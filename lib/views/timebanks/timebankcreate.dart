@@ -218,6 +218,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           )),
           headingText('Name your group', true),
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
+
             focusNode: nameNode,
             onFieldSubmitted: (v) {
               FocusScope.of(context).requestFocus(aboutNode);
@@ -245,6 +247,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
           headingText('About', true),
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
+
             focusNode: aboutNode,
             onFieldSubmitted: (v) {
               FocusScope.of(context).requestFocus(FocusNode());
@@ -330,12 +334,14 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       return RaisedButton(
                         // color: Colors.blue,
                         onPressed: () {
+                          if(errTxt!=null || errTxt!=""){
 
+                          }
                           // Validate will return true if the form is valid, or false if
                           // the form is invalid.
                           //if (location != null) {
                           if (_formKey.currentState.validate() &&
-                              errTxt == null) {
+                              (errTxt == null || errTxt == "")) {
 //                            print("Hello");
 //                            // If the form is valid, we want to show a Snackbar
                             _writeToDB();
@@ -487,6 +493,11 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         Text(''),
         TextFormField(
           decoration: InputDecoration(
+            prefix: Icon(
+              Icons.add,
+              color: Colors.black,
+              size: 13,
+            ),
             hintText: 'The Timebanks primary phone number',
             labelText: 'Phone Number',
             // labelStyle: textStyle,
@@ -658,7 +669,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       color: FlavorConfig.values.theme.primaryColor,
                       onPressed: () async {
                         var connResult =
-                        await Connectivity().checkConnectivity();
+                            await Connectivity().checkConnectivity();
                         if (connResult == ConnectivityResult.none) {
                           Scaffold.of(context).showSnackBar(
                             SnackBar(
@@ -666,8 +677,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                                   "Please check your internet connection."),
                               action: SnackBarAction(
                                 label: 'Dismiss',
-                                onPressed: () => Scaffold.of(context)
-                                    .hideCurrentSnackBar(),
+                                onPressed: () =>
+                                    Scaffold.of(context).hideCurrentSnackBar(),
                               ),
                             ),
                           );

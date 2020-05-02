@@ -554,6 +554,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           textInputAction: TextInputAction.done,
           onFieldSubmitted: (input) {
             print("--------------------------");
@@ -579,6 +580,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           textInputAction: TextInputAction.done,
           onFieldSubmitted: (input) {
             // FocusScope.of(bc).requestFocus(focusNodes[1]);
@@ -630,6 +632,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             scrollToBottom();
           },
@@ -650,6 +653,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(bc).unfocus();
           },
@@ -673,6 +677,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+            textCapitalization: TextCapitalization.sentences,
             onFieldSubmitted: (input) {
               // FocusScope.of(bc).requestFocus(focusNodes[6]);
               FocusScope.of(bc).unfocus();
@@ -693,6 +698,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           textInputAction: TextInputAction.done,
           onFieldSubmitted: (input) {
             // FocusScope.of(bc).requestFocus(focusNodes[2]);
@@ -717,6 +723,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
+
           onFieldSubmitted: (input) {
             // FocusScope.of(bc).requestFocus(focusNodes[7]);
             FocusScope.of(bc).unfocus();

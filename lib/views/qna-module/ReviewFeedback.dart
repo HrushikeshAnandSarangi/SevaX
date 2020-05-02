@@ -16,8 +16,7 @@ class ReviewFeedback extends StatefulWidget {
 
   ReviewFeedback({this.feedbackType});
   @override
-  State<StatefulWidget> createState() =>
-      ReviewFeedbackState();
+  State<StatefulWidget> createState() => ReviewFeedbackState();
 }
 
 class ReviewFeedbackState extends State<ReviewFeedback> {
@@ -37,26 +36,27 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       title: AppConfig.appName,
       home: Scaffold(
         appBar: AppBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            title: Text(
-              toolbarTitle,
-              style: TextStyle(
-                color: Colors.white,
-              ),
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text(
+            toolbarTitle,
+            style: TextStyle(
+              color: Colors.white,
             ),
-            automaticallyImplyLeading: false,
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              onPressed: () => {
-                //  Navigator.popUntil(
-                //     context, ModalRoute.withName(Navigator.defaultRouteName))
+          ),
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+            onPressed: () => {
+              //  Navigator.popUntil(
+              //     context, ModalRoute.withName(Navigator.defaultRouteName))
 
-                Navigator.of(context).pop()
-              },
-            )),
+              Navigator.of(context).pop()
+            },
+          ),
+        ),
         body: questionIndex < getQuestions(widget.feedbackType).length
             ? getFeebackQuestions()
             : getTextFeedback(context),
@@ -94,8 +94,9 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
           child: Text(
             getQuestions(widget.feedbackType)[questionIndex]
                 [FeedbackConstants.FEEDBACK_TITLE],
+            textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 19,
+              fontSize: 16,
               letterSpacing: 2,
             ),
           ),
@@ -152,6 +153,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 controller: myCommentsController,
                 style: TextStyle(fontSize: 14.0, color: Colors.black87),
                 decoration: InputDecoration(
@@ -181,7 +183,8 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                   ),
                   onPressed: () {
                     setState(() {
-                      if ((FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
+                      if ((FlavorConfig.appFlavor == Flavor.APP ||
+                          FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
                         myCommentsController.text.isEmpty
                             ? _validate = true
                             : _validate = false;

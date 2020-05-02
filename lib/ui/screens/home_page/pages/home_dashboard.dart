@@ -95,6 +95,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
     return BlocProvider(
       bloc: _homeDashBoardBloc,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
           centerTitle: false,

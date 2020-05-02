@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:core';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -1232,7 +1233,7 @@ class DiscussionListState extends State<DiscussionList> {
                                 Container(
                                   margin: EdgeInsets.only(left: 5),
                                   child: Text(
-                                    news.fullName.trim(),
+                                    news.fullName?.trim() ?? '',
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold),
                                     overflow: TextOverflow.ellipsis,
@@ -1560,7 +1561,7 @@ class DiscussionListState extends State<DiscussionList> {
             child: FadeInImage(
               fit: BoxFit.fitWidth,
               placeholder: AssetImage('lib/assets/images/noimagefound.png'),
-              image: NetworkImage(urlToLoad),
+              image: CachedNetworkImageProvider(urlToLoad),
             ),
           ),
         ),

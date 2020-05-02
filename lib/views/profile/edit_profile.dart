@@ -191,10 +191,10 @@ class _EditProfilePageState extends State<EditProfilePage>
           automaticallyImplyLeading: true,
           userModel: loggedInUser,
           isFromProfile: true,
-          onSelectedInterests: (interests) {
+          onSelectedInterests: (interests) async {
             Navigator.pop(context);
-            loggedInUser.interests = interests;
-            updateUserData(loggedInUser);
+            loggedInUser.interests = interests.length > 0 ? interests : [];
+            await updateUserData(loggedInUser);
           },
           onSkipped: () {
             Navigator.pop(context);
@@ -214,10 +214,10 @@ class _EditProfilePageState extends State<EditProfilePage>
           automaticallyImplyLeading: true,
           isFromProfile: true,
           userModel: loggedInUser,
-          onSelectedSkills: (skills) {
+          onSelectedSkills: (skills) async {
             Navigator.pop(context);
-            loggedInUser.skills = skills;
-            updateUserData(loggedInUser);
+            loggedInUser.skills = skills.length > 0 ? skills : [];
+            await updateUserData(loggedInUser);
           },
           onSkipped: () {
             Navigator.pop(context);
@@ -372,17 +372,19 @@ class _EditProfilePageState extends State<EditProfilePage>
                     ),
                     onPressed: () async {
                       var connResult = await Connectivity().checkConnectivity();
-                      if(connResult == ConnectivityResult.none){
+                      if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content: Text("Please check your internet connection."),
+                            content:
+                                Text("Please check your internet connection."),
                             action: SnackBarAction(
                               label: 'Dismiss',
-                              onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                              onPressed: () => _scaffoldKey.currentState
+                                  .hideCurrentSnackBar(),
                             ),
                           ),
                         );
-                        return ;
+                        return;
                       }
                       if (!_formKey.currentState.validate()) {
                         return;
@@ -464,17 +466,19 @@ class _EditProfilePageState extends State<EditProfilePage>
                     ),
                     onPressed: () async {
                       var connResult = await Connectivity().checkConnectivity();
-                      if(connResult == ConnectivityResult.none){
+                      if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content: Text("Please check your internet connection."),
+                            content:
+                                Text("Please check your internet connection."),
                             action: SnackBarAction(
                               label: 'Dismiss',
-                              onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                              onPressed: () => _scaffoldKey.currentState
+                                  .hideCurrentSnackBar(),
                             ),
                           ),
                         );
-                        return ;
+                        return;
                       }
                       if (!_formKey.currentState.validate()) {
                         return;
@@ -555,19 +559,21 @@ class _EditProfilePageState extends State<EditProfilePage>
                       "Logout",
                       style: TextStyle(fontFamily: 'Europa'),
                     ),
-                    onPressed: () async{
+                    onPressed: () async {
                       var connResult = await Connectivity().checkConnectivity();
-                      if(connResult == ConnectivityResult.none){
+                      if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content: Text("Please check your internet connection."),
+                            content:
+                                Text("Please check your internet connection."),
                             action: SnackBarAction(
                               label: 'Dismiss',
-                              onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                              onPressed: () => _scaffoldKey.currentState
+                                  .hideCurrentSnackBar(),
                             ),
                           ),
                         );
-                        return ;
+                        return;
                       }
                       // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
                       //   statusBarBrightness: Brightness.light,

@@ -50,7 +50,6 @@ class CreateRequest extends StatefulWidget {
 }
 
 class _CreateRequestState extends State<CreateRequest> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -199,6 +198,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     TextStyle textStyle = TextStyle(
       fontSize: 14,
       // fontWeight: FontWeight.bold,
+      color: Colors.black,
+      fontFamily: 'Europa',
+    );
+
+    TextStyle hintTextStyle = TextStyle(
+      fontSize: 14,
+      // fontWeight: FontWeight.bold,
       color: Colors.grey,
       fontFamily: 'Europa',
     );
@@ -246,7 +252,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Europa',
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 TextFormField(
@@ -260,7 +266,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                         ? "Yang gang request title"
                         : "Ex: Small carpentry work...",
-                    hintStyle: textStyle,
+                    hintStyle: hintTextStyle,
                   ),
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
@@ -291,7 +297,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Europa',
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 TextFormField(
@@ -302,7 +308,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     hintText: 'Your Request and any #hashtags',
-                    hintStyle: textStyle,
+                    hintStyle: hintTextStyle,
                   ),
                   initialValue: widget.offer != null && widget.isOfferRequest
                       ? getOfferDescription(
@@ -325,7 +331,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Europa',
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 TextFormField(
@@ -336,7 +342,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
                       hintText: 'Total no. of hours required',
-                      hintStyle: textStyle,
+                      hintStyle: hintTextStyle,
                       // labelText: 'No. of volunteers',
                     ),
                     keyboardType: TextInputType.number,
@@ -359,7 +365,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Europa',
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 TextFormField(
@@ -369,7 +375,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   },
                   decoration: InputDecoration(
                     hintText: 'No. of approvals',
-                    hintStyle: textStyle,
+                    hintStyle: hintTextStyle,
                     // labelText: 'No. of volunteers',
                   ),
                   keyboardType: TextInputType.number,
@@ -397,7 +403,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     ),
                     color: Colors.grey[200],
                     onPressed: () {
-
                       Navigator.push(
                         context,
                         MaterialPageRoute<GeoFirePoint>(
@@ -496,7 +501,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
   void createRequest() async {
     var connResult = await Connectivity().checkConnectivity();
-    if(connResult == ConnectivityResult.none){
+    if (connResult == ConnectivityResult.none) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text("Please check your internet connection."),
@@ -506,7 +511,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           ),
         ),
       );
-      return ;
+      return;
     }
 
     print('request mode ${requestModel.requestMode.toString()}');

@@ -60,9 +60,9 @@ class MyCustomFormState extends State<MyCustomForm> {
 
   static TextStyle titleStyle = TextStyle(
     fontSize: 16,
-    fontWeight: FontWeight.bold,
+    // fontWeight: FontWeight.bold,
     fontFamily: 'Europa',
-    color: Colors.grey,
+    color: Colors.black,
   );
   static TextStyle subTitleStyle = TextStyle(
     fontSize: 14,
@@ -89,7 +89,8 @@ class MyCustomFormState extends State<MyCustomForm> {
     individualOfferDataModel = IndividualOfferDataModel();
 
     this.timebankId = _selectedTimebankId;
-    if ((FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
+    if ((FlavorConfig.appFlavor == Flavor.APP ||
+        FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
       _fetchCurrentlocation;
     }
   }
@@ -158,10 +159,13 @@ class MyCustomFormState extends State<MyCustomForm> {
           // style: TextStyle(color: Colors.grey, fontSize: 14),
         ),
         TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(hintText: 'Ex: babysitting..'),
           keyboardType: TextInputType.text,
           style: subTitleStyle,
-          inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))],
+          inputFormatters: <TextInputFormatter>[
+            WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
+          ],
           validator: (value) {
             if (value.isEmpty) {
               return 'Please enter the subject of your Offer';
@@ -175,6 +179,7 @@ class MyCustomFormState extends State<MyCustomForm> {
           style: titleStyle,
         ),
         TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           maxLength: 500,
           style: subTitleStyle,
           decoration: InputDecoration(
@@ -192,6 +197,7 @@ class MyCustomFormState extends State<MyCustomForm> {
         SizedBox(height: 20),
         Text('Availability', style: titleStyle),
         TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
             hintText: 'Describe my availability',
           ),
@@ -384,9 +390,13 @@ class MyCustomFormState extends State<MyCustomForm> {
           // style: TextStyle(color: Colors.grey, fontSize: 14),
         ),
         TextFormField(
+          textCapitalization: TextCapitalization.sentences,
+
           decoration: InputDecoration(hintText: 'Ex: babysitting..'),
           keyboardType: TextInputType.text,
-          inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))],
+          inputFormatters: <TextInputFormatter>[
+            WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
+          ],
           // style: finalStyle,
           style: subTitleStyle,
           validator: (value) {
@@ -412,6 +422,7 @@ class MyCustomFormState extends State<MyCustomForm> {
           style: titleStyle,
         ),
         TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           maxLength: 500,
           style: subTitleStyle,
           decoration: InputDecoration(

@@ -63,10 +63,13 @@ class CreateEditCommunityView extends StatelessWidget {
               isCreateTimebank: isCreateTimebank,
             ),
           )
-        : CreateEditCommunityViewForm(
-            timebankId: timebankId,
-            isFromFind: isFromFind,
-            isCreateTimebank: isCreateTimebank,
+        : Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: CreateEditCommunityViewForm(
+              timebankId: timebankId,
+              isFromFind: isFromFind,
+              isCreateTimebank: isCreateTimebank,
+            ),
           );
   }
 }
@@ -120,15 +123,16 @@ class CreateEditCommunityViewFormState
   var scollContainer = ScrollController();
   PanelController _pc = new PanelController();
   GlobalKey<FormState> _stateSelectorKey = GlobalKey();
-//  final aboutFocus = FocusNode();
+  final nameFocus = FocusNode();
 
   String selectedCountryValue = "Select your country";
 
   var scrollIsOpen = false;
   var communityFound = false;
   List<FocusNode> focusNodes;
-  String errTxt;
+  String errTxt = null;
   int totalMembersCount = 0;
+
 
   final _textUpdates = StreamController<String>();
 
@@ -166,17 +170,19 @@ class CreateEditCommunityViewFormState
           errTxt = null;
         });
       } else {
-        if (communityModel.name != s) {
-          SearchManager.searchCommunityForDuplicate(queryString: s).then((commFound) {
+        if (communitynName != s) {
+          SearchManager.searchCommunityForDuplicate(queryString: s)
+              .then((commFound) {
+                print("querystring is  ${s} and communitynName is ${communitynName}");
             if (commFound) {
               setState(() {
                 communityFound = true;
                 print(
-                    "name ----- ${communitynName} and ${searchTextController
-                        .text}");
+                    "fkcin name ----- ${communitynName} and ${searchTextController.text}");
                 errTxt = 'Timebank name already exists';
               });
             } else {
+              print("inside fkcin else");
               setState(() {
                 communityFound = false;
                 errTxt = null;
@@ -309,6 +315,7 @@ class CreateEditCommunityViewFormState
                   ),
                   headingText('Name your timebank'),
                   TextFormField(
+                    focusNode: nameFocus,
                     textCapitalization: TextCapitalization.sentences,
                     onFieldSubmitted: (v) {
                       FocusScope.of(context).requestFocus(aboutFocus);
@@ -533,10 +540,12 @@ class CreateEditCommunityViewFormState
                       label: Container(
                         child: Text(
                           (snapshot.data.timebank.address == null ||
-                                      snapshot.data.timebank.address.isEmpty) &&
+                                      snapshot.data.timebank.address.isEmpty ||snapshot.data.timebank.address =="") &&
                                   selectedAddress == ''
                               ? 'Add Location'
-                              : widget.isCreateTimebank ? snapshot.data.timebank.address: timebankModel.address,
+                              : widget.isCreateTimebank
+                                  ? snapshot.data.timebank.address
+                                  : timebankModel.address,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -623,12 +632,18 @@ class CreateEditCommunityViewFormState
                             );
                             return;
                           }
+                          if(errTxt != null){
+                            showDialogForSuccess(
+                                dialogTitle:
+                                "Timebank name already exists !", err: true);
+                            return ;
+                          }
                           // show a dialog
                           if (widget.isCreateTimebank) {
                             if (!hasRegisteredLocation()) {
                               showDialogForSuccess(
                                   dialogTitle:
-                                      "Please add your timebank location");
+                                      "Please add your timebank location", err: true);
                               return;
                             }
 
@@ -703,7 +718,7 @@ class CreateEditCommunityViewFormState
                                       SevaCore.of(context).loggedInUser;
                                   _formKey.currentState.reset();
                                   // _billingInformationKey.currentState.reset();
-                                  Navigator.of(context).push(
+                                  Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                       builder: (context) => BillingPlanDetails(
                                         user: user,
@@ -731,7 +746,7 @@ class CreateEditCommunityViewFormState
                             if (!hasRegisteredLocation()) {
                               showDialogForSuccess(
                                   dialogTitle:
-                                      "Please add your timebank location");
+                                      "Please add your timebank location", err: true);
                               return;
                             }
 
@@ -744,7 +759,8 @@ class CreateEditCommunityViewFormState
                             }
 
                             timebankModel.location = location;
-;                           timebankModel.address = selectedAddress;
+                            ;
+                            timebankModel.address = selectedAddress;
 
                             if (selectedUsers != null) {
                               selectedUsers.forEach((key, user) {
@@ -795,7 +811,7 @@ class CreateEditCommunityViewFormState
                             } else {
                               showDialogForSuccess(
                                   dialogTitle:
-                                      "Timebank updated successfully, Please restart your app to see the updated changes.");
+                                      "Timebank updated successfully, Please restart your app to see the updated changes.", err: false);
                             }
                           }
                         },
@@ -1118,6 +1134,7 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[2]);
           },
@@ -1146,6 +1163,7 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[1]);
           },
@@ -1204,6 +1222,7 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).unfocus();
             // scrollToBottom();
@@ -1236,6 +1255,7 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             // FocusScope.of(context).requestFocus(focusNodes[5]);
             FocusScope.of(context).unfocus();
@@ -1265,6 +1285,7 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+            textCapitalization: TextCapitalization.sentences,
             onFieldSubmitted: (input) {
               FocusScope.of(context).unfocus();
             },
@@ -1290,6 +1311,7 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[7]);
             // scrollToBottom();
@@ -1318,6 +1340,7 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[3]);
           },
@@ -1524,7 +1547,7 @@ class CreateEditCommunityViewFormState
         });
   }
 
-  void showDialogForSuccess({String dialogTitle}) {
+  void showDialogForSuccess({String dialogTitle, bool err}) {
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
@@ -1534,9 +1557,12 @@ class CreateEditCommunityViewFormState
               FlatButton(
                 child: Text(
                   'OK',
+
                   style: TextStyle(
                     fontSize: 16,
+                    color: err ? Colors.red : Colors.green
                   ),
+
                 ),
                 onPressed: () {
                   Navigator.of(viewContext).pop();

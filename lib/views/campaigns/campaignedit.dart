@@ -1,14 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:sevaexchange/components/sevaavatar/campaignavatar.dart';
+import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/models/campaign_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/membersaddedit.dart';
 import 'package:sevaexchange/views/membersmanagecampaign.dart';
-import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/models/campaign_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class CampaignEdit extends StatelessWidget {
   final String timebankId;
@@ -156,6 +155,7 @@ class CampaignEditFormState extends State<CampaignEditForm> {
                 padding: EdgeInsets.all(15.0),
               ),
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 initialValue: widget.campaignModel.name,
                 decoration: InputDecoration(
                   hintText: 'Project Name',
@@ -175,7 +175,9 @@ class CampaignEditFormState extends State<CampaignEditForm> {
                 ),
                 keyboardType: TextInputType.multiline,
                 maxLines: 3,
-                inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))],
+                inputFormatters: <TextInputFormatter>[
+                  WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
+                ],
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please enter some text';
@@ -185,6 +187,7 @@ class CampaignEditFormState extends State<CampaignEditForm> {
               ),
               Text(' '),
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 initialValue: widget.campaignModel.missionStatement,
                 decoration: InputDecoration(
                   hintText: 'What you are about',
@@ -269,6 +272,7 @@ class CampaignEditFormState extends State<CampaignEditForm> {
               ),
               Text(''),
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 initialValue: widget.campaignModel.address,
                 decoration: InputDecoration(
                   hintText: 'Your main address',
