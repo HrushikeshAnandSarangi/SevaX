@@ -432,10 +432,8 @@ Stream<List<NotificationsModel>> getNotificationsForTimebank({
             if (model.type == NotificationType.RequestAccept ||
                 model.type == NotificationType.JoinRequest ||
                 model.type == NotificationType.RequestCompleted ||
-                model.type ==
-                    NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED ||
-                model.type ==
-                    NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK) {
+                model.type == NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED ||
+                model.type == NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK) {
               notifications.add(model);
             }
           }
