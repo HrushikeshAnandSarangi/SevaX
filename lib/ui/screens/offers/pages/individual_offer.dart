@@ -139,7 +139,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: "Offer descritption*",
+                                heading: "Offer description*",
                                 onChanged: _bloc.onOfferDescriptionChanged,
                                 hint: "Your offer and any #hashtags",
                                 maxLength: 500,

@@ -67,7 +67,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
       timebankId: widget.timebankId,
     );
-    _fetchCurrentlocation;
 
     setState(() {});
   }
@@ -80,22 +79,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       selectedAddress = projectModel.address;
       isDataLoaded = true;
       setState(() {});
-    });
-  }
-  void get _fetchCurrentlocation {
-    Location().getLocation().then((onValue) {
-      print("Location1:$onValue");
-      location = GeoFirePoint(onValue.latitude, onValue.longitude);
-      LocationUtility()
-          .getFormattedAddress(
-        location.latitude,
-        location.longitude,
-      )
-          .then((address) {
-        setState(() {
-          this.selectedAddress = address;
-        });
-      });
     });
   }
 
