@@ -813,7 +813,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       var newMembers = List<String>();
       for (var i = 0; i < communityModel.members.length; i++) {
         if (communityModel.members[i] != user.sevaUserID) {
-          newMembers.add(communityModel.members[i]);
+          newMembers.remove(communityModel.members[i]);
         }
       }
       communityModel.members = newMembers;
