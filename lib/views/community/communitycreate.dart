@@ -152,6 +152,7 @@ class CreateEditCommunityViewFormState
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
     selectedUsers = HashMap();
+    _fetchCurrentlocation;
     if (!widget.isCreateTimebank) {
       _fetchCurrentlocation;
     }

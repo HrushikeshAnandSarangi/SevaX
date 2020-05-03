@@ -99,7 +99,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         });
       } else {
         SearchManager.searchGroupForDuplicate(
-                queryString: s,
+                queryString: s.trim(),
                 communityId: SevaCore.of(context).loggedInUser.currentCommunity)
             .then((groupFound) {
           if (groupFound) {
@@ -219,7 +219,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           headingText('Name your group', true),
           TextFormField(
             textCapitalization: TextCapitalization.sentences,
-
             focusNode: nameNode,
             onFieldSubmitted: (v) {
               FocusScope.of(context).requestFocus(aboutNode);
@@ -242,7 +241,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               if (value.isEmpty) {
                 return 'Please enter some text';
               }
-              timebankModel.name = value;
+              timebankModel.name =  value.trim();
             },
           ),
           headingText('About', true),

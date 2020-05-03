@@ -51,7 +51,7 @@ class EditGroupFormState extends State<EditGroupForm> {
   bool protectedVal = false;
   GeoFirePoint location;
   String selectedAddress;
-  TextEditingController searchTextController = new TextEditingController();
+  TextEditingController searchTextController;
   var _searchText = "";
   String errTxt;
   final _textUpdates = StreamController<String>();
@@ -62,6 +62,7 @@ class EditGroupFormState extends State<EditGroupForm> {
       location = widget.timebankModel.location;
       _getLocation();
     }
+    searchTextController =  new TextEditingController(text: widget.timebankModel.name);
 
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
@@ -74,18 +75,26 @@ class EditGroupFormState extends State<EditGroupForm> {
           _searchText = "";
         });
       } else {
-        SearchManager.searchGroupForDuplicate(queryString: s, communityId: SevaCore.of(context).loggedInUser.currentCommunity).then((groupFound) {
-          if (groupFound) {
-            setState(() {
-              errTxt = 'Group name already exists';
-            });
-          } else {
-            setState(() {
-              groupFound = false;
-              errTxt = null;
-            });
-          }
-        });
+        if (widget.timebankModel.name != s) {
+          SearchManager.searchGroupForDuplicate(
+              queryString: s.trim(),
+              communityId: SevaCore
+                  .of(context)
+                  .loggedInUser
+                  .currentCommunity)
+              .then((groupFound) {
+            if (groupFound) {
+              setState(() {
+                errTxt = 'Group name already exists';
+              });
+            } else {
+              setState(() {
+                groupFound = false;
+                errTxt = null;
+              });
+            }
+          });
+        }
       }
     });
 
@@ -152,8 +161,9 @@ class EditGroupFormState extends State<EditGroupForm> {
           )),
           headingText('Name your group', true),
           TextFormField(
-            initialValue: widget.timebankModel.name ?? "",
+            controller: searchTextController,
             decoration: InputDecoration(
+              errorText: errTxt,
               hintText: "Ex: Pets-in-town, Citizen collab",
             ),
             keyboardType: TextInputType.multiline,
@@ -240,7 +250,7 @@ class EditGroupFormState extends State<EditGroupForm> {
               alignment: Alignment.center,
               child: RaisedButton(
                 onPressed: () {
-                  if (_formKey.currentState.validate()) {
+                  if (_formKey.currentState.validate() && (errTxt == null || errTxt == "")) {
                     updateGroupDetails();
                   }
                 },
