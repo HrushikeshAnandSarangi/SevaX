@@ -46,9 +46,14 @@ class _InterestViewNewState extends State<InterestViewNew> {
       querySnapshot.documents.forEach((DocumentSnapshot data) {
         interests[data.documentID] = data['name'];
       });
-      widget.userModel.interests.forEach((id) {
-        _selectedInterests[id] = interests[id];
-      });
+
+      if (widget.userModel.interests != null &&
+          widget.userModel.interests.length > 0) {
+        widget.userModel.interests.forEach((id) {
+          _selectedInterests[id] = interests[id];
+        });
+      }
+
       // isDataLoaded = true;
 
       setState(() {

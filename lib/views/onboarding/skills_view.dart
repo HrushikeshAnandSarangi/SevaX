@@ -48,7 +48,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
 
         // ids[data['name']] = data.documentID;
       });
-      if (widget.userModel.skills.length > 0) {
+      if (widget.userModel.skills != null && widget.userModel.skills.length > 0) {
         widget.userModel.skills.forEach((id) {
           _selectedSkills[id] = skills[id];
           // selectedChips.add(buildChip(id: id, value: skills[id]));

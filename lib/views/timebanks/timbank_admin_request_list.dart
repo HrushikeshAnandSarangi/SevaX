@@ -479,6 +479,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       batch.updateData(newMemberDocumentReference, {
         'communities': FieldValue.arrayUnion([communityId]),
       });
+
+      var addToCommunityRef =
+          Firestore.instance.collection('communities').document(communityId);
+      batch.updateData(addToCommunityRef, {
+        'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
+      });
     }
 
     batch.updateData(
