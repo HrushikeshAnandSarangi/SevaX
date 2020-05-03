@@ -368,7 +368,7 @@ class CreateEditCommunityViewFormState
                       hintText: 'Ex: A bit more about your timebank',
                     ),
                     keyboardType: TextInputType.multiline,
-                    textInputAction: TextInputAction.newline,
+                    textInputAction: TextInputAction.done,
                     maxLines: 3,
                     textCapitalization: TextCapitalization.sentences,
                     initialValue: timebankModel.missionStatement ?? "",
