@@ -367,9 +367,9 @@ class CreateEditCommunityViewFormState
                     decoration: InputDecoration(
                       hintText: 'Ex: A bit more about your timebank',
                     ),
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.done,
-                    maxLines: 5,
+                    keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.newline,
+                    maxLines: 3,
                     textCapitalization: TextCapitalization.sentences,
                     initialValue: timebankModel.missionStatement ?? "",
                     onChanged: (value) {

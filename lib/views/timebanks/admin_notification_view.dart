@@ -1148,7 +1148,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             Navigator.pop(viewContext);
                             showProgressForOnboardingUser();
 
-
                             await addMemberToTimebank(
                               timebankId: model.entityId,
                               joinRequestId: model.id,
@@ -1232,6 +1231,12 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     if (!isFromGroup) {
       batch.updateData(newMemberDocumentReference, {
         'communities': FieldValue.arrayUnion([communityId]),
+      });
+
+      var addToCommunityRef =
+          Firestore.instance.collection('communities').document(communityId);
+      batch.updateData(addToCommunityRef, {
+        'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
       });
     }
 

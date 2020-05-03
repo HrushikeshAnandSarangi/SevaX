@@ -543,14 +543,11 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   //widget.communityModel.id
                   //here is the thing
 
-                  await Firestore.instance
-                      .collection("users")
-                      .document(widget.user.email)
-                      .updateData({
-                    'communities':
-                        FieldValue.arrayUnion([widget.communityModel.id]),
-                    'currentCommunity': widget.communityModel.id
-                  });
+                  await onBoardMember(
+                    commmunityId: widget.communityModel.id,
+                    onBaordingMemberSevaId: widget.user.sevaUserID,
+                    onBoardingMemberEmail: widget.user.email,
+                  ).commit();
 
                   setState(() {
                     widget.user.currentCommunity = widget.communityModel.id;
@@ -585,6 +582,31 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
         setError(errorMessage: "Please enter PIN to verify");
       }
     }
+  }
+
+  WriteBatch onBoardMember({
+    String onBoardingMemberEmail,
+    String commmunityId,
+    String onBaordingMemberSevaId,
+  }) {
+    var batchUpdate = Firestore.instance.batch();
+
+    var userUpdateRef =
+        Firestore.instance.collection("users").document(onBoardingMemberEmail);
+
+    var communityMembersRef =
+        Firestore.instance.collection("communities").document(commmunityId);
+
+    batchUpdate.updateData(userUpdateRef, {
+      'communities': FieldValue.arrayUnion([commmunityId]),
+      'currentCommunity': commmunityId
+    });
+
+    batchUpdate.updateData(communityMembersRef, {
+      'members': FieldValue.arrayUnion([onBaordingMemberSevaId])
+    });
+
+    return batchUpdate;
   }
 
   void setError({String errorMessage}) {

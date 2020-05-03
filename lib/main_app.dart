@@ -9,6 +9,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'models/news_model.dart';
 
 Future<void> main() async {
