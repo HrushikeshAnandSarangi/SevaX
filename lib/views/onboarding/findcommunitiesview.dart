@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
@@ -389,7 +390,18 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     );
   }
 
+  void getGps() async {
+    bool isLocationEnabled = await Geolocator().isLocationServiceEnabled();
+    if (isLocationEnabled) {
+      print(' gps enabled');
+    } else {
+      print('gps disabled');
+    }
+  }
+
   Widget nearByTimebanks() {
+    //  getGps();
+
     return StreamBuilder<List<CommunityModel>>(
         stream: FirestoreManager.getNearCommunitiesListStream(),
         builder: (context, snapshot) {
