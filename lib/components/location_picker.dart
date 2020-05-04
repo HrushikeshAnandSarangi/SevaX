@@ -143,7 +143,7 @@ class _LocationPickerState extends State<LocationPicker> {
 
   Future loadInitialLocation() async {
     log('loadCurrentLocation');
-    // LocationData locationData;
+    LocationData locationData;
     try {
       locationData = await widget.location.getLocation();
       if (_mapController != null) {
