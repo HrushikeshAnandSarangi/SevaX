@@ -28,7 +28,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
   bool isDataLoaded = false;
   @override
   void initState() {
-    // TODO: implement initState
+print("inside project initStateeee");
     getData();
     setState(() {});
     super.initState();
@@ -44,6 +44,11 @@ class _AboutProjectViewState extends State<AboutProjectView> {
         getUserData();
       });
     });
+  }
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getData();
+    setState(() {});
   }
 
   void getUserData() async {

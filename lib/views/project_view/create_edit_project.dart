@@ -150,10 +150,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   setState(() {
                     print("$sharedValue -- $val");
                     if (val == 0) {
-                      print("TTTTTTTTTtimebank proj");
                       projectModel.mode = 'Timebank';
                     } else {
-                      print("pppppppppersonal proj");
                       projectModel.mode = 'Personal';
                     }
                     sharedValue = val;
@@ -364,10 +362,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               //  validator: _validateEmailId,
               keyboardType: TextInputType.number,
               onSaved: (value) {
-                projectModel.phoneNumber = '+' + value.trim();
+                projectModel.phoneNumber = '+' + value;
               },
               onChanged: (value) {
-                projectModel.phoneNumber = '+' + value.trim();
+                projectModel.phoneNumber = '+' + value;
               },
               inputFormatters: [
                 new WhitelistingTextInputFormatter(RegExp("[0-9]")),
@@ -377,7 +375,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 if (value.isEmpty) {
                   return 'Mobile Number cannot be empty.';
                 } else {
-                  projectModel.phoneNumber = '+' + value.trim();
+                  projectModel.phoneNumber = '+' + value;
                 }
                 return null;
               },
@@ -471,7 +469,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 alignment: Alignment.center,
                 child: RaisedButton(
                   onPressed: () async {
-                    print('project phone ${projectModel.phoneNumber.trim()}');
+                    print('project phone ${projectModel.phoneNumber}');
 
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
