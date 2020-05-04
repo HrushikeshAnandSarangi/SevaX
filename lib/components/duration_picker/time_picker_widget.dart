@@ -57,6 +57,8 @@ class TimePickerState extends State<TimePicker> {
           ),
           Expanded(
             child: DataScrollPicker(minuteList, minute.toString(), (value) {
+              if (ispm == 'PM') (hour + 12) >= 24 ?   hour == 12 ? hour = hour: hour = hour: hour = hour + 12;
+              if (ispm == 'AM') (hour - 12) <= 0 ?   hour == 12 ? hour = 0 : hour = hour: hour = hour - 12;
               setState(() {
                 minute = int.parse(value);
               });

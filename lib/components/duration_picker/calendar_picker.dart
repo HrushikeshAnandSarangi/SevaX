@@ -128,7 +128,7 @@ class CalendarPickerState extends State<CalendarPicker> {
                       Expanded(
                         child: TimePicker(
                           hour: selectionType == SelectionType.START_DATE ?  startDate.hour == 12 ?  startDate.hour : startDate.hour % 12 : startDate.millisecondsSinceEpoch < endDate.millisecondsSinceEpoch ? endDate.hour % 12: startDate.hour %12,
-                          minute: selectionType == SelectionType.START_DATE ? (((startDate.minute/15).round() * 15) % 60) : ((endDate.minute/15).round() * 15) % 60,
+                          minute: selectionType == SelectionType.START_DATE ? (((startDate.minute/15).round() * 15) % 60) : startDate.millisecondsSinceEpoch < endDate.millisecondsSinceEpoch ? ((endDate.minute/15).round() * 15) % 60: ((startDate.minute/15).round() * 15) % 60 ,
                           ispm: selectionType == SelectionType.START_DATE ?  startDate.hour >= 12 ? "PM": "AM" : startDate.millisecondsSinceEpoch < endDate.millisecondsSinceEpoch ? endDate.hour >= 12 ? "PM": "AM": startDate.hour >= 12 ? "PM": "AM",
                           onTimeSelected: (hour, minute, ispm) {
                             setState(() {
@@ -154,18 +154,11 @@ class CalendarPickerState extends State<CalendarPicker> {
             ),
           ),
           getBottomButton(context, () {
-// DateTime startDate = _calendarState.currentState.startDate;
-// DateTime endDate = _calendarState.currentState.endDate;
-            print('check this');
-            print(endDate.millisecondsSinceEpoch);
-            print(startDate.millisecondsSinceEpoch);
             if (endDate.millisecondsSinceEpoch <  startDate.millisecondsSinceEpoch) {
               _dateInvalidAlert(context);
             } else {
               Navigator.pop(context, [startDate, endDate]);
             }
-            //TimePickerState.hour = 0;
-            //TimePickerState.minute = 0;
           }, 'Done'),
         ],
       ),
