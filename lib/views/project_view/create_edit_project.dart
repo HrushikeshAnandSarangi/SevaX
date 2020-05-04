@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:location/location.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/projects_avtaar.dart';
@@ -361,20 +360,24 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               cursorColor: Colors.black54,
               focusNode: focusNodes[3],
               textInputAction: TextInputAction.done,
+
               //  validator: _validateEmailId,
               keyboardType: TextInputType.number,
               onSaved: (value) {
-                projectModel.phoneNumber = '+' + value;
+                projectModel.phoneNumber = '+' + value.trim();
               },
               onChanged: (value) {
-                projectModel.phoneNumber = '+' + value;
+                projectModel.phoneNumber = '+' + value.trim();
               },
+              inputFormatters: [
+                new WhitelistingTextInputFormatter(RegExp("[0-9]")),
+              ],
 
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Mobile Number cannot be empty.';
                 } else {
-                  projectModel.phoneNumber = '+' + value;
+                  projectModel.phoneNumber = '+' + value.trim();
                 }
                 return null;
               },
@@ -382,6 +385,16 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               initialValue:
                   widget.isCreateProject ? "" : projectModel.phoneNumber ?? "",
               decoration: InputDecoration(
+//                icon: Icon(
+//                  Icons.add,
+//                  color: Colors.black,
+//                  size: 13,
+//                ),
+//                prefixIcon: Icon(
+//                  Icons.add,
+//                  color: Colors.black,
+//                  size: 13,
+//                ),
                 prefix: Icon(
                   Icons.add,
                   color: Colors.black,
@@ -416,7 +429,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 icon: Icon(Icons.add_location),
                 label: Container(
                   child: Text(
-                    selectedAddress == '' || selectedAddress==null
+                    selectedAddress == '' || selectedAddress == null
                         ? 'Add Location'
                         : selectedAddress ?? "",
                     overflow: TextOverflow.ellipsis,
@@ -458,7 +471,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 alignment: Alignment.center,
                 child: RaisedButton(
                   onPressed: () async {
-                    print('project phone ${projectModel.phoneNumber}');
+                    print('project phone ${projectModel.phoneNumber.trim()}');
 
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
@@ -620,7 +633,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 
   bool hasRegisteredLocation() {
     print("Location ---========================= ${projectModel.address}");
-    return location != null || projectModel.address !=null;
+    return location != null || projectModel.address != null;
   }
 
   Future<void> showDialogForTitle({String dialogTitle}) async {
