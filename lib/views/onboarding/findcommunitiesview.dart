@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
@@ -8,7 +7,6 @@ import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
@@ -45,17 +43,19 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   static const String JOINED = "Joined";
   bool showAppbar = false;
   String nearTimebankText = 'Timebanks near you';
-  var radius = 10;
+  var radius;
 
   @override
   void initState() {
     super.initState();
     String _searchText = "";
-    try {
-      radius = json.decode(AppConfig.remoteConfig.getString('radius'));
-    } on Exception {
-      print("Exception raised while getting radius");
-    }
+//    try {
+//      radius = json.decode(AppConfig.remoteConfig.getString('radius'));
+//    } on Exception {
+//      print("Exception raised while getting radius");
+//    }
+//    print(' radius $radius');
+
     final _textUpdates = StreamController<String>();
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
@@ -391,49 +391,44 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   Widget nearByTimebanks() {
     return StreamBuilder<List<CommunityModel>>(
-        stream: FirestoreManager.getNearCommunitiesListStream(
-            radius: radius.toString()),
+        stream: FirestoreManager.getNearCommunitiesListStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasData) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+            //  print('near by comminities ${snapshot.data}');
+            if (snapshot.data.length != 0) {
+              List<CommunityModel> communityList = snapshot.data;
+              return ListView.builder(
+                  padding: EdgeInsets.only(
+                    bottom: 180,
+                    top: 5.0,
+                  ), //to avoid keyboard overlap //temp fix neeeds to be changed
+
+                  shrinkWrap: true,
+                  itemCount: communityList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    CompareUserStatus status;
+                    status = _compareUserStatus(
+                      communityList[index],
+                      widget.loggedInUser.sevaUserID,
+                    );
+
+                    return timeBankWidget(
+                      communityModel: communityList[index],
+                      context: context,
+                      status: status,
+                    );
+                  });
             } else {
-              //  print('near by comminities ${snapshot.data}');
-              if (snapshot.data.length != 0) {
-                List<CommunityModel> communityList = snapshot.data;
-                return ListView.builder(
-                    padding: EdgeInsets.only(
-                      bottom: 180,
-                      top: 5.0,
-                    ), //to avoid keyboard overlap //temp fix neeeds to be changed
-
-                    shrinkWrap: true,
-                    itemCount: communityList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      CompareUserStatus status;
-                      status = _compareUserStatus(
-                        communityList[index],
-                        widget.loggedInUser.sevaUserID,
-                      );
-
-                      return timeBankWidget(
-                        communityModel: communityList[index],
-                        context: context,
-                        status: status,
-                      );
-                    });
-              } else {
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
-                  child: Center(
-                    child: Text("No timebanks found",
-                        style: TextStyle(fontFamily: "Europa", fontSize: 14)),
-                  ),
-                );
-              }
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
+                child: Center(
+                  child: Text("No timebanks found",
+                      style: TextStyle(fontFamily: "Europa", fontSize: 14)),
+                ),
+              );
             }
           } else if (snapshot.hasError) {
             return Padding(
