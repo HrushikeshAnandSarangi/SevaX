@@ -349,23 +349,23 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
               print("Model1" + model.user1);
               print("Model2" + model.user2);
 
-              await createChat(chat: model).then(
-                (_) {
-                  Navigator.of(context).pop();
+              showProgressDialog();
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatView(
-                        useremail: user.email,
-                        chatModel: model,
-                        isFromShare: false,
-                        news: NewsModel(),
-                        isFromNewChat: fromNewChat,
-                      ),
-                    ),
-                  );
-                },
+              await createChat(chat: model);
+              Navigator.of(dialogLoadingContext).pop();
+
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatView(
+                    useremail: user.email,
+                    chatModel: model,
+                    isFromShare: false,
+                    news: NewsModel(),
+                    isFromNewChat: fromNewChat,
+                  ),
+                ),
               );
             }
             return user.email == SevaCore.of(context).loggedInUser.email
@@ -382,34 +382,32 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
                 user.email,
                 SevaCore.of(context).loggedInUser.email
               ];
-              print("Listing users");
               users.sort();
               ChatModel model = ChatModel();
               model.user1 = users[0];
               model.user2 = users[1];
               model.timebankId = timebankModel.id;
+              model.communityId =
+                  SevaCore.of(context).loggedInUser.currentCommunity;
 
-              print("Model1" + model.user1);
-              print("Model2" + model.user2);
+              showProgressDialog();
 
-              await createChat(chat: model).then(
-                (_) {
-                  Navigator.of(context).pop();
+              await createChat(chat: model);
+              Navigator.of(dialogLoadingContext).pop();
+              Navigator.of(context).pop();
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatView(
-                        useremail: user.email,
-                        chatModel: model,
-                        isFromShare: true,
-                        news: widget.newsModel,
-                        isFromNewChat: IsFromNewChat(
-                            false, DateTime.now().millisecondsSinceEpoch),
-                      ),
-                    ),
-                  );
-                },
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatView(
+                    useremail: user.email,
+                    chatModel: model,
+                    isFromShare: true,
+                    news: widget.newsModel,
+                    isFromNewChat: IsFromNewChat(
+                        false, DateTime.now().millisecondsSinceEpoch),
+                  ),
+                ),
               );
             }
             return user.email == SevaCore.of(context).loggedInUser.email
@@ -419,27 +417,44 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
             break;
         }
       },
-      child: Card(
-        color: isSelected(user.email) ? Colors.green : Colors.white,
-        child: ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(user.photoURL),
-          ),
-          title: Text(
-            user.fullname,
-            style: TextStyle(
-              color: getTextColorForSelectedItem(user.email),
+      child: user.email == SevaCore.of(context).loggedInUser.email
+          ? Container()
+          : Card(
+              color: isSelected(user.email) ? Colors.green : Colors.white,
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(user.photoURL),
+                ),
+                title: Text(
+                  user.fullname,
+                  style: TextStyle(
+                    color: getTextColorForSelectedItem(user.email),
+                  ),
+                ),
+                // subtitle: Text(
+                //   user.email,
+                //   style: TextStyle(
+                //     color: getTextColorForSelectedItem(user.email),
+                //   ),
+                // ),
+              ),
             ),
-          ),
-          // subtitle: Text(
-          //   user.email,
-          //   style: TextStyle(
-          //     color: getTextColorForSelectedItem(user.email),
-          //   ),
-          // ),
-        ),
-      ),
     );
+  }
+
+  BuildContext dialogLoadingContext;
+
+  void showProgressDialog() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          dialogLoadingContext = context;
+          return AlertDialog(
+            title: Text('Please wait...'),
+            content: LinearProgressIndicator(),
+          );
+        });
   }
 
   bool isSelected(String email) {

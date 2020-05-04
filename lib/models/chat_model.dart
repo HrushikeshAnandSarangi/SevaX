@@ -32,7 +32,7 @@ class ChatModel extends DataModel {
   });
 
   ChatModel.fromMap(Map<String, dynamic> map) {
-    if (map.containsKey('softDeletedBy')) {
+    if (map != null && map.containsKey('softDeletedBy')) {
       List<String> softDeletedBy = List.castFrom(map['softDeletedBy']);
       this.softDeletedBy = softDeletedBy;
     } else {

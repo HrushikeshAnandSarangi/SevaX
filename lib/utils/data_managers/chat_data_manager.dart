@@ -123,8 +123,9 @@ Future<void> updateMessagingReadStatusForMe({
             "${chat.user1}*${chat.user2}*${FlavorConfig.values.timebankId}*${chat.communityId}")
         .updateData({
       'unread_status': unreadStatus,
-      'location': chat.candidateLocation.data ??
-          GeoFirePoint(40.754387, -73.984291).data
+      'location': chat.candidateLocation != null
+          ? chat.candidateLocation.data
+          : GeoFirePoint(40.754387, -73.984291).data
     });
   });
 }

@@ -179,6 +179,8 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
               model.user1 = users[0];
               model.user2 = users[1];
               model.timebankId = widget.timebankId;
+              model.communityId =
+                  SevaCore.of(context).loggedInUser.currentCommunity;
 
               print("Model1" + model.user1);
               print("Model2" + model.user2);
@@ -223,6 +225,8 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
               model.user1 = users[0];
               model.user2 = users[1];
               model.timebankId = widget.timebankId;
+              model.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
+
               print("Model1" + model.user1);
               print("Model2" + model.user2);
 

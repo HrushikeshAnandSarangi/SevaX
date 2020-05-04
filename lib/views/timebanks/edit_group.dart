@@ -62,7 +62,8 @@ class EditGroupFormState extends State<EditGroupForm> {
       location = widget.timebankModel.location;
       _getLocation();
     }
-    searchTextController =  new TextEditingController(text: widget.timebankModel.name);
+    searchTextController =
+        new TextEditingController(text: widget.timebankModel.name);
 
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
@@ -77,11 +78,9 @@ class EditGroupFormState extends State<EditGroupForm> {
       } else {
         if (widget.timebankModel.name != s) {
           SearchManager.searchGroupForDuplicate(
-              queryString: s.trim(),
-              communityId: SevaCore
-                  .of(context)
-                  .loggedInUser
-                  .currentCommunity)
+                  queryString: s.trim(),
+                  communityId:
+                      SevaCore.of(context).loggedInUser.currentCommunity)
               .then((groupFound) {
             if (groupFound) {
               setState(() {
@@ -97,7 +96,6 @@ class EditGroupFormState extends State<EditGroupForm> {
         }
       }
     });
-
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -126,7 +124,8 @@ class EditGroupFormState extends State<EditGroupForm> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
         child: SingleChildScrollView(
-          child: (FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)
+          child: (FlavorConfig.appFlavor == Flavor.APP ||
+                  FlavorConfig.appFlavor == Flavor.SEVA_DEV)
               ? createSevaX
               : createTimebankHumanityFirst,
         ),
@@ -146,7 +145,7 @@ class EditGroupFormState extends State<EditGroupForm> {
             child: Column(
               children: <Widget>[
                 TimebankAvatar(
-                  photoUrl: widget.timebankModel.photoUrl ?? "",
+                  photoUrl: widget.timebankModel.photoUrl ?? null,
                 ),
                 SizedBox(height: 5),
                 Text(
@@ -161,6 +160,7 @@ class EditGroupFormState extends State<EditGroupForm> {
           )),
           headingText('Name your group', true),
           TextFormField(
+            textInputAction: TextInputAction.done,
             controller: searchTextController,
             decoration: InputDecoration(
               errorText: errTxt,
@@ -181,6 +181,7 @@ class EditGroupFormState extends State<EditGroupForm> {
             decoration: InputDecoration(
               hintText: 'Ex: A bit more about your group',
             ),
+            textInputAction: TextInputAction.done,
             keyboardType: TextInputType.multiline,
             maxLines: null,
             validator: (value) {
@@ -188,7 +189,6 @@ class EditGroupFormState extends State<EditGroupForm> {
                 return 'Please enter some text';
               }
               widget.timebankModel.missionStatement = value;
-              return "";
             },
           ),
           Row(
@@ -250,7 +250,8 @@ class EditGroupFormState extends State<EditGroupForm> {
               alignment: Alignment.center,
               child: RaisedButton(
                 onPressed: () {
-                  if (_formKey.currentState.validate() && (errTxt == null || errTxt == "")) {
+                  if (_formKey.currentState.validate() &&
+                      (errTxt == null || errTxt == "")) {
                     updateGroupDetails();
                   }
                 },
@@ -355,7 +356,6 @@ class EditGroupFormState extends State<EditGroupForm> {
             }
             widget.timebankModel.missionStatement = value;
             return "";
-
           },
         ),
         Text(''),
