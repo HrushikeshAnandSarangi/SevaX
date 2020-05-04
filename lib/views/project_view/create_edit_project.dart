@@ -380,8 +380,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 return null;
               },
               maxLength: 15,
-              initialValue:
-                  widget.isCreateProject ? "" : projectModel.phoneNumber ?? "",
+              initialValue: widget.isCreateProject
+                  ? ""
+                  : projectModel.phoneNumber.replaceAll('+', '') ?? "",
               decoration: InputDecoration(
 //                icon: Icon(
 //                  Icons.add,
