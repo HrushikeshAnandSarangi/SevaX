@@ -564,7 +564,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         projectModel.endTime =
                             OfferDurationWidgetState.endtimestamp;
 
-                        projectModel.photoUrl = globals.projectsAvtaarURL;
+                        if (globals.projectsAvtaarURL != null) {
+                          projectModel.photoUrl = globals.projectsAvtaarURL;
+                        }
 
                         if (projectModel.startTime == 0 ||
                             projectModel.endTime == 0) {
