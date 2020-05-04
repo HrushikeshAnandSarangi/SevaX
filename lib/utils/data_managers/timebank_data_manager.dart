@@ -164,8 +164,7 @@ Stream<List<TimebankModel>> getTimebanksForAdmins(
   );
 }
 
-Stream<List<CommunityModel>> getNearCommunitiesListStream(
-    {String radius}) async* {
+Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
   // LocationData pos = await location.getLocation();
   // double lat = pos.latitude;
   // double lng = pos.longitude;
@@ -183,7 +182,8 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream(
   } on Exception {
     print("Exception raised while getting radius ");
   }
-  print("radius is fetched from remote config near community list stream${radius.toDouble()}");
+  print(
+      "radius is fetched from remote config near community list stream ${radius.toDouble()}");
 
   GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
   var query = Firestore.instance.collection('communities');
