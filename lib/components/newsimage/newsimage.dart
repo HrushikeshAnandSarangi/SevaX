@@ -231,7 +231,8 @@ class NewsImageState extends State<NewsImage>
       }
       Location().getLocation().then((onValue) {
         print("Location1:$onValue");
-        GeoFirePoint location = GeoFirePoint(onValue.latitude, onValue.longitude);
+        GeoFirePoint location =
+            GeoFirePoint(onValue.latitude, onValue.longitude);
         geoFirePointLocationCallback(location);
         LocationUtility()
             .getFormattedAddress(

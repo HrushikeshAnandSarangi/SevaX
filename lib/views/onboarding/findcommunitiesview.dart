@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
@@ -48,14 +48,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   @override
   void initState() {
+    gpsCheck;
+
     super.initState();
     String _searchText = "";
-//    try {
-//      radius = json.decode(AppConfig.remoteConfig.getString('radius'));
-//    } on Exception {
-//      print("Exception raised while getting radius");
-//    }
-//    print(' radius $radius');
 
     final _textUpdates = StreamController<String>();
     searchTextController
@@ -257,7 +253,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 //      print('near by called');
 //
 //      return nearByTimebanks();
-//    }
 
     if (searchTextController.text.trim().length < 1) {
       //  print('Search requires minimum 1 character');
@@ -390,18 +385,35 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     );
   }
 
-  void getGps() async {
-    bool isLocationEnabled = await Geolocator().isLocationServiceEnabled();
-    if (isLocationEnabled) {
-      print(' gps enabled');
-    } else {
-      print('gps disabled');
+  void get gpsCheck async {
+    Location templocation = new Location();
+    bool _serviceEnabled;
+
+    _serviceEnabled = await templocation.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await templocation.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
     }
+//  } on PlatformException catch (e) {
+//  print(e);
+//  if (e.code == 'PERMISSION_DENIED') {
+//  //error = e.message;
+//  } else if (e.code == 'SERVICE_STATUS_ERROR') {
+//  //error = e.message;
+//  }
+//  }
+
+//    bool isLocationEnabled = await Geolocator().isLocationServiceEnabled();
+//    if (isLocationEnabled) {
+//      print(' gps enabled');
+//    } else {
+//      print('gps disabled');
+//    }
   }
 
   Widget nearByTimebanks() {
-    //  getGps();
-
     return StreamBuilder<List<CommunityModel>>(
         stream: FirestoreManager.getNearCommunitiesListStream(),
         builder: (context, snapshot) {
