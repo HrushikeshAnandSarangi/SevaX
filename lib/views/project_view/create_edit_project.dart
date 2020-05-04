@@ -362,11 +362,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               //  validator: _validateEmailId,
               keyboardType: TextInputType.number,
               onSaved: (value) {
-                if( projectModel.phoneNumber.startsWith("+") ){
+//                if( projectModel.phoneNumber.startsWith("+") ){
                   projectModel.phoneNumber = value;
-                }else{
-                  projectModel.phoneNumber = '+' + value;
-                }
+//                }else{
+//                  projectModel.phoneNumber = '+' + value;
+//                }
               },
               onChanged: (value) {
                 if( projectModel.phoneNumber.startsWith("+") ){
@@ -378,14 +378,15 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Mobile Number cannot be empty.';
-                } else {
-                  projectModel.phoneNumber = '+' + value;
+                }
+                else {
+                  projectModel.phoneNumber = value;
                 }
                 return null;
               },
               maxLength: 15,
               initialValue:
-                  widget.isCreateProject ? "" : "+"+projectModel.phoneNumber ?? "",
+                  widget.isCreateProject ? "" : projectModel.phoneNumber ?? "",
               decoration: InputDecoration(
                 prefix: Icon(
                   Icons.add,
