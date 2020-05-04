@@ -45,10 +45,17 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   static const String JOINED = "Joined";
   bool showAppbar = false;
   String nearTimebankText = 'Timebanks near you';
+  var radius = 10;
+
   @override
   void initState() {
     super.initState();
     String _searchText = "";
+    try {
+      radius = json.decode(AppConfig.remoteConfig.getString('radius'));
+    } on Exception {
+      print("Exception raised while getting radius");
+    }
     final _textUpdates = StreamController<String>();
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
@@ -244,10 +251,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     );
   }
 
-  Widget nearby() {
-    return nearByTimebanks();
-  }
-
   Widget buildList() {
 //    if (searchTextController.text.length == 0) {
 //      print('near by called');
@@ -305,7 +308,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               }
             }
           } else if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
+            return Text('Please try again later');
           }
           /*else if(snapshot.data==null){
             return Expanded(
@@ -387,22 +390,18 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   }
 
   Widget nearByTimebanks() {
-    var radius = 10;
-    try {
-      radius = json.decode(AppConfig.remoteConfig.getString('radius'));
-    } on Exception {
-      print("Exception raised while getting radius");
-    }
-
     return StreamBuilder<List<CommunityModel>>(
         stream: FirestoreManager.getNearCommunitiesListStream(
             radius: radius.toString()),
         builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
           if (snapshot.hasData) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else {
-              //  print(' near by comminities ${snapshot.data}');
+              //  print('near by comminities ${snapshot.data}');
               if (snapshot.data.length != 0) {
                 List<CommunityModel> communityList = snapshot.data;
                 return ListView.builder(
