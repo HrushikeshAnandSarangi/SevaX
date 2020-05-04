@@ -2,9 +2,12 @@
 import 'package:flutter/material.dart';
 
 class TimePicker extends StatefulWidget {
-  final void Function(int hour, int minute) onTimeSelected;
+  final int hour;
+  final int minute;
+  final String ispm;
+  final void Function(int hour, int minute, String ispm) onTimeSelected;
 
-  TimePicker({this.onTimeSelected});
+  TimePicker({this.onTimeSelected, this.hour, this.minute, this.ispm});
 
   @override
   TimePickerState createState() => TimePickerState();
@@ -12,8 +15,8 @@ class TimePicker extends StatefulWidget {
 
 class TimePickerState extends State<TimePicker> {
   int hour = 0, minute = 0;
+  String ispm = 'AM';
   PageController _pageController;
-  bool ispm = false;
   @override
   void initState() {
     super.initState();
@@ -21,17 +24,22 @@ class TimePickerState extends State<TimePicker> {
 
   @override
   Widget build(BuildContext context) {
+    hour =  widget.hour > 0 ? widget.hour : 0;
+    minute =  widget.minute > 0 ? widget.minute : 0;
+    ispm = widget.ispm;
     return Container(
       height: 130,
       child: Row(
         children: <Widget>[
           Expanded(
-            child: DataScrollPicker(hourList, (value) {
+            child: DataScrollPicker(hourList, hour.toString(), (value) {
+              if (ispm == 'PM') (int.parse(value) + 12) >= 24 ?   int.parse(value) == 12 ? hour = int.parse(value): hour = int.parse(value): hour = int.parse(value) + 12;
+              if (ispm == 'AM') (int.parse(value) - 12) <= 0 ?   int.parse(value) == 12 ? hour = 0 : hour = int.parse(value): hour = int.parse(value) - 12;
               setState(() {
-                hour = int.parse(value);
-                if (ispm) hour = hour + 12;
+                hour = hour;
+                ispm;
               });
-              widget.onTimeSelected(hour, minute);
+              widget.onTimeSelected(hour, minute, ispm);
             }),
           ),
           Container(
@@ -48,38 +56,22 @@ class TimePickerState extends State<TimePicker> {
             ),
           ),
           Expanded(
-            child: DataScrollPicker(minuteList, (value) {
+            child: DataScrollPicker(minuteList, minute.toString(), (value) {
               setState(() {
                 minute = int.parse(value);
               });
-              widget.onTimeSelected(hour, minute);
+              widget.onTimeSelected(hour, int.parse(value), ispm);
             }),
           ),
           Expanded(
-            child: DataScrollPicker(amPmList, (value) {
+            child: DataScrollPicker(amPmList, ispm, (value) {
+              if (value == 'PM') (hour + 12) > 23 ? hour: hour = hour + 12;
+              if (value == 'AM') (hour - 12) < 0 ?  hour: hour = hour - 12;
               setState(() {
-                switch (value) {
-                  case 'PM':
-                    if (ispm == false) {
-                      ispm = true;
-                      hour = hour + 12;
-                      if (hour == 24) {
-                        hour = 0;
-                        break;
-                      }
-                      if (hour > 24) break;
-                    }
-                    break;
-
-                  case 'AM':
-                    if (ispm == true) {
-                      hour = hour - 12;
-                      ispm = false;
-                    }
-                    break;
-                }
+                hour = hour;
+                ispm = value;
               });
-              widget.onTimeSelected(hour, minute);
+              widget.onTimeSelected(hour, minute, value);
             }),
           ),
         ],
@@ -89,7 +81,7 @@ class TimePickerState extends State<TimePicker> {
 
   List<String> get hourList {
     return [
-      //'0',
+      '0',
       '1',
       '2',
       '3',
@@ -101,18 +93,7 @@ class TimePickerState extends State<TimePicker> {
       '9',
       '10',
       '11',
-      '12',
-      // '13',
-      // '14',
-      // '15',
-      // '16',
-      // '17',
-      // '18',
-      // '19',
-      // '20',
-      // '21',
-      // '22',
-      // '23',
+      '12'
     ];
   }
 
@@ -128,9 +109,11 @@ class TimePickerState extends State<TimePicker> {
 class DataScrollPicker extends StatefulWidget {
   final List<String> dataList;
   final void Function(String value) onValueSelected;
+  final String presetvalue;
 
   DataScrollPicker(
     this.dataList,
+    this.presetvalue,
     this.onValueSelected,
   );
 
@@ -145,15 +128,26 @@ class _DataScrollPickerState extends State<DataScrollPicker> {
   @override
   void initState() {
     super.initState();
-    _selectedIndex = 0;
-    _pageController = PageController(
-      initialPage: 0,
-      viewportFraction: 0.4,
-    );
+  }
+
+  findSelectedIndex(datalist, presetvalue) {
+    var temp = widget.dataList.indexOf(presetvalue);
+    if (temp != null && temp != -1) {
+      return temp;
+    } else {
+      return 0;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    _selectedIndex = findSelectedIndex(widget.dataList, widget.presetvalue);
+    _pageController = PageController(
+      initialPage: _selectedIndex,
+      viewportFraction: 0.4,
+    );
+    Future.delayed(Duration.zero, () {
+    _pageController.jumpToPage(_selectedIndex > -1 ? _selectedIndex : 0);});
     return Container(
       height: 110,
       child: PageView(

@@ -25,7 +25,7 @@ class CalendarPickerState extends State<CalendarPicker> {
   final GlobalKey<CalendarWidgetState> _calendarState = GlobalKey();
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
-  int timehour = 0, timeminute = 0;
+//  int timehour = DateTime.now().hour, timeminute = DateTime.now().minute;
 
   SelectionType selectionType;
 
@@ -66,7 +66,8 @@ class CalendarPickerState extends State<CalendarPicker> {
                 child: DateTimeSelector(
                   title: 'Start',
                   onPressed: () {
-                    setState(() => selectionType = SelectionType.START_DATE);
+                    setState(() => {
+                    selectionType = SelectionType.START_DATE});
                     log("start date : $startDate");
                   },
                   dateTime: startDate,
@@ -77,7 +78,7 @@ class CalendarPickerState extends State<CalendarPicker> {
                 child: DateTimeSelector(
                   title: 'End',
                   onPressed: () {
-                    setState(() => selectionType = SelectionType.END_DATE);
+                    setState(() => {selectionType = SelectionType.END_DATE});
                     log("end date : $endDate");
                   },
                   dateTime: endDate,
@@ -97,11 +98,11 @@ class CalendarPickerState extends State<CalendarPicker> {
                     if (selectionType == SelectionType.START_DATE) {
                       startDate = DateTime(
                           callbackDate.year, callbackDate.month, callbackDate.day,
-                          timehour, timeminute);
+                          startDate.hour, startDate.minute);
                       if (endDate.millisecondsSinceEpoch <  startDate.millisecondsSinceEpoch) {
                         endDate = DateTime(
                             startDate.year, startDate.month, startDate.day,
-                            timehour + 1, timeminute);
+                            endDate.hour + 1, endDate.minute);
                       }
                     }
                     else
@@ -126,18 +127,19 @@ class CalendarPickerState extends State<CalendarPicker> {
                       Expanded(child: Container()),
                       Expanded(
                         child: TimePicker(
-                          onTimeSelected: (hour, minute) {
+                          hour: selectionType == SelectionType.START_DATE ?  startDate.hour == 12 ?  startDate.hour : startDate.hour % 12 : startDate.millisecondsSinceEpoch < endDate.millisecondsSinceEpoch ? endDate.hour % 12: startDate.hour %12,
+                          minute: selectionType == SelectionType.START_DATE ? (((startDate.minute/15).round() * 15) % 60) : ((endDate.minute/15).round() * 15) % 60,
+                          ispm: selectionType == SelectionType.START_DATE ?  startDate.hour >= 12 ? "PM": "AM" : startDate.millisecondsSinceEpoch < endDate.millisecondsSinceEpoch ? endDate.hour >= 12 ? "PM": "AM": startDate.hour >= 12 ? "PM": "AM",
+                          onTimeSelected: (hour, minute, ispm) {
                             setState(() {
-                              timehour = hour;
-                              timeminute = minute;
                               if (selectionType == SelectionType.START_DATE) {
                                 DateTime d1 = startDate;
                                 startDate = DateTime(d1.year, d1.month, d1.day,
-                                    timehour, timeminute);
+                                    hour, minute);
                               } else {
                                 DateTime d1 = endDate;
                                 endDate = DateTime(d1.year, d1.month, d1.day,
-                                    timehour, timeminute);
+                                    hour, minute);
                               }
                             });
                           },
@@ -154,13 +156,40 @@ class CalendarPickerState extends State<CalendarPicker> {
           getBottomButton(context, () {
 // DateTime startDate = _calendarState.currentState.startDate;
 // DateTime endDate = _calendarState.currentState.endDate;
-
-            Navigator.pop(context, [startDate, endDate]);
+            print('check this');
+            print(endDate.millisecondsSinceEpoch);
+            print(startDate.millisecondsSinceEpoch);
+            if (endDate.millisecondsSinceEpoch <  startDate.millisecondsSinceEpoch) {
+              _dateInvalidAlert(context);
+            } else {
+              Navigator.pop(context, [startDate, endDate]);
+            }
             //TimePickerState.hour = 0;
             //TimePickerState.minute = 0;
           }, 'Done'),
         ],
       ),
+    );
+  }
+  void _dateInvalidAlert(context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Date Selection issue"),
+          content: Container(
+            child: Text('End Date cannot be before Start Date '),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
