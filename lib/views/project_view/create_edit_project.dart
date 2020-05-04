@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:location/location.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/projects_avtaar.dart';
@@ -151,10 +150,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   setState(() {
                     print("$sharedValue -- $val");
                     if (val == 0) {
-                      print("TTTTTTTTTtimebank proj");
                       projectModel.mode = 'Timebank';
                     } else {
-                      print("pppppppppersonal proj");
                       projectModel.mode = 'Personal';
                     }
                     sharedValue = val;
@@ -361,6 +358,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               cursorColor: Colors.black54,
               focusNode: focusNodes[3],
               textInputAction: TextInputAction.done,
+
               //  validator: _validateEmailId,
               keyboardType: TextInputType.number,
               onSaved: (value) {
@@ -369,6 +367,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               onChanged: (value) {
                 projectModel.phoneNumber = '+' + value;
               },
+              inputFormatters: [
+                new WhitelistingTextInputFormatter(RegExp("[0-9]")),
+              ],
 
               validator: (value) {
                 if (value.isEmpty) {
@@ -382,6 +383,16 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               initialValue:
                   widget.isCreateProject ? "" : projectModel.phoneNumber ?? "",
               decoration: InputDecoration(
+//                icon: Icon(
+//                  Icons.add,
+//                  color: Colors.black,
+//                  size: 13,
+//                ),
+//                prefixIcon: Icon(
+//                  Icons.add,
+//                  color: Colors.black,
+//                  size: 13,
+//                ),
                 prefix: Icon(
                   Icons.add,
                   color: Colors.black,
@@ -416,7 +427,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 icon: Icon(Icons.add_location),
                 label: Container(
                   child: Text(
-                    selectedAddress == '' || selectedAddress==null
+                    selectedAddress == '' || selectedAddress == null
                         ? 'Add Location'
                         : selectedAddress ?? "",
                     overflow: TextOverflow.ellipsis,
@@ -620,7 +631,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 
   bool hasRegisteredLocation() {
     print("Location ---========================= ${projectModel.address}");
-    return location != null || projectModel.address !=null;
+    return location != null || projectModel.address != null;
   }
 
   Future<void> showDialogForTitle({String dialogTitle}) async {
