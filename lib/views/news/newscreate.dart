@@ -485,9 +485,14 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   Future<void> fetchPosts(String url) async {
     print("started fetch");
     // url = "https://en.wikipedia.org/wiki/The_War_on_Normal_People";
-    final response = await http.get(
-      url,
-    );
+    var response;
+    try {
+      response = await http.get(
+        url,
+      );
+    } catch (e) {
+      return;
+    }
 
     print("Ststus recived from web scraping -> ${response.statusCode}");
     if (response.statusCode != 200) {
