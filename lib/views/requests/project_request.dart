@@ -26,9 +26,8 @@ class ProjectRequests extends StatefulWidget {
       {@required this.timebankId,
       @required this.projectModel,
       @required this.timebankModel});
-  State<StatefulWidget> createState() {
-    return RequestsState();
-  }
+//  State<StatefulWidget> createState() {
+  RequestsState createState() => RequestsState();
 }
 
 // Create a Form Widget

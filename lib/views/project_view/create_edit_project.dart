@@ -151,10 +151,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   setState(() {
                     print("$sharedValue -- $val");
                     if (val == 0) {
-                      print("TTTTTTTTTtimebank proj");
                       projectModel.mode = 'Timebank';
                     } else {
-                      print("pppppppppersonal proj");
                       projectModel.mode = 'Personal';
                     }
                     sharedValue = val;
@@ -364,12 +362,19 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               //  validator: _validateEmailId,
               keyboardType: TextInputType.number,
               onSaved: (value) {
-                projectModel.phoneNumber = '+' + value;
+                if( projectModel.phoneNumber.startsWith("+") ){
+                  projectModel.phoneNumber = value;
+                }else{
+                  projectModel.phoneNumber = '+' + value;
+                }
               },
               onChanged: (value) {
-                projectModel.phoneNumber = '+' + value;
+                if( projectModel.phoneNumber.startsWith("+") ){
+                  projectModel.phoneNumber = value;
+                }else{
+                  projectModel.phoneNumber = '+' + value;
+                }
               },
-
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Mobile Number cannot be empty.';
@@ -380,7 +385,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               },
               maxLength: 15,
               initialValue:
-                  widget.isCreateProject ? "" : projectModel.phoneNumber ?? "",
+                  widget.isCreateProject ? "" : "+"+projectModel.phoneNumber ?? "",
               decoration: InputDecoration(
                 prefix: Icon(
                   Icons.add,
