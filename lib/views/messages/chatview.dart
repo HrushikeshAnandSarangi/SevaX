@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,7 @@ class ChatView extends StatefulWidget {
 }
 
 class _ChatViewState extends State<ChatView> {
+  Map<String, NewsModel> sharedPosts;
   //UserModel user;
   UserModel loggedInUser;
   UserModel partnerUser;
@@ -54,8 +56,10 @@ class _ChatViewState extends State<ChatView> {
   String loggedInEmail;
   final TextEditingController textcontroller = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  ScrollController scrollcontroller = ScrollController();
+  ScrollController _scrollController;
   Future _fetchAppBarData;
+  String messageContent;
+  bool _isOnTop = true;
 
   @override
   void didChangeDependencies() {
@@ -74,6 +78,9 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   void initState() {
+    sharedPosts = HashMap();
+
+    _scrollController = ScrollController();
     Future.delayed(Duration.zero, () {
       updateMessagingReadStatus(
         chat: widget.chatModel,
@@ -92,12 +99,21 @@ class _ChatViewState extends State<ChatView> {
       textcontroller.text =
           'I am rejecting your task completion request because ';
     if (widget.isFromShare == null) widget.isFromShare = false;
-    if (widget.isFromShare) textcontroller.text = widget.news.id;
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      Timer(Duration(milliseconds: 100), () {
-        scrollcontroller.jumpTo(scrollcontroller.position.maxScrollExtent);
-      });
-    });
+    //here is we keep id
+    if (widget.isFromShare) {
+      textcontroller.text = widget.news.id;
+      print("Priniting new message ");
+// widget.chatModel.user1 ==
+
+      pushNewMessage(
+        communityId: widget.chatModel.communityId,
+        loggedInEmailId: widget.useremail == widget.chatModel.user1
+            ? widget.chatModel.user2
+            : widget.chatModel.user1,
+        messageContent: widget.news.id,
+      );
+    }
+    _scrollToBottom();
     super.initState();
     getCurrentLocation();
   }
@@ -240,12 +256,15 @@ class _ChatViewState extends State<ChatView> {
               builder: (BuildContext context,
                   AsyncSnapshot<List<MessageModel>> chatListSnapshot) {
                 if (chatListSnapshot.hasError) {
+                  _scrollToBottom();
                   return new Text('Error: ${chatListSnapshot.error}');
                 }
 
+                if (!chatListSnapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
                 switch (chatListSnapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return Center(child: CircularProgressIndicator());
                   default:
                     print("Inside chat view");
                     List<MessageModel> chatModelList = chatListSnapshot.data;
@@ -263,16 +282,18 @@ class _ChatViewState extends State<ChatView> {
                       userEmail: widget.useremail,
                     );
 
+                    List<Widget> messages = chatModelList.map(
+                      (MessageModel chatModel) {
+                        return getChatListView(
+                            chatModel, loggedInEmail, widget.useremail);
+                      },
+                    ).toList();
+
                     return Container(
                       padding: EdgeInsets.only(left: 10.0, right: 10.0),
                       child: ListView(
-                        controller: scrollcontroller,
-                        children: chatModelList.map(
-                          (MessageModel chatModel) {
-                            return getChatListView(
-                                chatModel, loggedInEmail, widget.useremail);
-                          },
-                        ).toList(),
+                        controller: _scrollController,
+                        children: <Widget>[...messages],
                       ),
                     );
                 }
@@ -296,7 +317,8 @@ class _ChatViewState extends State<ChatView> {
                         if (value.isEmpty) {
                           return 'Please type message';
                         }
-                        messageModel.message = value;
+                        messageContent = value;
+
                         setState(() {});
                       },
                     ),
@@ -316,46 +338,14 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
                       // This statment clears the soft delete parameter and message becomes visible to both the parties
-                      widget.chatModel.softDeletedBy = [];
+                      // pushNewMessage(messageContent);
 
-                      widget.chatModel.communityId =
-                          SevaCore.of(context).loggedInUser.currentCommunity;
-
-                      String loggedInEmailId =
-                          SevaCore.of(context).loggedInUser.email;
-
-                      widget.chatModel.communityId =
-                          SevaCore.of(context).loggedInUser.currentCommunity;
-
-                      messageModel.fromId = loggedInEmailId;
-                      messageModel.toId = widget.useremail;
-                      messageModel.timestamp =
-                          DateTime.now().millisecondsSinceEpoch;
-                      widget.chatModel.lastMessage = messageModel.message;
-
-                      createmessage(
-                        messagemodel: messageModel,
-                        chatmodel: widget.chatModel,
+                      pushNewMessage(
+                        messageContent: messageContent,
+                        communityId: loggedInUser.currentCommunity,
+                        loggedInEmailId: loggedInUser.email,
                       );
 
-                      updateChat(
-                        chat: widget.chatModel,
-                        email: loggedInEmailId,
-                      ).then((onVlaue) {
-                        //
-                        updateMessagingReadStatus(
-                            chat: widget.chatModel,
-                            email: loggedInEmailId,
-                            userEmail: widget.useremail);
-                      });
-
-                      textcontroller.clear();
-                      SchedulerBinding.instance.addPostFrameCallback((_) {
-                        Timer(Duration(milliseconds: 100), () {
-                          scrollcontroller.jumpTo(
-                              scrollcontroller.position.maxScrollExtent);
-                        });
-                      });
                       //FocusScope.of(context).requestFocus(FocusNode());
                     }
                   },
@@ -368,72 +358,101 @@ class _ChatViewState extends State<ChatView> {
     );
   }
 
+  _scrollToBottom() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Timer(Duration(milliseconds: 100), () {
+        try {
+          _scrollController.jumpTo(
+            _scrollController.position.maxScrollExtent,
+          );
+        } catch (e) {
+          print("Scroller not attached");
+        }
+      });
+    });
+  }
+
+  void pushNewMessage({
+    String messageContent,
+    String loggedInEmailId,
+    String communityId,
+  }) {
+    widget.chatModel.softDeletedBy = [];
+
+    // String loggedInEmailId = SevaCore.of(context).loggedInUser.email;
+    // widget.chatModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
+    // widget.chatModel.communityId = "162cefc3-e1eb-4d8a-b297-fdf4e8176686";
+    widget.chatModel.communityId = communityId;
+    messageModel.fromId = loggedInEmailId;
+    messageModel.toId = widget.useremail;
+    messageModel.message = messageContent;
+    messageModel.timestamp = DateTime.now().millisecondsSinceEpoch;
+    widget.chatModel.lastMessage = messageModel.message;
+
+    // RegExp exp = RegExp(
+    //     r'[a-zA-Z][a-zA-Z0-9_.%$&]*[@][a-zA-Z0-9]*[.][a-zA-Z.]*[*][0-9]{13,}');
+    // if (exp.hasMatch(lastMessage)) {
+    //   this.lastMessage = "Shared a feed";
+    // }
+
+    createmessage(
+      messagemodel: messageModel,
+      chatmodel: widget.chatModel,
+    );
+
+    updateChat(
+      chat: widget.chatModel,
+      email: loggedInEmailId,
+    ).then((onVlaue) {
+      //
+      updateMessagingReadStatus(
+        chat: widget.chatModel,
+        email: loggedInEmailId,
+        userEmail: widget.useremail,
+      );
+    });
+
+    textcontroller.clear();
+    _scrollToBottom();
+  }
+
+  Widget _getSharedNewDetails({MessageModel messageModel}) {
+    return FutureBuilder<Object>(
+        future: FirestoreManager.getNewsForId(messageModel.message),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return new Text('Couldn\'t load the post!');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container();
+          }
+
+          NewsModel news = snapshot.data;
+          sharedPosts[messageModel.message] = news;
+
+          return getSharedNewsCard(
+            loggedinEmail: loggedInUser.email,
+            news: news,
+            loggedInUser: loggedInUser,
+            messageModel: messageModel,
+          );
+        });
+  }
+
   Widget getChatListView(
       MessageModel messageModel, String loggedinEmail, String chatUserEmail) {
     // if (messageModel.fromId == loggedinEmail) {
     RegExp exp = RegExp(
         r'[a-zA-Z][a-zA-Z0-9_.%$&]*[@][a-zA-Z0-9]*[.][a-zA-Z.]*[*][0-9]{13,}');
     if (exp.hasMatch(messageModel.message)) {
-      return FutureBuilder<Object>(
-          future: FirestoreManager.getNewsForId(messageModel.message),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return new Text('Error: ${snapshot.error}');
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return messageModel.fromId == loggedinEmail
-                  ? sendmessageShimmer
-                  : receivemessageShimmer;
-            }
-            NewsModel news = snapshot.data;
-
-            return Container(
-              padding: messageModel.fromId == loggedinEmail
-                  ? EdgeInsets.fromLTRB(
-                      MediaQuery.of(context).size.width / 10, 5, 0, 5)
-                  : EdgeInsets.fromLTRB(
-                      0, 5, MediaQuery.of(context).size.width / 10, 5),
-              alignment: messageModel.fromId == loggedinEmail
-                  ? Alignment.topRight
-                  : Alignment.topLeft,
-              child: Wrap(
-                children: <Widget>[
-                  Container(
-                    decoration: messageModel.fromId == loggedinEmail
-                        ? myBoxDecorationsend()
-                        : myBoxDecorationreceive(),
-                    padding: messageModel.fromId == loggedinEmail &&
-                            news != null
-                        ? EdgeInsets.fromLTRB(0, 0, 5, 2)
-                        : messageModel.fromId != loggedinEmail && news != null
-                            ? EdgeInsets.fromLTRB(0, 0, 0, 2)
-                            : EdgeInsets.fromLTRB(10, 5, 10, 5),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        news != null
-                            ? getNewsCard(news)
-                            : Text(
-                                messageModel.message,
-                                style: TextStyle(fontWeight: FontWeight.w500),
-                              ),
-                        Text(
-                          DateFormat('h:mm a').format(
-                            getDateTimeAccToUserTimezone(
-                                dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                    messageModel.timestamp),
-                                timezoneAbb: loggedInUser.timezone),
-                          ),
-                          style:
-                              TextStyle(fontSize: 10, color: Colors.grey[700]),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          });
+      return sharedPosts.containsKey(messageModel.message)
+          ? getSharedNewsCard(
+              loggedinEmail: loggedInUser.email,
+              news: sharedPosts[messageModel.message],
+              loggedInUser: loggedInUser,
+              messageModel: messageModel,
+            )
+          : _getSharedNewDetails(messageModel: messageModel);
     } else
       return Container(
         padding: messageModel.fromId == loggedinEmail
@@ -477,6 +496,57 @@ class _ChatViewState extends State<ChatView> {
       );
   }
 
+  Widget getSharedNewsCard({
+    String loggedinEmail,
+    NewsModel news,
+    UserModel loggedInUser,
+    MessageModel messageModel,
+  }) {
+    return Container(
+      padding: messageModel.fromId == loggedinEmail
+          ? EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 10, 5, 0, 5)
+          : EdgeInsets.fromLTRB(
+              0, 5, MediaQuery.of(context).size.width / 10, 5),
+      alignment: messageModel.fromId == loggedinEmail
+          ? Alignment.topRight
+          : Alignment.topLeft,
+      child: Wrap(
+        children: <Widget>[
+          Container(
+            decoration: messageModel.fromId == loggedinEmail
+                ? myBoxDecorationsend()
+                : myBoxDecorationreceive(),
+            padding: messageModel.fromId == loggedinEmail && news != null
+                ? EdgeInsets.fromLTRB(0, 0, 5, 2)
+                : messageModel.fromId != loggedinEmail && news != null
+                    ? EdgeInsets.fromLTRB(0, 0, 0, 2)
+                    : EdgeInsets.fromLTRB(10, 5, 10, 5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                news != null
+                    ? getNewsCard(news)
+                    : Text(
+                        messageModel.message,
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                Text(
+                  DateFormat('h:mm a').format(
+                    getDateTimeAccToUserTimezone(
+                        dateTime: DateTime.fromMillisecondsSinceEpoch(
+                            messageModel.timestamp),
+                        timezoneAbb: loggedInUser.timezone),
+                  ),
+                  style: TextStyle(fontSize: 10, color: Colors.grey[700]),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<String> blockMemberDialogView(BuildContext viewContext) async {
     return showDialog(
       context: viewContext,
@@ -513,6 +583,12 @@ class _ChatViewState extends State<ChatView> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    sharedPosts.clear();
   }
 
   bool isValidEmail(String email) {
@@ -647,9 +723,10 @@ class _ChatViewState extends State<ChatView> {
       color: Colors.indigo[200],
       border: Border.all(width: 0.1),
       borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(8),
-          bottomRight: Radius.circular(15),
-          topLeft: Radius.circular(8)),
+        bottomLeft: Radius.circular(8),
+        bottomRight: Radius.circular(15),
+        topLeft: Radius.circular(8),
+      ),
     );
   }
 

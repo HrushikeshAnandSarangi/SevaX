@@ -237,11 +237,16 @@ class _ChatListViewState extends State<ChatListView> {
 
   Widget getMessageListView(ChatModel chatModel, BuildContext parentContext) {
     // print("------------------------->" + chatModel.toString());
+    RegExp feedsExpression = RegExp(
+        r'[a-zA-Z][a-zA-Z0-9_.%$&]*[@][a-zA-Z0-9]*[.][a-zA-Z.]*[*][0-9]{13,}');
     String lastmessage;
     if (chatModel.lastMessage == null) {
       lastmessage = '';
-    } else
+    } else if (feedsExpression.hasMatch(chatModel.lastMessage)) {
+      lastmessage = "Shared a post";
+    } else {
       lastmessage = chatModel.lastMessage;
+    }
 
     var userEmail = SevaCore.of(context).loggedInUser.email;
 
