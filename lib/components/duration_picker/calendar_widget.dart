@@ -99,8 +99,8 @@ class CalendarWidgetState extends State<CalendarWidget> {
                               break;
                             case SelectionType.END_DATE:
                               if (isPastDay(dayNumber)) return false;
-                              if (getSelectedDate(dayNumber)
-                                  .isBefore(startDate)) return false;
+//                              if (getSelectedDate(dayNumber)
+//                                  .isBefore(startDate)) return false;
                               setState(() {
                                 endDate = getSelectedDate(dayNumber);
 
