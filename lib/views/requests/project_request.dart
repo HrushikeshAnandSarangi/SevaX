@@ -1,17 +1,22 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/resources/community_list_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 
 import '../../flavor_config.dart';
 import '../../new_baseline/models/project_model.dart';
@@ -492,16 +497,43 @@ class ProjectRequestListState extends State<ProjectRequestList> {
       width: MediaQuery.of(context).size.width - 20,
       child: Row(
         children: <Widget>[
-          Column(
-            children: <Widget>[
-              Text(
-                "Add request",
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
+//          Column(
+//            children: <Widget>[
+//              Text(
+//                "Add request",
+//                style: TextStyle(
+//                  fontWeight: FontWeight.w500,
+//                  fontSize: 20,
+//                ),
+//              ),
+//            ],
+//          ),
+          ButtonTheme(
+            minWidth: 110.0,
+            height: 50.0,
+            buttonColor: Color.fromRGBO(234, 135, 137, 1.0),
+            child: Stack(
+              children: [
+                FlatButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Add Requests',
+                    style: (TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 18)),
+                  ),
                 ),
-              ),
-            ],
+                Positioned(
+                  // will be positioned in the top right of the container
+                  top: -10,
+                  right: -10,
+                  child: infoButton(
+                    context: context,
+                    key: GlobalKey(),
+                    type: InfoType.REQUESTS,
+                  ),
+                ),
+              ],
+            ),
           ),
           Container(
             margin: EdgeInsets.only(left: 10),
@@ -519,7 +551,37 @@ class ProjectRequestListState extends State<ProjectRequestList> {
             ),
             onTap: () => createProjectRequest(),
           ),
+          Spacer(),
+          IconButton(
+            icon: Image.asset(
+              'lib/assets/images/help.png',
+            ),
+            color: FlavorConfig.values.theme.primaryColor,
+            iconSize: 24,
+            onPressed: showRequestsWebPage,
+          ),
         ],
+      ),
+    );
+  }
+
+  void showRequestsWebPage() {
+    var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
+    navigateToWebView(
+      aboutMode: AboutMode(
+          title: "Requests Help", urlToHit: dynamicLinks['requestsInfoLink']),
+      context: context,
+    );
+  }
+
+  void navigateToWebView({
+    BuildContext context,
+    AboutMode aboutMode,
+  }) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SevaWebView(aboutMode),
       ),
     );
   }
