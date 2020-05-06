@@ -524,34 +524,6 @@ class DiscussionListState extends State<DiscussionList> {
               Expanded(
                 child: Container(),
               ),
-              Container(
-                width: 120,
-                child: CupertinoSegmentedControl<int>(
-                  children: logoWidgets,
-                  padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                  borderColor: Colors.grey,
-                  selectedColor: Theme.of(context).primaryColor,
-                  groupValue: sharedValue,
-                  onValueChanged: (int val) {
-                    print(val);
-                    if (val != sharedValue) {
-                      if (val == 0) {
-                        setState(() {
-                          isNearMe = false;
-                        });
-                      } else {
-                        setState(() {
-                          isNearMe = true;
-                        });
-                      }
-                      setState(() {
-                        sharedValue = val;
-                      });
-                    }
-                  },
-                  //groupValue: sharedValue,
-                ),
-              ),
               Padding(
                 padding: EdgeInsets.only(right: 5),
               ),
@@ -603,287 +575,89 @@ class DiscussionListState extends State<DiscussionList> {
             ),
           ),
         ),
-        widget.timebankId != 'All' && isNearMe == false
-            ? StreamBuilder<List<NewsModel>>(
-                stream: FirestoreManager.getNewsStream(
-                    timebankID: widget.timebankId),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError)
-                    return Text('Please make sure you have GPS turned on.');
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return Container(
-                        padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height / 3),
-                        child: Center(child: CircularProgressIndicator()),
-                      );
+        StreamBuilder<List<NewsModel>>(
+          stream: FirestoreManager.getNewsStream(timebankID: widget.timebankId),
+          builder: (context, snapshot) {
+            if (snapshot.hasError)
+              return Text('Please make sure you have GPS turned on.');
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return Container(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height / 3),
+                  child: Center(child: CircularProgressIndicator()),
+                );
 
-                      break;
-                    default:
-                      List<NewsModel> newsList = snapshot.data;
-                      print('latest feeds ${newsList}');
-                      newsList = filterBlockedContent(newsList, context);
-                      newsList = filterPinnedNews(newsList, context);
+                break;
+              default:
+                List<NewsModel> newsList = snapshot.data;
+                print('latest feeds ${newsList}');
+                newsList = filterBlockedContent(newsList, context);
+                newsList = filterPinnedNews(newsList, context);
 
-                      print("Size of incloming docs ${newsList.length}");
-                      if (newsList.length == 1 &&
-                          newsList[0].isPinned == true) {
-                        return Expanded(
-                          child: ListView(
-                            children: <Widget>[
-                              getNewsCard(
-                                newsList.elementAt(0),
+                print("Size of incloming docs ${newsList.length}");
+                if (newsList.length == 1 && newsList[0].isPinned == true) {
+                  return Expanded(
+                    child: ListView(
+                      children: <Widget>[
+                        getNewsCard(
+                          newsList.elementAt(0),
+                          false,
+                        )
+                      ],
+                    ),
+                  );
+                }
+                if (newsList.length == 0) {
+                  return Padding(
+                    padding: const EdgeInsets.all(28.0),
+                    child: Center(child: Text('Your feed is empty')),
+                  );
+                }
+                return Expanded(
+                  child: ListView(
+                    children: <Widget>[
+                      isPinned
+                          ? getNewsCard(
+                              pinnedNewsModel,
+                              false,
+                            )
+                          : Offstage(),
+                      ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: newsList.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index >= newsList.length) {
+                            return Container(
+                              width: double.infinity,
+                              height: 20,
+                            );
+                          }
+
+                          if (newsList.elementAt(index).reports.length > 2) {
+                            return Offstage();
+                          } else {
+                            if (index == 0) {
+                              return getNewsCard(
+                                newsList.elementAt(index),
                                 false,
-                              )
-                            ],
-                          ),
-                        );
-                      }
-                      if (newsList.length == 0) {
-                        return Padding(
-                          padding: const EdgeInsets.all(28.0),
-                          child: Center(child: Text('Your feed is empty')),
-                        );
-                      }
-                      return Expanded(
-                        child: ListView(
-                          children: <Widget>[
-                            isPinned
-                                ? getNewsCard(
-                                    pinnedNewsModel,
-                                    false,
-                                  )
-                                : Offstage(),
-                            ListView.builder(
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: newsList.length + 1,
-                              itemBuilder: (context, index) {
-                                if (index >= newsList.length) {
-                                  return Container(
-                                    width: double.infinity,
-                                    height: 20,
-                                  );
-                                }
-
-                                if (newsList.elementAt(index).reports.length >
-                                    2) {
-                                  return Offstage();
-                                } else {
-                                  if (index == 0) {
-                                    return getNewsCard(
-                                      newsList.elementAt(index),
-                                      false,
-                                    );
-                                  } else {
-                                    return getNewsCard(
-                                      newsList.elementAt(index),
-                                      false,
-                                    );
-                                  }
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                  }
-                },
-              )
-            : widget.timebankId == 'All' && isNearMe == false
-                ? StreamBuilder<List<NewsModel>>(
-                    stream: FirestoreManager.getAllNewsStream(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError)
-                        return new Text(
-                            'Please make sure you have GPS turned on.');
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          return Center(child: CircularProgressIndicator());
-                          break;
-                        default:
-                          List<NewsModel> newsList = snapshot.data;
-                          newsList = filterBlockedContent(newsList, context);
-                          newsList = filterPinnedNews(newsList, context);
-                          if (newsList.length == 1 &&
-                              newsList[0].isPinned == true) {
-                            return Expanded(
-                              child: ListView(
-                                children: <Widget>[
-                                  getNewsCard(
-                                    newsList.elementAt(0),
-                                    false,
-                                  )
-                                ],
-                              ),
-                            );
-                          }
-                          if (newsList.length == 0) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(child: Text('Your feed is empty')),
-                            );
-                          }
-                          return Expanded(
-                            child: ListView(
-                              children: <Widget>[
-                                isPinned
-                                    ? getNewsCard(
-                                        pinnedNewsModel,
-                                        false,
-                                      )
-                                    : Offstage(),
-                                ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: newsList.length,
-                                  itemBuilder: (context, index) {
-                                    return getNewsCard(
-                                        newsList.elementAt(index), false);
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
-                      }
-                    },
-                  )
-                : widget.timebankId != 'All' && isNearMe == true
-                    ? StreamBuilder<List<NewsModel>>(
-                        stream: FirestoreManager.getNearNewsStream(
-                            timebankID: widget.timebankId),
-                        builder: (context, snapshot) {
-                          print(
-                              "Getting news stream for near me ${snapshot.connectionState}");
-
-                          if (snapshot.hasError)
-                            return Text(
-                                'Please make sure you have GPS turned on.');
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.waiting:
-                              return Container(
-                                padding: EdgeInsets.only(
-                                    top:
-                                        MediaQuery.of(context).size.height / 3),
-                                child:
-                                    Center(child: CircularProgressIndicator()),
                               );
-                              break;
-                            default:
-                              List<NewsModel> newsList = snapshot.data;
-
-                              print(
-                                  "News list from near me ${newsList.length}");
-                              newsList =
-                                  filterBlockedContent(newsList, context);
-                              newsList = filterPinnedNews(newsList, context);
-                              if (newsList.length == 1 &&
-                                  newsList[0].isPinned == true) {
-                                return Expanded(
-                                  child: ListView(
-                                    children: <Widget>[
-                                      getNewsCard(
-                                        newsList.elementAt(0),
-                                        false,
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }
-                              if (newsList.length == 0) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child:
-                                      Center(child: Text('Your feed is empty')),
-                                );
-                              }
-                              return Expanded(
-                                child: ListView(
-                                  children: <Widget>[
-                                    isPinned
-                                        ? getNewsCard(
-                                            pinnedNewsModel,
-                                            false,
-                                          )
-                                        : Offstage(),
-                                    ListView.builder(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemCount: newsList.length,
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) {
-                                        return getNewsCard(
-                                            newsList.elementAt(index), false);
-                                      },
-                                    ),
-                                  ],
-                                ),
+                            } else {
+                              return getNewsCard(
+                                newsList.elementAt(index),
+                                false,
                               );
+                            }
                           }
                         },
-                      )
-                    : widget.timebankId == 'All' && isNearMe == true
-                        ? StreamBuilder<List<NewsModel>>(
-                            stream: FirestoreManager.getAllNearNewsStream(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError)
-                                return Text(
-                                    'Please make sure you have GPS turned on.');
-                              switch (snapshot.connectionState) {
-                                case ConnectionState.waiting:
-                                  return Center(
-                                      child: CircularProgressIndicator());
-                                  break;
-                                default:
-                                  List<NewsModel> newsList = snapshot.data;
-                                  newsList =
-                                      filterBlockedContent(newsList, context);
-                                  newsList =
-                                      filterPinnedNews(newsList, context);
-                                  if (newsList.length == 1 &&
-                                      newsList[0].isPinned == true) {
-                                    return Expanded(
-                                      child: ListView(
-                                        children: <Widget>[
-                                          getNewsCard(
-                                            newsList.elementAt(0),
-                                            false,
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  }
-                                  if (newsList.length == 0) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Center(
-                                          child: Text('Your feed is empty')),
-                                    );
-                                  }
-                                  return Expanded(
-                                    child: ListView(
-                                      children: <Widget>[
-                                        isPinned
-                                            ? getNewsCard(
-                                                pinnedNewsModel,
-                                                false,
-                                              )
-                                            : Offstage(),
-                                        ListView.builder(
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          itemCount: newsList.length,
-                                          itemBuilder: (context, index) {
-                                            return getNewsCard(
-                                                newsList.elementAt(index),
-                                                false);
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                              }
-                            },
-                          )
-                        : Offstage(),
+                      ),
+                    ],
+                  ),
+                );
+            }
+          },
+        )
       ],
     );
   }
