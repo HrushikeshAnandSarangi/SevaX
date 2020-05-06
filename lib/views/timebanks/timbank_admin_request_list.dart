@@ -10,6 +10,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
+import 'package:sevaexchange/ui/screens/add_members/pages/add_members.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
@@ -887,6 +888,15 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         });
   }
 
+  void _navigateToAddMembers() {
+    Navigator.of(context).push(
+      AddMembers.route(
+        timebankId: timebankModel.id,
+        communityId: timebankModel.communityId,
+      ),
+    );
+  }
+
   Future loadNextMembers() async {
     if (_membersWidgets.length == 0) {
       if (widget.isUserAdmin) {
@@ -895,27 +905,28 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
             child: Row(
               children: <Widget>[
                 getSectionTitle(context, 'Members '),
-                !widget.isFromGroup
-                    ? CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 10,
-                        child: Image.asset("lib/assets/images/add.png"),
-                      )
-                    : Container(),
+                CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 10,
+                  child: Image.asset("lib/assets/images/add.png"),
+                )
               ],
             ),
-            onTap: () async {
-              print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTimebankCode");
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => InviteAddMembers(
-                    timebankModel.id,
-                    timebankModel.communityId,
-                  ),
-                ),
-              );
-            },
+            onTap: widget.isFromGroup
+                ? _navigateToAddMembers
+                : () async {
+                    print(
+                        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTimebankCode");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => InviteAddMembers(
+                          timebankModel.id,
+                          timebankModel.communityId,
+                        ),
+                      ),
+                    );
+                  },
           ),
         );
         _membersWidgets.add(gesture);
