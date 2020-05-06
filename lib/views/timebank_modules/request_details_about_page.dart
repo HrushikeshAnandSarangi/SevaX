@@ -61,16 +61,18 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     var futures = <Future>[];
     futures.clear();
 
-    if (widget.requestItem.acceptors != null || widget.requestItem.acceptors.length !=0 || widget.requestItem.approvedUsers.length !=0 || widget.requestItem.invitedUsers!=null || widget.requestItem.invitedUsers.length !=0) {
+    if (widget.requestItem.acceptors != null || widget.requestItem.acceptors.length != 0
+        || widget.requestItem.approvedUsers.length != 0) {
       widget.requestItem.acceptors.forEach((memberEmail) {
         futures.add(getUserDetails(memberEmail: memberEmail));
       });
       isApplied = widget.requestItem.acceptors
               .contains(SevaCore.of(context).loggedInUser.email) ||
           widget.requestItem.approvedUsers
-              .contains(SevaCore.of(context).loggedInUser.email) ||
-          widget.requestItem.invitedUsers
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID) || false;
+              .contains(SevaCore.of(context).loggedInUser.email) || false;
+
+      isApplied = isApplied==false && widget.requestItem.invitedUsers != null ?
+      widget.requestItem.invitedUsers.contains(SevaCore.of(context).loggedInUser.sevaUserID) : false;
     } else {
       isApplied = false;
     }
@@ -351,7 +353,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
     return address;
   }
-
   bool isApplied = false;
   Widget getBottombar() {
     return Container(
