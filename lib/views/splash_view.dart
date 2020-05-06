@@ -25,6 +25,7 @@ import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 
+import '../app_localizations.dart';
 import 'onboarding/interests_view.dart';
 import 'onboarding/skills_view.dart';
 
@@ -113,7 +114,8 @@ class _SplashViewState extends State<SplashView> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_initialized) {
-      loadingMessage = 'Hang on tight';
+      loadingMessage =
+          AppLocalizations.of(context).translate('loading_msg_hangon');
       _precacheImage().then((_) {
         initiateLogin();
       });
@@ -394,7 +396,8 @@ class _SplashViewState extends State<SplashView> {
   }
 
   void initiateLogin() {
-    loadingMessage = 'Checking, if we met before';
+    loadingMessage =
+        AppLocalizations.of(context).translate('checking_met_before');
     _getLoggedInUserId().then(handleLoggedInUserIdResponse).catchError((error) {
       print("Inside -> Error $error");
     });
@@ -455,7 +458,8 @@ class _SplashViewState extends State<SplashView> {
 
   Future<void> handleLoggedInUserIdResponse(String userId) async {
     if (userId == null || userId.isEmpty) {
-      loadingMessage = 'Hang on tight';
+      loadingMessage =
+          AppLocalizations.of(context).translate('loading_msg_hangon');
       _navigateToLoginPage();
       return;
     }
@@ -476,7 +480,7 @@ class _SplashViewState extends State<SplashView> {
     }
 
     if (loggedInUser == null) {
-      loadingMessage = 'Welcome to the world of communities';
+      loadingMessage = AppLocalizations.of(context).translate('welcome_msg');
       _navigateToLoginPage();
       return;
     }
@@ -517,6 +521,8 @@ class _SplashViewState extends State<SplashView> {
       });
     } else if (Platform.isIOS) {
       await PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
+        globals.currentVersionNumber = packageInfo.buildNumber.toString();
+
         if (int.parse(packageInfo.buildNumber) < versionInfo['ios']['build']) {
           print("New version available");
           if (versionInfo['ios']['forceUpdate']) {
@@ -661,7 +667,7 @@ class _SplashViewState extends State<SplashView> {
     // if (loggedInUser.bio == null) {
     //   await _navigateToBioView(loggedInUser);
     // }
-    loadingMessage = 'We met before';
+    loadingMessage = AppLocalizations.of(context).translate('update_skill');
 
     // print(loggedInUser.communities);
     if (loggedInUser.communities == null || loggedInUser.communities.isEmpty) {
@@ -776,13 +782,15 @@ class _SplashViewState extends State<SplashView> {
             Navigator.pop(context);
             loggedInUser.skills = skills;
             updateUserData(loggedInUser);
-            loadingMessage = 'Updating skills';
+            loadingMessage =
+                AppLocalizations.of(context).translate('update_skill');
           },
           onSkipped: () {
             Navigator.pop(context);
             AppConfig.prefs.setBool(AppConfig.skip_skill, true);
             loggedInUser.skills = [];
-            loadingMessage = 'Skipping skills';
+            loadingMessage =
+                AppLocalizations.of(context).translate('skip_skill');
           },
         ),
       ),
@@ -809,13 +817,15 @@ class _SplashViewState extends State<SplashView> {
             Navigator.pop(context);
             loggedInUser.interests = interests;
             updateUserData(loggedInUser);
-            loadingMessage = 'Updating interests';
+            loadingMessage =
+                AppLocalizations.of(context).translate('update_interest');
           },
           onSkipped: () {
             Navigator.pop(context);
             loggedInUser.interests = [];
             AppConfig.prefs.setBool(AppConfig.skip_interest, true);
-            loadingMessage = 'Skipping interests';
+            loadingMessage =
+                AppLocalizations.of(context).translate('skip_interest');
           },
           onBacked: () {
             AppConfig.prefs.setBool(AppConfig.skip_skill, null);
@@ -834,12 +844,13 @@ class _SplashViewState extends State<SplashView> {
           Navigator.pop(context);
           loggedInUser.bio = bio;
           updateUserData(loggedInUser);
-          loadingMessage = 'Updating bio';
+          loadingMessage = AppLocalizations.of(context).translate('update_bio');
         }, onSkipped: () {
           Navigator.pop(context);
           loggedInUser.bio = '';
           AppConfig.prefs.setBool(AppConfig.skip_bio, true);
-          loadingMessage = 'Skipping bio';
+          loadingMessage =
+              AppLocalizations.of(context).translate('skipping_bio');
         }, onBacked: () {
           AppConfig.prefs.setBool(AppConfig.skip_interest, null);
           _navigateToInterestsView(loggedInUser);

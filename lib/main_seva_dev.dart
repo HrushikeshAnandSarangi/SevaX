@@ -2,6 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sevaexchange/app_localizations.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -11,6 +13,7 @@ import 'package:sevaexchange/views/splash_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/news_model.dart';
+
 Future<void> fetchRemoteConfig() async {
   AppConfig.remoteConfig = await RemoteConfig.instance;
   AppConfig.remoteConfig.fetch(expiration: Duration.zero);
@@ -83,6 +86,32 @@ class MainApplication extends StatelessWidget {
         // home: RequestStatusView(
         //   requestId: "anitha.beberg@gmail.com*1573268670404",
         // ),
+        // List all of the app's supported locales here
+        supportedLocales: [
+          Locale('en', 'US'),
+          Locale('sk', 'SK'),
+        ],
+        localizationsDelegates: [
+          // A class which loads the translations from JSON files
+          AppLocalizations.delegate,
+          // Built-in localization of basic text for Material widgets
+          GlobalMaterialLocalizations.delegate,
+          // Built-in localization for text direction LTR/RTL
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        // Returns a locale which will be used by the app
+        localeResolutionCallback: (locale, supportedLocales) {
+          // Check if the current device locale is supported
+          for (var supportedLocale in supportedLocales) {
+            if (supportedLocale.languageCode == locale.languageCode &&
+                supportedLocale.countryCode == locale.countryCode) {
+              return supportedLocale;
+            }
+          }
+          // If the locale of the device is not supported, use the first one
+          // from the list (English, in this case).
+          return supportedLocales.first;
+        },
         builder: (context, child) {
           return GestureDetector(
             child: child,

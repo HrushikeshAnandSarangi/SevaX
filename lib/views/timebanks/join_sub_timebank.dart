@@ -160,6 +160,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
                   child: Text(
+                    //AppLocalizations.of(context).translate('first_string'),
                     "Groups within a Timebank allow for granular activities. You can join one of the groups below or create your own group",
                   ),
                 ),
@@ -400,17 +401,16 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
     String subtimebankId,
   }) {
     return new JoinRequestModel(
-      timebankTitle: subTimebankLabel,
-      accepted: false,
-      entityId: subtimebankId,
-      entityType: EntityType.Timebank,
-      operationTaken: false,
-      reason: "I want to volunteer.",
-      timestamp: DateTime.now().millisecondsSinceEpoch,
-      userId: userIdForNewMember,
-      isFromGroup: true,
-      notificationId: utils.Utils.getUuid()
-    );
+        timebankTitle: subTimebankLabel,
+        accepted: false,
+        entityId: subtimebankId,
+        entityType: EntityType.Timebank,
+        operationTaken: false,
+        reason: "I want to volunteer.",
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+        userId: userIdForNewMember,
+        isFromGroup: true,
+        notificationId: utils.Utils.getUuid());
   }
 
   NotificationsModel _assembleNotificationForJoinRequest({

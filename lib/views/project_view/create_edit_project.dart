@@ -456,12 +456,14 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 },
               ),
             ),
-            Text(
-              locationError,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
-                fontSize: 12,
+            Center(
+              child: Text(
+                locationError,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                  fontSize: 12,
+                ),
               ),
             ),
             Padding(
