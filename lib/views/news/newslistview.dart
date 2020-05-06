@@ -10,7 +10,6 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
-import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
@@ -975,9 +974,9 @@ class NewsListState extends State<NewsList> {
                 case EntityType.timebank:
                   loadTimebankForId(context, entityModel.entityId);
                   break;
-                case EntityType.campaign:
-                  loadCampaignForId(context, entityModel.entityId);
-                  break;
+                // case EntityType.campaign:
+                //   loadCampaignForId(context, entityModel.entityId);
+                //   break;
                 default:
                   break;
               }
@@ -1008,20 +1007,20 @@ class NewsListState extends State<NewsList> {
     );
   }
 
-  void loadCampaignForId(
-    BuildContext context,
-    String campaignId,
-  ) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) {
-          return CampaignView(
-            campaignId: campaignId,
-          );
-        },
-      ),
-    );
-  }
+  // void loadCampaignForId(
+  //   BuildContext context,
+  //   String campaignId,
+  // ) {
+  //   Navigator.of(context).push(
+  //     MaterialPageRoute(
+  //       builder: (context) {
+  //         return CampaignView(
+  //           campaignId: campaignId,
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 }
 
 Future _getLocation(

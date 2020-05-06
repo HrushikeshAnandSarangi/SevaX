@@ -12,9 +12,6 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:sevaexchange/views/campaigns/campaigncreate.dart';
-import 'package:sevaexchange/views/campaigns/campaignjoin.dart';
-import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/splash_view.dart';
@@ -870,20 +867,20 @@ class _TimebankViewState extends State<TimebankView> {
           superAdminTimebankModel: widget.superAdminTimebankModel,
         );
         break;
-      case 'campaigns':
-        if (timebankModel.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-          return CampaignCreate(
-            timebankModel: timebankModel,
-          );
-        } else {
-          return CampaignJoin();
-        }
-        break;
-      case 'viewcampaigns':
-        return CampaignsView(
-          timebankModel: timebankModel,
-        );
+        // case 'campaigns':
+        //   if (timebankModel.admins
+        //       .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+        //     return CampaignCreate(
+        //       timebankModel: timebankModel,
+        //     );
+        //   } else {
+        //     return CampaignJoin();
+        //   }
+        //   break;
+        // case 'viewcampaigns':
+        //   return CampaignsView(
+        //     timebankModel: timebankModel,
+        //   );
         break;
       case 'joinrequests':
         return TimebankJoinRequestView(

@@ -16,7 +16,6 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
-import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
@@ -741,28 +740,28 @@ class _SplashViewState extends State<SplashView> {
     }
   }
 
-  Future _navogateToIntro(UserModel loggedInUser) async {
-    print("Intro -> ${loggedInUser.toString()}");
+  // Future _navogateToIntro(UserModel loggedInUser) async {
+  //   print("Intro -> ${loggedInUser.toString()}");
 
-    Map results = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => IntroScreenHukanityFirst(),
-      ),
-    );
+  //   Map results = await Navigator.of(context).push(
+  //     MaterialPageRoute(
+  //       builder: (context) => IntroScreenHukanityFirst(),
+  //     ),
+  //   );
 
-    if (results != null &&
-        (results['response'] == "ACCEPTED" ||
-            results['response'] == "SKIPPED")) {
-      await Firestore.instance
-          .collection('users')
-          .document(loggedInUser.email)
-          .updateData({'completedIntro': true}).then((onValue) {
-        print("Updating Introcuction part");
-      }).catchError((onError) {
-        print("Error in introdution part");
-      });
-    }
-  }
+  //   if (results != null &&
+  //       (results['response'] == "ACCEPTED" ||
+  //           results['response'] == "SKIPPED")) {
+  //     await Firestore.instance
+  //         .collection('users')
+  //         .document(loggedInUser.email)
+  //         .updateData({'completedIntro': true}).then((onValue) {
+  //       print("Updating Introcuction part");
+  //     }).catchError((onError) {
+  //       print("Error in introdution part");
+  //     });
+  //   }
+  // }
 
   Future _navigateToSkillsView(UserModel loggedInUser) async {
     AppConfig.prefs.setBool(AppConfig.skip_skill, null);

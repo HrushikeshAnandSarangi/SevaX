@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/qna-module/FeedbackConstants.dart';
@@ -81,8 +80,8 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   }
 
   Widget getFeebackQuestions() {
-    Logger.root.level = Level.ALL;
-    Logger.root.onRecord.listen((LogRecord rec) {});
+    // Logger.root.level = Level.ALL;
+    // Logger.root.onRecord.listen((LogRecord rec) {});
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,

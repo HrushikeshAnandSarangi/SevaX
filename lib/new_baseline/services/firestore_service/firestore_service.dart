@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:async/async.dart' show StreamGroup;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
-import 'package:sevaexchange/base/base_service.dart';
 import 'package:sevaexchange/models/models.dart';
 
 export 'package:sevaexchange/utils/data_managers/campaigns_data_manager.dart';
@@ -14,11 +14,11 @@ export 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 export 'package:sevaexchange/utils/data_managers/transaction_data_manager.dart';
 export 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 
-class FirestoreService extends BaseService {
+class FirestoreService {
   ///
   Stream<List<DataModel>> getEntityDataListStream(
       {@required String userEmail}) async* {
-    log.i('getEntityDataListStream: EmailID: $userEmail');
+    log('getEntityDataListStream: EmailID: $userEmail');
 
     var campaignSnapshotStream = Firestore.instance
         .collection('campaigns')
@@ -50,7 +50,6 @@ class FirestoreService extends BaseService {
         handleData: (snapshot, timebankSink) {
           List<TimebankModel> modelList = [];
           snapshot.documents.forEach((documentSnapshot) {
-            
             TimebankModel model = TimebankModel(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
             modelList.add(model);

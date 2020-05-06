@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sevaexchange/logger/logger.dart';
 
 class BaseView<T extends ChangeNotifier> extends StatefulWidget {
   final Widget Function(BuildContext context, T model, Widget child) builder;
@@ -20,7 +19,7 @@ class _BaseViewState<T extends ChangeNotifier> extends State<BaseView<T>> {
   @override
   void initState() {
     model = widget.viewModel;
-    getLogger(this.runtimeType.toString()).i('initState');
+    // getLogger(this.runtimeType.toString()).i('initState');
     if (widget.onModelReady != null) {
       widget.onModelReady(model);
     }
@@ -30,7 +29,7 @@ class _BaseViewState<T extends ChangeNotifier> extends State<BaseView<T>> {
 
   @override
   Widget build(BuildContext context) {
-    getLogger(this.runtimeType.toString()).i('build');
+    // getLogger(this.runtimeType.toString()).i('build');
     return ChangeNotifierProvider<T>(
       create: (context) => model,
       child: Consumer<T>(
@@ -42,7 +41,7 @@ class _BaseViewState<T extends ChangeNotifier> extends State<BaseView<T>> {
 
   @override
   void dispose() {
-    getLogger(this.runtimeType.toString()).i('dispose');
+    // getLogger(this.runtimeType.toString()).i('dispose');
     super.dispose();
   }
 }
