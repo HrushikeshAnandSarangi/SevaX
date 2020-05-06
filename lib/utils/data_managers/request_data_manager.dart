@@ -295,7 +295,7 @@ Stream<List<RequestModel>> getNearRequestListStream(
   try {
     radius = json.decode(AppConfig.remoteConfig.getString('radius'));
   } on Exception {
-    print("Exception raised while getting user minimum balance ");
+    print("Exception raised while getting user minimum radius ");
   }
   print(
       "radius is fetched from remote config near request item ${radius.toDouble()}");

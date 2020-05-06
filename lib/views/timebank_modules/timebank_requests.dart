@@ -72,11 +72,6 @@ class RequestsState extends State<RequestsModule> {
   Widget build(BuildContext context) {
     _setORValue();
     timebankId = widget.timebankModel.id;
-    print("----------->>>$timebankId");
-
-//    return Scaffold(
-//      body: Text("Hello"),
-//    );
     var body = Container(
       margin: EdgeInsets.only(left: 0, right: 0, top: 7),
       child: Column(
@@ -179,7 +174,6 @@ class RequestsState extends State<RequestsModule> {
                   padding: EdgeInsets.only(left: 0, right: 5.0),
                   groupValue: sharedValue,
                   onValueChanged: (int val) {
-                    print(val);
                     if (val != sharedValue) {
                       setState(() {
                         if (isNearme == true)
@@ -192,115 +186,8 @@ class RequestsState extends State<RequestsModule> {
                       });
                     }
                   },
-                  //groupValue: sharedValue,
                 ),
               ),
-              // Offstage(
-              //   offstage: true,
-              //   child: StreamBuilder<Object>(
-              //       stream: FirestoreManager.getTimebanksForUserStream(
-              //         userId: SevaCore.of(context).loggedInUser.sevaUserID,
-              //         communityId:
-              //             SevaCore.of(context).loggedInUser.currentCommunity,
-              //       ),
-              //       builder: (context, snapshot) {
-              //         if (snapshot.hasError)
-              //           return new Text('Error: ${snapshot.error}');
-              //         if (snapshot.connectionState ==
-              //             ConnectionState.waiting) {
-              //           return Center(child: CircularProgressIndicator());
-              //         }
-              //         if (snapshot.data == null) {
-              //           return Container();
-              //         }
-              //         timebankList = snapshot.data;
-              //         List<String> dropdownList = [];
-              //         int adminOfCount = 0;
-              //         if (FlavorConfig.values.timebankName == "Yang 2020") {
-              //           dropdownList.add("Create Yang Gang");
-              //         }
-              //         timebankList.forEach((t) {
-              //           dropdownList.add(t.id);
-
-              //           if (t.admins.contains(
-              //               SevaCore.of(context).loggedInUser.sevaUserID)) {
-              //             adminOfCount++;
-
-              //             SevaCore.of(context)
-              //                 .loggedInUser
-              //                 .timebankIdForYangGangAdmin = t.id;
-              //           }
-              //         });
-              //         SevaCore.of(context)
-              //             .loggedInUser
-              //             .associatedWithTimebanks = dropdownList.length;
-              //         SevaCore.of(context).loggedInUser.adminOfYanagGangs =
-              //             adminOfCount;
-              //         return DropdownButton<String>(
-              //           value: timebankId,
-              //           onChanged: (String newValue) {
-              //             if (newValue == "Create Yang Gang") {
-              //               {
-              //                 this.createSubTimebank(context);
-              //               }
-              //             } else {
-              //               setState(() {
-              //                 SevaCore.of(context)
-              //                     .loggedInUser
-              //                     .currentTimebank = newValue;
-              //                 timebankId = newValue;
-              //               });
-              //             }
-              //           },
-              //           items: dropdownList
-              //               .map<DropdownMenuItem<String>>((String value) {
-              //             if (value == "Create Yang Gang") {
-              //               return DropdownMenuItem<String>(
-              //                 value: value,
-              //                 child: Text(
-              //                   value,
-              //                   style: TextStyle(color: Colors.red),
-              //                 ),
-              //               );
-              //             } else {
-              //               if (value == 'All') {
-              //                 return DropdownMenuItem<String>(
-              //                   value: value,
-              //                   child: Text(value),
-              //                 );
-              //               } else {
-              //                 return DropdownMenuItem<String>(
-              //                   value: value,
-              //                   child: FutureBuilder<Object>(
-              //                       future: FirestoreManager.getTimeBankForId(
-              //                           timebankId: value),
-              //                       builder: (context, snapshot) {
-              //                         if (snapshot.hasError)
-              //                           return new Text(
-              //                               'Error: ${snapshot.error}');
-              //                         if (snapshot.connectionState ==
-              //                             ConnectionState.waiting) {
-              //                           return Offstage();
-              //                         }
-              //                         TimebankModel timebankModel =
-              //                             snapshot.data;
-              //                         if (timebankModel == null ||
-              //                             timebankModel.name == null ||
-              //                             timebankModel.name == "") {
-              //                           return Container();
-              //                         }
-              //                         return Text(
-              //                           timebankModel.name,
-              //                           style: TextStyle(fontSize: 15.0),
-              //                         );
-              //                       }),
-              //                 );
-              //               }
-              //             }
-              //           }).toList(),
-              //         );
-              //       }),
-              // ),
 
               Padding(
                 padding: EdgeInsets.only(right: 5),
@@ -340,24 +227,6 @@ class RequestsState extends State<RequestsModule> {
       );
     }
     return body;
-//    if (widget.isFromSettings) {
-//      return Scaffold(
-//        body: body,
-//      );
-//    }
-//    return Scaffold(
-//      appBar: AppBar(
-//        elevation: 0.5,
-//        automaticallyImplyLeading: true,
-//        title: Text(
-//          "hello",
-//          style: TextStyle(
-//            fontSize: 18,
-//          ),
-//        ),
-//      ),
-//      body: Text("hello"),
-//    );
   }
 
   void _showProtectedTimebankMessage() {
@@ -701,8 +570,6 @@ class _RequestCardViewState extends State<RequestCardView> {
   Future<void> deleteRequest({
     @required RequestModel requestModel,
   }) async {
-    print(requestModel.toMap());
-
     return await Firestore.instance
         .collection('requests')
         .document(requestModel.id)
@@ -755,9 +622,6 @@ class NearRequestListItems extends StatelessWidget {
                 default:
                   List<RequestModel> requestModelList =
                       requestListSnapshot.data;
-                  requestModelList
-                      .removeWhere((request) => request.projectId.isNotEmpty);
-
                   requestModelList = filterBlockedRequestsContent(
                       context: context, requestModelList: requestModelList);
 
@@ -900,7 +764,6 @@ class NearRequestListItems extends StatelessWidget {
                                   model.approvedUsers.contains(
                                       SevaCore.of(context).loggedInUser.email)
                               ?
-//                          || model.invitedUsers.contains(userEmail) ?
                               Container(
                                   margin: EdgeInsets.only(top: 10, bottom: 10),
                                   width: 100,
@@ -993,7 +856,6 @@ class RequestListItemsState extends State<RequestListItems> {
   @override
   Widget build(BuildContext context) {
     if (widget.timebankId != 'All') {
-      print("if RequestListItemsState");
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
@@ -1018,10 +880,6 @@ class RequestListItemsState extends State<RequestListItems> {
                   if (snapshot.hasData) {
                     List<RequestModel> requestModelList =
                         snapshot.data.requests;
-
-                    requestModelList
-                        .removeWhere((request) => request.projectId.isNotEmpty);
-
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
 
@@ -1047,8 +905,8 @@ class RequestListItemsState extends State<RequestListItems> {
                   return Text("");
                 });
           });
-    } else {
-      print("else RequestListItemsState");
+    }
+    else {
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
@@ -1072,9 +930,6 @@ class RequestListItemsState extends State<RequestListItems> {
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
-                    requestModelList
-                        .removeWhere((request) => request.projectId.isNotEmpty);
-
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
 
@@ -1177,9 +1032,7 @@ class RequestListItemsState extends State<RequestListItems> {
 
   Widget getFromNormalRequest(
       {RequestModel model, String loggedintimezone, String userEmail}) {
-    if (model.projectId != null && model.projectId.isNotEmpty) {
-      return Container();
-    }
+
     return Container(
       decoration: containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
@@ -1200,7 +1053,6 @@ class RequestListItemsState extends State<RequestListItems> {
                     child: FadeInImage.assetNetwork(
                       fit: BoxFit.cover,
                       placeholder: defaultUserImageURL,
-                      //  placeholder: 'lib/assets/images/profile.png',
                       image: model.photoUrl == null
                           ? defaultUserImageURL
                           : model.photoUrl,
@@ -1255,7 +1107,6 @@ class RequestListItemsState extends State<RequestListItems> {
                           model.acceptors.contains(userEmail) ||
                                   model.approvedUsers.contains(userEmail)
                               ?
-//                          || model.invitedUsers.contains(userEmail) ?
                               Container(
                                   margin: EdgeInsets.only(top: 10, bottom: 10),
                                   width: 100,
