@@ -129,7 +129,11 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       UserModel user = snapshot.data;
                       return user != null && user.fullname != null
                           ? getJoinReuqestsNotificationWidget(
-                              user, notification.id, model, context)
+                              user,
+                              notification.id,
+                              model,
+                              context,
+                            )
                           : Offstage();
                     });
                 break;
@@ -1013,37 +1017,30 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     JoinRequestModel model,
     BuildContext context,
   ) {
-    return Dismissible(
-        background: dismissibleBackground,
-        key: Key(Utils.getUuid()),
-        onDismissed: (direction) {
-          String userEmail = SevaCore.of(context).loggedInUser.email;
-          FirestoreManager.readUserNotification(notificationId, userEmail);
-        },
-        child: GestureDetector(
-          child: Container(
-            margin: notificationPadding,
-            decoration: notificationDecoration,
-            child: ListTile(
-              title: Text("Join request"),
-              leading: user.photoURL != null
-                  ? CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL),
-                    )
-                  : Offstage(),
-              subtitle: Text(
-                  '${user.fullname.toLowerCase()} has requested to join ${model.timebankTitle}.'),
-            ),
-          ),
-          onTap: () {
-            showDialogForJoinRequestApproval(
-              context: context,
-              userModel: user,
-              model: model,
-              notificationId: notificationId,
-            );
-          },
-        ));
+    return GestureDetector(
+      child: Container(
+        margin: notificationPadding,
+        decoration: notificationDecoration,
+        child: ListTile(
+          title: Text("Join request"),
+          leading: user.photoURL != null
+              ? CircleAvatar(
+                  backgroundImage: NetworkImage(user.photoURL),
+                )
+              : Offstage(),
+          subtitle: Text(
+              '${user.fullname.toLowerCase()} has requested to join ${model.timebankTitle}.'),
+        ),
+      ),
+      onTap: () {
+        showDialogForJoinRequestApproval(
+          context: context,
+          userModel: user,
+          model: model,
+          notificationId: notificationId,
+        );
+      },
+    );
   }
 
   BuildContext showProgressForOnboardingUserContext;
@@ -1490,38 +1487,40 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return notificationShimmer;
         }
-
         UserModel user = snapshot.data;
+
         return Slidable(
-            delegate: SlidableBehindDelegate(),
-            actions: <Widget>[],
-            secondaryActions: <Widget>[],
-            child: GestureDetector(
-              onTap: () {
-                showDialogForApproval(
-                    context: context,
-                    userModel: user,
-                    notificationId: notificationId,
-                    requestModel: model);
-              },
-              child: Container(
-                  margin: notificationPadding,
-                  decoration: notificationDecoration,
-                  child: ListTile(
-                    title: Padding(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text(model.title),
-                    ),
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL),
-                    ),
-                    subtitle: Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                      child: Text(
-                          'Request accepted by ${user.fullname}, waiting for your approval'),
-                    ),
-                  )),
-            ));
+          delegate: SlidableBehindDelegate(),
+          actions: <Widget>[],
+          secondaryActions: <Widget>[],
+          child: GestureDetector(
+            onTap: () {
+              showDialogForApproval(
+                  context: context,
+                  userModel: user,
+                  notificationId: notificationId,
+                  requestModel: model);
+            },
+            child: Container(
+              margin: notificationPadding,
+              decoration: notificationDecoration,
+              child: ListTile(
+                title: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Text(model.title),
+                ),
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(user.photoURL),
+                ),
+                subtitle: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                  child: Text(
+                      'Request accepted by ${user.fullname}, waiting for your approval'),
+                ),
+              ),
+            ),
+          ),
+        );
       },
     );
   }

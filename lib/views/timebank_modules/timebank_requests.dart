@@ -188,7 +188,6 @@ class RequestsState extends State<RequestsModule> {
                   },
                 ),
               ),
-
               Padding(
                 padding: EdgeInsets.only(right: 5),
               ),
@@ -813,10 +812,11 @@ class NearRequestListItems extends StatelessWidget {
       borderRadius: BorderRadius.all(Radius.circular(12.0)),
       boxShadow: [
         BoxShadow(
-            color: Colors.black.withAlpha(10),
-            spreadRadius: 4,
-            offset: Offset(0, 3),
-            blurRadius: 6)
+          color: Colors.black.withAlpha(10),
+          spreadRadius: 4,
+          offset: Offset(0, 3),
+          blurRadius: 6,
+        )
       ],
       color: Colors.white,
     );

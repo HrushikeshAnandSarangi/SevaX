@@ -110,8 +110,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                 itemBuilder: (context, index) {
                   NotificationsModel notification =
                       notifications.elementAt(index);
-                  void onDismissed() {
-                    _clearNotification(
+                  Future<void> onDismissed() async {
+                    await _clearNotification(
                       notificationId: notification.id,
                       email: user.email,
                     );
@@ -182,7 +182,11 @@ class NotificationsView extends State<NotificationViewHolder> {
                             UserModel user = snapshot.data;
                             return user != null && user.fullname != null
                                 ? getJoinReuqestsNotificationWidget(
-                                    user, notification.id, model, context)
+                                    user,
+                                    notification.id,
+                                    model,
+                                    context,
+                                  )
                                 : Offstage();
                           });
                       break;
@@ -521,8 +525,8 @@ class NotificationsView extends State<NotificationViewHolder> {
     }
   }
 
-  void _clearNotification({String email, String notificationId}) {
-    FirestoreManager.readUserNotification(
+  Future _clearNotification({String email, String notificationId}) {
+    return FirestoreManager.readUserNotification(
       notificationId,
       email,
     );
@@ -534,70 +538,31 @@ class NotificationsView extends State<NotificationViewHolder> {
     String notificationId,
   ) {
     return FutureBuilder<UserModel>(
-        future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) return Container();
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return notificationShimmer;
-          }
-          UserModel user = snapshot.data;
-          return Dismissible(
-              key: Key(Utils.getUuid()),
-              background: dismissibleBackground,
-              onDismissed: (direction) {
-                FirestoreManager.readUserNotification(
-                  notificationId,
-                  SevaCore.of(context).loggedInUser.email,
-                );
-              },
-              child: GestureDetector(
-                child: Container(
-                  margin: notificationPadding,
-                  decoration: notificationDecoration,
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL),
-                    ),
-                    title: Text('Credited'),
-                    subtitle: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            // text: 'Congrats, ${user.fullname} has credited ',
-                            text: 'Congrats,  ',
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                          TextSpan(
-                            text: () {
-                              return FlavorConfig.appFlavor ==
-                                      Flavor.HUMANITY_FIRST
-                                  ? '${model.credits} Yang Bucks'
-                                  : FlavorConfig.appFlavor == Flavor.TULSI
-                                      ? '${model.credits} Tulsi Tokens'
-                                      : '${model.credits} Seva Credits';
-                            }(),
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                          TextSpan(
-                            text: () {
-                              return " have been credited to your account.";
-                            }(),
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                onTap: () {},
-              ));
-        });
+      future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return Container();
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return notificationShimmer;
+        }
+        UserModel user = snapshot.data;
+
+        return NotificationCard(
+          entityName: user.fullname,
+          isDissmissible: true,
+          onDismissed: () {
+            FirestoreManager.readUserNotification(
+              notificationId,
+              SevaCore.of(context).loggedInUser.email,
+            );
+          },
+          onPressed: null,
+          photoUrl: user.fullname,
+          title: "Credited",
+          subTitle:
+              'Congrats, ${model.credits} Seva credits have been credited to your account.',
+        );
+      },
+    );
   }
 
   Widget getNotificationDebit(
@@ -613,50 +578,20 @@ class NotificationsView extends State<NotificationViewHolder> {
             return notificationShimmer;
           }
           UserModel user = snapshot.data;
-          return Dismissible(
-            key: Key(Utils.getUuid()),
-            background: dismissibleBackground,
-            onDismissed: (direction) {
+
+          return NotificationCard(
+            entityName: user.fullname,
+            isDissmissible: true,
+            onDismissed: () {
               FirestoreManager.readUserNotification(
                 notificationId,
                 SevaCore.of(context).loggedInUser.email,
               );
             },
-            child: Container(
-              margin: notificationPadding,
-              decoration: notificationDecoration,
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(user.photoURL),
-                ),
-                title: Text('Debited'),
-                subtitle: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: () {
-                          return FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                              ? '${model.credits} Yang Bucks '
-                              : FlavorConfig.appFlavor == Flavor.TULSI
-                                  ? '${model.credits} Tulsi TOkens '
-                                  : '${model.credits} Seva Credits ';
-                        }(),
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                      TextSpan(
-                        text:
-                            'has been debited from your account', //credited to ${user.fullname}',
-                        style: TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            onPressed: null,
+            photoUrl: user.photoURL,
+            title: "Debited",
+            subTitle: '${model.credits} has been debited from your account.',
           );
         });
   }
@@ -666,65 +601,26 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    // return
-
     TransactionModel transactionModel =
         model.transactions.firstWhere((transaction) {
       return transaction.to == SevaCore.of(context).loggedInUser.sevaUserID;
     });
 
-    return Dismissible(
-      key: Key(Utils.getUuid()),
-      background: dismissibleBackground,
-      onDismissed: (direction) {
+    return NotificationCard(
+      entityName: model.fullName,
+      isDissmissible: true,
+      onDismissed: () {
         FirestoreManager.readUserNotification(
           notificationId,
           SevaCore.of(context).loggedInUser.email,
         );
       },
-      child: Container(
-        margin: notificationPadding,
-        decoration: notificationDecoration,
-        child: ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(model.photoUrl),
-          ),
-          title: Text(model.title),
-          subtitle: RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: '${model.fullName} approved the task completion for ',
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-                TextSpan(
-                  text: () {
-                    return '${transactionModel.credits} hours';
-                  }(),
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
+      onPressed: null,
+      photoUrl: model.photoUrl,
+      subTitle:
+          '${model.fullName} approved the task completion for ${transactionModel.credits} hours',
+      title: model.title,
     );
-
-    // return StreamBuilder<UserModel>(
-    //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
-    //   builder: (context, snapshot) {
-    //     if (snapshot.hasError) return Container();
-    //     if (snapshot.connectionState == ConnectionState.waiting) {
-    //       return notificationShimmer;
-    //     }
-    //     UserModel user = snapshot.data;
-
-    //   },
-    // );
   }
 
   Widget getOfferAcceptNotification(
@@ -756,8 +652,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                           requestId: requestid),
                       builder: (context, snapshot) {
                         RequestModel model = snapshot.data;
-                        if (snapshot.hasError)
-                          return Container();
+                        if (snapshot.hasError) return Container();
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return notificationShimmer;
@@ -807,8 +702,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                         requestId: requestid),
                     builder: (context, snapshot) {
                       RequestModel model = snapshot.data;
-                      if (snapshot.hasError)
-                        return Container();
+                      if (snapshot.hasError) return Container();
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return notificationShimmer;
                       }
@@ -1033,42 +927,54 @@ class NotificationsView extends State<NotificationViewHolder> {
       String communityId) {
     // assert(user != null);
 
-    return Dismissible(
-        background: dismissibleBackground,
-        key: Key(Utils.getUuid()),
-        onDismissed: (direction) {
-          String userEmail = SevaCore.of(buildContext).loggedInUser.email;
-          FirestoreManager.readUserNotification(notificationId, userEmail);
-        },
-        child: GestureDetector(
-          child: Container(
-            margin: notificationPadding,
-            decoration: notificationDecoration,
-            child: ListTile(
-              title: Text("Join request"),
-              leading: requestInvitationModel.timebankImage != null
-                  ? CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(requestInvitationModel.timebankImage),
-                    )
-                  : Offstage(),
-              subtitle: Text(
-                  '${requestInvitationModel.timebankName.toLowerCase()} has requested you to join ${requestInvitationModel.requestTitle}, Tap to view join request'),
-            ),
-          ),
-          onTap: () {
-            showDialog(
-                context: buildContext,
-                builder: (context) {
-                  return JoinRejectDialogView(
-                    requestInvitationModel: requestInvitationModel,
-                    timeBankId: timebankId,
-                    notificationId: notificationId,
-                    userModel: SevaCore.of(buildContext).loggedInUser,
-                  );
-                });
-          },
-        ));
+    return NotificationCard(
+      entityName: requestInvitationModel.timebankName.toLowerCase(),
+      isDissmissible: true,
+      onDismissed: () {
+        String userEmail = SevaCore.of(buildContext).loggedInUser.email;
+        FirestoreManager.readUserNotification(notificationId, userEmail);
+      },
+      onPressed: () {
+        showDialog(
+            context: buildContext,
+            builder: (context) {
+              return JoinRejectDialogView(
+                requestInvitationModel: requestInvitationModel,
+                timeBankId: timebankId,
+                notificationId: notificationId,
+                userModel: SevaCore.of(buildContext).loggedInUser,
+              );
+            });
+      },
+      photoUrl: requestInvitationModel.timebankImage,
+      subTitle:
+          '${requestInvitationModel.timebankName.toLowerCase()} has invited you to join ${requestInvitationModel.requestTitle}, Tap to view invitation',
+      title: "Invitation request",
+    );
+
+    // return Dismissible(
+    //   background: dismissibleBackground,
+    //   key: Key(Utils.getUuid()),
+    //   onDismissed: (direction) {},
+    //   child: GestureDetector(
+    //     child: Container(
+    //       margin: notificationPadding,
+    //       decoration: notificationDecoration,
+    //       child: ListTile(
+    //         title: Text("Join request"),
+    //         leading: requestInvitationModel.timebankImage != null
+    //             ? CircleAvatar(
+    //                 backgroundImage:
+    //                     NetworkImage(requestInvitationModel.timebankImage),
+    //               )
+    //             : Offstage(),
+    //         subtitle: Text(
+    //             '${requestInvitationModel.timebankName.toLowerCase()} has requested you to join ${requestInvitationModel.requestTitle}, Tap to view join request'),
+    //       ),
+    //     ),
+    //     onTap: () {},
+    //   ),
+    // );
   }
 
   void showMemberClaimConfirmation(

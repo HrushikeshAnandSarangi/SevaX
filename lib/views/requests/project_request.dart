@@ -518,8 +518,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                   onPressed: () {},
                   child: Text(
                     'Add Requests',
-                    style: (TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 18)),
+                    style:
+                        (TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                   ),
                 ),
                 Positioned(
