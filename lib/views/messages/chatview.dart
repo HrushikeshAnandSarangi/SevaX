@@ -56,7 +56,7 @@ class _ChatViewState extends State<ChatView> {
   String loggedInEmail;
   final TextEditingController textcontroller = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  ScrollController _scrollController;
+  ScrollController _scrollController = new ScrollController();
   Future _fetchAppBarData;
   String messageContent;
   bool _isOnTop = true;
@@ -113,7 +113,7 @@ class _ChatViewState extends State<ChatView> {
         messageContent: widget.news.id,
       );
     }
-    _scrollToBottom();
+    //  _scrollToBottom();
     super.initState();
     getCurrentLocation();
   }
@@ -288,10 +288,13 @@ class _ChatViewState extends State<ChatView> {
                             chatModel, loggedInEmail, widget.useremail);
                       },
                     ).toList();
+                    _scrollToBottom();
 
                     return Container(
                       padding: EdgeInsets.only(left: 10.0, right: 10.0),
                       child: ListView(
+                        //  shrinkWrap: true,
+                        // reverse: false,
                         controller: _scrollController,
                         children: <Widget>[...messages],
                       ),
@@ -360,16 +363,25 @@ class _ChatViewState extends State<ChatView> {
 
   _scrollToBottom() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      Timer(Duration(milliseconds: 300), () {
-        try {
-          _scrollController.jumpTo(
-            _scrollController.position.maxScrollExtent,
-          );
-        } catch (e) {
-          print("Scroller not attached");
-        }
-      });
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
     });
+
+    // setState(() {});
+//    SchedulerBinding.instance.addPostFrameCallback((_) {
+//      Timer(Duration(milliseconds: 100), () {
+//        try {
+//          _scrollController.jumpTo(
+//            _scrollController.position.maxScrollExtent,
+//          );
+//        } catch (e) {
+//          print("Scroller not attached");
+//        }
+//      });
+//    });
   }
 
   void pushNewMessage({
@@ -411,9 +423,10 @@ class _ChatViewState extends State<ChatView> {
         userEmail: widget.useremail,
       );
     });
-
-    textcontroller.clear();
-    _scrollToBottom();
+    setState(() {
+      textcontroller.clear();
+      _scrollToBottom();
+    });
   }
 
   Widget _getSharedNewDetails({MessageModel messageModel}) {

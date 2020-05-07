@@ -350,6 +350,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     child: Center(
                       child: NewsImage(
                         photoCredits: newsObject.photoCredits,
+                        selectedAddress:
+                            newsObject.placeAddress ?? 'Add Location',
                         geoFirePointLocation: location,
                         geoFirePointLocationCallback:
                             (geoLocationPointSelected) async {
@@ -401,18 +403,21 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   shape: StadiumBorder(),
                   color: Theme.of(context).accentColor,
                   onPressed: () async {
+                    //  print("address $selectedAddress");
                     var connResult = await Connectivity().checkConnectivity();
-                    if(connResult == ConnectivityResult.none){
+                    if (connResult == ConnectivityResult.none) {
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("Please check your internet connection."),
+                          content:
+                              Text("Please check your internet connection."),
                           action: SnackBarAction(
                             label: 'Dismiss',
-                            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+                            onPressed: () =>
+                                Scaffold.of(context).hideCurrentSnackBar(),
                           ),
                         ),
                       );
-                      return ;
+                      return;
                     }
                     if (location != null) {
                       if (formKey.currentState.validate()) {
