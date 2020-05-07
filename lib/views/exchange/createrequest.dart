@@ -239,8 +239,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     this.requestModel.email = loggedInUser.email;
-    this.requestModel.fullName = loggedInUser.fullname;
-    this.requestModel.photoUrl = loggedInUser.photoURL;
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
 
     return Form(
@@ -573,9 +571,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       //Form and date is valid
       switch (requestModel.requestMode) {
         case RequestMode.PERSONAL_REQUEST:
+          var myDetails = SevaCore.of(context).loggedInUser;
+          this.requestModel.fullName = myDetails.fullname;
+          this.requestModel.photoUrl = myDetails.photoURL;
+
           var onBalanceCheckResult = await hasSufficientCredits(
             credits: requestModel.numberOfHours.toDouble(),
-            userId: SevaCore.of(context).loggedInUser.sevaUserID,
+            userId: myDetails.sevaUserID,
           );
 
           if (!onBalanceCheckResult) {

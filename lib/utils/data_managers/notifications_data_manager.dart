@@ -60,56 +60,55 @@ Future<void> createAcceptRequestNotification({
 Future<void> withdrawAcceptRequestNotification({
   NotificationsModel notificationsModel,
 }) async {
-  UserModel user =
-      await getUserForId(sevaUserId: notificationsModel.targetUserId);
-  UserModel senderUser =
-      await getUserForId(sevaUserId: notificationsModel.senderUserId);
+  RequestModel requestModel = RequestModel.fromMap(notificationsModel.data);
 
-  // This is a Minor hack
-  Map<String, dynamic> dataMap = notificationsModel.data;
-  List<String> acceptorList = List.castFrom(dataMap['acceptors']);
-
-  acceptorList.add(senderUser.email);
-
-  dataMap['acceptors'] = acceptorList;
-  bool isTimeBankNotification =
-      await fetchProtectedStatus(notificationsModel.timebankId);
-  QuerySnapshot data = isTimeBankNotification
-      ? await Firestore.instance
+  switch (requestModel.requestMode) {
+    case RequestMode.TIMEBANK_REQUEST:
+      QuerySnapshot snapshotQuery = await Firestore.instance
           .collection('timebanknew')
           .document(notificationsModel.timebankId)
           .collection('notifications')
-          .where('data', isEqualTo: dataMap)
-          .getDocuments()
-      : await Firestore.instance
+          .where('type', isEqualTo: 'RequestAccept')
+          .where('data.id', isEqualTo: requestModel.id)
+          .where('data.email', isEqualTo: requestModel.email)
+          .getDocuments();
+      snapshotQuery.documents.forEach(
+        (document) async {
+          await Firestore.instance
+              .collection('timebanknew')
+              .document(notificationsModel.timebankId)
+              .collection('notifications')
+              .document(document.documentID)
+              .delete();
+        },
+      );
+
+      break;
+
+    case RequestMode.PERSONAL_REQUEST:
+      UserModel user =
+          await getUserForId(sevaUserId: notificationsModel.targetUserId);
+      QuerySnapshot querySnapshot = await Firestore.instance
           .collection('users')
           .document(user.email)
           .collection('notifications')
-          .where('data', isEqualTo: dataMap)
+          .where('type', isEqualTo: 'RequestAccept')
+          .where('data.id', isEqualTo: requestModel.id)
+          .where('data.email', isEqualTo: requestModel.email)
           .getDocuments();
-  //error: The name 'dynamic' isn't a type so it can't be used as a type argument. (non_type_as_type_argument at [sevaexchange] lib/utils/search_manager.dart:21)
+      querySnapshot.documents.forEach(
+        (document) {
+          Firestore.instance
+              .collection('users')
+              .document(user.email)
+              .collection('notifications')
+              .document(document.documentID)
+              .delete();
+        },
+      );
 
-  isTimeBankNotification
-      ? data.documents.forEach(
-          (document) {
-            Firestore.instance
-                .collection('timebanknew')
-                .document(notificationsModel.timebankId)
-                .collection('notifications')
-                .document(document.documentID)
-                .delete();
-          },
-        )
-      : data.documents.forEach(
-          (document) {
-            Firestore.instance
-                .collection('users')
-                .document(user.email)
-                .collection('notifications')
-                .document(document.documentID)
-                .delete();
-          },
-        );
+      break;
+  }
 }
 
 Future<String> getNotificationId(
@@ -432,8 +431,10 @@ Stream<List<NotificationsModel>> getNotificationsForTimebank({
             if (model.type == NotificationType.RequestAccept ||
                 model.type == NotificationType.JoinRequest ||
                 model.type == NotificationType.RequestCompleted ||
-                model.type == NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED ||
-                model.type == NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK) {
+                model.type ==
+                    NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED ||
+                model.type ==
+                    NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK) {
               notifications.add(model);
             }
           }
@@ -530,7 +531,7 @@ Stream<List<NotificationsModel>> getCompletedNotificationsStream(
         });
         notificationSink.add(notifications);
         print(
-            "${notifications.length}----------------------------------------");
+            "${notifications.length}----------  -------------------------  -----");
       },
     ),
   );

@@ -107,7 +107,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               child: Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Text(
-                  "save",
+                  "Save",
                   style: prefix0.TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
@@ -320,12 +320,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               color: getTextColorForSelectedItem(user.email),
             ),
           ),
-          subtitle: Text(
-            user.email,
-            style: TextStyle(
-              color: getTextColorForSelectedItem(user.email),
-            ),
-          ),
+          subtitle: Container(),
         ),
       ),
     );
