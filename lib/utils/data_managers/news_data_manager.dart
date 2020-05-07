@@ -6,7 +6,9 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:meta/meta.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 
 import '../app_config.dart';
 import '../location_utility.dart';
@@ -50,27 +52,37 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
 
     querySnapshot.documents.forEach((document) {
       var newsModel = NewsModel.fromMap(document.data);
-      futures.add(getUserInfo(newsModel.email));
+      //futures.add(getUserInfo(newsModel.email));
       modelList.add(newsModel);
     });
 
-    //await process goes here
+//    //await process goes here
+//    for (int i = 0; i < modelList.length; i += 1) {
+//      UserModel userModel = await getUserForId(
+//        sevaUserId: modelList[i].sevaUserId,
+//      );
+//      modelList[i].userPhotoURL=userModel.photoURL;
+//      timeBankModelList.add(timeBankModel);
+//    }
+    // await Future.wait(futures).then((onValue) async {
+    for (var i = 0; i < modelList.length; i++) {
+      //  modelList[i].userPhotoURL = onValue[i]['photourl'];
+      UserModel userModel = await getUserForId(
+        sevaUserId: modelList[i].sevaUserId,
+      );
+      modelList[i].userPhotoURL = userModel.photoURL;
 
-    await Future.wait(futures).then((onValue) async {
-      for (var i = 0; i < modelList.length; i++) {
-        modelList[i].userPhotoURL = onValue[i]['photourl'];
-
-        if (modelList[i].placeAddress == null) {
-          var data = await _getLocation(
-            modelList[i].location.geoPoint.latitude,
-            modelList[i].location.geoPoint.longitude,
-          );
-          modelList[i].placeAddress = data;
-        }
+      if (modelList[i].placeAddress == null) {
+        var data = await _getLocation(
+          modelList[i].location.geoPoint.latitude,
+          modelList[i].location.geoPoint.longitude,
+        );
+        modelList[i].placeAddress = data;
       }
+    }
 
-      newsSink.add(modelList);
-    });
+    newsSink.add(modelList);
+    // });
   }));
 }
 
@@ -139,13 +151,12 @@ Stream<List<NewsModel>> getNearNewsStream(
     modelList.sort((n1, n2) {
       return n2.postTimestamp.compareTo(n1.postTimestamp);
       // return n2.postTimestamp > n2.postTimestamp ? -1 : 1;
-
     });
 
     //await process goes here
     await Future.wait(futures).then((onValue) async {
       for (var i = 0; i < modelList.length; i++) {
-        modelList[i].userPhotoURL = onValue[i]['photourl'];
+        //  modelList[i].userPhotoURL = onValue[i]['photourl'];
 
         // var data = await _getLocation(
         //   modelList[i].location.geoPoint.latitude,

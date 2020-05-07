@@ -16,14 +16,21 @@ class CustomNetworkImage extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      imageUrl: imageUrl ?? "https://getuikit.com/v2/docs/images/placeholder_600x400.svg",
-      fit: fit ?? BoxFit.fitWidth,
-      placeholder: (context, url) => Center(
-        child: placeholder ?? CircularProgressIndicator(),
-      ),
-      errorWidget: (context, url, error) => Center(
-        child: Icon(Icons.error),
+    return ClipOval(
+      child: SizedBox(
+        height: 45,
+        width: 45,
+        child: CachedNetworkImage(
+          imageUrl: imageUrl ??
+              "https://getuikit.com/v2/docs/images/placeholder_600x400.svg",
+          fit: fit ?? BoxFit.fitWidth,
+          placeholder: (context, url) => Center(
+            child: placeholder ?? CircularProgressIndicator(),
+          ),
+          errorWidget: (context, url, error) => Center(
+            child: Icon(Icons.error),
+          ),
+        ),
       ),
     );
   }
