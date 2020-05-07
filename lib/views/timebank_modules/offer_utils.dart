@@ -93,6 +93,11 @@ void addBookMark(String offerId, String userId) {
   });
 }
 
+bool isParticipant(BuildContext context, OfferModel model) {
+  return getOfferParticipants(offerDataModel: model)
+      .contains(SevaCore.of(context).loggedInUser.sevaUserID);
+}
+
 Future<bool> offerActions(BuildContext context, OfferModel model) async {
   var _userId = SevaCore.of(context).loggedInUser.sevaUserID;
   bool _isParticipant = getOfferParticipants(offerDataModel: model)

@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:sevaexchange/views/profile/profile_viewer_join_request.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-
-import '../membersaddedit.dart';
+import 'package:sevaexchange/views/profile/profile_viewer_join_request.dart';
 
 class TimebankJoinRequestView extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -63,7 +62,7 @@ class TimebankJoinRequestViewState extends State<TimebankJoinRequestView> {
                               CircleAvatar(
                                 minRadius: 15.0,
                                 backgroundImage:
-                                    NetworkImage(item['requestor_photourl']),
+                                    NetworkImage(item['requestor_photourl'] ?? defaultUserImageURL),
                               ),
                               FlatButton(
                                 onPressed: () {

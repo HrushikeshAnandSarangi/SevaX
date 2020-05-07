@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -82,13 +83,13 @@ class TimebankRequests extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
-          
+
           List<JoinRequestModel> joinrequestModelList = snapshot.data;
 
           if (joinrequestModelList.length == 0) {
             return Center(child: Text('No pending join requests'));
           }
-          
+
           return ListView.builder(
               itemCount: joinrequestModelList.length,
               itemBuilder: (listContext, index) {
@@ -125,8 +126,9 @@ class TimebankRequests extends StatelessWidget {
                                 child: ListTile(
                                   title: Text(userModel.fullname),
                                   leading: CircleAvatar(
-                                    backgroundImage:
-                                        NetworkImage(userModel.photoURL),
+                                    backgroundImage: NetworkImage(
+                                        userModel.photoURL ??
+                                            defaultUserImageURL),
                                   ),
                                   subtitle: Text(
                                     'Reason: ${model.reason}',
@@ -171,7 +173,9 @@ class TimebankRequests extends StatelessWidget {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
+                      backgroundImage: NetworkImage(
+                        userModel.photoURL ?? defaultUserImageURL,
+                      ),
                     ),
                   ),
                   Padding(

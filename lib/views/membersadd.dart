@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 
 class AddMembers extends StatefulWidget {
@@ -64,7 +64,7 @@ class _AddMembersState extends State<AddMembers> {
                                 // ),
                                 CircleAvatar(
                                   backgroundImage:
-                                      NetworkImage(document['photourl'] ?? ''),
+                                      NetworkImage(document['photourl'] ?? defaultUserImageURL),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(right: 20.0),

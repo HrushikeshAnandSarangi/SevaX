@@ -905,7 +905,9 @@ class NewsListState extends State<NewsList> {
             child: FadeInImage(
               fit: BoxFit.fitWidth,
               placeholder: AssetImage('lib/assets/images/noimagefound.png'),
-              image: NetworkImage(urlToLoad),
+              image: NetworkImage(
+                urlToLoad ?? defaultUserImageURL,
+              ),
             ),
           ),
         ),

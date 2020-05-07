@@ -143,7 +143,7 @@ class _ChatViewState extends State<ChatView> {
                 ),
               ),
               image: DecorationImage(
-                image: NetworkImage(imageUrl),
+                image: NetworkImage(imageUrl ?? defaultUserImageURL),
               ),
             ),
           ),
@@ -360,7 +360,7 @@ class _ChatViewState extends State<ChatView> {
 
   _scrollToBottom() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      Timer(Duration(milliseconds: 100), () {
+      Timer(Duration(milliseconds: 300), () {
         try {
           _scrollController.jumpTo(
             _scrollController.position.maxScrollExtent,
@@ -787,7 +787,9 @@ class _ChatViewState extends State<ChatView> {
                             fit: BoxFit.fitWidth,
                             placeholder:
                                 AssetImage('lib/assets/images/waiting.jpg'),
-                            image: NetworkImage(imageBanner),
+                            image: NetworkImage(
+                              imageBanner ?? defaultUserImageURL,
+                            ),
                           )
                         : Offstage()),
               ),

@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -107,7 +108,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               child: Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Text(
-                  "save",
+                  "Save",
                   style: prefix0.TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
@@ -312,7 +313,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         color: isSelected(user.email) ? Colors.green : Colors.white,
         child: ListTile(
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(user.photoURL),
+            backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
           ),
           title: Text(
             user.fullname,
@@ -320,12 +321,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               color: getTextColorForSelectedItem(user.email),
             ),
           ),
-          subtitle: Text(
-            user.email,
-            style: TextStyle(
-              color: getTextColorForSelectedItem(user.email),
-            ),
-          ),
+          subtitle: Container(),
         ),
       ),
     );

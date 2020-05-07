@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 
 class GroupCard extends StatelessWidget {
   final String image;
@@ -26,7 +27,7 @@ class GroupCard extends StatelessWidget {
           AspectRatio(
             aspectRatio: 3 / 2,
             child: CachedNetworkImage(
-              imageUrl: image,
+              imageUrl: image ?? defaultGroupImageURL,
               fit: BoxFit.fitWidth,
             ),
           ),
