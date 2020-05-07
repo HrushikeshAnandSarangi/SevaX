@@ -16,8 +16,9 @@ import 'package:share/share.dart';
 class InviteAddMembers extends StatefulWidget {
   final String communityId;
   final String timebankId;
+  final TimebankModel timebankModel;
 
-  InviteAddMembers(this.timebankId, this.communityId);
+  InviteAddMembers(this.timebankId, this.communityId, this.timebankModel);
 
   @override
   State<StatefulWidget> createState() => InviteAddMembersState();
@@ -32,6 +33,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   void initState() {
     super.initState();
     _setTimebankModel();
+    setState(() {});
   }
 
   void _setTimebankModel() async {
@@ -68,35 +70,39 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   Widget get inviteCodeWidget {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.all(5),
-          child: GestureDetector(
-            child: Container(
-              height: 25,
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    "Invite via code",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+    return !widget.timebankModel.private == true
+        ? Column(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(5),
+                child: GestureDetector(
+                  child: Container(
+                    height: 25,
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          "Invite via code",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Spacer(),
+                        Image.asset("lib/assets/images/add.png"),
+                      ],
                     ),
                   ),
-                  Spacer(),
-                  Image.asset("lib/assets/images/add.png"),
-                ],
+                  onTap: () async {
+                    _asyncInputDialog(context);
+                  },
+                ),
               ),
-            ),
-            onTap: () async {
-              _asyncInputDialog(context);
-            },
-          ),
-        ),
-        getTimebankCodesWidget,
-      ],
-    );
+              getTimebankCodesWidget,
+            ],
+          )
+        : Container(
+            child: Text('private timebank'),
+          );
   }
 
   Widget get getTimebankCodesWidget {

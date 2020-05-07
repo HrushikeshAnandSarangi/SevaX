@@ -667,70 +667,112 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 //        "SevaCore.of(context).loggedInUser.sevaUserID:${SevaCore.of(context).loggedInUser.sevaUserID}");
 //    print("user.sevaUserID:${user.sevaUserID}");
 
-    return SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID ||
-            !widget.isUserAdmin ||
-            user.sevaUserID == timebankModel.creatorId
-        ? Offstage()
-        : Row(
-            children: <Widget>[
-              if (isPromoteBottonVisible)
+    if (SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID &&
+        !widget.isUserAdmin) {
+      return Padding(
+        padding: EdgeInsets.only(left: 2, right: 2),
+        child: CustomRaisedButton(
+          debouncer: debounceValue,
+          action: Actions.Exit,
+          onTap: () async {
+            Map<String, bool> onActivityResult = await showAdvisory(
+                dialogTitle:
+                    "Are you sure you want to exit from ${model.name}?");
+            if (onActivityResult['PROCEED']) {
+              setState(() {
+                isProgressBarActive = true;
+              });
+              if (isAdmin) {
+                List<String> admins =
+                    timebankModel.admins.map((s) => s).toList();
+                admins.remove(user.sevaUserID);
+                _updateTimebank(timebankModel, admins: admins);
+              } else {
+                List<String> members =
+                    timebankModel.members.map((s) => s).toList();
+                members.remove(user.sevaUserID);
+                if (widget.isCommunity != null && widget.isCommunity) {
+                  _removeUserFromCommunityAndUpdateUserCommunityList(
+                      model: timebankModel,
+                      members: members,
+                      userId: user.sevaUserID);
+                } else {
+                  _updateTimebank(timebankModel, members: members);
+                }
+              }
+            } else {
+              return;
+            }
+          },
+        ),
+      );
+    } else {
+      return SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID ||
+              !widget.isUserAdmin ||
+              user.sevaUserID == timebankModel.creatorId
+          ? Offstage()
+          : Row(
+              children: <Widget>[
+                if (isPromoteBottonVisible)
+                  Padding(
+                    padding: EdgeInsets.only(left: 2, right: 2),
+                    child: CustomRaisedButton(
+                      debouncer: debounceValue,
+                      action: Actions.Promote,
+                      onTap: () async {
+                        setState(() {
+                          isProgressBarActive = true;
+                        });
+                        List<String> admins =
+                            timebankModel.admins.map((s) => s).toList();
+                        admins.add(user.sevaUserID);
+                        _updateTimebank(timebankModel, admins: admins);
+                      },
+                    ),
+                  ),
                 Padding(
                   padding: EdgeInsets.only(left: 2, right: 2),
                   child: CustomRaisedButton(
                     debouncer: debounceValue,
-                    action: Actions.Promote,
+                    action: Actions.Remove,
                     onTap: () async {
-                      setState(() {
-                        isProgressBarActive = true;
-                      });
-                      List<String> admins =
-                          timebankModel.admins.map((s) => s).toList();
-                      admins.add(user.sevaUserID);
-                      _updateTimebank(timebankModel, admins: admins);
+                      //Here we need to put dialog
+
+                      Map<String, bool> onActivityResult = await showAdvisory(
+                          dialogTitle:
+                              "Are you sure you want to remove ${user.fullname}?");
+                      if (onActivityResult['PROCEED']) {
+                        setState(() {
+                          isProgressBarActive = true;
+                        });
+                        if (isAdmin) {
+                          List<String> admins =
+                              timebankModel.admins.map((s) => s).toList();
+                          admins.remove(user.sevaUserID);
+                          _updateTimebank(timebankModel, admins: admins);
+                        } else {
+                          List<String> members =
+                              timebankModel.members.map((s) => s).toList();
+                          members.remove(user.sevaUserID);
+                          if (widget.isCommunity != null &&
+                              widget.isCommunity) {
+                            _removeUserFromCommunityAndUpdateUserCommunityList(
+                                model: timebankModel,
+                                members: members,
+                                userId: user.sevaUserID);
+                          } else {
+                            _updateTimebank(timebankModel, members: members);
+                          }
+                        }
+                      } else {
+                        return;
+                      }
                     },
                   ),
                 ),
-              Padding(
-                padding: EdgeInsets.only(left: 2, right: 2),
-                child: CustomRaisedButton(
-                  debouncer: debounceValue,
-                  action: Actions.Remove,
-                  onTap: () async {
-                    //Here we need to put dialog
-
-                    Map<String, bool> onActivityResult = await showAdvisory(
-                        dialogTitle:
-                            "Are you sure you want to remove ${user.fullname}?");
-                    if (onActivityResult['PROCEED']) {
-                      setState(() {
-                        isProgressBarActive = true;
-                      });
-                      if (isAdmin) {
-                        List<String> admins =
-                            timebankModel.admins.map((s) => s).toList();
-                        admins.remove(user.sevaUserID);
-                        _updateTimebank(timebankModel, admins: admins);
-                      } else {
-                        List<String> members =
-                            timebankModel.members.map((s) => s).toList();
-                        members.remove(user.sevaUserID);
-                        if (widget.isCommunity != null && widget.isCommunity) {
-                          _removeUserFromCommunityAndUpdateUserCommunityList(
-                              model: timebankModel,
-                              members: members,
-                              userId: user.sevaUserID);
-                        } else {
-                          _updateTimebank(timebankModel, members: members);
-                        }
-                      }
-                    } else {
-                      return;
-                    }
-                  },
-                ),
-              ),
-            ],
-          );
+              ],
+            );
+    }
   }
 
   Future _addUserToCommunityAndUpdateUserCommunityList({
@@ -909,10 +951,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => InviteAddMembers(
-                    timebankModel.id,
-                    timebankModel.communityId,
-                  ),
+                  builder: (context) => InviteAddMembers(timebankModel.id,
+                      timebankModel.communityId, timebankModel),
                 ),
               );
             },
@@ -1156,6 +1196,7 @@ enum Actions {
   Reject,
   Remove,
   Promote,
+  Exit,
 }
 
 class Debouncer {

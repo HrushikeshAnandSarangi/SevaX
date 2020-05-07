@@ -20,8 +20,6 @@ import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 
-import '../../app_localizations.dart';
-
 class LoginPage extends StatefulWidget {
   LoginPage();
 
@@ -148,36 +146,26 @@ class _LoginPageState extends State<LoginPage> {
                     RichText(
                       text: TextSpan(
                         style: TextStyle(color: Colors.black45, fontSize: 12),
-                        text: AppLocalizations.of(context)
-                            .translate('login_desc_1'),
+                        text: 'By continuing, you agree to SevaX',
                         children: <TextSpan>[
                           TextSpan(
-                              text: " " +
-                                  AppLocalizations.of(context)
-                                      .translate('terms'),
+                              text: ' Terms of Service',
                               style: TextStyle(
                                   color: Theme.of(context).accentColor),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = showTermsPage),
                           TextSpan(
-                            text: AppLocalizations.of(context)
-                                .translate('login_desc_2'),
-                          ),
+                              text:
+                                  ' We will manage information as described in our'),
                           TextSpan(
-                              text: " " +
-                                  AppLocalizations.of(context)
-                                      .translate('privacy_policy'),
+                              text: ' Privacy Policy ',
                               style: TextStyle(
                                   color: Theme.of(context).accentColor),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = showPrivacyPolicyPage),
+                          TextSpan(text: ' and'),
                           TextSpan(
-                            text: AppLocalizations.of(context).translate('and'),
-                          ),
-                          TextSpan(
-                              text: " " +
-                                  AppLocalizations.of(context)
-                                      .translate('payment_policy'),
+                              text: ' Payment Policy.',
                               style: TextStyle(
                                   color: Theme.of(context).accentColor),
                               recognizer: TapGestureRecognizer()
@@ -195,8 +183,7 @@ class _LoginPageState extends State<LoginPage> {
                         Row(
                           children: <Widget>[
                             Text(
-                              AppLocalizations.of(context)
-                                  .translate('new_user'),
+                              "New User? ",
                               style: TextStyle(
                                 color: Colors.grey,
                               ),
@@ -214,8 +201,7 @@ class _LoginPageState extends State<LoginPage> {
                                 if (user != null) _processLogin(user);
                               },
                               child: Text(
-                                AppLocalizations.of(context)
-                                    .translate('sign_up'),
+                                "Sign up",
                                 style: TextStyle(
                                   color: Theme.of(context).accentColor,
                                 ),
@@ -227,8 +213,7 @@ class _LoginPageState extends State<LoginPage> {
                         Row(
                           children: <Widget>[
                             Text(
-                              AppLocalizations.of(context)
-                                  .translate('forgot_password'),
+                              "Forgot Password? ",
                               style: TextStyle(
                                 color: Colors.grey,
                               ),
@@ -252,8 +237,7 @@ class _LoginPageState extends State<LoginPage> {
                                         builder: (context) {
                                           return AlertDialog(
                                             title: Text(
-                                              AppLocalizations.of(context)
-                                                  .translate('enter_email'),
+                                              'Enter email',
                                             ),
                                             content: Column(
                                               mainAxisSize: MainAxisSize.min,
@@ -263,21 +247,13 @@ class _LoginPageState extends State<LoginPage> {
                                                   child: TextFormField(
                                                     validator: (value) {
                                                       if (value.isEmpty) {
-                                                        return AppLocalizations
-                                                                .of(context)
-                                                            .translate(
-                                                                'email_reset_msg');
+                                                        return 'Please enter email to reset';
                                                       } else if (!validateEmail(
                                                           value.trim())) {
-                                                        return AppLocalizations
-                                                                .of(context)
-                                                            .translate(
-                                                                'enter_valid_email');
-                                                      } else {
-                                                        _textFieldControllerResetEmail =
-                                                            value;
-                                                        return null;
+                                                        return 'Please enter a valid email';
                                                       }
+                                                      _textFieldControllerResetEmail =
+                                                          value;
                                                     },
                                                     // validator: validateEmail,
                                                     onChanged: (value) {
@@ -289,10 +265,7 @@ class _LoginPageState extends State<LoginPage> {
                                                     controller: null,
                                                     decoration: InputDecoration(
                                                       hintText:
-                                                          AppLocalizations.of(
-                                                                  context)
-                                                              .translate(
-                                                                  'email_hint'),
+                                                          "Your email address",
                                                       // errorText: isEmailValidForReset
                                                       //     ? null
                                                       //     : validateEmail(
@@ -316,10 +289,7 @@ class _LoginPageState extends State<LoginPage> {
                                                           .values
                                                           .buttonTextColor,
                                                       child: Text(
-                                                        AppLocalizations.of(
-                                                                context)
-                                                            .translate(
-                                                                'reset_password'),
+                                                        'Reset Password',
                                                         style: TextStyle(
                                                           fontSize: 15,
                                                         ),
@@ -341,10 +311,7 @@ class _LoginPageState extends State<LoginPage> {
                                                     ),
                                                     FlatButton(
                                                       child: Text(
-                                                        AppLocalizations.of(
-                                                                context)
-                                                            .translate(
-                                                                'cancel'),
+                                                        'Cancel',
                                                         style: TextStyle(
                                                           fontSize: 15,
                                                           color: Colors.red,
@@ -390,8 +357,7 @@ class _LoginPageState extends State<LoginPage> {
                                     padding:
                                         const EdgeInsets.symmetric(vertical: 5),
                                     child: Text(
-                                      AppLocalizations.of(context)
-                                          .translate('reset'),
+                                      "Reset",
                                       style: TextStyle(
                                           color: Theme.of(context).accentColor),
                                     ),
@@ -409,7 +375,7 @@ class _LoginPageState extends State<LoginPage> {
                         shape: StadiumBorder(),
                         color: Color(0x0FF766FE0),
                         child: Text(
-                          AppLocalizations.of(context).translate('sign_in'),
+                          'Sign in',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -419,28 +385,21 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: isLoading
                             ? null
                             : () async {
-                                var connResult =
-                                    await Connectivity().checkConnectivity();
-                                if (connResult == ConnectivityResult.none) {
-                                  _scaffoldKey.currentState.showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        AppLocalizations.of(context)
-                                            .translate('internet_connection'),
-                                      ),
-                                      action: SnackBarAction(
-                                        label: AppLocalizations.of(context)
-                                            .translate('dismiss'),
-                                        onPressed: () => _scaffoldKey
-                                            .currentState
-                                            .hideCurrentSnackBar(),
-                                      ),
+                              var connResult = await Connectivity().checkConnectivity();
+                              if(connResult == ConnectivityResult.none){
+                                _scaffoldKey.currentState.showSnackBar(
+                                  SnackBar(
+                                    content: Text("Please check your internet connection."),
+                                    action: SnackBarAction(
+                                      label: 'Dismiss',
+                                      onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
                                     ),
-                                  );
-                                  return;
-                                }
+                                  ),
+                                );
+                                return ;
+                              }
 
-                                signInWithEmailAndPassword();
+                              signInWithEmailAndPassword();
                               },
                       ),
                     ),
@@ -485,7 +444,7 @@ class _LoginPageState extends State<LoginPage> {
                     //   ),
                     // ),
                     SizedBox(height: 8),
-                    Text(AppLocalizations.of(context).translate('or')),
+                    Text('or'),
                     SizedBox(height: 8),
                     signInWithSocialMedia,
                     SizedBox(height: 8),
@@ -493,8 +452,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: ScreenUtil.getInstance().setHeight(30),
                     ),
 //                    futureLoginBtn,
-                    (FlavorConfig.appFlavor == Flavor.APP ||
-                            FlavorConfig.appFlavor == Flavor.SEVA_DEV)
+                    (FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)
                         ? Offstage()
                         : poweredBySevaLogo,
                     SizedBox(height: 16),
@@ -607,9 +565,7 @@ class _LoginPageState extends State<LoginPage> {
         children: <Widget>[
           FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
               ? Text(
-                  AppLocalizations.of(context)
-                      .translate('humanity_first')
-                      .toUpperCase(),
+                  'Humanity\nFirst'.toUpperCase(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     height: 1,
@@ -676,7 +632,7 @@ class _LoginPageState extends State<LoginPage> {
                     cursorColor: Colors.black54,
                     validator: _validateEmailId,
                     onSaved: _saveEmail,
-                    onFieldSubmitted: (v) {
+                    onFieldSubmitted: (v){
                       FocusScope.of(context).requestFocus(pwdFocus);
                     },
                     decoration: InputDecoration(
@@ -686,8 +642,7 @@ class _LoginPageState extends State<LoginPage> {
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.black54),
                       ),
-                      labelText:
-                          AppLocalizations.of(context).translate('email'),
+                      labelText: 'EMAIL',
                       labelStyle: textStyle,
                     ),
                   ),
@@ -704,8 +659,7 @@ class _LoginPageState extends State<LoginPage> {
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black54),
                         ),
-                        labelText:
-                            AppLocalizations.of(context).translate('password'),
+                        labelText: 'PASSWORD',
                         labelStyle: textStyle,
                         suffix: GestureDetector(
                           onTap: () {
@@ -885,9 +839,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             horizontalLine(),
-            Text(
-              AppLocalizations.of(context).translate('sign_in'),
-            ),
+            Text("Sign in with"),
             horizontalLine()
           ],
         ),
@@ -923,7 +875,6 @@ class _LoginPageState extends State<LoginPage> {
       child: googleLogin,
     );
   }
-
   Widget get appleLogin {
     return Material(
       color: Colors.white,
@@ -931,7 +882,7 @@ class _LoginPageState extends State<LoginPage> {
       child: InkWell(
         customBorder: CircleBorder(),
         onTap: appleLogIn,
-        child: SizedBox(
+        child:  SizedBox(
           height: 44,
           width: 44,
           child: Image.asset('lib/assets/images/signin_apple.png'),
@@ -1009,7 +960,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget get googleLoginiPhone {
     return signInButton(
       imageRef: 'lib/assets/google-logo-png-open-2000.png',
-      msg: AppLocalizations.of(context).translate('google_signIn'),
+      msg: 'Sign in with Google',
       operation: useGoogleSignIn,
     );
   }
@@ -1017,25 +968,24 @@ class _LoginPageState extends State<LoginPage> {
   Widget get appleLoginiPhone {
     return signInButton(
       imageRef: 'lib/assets/images/apple-logo.png',
-      msg: AppLocalizations.of(context).translate('apple_signIn'),
+      msg: 'Sign in with Apple',
       operation: appleLogIn,
     );
   }
 
   void appleLogIn() async {
     var connResult = await Connectivity().checkConnectivity();
-    if (connResult == ConnectivityResult.none) {
+    if(connResult == ConnectivityResult.none){
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
-          content: Text(
-              AppLocalizations.of(context).translate('internet_connection')),
+          content: Text("Please check your internet connection."),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('dismiss'),
+            label: 'Dismiss',
             onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
           ),
         ),
       );
-      return;
+      return ;
     }
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
@@ -1053,7 +1003,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget get poweredBySevaLogo {
     return Column(
       children: <Widget>[
-        Text(AppLocalizations.of(context).translate('powered_by'),
+        Text("Powered by",
             style: TextStyle(
                 color: Colors.black38, fontSize: 12, letterSpacing: 1.0)),
         SizedBox(
@@ -1074,18 +1024,17 @@ class _LoginPageState extends State<LoginPage> {
 
   void useGoogleSignIn() async {
     var connResult = await Connectivity().checkConnectivity();
-    if (connResult == ConnectivityResult.none) {
+    if(connResult == ConnectivityResult.none){
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
-          content: Text(
-              AppLocalizations.of(context).translate('internet_connection')),
+          content: Text("Please check your internet connection."),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('dismiss'),
+            label: 'Dismiss',
             onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
           ),
         ),
       );
-      return;
+      return ;
     }
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
@@ -1100,6 +1049,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void signInWithEmailAndPassword() async {
+
     if (!_formKey.currentState.validate()) return;
     FocusScope.of(context).requestFocus(FocusNode());
     _formKey.currentState.save();
@@ -1128,7 +1078,7 @@ class _LoginPageState extends State<LoginPage> {
         SnackBar(
           content: Text(error.message),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('dismiss'),
+            label: 'Dismiss',
             onPressed: () {
               _scaffoldKey.currentState.hideCurrentSnackBar();
             },
@@ -1140,7 +1090,7 @@ class _LoginPageState extends State<LoginPage> {
         SnackBar(
           content: Text(error.message),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('change_password'),
+            label: 'Change password',
             onPressed: () {
               resetPassword(emailId);
               _scaffoldKey.currentState.hideCurrentSnackBar();
@@ -1154,18 +1104,14 @@ class _LoginPageState extends State<LoginPage> {
   String _validateEmailId(String value) {
     RegExp emailPattern = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-    if (value.isEmpty)
-      return AppLocalizations.of(context).translate('enter_email');
-    if (!emailPattern.hasMatch(value))
-      return AppLocalizations.of(context).translate('enter_valid_email');
+    if (value.isEmpty) return 'Enter email';
+    if (!emailPattern.hasMatch(value)) return 'Email is not valid';
     return null;
   }
 
   String _validatePassword(String value) {
-    if (value.isEmpty)
-      return AppLocalizations.of(context).translate('enter_password');
-    if (value.length < 6)
-      return AppLocalizations.of(context).translate('password_msg');
+    if (value.isEmpty) return 'Enter password';
+    if (value.length < 6) return 'Password must be 6 characters long';
     return null;
   }
 
@@ -1193,9 +1139,9 @@ class _LoginPageState extends State<LoginPage> {
         .sendPasswordResetEmail(email: email)
         .then((onValue) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context).translate('link_sent_msg')),
+        content: Text("We\'ve sent the reset link to your email address"),
         action: SnackBarAction(
-          label: AppLocalizations.of(context).translate('dismiss'),
+          label: 'Dismiss',
           onPressed: () {
             _scaffoldKey.currentState.hideCurrentSnackBar();
           },
@@ -1210,7 +1156,7 @@ class _LoginPageState extends State<LoginPage> {
 
     navigateToWebView(
       aboutMode: AboutMode(
-          title: AppLocalizations.of(context).translate('terms'),
+          title: "Terms of Service",
           urlToHit: dynamicLinks['termsAndConditionsLink']),
       context: context,
     );
@@ -1222,8 +1168,7 @@ class _LoginPageState extends State<LoginPage> {
 
     navigateToWebView(
       aboutMode: AboutMode(
-          title: AppLocalizations.of(context).translate('privacy_policy'),
-          urlToHit: dynamicLinks['privacyPolicyLink']),
+          title: "Privacy Policy", urlToHit: dynamicLinks['privacyPolicyLink']),
       context: context,
     );
   }
@@ -1233,8 +1178,7 @@ class _LoginPageState extends State<LoginPage> {
     print('payment clicked ' + dynamicLinks['paymentPolicyLink']);
     navigateToWebView(
       aboutMode: AboutMode(
-          title: AppLocalizations.of(context).translate('payment_policy'),
-          urlToHit: dynamicLinks['paymentPolicyLink']),
+          title: "Payment Policy", urlToHit: dynamicLinks['paymentPolicyLink']),
       context: context,
     );
   }

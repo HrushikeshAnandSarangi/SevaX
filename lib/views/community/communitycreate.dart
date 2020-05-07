@@ -133,7 +133,6 @@ class CreateEditCommunityViewFormState
   String errTxt = null;
   int totalMembersCount = 0;
 
-
   final _textUpdates = StreamController<String>();
 
   void initState() {
@@ -172,7 +171,8 @@ class CreateEditCommunityViewFormState
         if (communitynName != s) {
           SearchManager.searchCommunityForDuplicate(queryString: s)
               .then((commFound) {
-                print("querystring is  ${s} and communitynName is ${communitynName}");
+            print(
+                "querystring is  ${s} and communitynName is ${communitynName}");
             if (commFound) {
               setState(() {
                 communityFound = true;
@@ -347,7 +347,8 @@ class CreateEditCommunityViewFormState
                       communityModel.name =
                           value.replaceAll("[^a-zA-Z0-9_ ]*", "");
 
-                      timebankModel.name = value.replaceAll("[^a-zA-Z0-9_ ]*", "");
+                      timebankModel.name =
+                          value.replaceAll("[^a-zA-Z0-9_ ]*", "");
                     },
                     decoration: InputDecoration(
                       errorText: errTxt,
@@ -455,12 +456,44 @@ class CreateEditCommunityViewFormState
                       ],
                     ),
                   ),
-
+                  Row(
+                    children: <Widget>[
+                      headingText('Private Timebank'),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                        child: infoButton(
+                          context: context,
+                          key: GlobalKey(),
+                          type: InfoType.PRIVATE_TIMEBANK,
+                        ),
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Divider(),
+                          Checkbox(
+                            value: widget.isCreateTimebank
+                                ? snapshot.data.timebank.private
+                                : timebankModel.private,
+                            onChanged: (bool value) {
+                              print(value);
+                              timebankModel.private = value;
+                              snapshot.data.community
+                                  .updateValueByKey('private', value);
+                              communityModel.private = value;
+                              snapshot.data.timebank
+                                  .updateValueByKey('private', value);
+                              createEditCommunityBloc.onChange(snapshot.data);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                   Row(
                     children: <Widget>[
                       headingText('Protected Timebank'),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(2, 15, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
                         child: infoButton(
                           context: context,
                           key: GlobalKey(),
@@ -477,6 +510,7 @@ class CreateEditCommunityViewFormState
                             onChanged: (bool value) {
                               print(value);
                               timebankModel.protected = value;
+
                               snapshot.data.timebank
                                   .updateValueByKey('protected', value);
                               createEditCommunityBloc.onChange(snapshot.data);
@@ -558,7 +592,8 @@ class CreateEditCommunityViewFormState
                       label: Container(
                         child: Text(
                           (snapshot.data.timebank.address == null ||
-                                      snapshot.data.timebank.address.isEmpty || snapshot.data.timebank.address =="") &&
+                                      snapshot.data.timebank.address.isEmpty ||
+                                      snapshot.data.timebank.address == "") &&
                                   selectedAddress == ''
                               ? 'Add Location'
                               : widget.isCreateTimebank
@@ -650,18 +685,19 @@ class CreateEditCommunityViewFormState
                             );
                             return;
                           }
-                          if(errTxt != null){
+                          if (errTxt != null) {
                             showDialogForSuccess(
-                                dialogTitle:
-                                "Timebank name already exists !", err: true);
-                            return ;
+                                dialogTitle: "Timebank name already exists !",
+                                err: true);
+                            return;
                           }
                           // show a dialog
                           if (widget.isCreateTimebank) {
                             if (!hasRegisteredLocation()) {
                               showDialogForSuccess(
                                   dialogTitle:
-                                      "Please add your timebank location", err: true);
+                                      "Please add your timebank location",
+                                  err: true);
                               return;
                             }
 
@@ -764,7 +800,8 @@ class CreateEditCommunityViewFormState
                             if (!hasRegisteredLocation()) {
                               showDialogForSuccess(
                                   dialogTitle:
-                                      "Please add your timebank location", err: true);
+                                      "Please add your timebank location",
+                                  err: true);
                               return;
                             }
 
@@ -829,7 +866,8 @@ class CreateEditCommunityViewFormState
                             } else {
                               showDialogForSuccess(
                                   dialogTitle:
-                                      "Timebank updated successfully, Please restart your app to see the updated changes.", err: false);
+                                      "Timebank updated successfully, Please restart your app to see the updated changes.",
+                                  err: false);
                             }
                           }
                         },
@@ -1575,12 +1613,8 @@ class CreateEditCommunityViewFormState
               FlatButton(
                 child: Text(
                   'OK',
-
                   style: TextStyle(
-                    fontSize: 16,
-                    color: err ? Colors.red : Colors.green
-                  ),
-
+                      fontSize: 16, color: err ? Colors.red : Colors.green),
                 ),
                 onPressed: () {
                   Navigator.of(viewContext).pop();
