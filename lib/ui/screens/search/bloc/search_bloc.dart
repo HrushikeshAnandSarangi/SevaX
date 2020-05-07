@@ -15,7 +15,7 @@ class SearchBloc extends BlocBase {
         assert(user != null);
 
   final _searchText = BehaviorSubject<String>();
-  final _debouncer = Debouncer(milliseconds: 500);
+  final _debouncer = Debouncer(milliseconds: 800);
 
   void onSearchChange(String value) {
     if (value != null || value != "") {
