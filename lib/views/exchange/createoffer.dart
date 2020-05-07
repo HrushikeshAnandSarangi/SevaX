@@ -8,6 +8,7 @@ import 'package:location/location.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
@@ -247,14 +248,14 @@ class MyCustomFormState extends State<MyCustomForm> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute<GeoFirePoint>(
+                          MaterialPageRoute<LocationDataModel>(
                             builder: (context) => LocationPicker(
                               selectedLocation: location,
                             ),
                           ),
-                        ).then((point) {
-                          if (point != null) location = point;
-                          _getLocation();
+                        ).then((dataModel) {
+                          if (dataModel != null) location = dataModel.geoPoint;
+                          this.selectedAddress = dataModel.location;
                           log('ReceivedLocation: $selectedAddress');
                         });
                       },
@@ -510,16 +511,16 @@ class MyCustomFormState extends State<MyCustomForm> {
     );
   }
 
-  Future _getLocation() async {
-    String address = await LocationUtility().getFormattedAddress(
-      location.latitude,
-      location.longitude,
-    );
-    log('_getLocation: $address');
-    setState(() {
-      this.selectedAddress = address;
-    });
-  }
+  // Future _getLocation() async {
+  //   String address = await LocationUtility().getFormattedAddress(
+  //     location.latitude,
+  //     location.longitude,
+  //   );
+  //   log('_getLocation: $address');
+  //   setState(() {
+  //     this.selectedAddress = address;
+  //   });
+  // }
 
   void get _fetchCurrentlocation async {
     try {

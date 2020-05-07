@@ -17,6 +17,7 @@ import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -133,7 +134,6 @@ class CreateEditCommunityViewFormState
   String errTxt = null;
   int totalMembersCount = 0;
 
-
   final _textUpdates = StreamController<String>();
 
   void initState() {
@@ -172,7 +172,8 @@ class CreateEditCommunityViewFormState
         if (communitynName != s) {
           SearchManager.searchCommunityForDuplicate(queryString: s)
               .then((commFound) {
-                print("querystring is  ${s} and communitynName is ${communitynName}");
+            print(
+                "querystring is  ${s} and communitynName is ${communitynName}");
             if (commFound) {
               setState(() {
                 communityFound = true;
@@ -347,7 +348,8 @@ class CreateEditCommunityViewFormState
                       communityModel.name =
                           value.replaceAll("[^a-zA-Z0-9_ ]*", "");
 
-                      timebankModel.name = value.replaceAll("[^a-zA-Z0-9_ ]*", "");
+                      timebankModel.name =
+                          value.replaceAll("[^a-zA-Z0-9_ ]*", "");
                     },
                     decoration: InputDecoration(
                       errorText: errTxt,
@@ -558,7 +560,8 @@ class CreateEditCommunityViewFormState
                       label: Container(
                         child: Text(
                           (snapshot.data.timebank.address == null ||
-                                      snapshot.data.timebank.address.isEmpty || snapshot.data.timebank.address =="") &&
+                                      snapshot.data.timebank.address.isEmpty ||
+                                      snapshot.data.timebank.address == "") &&
                                   selectedAddress == ''
                               ? 'Add Location'
                               : widget.isCreateTimebank
@@ -572,19 +575,20 @@ class CreateEditCommunityViewFormState
                         print("Location opened : $location");
                         await Navigator.push(
                           context,
-                          MaterialPageRoute<GeoFirePoint>(
+                          MaterialPageRoute<LocationDataModel>(
                             builder: (context) => LocationPicker(
                               selectedLocation: location,
                             ),
                           ),
-                        ).then((point) {
-                          if (point != null) {
-                            location = snapshot.data.timebank.location = point;
+                        ).then((dataModel) {
+                          if (dataModel != null) {
+                            location = snapshot.data.timebank.location =
+                                dataModel.geoPoint;
 
-                            print(
-                                "Location is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
+                            // print(
+                            //     "Location is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
                           }
-                          _getLocation(snapshot.data);
+                          _setLocation(snapshot.data, dataModel);
                           print(
                               'ReceivedLocation: $snapshot.data.timebank.address');
                         });
@@ -650,18 +654,19 @@ class CreateEditCommunityViewFormState
                             );
                             return;
                           }
-                          if(errTxt != null){
+                          if (errTxt != null) {
                             showDialogForSuccess(
-                                dialogTitle:
-                                "Timebank name already exists !", err: true);
-                            return ;
+                                dialogTitle: "Timebank name already exists !",
+                                err: true);
+                            return;
                           }
                           // show a dialog
                           if (widget.isCreateTimebank) {
                             if (!hasRegisteredLocation()) {
                               showDialogForSuccess(
                                   dialogTitle:
-                                      "Please add your timebank location", err: true);
+                                      "Please add your timebank location",
+                                  err: true);
                               return;
                             }
 
@@ -764,7 +769,8 @@ class CreateEditCommunityViewFormState
                             if (!hasRegisteredLocation()) {
                               showDialogForSuccess(
                                   dialogTitle:
-                                      "Please add your timebank location", err: true);
+                                      "Please add your timebank location",
+                                  err: true);
                               return;
                             }
 
@@ -829,7 +835,8 @@ class CreateEditCommunityViewFormState
                             } else {
                               showDialogForSuccess(
                                   dialogTitle:
-                                      "Timebank updated successfully, Please restart your app to see the updated changes.", err: false);
+                                      "Timebank updated successfully, Please restart your app to see the updated changes.",
+                                  err: false);
                             }
                           }
                         },
@@ -1029,23 +1036,37 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  Future _getLocation(data) async {
+  Future _setLocation(data, LocationDataModel dataModel) async {
     print('Timebank value:$data');
-    String address = await LocationUtility().getFormattedAddress(
-      location.latitude,
-      location.longitude,
-    );
     setState(() {
-      this.selectedAddress = address;
+      this.selectedAddress = dataModel.location;
     });
 //    timebank.updateValueByKey('locationAddress', address);
-    print('_getLocation: $address');
-    timebankModel.address = address;
+    print('_getLocation: ${dataModel.location}');
+    timebankModel.address = dataModel.location;
     communityModel.location = location;
-    data.timebank.updateValueByKey('address', address);
+    data.timebank.updateValueByKey('address', dataModel.location);
     data.community.updateValueByKey('location', location);
     createEditCommunityBloc.onChange(data);
   }
+
+//   Future _getLocation(data) async {
+//     print('Timebank value:$data');
+//     String address = await LocationUtility().getFormattedAddress(
+//       location.latitude,
+//       location.longitude,
+//     );
+//     setState(() {
+//       this.selectedAddress = address;
+//     });
+// //    timebank.updateValueByKey('locationAddress', address);
+//     print('_getLocation: $address');
+//     timebankModel.address = address;
+//     communityModel.location = location;
+//     data.timebank.updateValueByKey('address', address);
+//     data.community.updateValueByKey('location', location);
+//     createEditCommunityBloc.onChange(data);
+//   }
 
   void fetchCurrentlocation() {
     Location().getLocation().then((onValue) {
@@ -1575,12 +1596,8 @@ class CreateEditCommunityViewFormState
               FlatButton(
                 child: Text(
                   'OK',
-
                   style: TextStyle(
-                    fontSize: 16,
-                    color: err ? Colors.red : Colors.green
-                  ),
-
+                      fontSize: 16, color: err ? Colors.red : Colors.green),
                 ),
                 onPressed: () {
                   Navigator.of(viewContext).pop();

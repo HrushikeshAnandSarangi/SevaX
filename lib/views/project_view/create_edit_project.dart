@@ -10,6 +10,7 @@ import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/projects_avtaar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -439,18 +440,21 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   print("Location opened : $location");
                   await Navigator.push(
                     context,
-                    MaterialPageRoute<GeoFirePoint>(
+                    MaterialPageRoute<LocationDataModel>(
                       builder: (context) => LocationPicker(
                         selectedLocation: location,
                       ),
                     ),
-                  ).then((point) {
-                    if (point != null) {
-                      location = point;
+                  ).then((dataModel) {
+                    if (dataModel != null) {
+                      location = dataModel.geoPoint;
                       print(
                           "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
                     }
-                    _getLocation(location);
+                    setState(() {
+                      this.selectedAddress = dataModel.location;
+                    });
+                    // _getLocation(location);
                     //print('ReceivedLocation: $snapshot.data.timebank.address');
                   });
                 },

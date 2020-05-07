@@ -14,6 +14,7 @@ import 'package:location/location.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -433,14 +434,17 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute<GeoFirePoint>(
+                        MaterialPageRoute<LocationDataModel>(
                           builder: (context) => LocationPicker(
                             selectedLocation: location,
                           ),
                         ),
-                      ).then((point) {
-                        if (point != null) location = point;
-                        _getLocation();
+                      ).then((dataModel) {
+                        if (dataModel != null) location = dataModel.geoPoint;
+                        setState(() {
+                          this.selectedAddress = dataModel.location;
+                        });
+                        // _getLocation();
                         log('ReceivedLocation: $selectedAddress');
                       });
                     },
@@ -787,14 +791,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     }
   }
 
-  Future _getLocation() async {
-    String address = await LocationUtility().getFormattedAddress(
-      location.latitude,
-      location.longitude,
-    );
+  // Future _getLocation() async {
+  //   String address = await LocationUtility().getFormattedAddress(
+  //     location.latitude,
+  //     location.longitude,
+  //   );
 
-    setState(() {
-      this.selectedAddress = address;
-    });
-  }
+  //   setState(() {
+  //     this.selectedAddress = address;
+  //   });
+  // }
 }

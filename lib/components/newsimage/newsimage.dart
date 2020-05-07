@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
-import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -185,19 +185,21 @@ class NewsImageState extends State<NewsImage>
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute<GeoFirePoint>(
+                MaterialPageRoute<LocationDataModel>(
                   builder: (context) => LocationPicker(
                     selectedLocation: widget.geoFirePointLocation,
                   ),
                 ),
               ).then(
-                (point) {
-                  if (point != null) {
-                    getLocation(point).then((address) {
-                      selectedAddress = address;
-                      geoFirePointLocationCallback(point);
-                      setState(() {});
-                    });
+                (LocationDataModel dataModel) {
+                  if (dataModel != null) {
+                    selectedAddress = dataModel.location;
+                    geoFirePointLocationCallback(dataModel.geoPoint);
+                    // getLocation(point).then((address) {
+                    //   selectedAddress = address;
+                    //   geoFirePointLocationCallback(point);
+                    //   setState(() {});
+                    // });
                   }
                 },
               );

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/models/location_model.dart';
 
 class LocationConfimationCard extends StatelessWidget {
-  final String address;
-  final GeoFirePoint point;
+  final LocationDataModel locationDataModel;
 
-  const LocationConfimationCard({Key key, this.address, this.point})
+  const LocationConfimationCard({Key key, this.locationDataModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final bool isReverseGeoEncoded = locationDataModel.location.contains('*');
+
     return Positioned(
       bottom: 0,
       left: 0,
@@ -26,7 +27,11 @@ class LocationConfimationCard extends StatelessWidget {
                 children: <Widget>[
                   Icon(Icons.location_on),
                   Text(
-                    address.split('*')[0],
+                    isReverseGeoEncoded
+                        ? locationDataModel.location.split('*')[0]
+                        : locationDataModel.location.contains(',')
+                            ? locationDataModel.location.split(',')[0]
+                            : locationDataModel.location,
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -37,7 +42,9 @@ class LocationConfimationCard extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(left: 8),
                 child: Text(
-                  address.split('*')[1] ?? '',
+                  isReverseGeoEncoded
+                      ? locationDataModel.location.split('*')[1] ?? ''
+                      : locationDataModel.location,
                   maxLines: 2,
                 ),
               ),
@@ -54,7 +61,10 @@ class LocationConfimationCard extends StatelessWidget {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   onPressed: () {
-                    Navigator.pop(context, point);
+                    Navigator.pop(
+                      context,
+                      locationDataModel,
+                    );
                   },
                 ),
               ),

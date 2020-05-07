@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
@@ -404,14 +405,17 @@ class RequestEditFormState extends State<RequestEditForm> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute<GeoFirePoint>(
+                      MaterialPageRoute<LocationDataModel>(
                         builder: (context) => LocationPicker(
                           selectedLocation: location,
                         ),
                       ),
-                    ).then((point) {
-                      if (point != null) location = point;
-                      _getLocation();
+                    ).then((dataModel) {
+                      if (dataModel != null) location = dataModel.geoPoint;
+                      setState(() {
+                        this.selectedAddress = dataModel.location;
+                      });
+                      // _getLocation();
                       log('ReceivedLocation: $selectedAddress');
                     });
                   },

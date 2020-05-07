@@ -47,6 +47,11 @@ class _LocationPickerState extends State<LocationPicker> {
   String address = 'Fetching location ...*';
   // CameraPosition cameraPosition;
   LatLng defaultLatLng = LatLng(41.678510, -87.494080);
+  LocationDataModel locationDataFromSearch = LocationDataModel(
+    null,
+    null,
+    null,
+  );
 
   CameraPosition get initialCameraPosition {
     return CameraPosition(
@@ -105,8 +110,8 @@ class _LocationPickerState extends State<LocationPicker> {
               Icons.search,
             ),
             onPressed: () async {
-              LocationDataModel dataModel = LocationDataModel("", null, null);
-              dataModel = await Navigator.push(
+              // LocationDataModel dataModel = LocationDataModel("", null, null);
+              locationDataFromSearch = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (BuildContext context) =>
@@ -114,7 +119,8 @@ class _LocationPickerState extends State<LocationPicker> {
                   fullscreenDialog: true,
                 ),
               );
-              target = LatLng(dataModel.lat, dataModel.lng);
+              target = LatLng(
+                  locationDataFromSearch.lat, locationDataFromSearch.lng);
               animateToLocation(
                 _mapController,
                 location: target,
@@ -134,8 +140,13 @@ class _LocationPickerState extends State<LocationPicker> {
           ),
         ),
         LocationConfimationCard(
-          address: address,
-          point: point,
+          locationDataModel: locationDataFromSearch.location == null
+              ? LocationDataModel(
+                  address,
+                  point?.latitude,
+                  point?.longitude,
+                )
+              : locationDataFromSearch,
         ),
       ]),
     );
@@ -234,12 +245,27 @@ class _LocationPickerState extends State<LocationPicker> {
         compassEnabled: true,
         markers: markers,
         onCameraMove: (position) {
-          setState(() {
-            target = position.target;
-          });
+          // setState(() {
+          target = position.target;
+          // });
         },
         onCameraIdle: () {
           _addMarker();
+          log(point
+              .distance(
+                lat: locationDataFromSearch.lat,
+                lng: locationDataFromSearch.lng,
+              )
+              .toString());
+          if (locationDataFromSearch.lat != null &&
+              locationDataFromSearch.lng != null) {
+            if (point.distance(
+                    lat: locationDataFromSearch.lat,
+                    lng: locationDataFromSearch.lng) >
+                0.005) {
+              locationDataFromSearch.location = null;
+            }
+          }
         },
       ),
     );

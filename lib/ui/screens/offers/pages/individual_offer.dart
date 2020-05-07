@@ -2,6 +2,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/location_picker.dart';
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
@@ -183,18 +184,24 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   onPressed: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute<GeoFirePoint>(
+                                      MaterialPageRoute<LocationDataModel>(
                                         builder: (context) => LocationPicker(
                                           selectedLocation:
                                               snapshot.data?.location,
                                         ),
                                       ),
-                                    ).then((point) {
-                                      if (point != null) {
-                                        _getLocation(point).then((address) {
-                                          _bloc.onLocatioChanged(
-                                              CustomLocation(point, address));
-                                        });
+                                    ).then((dataModel) {
+                                      if (dataModel != null) {
+                                        _bloc.onLocatioChanged(
+                                          CustomLocation(
+                                            dataModel.geoPoint,
+                                            dataModel.location,
+                                          ),
+                                        );
+                                        // _getLocation(point).then((address) {
+                                        // _bloc.onLocatioChanged(
+                                        // CustomLocation(point, address));
+                                        // });
                                       }
                                     });
                                   },
