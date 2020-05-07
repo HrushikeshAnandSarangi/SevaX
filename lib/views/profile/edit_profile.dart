@@ -301,8 +301,7 @@ class _EditProfilePageState extends State<EditProfilePage>
             ),
             child: CircleAvatar(
               backgroundImage: NetworkImage(
-                widget.userModel.photoURL ??
-                    'https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg',
+                widget.userModel.photoURL ?? defaultUserImageURL,
               ),
               backgroundColor: Colors.white,
               radius: MediaQuery.of(context).size.width / 4.5,

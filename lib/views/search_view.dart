@@ -72,7 +72,7 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
                     ),
                     image: DecorationImage(
                       image: NetworkImage(
-                          SevaCore.of(context).loggedInUser.photoURL),
+                          SevaCore.of(context).loggedInUser.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                 ),

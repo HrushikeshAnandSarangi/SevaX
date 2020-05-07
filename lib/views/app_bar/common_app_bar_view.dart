@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/base/base_view.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/views/app_bar/common_app_bar_view_model.dart';
 
 class CommonAppBarView extends StatelessWidget with PreferredSizeWidget {
@@ -41,7 +42,7 @@ class CommonAppBarView extends StatelessWidget with PreferredSizeWidget {
               image: viewModel.busy
                   ? CircularProgressIndicator()
                   : DecorationImage(
-                      image: NetworkImage(viewModel.photoUrl),
+                      image: NetworkImage(viewModel.photoUrl ?? defaultUserImageURL),
                     ),
             ),
           ),

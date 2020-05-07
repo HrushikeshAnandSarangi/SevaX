@@ -124,7 +124,7 @@ class AdminChatViewState extends State<AdminChatView> {
               ),
             ),
             image: DecorationImage(
-              image: NetworkImage(imageUrl),
+              image: NetworkImage(imageUrl ?? defaultUserImageURL),
             ),
           ),
         ),

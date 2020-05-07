@@ -12,6 +12,7 @@ class OfferCard extends StatelessWidget {
   final OfferType offerType;
   final Function onActionPressed;
   final Function onCardPressed;
+  final Color buttonColor;
 
   final bool isCreator;
   final bool isCardVisible;
@@ -28,6 +29,7 @@ class OfferCard extends StatelessWidget {
     this.selectedAddress,
     this.startDate,
     this.isCardVisible = false,
+    this.buttonColor,
   })  : assert(title != null),
         assert(subtitle != null),
         assert(offerType != null),
@@ -80,7 +82,8 @@ class OfferCard extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               padding: EdgeInsets.only(left: 10, right: 10),
-                              color: Theme.of(context).primaryColor,
+                              color:
+                                  buttonColor ?? Theme.of(context).primaryColor,
                               child: Text(
                                 actionButtonLabel ?? '',
                                 style: TextStyle(
