@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'dart:core';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -661,81 +660,81 @@ class DiscussionListState extends State<DiscussionList> {
       ],
     );
   }
-
-  Widget getCreateFeedCard({NewsModel news}) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Container(
-          alignment: Alignment.topCenter,
-          width: 40,
-          height: 40,
-          margin: EdgeInsets.only(left: 5, bottom: 10, top: 10),
-          child: ClipOval(
-            child: FadeInImage.assetNetwork(
-              placeholder: 'lib/assets/images/search.png',
-              image: SevaCore.of(context).loggedInUser.photoURL,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            margin: EdgeInsets.only(left: 9, right: 4),
-            child: FlatButton(
-              color: Color.fromARGB(50, 149, 149, 149),
-              onPressed: () {},
-              // onPressed: () {
-              //   if (SevaCore.of(context).loggedInUser.associatedWithTimebanks >
-              //       1) {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (context) {
-              //           var selectTimeBankForNewRequest = SelectTimeBankForNewRequest;
-              //           return selectTimeBankForNewRequest("Feed");
-              //         },
-              //       ),
-              //     );
-              //   } else {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (context) => NewsCeate(
-              //           timebankId:
-              //               SevaCore.of(context).loggedInUser.currentTimebank,
-              //         ),
-              //       ),
-              //     );
-              //   }
-              //these
-              // },
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NewsCreate(
-                        timebankId:
-                            SevaCore.of(context).loggedInUser.currentTimebank,
-                      ),
-                    ),
-                  );
-                },
-                child: Container(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    'Start a new discussion...',
-                    style: TextStyle(color: Colors.black),
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        )
-      ],
-    );
-  }
+//
+//  Widget getCreateFeedCard({NewsModel news}) {
+//    return Row(
+//      crossAxisAlignment: CrossAxisAlignment.center,
+//      children: <Widget>[
+//        Container(
+//          alignment: Alignment.topCenter,
+//          width: 40,
+//          height: 40,
+//          margin: EdgeInsets.only(left: 5, bottom: 10, top: 10),
+//          child: ClipOval(
+//            child: FadeInImage.assetNetwork(
+//              placeholder: 'lib/assets/images/search.png',
+//              image: SevaCore.of(context).loggedInUser.photoURL,
+//            ),
+//          ),
+//        ),
+//        Expanded(
+//          child: Container(
+//            margin: EdgeInsets.only(left: 9, right: 4),
+//            child: FlatButton(
+//              color: Color.fromARGB(50, 149, 149, 149),
+//              onPressed: () {},
+//              // onPressed: () {
+//              //   if (SevaCore.of(context).loggedInUser.associatedWithTimebanks >
+//              //       1) {
+//              //     Navigator.push(
+//              //       context,
+//              //       MaterialPageRoute(
+//              //         builder: (context) {
+//              //           var selectTimeBankForNewRequest = SelectTimeBankForNewRequest;
+//              //           return selectTimeBankForNewRequest("Feed");
+//              //         },
+//              //       ),
+//              //     );
+//              //   } else {
+//              //     Navigator.push(
+//              //       context,
+//              //       MaterialPageRoute(
+//              //         builder: (context) => NewsCeate(
+//              //           timebankId:
+//              //               SevaCore.of(context).loggedInUser.currentTimebank,
+//              //         ),
+//              //       ),
+//              //     );
+//              //   }
+//              //these
+//              // },
+//              child: GestureDetector(
+//                onTap: () {
+//                  Navigator.push(
+//                    context,
+//                    MaterialPageRoute(
+//                      builder: (context) => NewsCreate(
+//                        timebankId:
+//                            SevaCore.of(context).loggedInUser.currentTimebank,
+//                      ),
+//                    ),
+//                  );
+//                },
+//                child: Container(
+//                  alignment: Alignment.bottomLeft,
+//                  child: Text(
+//                    'Start a new discussion...',
+//                    style: TextStyle(color: Colors.black),
+//                    textAlign: TextAlign.left,
+//                  ),
+//                ),
+//              ),
+//            ),
+//          ),
+//        )
+//      ],
+//    );
+//  }
 
   void createSubTimebank(BuildContext context) {
     Navigator.push(
@@ -988,16 +987,33 @@ class DiscussionListState extends State<DiscussionList> {
                         // Slot
                         Row(
                           children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.all(5),
-                              height: 40,
-                              width: 40,
-                              child: CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                    news.userPhotoURL ?? defaultUserImageURL),
-                                minRadius: 40.0,
+                            ClipOval(
+                              child: SizedBox(
+                                height: 45,
+                                width: 45,
+                                child: FadeInImage.assetNetwork(
+                                  fit: BoxFit.cover,
+                                  placeholder: defaultUserImageURL,
+                                  //  placeholder: 'lib/assets/images/profile.png',
+                                  image: news.userPhotoURL == null
+                                      ? defaultUserImageURL
+                                      : news.userPhotoURL,
+                                ),
                               ),
                             ),
+//                            Container(
+//                              margin: EdgeInsets.all(5),
+//                              height: 40,
+//                              width: 40,
+//                              child: CircleAvatar(
+//                                backgroundImage: NetworkImage(
+//                                  news.userPhotoURL == null
+//                                      ? defaultUserImageURL
+//                                      : news.userPhotoURL,
+//                                ),
+//                                minRadius: 40.0,
+//                              ),
+//                            ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -1332,7 +1348,7 @@ class DiscussionListState extends State<DiscussionList> {
             child: FadeInImage(
               fit: BoxFit.fitWidth,
               placeholder: AssetImage('lib/assets/images/noimagefound.png'),
-              image: CachedNetworkImageProvider(urlToLoad),
+              image: NetworkImage(urlToLoad),
             ),
           ),
         ),

@@ -176,6 +176,9 @@ class OfferListItems extends StatelessWidget {
       selectedAddress: model.selectedAdrress,
       actionButtonLabel: getButtonLabel(
           model, SevaCore.of(parentContext).loggedInUser.sevaUserID),
+      buttonColor: isParticipant(parentContext, model)
+          ? Colors.grey
+          : Theme.of(parentContext).primaryColor,
       onCardPressed: () => _navigateToOfferDetails(model),
       onActionPressed: () => offerActions(parentContext, model),
     );
@@ -313,6 +316,9 @@ class NearOfferListItems extends StatelessWidget {
       selectedAddress: model.selectedAdrress,
       actionButtonLabel: getButtonLabel(
           model, SevaCore.of(parentContext).loggedInUser.sevaUserID),
+      buttonColor: isParticipant(parentContext, model)
+          ? Colors.grey
+          : Theme.of(parentContext).primaryColor,
       onCardPressed: () => _navigateToOfferDetails(model),
       onActionPressed: () => offerActions(parentContext, model),
     );
