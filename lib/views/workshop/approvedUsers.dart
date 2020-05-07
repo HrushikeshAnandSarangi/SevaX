@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/workshop/MembersInvolved.dart';
@@ -107,7 +108,7 @@ class RequestStatusViewState extends State<RequestStatusView> {
       child: Card(
         child: ListTile(
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(userSelected.photourl),
+            backgroundImage: NetworkImage(userSelected.photourl ?? defaultUserImageURL),
           ),
           title: Text(
             userSelected.fullname,

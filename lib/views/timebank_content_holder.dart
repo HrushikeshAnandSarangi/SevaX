@@ -994,10 +994,7 @@ class DiscussionListState extends State<DiscussionList> {
                               width: 40,
                               child: CircleAvatar(
                                 backgroundImage: NetworkImage(
-                                  news.userPhotoURL == null
-                                      ? defaultUserImageURL
-                                      : news.userPhotoURL,
-                                ),
+                                    news.userPhotoURL ?? defaultUserImageURL),
                                 minRadius: 40.0,
                               ),
                             ),

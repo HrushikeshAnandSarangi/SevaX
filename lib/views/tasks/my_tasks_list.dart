@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -250,7 +251,8 @@ class MyTasksList extends StatelessWidget {
                     ],
                   ),
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(user.photoURL),
+                    backgroundImage:
+                        NetworkImage(user.photoURL ?? defaultUserImageURL),
                   ),
                   onTap: () {
                     Navigator.of(context).push(

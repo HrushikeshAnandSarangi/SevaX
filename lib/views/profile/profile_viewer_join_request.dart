@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 
-import 'package:sevaexchange/views/profile/profileedit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/profile/profileedit.dart';
 
 class ProfileViewerJoinRequest extends StatelessWidget {
   final String userEmail;
@@ -46,7 +47,8 @@ class ProfileViewerJoinRequest extends StatelessWidget {
                             padding: EdgeInsets.only(top: 25.0),
                             child: CircleAvatar(
                               backgroundImage: (NetworkImage(
-                                  snapshot.data['photourl'] ?? '')),
+                                  snapshot.data['photourl'] ??
+                                      defaultUserImageURL)),
                               minRadius: 40.0,
                             )
                             //  SevaAvatar(),
