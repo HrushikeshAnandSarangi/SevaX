@@ -635,8 +635,23 @@ class TaskCardViewState extends State<TaskCardView> {
     ));
 
     if (results != null && results.containsKey('selection')) {
+      showProgressForCreditRetrieval();
       onActivityResult(results);
     } else {}
+  }
+
+  BuildContext creditRequestDialogContext;
+  void showProgressForCreditRetrieval() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          creditRequestDialogContext = context;
+          return AlertDialog(
+            title: Text("Please wait..."),
+            content: LinearProgressIndicator(),
+          );
+        });
   }
 
   Stream<List<ReviewModel>> getMyReview() async* {
@@ -652,9 +667,9 @@ class TaskCardViewState extends State<TaskCardView> {
     }));
   }
 
-  void onActivityResult(Map results) {
+  Future<void> onActivityResult(Map results) async {
     // adds review to firestore
-    Firestore.instance.collection("reviews").add({
+    await Firestore.instance.collection("reviews").add({
       "reviewer": SevaCore.of(context).loggedInUser.email,
       "reviewed": requestModel.email,
       "ratings": results['selection'],
@@ -713,7 +728,7 @@ class TaskCardViewState extends State<TaskCardView> {
           timebankId: requestModel.timebankId,
         ),
       );
-
+      Navigator.of(creditRequestDialogContext).pop();
       Navigator.of(context).pop();
     }
   }
