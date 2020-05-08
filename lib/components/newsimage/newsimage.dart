@@ -9,10 +9,10 @@ import 'package:location/location.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 import './image_picker_handler.dart';
 import '../../globals.dart' as globals;
-import '../location_picker.dart';
 
 class NewsImage extends StatefulWidget {
   final String photoCredits;
@@ -176,34 +176,13 @@ class NewsImageState extends State<NewsImage>
               imagePicker.showDialog(context);
             },
           ),
-          FlatButton.icon(
-            color: Colors.grey[200],
-            icon: Icon(Icons.add_location),
-            label: Text(
-              selectedAddress == null ? 'Add Location' : selectedAddress,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute<LocationDataModel>(
-                  builder: (context) => LocationPicker(
-                    selectedAddress: selectedAddress,
-                    selectedLocation: widget.geoFirePointLocation,
-                  ),
-                ),
-              ).then(
-                (LocationDataModel dataModel) {
-                  if (dataModel != null) {
-                    selectedAddress = dataModel.location;
-                    onLocationDataModelUpdate(dataModel);
-                    // getLocation(point).then((address) {
-                    //   selectedAddress = address;
-                    //   geoFirePointLocationCallback(point);
-                    //   setState(() {});
-                    // });
-                  }
-                },
-              );
+          LocationPickerWidget(
+            location: widget.geoFirePointLocation,
+            selectedAddress: selectedAddress,
+            onChanged: (LocationDataModel dataModel) {
+              selectedAddress = dataModel.location;
+              onLocationDataModelUpdate(dataModel);
+              setState(() {});
             },
           ),
         ],

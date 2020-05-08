@@ -33,14 +33,10 @@ class UpdateNewsFeed extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
-          backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             "Update feed",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(fontSize: 18),
           ),
-          centerTitle: false,
-          actions: <Widget>[],
         ),
         body: NewsCreateForm(
           timebankId: timebankId,
@@ -373,12 +369,11 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                 ],
               ),
               Container(
-                margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
                 alignment: Alignment(0, 1),
                 padding: const EdgeInsets.only(top: 10.0),
                 child: RaisedButton(
                   shape: StadiumBorder(),
-                  color: Theme.of(context).accentColor,
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
@@ -426,22 +421,11 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       );
                     }
                   },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.attachment,
-                        size: 24.0,
-                        color: FlavorConfig.values.buttonTextColor,
-                      ),
-                      Text(' '),
-                      Text(
-                        'Update feed',
-                        style: TextStyle(
-                          color: FlavorConfig.values.buttonTextColor,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    'Update feed',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
