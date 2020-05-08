@@ -112,7 +112,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
     // <-- note the async keyword here
 
     // this will contain the result from Navigator.pop(context, result)
-    final donateAmount_Recieved = await showDialog<double>(
+    final donateAmount_Received = await showDialog<double>(
       context: context,
       builder: (context) => InputDonateDialog(
           donateAmount: donateAmount,
@@ -123,9 +123,9 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
 
     // note that the result can also be null, so check it
     // (back button or pressed outside of the dialog)
-    if (donateAmount_Recieved != null) {
+    if (donateAmount_Received != null) {
       setState(() {
-        donateAmount = donateAmount_Recieved;
+        donateAmount = donateAmount_Received;
       });
       await TransactionBloc().createNewTransaction(
           this.widget.loggedInUser.sevaUserID,
@@ -177,7 +177,8 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text('Your current seva coins is ' + widget.maxAmount.toStringAsFixed(2).toString()),
+          Text('Your current seva coins is ' +
+              widget.maxAmount.toStringAsFixed(2).toString()),
           Slider(
             label: "Donate " + _donateAmount.toStringAsFixed(2) + " Coins",
             value: _donateAmount,

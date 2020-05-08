@@ -828,6 +828,7 @@ class DiscussionListState extends State<DiscussionList> {
           MaterialPageRoute(
             builder: (context) {
               return NewsCardView(
+                timebankId: widget.timebankModel.id,
                 newsModel: news,
               );
             },

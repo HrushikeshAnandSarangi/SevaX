@@ -178,7 +178,8 @@ Stream<List<RequestModel>> getTimebankExistingRequestListStream(
       .collection('requests')
       .where('timebankId', isEqualTo: timebankId)
       .where('accepted', isEqualTo: false)
-      .where('requestMode', isEqualTo: 'TIMEBANK_REQUEST');
+      .where('requestMode', isEqualTo: 'TIMEBANK_REQUEST')
+      .where('request_end', isLessThan: DateTime.now().millisecondsSinceEpoch);
 
   var data = query.snapshots();
 
@@ -212,7 +213,8 @@ Stream<List<RequestModel>> getPersonalRequestListStream(
       .collection('requests')
       .where('sevauserid', isEqualTo: sevauserid)
       .where('accepted', isEqualTo: false)
-      .where('requestMode', isEqualTo: 'PERSONAL_REQUEST');
+      .where('requestMode', isEqualTo: 'PERSONAL_REQUEST')
+      .where('request_end', isLessThan: DateTime.now().millisecondsSinceEpoch);
 
   var data = query.snapshots();
 
