@@ -33,6 +33,8 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../switch_timebank.dart';
+
 class CreateEditCommunityView extends StatelessWidget {
   final String timebankId;
   final bool isFromFind;
@@ -153,8 +155,8 @@ class CreateEditCommunityViewFormState
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
     selectedUsers = HashMap();
-    _fetchCurrentlocation;
-    if (!widget.isCreateTimebank) {
+
+    if (widget.isCreateTimebank) {
       _fetchCurrentlocation;
     }
 
@@ -245,7 +247,7 @@ class CreateEditCommunityViewFormState
 
     timebankModel =
         await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
-
+    selectedAddress = timebankModel.address;
     location = timebankModel.location;
     totalMembersCount = await FirestoreManager.getMembersCountOfAllMembers(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity);
@@ -560,7 +562,8 @@ class CreateEditCommunityViewFormState
                       selectedAddress: selectedAddress,
                       location: location,
                       onChanged: (LocationDataModel dataModel) {
-                        log("received data model");
+                        log("received data model ");
+
                         setState(() {
                           location = dataModel.geoPoint;
                           this.selectedAddress = dataModel.location;
@@ -807,10 +810,17 @@ class CreateEditCommunityViewFormState
                             if (widget.isFromFind) {
                               Navigator.of(context).pop();
                             } else {
-                              showDialogForSuccess(
-                                  dialogTitle:
-                                      "Timebank updated successfully, Please restart your app to see the updated changes.",
-                                  err: false);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SwitchTimebank(
+                                      content: 'Updating'),
+                                ),
+                              );
+                              // showDialogForSuccess(
+                              //     dialogTitle:
+                              //         "Timebank updated successfully, Please restart your app to see the updated changes.",
+                              //     err: false);
                             }
                           }
                         },
