@@ -428,17 +428,18 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               padding: const EdgeInsets.symmetric(vertical: 10.0),
             ),
             Center(
-                child: LocationPickerWidget(
-              selectedAddress: selectedAddress,
-              location: location,
-              onChanged: (LocationDataModel dataModel) {
-                log("received data model");
-                setState(() {
-                  location = dataModel.geoPoint;
-                  this.selectedAddress = dataModel.location;
-                });
-              },
-            )),
+              child: LocationPickerWidget(
+                selectedAddress: selectedAddress,
+                location: location,
+                onChanged: (LocationDataModel dataModel) {
+                  log("received data model");
+                  setState(() {
+                    location = dataModel.geoPoint;
+                    this.selectedAddress = dataModel.location;
+                  });
+                },
+              ),
+            ),
             // Center(
             //   child: FlatButton.icon(
             //     icon: Icon(Icons.add_location),

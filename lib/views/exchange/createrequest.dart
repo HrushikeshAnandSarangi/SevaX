@@ -747,6 +747,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.postTimestamp = timestamp;
     requestModel.accepted = false;
     requestModel.acceptors = [];
+    requestModel.address = selectedAddress;
     requestModel.location =
         location == null ? GeoFirePoint(40.754387, -73.984291) : location;
     requestModel.root_timebank_id = FlavorConfig.values.timebankId;
