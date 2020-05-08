@@ -1,0 +1,48 @@
+import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/components/location_picker.dart';
+import 'package:sevaexchange/models/location_model.dart';
+
+class LocationPickerWidget extends StatelessWidget {
+  final ValueChanged<LocationDataModel> onChanged;
+  final String selectedAddress;
+  final GeoFirePoint location;
+
+  const LocationPickerWidget(
+      {Key key, this.onChanged, this.selectedAddress, this.location})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton.icon(
+      icon: Icon(Icons.add_location),
+      label: Container(
+        constraints: BoxConstraints.loose(
+          Size(MediaQuery.of(context).size.width - 100, 50),
+        ),
+        child: Text(
+          selectedAddress == '' || selectedAddress == null
+              ? 'Add Location'
+              : selectedAddress,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+      ),
+      color: Colors.grey[200],
+      onPressed: () async {
+        await Navigator.push(
+          context,
+          MaterialPageRoute<LocationDataModel>(
+            builder: (context) => LocationPicker(
+              selectedLocation: location,
+              selectedAddress: selectedAddress,
+            ),
+          ),
+        ).then((dataModel) {
+          if (dataModel != null) {
+            onChanged(dataModel);
+          }
+        });
+      },
+    );
+  }
+}
