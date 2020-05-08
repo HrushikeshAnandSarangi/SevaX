@@ -105,6 +105,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.location = location;
     newsObject.root_timebank_id = FlavorConfig.values.timebankId;
     newsObject.photoCredits = photoCredits == null ? "" : photoCredits;
+    newsObject.userPhotoURL = SevaCore.of(context).loggedInUser.photoURL;
 
 //    EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(

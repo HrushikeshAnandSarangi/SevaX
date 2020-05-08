@@ -152,9 +152,7 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
     return Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage(widget.photoUrl != null
-                    ? widget.photoUrl
-                    : defaultCameraImageURL),
+                image: NetworkImage(widget.photoUrl ?? defaultCameraImageURL),
                 fit: BoxFit.cover),
             borderRadius: BorderRadius.all(Radius.circular(75.0)),
             boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]));

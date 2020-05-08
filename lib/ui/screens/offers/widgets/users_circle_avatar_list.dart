@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
@@ -42,7 +43,8 @@ class UserCircleAvatarList extends StatelessWidget {
                       aspectRatio: 1,
                       child: ClipOval(
                         child: CustomNetworkImage(
-                          snapshot.data[index].participantDetails.photourl,
+                          snapshot.data[index].participantDetails.photourl ??
+                              defaultUserImageURL,
                           fit: BoxFit.cover,
                         ),
                       ),

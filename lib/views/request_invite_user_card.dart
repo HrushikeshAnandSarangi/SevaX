@@ -23,15 +23,18 @@ class _RequestInviteUserCardState extends State<RequestInviteUserCard> {
 
   Widget getUserThumbnail() {
     return Container(
-        margin: EdgeInsets.only(top: 20, right: 15),
-        width: 60.0,
-        height: 60.0,
-        decoration: new BoxDecoration(
-            shape: BoxShape.circle,
-            image: new DecorationImage(
-                fit: BoxFit.fill,
-                image: new NetworkImage(
-                    "https://www.itl.cat/pngfile/big/43-430987_cute-profile-images-pic-for-whatsapp-for-boys.jpg"))));
+      margin: EdgeInsets.only(top: 20, right: 15),
+      width: 60.0,
+      height: 60.0,
+      decoration: new BoxDecoration(
+        shape: BoxShape.circle,
+        image: new DecorationImage(
+          fit: BoxFit.fill,
+          image: new NetworkImage(
+              "https://www.itl.cat/pngfile/big/43-430987_cute-profile-images-pic-for-whatsapp-for-boys.jpg"),
+        ),
+      ),
+    );
   }
 
   Widget getUserCard() {

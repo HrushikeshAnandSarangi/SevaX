@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'dart:core';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -524,33 +523,6 @@ class DiscussionListState extends State<DiscussionList> {
               Expanded(
                 child: Container(),
               ),
-              Container(
-                width: 120,
-                child: CupertinoSegmentedControl<int>(
-                  children: logoWidgets,
-                  padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                  borderColor: Colors.grey,
-                  selectedColor: Theme.of(context).primaryColor,
-                  groupValue: sharedValue,
-                  onValueChanged: (int val) {
-                    if (val != sharedValue) {
-                      if (val == 0) {
-                        setState(() {
-                          isNearMe = false;
-                        });
-                      } else {
-                        setState(() {
-                          isNearMe = true;
-                        });
-                      }
-                      setState(() {
-                        sharedValue = val;
-                      });
-                    }
-                  },
-                  //groupValue: sharedValue,
-                ),
-              ),
               Padding(
                 padding: EdgeInsets.only(right: 5),
               ),
@@ -602,20 +574,18 @@ class DiscussionListState extends State<DiscussionList> {
             ),
           ),
         ),
-        widget.timebankId != 'All' && isNearMe == false
-            ? StreamBuilder<List<NewsModel>>(
-                stream: FirestoreManager.getNewsStream(
-                    timebankID: widget.timebankId),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError)
-                    return Text('Please make sure you have GPS turned on.');
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return Container(
-                        padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height / 3),
-                        child: Center(child: CircularProgressIndicator()),
-                      );
+        StreamBuilder<List<NewsModel>>(
+          stream: FirestoreManager.getNewsStream(timebankID: widget.timebankId),
+          builder: (context, snapshot) {
+            if (snapshot.hasError)
+              return Text('Please make sure you have GPS turned on.');
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return Container(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height / 3),
+                  child: Center(child: CircularProgressIndicator()),
+                );
 
                       break;
                     default:
@@ -663,296 +633,107 @@ class DiscussionListState extends State<DiscussionList> {
                                   );
                                 }
 
-                                if (newsList.elementAt(index).reports.length >
-                                    2) {
-                                  return Offstage();
-                                } else {
-                                  if (index == 0) {
-                                    return getNewsCard(
-                                      newsList.elementAt(index),
-                                      false,
-                                    );
-                                  } else {
-                                    return getNewsCard(
-                                      newsList.elementAt(index),
-                                      false,
-                                    );
-                                  }
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                  }
-                },
-              )
-            : widget.timebankId == 'All' && isNearMe == false
-                ? StreamBuilder<List<NewsModel>>(
-                    stream: FirestoreManager.getAllNewsStream(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError)
-                        return new Text(
-                            'Please make sure you have GPS turned on.');
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          return Center(child: CircularProgressIndicator());
-                          break;
-                        default:
-                          List<NewsModel> newsList = snapshot.data;
-                          newsList = filterBlockedContent(newsList, context);
-                          newsList = filterPinnedNews(newsList, context);
-                          if (newsList.length == 1 &&
-                              newsList[0].isPinned == true) {
-                            return Expanded(
-                              child: ListView(
-                                children: <Widget>[
-                                  getNewsCard(
-                                    newsList.elementAt(0),
-                                    false,
-                                  )
-                                ],
-                              ),
-                            );
-                          }
-                          if (newsList.length == 0) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(child: Text('Your feed is empty')),
-                            );
-                          }
-                          return Expanded(
-                            child: ListView(
-                              children: <Widget>[
-                                isPinned
-                                    ? getNewsCard(
-                                        pinnedNewsModel,
-                                        false,
-                                      )
-                                    : Offstage(),
-                                ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: newsList.length,
-                                  itemBuilder: (context, index) {
-                                    return getNewsCard(
-                                        newsList.elementAt(index), false);
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
-                      }
-                    },
-                  )
-                : widget.timebankId != 'All' && isNearMe == true
-                    ? StreamBuilder<List<NewsModel>>(
-                        stream: FirestoreManager.getNearNewsStream(
-                            timebankID: widget.timebankId),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError)
-                            return Text(
-                                'Please make sure you have GPS turned on.');
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.waiting:
-                              return Container(
-                                padding: EdgeInsets.only(
-                                    top:
-                                        MediaQuery.of(context).size.height / 3),
-                                child:
-                                    Center(child: CircularProgressIndicator()),
+                          if (newsList.elementAt(index).reports.length > 2) {
+                            return Offstage();
+                          } else {
+                            if (index == 0) {
+                              return getNewsCard(
+                                newsList.elementAt(index),
+                                false,
                               );
-                              break;
-                            default:
-                              List<NewsModel> newsList = snapshot.data;
-                              newsList =
-                                  filterBlockedContent(newsList, context);
-                              newsList = filterPinnedNews(newsList, context);
-                              if (newsList.length == 1 &&
-                                  newsList[0].isPinned == true) {
-                                return Expanded(
-                                  child: ListView(
-                                    children: <Widget>[
-                                      getNewsCard(
-                                        newsList.elementAt(0),
-                                        false,
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }
-                              if (newsList.length == 0) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child:
-                                      Center(child: Text('Your feed is empty')),
-                                );
-                              }
-                              return Expanded(
-                                child: ListView(
-                                  children: <Widget>[
-                                    isPinned
-                                        ? getNewsCard(
-                                            pinnedNewsModel,
-                                            false,
-                                          )
-                                        : Offstage(),
-                                    ListView.builder(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemCount: newsList.length,
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) {
-                                        return getNewsCard(
-                                            newsList.elementAt(index), false);
-                                      },
-                                    ),
-                                  ],
-                                ),
+                            } else {
+                              return getNewsCard(
+                                newsList.elementAt(index),
+                                false,
                               );
+                            }
                           }
                         },
-                      )
-                    : widget.timebankId == 'All' && isNearMe == true
-                        ? StreamBuilder<List<NewsModel>>(
-                            stream: FirestoreManager.getAllNearNewsStream(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError)
-                                return Text(
-                                    'Please make sure you have GPS turned on.');
-                              switch (snapshot.connectionState) {
-                                case ConnectionState.waiting:
-                                  return Center(
-                                      child: CircularProgressIndicator());
-                                  break;
-                                default:
-                                  List<NewsModel> newsList = snapshot.data;
-                                  newsList =
-                                      filterBlockedContent(newsList, context);
-                                  newsList =
-                                      filterPinnedNews(newsList, context);
-                                  if (newsList.length == 1 &&
-                                      newsList[0].isPinned == true) {
-                                    return Expanded(
-                                      child: ListView(
-                                        children: <Widget>[
-                                          getNewsCard(
-                                            newsList.elementAt(0),
-                                            false,
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  }
-                                  if (newsList.length == 0) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Center(
-                                          child: Text('Your feed is empty')),
-                                    );
-                                  }
-                                  return Expanded(
-                                    child: ListView(
-                                      children: <Widget>[
-                                        isPinned
-                                            ? getNewsCard(
-                                                pinnedNewsModel,
-                                                false,
-                                              )
-                                            : Offstage(),
-                                        ListView.builder(
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          itemCount: newsList.length,
-                                          itemBuilder: (context, index) {
-                                            return getNewsCard(
-                                                newsList.elementAt(index),
-                                                false);
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                              }
-                            },
-                          )
-                        : Offstage(),
-      ],
-    );
-  }
-
-  Widget getCreateFeedCard({NewsModel news}) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Container(
-          alignment: Alignment.topCenter,
-          width: 40,
-          height: 40,
-          margin: EdgeInsets.only(left: 5, bottom: 10, top: 10),
-          child: ClipOval(
-            child: FadeInImage.assetNetwork(
-              placeholder: 'lib/assets/images/search.png',
-              image: SevaCore.of(context).loggedInUser.photoURL,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            margin: EdgeInsets.only(left: 9, right: 4),
-            child: FlatButton(
-              color: Color.fromARGB(50, 149, 149, 149),
-              onPressed: () {},
-              // onPressed: () {
-              //   if (SevaCore.of(context).loggedInUser.associatedWithTimebanks >
-              //       1) {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (context) {
-              //           var selectTimeBankForNewRequest = SelectTimeBankForNewRequest;
-              //           return selectTimeBankForNewRequest("Feed");
-              //         },
-              //       ),
-              //     );
-              //   } else {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (context) => NewsCeate(
-              //           timebankId:
-              //               SevaCore.of(context).loggedInUser.currentTimebank,
-              //         ),
-              //       ),
-              //     );
-              //   }
-              //these
-              // },
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NewsCreate(
-                        timebankId:
-                            SevaCore.of(context).loggedInUser.currentTimebank,
                       ),
-                    ),
-                  );
-                },
-                child: Container(
-                  alignment: Alignment.bottomLeft,
-                  child: Text(
-                    'Start a new discussion...',
-                    style: TextStyle(color: Colors.black),
-                    textAlign: TextAlign.left,
+                    ],
                   ),
-                ),
-              ),
-            ),
-          ),
+                );
+            }
+          },
         )
       ],
     );
   }
+//
+//  Widget getCreateFeedCard({NewsModel news}) {
+//    return Row(
+//      crossAxisAlignment: CrossAxisAlignment.center,
+//      children: <Widget>[
+//        Container(
+//          alignment: Alignment.topCenter,
+//          width: 40,
+//          height: 40,
+//          margin: EdgeInsets.only(left: 5, bottom: 10, top: 10),
+//          child: ClipOval(
+//            child: FadeInImage.assetNetwork(
+//              placeholder: 'lib/assets/images/search.png',
+//              image: SevaCore.of(context).loggedInUser.photoURL,
+//            ),
+//          ),
+//        ),
+//        Expanded(
+//          child: Container(
+//            margin: EdgeInsets.only(left: 9, right: 4),
+//            child: FlatButton(
+//              color: Color.fromARGB(50, 149, 149, 149),
+//              onPressed: () {},
+//              // onPressed: () {
+//              //   if (SevaCore.of(context).loggedInUser.associatedWithTimebanks >
+//              //       1) {
+//              //     Navigator.push(
+//              //       context,
+//              //       MaterialPageRoute(
+//              //         builder: (context) {
+//              //           var selectTimeBankForNewRequest = SelectTimeBankForNewRequest;
+//              //           return selectTimeBankForNewRequest("Feed");
+//              //         },
+//              //       ),
+//              //     );
+//              //   } else {
+//              //     Navigator.push(
+//              //       context,
+//              //       MaterialPageRoute(
+//              //         builder: (context) => NewsCeate(
+//              //           timebankId:
+//              //               SevaCore.of(context).loggedInUser.currentTimebank,
+//              //         ),
+//              //       ),
+//              //     );
+//              //   }
+//              //these
+//              // },
+//              child: GestureDetector(
+//                onTap: () {
+//                  Navigator.push(
+//                    context,
+//                    MaterialPageRoute(
+//                      builder: (context) => NewsCreate(
+//                        timebankId:
+//                            SevaCore.of(context).loggedInUser.currentTimebank,
+//                      ),
+//                    ),
+//                  );
+//                },
+//                child: Container(
+//                  alignment: Alignment.bottomLeft,
+//                  child: Text(
+//                    'Start a new discussion...',
+//                    style: TextStyle(color: Colors.black),
+//                    textAlign: TextAlign.left,
+//                  ),
+//                ),
+//              ),
+//            ),
+//          ),
+//        )
+//      ],
+//    );
+//  }
 
   void createSubTimebank(BuildContext context) {
     Navigator.push(
@@ -1203,19 +984,33 @@ class DiscussionListState extends State<DiscussionList> {
                         // Slot
                         Row(
                           children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.all(5),
-                              height: 40,
-                              width: 40,
-                              child: CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                  news.userPhotoURL == null
+                            ClipOval(
+                              child: SizedBox(
+                                height: 45,
+                                width: 45,
+                                child: FadeInImage.assetNetwork(
+                                  fit: BoxFit.cover,
+                                  placeholder: defaultUserImageURL,
+                                  //  placeholder: 'lib/assets/images/profile.png',
+                                  image: news.userPhotoURL == null
                                       ? defaultUserImageURL
                                       : news.userPhotoURL,
                                 ),
-                                minRadius: 40.0,
                               ),
                             ),
+//                            Container(
+//                              margin: EdgeInsets.all(5),
+//                              height: 40,
+//                              width: 40,
+//                              child: CircleAvatar(
+//                                backgroundImage: NetworkImage(
+//                                  news.userPhotoURL == null
+//                                      ? defaultUserImageURL
+//                                      : news.userPhotoURL,
+//                                ),
+//                                minRadius: 40.0,
+//                              ),
+//                            ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -1549,7 +1344,7 @@ class DiscussionListState extends State<DiscussionList> {
             child: FadeInImage(
               fit: BoxFit.fitWidth,
               placeholder: AssetImage('lib/assets/images/noimagefound.png'),
-              image: CachedNetworkImageProvider(urlToLoad),
+              image: NetworkImage(urlToLoad),
             ),
           ),
         ),

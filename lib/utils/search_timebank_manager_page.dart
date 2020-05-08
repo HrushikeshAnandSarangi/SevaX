@@ -225,7 +225,8 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
               model.user1 = users[0];
               model.user2 = users[1];
               model.timebankId = widget.timebankId;
-              model.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
+              model.communityId =
+                  SevaCore.of(context).loggedInUser.currentCommunity;
 
               print("Model1" + model.user1);
               print("Model2" + model.user2);
@@ -302,7 +303,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
         color: Colors.white,
         child: ListTile(
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(user.photoURL),
+            backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
           ),
           title: Text(
             user.fullname,
