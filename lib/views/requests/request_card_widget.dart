@@ -21,7 +21,7 @@ class RequestCardWidget extends StatelessWidget {
   final String currentCommunity;
   final String loggedUserId;
 
-  const RequestCardWidget({
+  RequestCardWidget({
     @required this.userModel,
     @required this.requestModel,
     @required this.timebankModel,
@@ -123,19 +123,28 @@ class RequestCardWidget extends StatelessWidget {
                               ),
                       ],
                     ),
-                    onTap: () {
+                    onTap: () async {
                       if (isFavorite) {
-                        removeFromFavoriteList(
+                        await removeFromFavoriteList(
                           email: userModel.email,
-                          timeBankId: timebankModel.id,
+                          timeBankId: requestModel.timebankId,
                           loggedInUserId: loggedUserId,
-                        ).then((_) => refresh());
+                        );
+                        Future.delayed(
+                          Duration(milliseconds: 3000),
+                              () => refresh(),
+                        );
                       } else {
-                        addToFavoriteList(
+                        await addToFavoriteList(
                           email: userModel.email,
-                          timebankId: timebankModel.id,
+                          timebankId: requestModel.timebankId,
                           loggedInUserId: loggedUserId,
-                        ).then((_) => refresh());
+                        );
+                        Future.delayed(
+                          Duration(milliseconds: 3000),
+                              () => refresh(),
+                        );
+
                       }
                     },
                   ),

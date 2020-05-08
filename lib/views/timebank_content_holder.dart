@@ -533,7 +533,6 @@ class DiscussionListState extends State<DiscussionList> {
                   selectedColor: Theme.of(context).primaryColor,
                   groupValue: sharedValue,
                   onValueChanged: (int val) {
-                    print(val);
                     if (val != sharedValue) {
                       if (val == 0) {
                         setState(() {
@@ -621,11 +620,9 @@ class DiscussionListState extends State<DiscussionList> {
                       break;
                     default:
                       List<NewsModel> newsList = snapshot.data;
-                      print('latest feeds ${newsList}');
                       newsList = filterBlockedContent(newsList, context);
                       newsList = filterPinnedNews(newsList, context);
 
-                      print("Size of incloming docs ${newsList.length}");
                       if (newsList.length == 1 &&
                           newsList[0].isPinned == true) {
                         return Expanded(
@@ -752,9 +749,6 @@ class DiscussionListState extends State<DiscussionList> {
                         stream: FirestoreManager.getNearNewsStream(
                             timebankID: widget.timebankId),
                         builder: (context, snapshot) {
-                          print(
-                              "Getting news stream for near me ${snapshot.connectionState}");
-
                           if (snapshot.hasError)
                             return Text(
                                 'Please make sure you have GPS turned on.');
@@ -770,9 +764,6 @@ class DiscussionListState extends State<DiscussionList> {
                               break;
                             default:
                               List<NewsModel> newsList = snapshot.data;
-
-                              print(
-                                  "News list from near me ${newsList.length}");
                               newsList =
                                   filterBlockedContent(newsList, context);
                               newsList = filterPinnedNews(newsList, context);
@@ -995,11 +986,9 @@ class DiscussionListState extends State<DiscussionList> {
       }
     });
 
-    // print('pinned news ${pinnedNewsModel}');
     if (filteredNewsList.length > 1) {
       filteredNewsList.removeWhere((news) => news.isPinned == true);
     }
-    // print('filtered news ${filteredNewsList}');
 
     return filteredNewsList;
   }
@@ -1547,7 +1536,6 @@ class DiscussionListState extends State<DiscussionList> {
   }
 
   Widget getImageView(String newsId, String urlToLoad) {
-    print("Load here ->  $urlToLoad");
     return Container(
       height: 250,
       child: SizedBox.expand(
