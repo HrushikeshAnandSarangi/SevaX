@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
-import 'package:sevaexchange/components/location_picker.dart';
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/one_to_many_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
@@ -11,6 +11,7 @@ import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 class OneToManyOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -62,7 +63,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
   @override
   Widget build(BuildContext mcontext) {
     return Scaffold(
-      key:_scaffoldKey,
+      key: _scaffoldKey,
       appBar: widget.offerModel != null
           ? AppBar(
               title: Text(
@@ -130,7 +131,10 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                               return CustomTextField(
                                 currentNode: focusNodes[0],
                                 nextNode: focusNodes[1],
-                                formatters: <TextInputFormatter>[WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))],
+                                formatters: <TextInputFormatter>[
+                                  WhitelistingTextInputFormatter(
+                                      RegExp("[a-zA-Z0-9_ ]*"))
+                                ],
                                 initialValue: snapshot.data != null
                                     ? snapshot.data.contains('__*__')
                                         ? snapshot.data
@@ -244,35 +248,16 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                           StreamBuilder<CustomLocation>(
                               stream: _bloc.location,
                               builder: (_, snapshot) {
-                                return FlatButton.icon(
-                                  textColor: snapshot.error != null
-                                      ? Colors.red
-                                      : Colors.green,
-                                  icon: Icon(Icons.add_location),
-                                  label: Text(
-                                    snapshot.data?.address == null
-                                        ? 'Add Location'
-                                        : snapshot.data.address,
-                                  ),
-                                  color: Colors.grey[200],
-                                  onPressed: () {
-                                    FocusScope.of(context).unfocus();
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute<GeoFirePoint>(
-                                        builder: (context) => LocationPicker(
-                                          selectedLocation:
-                                              snapshot.data?.location,
-                                        ),
+                                return LocationPickerWidget(
+                                  location: snapshot.data?.location,
+                                  selectedAddress: snapshot.data?.address,
+                                  onChanged: (LocationDataModel dataModel) {
+                                    _bloc.onLocatioChanged(
+                                      CustomLocation(
+                                        dataModel.geoPoint,
+                                        dataModel.location,
                                       ),
-                                    ).then((point) {
-                                      if (point != null) {
-                                        _getLocation(point).then((address) {
-                                          _bloc.onLocatioChanged(
-                                              CustomLocation(point, address));
-                                        });
-                                      }
-                                    });
+                                    );
                                   },
                                 );
                               }),
@@ -281,33 +266,24 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             onPressed: status.data == Status.LOADING
                                 ? () {}
                                 : () async {
-                                    var connResult = await Connectivity().checkConnectivity();
-                                    if(connResult == ConnectivityResult.none){
+                                    var connResult = await Connectivity()
+                                        .checkConnectivity();
+                                    if (connResult == ConnectivityResult.none) {
                                       _scaffoldKey.currentState.showSnackBar(
                                         SnackBar(
-                                          content: Text("Please check your internet connection."),
+                                          content: Text(
+                                              "Please check your internet connection."),
                                           action: SnackBarAction(
                                             label: 'Dismiss',
-                                            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                                            onPressed: () => _scaffoldKey
+                                                .currentState
+                                                .hideCurrentSnackBar(),
                                           ),
                                         ),
                                       );
-                                      return ;
+                                      return;
                                     }
                                     FocusScope.of(context).unfocus();
-
-                                    // if (_bloc.checkCreditError()) {
-                                    //   WidgetsBinding.instance
-                                    //       .addPostFrameCallback(
-                                    //     (_) {
-                                    //       errorDialog(
-                                    //         context: context,
-                                    //         error: ValidationErrors
-                                    //             .offerCreditError,
-                                    //       );
-                                    //     },
-                                    //   );
-                                    // }
                                     if (OfferDurationWidgetState
                                             .starttimestamp !=
                                         0) {
@@ -327,9 +303,10 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                       }
                                     } else {
                                       errorDialog(
-                                          context: context,
-                                          error:
-                                              "Please enter start and end date");
+                                        context: context,
+                                        error:
+                                            "Please enter start and end date",
+                                      );
                                     }
                                   },
                             child: status.data == Status.LOADING
