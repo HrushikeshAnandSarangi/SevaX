@@ -1,5 +1,7 @@
 //import 'dart:html';
 
+import 'dart:developer';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +17,6 @@ import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
@@ -452,8 +453,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
                     }
                     setState(() {
+                      projectModel.address = this.selectedAddress;
                       this.selectedAddress = dataModel.location;
                     });
+                    log("Adderess   ${dataModel.location}");
                     // _getLocation(location);
                     //print('ReceivedLocation: $snapshot.data.timebank.address');
                   });
@@ -538,6 +541,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         projectModel.creatorId =
                             SevaCore.of(context).loggedInUser.sevaUserID;
                         projectModel.members = [];
+                        projectModel.address = selectedAddress;
                         projectModel.id = Utils.getUuid();
                         // if (globals.projectsAvtaarURL == null) {
                         //   setState(() {
@@ -677,19 +681,19 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         });
   }
 
-  Future _getLocation(data) async {
-    print('Timebank value:$data');
-    String address = await LocationUtility().getFormattedAddress(
-      location.latitude,
-      location.longitude,
-    );
-    setState(() {
-      this.selectedAddress = address;
-    });
-//    timebank.updateValueByKey('locationAddress', address);
-    print('_getLocation: $address');
-    projectModel.address = this.selectedAddress;
-  }
+//   Future _getLocation(data) async {
+//     print('Timebank value:$data');
+//     String address = await LocationUtility().getFormattedAddress(
+//       location.latitude,
+//       location.longitude,
+//     );
+//     setState(() {
+//       this.selectedAddress = address;
+//     });
+// //    timebank.updateValueByKey('locationAddress', address);
+//     print('_getLocation: $address');
+//     projectModel.address = this.selectedAddress;
+//   }
 
   Widget headingText(String name) {
     return Padding(

@@ -24,6 +24,7 @@ extension StringExtension on String {
 
 class LocationPicker extends StatefulWidget {
   final GeoFirePoint selectedLocation;
+  final String selectedAddress;
   final Location location = new Location();
   final Geoflutterfire geo = Geoflutterfire();
   final Firestore firestore = Firestore.instance;
@@ -32,6 +33,7 @@ class LocationPicker extends StatefulWidget {
   LocationPicker({
     this.defaultLocation,
     this.selectedLocation,
+    this.selectedAddress,
   });
 
   @override
@@ -68,6 +70,13 @@ class _LocationPickerState extends State<LocationPicker> {
 
   @override
   void initState() {
+    if (widget.selectedLocation != null) {
+      locationDataFromSearch = LocationDataModel(
+        widget.selectedAddress,
+        widget.selectedLocation.latitude,
+        widget.selectedLocation.longitude,
+      );
+    }
     log('init state called for ${this.runtimeType.toString()}');
     // loadCameraPosition();
     super.initState();

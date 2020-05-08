@@ -20,25 +20,25 @@ class NewsImage extends StatefulWidget {
   final GeoFirePoint geoFirePointLocation;
 
   final ValueChanged<String> onCreditsEntered;
-  final Function(GeoFirePoint) geoFirePointLocationCallback;
+  final Function(LocationDataModel) onLocationDataModelUpdate;
 
   NewsImage({
     this.photoCredits,
     this.geoFirePointLocation,
-    this.geoFirePointLocationCallback,
+    this.onLocationDataModelUpdate,
     this.onCreditsEntered,
     this.selectedAddress,
   });
 
-  NewsImageState createState() => NewsImageState(geoFirePointLocationCallback);
+  NewsImageState createState() => NewsImageState(onLocationDataModelUpdate);
 }
 
 @override
 class NewsImageState extends State<NewsImage>
     with TickerProviderStateMixin, ImagePickerListener {
   bool _isImageBeingUploaded = false;
-  Function(GeoFirePoint) geoFirePointLocationCallback;
-  NewsImageState(this.geoFirePointLocationCallback);
+  Function(LocationDataModel) onLocationDataModelUpdate;
+  NewsImageState(this.onLocationDataModelUpdate);
   String selectedAddress;
 
   ImagePickerHandler imagePicker;
@@ -83,7 +83,7 @@ class NewsImageState extends State<NewsImage>
 
   @override
   void initState() {
-    _fetchCurrentlocation;
+    if (widget.geoFirePointLocation == null) _fetchCurrentlocation;
     super.initState();
     print("locaton on newsimage ${widget.geoFirePointLocation?.coords}");
     selectedAddress = widget.selectedAddress;
@@ -187,6 +187,7 @@ class NewsImageState extends State<NewsImage>
                 context,
                 MaterialPageRoute<LocationDataModel>(
                   builder: (context) => LocationPicker(
+                    selectedAddress: selectedAddress,
                     selectedLocation: widget.geoFirePointLocation,
                   ),
                 ),
@@ -194,7 +195,7 @@ class NewsImageState extends State<NewsImage>
                 (LocationDataModel dataModel) {
                   if (dataModel != null) {
                     selectedAddress = dataModel.location;
-                    geoFirePointLocationCallback(dataModel.geoPoint);
+                    onLocationDataModelUpdate(dataModel);
                     // getLocation(point).then((address) {
                     //   selectedAddress = address;
                     //   geoFirePointLocationCallback(point);
@@ -235,13 +236,18 @@ class NewsImageState extends State<NewsImage>
         print("Location1:$onValue");
         GeoFirePoint location =
             GeoFirePoint(onValue.latitude, onValue.longitude);
-        geoFirePointLocationCallback(location);
+
         LocationUtility()
             .getFormattedAddress(
           location.latitude,
           location.longitude,
         )
             .then((address) {
+          onLocationDataModelUpdate(LocationDataModel(
+            address,
+            location.latitude,
+            location.longitude,
+          ));
           setState(() {
             this.selectedAddress = address;
           });
