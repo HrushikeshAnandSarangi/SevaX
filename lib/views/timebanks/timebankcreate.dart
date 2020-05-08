@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -151,7 +150,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.members = members;
     timebankModel.children = [];
     timebankModel.balance = 0;
-    timebankModel.protected = protectedVal;
+    timebankModel.protected = false;
     timebankModel.parentTimebankId = widget.timebankId;
     timebankModel.rootTimebankId = FlavorConfig.values.timebankId;
     timebankModel.address = selectedAddress;
@@ -181,13 +180,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         key: _formKey,
         child: Container(
             padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-            child: SingleChildScrollView(
-              child: ((FlavorConfig.appFlavor == Flavor.APP ||
-                          FlavorConfig.appFlavor == Flavor.SEVA_DEV) ||
-                      FlavorConfig.appFlavor == Flavor.SEVA_DEV)
-                  ? createSevaX
-                  : createTimebankHumanityFirst,
-            )));
+            child: SingleChildScrollView(child: createSevaX)));
   }
 
   Widget get createSevaX {
@@ -268,33 +261,33 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             },
           ),
           tappableInviteMembers,
-          Row(
-            children: <Widget>[
-              headingText('Protected group', false),
-              Column(
-                children: <Widget>[
-                  Divider(),
-                  Checkbox(
-                    checkColor: Colors.white,
-                    activeColor: Colors.green,
-                    value: protectedVal,
-                    onChanged: (bool value) {
-                      setState(() {
-                        protectedVal = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Text(
-            'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled.',
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
-          ),
+//          Row(
+//            children: <Widget>[
+//              headingText('Protected group', false),
+//              Column(
+//                children: <Widget>[
+//                  Divider(),
+//                  Checkbox(
+//                    checkColor: Colors.white,
+//                    activeColor: Colors.green,
+//                    value: protectedVal,
+//                    onChanged: (bool value) {
+//                      setState(() {
+//                        protectedVal = value;
+//                      });
+//                    },
+//                  ),
+//                ],
+//              ),
+//            ],
+//          ),
+//          Text(
+//            'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled.',
+//            style: TextStyle(
+//              fontSize: 12,
+//              color: Colors.grey,
+//            ),
+//          ),
           headingText('Is this pin at a right place?', false),
           // Center(
           //   child: FlatButton.icon(

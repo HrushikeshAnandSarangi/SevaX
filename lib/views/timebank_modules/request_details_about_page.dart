@@ -241,7 +241,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    '${widget.requestItem.approvedUsers.length} / ${widget.requestItem.acceptors.length} People approved',
+                    '${widget.requestItem.approvedUsers.length} / ${widget.requestItem.numberOfApprovals} Accepted',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -258,7 +258,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           return Center(child: CircularProgressIndicator());
                         }
 
-                        if (snapshot.data.length == 0) {
+                        if (widget.requestItem.approvedUsers.length == 0) {
                           return Container(
                             margin: EdgeInsets.only(left: 0, top: 10),
                             child: Text(
@@ -285,8 +285,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               itemCount: snap.length,
                               itemBuilder: (context, index) {
                                 return Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  padding: const EdgeInsets.only(left: 3, right:3, top: 8),
                                   child: Container(
                                     height: 40,
                                     width: 40,

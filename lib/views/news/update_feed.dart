@@ -349,6 +349,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     child: Center(
                       child: NewsImage(
                         photoCredits: newsObject.photoCredits,
+                        selectedAddress:
+                            newsObject.placeAddress ?? 'Add Location',
                         geoFirePointLocation: location,
                         selectedAddress: selectedAddress,
                         onLocationDataModelUpdate:
@@ -375,6 +377,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                 child: RaisedButton(
                   shape: StadiumBorder(),
                   onPressed: () async {
+                    //  print("address $selectedAddress");
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
                       Scaffold.of(context).showSnackBar(
