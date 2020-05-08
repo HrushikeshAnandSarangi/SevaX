@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -12,6 +9,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 class NewsEdit extends StatelessWidget {
   final GlobalKey<NewsEditFormState> _formState = GlobalKey();
@@ -368,32 +366,18 @@ class NewsEditFormState extends State<NewsEditForm> {
                   Text(""),
                 ],
               ),
-              FlatButton.icon(
-                icon: Icon(Icons.add_location),
-                label: Text(
-                  selectedAddress == null || selectedAddress.isEmpty
-                      ? '${this._getLocation()}'
-                      : selectedAddress,
-                ),
-                color: Colors.grey[200],
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<LocationDataModel>(
-                      builder: (context) => LocationPicker(
-                        selectedLocation: location,
-                      ),
-                    ),
-                  ).then((dataModel) {
-                    if (dataModel != null) location = dataModel.geoPoint;
-                    setState(() {
-                      this.selectedAddress = dataModel.location;
-                    });
-                    // _getLocation();
-                    log('ReceivedLocation: $selectedAddress');
+              LocationPickerWidget(
+                location: location,
+                selectedAddress: selectedAddress,
+                onChanged: (LocationDataModel dataModel) {
+                  location = dataModel.geoPoint;
+                  setState(() {
+                    location = dataModel.geoPoint;
+                    this.selectedAddress = dataModel.location;
                   });
                 },
               ),
+
               Container(
                 margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
                 alignment: Alignment(0, 1),
