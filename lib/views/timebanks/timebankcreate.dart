@@ -20,6 +20,7 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
+import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 class TimebankCreate extends StatelessWidget {
   final String timebankId;
@@ -295,30 +296,43 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             ),
           ),
           headingText('Is this pin at a right place?', false),
+          // Center(
+          //   child: FlatButton.icon(
+          //     icon: Icon(Icons.add_location),
+          //     label: Text(
+          //       selectedAddress == null || selectedAddress.isEmpty
+          //           ? 'Add Location'
+          //           : selectedAddress,
+          //     ),
+          //     color: Colors.grey[200],
+          //     onPressed: () {
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute<LocationDataModel>(
+          //           builder: (context) => LocationPicker(
+          //             selectedLocation: location,
+          //           ),
+          //         ),
+          //       ).then((dataModel) {
+          //         if (dataModel != null) location = dataModel.geoPoint;
+          //         setState(() {
+          //           this.selectedAddress = dataModel.location;
+          //         });
+          //         // _getLocation();
+          //         log('ReceivedLocation: $selectedAddress');
+          //       });
+          //     },
+          //   ),
+          // ),
           Center(
-            child: FlatButton.icon(
-              icon: Icon(Icons.add_location),
-              label: Text(
-                selectedAddress == null || selectedAddress.isEmpty
-                    ? 'Add Location'
-                    : selectedAddress,
-              ),
-              color: Colors.grey[200],
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<LocationDataModel>(
-                    builder: (context) => LocationPicker(
-                      selectedLocation: location,
-                    ),
-                  ),
-                ).then((dataModel) {
-                  if (dataModel != null) location = dataModel.geoPoint;
-                  setState(() {
-                    this.selectedAddress = dataModel.location;
-                  });
-                  // _getLocation();
-                  log('ReceivedLocation: $selectedAddress');
+            child: LocationPickerWidget(
+              selectedAddress: selectedAddress,
+              location: location,
+              onChanged: (LocationDataModel dataModel) {
+                log("received data model");
+                setState(() {
+                  location = dataModel.geoPoint;
+                  this.selectedAddress = dataModel.location;
                 });
               },
             ),

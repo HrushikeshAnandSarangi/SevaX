@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
@@ -13,7 +14,6 @@ import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
-import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -30,6 +30,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
+import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
@@ -555,46 +556,19 @@ class CreateEditCommunityViewFormState
                   ),
                   SizedBox(height: 20),
                   Center(
-                    child: FlatButton.icon(
-                      icon: Icon(Icons.add_location),
-                      label: Container(
-                        child: Text(
-                          (snapshot.data.timebank.address == null ||
-                                      snapshot.data.timebank.address.isEmpty ||
-                                      snapshot.data.timebank.address == "") &&
-                                  selectedAddress == ''
-                              ? 'Add Location'
-                              : widget.isCreateTimebank
-                                  ? snapshot.data.timebank.address
-                                  : timebankModel.address,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      color: Colors.grey[200],
-                      onPressed: () async {
-                        print("Location opened : $location");
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute<LocationDataModel>(
-                            builder: (context) => LocationPicker(
-                              selectedLocation: location,
-                            ),
-                          ),
-                        ).then((dataModel) {
-                          if (dataModel != null) {
-                            location = snapshot.data.timebank.location =
-                                dataModel.geoPoint;
-
-                            // print(
-                            //     "Location is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
-                          }
-                          _setLocation(snapshot.data, dataModel);
-                          print(
-                              'ReceivedLocation: $snapshot.data.timebank.address');
+                    child: LocationPickerWidget(
+                      selectedAddress: selectedAddress,
+                      location: location,
+                      onChanged: (LocationDataModel dataModel) {
+                        log("received data model");
+                        setState(() {
+                          location = dataModel.geoPoint;
+                          this.selectedAddress = dataModel.location;
                         });
                       },
                     ),
                   ),
+
                   SizedBox(height: 10),
                   widget.isCreateTimebank
                       ? Padding(

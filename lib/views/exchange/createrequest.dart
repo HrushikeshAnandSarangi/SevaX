@@ -12,7 +12,6 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
-import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -27,6 +26,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
+import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -421,29 +421,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 SizedBox(height: 40),
                 Center(
-                  child: FlatButton.icon(
-                    icon: Icon(Icons.add_location),
-                    label: Text(
-                      selectedAddress == null || selectedAddress.isEmpty
-                          ? 'Add Location'
-                          : selectedAddress,
-                    ),
-                    color: Colors.grey[200],
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<LocationDataModel>(
-                          builder: (context) => LocationPicker(
-                            selectedLocation: location,
-                          ),
-                        ),
-                      ).then((dataModel) {
-                        if (dataModel != null) location = dataModel.geoPoint;
-                        setState(() {
-                          this.selectedAddress = dataModel.location;
-                        });
-                        // _getLocation();
-                        log('ReceivedLocation: $selectedAddress');
+                  child: LocationPickerWidget(
+                    selectedAddress: selectedAddress,
+                    location: location,
+                    onChanged: (LocationDataModel dataModel) {
+                      log("received data model");
+                      setState(() {
+                        location = dataModel.geoPoint;
+                        this.selectedAddress = dataModel.location;
                       });
                     },
                   ),
