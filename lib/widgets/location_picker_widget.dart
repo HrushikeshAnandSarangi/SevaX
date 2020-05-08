@@ -17,7 +17,7 @@ class LocationPickerWidget extends StatelessWidget {
       icon: Icon(Icons.add_location),
       label: Container(
         constraints: BoxConstraints.loose(
-          Size(MediaQuery.of(context).size.width - 100, 50),
+          Size(MediaQuery.of(context).size.width - 140, 50),
         ),
         child: Text(
           selectedAddress == '' || selectedAddress == null
