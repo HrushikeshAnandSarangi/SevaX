@@ -349,8 +349,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     child: Center(
                       child: NewsImage(
                         photoCredits: newsObject.photoCredits,
-                        selectedAddress:
-                            newsObject.placeAddress ?? 'Add Location',
                         geoFirePointLocation: location,
                         selectedAddress: selectedAddress,
                         onLocationDataModelUpdate:
