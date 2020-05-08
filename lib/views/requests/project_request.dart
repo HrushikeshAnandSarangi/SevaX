@@ -729,7 +729,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                             label: Container(
                               width: MediaQuery.of(context).size.width - 170,
                               child: Text(
-                                "$address",
+                                model.address ?? address,
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 17,

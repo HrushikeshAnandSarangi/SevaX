@@ -228,7 +228,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             headingText('Project Name'),
             TextFormField(
               onChanged: (value) {
-                //  enteredName = value;
                 print("name ------ $value");
                 projectModel.name = value;
               },
