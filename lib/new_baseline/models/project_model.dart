@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/models/models.dart';
 
@@ -16,6 +18,7 @@ class ProjectModel extends DataModel {
   int createdAt;
   int startTime;
   int endTime;
+  GeoFirePoint location;
   List<String> members;
   List<String> pendingRequests;
   List<String> completedRequests;
@@ -36,6 +39,7 @@ class ProjectModel extends DataModel {
       this.startTime,
       this.endTime,
       this.members,
+      this.location,
       this.pendingRequests,
       this.completedRequests});
 
@@ -54,6 +58,20 @@ class ProjectModel extends DataModel {
         createdAt: json["created_at"] == null ? null : json["created_at"],
         startTime: json["start_time"] == null ? null : json["start_time"],
         endTime: json["end_time"] == null ? null : json["end_time"],
+        //Firebase gives GeoPoint directly as dataType
+        //Elastic search gives geopoint as map instead of GeoPoint datatype
+        //hence mapping required
+        location: json.containsKey('location')
+            ? json['location']['geopoint'] is GeoPoint
+                ? GeoFirePoint(
+                    json['location']['geopoint'].latitude,
+                    json['location']['geopoint'].longitude,
+                  )
+                : GeoFirePoint(
+                    json['location']['geopoint']['_latitude'],
+                    json['location']['geopoint']['_longitude'],
+                  )
+            : null,
         members: json["members"] == null
             ? null
             : new List<String>.from(json["members"].map((x) => x)),
@@ -79,6 +97,7 @@ class ProjectModel extends DataModel {
         "created_at": createdAt == null ? null : createdAt,
         "start_time": startTime == null ? null : startTime,
         "end_time": endTime == null ? null : endTime,
+        "location": location?.data,
         "members": members == null
             ? null
             : new List<dynamic>.from(members.map((x) => x)),

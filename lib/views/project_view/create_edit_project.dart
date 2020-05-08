@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
-import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/projects_avtaar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -20,6 +19,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
+import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 import '../../flavor_config.dart';
 
@@ -43,6 +43,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   ProjectModel projectModel = ProjectModel();
   GeoFirePoint location;
   String selectedAddress = '';
+
   TimebankModel timebankModel = TimebankModel({});
   BuildContext dialogContext;
   String dateTimeEroor = '';
@@ -79,6 +80,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       projectModel = onValue;
       print("projectttttt ${projectModel}");
       selectedAddress = projectModel.address;
+      location = projectModel.location;
       isDataLoaded = true;
       setState(() {});
     });
@@ -426,43 +428,53 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               padding: const EdgeInsets.symmetric(vertical: 10.0),
             ),
             Center(
-              child: FlatButton.icon(
-                icon: Icon(Icons.add_location),
-                label: Container(
-                  child: Text(
-                    selectedAddress == '' || selectedAddress == null
-                        ? 'Add Location'
-                        : selectedAddress ?? "",
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                color: Colors.grey[200],
-                onPressed: () async {
-                  print("Location opened : $location");
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute<LocationDataModel>(
-                      builder: (context) => LocationPicker(
-                        selectedLocation: location,
-                      ),
-                    ),
-                  ).then((dataModel) {
-                    if (dataModel != null) {
-                      location = dataModel.geoPoint;
-                      print(
-                          "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
-                    }
-                    setState(() {
-                      projectModel.address = this.selectedAddress;
-                      this.selectedAddress = dataModel.location;
-                    });
-                    log("Adderess   ${dataModel.location}");
-                    // _getLocation(location);
-                    //print('ReceivedLocation: $snapshot.data.timebank.address');
-                  });
-                },
-              ),
-            ),
+                child: LocationPickerWidget(
+              selectedAddress: selectedAddress,
+              location: location,
+              onChanged: (LocationDataModel dataModel) {
+                log("received data model");
+                setState(() {
+                  location = dataModel.geoPoint;
+                  this.selectedAddress = dataModel.location;
+                });
+              },
+            )),
+            // Center(
+            //   child: FlatButton.icon(
+            //     icon: Icon(Icons.add_location),
+            //     label: Container(
+            //       child: Text(
+            //         selectedAddress == '' || selectedAddress == null
+            //             ? 'Add Location'
+            //             : selectedAddress ?? "",
+            //         overflow: TextOverflow.ellipsis,
+            //       ),
+            //     ),
+            //     color: Colors.grey[200],
+            //     onPressed: () async {
+            //       print("Location opened : $location");
+            //       await Navigator.push(
+            //         context,
+            //         MaterialPageRoute<LocationDataModel>(
+            //           builder: (context) => LocationPicker(
+            //             selectedLocation: location,
+            //             selectedAddress: selectedAddress,
+            //           ),
+            //         ),
+            //       ).then((dataModel) {
+            //         if (dataModel != null) {
+            //           location = dataModel.geoPoint;
+            //           print(
+            //               "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
+            //           setState(() {
+            //             this.selectedAddress = dataModel.location;
+            //           });
+            //           log("Adderess   ${dataModel.location}");
+            //         }
+            //       });
+            //     },
+            //   ),
+            // ),
             Text(
               locationError,
               style: TextStyle(
@@ -535,6 +547,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         projectModel.photoUrl = globals.projectsAvtaarURL;
                         projectModel.emailId =
                             SevaCore.of(context).loggedInUser.email;
+                        projectModel.location = location;
                         int timestamp = DateTime.now().millisecondsSinceEpoch;
                         projectModel.createdAt = timestamp;
 
@@ -571,6 +584,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             OfferDurationWidgetState.starttimestamp;
                         projectModel.endTime =
                             OfferDurationWidgetState.endtimestamp;
+                        projectModel.address = selectedAddress;
+                        projectModel.location = location;
 
                         if (globals.projectsAvtaarURL != null) {
                           projectModel.photoUrl = globals.projectsAvtaarURL;
