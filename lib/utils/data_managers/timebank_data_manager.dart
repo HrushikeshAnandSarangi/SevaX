@@ -392,11 +392,11 @@ Stream<CardModel> getCardModelStream({@required String communityId}) async* {
 
 Future<List<String>> getAllTimebankIdStream(
     {@required String timebankId}) async {
-  return Firestore.instance
+  DocumentSnapshot onValue = await Firestore.instance
       .collection('timebanknew')
       .document(timebankId)
-      .get()
-      .then((onValue) {
+      .get();
+
     prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data);
 
     var admins = model.admins;
@@ -407,7 +407,6 @@ Future<List<String>> getAllTimebankIdStream(
     allItems.addAll(coordinators);
     allItems.addAll(members);
     return allItems;
-  });
 }
 
 Stream<List<TimebankModel>> getAllMyTimebanks(

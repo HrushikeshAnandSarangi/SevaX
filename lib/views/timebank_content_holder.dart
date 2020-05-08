@@ -587,52 +587,51 @@ class DiscussionListState extends State<DiscussionList> {
                   child: Center(child: CircularProgressIndicator()),
                 );
 
-                break;
-              default:
-                List<NewsModel> newsList = snapshot.data;
-                print('latest feeds ${newsList}');
-                newsList = filterBlockedContent(newsList, context);
-                newsList = filterPinnedNews(newsList, context);
+                      break;
+                    default:
+                      List<NewsModel> newsList = snapshot.data;
+                      newsList = filterBlockedContent(newsList, context);
+                      newsList = filterPinnedNews(newsList, context);
 
-                print("Size of incloming docs ${newsList.length}");
-                if (newsList.length == 1 && newsList[0].isPinned == true) {
-                  return Expanded(
-                    child: ListView(
-                      children: <Widget>[
-                        getNewsCard(
-                          newsList.elementAt(0),
-                          false,
-                        )
-                      ],
-                    ),
-                  );
-                }
-                if (newsList.length == 0) {
-                  return Padding(
-                    padding: const EdgeInsets.all(28.0),
-                    child: Center(child: Text('Your feed is empty')),
-                  );
-                }
-                return Expanded(
-                  child: ListView(
-                    children: <Widget>[
-                      isPinned
-                          ? getNewsCard(
-                              pinnedNewsModel,
-                              false,
-                            )
-                          : Offstage(),
-                      ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: newsList.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index >= newsList.length) {
-                            return Container(
-                              width: double.infinity,
-                              height: 20,
-                            );
-                          }
+                      if (newsList.length == 1 &&
+                          newsList[0].isPinned == true) {
+                        return Expanded(
+                          child: ListView(
+                            children: <Widget>[
+                              getNewsCard(
+                                newsList.elementAt(0),
+                                false,
+                              )
+                            ],
+                          ),
+                        );
+                      }
+                      if (newsList.length == 0) {
+                        return Padding(
+                          padding: const EdgeInsets.all(28.0),
+                          child: Center(child: Text('Your feed is empty')),
+                        );
+                      }
+                      return Expanded(
+                        child: ListView(
+                          children: <Widget>[
+                            isPinned
+                                ? getNewsCard(
+                                    pinnedNewsModel,
+                                    false,
+                                  )
+                                : Offstage(),
+                            ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: newsList.length + 1,
+                              itemBuilder: (context, index) {
+                                if (index >= newsList.length) {
+                                  return Container(
+                                    width: double.infinity,
+                                    height: 20,
+                                  );
+                                }
 
                           if (newsList.elementAt(index).reports.length > 2) {
                             return Offstage();
@@ -768,11 +767,9 @@ class DiscussionListState extends State<DiscussionList> {
       }
     });
 
-    // print('pinned news ${pinnedNewsModel}');
     if (filteredNewsList.length > 1) {
       filteredNewsList.removeWhere((news) => news.isPinned == true);
     }
-    // print('filtered news ${filteredNewsList}');
 
     return filteredNewsList;
   }
@@ -1335,7 +1332,6 @@ class DiscussionListState extends State<DiscussionList> {
   }
 
   Widget getImageView(String newsId, String urlToLoad) {
-    print("Load here ->  $urlToLoad");
     return Container(
       height: 250,
       child: SizedBox.expand(

@@ -952,8 +952,9 @@ Stream<List<TransactionModel>> getTimebankCreditsDebitsStream({
 }) async* {
   var data = Firestore.instance
       .collection('transactions')
-      .where('transactionbetween', arrayContains: timebankid)
       .where("isApproved", isEqualTo: true)
+      .where('transactionbetween', arrayContains: timebankid)
+      .orderBy("timestamp", descending: true)
       .snapshots();
 
   yield* data.transform(
@@ -977,8 +978,8 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
 }) async* {
   var data = Firestore.instance
       .collection('transactions')
-      .where('transactionbetween', arrayContains: userId)
       .where("isApproved", isEqualTo: true)
+      .where('transactionbetween', arrayContains: userId)
       .orderBy("timestamp", descending: true)
       .snapshots();
 
