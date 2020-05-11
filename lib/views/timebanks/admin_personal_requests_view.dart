@@ -134,8 +134,8 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
 
     requestModelList.forEach((request) =>
         request.requestEnd > DateTime.now().millisecondsSinceEpoch
-            ? "Filtering past requests content"
-            : filteredList.add(request));
+            ? filteredList.add(request)
+            : "Filtering past requests content");
 
     return filteredList;
   }
