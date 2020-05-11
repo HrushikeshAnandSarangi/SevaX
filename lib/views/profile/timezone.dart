@@ -25,9 +25,29 @@ class TimezoneListData {
         timezoneName: 'Alaska Standard Time'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
+        offsetFromUtc: -9,
+        timezoneAbb: 'AKDT',
+        timezoneName: 'Alaska Day Light Time'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -7,
+        timezoneAbb: 'MST',
+        timezoneName: 'Mountain Day Light Time'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -6,
+        timezoneAbb: 'MDT',
+        timezoneName: 'Mountain Day Light Time'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
         offsetFromUtc: -8,
         timezoneAbb: 'PT',
         timezoneName: 'Pacific Standard Time'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -7,
+        timezoneAbb: 'PDT',
+        timezoneName: 'Pacific Day Light Time'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -7,
@@ -38,6 +58,26 @@ class TimezoneListData {
         offsetFromUtc: -6,
         timezoneAbb: 'CT',
         timezoneName: 'Central Standard Time'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -5,
+        timezoneAbb: 'CDT',
+        timezoneName: 'Central Day Light Time'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -5,
+        timezoneAbb: 'EDT',
+        timezoneName: 'Eastern Day Light Time'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -10,
+        timezoneAbb: 'HST',
+        timezoneName: 'Hawaii-Aleutian Time'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -9,
+        timezoneAbb: 'HDT',
+        timezoneName: 'Hawaii-Aleutian Day Light Time'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -5,
@@ -633,6 +673,14 @@ class TimezoneListData {
       }
     }
     return [-5, 0];
+  }
+  getTimeZoneByCodeData (timezoneCode) {
+    for (var i = 0; i < timezonelist.length; i++) {
+      if (timezonelist[i].timezoneAbb == timezoneCode) {
+        return timezonelist[i].timezoneName;
+      }
+    }
+    return "Pacific Standard Time";
   }
   getData() {
     return timezonelist;
