@@ -131,7 +131,7 @@ class RequestCardWidget extends StatelessWidget {
                           loggedInUserId: loggedUserId,
                         );
                         Future.delayed(
-                          Duration(milliseconds: 3000),
+                          Duration(milliseconds: 1800),
                               () => refresh(),
                         );
                       } else {
@@ -141,7 +141,7 @@ class RequestCardWidget extends StatelessWidget {
                           loggedInUserId: loggedUserId,
                         );
                         Future.delayed(
-                          Duration(milliseconds: 3000),
+                          Duration(milliseconds: 1800),
                               () => refresh(),
                         );
 
