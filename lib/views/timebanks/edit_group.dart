@@ -193,45 +193,48 @@ class EditGroupFormState extends State<EditGroupForm> {
               widget.timebankModel.missionStatement = value;
             },
           ),
-          Row(
-            children: <Widget>[
-              headingText('Protected group', false),
-              Column(
-                children: <Widget>[
-                  Divider(),
-                  Checkbox(
-                    checkColor: Colors.white,
-                    activeColor: Colors.green,
-                    value: widget.timebankModel.protected,
-                    onChanged: (bool value) {
-                      setState(() {
-                        widget.timebankModel.protected = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Text(
-            'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled.',
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
-          ),
+          // Row(
+          //   children: <Widget>[
+          //     headingText('Protected group', false),
+          //     Column(
+          //       children: <Widget>[
+          //         Divider(),
+          //         Checkbox(
+          //           checkColor: Colors.white,
+          //           activeColor: Colors.green,
+          //           value: widget.timebankModel.protected,
+          //           onChanged: (bool value) {
+          //             setState(() {
+          //               widget.timebankModel.protected = value;
+          //             });
+          //           },
+          //         ),
+          //       ],
+          //     ),
+          //   ],
+          // ),
+          // Text(
+          //   'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled.',
+          //   style: TextStyle(
+          //     fontSize: 12,
+          //     color: Colors.grey,
+          //   ),
+          // ),
           headingText('Is this pin at a right place?', false),
-          Center(
-            child: LocationPickerWidget(
-              selectedAddress: selectedAddress,
-              location: location,
-              onChanged: (LocationDataModel dataModel) {
-                log("received data model");
-                setState(() {
-                  location = dataModel.geoPoint;
-                  this.selectedAddress = dataModel.location;
-                });
-              },
+          Container(
+            margin: EdgeInsets.all(20),
+            child: Center(
+              child: LocationPickerWidget(
+                selectedAddress: selectedAddress,
+                location: location,
+                onChanged: (LocationDataModel dataModel) {
+                  log("received data model");
+                  setState(() {
+                    location = dataModel.geoPoint;
+                    this.selectedAddress = dataModel.location;
+                  });
+                },
+              ),
             ),
           ),
           Padding(
