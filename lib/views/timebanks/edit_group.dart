@@ -12,7 +12,6 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
-import 'package:sevaexchange/utils/soft_delete.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
 import '../core.dart';
@@ -220,31 +219,34 @@ class EditGroupFormState extends State<EditGroupForm> {
           //     color: Colors.grey,
           //   ),
           // ),
-          deleteGroup,
+          // deleteGroup,
           headingText('Is this pin at a right place?', false),
-          Center(
-            child: FlatButton.icon(
-              icon: Icon(Icons.add_location),
-              label: Text(
-                selectedAddress == null || selectedAddress.isEmpty
-                    ? 'Add Location'
-                    : selectedAddress,
-              ),
-              color: Colors.grey[200],
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<GeoFirePoint>(
-                    builder: (context) => LocationPicker(
-                      selectedLocation: location,
+          Container(
+            margin: EdgeInsets.all(20),
+            child: Center(
+              child: FlatButton.icon(
+                icon: Icon(Icons.add_location),
+                label: Text(
+                  selectedAddress == null || selectedAddress.isEmpty
+                      ? 'Add Location'
+                      : selectedAddress,
+                ),
+                color: Colors.grey[200],
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<GeoFirePoint>(
+                      builder: (context) => LocationPicker(
+                        selectedLocation: location,
+                      ),
                     ),
-                  ),
-                ).then((point) {
-                  if (point != null) location = point;
-                  _getLocation();
-                  log('ReceivedLocation: $selectedAddress');
-                });
-              },
+                  ).then((point) {
+                    if (point != null) location = point;
+                    _getLocation();
+                    log('ReceivedLocation: $selectedAddress');
+                  });
+                },
+              ),
             ),
           ),
           Padding(
@@ -288,28 +290,7 @@ class EditGroupFormState extends State<EditGroupForm> {
     );
   }
 
-  Widget get deleteGroup {
-    return Padding(
-      padding: EdgeInsets.only(top: 15),
-      child: FlatButton(
-        onPressed: () {
-          showAdvisoryBeforeDeletion(
-            context,
-            SoftDelete.REQUEST_DELETE_GROUP,
-            widget.timebankModel.id,
-          );
-        },
-        child: Text(
-          "Delete Group",
-          textAlign: TextAlign.start,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.red,
-          ),
-        ),
-      ),
-    );
-  }
+
 
 /////
 

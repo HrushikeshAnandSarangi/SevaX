@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/soft_delete.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
@@ -168,6 +169,29 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 //    );
 //  }
 //
+
+  Widget get deleteTimebank {
+    return GestureDetector(
+      onTap: () {
+        showAdvisoryBeforeDeletion(
+          context: context,
+          associatedId: widget.timebankModel.id,
+          softDeleteType: SoftDelete.REQUEST_DELETE_TIMEBANK,
+          associatedContentTitle: widget.timebankModel.name,
+          email: SevaCore.of(context).loggedInUser.email,
+        );
+      },
+      child: Text(
+        "Delete Timebank",
+        textAlign: TextAlign.left,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.red,
+        ),
+      ),
+    );
+  }
+
   Widget viewRequests({BuildContext context}) {
     return GestureDetector(
       onTap: () {
@@ -402,6 +426,10 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
             height: 30,
           ),
           viewRequests(context: context),
+          SizedBox(
+            height: 20,
+          ),
+          deleteTimebank,
           // viewAcceptedOffers(context: context),
           // manageTimebankCodes(context: context),
 //          billingView(context: context),

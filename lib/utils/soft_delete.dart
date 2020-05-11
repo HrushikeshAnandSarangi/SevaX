@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:progress_dialog/progress_dialog.dart';
+
+import '../flavor_config.dart';
 
 String successMessages =
-    "A request has been successfully submited by SevaX admin, you will notified with youor registered mail. ";
+    "A request has been successfully submited to SevaX admin, you will notified with your registered mail. ";
 String failureMessage =
     "Sending request failed somehow, please try again later!";
 
 String successTitle = "Request submitted";
 String failureTitle = "Request failed!";
+
+ProgressDialog progressDialog;
 
 enum SoftDelete {
   REQUEST_DELETE_GROUP,
@@ -15,53 +20,72 @@ enum SoftDelete {
   REQUEST_DELETE_PROJECT,
 }
 
-void showAdvisoryBeforeDeletion(
+void showAdvisoryBeforeDeletion({
   BuildContext context,
   SoftDelete softDeleteType,
   String associatedId,
-) {
+  String email,
+  String associatedContentTitle,
+}) {
+  progressDialog = ProgressDialog(
+    context,
+    type: ProgressDialogType.Normal,
+    isDismissible: false,
+    customBody: Container(
+      child: Center(
+        child: Text("Please wait..."),
+      ),
+    ),
+  );
+
   showDialog(
     context: context,
-    builder: (BuildContext context) {
+    builder: (BuildContext contextDialog) {
       return AlertDialog(
-        title: Text("Are your sure"),
-        content: Text(
-            "All relevent information including projects, requests and offers under the group will be deleted!"),
+        title: Text(
+          "Are your sure you want to delete " + associatedContentTitle + "?",
+        ),
+        content: Text(_getContentFromType(softDeleteType)),
         actions: <Widget>[
           RaisedButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(contextDialog);
             },
             child: Text("  Cancel  "),
           ),
           FlatButton(
             color: Colors.white,
             onPressed: () async {
-              Navigator.pop(context);
-              showLinearProgress(context: context);
-
+              Navigator.pop(contextDialog);
+              progressDialog.show();
               try {
-                await http.get("https://gitlab.com/sevaexchange/seva-exchange");
-                Navigator.pop(buildContextForLinearProgress);
-                // showFinalResultConfirmation(
-                //   context,
-                //   softDeleteType,
-                //   associatedId,
-                //   false,
-                // );
+                await http.post(
+                  "${FlavorConfig.values.cloudFunctionBaseURL}/sendFeedbackToTimebank",
+                  body: {
+                    "memberEmail": email,
+                    "feedbackBody": email +
+                        " has requested to delete ${_getModelType(softDeleteType)} with id $associatedId with name $associatedContentTitle",
+                  },
+                );
+                progressDialog.hide();
+                showFinalResultConfirmation(
+                  context,
+                  softDeleteType,
+                  associatedId,
+                  true,
+                );
               } catch (_) {
-                Navigator.pop(buildContextForLinearProgress);
-
-                // showFinalResultConfirmation(
-                //   context,
-                //   softDeleteType,
-                //   associatedId,
-                //   false,
-                // );
+                progressDialog.hide();
+                showFinalResultConfirmation(
+                  context,
+                  softDeleteType,
+                  associatedId,
+                  false,
+                );
               }
             },
             child: Text(
-              "DELETE",
+              "Delete " + associatedContentTitle,
               style: TextStyle(
                 color: Colors.red,
               ),
@@ -78,7 +102,7 @@ BuildContext buildContextForLinearProgress;
 void showLinearProgress({BuildContext context}) {
   showDialog(
     context: context,
-    builder: (BuildContext dialogForLinearProgress) {
+    builder: (BuildContext context) {
       buildContextForLinearProgress = context;
       return AlertDialog(
         title: Text("Submitting request..."),
@@ -86,6 +110,33 @@ void showLinearProgress({BuildContext context}) {
       );
     },
   );
+}
+
+String advisoryForTimebank =
+    "All relevent information including projects, requests and offers under the group will be deleted!";
+String advisoryForProjects =
+    "All requests associated to this request would be removed";
+
+String _getContentFromType(SoftDelete type) {
+  switch (type) {
+    case SoftDelete.REQUEST_DELETE_GROUP:
+      return advisoryForTimebank;
+    case SoftDelete.REQUEST_DELETE_PROJECT:
+      return advisoryForProjects;
+    case SoftDelete.REQUEST_DELETE_TIMEBANK:
+      return advisoryForTimebank;
+  }
+}
+
+String _getModelType(SoftDelete type) {
+  switch (type) {
+    case SoftDelete.REQUEST_DELETE_GROUP:
+      return "GROUP";
+    case SoftDelete.REQUEST_DELETE_PROJECT:
+      return "PROJECT";
+    case SoftDelete.REQUEST_DELETE_TIMEBANK:
+      return "TIMEBANK";
+  }
 }
 
 void showFinalResultConfirmation(
@@ -109,7 +160,10 @@ void showFinalResultConfirmation(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text("Dismiss"),
+            child: Container(
+              margin: EdgeInsets.only(left: 10, right: 10),
+              child: Text("Dismiss"),
+            ),
           ),
         ],
       );
