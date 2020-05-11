@@ -83,7 +83,8 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
-
+                    requestModelList = filterRequests(
+                        context: context, requestModelList: requestModelList);
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
 
@@ -121,6 +122,20 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                 .contains(request.sevaUserId)
         ? "Filtering blocked content"
         : filteredList.add(request));
+
+    return filteredList;
+  }
+
+  List<RequestModel> filterRequests({
+    List<RequestModel> requestModelList,
+    BuildContext context,
+  }) {
+    List<RequestModel> filteredList = [];
+
+    requestModelList.forEach((request) =>
+        request.requestEnd > DateTime.now().millisecondsSinceEpoch
+            ? "Filtering past requests content"
+            : filteredList.add(request));
 
     return filteredList;
   }
