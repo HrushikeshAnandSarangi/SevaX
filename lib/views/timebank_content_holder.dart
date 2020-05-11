@@ -148,42 +148,85 @@ Widget createAdminTabBar(
       body: Column(
         children: <Widget>[
           ShowLimitBadge(),
-          TabBar(
-            labelColor: Theme.of(context).primaryColor,
-            indicatorColor: Theme.of(context).primaryColor,
-            indicatorSize: TabBarIndicatorSize.label,
-            unselectedLabelColor: Colors.black,
-            isScrollable: true,
-            tabs: [
-              Tab(
-                text: "Feeds",
+          Stack(
+            children: <Widget>[
+              TabBar(
+                labelPadding: EdgeInsets.symmetric(horizontal: 10),
+                labelColor: Theme.of(context).primaryColor,
+                indicatorColor: Theme.of(context).primaryColor,
+                indicatorSize: TabBarIndicatorSize.label,
+                unselectedLabelColor: Colors.black,
+                isScrollable: true,
+                tabs: [
+                  Tab(
+                    text: "Feeds",
+                  ),
+                  Tab(
+                    text: "Projects",
+                  ),
+                  Tab(
+                    text: "Requests",
+                  ),
+                  Tab(
+                    text: "Offers",
+                  ),
+                  Tab(
+                    text: "About",
+                  ),
+                  // Tab(
+                  //   text: "Bookmarked Offers",
+                  // ),
+                  Tab(
+                    text: "Members",
+                  ),
+                  Tab(
+                    text: "Manage",
+                  ),
+                  Container(
+                    width: 20,
+                    // height: 10,
+                    // color: Colors.green,
+                  ),
+                  Container(
+                    width: 20,
+                    // height: 10,
+                    // color: Colors.green,
+                  ),
+                ],
               ),
-              Tab(
-                text: "Projects",
-              ),
-              Tab(
-                text: "Requests",
-              ),
-              Tab(
-                text: "Offers",
-              ),
-              Tab(
-                text: "About",
-              ),
-              // Tab(
-              //   text: "Bookmarked Offers",
-              // ),
-              Tab(
-                text: "Members",
-              ),
-              Tab(
-                text: "Manage",
-              ),
-              GetActiveTimebankNotifications(timebankId: timebankId),
-              getMessagingTab(
-                communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-                timebankId: timebankId,
-              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  color: Colors.white,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      SizedBox(width: 10),
+                      GestureDetector(
+                        onTap: () {
+                          // _timebankController.animateTo(8);
+                        },
+                        child: GetActiveTimebankNotifications(
+                          timebankId: timebankId,
+                        ),
+                      ),
+                      SizedBox(width: 14),
+                      GestureDetector(
+                        onTap: () {
+                          // _timebankController.animateTo(9);
+                        },
+                        child: getMessagingTab(
+                          communityId: SevaCore.of(context)
+                              .loggedInUser
+                              .currentCommunity,
+                          timebankId: timebankId,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                    ],
+                  ),
+                ),
+              )
             ],
           ),
           Expanded(
