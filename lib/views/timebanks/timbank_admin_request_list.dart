@@ -478,6 +478,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     if (!isFromGroup) {
       batch.updateData(newMemberDocumentReference, {
         'communities': FieldValue.arrayUnion([communityId]),
+        'currentCommunity': communityId
       });
 
       var addToCommunityRef =
