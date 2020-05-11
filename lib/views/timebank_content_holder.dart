@@ -361,33 +361,6 @@ Widget createJoinedUserTabBar(
           timebankModel.name,
           style: TextStyle(fontSize: 18),
         ),
-        // bottom: ColoredTabBar(
-        //   color: Colors.white,
-        //   tabBar: TabBar(
-        //     labelColor: Theme.of(context).primaryColor,
-        //     unselectedLabelColor: Colors.grey,
-        //     indicatorColor: Color(0xFFF766FE0),
-        //     indicatorSize: TabBarIndicatorSize.label,
-        //     isScrollable: true,
-        //     tabs: [
-        //       Tab(
-        //         text: "Feeds",
-        //       ),
-        //       Tab(
-        //         text: "Requests",
-        //       ),
-        //       Tab(
-        //         text: "Offers",
-        //       ),
-        //       Tab(
-        //         text: "About",
-        //       ),
-        //       Tab(
-        //         text: "Members",
-        //       ),
-        //     ],
-        //   ),
-        // ),
       ),
       body: Column(
         children: <Widget>[
