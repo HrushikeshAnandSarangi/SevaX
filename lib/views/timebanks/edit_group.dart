@@ -12,6 +12,7 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/soft_delete.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
 import '../core.dart';
@@ -140,24 +141,25 @@ class EditGroupFormState extends State<EditGroupForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Center(
-              child: Padding(
-            padding: EdgeInsets.all(5.0),
-            child: Column(
-              children: <Widget>[
-                TimebankAvatar(
-                  photoUrl: widget.timebankModel.photoUrl ?? null,
-                ),
-                SizedBox(height: 5),
-                Text(
-                  'Group logo',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+            child: Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Column(
+                children: <Widget>[
+                  TimebankAvatar(
+                    photoUrl: widget.timebankModel.photoUrl ?? null,
                   ),
-                )
-              ],
+                  SizedBox(height: 5),
+                  Text(
+                    'Group logo',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  )
+                ],
+              ),
             ),
-          )),
+          ),
           headingText('Name your group', true),
           TextFormField(
             textInputAction: TextInputAction.done,
@@ -191,33 +193,34 @@ class EditGroupFormState extends State<EditGroupForm> {
               widget.timebankModel.missionStatement = value;
             },
           ),
-          Row(
-            children: <Widget>[
-              headingText('Protected group', false),
-              Column(
-                children: <Widget>[
-                  Divider(),
-                  Checkbox(
-                    checkColor: Colors.white,
-                    activeColor: Colors.green,
-                    value: widget.timebankModel.protected,
-                    onChanged: (bool value) {
-                      setState(() {
-                        widget.timebankModel.protected = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Text(
-            'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled.',
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
-          ),
+          // Row(
+          //   children: <Widget>[
+          //     headingText('Protected group', false),
+          //     Column(
+          //       children: <Widget>[
+          //         Divider(),
+          //         Checkbox(
+          //           checkColor: Colors.white,
+          //           activeColor: Colors.green,
+          //           value: widget.timebankModel.protected,
+          //           onChanged: (bool value) {
+          //             setState(() {
+          //               widget.timebankModel.protected = value;
+          //             });
+          //           },
+          //         ),
+          //       ],
+          //     ),
+          //   ],
+          // ),
+          // Text(
+          //   'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled.',
+          //   style: TextStyle(
+          //     fontSize: 12,
+          //     color: Colors.grey,
+          //   ),
+          // ),
+          deleteGroup,
           headingText('Is this pin at a right place?', false),
           Center(
             child: FlatButton.icon(
@@ -284,6 +287,31 @@ class EditGroupFormState extends State<EditGroupForm> {
       ),
     );
   }
+
+  Widget get deleteGroup {
+    return Padding(
+      padding: EdgeInsets.only(top: 15),
+      child: FlatButton(
+        onPressed: () {
+          showAdvisoryBeforeDeletion(
+            context,
+            SoftDelete.REQUEST_DELETE_GROUP,
+            widget.timebankModel.id,
+          );
+        },
+        child: Text(
+          "Delete Group",
+          textAlign: TextAlign.start,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+          ),
+        ),
+      ),
+    );
+  }
+
+/////
 
   Widget get createTimebankHumanityFirst {
     return Column(
