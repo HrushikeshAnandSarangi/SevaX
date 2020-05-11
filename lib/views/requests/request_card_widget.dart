@@ -240,9 +240,6 @@ class RequestCardWidget extends StatelessWidget {
         .document(notification.id)
         .setData(notification.toMap());
 
-    // if (dialogLoadingContext != null) {
-    //  Navigator.pop(dialogLoadingContext);
-    // }
   }
 
   Future<void> addToFavoriteList(
