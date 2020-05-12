@@ -214,7 +214,7 @@ class CommunityModel extends DataModel {
       this.primary_email = value;
     }
 
-    if (key == 'locar=tion') {
+    if (key == 'location') {
       this.location = value;
     }
 
