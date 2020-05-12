@@ -40,6 +40,14 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   void initState() {
     super.initState();
     _setTimebankModel();
+    getMembersList();
+    searchTextController.addListener(() {
+      setState(() {});
+    });
+    // setState(() {});
+  }
+
+  void getMembersList() {
     FirestoreManager.getAllTimebankIdStream(
       timebankId: widget.timebankId,
     ).then((onValue) {
@@ -47,10 +55,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         validItems = onValue;
       });
     });
-    searchTextController.addListener(() {
-      setState(() {});
-    });
-    // setState(() {});
   }
 
   void _setTimebankModel() async {
@@ -129,7 +133,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                     borderRadius: new BorderRadius.circular(25.7)),
-                hintText: 'Type Member name. Ex: John (min 1 char)',
+                hintText: 'Type name, email. Ex: John',
                 hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
           ),
         ),
@@ -270,6 +274,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                         communityId: timebankModel.communityId,
                         userEmail: user.email)
                     .commit();
+                setState(() {
+                  getMembersList();
+                });
               }
             : null,
         child: Text(isJoined ? "Joined" : "Add"),
