@@ -242,6 +242,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     if (validItems.contains(user.sevaUserID)) {
       isJoined = true;
     }
+
     return ListTile(
       leading: user.photoURL != null
           ? ClipOval(
