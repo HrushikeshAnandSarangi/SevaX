@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/location_model.dart';
 
@@ -61,9 +63,15 @@ class LocationConfimationCard extends StatelessWidget {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   onPressed: () {
+                    LocationDataModel locData = locationDataModel;
+                    if (locData.location.contains("*")) {
+                      locData.location =
+                          locationDataModel.location.split('*')[1];
+                    }
+                    log(locationDataModel.location);
                     Navigator.pop(
                       context,
-                      locationDataModel,
+                      locData,
                     );
                   },
                 ),
