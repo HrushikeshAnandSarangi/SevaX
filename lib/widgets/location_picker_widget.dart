@@ -7,14 +7,20 @@ class LocationPickerWidget extends StatelessWidget {
   final ValueChanged<LocationDataModel> onChanged;
   final String selectedAddress;
   final GeoFirePoint location;
+  final Color color;
 
   const LocationPickerWidget(
-      {Key key, this.onChanged, this.selectedAddress, this.location})
+      {Key key,
+      this.onChanged,
+      this.selectedAddress,
+      this.location,
+      this.color = Colors.green})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return FlatButton.icon(
       icon: Icon(Icons.add_location),
+      textColor: color,
       label: Container(
         constraints: BoxConstraints.loose(
           Size(MediaQuery.of(context).size.width - 140, 50),

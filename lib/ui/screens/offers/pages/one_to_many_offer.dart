@@ -1,7 +1,6 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -9,7 +8,6 @@ import 'package:sevaexchange/ui/screens/offers/bloc/one_to_many_offer_bloc.dart'
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
@@ -251,6 +249,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                 return LocationPickerWidget(
                                   location: snapshot.data?.location,
                                   selectedAddress: snapshot.data?.address,
+                                  color: snapshot.error == null
+                                      ? Colors.green
+                                      : Colors.red,
                                   onChanged: (LocationDataModel dataModel) {
                                     _bloc.onLocatioChanged(
                                       CustomLocation(
@@ -353,12 +354,4 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
       }),
     );
   }
-}
-
-Future<String> _getLocation(GeoFirePoint location) async {
-  String address = await LocationUtility().getFormattedAddress(
-    location.latitude,
-    location.longitude,
-  );
-  return address;
 }
