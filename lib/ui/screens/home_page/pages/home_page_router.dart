@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/bottom_nav_bar.dart';
@@ -14,7 +13,6 @@ import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/explore_tabview.dart';
 
-import '../../../../app_localizations.dart';
 import '../../../../flavor_config.dart';
 import 'home_dashboard.dart';
 
@@ -60,32 +58,6 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
       title: AppConfig.appName,
       debugShowCheckedModeBanner: false,
       theme: FlavorConfig.values.theme,
-      // List all of the app's supported locales here
-      supportedLocales: [
-        Locale('en', 'US'),
-        Locale('sk', 'SK'),
-      ],
-      localizationsDelegates: [
-        // A class which loads the translations from JSON files
-        AppLocalizations.delegate,
-        // Built-in localization of basic text for Material widgets
-        GlobalMaterialLocalizations.delegate,
-        // Built-in localization for text direction LTR/RTL
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      // Returns a locale which will be used by the app
-      localeResolutionCallback: (locale, supportedLocales) {
-        // Check if the current device locale is supported
-        for (var supportedLocale in supportedLocales) {
-          if (supportedLocale.languageCode == locale.languageCode &&
-              supportedLocale.countryCode == locale.countryCode) {
-            return supportedLocale;
-          }
-        }
-        // If the locale of the device is not supported, use the first one
-        // from the list (English, in this case).
-        return supportedLocales.first;
-      },
       home: BlocProvider<UserDataBloc>(
         bloc: _userBloc,
         child: Scaffold(

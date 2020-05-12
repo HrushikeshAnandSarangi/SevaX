@@ -8,6 +8,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
@@ -33,10 +34,19 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       new TextEditingController();
   Future<TimebankModel> getTimebankDetails;
   TimebankModel timebankModel;
+  var validItems = List<String>();
+
   @override
   void initState() {
     super.initState();
     _setTimebankModel();
+    FirestoreManager.getAllTimebankIdStream(
+      timebankId: widget.timebankId,
+    ).then((onValue) {
+      setState(() {
+        validItems = onValue;
+      });
+    });
     searchTextController.addListener(() {
       setState(() {});
     });
@@ -175,13 +185,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Widget buildList() {
     print("search ${searchTextController.text}");
 
-    if (searchTextController.text.trim().length < 1) {
-      //  print('Search requires minimum 1 character');
-      return Offstage();
-    }
+//    if (searchTextController.text.trim().length < 1) {
+//      //  print('Search requires minimum 1 character');
+//      return Offstage();
+//    }
     // ListView contains a group of widgets that scroll inside the drawer
     return StreamBuilder<List<UserModel>>(
-        stream: SearchManager.searchForUser(
+        stream: SearchManager.searchUserInSevaX(
           queryString: searchTextController.text,
         ),
         builder: (context, snapshot) {
@@ -197,17 +207,17 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               ),
             );
           }
-          List<UserModel> userList = snapshot.data;
-          print("user list ${userList.length}");
+          List<UserModel> userlist = snapshot.data;
+          print("user list ${snapshot.data.toString()}");
 
           return Padding(
               padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
               child: ListView.builder(
                   shrinkWrap: true,
-                  padding: EdgeInsets.only(
-                      bottom:
-                          180), //to avoid keyboard overlap //temp fix neeeds to be changed
-                  itemCount: userList.length + 1,
+//                  padding: EdgeInsets.only(
+//                      bottom:
+//                          180), //to avoid keyboard overlap //temp fix neeeds to be changed
+                  itemCount: userlist.length,
                   itemBuilder: (context, index) {
 //                          CompareUserStatus status;
 //
@@ -217,7 +227,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                       return Container();
                     }
                     return userWidget(
-                      user: userList[index],
+                      user: userlist[index],
                       context: context,
                     );
                   }));
@@ -228,6 +238,10 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
   Widget userWidget(
       {UserModel user, BuildContext context, CompareUserStatus status}) {
+    bool isJoined = false;
+    if (validItems.contains(user.sevaUserID)) {
+      isJoined = true;
+    }
     return ListTile(
       leading: user.photoURL != null
           ? ClipOval(
@@ -245,30 +259,23 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       // onTap: goToNext(snapshot.data),
       title: Text(user.fullname,
           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
-      trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-        RaisedButton(
-          onPressed: () async {
-            await addMemberToTimebank(
-                    sevaUserId: user.sevaUserID,
-                    timebankId: timebankModel.id,
-                    communityId: timebankModel.communityId,
-                    userEmail: user.email)
-                .commit();
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: Text("Add"),
-              ),
-            ],
-          ),
-          color: Theme.of(context).accentColor,
-          textColor: FlavorConfig.values.buttonTextColor,
-          shape: StadiumBorder(),
-        )
-      ]),
+      subtitle: Text(user.email),
+      trailing: RaisedButton(
+        onPressed: !isJoined
+            ? () async {
+                await addMemberToTimebank(
+                        sevaUserId: user.sevaUserID,
+                        timebankId: timebankModel.id,
+                        communityId: timebankModel.communityId,
+                        userEmail: user.email)
+                    .commit();
+              }
+            : null,
+        child: Text(isJoined ? "Joined" : "Add"),
+        color: Theme.of(context).accentColor,
+        textColor: FlavorConfig.values.buttonTextColor,
+        shape: StadiumBorder(),
+      ),
     );
   }
 
