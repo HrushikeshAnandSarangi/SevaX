@@ -116,6 +116,7 @@ Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
   var query = Firestore.instance
       .collection('projects')
       .where('timebank_id', isEqualTo: timebankid)
+      .where('softDeleted', isEqualTo: false)
       .orderBy("created_at", descending: true);
 
   var data = query.snapshots();

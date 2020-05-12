@@ -79,6 +79,7 @@ class ProjectModel extends DataModel {
         "created_at": createdAt == null ? null : createdAt,
         "start_time": startTime == null ? null : startTime,
         "end_time": endTime == null ? null : endTime,
+        "softDelete": false,
         "members": members == null
             ? null
             : new List<dynamic>.from(members.map((x) => x)),
