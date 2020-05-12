@@ -236,6 +236,7 @@ class BookmarkedOffers extends StatelessWidget {
                                   isTimebankRequest: true,
                                   parentContext: parentContext,
                                   userModel: userModel,
+                                  showAppBar: true,
                                 ),
                               ),
                             );
