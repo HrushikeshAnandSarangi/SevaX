@@ -363,7 +363,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               TextFormField(
                 initialValue: "${widget.requestModel.numberOfApprovals}",
                 decoration: InputDecoration(
-                  hintText: 'No. of approvals',
+                  hintText: 'No. of volunteers*',
                   hintStyle: hintTextStyle,
 
                   // border: OutlineInputBorder(

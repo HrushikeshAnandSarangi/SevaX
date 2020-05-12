@@ -401,7 +401,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     FocusScope.of(context).unfocus();
                   },
                   decoration: InputDecoration(
-                    hintText: 'No. of approvals',
+                    hintText: 'No. of volunteers*',
                     hintStyle: hintTextStyle,
                     // labelText: 'No. of volunteers',
                   ),
