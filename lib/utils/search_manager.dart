@@ -110,8 +110,9 @@ class SearchManager {
       Map<String, dynamic> sourceMap = map['_source'];
       var community = CommunityModel(sourceMap);
       // print("community data ${community.name}");
-
-      communityList.add(community);
+      if (community.private == false) {
+        communityList.add(community);
+      }
 
       //CommunityModel communityModel = CommunityModel.fromMap(sourceMap);
       //communityList.add(communityModel);

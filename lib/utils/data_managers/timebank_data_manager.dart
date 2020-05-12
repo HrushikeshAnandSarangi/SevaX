@@ -205,8 +205,11 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
 
             CommunityModel model = CommunityModel(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
+            if (model.private == false) {
+              communityList.add(model);
+            }
 
-            communityList.add(model);
+            // communityList.add(model);
           },
         );
         requestSink.add(communityList);

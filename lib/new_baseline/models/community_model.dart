@@ -150,7 +150,7 @@ class CommunityModel extends DataModel {
     this.about = map.containsKey('about') ? map['about'] : '';
     this.primary_email =
         map.containsKey('primary_email') ? map['primary_email'] : '';
-    this.private = map.containsKey("private") ? map["private"] : false;
+    this.private = map.containsKey('private') ? map['private'] : false;
 
     this.billing_address = map.containsKey('billing_address')
         ? BillingAddress(map['billing_address'].cast<String, dynamic>())

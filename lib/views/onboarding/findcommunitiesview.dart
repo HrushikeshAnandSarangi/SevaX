@@ -276,8 +276,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               if (snapshot.data.length != 0) {
                 List<CommunityModel> communityList = snapshot.data;
                 print("comm list ${communityList}");
-                communityList
-                    .removeWhere((community) => community.private == true);
+//                communityList
+//                    .removeWhere((community) => community.private == true);
 
                 return Padding(
                     padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
@@ -428,8 +428,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             //  print('near by comminities ${snapshot.data}');
             if (snapshot.data.length != 0) {
               List<CommunityModel> communityList = snapshot.data;
-              communityList
-                  .removeWhere((community) => community.private == true);
 
               return ListView.builder(
                   padding: EdgeInsets.only(
