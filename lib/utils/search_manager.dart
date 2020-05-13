@@ -241,7 +241,7 @@ class SearchManager {
               {
                 "multi_match": {
                   "query": "$queryString",
-                  "fields": ["email", "fullname"],
+                  "fields": ["email"],
                   "type": "phrase_prefix"
                 }
               },

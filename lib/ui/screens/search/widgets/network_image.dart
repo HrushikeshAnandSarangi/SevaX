@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 
 class CustomNetworkImage extends StatelessWidget {
   final String imageUrl;
@@ -17,13 +18,13 @@ class CustomNetworkImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: imageUrl ?? "https://getuikit.com/v2/docs/images/placeholder_600x400.svg",
+      imageUrl: imageUrl ?? defaultUserImageURL,
       fit: fit ?? BoxFit.fitWidth,
       placeholder: (context, url) => Center(
         child: placeholder ?? CircularProgressIndicator(),
       ),
       errorWidget: (context, url, error) => Center(
-        child: Icon(Icons.error),
+        child: Icon(Icons.person_pin),
       ),
     );
   }

@@ -1222,7 +1222,8 @@ class DiscussionListState extends State<DiscussionList> {
                                 backgroundImage: NetworkImage(
                                   news.userPhotoURL == null
                                       ? defaultUserImageURL
-                                      : news.userPhotoURL,
+                                      : news.userPhotoURL ??
+                                          defaultUserImageURL,
                                 ),
                                 minRadius: 40.0,
                               ),
