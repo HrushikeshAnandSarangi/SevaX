@@ -14,7 +14,6 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
-import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:share/share.dart';
 
 class InviteAddMembers extends StatefulWidget {
@@ -133,7 +132,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                     borderRadius: new BorderRadius.circular(25.7)),
-                hintText: 'Type name, email. Ex: John',
+                hintText: 'Invite members via email',
                 hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
           ),
         ),
@@ -212,8 +211,14 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             );
           }
           List<UserModel> userlist = snapshot.data;
-          print("user list ${snapshot.data.toString()}");
-
+          print("user list ${snapshot.data}");
+          print("user  ${userlist}");
+          if (userlist.length == 0) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(child: Text('No member found')),
+            );
+          }
           return Padding(
               padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
               child: ListView.builder(
@@ -227,12 +232,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 //
 //                          status = _compareUserStatus(communityList[index],
 //                              widget.loggedInUser.sevaUserID);
-                    if (index == 0) {
-                      return Container();
-                    }
+
                     return userWidget(
                       user: userlist[index],
-                      context: context,
                     );
                   }));
 
@@ -240,8 +242,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         });
   }
 
-  Widget userWidget(
-      {UserModel user, BuildContext context, CompareUserStatus status}) {
+  Widget userWidget({
+    UserModel user,
+  }) {
     bool isJoined = false;
     if (validItems.contains(user.sevaUserID)) {
       isJoined = true;
@@ -264,7 +267,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       // onTap: goToNext(snapshot.data),
       title: Text(user.fullname,
           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
-      subtitle: Text(user.email),
+
+      ///  subtitle: Text(user.email),
       trailing: RaisedButton(
         onPressed: !isJoined
             ? () async {
@@ -280,7 +284,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               }
             : null,
         child: Text(isJoined ? "Joined" : "Add"),
-        color: Theme.of(context).accentColor,
+        color: FlavorConfig.values.theme.accentColor,
         textColor: FlavorConfig.values.buttonTextColor,
         shape: StadiumBorder(),
       ),

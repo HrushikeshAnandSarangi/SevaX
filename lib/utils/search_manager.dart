@@ -239,12 +239,8 @@ class SearchManager {
                 }
               },
               {
-                "multi_match": {
-                  "query": "$queryString",
-                  "fields": ["email"],
-                  "type": "phrase_prefix"
-                }
-              },
+                "term": {"email.keyword": queryString}
+              }
             ]
           }
         }

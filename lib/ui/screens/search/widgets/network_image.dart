@@ -24,7 +24,12 @@ class CustomNetworkImage extends StatelessWidget {
         child: placeholder ?? CircularProgressIndicator(),
       ),
       errorWidget: (context, url, error) => Center(
-        child: Icon(Icons.person_pin),
+        child: FadeInImage.assetNetwork(
+          height: 70,
+          width: 70,
+          image: defaultUserImageURL,
+          placeholder: defaultUserImageURL,
+        ),
       ),
     );
   }
