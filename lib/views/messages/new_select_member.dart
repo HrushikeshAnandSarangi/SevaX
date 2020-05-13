@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -199,7 +200,9 @@ class _SelectMembersView extends StatelessWidget {
       child: Card(
         child: ListTile(
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(user.photoURL),
+            backgroundImage: NetworkImage(
+              user.photoURL ?? defaultUserImageURL,
+            ),
           ),
           title: Text(user.fullname),
         ),

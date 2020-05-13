@@ -72,7 +72,7 @@ class _LoginSignupScreenState extends State<PinView> {
                   padding: EdgeInsets.only(
                       left: 20.0, right: 20.0, top: 10.0, bottom: 25.0),
                   child: Text(
-                    'Enter the code you recieved from your timebank Coordinator to see the exchange opportunities for your group',
+                    'Enter the code you received from your timebank Coordinator to see the exchange opportunities for your group',
                     textDirection: TextDirection.ltr,
                     style: TextStyle(
                       fontSize: 17.0,

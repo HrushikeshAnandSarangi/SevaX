@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/reports_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -146,7 +147,7 @@ class _ReportedUsersView extends StatelessWidget {
       child: Card(
         child: ListTile(
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(user.photoURL),
+            backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
           ),
           title: Text(user.fullname),
           subtitle: Text(user.email),
@@ -224,7 +225,7 @@ class _ReportedUsersView extends StatelessWidget {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
+                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(

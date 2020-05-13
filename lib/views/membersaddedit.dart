@@ -1,7 +1,7 @@
 // import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sevaexchange/models/data_model.dart';
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 // import '../components/member.dart';
 
@@ -77,7 +77,7 @@ class _AddMembersEditState extends State<AddMembersEdit> {
                                 // ),
                                 CircleAvatar(
                                   backgroundImage:
-                                      NetworkImage(document['photourl'] ?? ''),
+                                      NetworkImage(document['photourl'] ?? defaultUserImageURL),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(right: 20.0),

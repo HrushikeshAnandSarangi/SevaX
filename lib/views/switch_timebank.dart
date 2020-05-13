@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 
 class SwitchTimebank extends StatelessWidget {
+  final String content;
+
+  SwitchTimebank({this.content});
+
   @override
   Widget build(BuildContext context) {
     Future.delayed(
@@ -22,7 +26,7 @@ class SwitchTimebank extends StatelessWidget {
             CircularProgressIndicator(),
             SizedBox(height: 20),
             Text(
-              'Switching Timebank',
+              content ?? 'Switching Timebank',
               style: TextStyle(
                 fontSize: 22,
               ),

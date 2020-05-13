@@ -10,6 +10,7 @@ import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -84,8 +85,10 @@ class _EditTimebankViewState extends State<EditTimebankView>
 
   @override
   Widget build(BuildContext context) {
-    var timebankName =
-        (FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV) ? "Timebank" : "Yang gang";
+    var timebankName = (FlavorConfig.appFlavor == Flavor.APP ||
+            FlavorConfig.appFlavor == Flavor.SEVA_DEV)
+        ? "Timebank"
+        : "Yang gang";
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
@@ -687,14 +690,17 @@ class _EditTimebankViewState extends State<EditTimebankView>
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute<GeoFirePoint>(
+                  MaterialPageRoute<LocationDataModel>(
                     builder: (context) => LocationPicker(
                       selectedLocation: location,
                     ),
                   ),
-                ).then((point) {
-                  if (point != null) location = point;
-                  _getLocation();
+                ).then((dataModel) {
+                  if (dataModel != null) location = dataModel.geoPoint;
+                  // _getLocation();
+                  setState(() {
+                    this.selectedAddress = dataModel.location;
+                  });
                   widget.timebankModel.location = location;
                   updateTimebank();
                   log('ReceivedLocation: $selectedAddress');

@@ -48,12 +48,20 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             sevaUserId: widget.timebankModel.admins[0])
         .then((onValue) {
       user = onValue;
-      setState(() {
-        isAdminLoaded = true;
-      });
+      if (this.mounted)
+        setState(() {
+          isAdminLoaded = true;
+        });
     });
-    var templist = [...widget.timebankModel.members,...widget.timebankModel.admins,...widget.timebankModel.coordinators];
-    isUserJoined = templist.contains(SevaCore.of(context).loggedInUser.sevaUserID) ? true: false;
+    var templist = [
+      ...widget.timebankModel.members,
+      ...widget.timebankModel.admins,
+      ...widget.timebankModel.coordinators
+    ];
+    isUserJoined =
+        templist.contains(SevaCore.of(context).loggedInUser.sevaUserID)
+            ? true
+            : false;
     if (widget.timebankModel.members.contains(widget.userId)) {
       userModels = await FirestoreManager
           .getUsersForAdminsCoordinatorsMembersTimebankIdTwo(
@@ -132,7 +140,8 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 ),
               ),
             ),
-            isUserJoined ? TimeBankSevaCoin(
+            isUserJoined
+                ? TimeBankSevaCoin(
                     isAdmin: !widget.timebankModel.admins
                         .contains(SevaCore.of(context).loggedInUser.sevaUserID),
                     loggedInUser: SevaCore.of(context).loggedInUser,

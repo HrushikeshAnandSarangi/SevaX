@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
-
 
 class TimebankRequestCard extends StatelessWidget {
   final String title;
@@ -36,10 +36,7 @@ class TimebankRequestCard extends StatelessWidget {
                 child: SizedBox(
                   height: 45,
                   width: 45,
-                  child: FadeInImage.assetNetwork(
-                    placeholder: defaultUserImageURL,
-                    image: photoUrl ?? defaultUserImageURL,
-                  ),
+                  child: CustomNetworkImage(photoUrl ?? defaultUserImageURL),
                 ),
               ),
             ),

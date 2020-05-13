@@ -596,7 +596,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
       elevation: 0.0,
       child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(user.photoURL),
+          backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
         ),
         title: Text(user.fullname),
         subtitle: Text(user.email),

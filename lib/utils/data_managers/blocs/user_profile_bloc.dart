@@ -44,7 +44,7 @@ class UserProfileBloc {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SwitchTimebank(),
+                    builder: (context) => SwitchTimebank(content : 'Switching Timebank' ),
                   ),
                 );
               },

@@ -81,7 +81,8 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
-
+                    requestModelList = filterRequests(
+                        context: context, requestModelList: requestModelList);
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
 
@@ -101,6 +102,20 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
             );
           }),
     );
+  }
+
+  List<RequestModel> filterRequests({
+    List<RequestModel> requestModelList,
+    BuildContext context,
+  }) {
+    List<RequestModel> filteredList = [];
+
+    requestModelList.forEach((request) =>
+        request.requestEnd > DateTime.now().millisecondsSinceEpoch
+            ? filteredList.add(request)
+            : "Filtering past requests content");
+
+    return filteredList;
   }
 
   List<RequestModel> filterBlockedRequestsContent({

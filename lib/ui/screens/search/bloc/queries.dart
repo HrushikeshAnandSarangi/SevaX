@@ -8,6 +8,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 
 class Searches {
   static Future<http.Response> makePostRequest({
@@ -125,6 +126,13 @@ class Searches {
         }
       }
     });
+    for (var i = 0; i < feedsList.length; i++) {
+      //  modelList[i].userPhotoURL = onValue[i]['photourl'];
+      UserModel userModel = await getUserForId(
+        sevaUserId: feedsList[i].sevaUserId,
+      );
+      feedsList[i].userPhotoURL = userModel.photoURL;
+    }
 //    feedsList.sort((a, b) => a.title.compareTo(b.title));
     yield feedsList;
   }
@@ -367,11 +375,12 @@ class Searches {
     List<RequestModel> requestsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (loggedInUser.blockedBy.length == 0) {
+      if (loggedInUser.blockedBy.length == 0 && sourceMap['projectId'] == "") {
         RequestModel model = RequestModel.fromMapElasticSearch(sourceMap);
         if (model.accepted == false) requestsList.add(model);
       } else {
-        if (!loggedInUser.blockedBy.contains(sourceMap["sevauserid"])) {
+        if (!loggedInUser.blockedBy.contains(sourceMap["sevauserid"]) &&
+            sourceMap['projectId'] == "") {
           RequestModel model = RequestModel.fromMapElasticSearch(sourceMap);
           if (model.accepted == false) requestsList.add(model);
         }

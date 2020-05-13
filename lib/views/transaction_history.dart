@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../models/models.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-
-import 'core.dart';
 
 class TransactionHistoryView extends StatelessWidget {
   final UserModel userModel;
@@ -58,7 +57,7 @@ class TransactionHistoryView extends StatelessWidget {
                           return Center(child: CircularProgressIndicator());
                         }
                         return CircleAvatar(
-                          backgroundImage: NetworkImage(snapshot.data.photoURL),
+                          backgroundImage: NetworkImage(snapshot.data.photoURL ?? defaultUserImageURL),
                           radius: 32.0,
                         );
                       },
