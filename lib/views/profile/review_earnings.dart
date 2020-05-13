@@ -242,7 +242,7 @@ class EarningImageItem extends StatelessWidget {
     } else {
       TimebankModel timebanktemp = snapshot.data;
       return CircleAvatar(
-        backgroundImage: NetworkImage(timebanktemp.photoUrl),
+        backgroundImage: NetworkImage(timebanktemp.photoUrl ?? defaultUserImageURL),
       );
     }
   }

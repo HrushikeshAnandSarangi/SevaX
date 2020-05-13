@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
@@ -32,14 +33,10 @@ class UpdateNewsFeed extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
-          backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             "Update feed",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(fontSize: 18),
           ),
-          centerTitle: false,
-          actions: <Widget>[],
         ),
         body: NewsCreateForm(
           timebankId: timebankId,
@@ -77,9 +74,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   TextStyle textStyle;
   NewsCreateFormState({this.newsObject}) {
     print("Getting news Feed -> $newsObject");
-    location = newsObject.location;
+
     globals.newsImageURL = newsObject.newsImageUrl;
-    _getLocation();
+    // _getLocation();
   }
 
   List<DataModel> dataList = [];
@@ -138,6 +135,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   @override
   void initState() {
     super.initState();
+    selectedAddress = newsObject.placeAddress;
+    location = newsObject.location;
 
     dataList.add(EntityModel(entityType: EntityType.general));
 //    ApiManager.getTimeBanksForUser(userEmail: globals.email)
@@ -351,10 +350,14 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       child: NewsImage(
                         photoCredits: newsObject.photoCredits,
                         geoFirePointLocation: location,
-                        geoFirePointLocationCallback:
-                            (geoLocationPointSelected) async {
-                          location = geoLocationPointSelected;
-                          await _getLocation();
+                        selectedAddress: selectedAddress,
+                        onLocationDataModelUpdate:
+                            (LocationDataModel dataModel) async {
+                          location = dataModel.geoPoint;
+                          setState(() {
+                            this.selectedAddress = dataModel.location;
+                          });
+                          // await _getLocation();
                         },
                         onCreditsEntered: (photoCreditsFromNews) {
                           // print("" + photoCredits);
@@ -365,54 +368,28 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   ),
                 ],
               ),
-
-              // Container(
-              //   margin: prefix0.EdgeInsets.all(10),
-              //   child: FlatButton.icon(
-              //     icon: Icon(Icons.add_location),
-              //     label: Text(
-              //       selectedAddress == null || selectedAddress.isEmpty
-              //           // adasdasd
-              //           ? 'Add Location'
-              //           : selectedAddress,
-              //       overflow: TextOverflow.ellipsis,
-              //     ),
-              //     color: Colors.grey[200],
-              //     onPressed: () {
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute<GeoFirePoint>(
-              //           builder: (context) => LocationPicker(
-              //             selectedLocation: location,
-              //           ),
-              //         ),
-              //       ).then((point) {
-              //         if (point != null) location = point;
-              //         _getLocation();
-              //       });
-              //     },
-              //   ),
-              // ),
               Container(
-                margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
                 alignment: Alignment(0, 1),
                 padding: const EdgeInsets.only(top: 10.0),
                 child: RaisedButton(
                   shape: StadiumBorder(),
-                  color: Theme.of(context).accentColor,
                   onPressed: () async {
+                    //  print("address $selectedAddress");
                     var connResult = await Connectivity().checkConnectivity();
-                    if(connResult == ConnectivityResult.none){
+                    if (connResult == ConnectivityResult.none) {
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("Please check your internet connection."),
+                          content:
+                              Text("Please check your internet connection."),
                           action: SnackBarAction(
                             label: 'Dismiss',
-                            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+                            onPressed: () =>
+                                Scaffold.of(context).hideCurrentSnackBar(),
                           ),
                         ),
                       );
-                      return ;
+                      return;
                     }
                     if (location != null) {
                       if (formKey.currentState.validate()) {
@@ -445,22 +422,11 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       );
                     }
                   },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.attachment,
-                        size: 24.0,
-                        color: FlavorConfig.values.buttonTextColor,
-                      ),
-                      Text(' '),
-                      Text(
-                        'Update feed',
-                        style: TextStyle(
-                          color: FlavorConfig.values.buttonTextColor,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    'Update feed',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

@@ -205,7 +205,7 @@ class UserModel extends DataModel {
     if (map.containsKey('timezone')) {
       this.timezone = map['timezone'];
     } else {
-      this.timezone = 'PT';
+      this.timezone = 'Pacific Standard Time';
     }
     if (map.containsKey('currentCommunity')) {
       this.currentCommunity = map['currentCommunity'];
@@ -309,7 +309,7 @@ class UserModel extends DataModel {
     if (this.timezone != null) {
       object['timezone'] = this.timezone;
     } else {
-      object['timezone'] = 'PT';
+      object['timezone'] = 'Pacific Standard Time';
     }
 
     if (this.completedIntro != null) {

@@ -156,7 +156,7 @@ Stream<List<NewsModel>> getNearNewsStream(
     //await process goes here
     await Future.wait(futures).then((onValue) async {
       for (var i = 0; i < modelList.length; i++) {
-        modelList[i].userPhotoURL = onValue[i]['photourl'];
+        //  modelList[i].userPhotoURL = onValue[i]['photourl'];
 
         // var data = await _getLocation(
         //   modelList[i].location.geoPoint.latitude,

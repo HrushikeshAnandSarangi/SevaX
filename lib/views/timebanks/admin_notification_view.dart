@@ -6,6 +6,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -303,7 +304,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   decoration: notificationDecoration,
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL),
+                      backgroundImage:
+                          NetworkImage(user.photoURL ?? defaultUserImageURL),
                     ),
                     title: Text('Credited'),
                     subtitle: RichText(
@@ -378,7 +380,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
               decoration: notificationDecoration,
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage(user.photoURL),
+                  backgroundImage:
+                      NetworkImage(user.photoURL ?? defaultUserImageURL),
                 ),
                 title: Text('Debited'),
                 subtitle: RichText(
@@ -445,7 +448,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             decoration: notificationDecoration,
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
+                backgroundImage:
+                    NetworkImage(user.photoURL ?? defaultUserImageURL),
               ),
               title: Text(model.title),
               subtitle: RichText(
@@ -570,7 +574,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         decoration: notificationDecoration,
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundImage: NetworkImage(user.photoURL),
+                            backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
                           ),
                           title: Text(model.title),
                           subtitle: RichText(
@@ -756,7 +760,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                 decoration: notificationDecoration,
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(user.photoURL),
+                    backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
                   ),
                   title: Text(model.title),
                   subtitle: RichText(
@@ -865,7 +869,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
+                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(
@@ -1088,7 +1092,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
               title: Text("Join request"),
               leading: user.photoURL != null
                   ? CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL),
+                      backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
                     )
                   : Offstage(),
               subtitle: Text(
@@ -1143,7 +1147,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
+                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(
@@ -1368,7 +1372,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             child: ListTile(
               title: Text("Offer Accepted"),
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
+                backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
               ),
               subtitle: Text(
                   '${user.fullname.toLowerCase()} has shown interest in your offer'),

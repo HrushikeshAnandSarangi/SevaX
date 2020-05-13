@@ -998,6 +998,19 @@ class DiscussionListState extends State<DiscussionList> {
                                 ),
                               ),
                             ),
+//                            Container(
+//                              margin: EdgeInsets.all(5),
+//                              height: 40,
+//                              width: 40,
+//                              child: CircleAvatar(
+//                                backgroundImage: NetworkImage(
+//                                  news.userPhotoURL == null
+//                                      ? defaultUserImageURL
+//                                      : news.userPhotoURL,
+//                                ),
+//                                minRadius: 40.0,
+//                              ),
+//                            ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[

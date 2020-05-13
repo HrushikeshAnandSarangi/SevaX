@@ -349,7 +349,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
               child: Row(
                 children: <Widget>[
                   CircleAvatar(
-                    backgroundImage: NetworkImage(user.photoURL),
+                    backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
                   ),
                   Expanded(
                     child: Padding(
@@ -633,7 +633,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                 child: Row(
                   children: <Widget>[
                     CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL),
+                      backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
                     ),
                     Expanded(
                       child: Padding(

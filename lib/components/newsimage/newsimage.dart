@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
-import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 import './image_picker_handler.dart';
 import '../../globals.dart' as globals;
-import '../location_picker.dart';
 
 class NewsImage extends StatefulWidget {
   final String photoCredits;
@@ -20,25 +20,25 @@ class NewsImage extends StatefulWidget {
   final GeoFirePoint geoFirePointLocation;
 
   final ValueChanged<String> onCreditsEntered;
-  final Function(GeoFirePoint) geoFirePointLocationCallback;
+  final Function(LocationDataModel) onLocationDataModelUpdate;
 
   NewsImage({
     this.photoCredits,
     this.geoFirePointLocation,
-    this.geoFirePointLocationCallback,
+    this.onLocationDataModelUpdate,
     this.onCreditsEntered,
     this.selectedAddress,
   });
 
-  NewsImageState createState() => NewsImageState(geoFirePointLocationCallback);
+  NewsImageState createState() => NewsImageState(onLocationDataModelUpdate);
 }
 
 @override
 class NewsImageState extends State<NewsImage>
     with TickerProviderStateMixin, ImagePickerListener {
   bool _isImageBeingUploaded = false;
-  Function(GeoFirePoint) geoFirePointLocationCallback;
-  NewsImageState(this.geoFirePointLocationCallback);
+  Function(LocationDataModel) onLocationDataModelUpdate;
+  NewsImageState(this.onLocationDataModelUpdate);
   String selectedAddress;
 
   ImagePickerHandler imagePicker;
@@ -83,7 +83,7 @@ class NewsImageState extends State<NewsImage>
 
   @override
   void initState() {
-    _fetchCurrentlocation;
+    if (widget.geoFirePointLocation == null) _fetchCurrentlocation;
     super.initState();
     print("locaton on newsimage ${widget.geoFirePointLocation?.coords}");
     selectedAddress = widget.selectedAddress;
@@ -176,31 +176,13 @@ class NewsImageState extends State<NewsImage>
               imagePicker.showDialog(context);
             },
           ),
-          FlatButton.icon(
-            color: Colors.grey[200],
-            icon: Icon(Icons.add_location),
-            label: Text(
-              selectedAddress == null ? 'Add Location' : selectedAddress,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute<GeoFirePoint>(
-                  builder: (context) => LocationPicker(
-                    selectedLocation: widget.geoFirePointLocation,
-                  ),
-                ),
-              ).then(
-                (point) {
-                  if (point != null) {
-                    getLocation(point).then((address) {
-                      selectedAddress = address;
-                      geoFirePointLocationCallback(point);
-                      setState(() {});
-                    });
-                  }
-                },
-              );
+          LocationPickerWidget(
+            location: widget.geoFirePointLocation,
+            selectedAddress: selectedAddress,
+            onChanged: (LocationDataModel dataModel) {
+              selectedAddress = dataModel.location;
+              onLocationDataModelUpdate(dataModel);
+              setState(() {});
             },
           ),
         ],
@@ -233,13 +215,18 @@ class NewsImageState extends State<NewsImage>
         print("Location1:$onValue");
         GeoFirePoint location =
             GeoFirePoint(onValue.latitude, onValue.longitude);
-        geoFirePointLocationCallback(location);
+
         LocationUtility()
             .getFormattedAddress(
           location.latitude,
           location.longitude,
         )
             .then((address) {
+          onLocationDataModelUpdate(LocationDataModel(
+            address,
+            location.latitude,
+            location.longitude,
+          ));
           setState(() {
             this.selectedAddress = address;
           });

@@ -46,8 +46,9 @@ class AdminChatViewState extends State<AdminChatView> {
   String loggedInEmail;
   final TextEditingController textcontroller = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  ScrollController scrollcontroller = ScrollController();
+  // ScrollController scrollcontroller = ScrollController();
   Future _fetchAppBarData;
+  ScrollController _scrollController = new ScrollController();
 
   @override
   void didChangeDependencies() {
@@ -66,6 +67,8 @@ class AdminChatViewState extends State<AdminChatView> {
 
   @override
   void initState() {
+    _scrollController = ScrollController();
+
     _fetchAppBarData = isValidEmail(widget.useremail)
         ? FirestoreManager.getUserForEmail(emailAddress: widget.useremail)
         : FirestoreManager.getTimeBankForId(timebankId: widget.useremail);
@@ -76,12 +79,35 @@ class AdminChatViewState extends State<AdminChatView> {
           'I am rejecting your task completion request because ';
     if (widget.isFromShare == null) widget.isFromShare = false;
     if (widget.isFromShare) textcontroller.text = widget.news.id;
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      Timer(Duration(milliseconds: 100), () {
-        scrollcontroller.jumpTo(scrollcontroller.position.maxScrollExtent);
-      });
-    });
+//    SchedulerBinding.instance.addPostFrameCallback((_) {
+//      Timer(Duration(milliseconds: 100), () {
+//        scrollcontroller.jumpTo(scrollcontroller.position.maxScrollExtent);
+//      });
+//    });
     super.initState();
+  }
+
+  _scrollToBottom() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
+
+    // setState(() {});
+//    SchedulerBinding.instance.addPostFrameCallback((_) {
+//      Timer(Duration(milliseconds: 100), () {
+//        try {
+//          _scrollController.jumpTo(
+//            _scrollController.position.maxScrollExtent,
+//          );
+//        } catch (e) {
+//          print("Scroller not attached");
+//        }
+//      });
+//    });
   }
 
   Widget appBar({String imageUrl, String appbarTitle}) {
@@ -98,7 +124,7 @@ class AdminChatViewState extends State<AdminChatView> {
               ),
             ),
             image: DecorationImage(
-              image: NetworkImage(imageUrl),
+              image: NetworkImage(imageUrl ?? defaultUserImageURL),
             ),
           ),
         ),
@@ -210,6 +236,7 @@ class AdminChatViewState extends State<AdminChatView> {
               builder: (BuildContext context,
                   AsyncSnapshot<List<MessageModel>> chatListSnapshot) {
                 if (chatListSnapshot.hasError) {
+                  _scrollToBottom();
                   return new Text('Error: ${chatListSnapshot.error}');
                 }
 
@@ -231,17 +258,20 @@ class AdminChatViewState extends State<AdminChatView> {
                       email: email,
                       userEmail: widget.useremail,
                     );
+                    List<Widget> messages = chatModelList.map(
+                      (MessageModel chatModel) {
+                        return getChatListView(
+                            chatModel, loggedInEmail, widget.useremail);
+                      },
+                    ).toList();
+
+                    _scrollToBottom();
 
                     return Container(
                       padding: EdgeInsets.only(left: 10.0, right: 10.0),
                       child: ListView(
-                        controller: scrollcontroller,
-                        children: chatModelList.map(
-                          (MessageModel chatModel) {
-                            return getChatListView(
-                                chatModel, loggedInEmail, widget.useremail);
-                          },
-                        ).toList(),
+                        controller: _scrollController,
+                        children: <Widget>[...messages],
                       ),
                     );
                 }
@@ -318,12 +348,9 @@ class AdminChatViewState extends State<AdminChatView> {
                         );
                       });
 
-                      textcontroller.clear();
-                      SchedulerBinding.instance.addPostFrameCallback((_) {
-                        Timer(Duration(milliseconds: 100), () {
-                          scrollcontroller.jumpTo(
-                              scrollcontroller.position.maxScrollExtent);
-                        });
+                      setState(() {
+                        textcontroller.clear();
+                        _scrollToBottom();
                       });
                       //FocusScope.of(context).requestFocus(FocusNode());
                     }

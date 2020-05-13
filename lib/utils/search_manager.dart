@@ -267,7 +267,6 @@ class SearchManager {
     @required queryString,
     @required List<String> validItems,
   }) async* {
-    print("searchForUser :: ---------------");
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxusers/sevaxuser/_search';
     dynamic body = json.encode(
@@ -292,16 +291,11 @@ class SearchManager {
         }
       },
     );
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(url, body);
-
-    //  log("loggg - "+validItems.toString());
-
+    List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(url, body);
     List<UserModel> userList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       UserModel user = UserModel.fromMap(sourceMap);
-
       if (validItems.contains(user.sevaUserID)) {
         userList.add(user);
       }

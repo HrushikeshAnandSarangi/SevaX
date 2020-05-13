@@ -556,7 +556,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                   decoration: notificationDecoration,
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL),
+                      backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
                     ),
                     title: Text('Credited'),
                     subtitle: RichText(
@@ -627,7 +627,8 @@ class NotificationsView extends State<NotificationViewHolder> {
               decoration: notificationDecoration,
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage(user.photoURL),
+                  backgroundImage:
+                      NetworkImage(user.photoURL ?? defaultUserImageURL),
                 ),
                 title: Text('Debited'),
                 subtitle: RichText(
@@ -687,7 +688,8 @@ class NotificationsView extends State<NotificationViewHolder> {
         decoration: notificationDecoration,
         child: ListTile(
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(model.photoUrl),
+            backgroundImage:
+                NetworkImage(model.photoUrl ?? defaultUserImageURL),
           ),
           title: Text(model.title),
           subtitle: RichText(
@@ -815,7 +817,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                         decoration: notificationDecoration,
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundImage: NetworkImage(user.photoURL),
+                            backgroundImage: NetworkImage(
+                                user.photoURL ?? defaultUserImageURL),
                           ),
                           title: Text(model.title),
                           subtitle: RichText(
@@ -962,7 +965,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                 decoration: notificationDecoration,
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(user.photoURL),
+                    backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
                   ),
                   title: Text(model.title),
                   subtitle: RichText(
@@ -1047,7 +1050,7 @@ class NotificationsView extends State<NotificationViewHolder> {
               leading: requestInvitationModel.timebankImage != null
                   ? CircleAvatar(
                       backgroundImage:
-                          NetworkImage(requestInvitationModel.timebankImage),
+                          NetworkImage(requestInvitationModel.timebankImage ?? defaultUserImageURL),
                     )
                   : Offstage(),
               subtitle: Text(
@@ -1092,7 +1095,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
+                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(
@@ -1331,7 +1334,7 @@ class NotificationsView extends State<NotificationViewHolder> {
               title: Text("Join request"),
               leading: user.photoURL != null
                   ? CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL),
+                      backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
                     )
                   : Offstage(),
               subtitle: Text(
@@ -1366,7 +1369,7 @@ class NotificationsView extends State<NotificationViewHolder> {
             child: ListTile(
               title: Text("Offer Accepted"),
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
+                backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
               ),
               subtitle: Text(
                   '${user.fullname.toLowerCase()} has shown interest in your offer'),
@@ -1481,7 +1484,7 @@ class NotificationsView extends State<NotificationViewHolder> {
         child: ListTile(
           title: Text(model.title),
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(model.photoUrl),
+            backgroundImage: NetworkImage(model.photoUrl ?? defaultUserImageURL),
           ),
           subtitle: Text('Task completion rejected by ${model.fullName}'),
           onTap: () {
@@ -1665,7 +1668,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
+                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(

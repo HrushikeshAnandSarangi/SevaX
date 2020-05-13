@@ -145,7 +145,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
               );
             }
             return CircleAvatar(
-              backgroundImage: NetworkImage(user.photoURL),
+              backgroundImage:
+                  NetworkImage(user.photoURL ?? defaultUserImageURL),
             );
           },
         ),
@@ -386,7 +387,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
             decoration: notificationDecoration,
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
+                backgroundImage:
+                    NetworkImage(user.photoURL ?? defaultUserImageURL),
               ),
               title: Text(user.fullname),
               subtitle: RichText(
@@ -505,7 +507,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
             decoration: notificationDecoration,
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
+                backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
               ),
               title: Text(model.title),
               subtitle: RichText(
@@ -587,7 +589,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
+                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(

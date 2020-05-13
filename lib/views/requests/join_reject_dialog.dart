@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
@@ -49,7 +50,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               width: 70,
               child: CircleAvatar(
                 backgroundImage:
-                    NetworkImage(requestInvitationModel.timebankImage),
+                    NetworkImage(requestInvitationModel.timebankImage ?? defaultUserImageURL),
               ),
             ),
             Padding(

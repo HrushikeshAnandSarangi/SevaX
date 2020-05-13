@@ -796,7 +796,7 @@ class ProfileImage extends StatelessWidget {
       tag: tag,
       child: CircleAvatar(
         backgroundImage: NetworkImage(
-          image ?? '',
+          image ?? defaultUserImageURL,
         ),
         minRadius: radius,
       ),

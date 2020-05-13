@@ -61,7 +61,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     var futures = <Future>[];
     futures.clear();
 
-    if (widget.requestItem.acceptors != null || widget.requestItem.acceptors.length !=0 || widget.requestItem.approvedUsers.length !=0 || widget.requestItem.invitedUsers!=null || widget.requestItem.invitedUsers.length !=0) {
+    if (widget.requestItem.acceptors != null ||
+        widget.requestItem.acceptors.length != 0 ||
+        widget.requestItem.approvedUsers.length != 0 ||
+        widget.requestItem.invitedUsers != null ||
+        widget.requestItem.invitedUsers.length != 0) {
       widget.requestItem.acceptors.forEach((memberEmail) {
         futures.add(getUserDetails(memberEmail: memberEmail));
       });
@@ -70,7 +74,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           widget.requestItem.approvedUsers
               .contains(SevaCore.of(context).loggedInUser.email) ||
           widget.requestItem.invitedUsers
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID) || false;
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+          false;
     } else {
       isApplied = false;
     }
@@ -197,27 +202,29 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       style: titleStyle,
                       maxLines: 1,
                     ),
-                    subtitle: FutureBuilder<String>(
-                      future: _getLocation(
-                        widget.requestItem.location.latitude,
-                        widget.requestItem.location.longitude,
-                      ),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return Text("Unnamed Location");
-                        }
+                    subtitle: widget.requestItem.address != null
+                        ? Text(widget.requestItem.address)
+                        : FutureBuilder<String>(
+                            future: _getLocation(
+                              widget.requestItem.location.latitude,
+                              widget.requestItem.location.longitude,
+                            ),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                return Text("Unnamed Location");
+                              }
 
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Text("Resolving location...");
-                        }
-                        return Text(
-                          snapshot.data ?? '',
-                          style: subTitleStyle,
-                          maxLines: 1,
-                        );
-                      },
-                    ),
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Text("Resolving location...");
+                              }
+                              return Text(
+                                snapshot.data ?? '',
+                                style: subTitleStyle,
+                                maxLines: 1,
+                              );
+                            },
+                          ),
                   ),
                   CustomListTile(
                     // contentPadding: EdgeInsets.all(0),
@@ -234,7 +241,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    '${widget.requestItem.approvedUsers.length} / ${widget.requestItem.acceptors.length} People approved',
+                    '${widget.requestItem.approvedUsers.length} / ${widget.requestItem.numberOfApprovals} Accepted',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -251,7 +258,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           return Center(child: CircularProgressIndicator());
                         }
 
-                        if (snapshot.data.length == 0) {
+                        if (widget.requestItem.approvedUsers.length == 0) {
                           return Container(
                             margin: EdgeInsets.only(left: 0, top: 10),
                             child: Text(
@@ -278,8 +285,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               itemCount: snap.length,
                               itemBuilder: (context, index) {
                                 return Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  padding: const EdgeInsets.only(left: 3, right:3, top: 8),
                                   child: Container(
                                     height: 40,
                                     width: 40,

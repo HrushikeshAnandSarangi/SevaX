@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
@@ -13,10 +14,10 @@ import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
-import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -29,7 +30,10 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
+import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+
+import '../switch_timebank.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
   final String timebankId;
@@ -151,8 +155,8 @@ class CreateEditCommunityViewFormState
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
     selectedUsers = HashMap();
-    _fetchCurrentlocation;
-    if (!widget.isCreateTimebank) {
+
+    if (widget.isCreateTimebank) {
       _fetchCurrentlocation;
     }
 
@@ -243,7 +247,7 @@ class CreateEditCommunityViewFormState
 
     timebankModel =
         await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
-
+    selectedAddress = timebankModel.address;
     location = timebankModel.location;
     totalMembersCount = await FirestoreManager.getMembersCountOfAllMembers(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity);
@@ -587,45 +591,20 @@ class CreateEditCommunityViewFormState
                   ),
                   SizedBox(height: 20),
                   Center(
-                    child: FlatButton.icon(
-                      icon: Icon(Icons.add_location),
-                      label: Container(
-                        child: Text(
-                          (snapshot.data.timebank.address == null ||
-                                      snapshot.data.timebank.address.isEmpty ||
-                                      snapshot.data.timebank.address == "") &&
-                                  selectedAddress == ''
-                              ? 'Add Location'
-                              : widget.isCreateTimebank
-                                  ? snapshot.data.timebank.address
-                                  : timebankModel.address,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      color: Colors.grey[200],
-                      onPressed: () async {
-                        print("Location opened : $location");
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute<GeoFirePoint>(
-                            builder: (context) => LocationPicker(
-                              selectedLocation: location,
-                            ),
-                          ),
-                        ).then((point) {
-                          if (point != null) {
-                            location = snapshot.data.timebank.location = point;
+                    child: LocationPickerWidget(
+                      selectedAddress: selectedAddress,
+                      location: location,
+                      onChanged: (LocationDataModel dataModel) {
+                        log("received data model ");
 
-                            print(
-                                "Location is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
-                          }
-                          _getLocation(snapshot.data);
-                          print(
-                              'ReceivedLocation: $snapshot.data.timebank.address');
+                        setState(() {
+                          location = dataModel.geoPoint;
+                          this.selectedAddress = dataModel.location;
                         });
                       },
                     ),
                   ),
+
                   SizedBox(height: 10),
                   widget.isCreateTimebank
                       ? Padding(
@@ -864,10 +843,17 @@ class CreateEditCommunityViewFormState
                             if (widget.isFromFind) {
                               Navigator.of(context).pop();
                             } else {
-                              showDialogForSuccess(
-                                  dialogTitle:
-                                      "Timebank updated successfully, Please restart your app to see the updated changes.",
-                                  err: false);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      SwitchTimebank(content: 'Updating'),
+                                ),
+                              );
+                              // showDialogForSuccess(
+                              //     dialogTitle:
+                              //        "Timebank updated successfully, Please restart your app to see the updated changes.",
+                              //     err: false);
                             }
                           }
                         },
@@ -1067,23 +1053,37 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  Future _getLocation(data) async {
+  Future _setLocation(data, LocationDataModel dataModel) async {
     print('Timebank value:$data');
-    String address = await LocationUtility().getFormattedAddress(
-      location.latitude,
-      location.longitude,
-    );
     setState(() {
-      this.selectedAddress = address;
+      this.selectedAddress = dataModel.location;
     });
 //    timebank.updateValueByKey('locationAddress', address);
-    print('_getLocation: $address');
-    timebankModel.address = address;
+    print('_getLocation: ${dataModel.location}');
+    timebankModel.address = dataModel.location;
     communityModel.location = location;
-    data.timebank.updateValueByKey('address', address);
+    data.timebank.updateValueByKey('address', dataModel.location);
     data.community.updateValueByKey('location', location);
     createEditCommunityBloc.onChange(data);
   }
+
+//   Future _getLocation(data) async {
+//     print('Timebank value:$data');
+//     String address = await LocationUtility().getFormattedAddress(
+//       location.latitude,
+//       location.longitude,
+//     );
+//     setState(() {
+//       this.selectedAddress = address;
+//     });
+// //    timebank.updateValueByKey('locationAddress', address);
+//     print('_getLocation: $address');
+//     timebankModel.address = address;
+//     communityModel.location = location;
+//     data.timebank.updateValueByKey('address', address);
+//     data.community.updateValueByKey('location', location);
+//     createEditCommunityBloc.onChange(data);
+//   }
 
   void fetchCurrentlocation() {
     Location().getLocation().then((onValue) {
