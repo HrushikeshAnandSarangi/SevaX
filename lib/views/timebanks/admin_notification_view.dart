@@ -12,6 +12,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
@@ -23,6 +24,7 @@ import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+import 'package:sevaexchange/views/timebanks/widgets/timebank_user_exit_dialog.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AdminNotificationViewHolder extends StatefulWidget {
@@ -112,7 +114,20 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                 RequestModel model = RequestModel.fromMap(notification.data);
                 return Text("NotificationType.RequestReject");
                 break;
+              case NotificationType.TypeMemberExitTimebank:
+                // TODO: Handle this case.
 
+                print("notification data ${notification.data}");
+                UserExitModel userExitModel =
+                    UserExitModel.fromMap(notification.data);
+                return getUserExitNotificationWidget(
+                  userExitModel,
+                  notification.id,
+                  context,
+                  notification.timebankId,
+                  notification.communityId,
+                );
+                break;
               case NotificationType.JoinRequest:
                 JoinRequestModel model =
                     JoinRequestModel.fromMap(notification.data);
@@ -588,6 +603,51 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             });
       },
     );
+  }
+
+  Widget getUserExitNotificationWidget(
+      UserExitModel userExitModel,
+      String notificationId,
+      BuildContext buildContext,
+      String timebankId,
+      String communityId) {
+    // assert(user != null);
+
+    return Dismissible(
+        background: dismissibleBackground,
+        key: Key(Utils.getUuid()),
+        onDismissed: (direction) {
+          String userEmail = SevaCore.of(buildContext).loggedInUser.email;
+          FirestoreManager.readUserNotification(notificationId, userEmail);
+        },
+        child: GestureDetector(
+          child: Container(
+            margin: notificationPadding,
+            decoration: notificationDecoration,
+            child: ListTile(
+              title: Text("Timebank Exit"),
+              leading: userExitModel.userPhotoUrl != null
+                  ? CircleAvatar(
+                      backgroundImage: NetworkImage(userExitModel.userPhotoUrl),
+                    )
+                  : Offstage(),
+              subtitle: Text(
+                  '${userExitModel.userName.toLowerCase()} has exited ${userExitModel.timebank}, Tap to view details'),
+            ),
+          ),
+          onTap: () {
+            showDialog(
+                context: buildContext,
+                builder: (context) {
+                  return TimebankUserExitDialogView(
+                    userExitModel: userExitModel,
+                    timeBankId: timebankId,
+                    notificationId: notificationId,
+                    userModel: SevaCore.of(buildContext).loggedInUser,
+                  );
+                });
+          },
+        ));
   }
 
   void approveTransaction(RequestModel model, String userId,

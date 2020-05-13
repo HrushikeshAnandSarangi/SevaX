@@ -756,8 +756,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                           requestId: requestid),
                       builder: (context, snapshot) {
                         RequestModel model = snapshot.data;
-                        if (snapshot.hasError)
-                          return Container();
+                        if (snapshot.hasError) return Container();
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return notificationShimmer;
@@ -807,8 +806,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                         requestId: requestid),
                     builder: (context, snapshot) {
                       RequestModel model = snapshot.data;
-                      if (snapshot.hasError)
-                        return Container();
+                      if (snapshot.hasError) return Container();
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return notificationShimmer;
                       }

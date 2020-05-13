@@ -108,6 +108,7 @@ class CommunityCreateEditController {
     this.timebank.updateValueByKey('balance', 0.0);
     this.timebank.updateValueByKey('protected', this.timebank.protected);
     this.timebank.updateValueByKey('private', this.timebank.private);
+    this.timebank.updateValueByKey('emailId', user.email);
     this.timebank.updateValueByKey('parentTimebankId', widget.timebankId);
     this
         .timebank

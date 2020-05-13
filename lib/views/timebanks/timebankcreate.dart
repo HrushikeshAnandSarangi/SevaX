@@ -241,7 +241,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               if (value.isEmpty) {
                 return 'Please enter some text';
               }
-              timebankModel.name =  value.trim();
+              timebankModel.name = value.trim();
             },
           ),
           headingText('About', true),
@@ -333,9 +333,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       return RaisedButton(
                         // color: Colors.blue,
                         onPressed: () {
-                          if(errTxt!=null || errTxt!=""){
-
-                          }
+                          if (errTxt != null || errTxt != "") {}
                           // Validate will return true if the form is valid, or false if
                           // the form is invalid.
                           //if (location != null) {
@@ -480,6 +478,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
           keyboardType: TextInputType.emailAddress,
           maxLines: 1,
+          initialValue: SevaCore.of(context).loggedInUser.email,
           validator: (value) {
             if (value.isEmpty) {
               return 'Please enter email';
