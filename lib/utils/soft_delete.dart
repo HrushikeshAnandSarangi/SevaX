@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
@@ -5,7 +7,7 @@ import 'package:progress_dialog/progress_dialog.dart';
 import '../flavor_config.dart';
 
 String successMessages =
-    "A request has been successfully submited to SevaX admin, you will notified with your registered mail. ";
+    "We have received your request to delete this Timebank. We are sorry to see you go. We will examine your request and (in some cases) get in touch with you offline before we process the deletion of the ";
 String failureMessage =
     "Sending request failed somehow, please try again later!";
 
@@ -60,12 +62,19 @@ void showAdvisoryBeforeDeletion({
               progressDialog.show();
               try {
                 await http.post(
-                  "${FlavorConfig.values.cloudFunctionBaseURL}/sendFeedbackToTimebank",
-                  body: {
-                    "memberEmail": email,
-                    "feedbackBody": email +
-                        " has requested to delete ${_getModelType(softDeleteType)} with id $associatedId with name $associatedContentTitle",
-                  },
+                  "${FlavorConfig.values.cloudFunctionBaseURL}/mailForSoftDelete",
+                  headers: {"Content-Type": "application/json"},
+                  body: json.encode(
+                    {
+                      "mailSender": 'app@sevaexchange.com',
+                      "mailSubject":
+                          "Deletion request for ${_getModelType(softDeleteType)} $associatedContentTitle by " +
+                              email +
+                              ".",
+                      "mailBody": email +
+                          " has requested to delete ${_getModelType(softDeleteType)} $associatedContentTitle with unique-identity as $associatedId.",
+                    },
+                  ),
                 );
                 progressDialog.hide();
                 showFinalResultConfirmation(
@@ -131,11 +140,11 @@ String _getContentFromType(SoftDelete type) {
 String _getModelType(SoftDelete type) {
   switch (type) {
     case SoftDelete.REQUEST_DELETE_GROUP:
-      return "GROUP";
+      return "group";
     case SoftDelete.REQUEST_DELETE_PROJECT:
-      return "PROJECT";
+      return "project";
     case SoftDelete.REQUEST_DELETE_TIMEBANK:
-      return "TIMEBANK";
+      return "timebank";
   }
 }
 
@@ -153,7 +162,9 @@ void showFinalResultConfirmation(
           didSuceed ? successTitle : failureTitle,
         ),
         content: Text(
-          didSuceed ? successMessages : failureMessage,
+          didSuceed
+              ? successMessages + _getModelType(softDeleteType) + "."
+              : failureMessage,
         ),
         actions: <Widget>[
           RaisedButton(

@@ -503,12 +503,11 @@ Future<List<TimebankModel>> getTimebanksForCommunity(
   return Firestore.instance
       .collection('timebanknew')
       .where('community_id', isEqualTo: communityId)
-      .where('softDelete', isEqualTo: false)
       .getDocuments()
       .then((QuerySnapshot timebankModel) {
     timebankModel.documents.forEach((timebank) {
       var model = TimebankModel.fromMap(timebank.data);
-      if (model.id != primaryTimebankId) {
+      if (model.id != primaryTimebankId && model.softDelete) {
         timebankList.add(model);
       }
     });

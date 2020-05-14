@@ -130,6 +130,7 @@ class CommunityModel extends DataModel {
   List<String> members;
   int transactionCount;
   GeoFirePoint location;
+  bool softDelete;
 
   Map<String, dynamic> billingQuota;
   Map<String, dynamic> payment;
@@ -171,6 +172,7 @@ class CommunityModel extends DataModel {
     this.members =
         map.containsKey('members') ? List.castFrom(map['members']) : [];
     this.location = getLocation(map);
+    this.softDelete = map.containsKey('softDelete') ? map['softDelete'] : false;
   }
   GeoFirePoint getLocation(map) {
     GeoFirePoint geoFirePoint;
@@ -304,6 +306,8 @@ class CommunityModel extends DataModel {
     if (this.location != null) {
       object['location'] = this.location.data;
     }
+
+    object['softDelete'] = false;
     return object;
   }
 

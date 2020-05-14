@@ -67,7 +67,9 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
           (documentSnapshot) {
             TimebankModel model = TimebankModel.fromMap(documentSnapshot.data);
             if (model.rootTimebankId == FlavorConfig.values.timebankId)
-              modelList.add(model);
+              model.softDelete
+                  ? print("Removed soft deleted timebank from list")
+                  : modelList.add(model);
           },
         );
         modelList.sort(
@@ -186,7 +188,9 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
       "radius is fetched from remote config near community list stream ${radius.toDouble()}");
 
   GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
-  var query = Firestore.instance.collection('communities');
+  var query = Firestore.instance.collection('communities').where(
+        'softDelete',
+      );
   var data = geo.collection(collectionRef: query).within(
         center: center,
         radius: radius.toDouble(),
@@ -201,12 +205,12 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
         List<CommunityModel> communityList = [];
         snapshot.forEach(
           (documentSnapshot) {
-            //   print('near data ${documentSnapsyhot.data}');
-
             CommunityModel model = CommunityModel(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
 
-            communityList.add(model);
+            model.softDelete
+                ? print("Removed soft deleted item")
+                : communityList.add(model);
           },
         );
         requestSink.add(communityList);
@@ -397,16 +401,16 @@ Future<List<String>> getAllTimebankIdStream(
       .document(timebankId)
       .get();
 
-    prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data);
+  prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data);
 
-    var admins = model.admins;
-    var coordinators = model.coordinators;
-    var members = model.members;
-    var allItems = List<String>();
-    allItems.addAll(admins);
-    allItems.addAll(coordinators);
-    allItems.addAll(members);
-    return allItems;
+  var admins = model.admins;
+  var coordinators = model.coordinators;
+  var members = model.members;
+  var allItems = List<String>();
+  allItems.addAll(admins);
+  allItems.addAll(coordinators);
+  allItems.addAll(members);
+  return allItems;
 }
 
 Stream<List<TimebankModel>> getAllMyTimebanks(

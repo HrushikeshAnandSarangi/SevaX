@@ -23,6 +23,7 @@ class TimebankModel extends DataModel {
   List<String> children;
   num balance;
   GeoFirePoint location;
+  bool softDelete;
 
   // CompareToTimeBank joinStatus;
 
@@ -55,6 +56,7 @@ class TimebankModel extends DataModel {
         map.containsKey("children") ? List.castFrom(map['children']) : [];
     this.balance = map.containsKey("balance") ? map["balance"] : 0.0;
     this.location = getLocation(map);
+    this.softDelete = map.containsKey("softDelete") ? map["softDelete"] : false;
 
     // joinStatus = CompareToTimeBank.JOIN;
   }
@@ -183,6 +185,7 @@ class TimebankModel extends DataModel {
           ? null
           : new List<dynamic>.from(children.map((x) => x)),
       "balance": balance == null ? null : balance,
+      'softDelete': false,
     };
     if (this.location != null) {
       map['location'] = this.location.data;

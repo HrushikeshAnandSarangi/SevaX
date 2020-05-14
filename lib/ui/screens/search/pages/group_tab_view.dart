@@ -73,6 +73,7 @@ class _GroupTabViewState extends State<GroupTabView> {
                     _bloc.user.sevaUserID,
                     snapshot.data.requests,
                   );
+
                   return GroupCard(
                     image: group.photoUrl ?? "",
                     title: group.name,
