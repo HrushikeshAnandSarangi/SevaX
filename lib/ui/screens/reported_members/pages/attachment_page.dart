@@ -1,0 +1,35 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+
+class Attachment extends StatelessWidget {
+  final String attachment;
+
+  const Attachment({Key key, this.attachment}) : super(key: key);
+
+  static Route<dynamic> route({String attachment}) {
+    return MaterialPageRoute(
+      builder: (context) => Attachment(
+        attachment: attachment,
+      ),
+      fullscreenDialog: true,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Attachment",
+          style: TextStyle(fontSize: 18),
+        ),
+      ),
+      body: Center(
+        child: CachedNetworkImage(
+          imageUrl: attachment,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+}

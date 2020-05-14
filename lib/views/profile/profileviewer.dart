@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -104,8 +105,8 @@ class ProfileViewerState extends State<ProfileViewer> {
                             report: widget.userEmail == loggedInEmail
                                 ? null
                                 : () => onReportClick(
-                                      userData: userData,
-                                      userId: snapshot.data['sevauserid'],
+                                      reporterUserModel: userData,
+                                      reportedUserModel: user,
                                     ),
                           ),
                         ],
@@ -232,7 +233,8 @@ class ProfileViewerState extends State<ProfileViewer> {
     });
   }
 
-  void onReportClick({UserModel userData, String userId}) {
+  void onReportClick(
+      {UserModel reportedUserModel, UserModel reporterUserModel}) {
     showDialog(
       context: context,
       builder: (BuildContext viewContext) {
@@ -254,34 +256,31 @@ class ProfileViewerState extends State<ProfileViewer> {
                 ),
               ),
               onPressed: () {
-                print(userId);
-
+                print(reportedUserModel.sevaUserID);
+                Report report = Report(
+                  reporterId: reporterUserModel.sevaUserID,
+                  attachment: "some url",
+                  message: "test message",
+                  reporterImage: reporterUserModel.photoURL,
+                  reporterName: reporterUserModel.fullname,
+                );
                 Firestore.instance
                     .collection('reported_users_list')
-                    .where('timebankId',
-                        isEqualTo: FlavorConfig.values.timebankId)
-                    .where('reporterId', isEqualTo: userData.sevaUserID)
-                    .where('reportedId', isEqualTo: userId)
-                    .getDocuments()
-                    .then((data) {
-                  if (data.documents.length == 0) {
-                    Firestore.instance
-                        .collection('reported_users_list')
-                        .add({
-                          "reporterId": userData.sevaUserID,
-                          "reportedId": userId,
-                          "timebankId": FlavorConfig.values.timebankId
-                        })
-                        .then((result) => {
-                              Navigator.pop(viewContext),
-                              Navigator.of(context).pop()
-                            })
-                        .catchError((err) => print(err));
-                  } else {
-                    Navigator.pop(viewContext);
-                    Navigator.of(context).pop();
-                  }
-                });
+                    .document(
+                        "${reportedUserModel.sevaUserID}*${widget.timebankId}")
+                    .setData({
+                  "reportedId": reportedUserModel.sevaUserID,
+                  "timebankId": widget.timebankId,
+                  "reportedUserName": reportedUserModel.fullname,
+                  "reportedUserImage": reportedUserModel.photoURL,
+                  "reporterId": FieldValue.arrayUnion(
+                    [reporterUserModel.sevaUserID],
+                  ),
+                  "reports": FieldValue.arrayUnion([report.toMap()])
+                }, merge: true).then((result) => {
+                          Navigator.pop(viewContext),
+                          Navigator.of(context).pop()
+                        });
               },
             ),
             FlatButton(

@@ -6,6 +6,7 @@ class CustomNetworkImage extends StatelessWidget {
   final Widget placeholder;
   final Widget error;
   final BoxFit fit;
+  final double size;
 
   const CustomNetworkImage(
     this.imageUrl, {
@@ -13,13 +14,14 @@ class CustomNetworkImage extends StatelessWidget {
     this.placeholder,
     this.error,
     this.fit,
+    this.size = 45,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ClipOval(
       child: SizedBox(
-        height: 45,
-        width: 45,
+        height: size,
+        width: size,
         child: CachedNetworkImage(
           imageUrl: imageUrl ??
               "https://getuikit.com/v2/docs/images/placeholder_600x400.svg",

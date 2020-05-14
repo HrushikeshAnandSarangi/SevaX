@@ -338,7 +338,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
               child: Row(
                 children: <Widget>[
                   CircleAvatar(
-                    backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
+                    backgroundImage:
+                        NetworkImage(user.photoURL ?? defaultUserImageURL),
                   ),
                   Expanded(
                     child: Padding(
@@ -612,6 +613,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => ProfileViewer(
                       userEmail: user.email,
+                      timebankId: timebankModel.id,
                     )));
           },
           child: Row(
@@ -621,7 +623,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                 child: Row(
                   children: <Widget>[
                     CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
+                      backgroundImage:
+                          NetworkImage(user.photoURL ?? defaultUserImageURL),
                     ),
                     Expanded(
                       child: Padding(
