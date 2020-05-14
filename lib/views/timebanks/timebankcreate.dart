@@ -278,10 +278,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
                 child: Checkbox(
-                  value: false,
+                  value: timebankModel.private,
                   onChanged: (bool value) {
                     print(value);
-                    //  timebankModel.private = value;
+                    setState(() {
+                      timebankModel.private = value;
+                    });
                     print(timebankModel.private);
 
 //                      snapshot.data.community

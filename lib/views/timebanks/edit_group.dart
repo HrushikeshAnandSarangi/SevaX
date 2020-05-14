@@ -213,7 +213,9 @@ class EditGroupFormState extends State<EditGroupForm> {
                     value: widget.timebankModel.private,
                     onChanged: (bool value) {
                       print(value);
-                      widget.timebankModel.private = value;
+                      setState(() {
+                        widget.timebankModel.private = value;
+                      });
                       // print(widget.timebankModel.private);
                     },
                   ),
