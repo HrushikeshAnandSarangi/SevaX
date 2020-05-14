@@ -507,7 +507,8 @@ Future<List<TimebankModel>> getTimebanksForCommunity(
       .then((QuerySnapshot timebankModel) {
     timebankModel.documents.forEach((timebank) {
       var model = TimebankModel.fromMap(timebank.data);
-      if (model.id != primaryTimebankId) {
+
+      if (model.id != primaryTimebankId && model.private == false) {
         timebankList.add(model);
       }
     });

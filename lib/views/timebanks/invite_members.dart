@@ -267,8 +267,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       // onTap: goToNext(snapshot.data),
       title: Text(user.fullname,
           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
-
-      ///  subtitle: Text(user.email),
+      subtitle: Text(user.email),
       trailing: RaisedButton(
         onPressed: !isJoined
             ? () async {
