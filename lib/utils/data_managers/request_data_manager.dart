@@ -116,6 +116,7 @@ Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
   var query = Firestore.instance
       .collection('projects')
       .where('timebank_id', isEqualTo: timebankid)
+      .where('softDelete', isEqualTo: false)
       .orderBy("created_at", descending: true);
 
   var data = query.snapshots();
@@ -294,7 +295,7 @@ Stream<List<RequestModel>> getNearRequestListStream(
   try {
     radius = json.decode(AppConfig.remoteConfig.getString('radius'));
   } on Exception {
-    print("Exception raised while getting user minimum balance ");
+    print("Exception raised while getting user minimum radius ");
   }
   print(
       "radius is fetched from remote config near request item ${radius.toDouble()}");

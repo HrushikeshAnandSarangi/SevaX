@@ -447,7 +447,12 @@ class Searches {
   static Stream<List<UserModel>> searchMembersOfTimebank(
       {@required queryString,
       @required UserModel loggedInUser,
-      @required CommunityModel currentCommunityOfUser}) async* {
+      @required CommunityModel currentCommunityOfUser,
+      QuerySnapshot skillsListSnap,
+      QuerySnapshot interestsListSnap,
+  }) async* {
+    Map<String, List<String>> allSkillsInterestsConsolidated = getSkillsInterestsIdsOfUser(skillsListSnap, interestsListSnap, queryString.toLowerCase());
+    print("ids of selected skills " + allSkillsInterestsConsolidated['skills'].toString());
     String url = FlavorConfig.values.elasticSearchBaseURL +
         '//elasticsearch/sevaxusers/sevaxuser/_search';
     dynamic body = json.encode(
@@ -462,12 +467,39 @@ class Searches {
                 }
               },
               {
-                "multi_match": {
-                  "query": queryString,
-                  "fields": ["email", "fullname", "bio"],
-                  "type": "phrase_prefix"
+                "bool": {
+                  "should": [
+                    {
+                      "multi_match": {
+                        "query": queryString,
+                        "fields": [
+                          "email",
+                          "fullname",
+                          "bio"
+                        ],
+                        "type": "phrase_prefix"
+                      }
+                    },
+                    {
+                      "terms": {
+                        "skills.keyword": allSkillsInterestsConsolidated['skills']
+                      }
+                    },
+                    {
+                      "terms": {
+                        "interests.keyword": allSkillsInterestsConsolidated['interests']
+                      }
+                    }
+                  ]
                 }
-              },
+              }
+//              {
+//                "multi_match": {
+//                  "query": queryString,
+//                  "fields": ["email", "fullname", "bio"],
+//                  "type": "phrase_prefix"
+//                }
+//              },
             ]
           }
         }
@@ -507,5 +539,34 @@ class Searches {
       }
     });
     return timebankarr;
+  }
+
+  static Map<String, List<String>> getSkillsInterestsIdsOfUser(
+      QuerySnapshot allSkills, QuerySnapshot allInterests, String queryString) {
+    Map<String, List<String>> skillsInterestsConsolidated = {};
+    List<String> skillsarr = List();
+    List<String> interestsarr = List();
+    String temp = "";
+    allSkills.documents.forEach((skillDoc){
+      temp = skillDoc.data['name'].toLowerCase();
+      print("temp.contains is "+ temp + " "+queryString);
+      if(temp.contains(queryString.toLowerCase())){
+        print("temp.contains is ---"+temp);
+        skillsarr.add(skillDoc.documentID);
+      }
+    });
+    allInterests.documents.forEach((interestDoc){
+      temp = interestDoc.data['name'].toLowerCase();
+      if(temp.contains(queryString)){
+        interestsarr.add(interestDoc.documentID);
+      }
+    });
+
+
+    skillsInterestsConsolidated['skills'] = skillsarr;
+    skillsInterestsConsolidated['interests'] = interestsarr;
+//    print("id of selected skill " + skillsInterestsConsolidated['skills'].toString());
+
+    return skillsInterestsConsolidated;
   }
 }

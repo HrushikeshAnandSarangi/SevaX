@@ -143,24 +143,25 @@ class EditGroupFormState extends State<EditGroupForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Center(
-              child: Padding(
-            padding: EdgeInsets.all(5.0),
-            child: Column(
-              children: <Widget>[
-                TimebankAvatar(
-                  photoUrl: widget.timebankModel.photoUrl ?? null,
-                ),
-                SizedBox(height: 5),
-                Text(
-                  'Group logo',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+            child: Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Column(
+                children: <Widget>[
+                  TimebankAvatar(
+                    photoUrl: widget.timebankModel.photoUrl ?? null,
                   ),
-                )
-              ],
+                  SizedBox(height: 5),
+                  Text(
+                    'Group logo',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  )
+                ],
+              ),
             ),
-          )),
+          ),
           headingText('Name your group', true),
           TextFormField(
             textInputAction: TextInputAction.done,

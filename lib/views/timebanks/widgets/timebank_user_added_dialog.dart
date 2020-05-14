@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 
-class TimebankUserExitDialogView extends StatelessWidget {
-  final UserExitModel userExitModel;
+class TimebankUserAddedDialogView extends StatelessWidget {
+  final UserAddedModel userAddedModel;
   final String timeBankId;
   final String notificationId;
   final UserModel userModel;
 
-  TimebankUserExitDialogView(
-      {this.userExitModel,
+  TimebankUserAddedDialogView(
+      {this.userAddedModel,
       this.timeBankId,
       this.notificationId,
       this.userModel});
@@ -30,7 +30,7 @@ class TimebankUserExitDialogView extends StatelessWidget {
               height: 70,
               width: 70,
               child: CircleAvatar(
-                backgroundImage: NetworkImage(userExitModel.userPhotoUrl),
+                backgroundImage: NetworkImage(userAddedModel.timebankImage),
               ),
             ),
             Padding(
@@ -39,7 +39,7 @@ class TimebankUserExitDialogView extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                "User Exit",
+                "Added to Timebank",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -49,18 +49,27 @@ class TimebankUserExitDialogView extends StatelessWidget {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
               child: Text(
-                userExitModel.timebank ?? "Timebank name not updated",
+                userAddedModel.timebankName ?? "Timebank name not updated",
               ),
             ),
+//              Padding(
+//                padding: EdgeInsets.all(0.0),
+//                child: Text(
+//                  "About ${requestInvitationModel.}",
+//                  style: TextStyle(
+//                      fontSize: 13, fontWeight: FontWeight.bold),
+//                ),
+//              ),
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                userExitModel.reason ?? "Reason not mentioned",
+                "${userAddedModel.adminName} added you to ${userAddedModel.timebankName} Timebank",
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
               ),
             ),
+
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

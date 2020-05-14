@@ -72,11 +72,6 @@ class RequestsState extends State<RequestsModule> {
   Widget build(BuildContext context) {
     _setORValue();
     timebankId = widget.timebankModel.id;
-    print("lakalaka----------->>>$timebankId");
-
-//    return Scaffold(
-//      body: Text("Hello"),
-//    );
     var body = Container(
       margin: EdgeInsets.only(left: 0, right: 0, top: 7),
       child: Column(
@@ -191,7 +186,6 @@ class RequestsState extends State<RequestsModule> {
                       });
                     }
                   },
-                  //groupValue: sharedValue,
                 ),
               ),
               Padding(
@@ -232,24 +226,6 @@ class RequestsState extends State<RequestsModule> {
       );
     }
     return body;
-//    if (widget.isFromSettings) {
-//      return Scaffold(
-//        body: body,
-//      );
-//    }
-//    return Scaffold(
-//      appBar: AppBar(
-//        elevation: 0.5,
-//        automaticallyImplyLeading: true,
-//        title: Text(
-//          "hello",
-//          style: TextStyle(
-//            fontSize: 18,
-//          ),
-//        ),
-//      ),
-//      body: Text("hello"),
-//    );
   }
 
   void _showProtectedTimebankMessage() {
@@ -593,7 +569,6 @@ class _RequestCardViewState extends State<RequestCardView> {
   Future<void> deleteRequest({
     @required RequestModel requestModel,
   }) async {
-
     return await Firestore.instance
         .collection('requests')
         .document(requestModel.id)
@@ -646,9 +621,6 @@ class NearRequestListItems extends StatelessWidget {
                 default:
                   List<RequestModel> requestModelList =
                       requestListSnapshot.data;
-                  requestModelList
-                      .removeWhere((request) => request.projectId.isNotEmpty);
-
                   requestModelList = filterBlockedRequestsContent(
                       context: context, requestModelList: requestModelList);
 
@@ -791,7 +763,6 @@ class NearRequestListItems extends StatelessWidget {
                                   model.approvedUsers.contains(
                                       SevaCore.of(context).loggedInUser.email)
                               ?
-//                          || model.invitedUsers.contains(userEmail) ?
                               Container(
                                   margin: EdgeInsets.only(top: 10, bottom: 10),
                                   width: 100,
@@ -841,10 +812,11 @@ class NearRequestListItems extends StatelessWidget {
       borderRadius: BorderRadius.all(Radius.circular(12.0)),
       boxShadow: [
         BoxShadow(
-            color: Colors.black.withAlpha(10),
-            spreadRadius: 4,
-            offset: Offset(0, 3),
-            blurRadius: 6)
+          color: Colors.black.withAlpha(10),
+          spreadRadius: 4,
+          offset: Offset(0, 3),
+          blurRadius: 6,
+        )
       ],
       color: Colors.white,
     );
@@ -908,10 +880,6 @@ class RequestListItemsState extends State<RequestListItems> {
                   if (snapshot.hasData) {
                     List<RequestModel> requestModelList =
                         snapshot.data.requests;
-
-                    requestModelList
-                        .removeWhere((request) => request.projectId.isNotEmpty);
-
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
 
@@ -937,7 +905,8 @@ class RequestListItemsState extends State<RequestListItems> {
                   return Text("");
                 });
           });
-    } else {
+    }
+    else {
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
@@ -961,9 +930,6 @@ class RequestListItemsState extends State<RequestListItems> {
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
-                    requestModelList
-                        .removeWhere((request) => request.projectId.isNotEmpty);
-
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
 
@@ -1066,9 +1032,7 @@ class RequestListItemsState extends State<RequestListItems> {
 
   Widget getFromNormalRequest(
       {RequestModel model, String loggedintimezone, String userEmail}) {
-    if (model.projectId != null && model.projectId.isNotEmpty) {
-      return Container();
-    }
+
     return Container(
       decoration: containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
@@ -1143,7 +1107,6 @@ class RequestListItemsState extends State<RequestListItems> {
                           model.acceptors.contains(userEmail) ||
                                   model.approvedUsers.contains(userEmail)
                               ?
-//                          || model.invitedUsers.contains(userEmail) ?
                               Container(
                                   margin: EdgeInsets.only(top: 10, bottom: 10),
                                   width: 100,
