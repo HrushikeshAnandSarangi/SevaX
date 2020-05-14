@@ -57,11 +57,11 @@ class NewsCard extends StatelessWidget {
                     ? Hero(
                         tag: id + "*",
                         child: CustomNetworkImage(
-                          imageUrl,
+                          imageUrl ?? defaultUserImageURL,
                         ),
                       )
                     : CustomNetworkImage(
-                        imageUrl,
+                        imageUrl ?? defaultUserImageURL,
                       ),
               ),
             ),

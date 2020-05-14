@@ -123,6 +123,8 @@ class CommunityModel extends DataModel {
   String created_by;
   String created_at;
   String primary_timebank;
+  bool private;
+
   double taxPercentage;
   List<String> timebanks;
   List<String> admins;
@@ -149,6 +151,8 @@ class CommunityModel extends DataModel {
     this.about = map.containsKey('about') ? map['about'] : '';
     this.primary_email =
         map.containsKey('primary_email') ? map['primary_email'] : '';
+    this.private = map.containsKey('private') ? map['private'] : false;
+
     this.billing_address = map.containsKey('billing_address')
         ? BillingAddress(map['billing_address'].cast<String, dynamic>())
         : BillingAddress({});
@@ -212,7 +216,7 @@ class CommunityModel extends DataModel {
       this.primary_email = value;
     }
 
-    if (key == 'locar=tion') {
+    if (key == 'location') {
       this.location = value;
     }
 
@@ -233,6 +237,9 @@ class CommunityModel extends DataModel {
     }
     if (key == 'creator_email') {
       this.creator_email = value;
+    }
+    if (key == 'private') {
+      this.private = value;
     }
     if (key == 'created_by') {
       this.created_by = value;
@@ -278,8 +285,13 @@ class CommunityModel extends DataModel {
     if (this.creator_email != null && this.creator_email.isNotEmpty) {
       object['creator_email'] = this.creator_email;
     }
+
     if (this.created_at != null) {
       object['created_at'] = this.created_at;
+    }
+
+    if (this.private != null) {
+      object['private'] = this.private;
     }
     if (this.created_by != null) {
       object['created_by'] = this.created_by;
@@ -331,7 +343,8 @@ class CommunityModel extends DataModel {
         'coordinators: $coordinators,'
         ' members: $members, '
 //        'transactionCount: $transactionCount}'
-        'taxPercentage: $taxPercentage}';
+        'taxPercentage: $taxPercentage},'
+        'private: $private}';
   }
 }
 

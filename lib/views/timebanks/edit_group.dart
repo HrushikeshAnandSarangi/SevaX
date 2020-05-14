@@ -14,6 +14,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 import '../core.dart';
@@ -193,6 +194,32 @@ class EditGroupFormState extends State<EditGroupForm> {
               }
               widget.timebankModel.missionStatement = value;
             },
+          ),
+          Row(
+            children: <Widget>[
+              headingText('Private Group', true),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                child: infoButton(
+                  context: context,
+                  key: GlobalKey(),
+                  type: InfoType.PRIVATE_GROUP,
+                ),
+              ),
+              Column(
+                children: <Widget>[
+                  Divider(),
+                  Checkbox(
+                    value: widget.timebankModel.private,
+                    onChanged: (bool value) {
+                      print(value);
+                      widget.timebankModel.private = value;
+                      // print(widget.timebankModel.private);
+                    },
+                  ),
+                ],
+              ),
+            ],
           ),
           // Row(
           //   children: <Widget>[

@@ -6,7 +6,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
@@ -16,8 +20,9 @@ import 'package:share/share.dart';
 class InviteAddMembers extends StatefulWidget {
   final String communityId;
   final String timebankId;
+  final TimebankModel timebankModel;
 
-  InviteAddMembers(this.timebankId, this.communityId);
+  InviteAddMembers(this.timebankId, this.communityId, this.timebankModel);
 
   @override
   State<StatefulWidget> createState() => InviteAddMembersState();
@@ -25,13 +30,31 @@ class InviteAddMembers extends StatefulWidget {
 
 class InviteAddMembersState extends State<InviteAddMembers> {
   TimebankCodeModel codeModel = TimebankCodeModel();
-
+  final TextEditingController searchTextController =
+      new TextEditingController();
   Future<TimebankModel> getTimebankDetails;
   TimebankModel timebankModel;
+  var validItems = List<String>();
+
   @override
   void initState() {
     super.initState();
     _setTimebankModel();
+    getMembersList();
+    searchTextController.addListener(() {
+      setState(() {});
+    });
+    // setState(() {});
+  }
+
+  void getMembersList() {
+    FirestoreManager.getAllTimebankIdStream(
+      timebankId: widget.timebankId,
+    ).then((onValue) {
+      setState(() {
+        validItems = onValue;
+      });
+    });
   }
 
   void _setTimebankModel() async {
@@ -69,33 +92,242 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
   Widget get inviteCodeWidget {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.all(5),
-          child: GestureDetector(
-            child: Container(
-              height: 25,
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    "Invite via code",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+          padding: const EdgeInsets.only(top: 8.0),
+          child: TextField(
+            style: TextStyle(color: Colors.black),
+            controller: searchTextController,
+            decoration: InputDecoration(
+                suffixIcon: Offstage(
+                  offstage: searchTextController.text.length == 0,
+                  child: IconButton(
+                    splashColor: Colors.transparent,
+                    icon: Icon(
+                      Icons.clear,
+                      color: Colors.black54,
                     ),
+                    onPressed: () {
+                      //searchTextController.clear();
+                      WidgetsBinding.instance.addPostFrameCallback(
+                          (_) => searchTextController.clear());
+                    },
                   ),
-                  Spacer(),
-                  Image.asset("lib/assets/images/add.png"),
-                ],
-              ),
-            ),
-            onTap: () async {
-              _asyncInputDialog(context);
-            },
+                ),
+                hasFloatingPlaceholder: false,
+                alignLabelWithHint: true,
+                isDense: true,
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                ),
+                contentPadding: EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 3.0),
+                filled: true,
+                fillColor: Colors.grey[300],
+                focusedBorder: OutlineInputBorder(
+                  borderSide: new BorderSide(color: Colors.white),
+                  borderRadius: new BorderRadius.circular(25.7),
+                ),
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: new BorderRadius.circular(25.7)),
+                hintText: 'Invite members via email',
+                hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
           ),
         ),
-        getTimebankCodesWidget,
+        Padding(
+          padding: EdgeInsets.fromLTRB(5, 15, 0, 0),
+          child: Container(
+            height: 25,
+            child: Text(
+              "Members",
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: buildList(),
+        ),
+        !widget.timebankModel.private == true
+            ? Padding(
+                padding: EdgeInsets.all(5),
+                child: GestureDetector(
+                  child: Container(
+                    height: 25,
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          "Invite via code",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Spacer(),
+                        Image.asset("lib/assets/images/add.png"),
+                      ],
+                    ),
+                  ),
+                  onTap: () async {
+                    _asyncInputDialog(context);
+                  },
+                ),
+              )
+            : Offstage(),
+        !widget.timebankModel.private == true
+            ? getTimebankCodesWidget
+            : Offstage(),
       ],
+    );
+  }
+
+  Widget buildList() {
+    print("search ${searchTextController.text}");
+
+//    if (searchTextController.text.trim().length < 1) {
+//      //  print('Search requires minimum 1 character');
+//      return Offstage();
+//    }
+    // ListView contains a group of widgets that scroll inside the drawer
+    return StreamBuilder<List<UserModel>>(
+        stream: SearchManager.searchUserInSevaX(
+          queryString: searchTextController.text,
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Please try again later');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: SizedBox(
+                height: 48,
+                width: 48,
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+          List<UserModel> userlist = snapshot.data;
+          print("user list ${snapshot.data}");
+          print("user  ${userlist}");
+          if (userlist.length == 0) {
+            if (searchTextController.text.length > 1 &&
+                isvalidEmailId(searchTextController.text)) {
+              return userInviteWidget(email: searchTextController.text);
+            }
+
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                  child: searchTextController.text.length > 1
+                      ? Text("${searchTextController.text} not found")
+                      : Container()),
+            );
+          }
+          return Padding(
+              padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
+              child: ListView.builder(
+                  shrinkWrap: true,
+//                  padding: EdgeInsets.only(
+//                      bottom:
+//                          180), //to avoid keyboard overlap //temp fix neeeds to be changed
+                  itemCount: userlist.length,
+                  itemBuilder: (context, index) {
+//
+                    //  return userInviteWidget(email: "Umesha@uipep.com");
+                    return userWidget(
+                      user: userlist[index],
+                    );
+                  }));
+
+          return Text("");
+        });
+  }
+
+  bool isvalidEmailId(String value) {
+    RegExp emailPattern = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    //if (value.isEmpty) return 'Enter email';
+    if (emailPattern.hasMatch(value)) return true;
+    return false;
+  }
+
+  Widget userInviteWidget({
+    String email,
+  }) {
+    bool isInvited = false;
+//    if (validItems.contains(user.sevaUserID)) {
+//      isInvited = true;
+//    }
+
+    return ListTile(
+      leading: CircleAvatar(),
+      // onTap: goToNext(snapshot.data),
+      title: Text(email,
+          style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w700)),
+      trailing: Container(
+        height: 40,
+        padding: EdgeInsets.all(2),
+        child: RaisedButton(
+          onPressed: !isInvited ? () async {} : null,
+          child: Text(isInvited ? "Invited" : "Invite"),
+          color: Colors.indigo,
+          textColor: Colors.white,
+          shape: StadiumBorder(),
+        ),
+      ),
+    );
+  }
+
+  Widget userWidget({
+    UserModel user,
+  }) {
+    bool isJoined = false;
+    if (validItems.contains(user.sevaUserID)) {
+      isJoined = true;
+    }
+
+    return ListTile(
+      leading: user.photoURL != null
+          ? ClipOval(
+              child: FadeInImage.assetNetwork(
+                fadeInCurve: Curves.easeIn,
+                fadeInDuration: Duration(milliseconds: 400),
+                fadeOutDuration: Duration(milliseconds: 200),
+                width: 50,
+                height: 50,
+                placeholder: 'lib/assets/images/noimagefound.png',
+                image: user.photoURL,
+              ),
+            )
+          : CircleAvatar(),
+      // onTap: goToNext(snapshot.data),
+      title: Text(user.fullname,
+          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
+      subtitle: Text(user.email),
+      trailing: RaisedButton(
+        onPressed: !isJoined
+            ? () async {
+                await addMemberToTimebank(
+                        sevaUserId: user.sevaUserID,
+                        timebankId: timebankModel.id,
+                        communityId: timebankModel.communityId,
+                        userEmail: user.email)
+                    .commit();
+                setState(() {
+                  getMembersList();
+                });
+              }
+            : null,
+        child: Text(isJoined ? "Joined" : "Add"),
+        color: FlavorConfig.values.theme.accentColor,
+        textColor: FlavorConfig.values.buttonTextColor,
+        shape: StadiumBorder(),
+      ),
     );
   }
 
@@ -336,6 +568,77 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         .delete();
 
     print('deleted');
+  }
+
+  TextStyle get sectionTextStyle {
+    return TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 11,
+      color: Colors.grey,
+    );
+  }
+
+  WriteBatch addMemberToTimebank(
+      {String communityId,
+      String sevaUserId,
+      String timebankId,
+      String userEmail}) {
+    WriteBatch batch = Firestore.instance.batch();
+    var timebankRef =
+        Firestore.instance.collection('timebanknew').document(timebankId);
+    var addToCommunityRef =
+        Firestore.instance.collection('communities').document(communityId);
+
+    var newMemberDocumentReference =
+        Firestore.instance.collection('users').document(userEmail);
+
+    batch.updateData(timebankRef, {
+      'members': FieldValue.arrayUnion([sevaUserId]),
+    });
+
+    batch.updateData(newMemberDocumentReference, {
+      'communities': FieldValue.arrayUnion([communityId]),
+    });
+
+    batch.updateData(addToCommunityRef, {
+      'members': FieldValue.arrayUnion([sevaUserId]),
+    });
+
+    sendNotificationToMember(
+        communityId: communityId,
+        timebankId: timebankId,
+        sevaUserId: sevaUserId,
+        userEmail: userEmail);
+
+    return batch;
+  }
+
+  Future<void> sendNotificationToMember(
+      {String communityId,
+      String sevaUserId,
+      String timebankId,
+      String userEmail}) async {
+    UserAddedModel userAddedModel = UserAddedModel(
+        timebankImage: timebankModel.photoUrl,
+        timebankName: timebankModel.name,
+        adminName: SevaCore.of(context).loggedInUser.fullname);
+
+    NotificationsModel notification = NotificationsModel(
+        id: utils.Utils.getUuid(),
+        timebankId: FlavorConfig.values.timebankId,
+        data: userAddedModel.toMap(),
+        isRead: false,
+        type: NotificationType.TypeMemberAdded,
+        communityId: communityId,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        targetUserId: sevaUserId);
+
+    await Firestore.instance
+        .collection('users')
+        .document(userEmail)
+        .collection("notifications")
+        .document(notification.id)
+        .setData(notification.toMap());
   }
 }
 

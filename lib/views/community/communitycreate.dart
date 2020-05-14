@@ -460,12 +460,44 @@ class CreateEditCommunityViewFormState
                       ],
                     ),
                   ),
-
+                  Row(
+                    children: <Widget>[
+                      headingText('Private Timebank'),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                        child: infoButton(
+                          context: context,
+                          key: GlobalKey(),
+                          type: InfoType.PRIVATE_TIMEBANK,
+                        ),
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Divider(),
+                          Checkbox(
+                            value: widget.isCreateTimebank
+                                ? snapshot.data.timebank.private
+                                : timebankModel.private,
+                            onChanged: (bool value) {
+                              print(value);
+                              timebankModel.private = value;
+                              snapshot.data.community
+                                  .updateValueByKey('private', value);
+                              communityModel.private = value;
+                              snapshot.data.timebank
+                                  .updateValueByKey('private', value);
+                              createEditCommunityBloc.onChange(snapshot.data);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                   Row(
                     children: <Widget>[
                       headingText('Protected Timebank'),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(2, 15, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
                         child: infoButton(
                           context: context,
                           key: GlobalKey(),
@@ -482,6 +514,7 @@ class CreateEditCommunityViewFormState
                             onChanged: (bool value) {
                               print(value);
                               timebankModel.protected = value;
+
                               snapshot.data.timebank
                                   .updateValueByKey('protected', value);
                               createEditCommunityBloc.onChange(snapshot.data);
@@ -813,13 +846,13 @@ class CreateEditCommunityViewFormState
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SwitchTimebank(
-                                      content: 'Updating'),
+                                  builder: (context) =>
+                                      SwitchTimebank(content: 'Updating'),
                                 ),
                               );
                               // showDialogForSuccess(
                               //     dialogTitle:
-                              //         "Timebank updated successfully, Please restart your app to see the updated changes.",
+                              //        "Timebank updated successfully, Please restart your app to see the updated changes.",
                               //     err: false);
                             }
                           }

@@ -17,6 +17,7 @@ class TimebankModel extends DataModel {
   List<String> coordinators;
   List<String> members;
   bool protected;
+  bool private;
   String parentTimebankId;
   String communityId;
   String rootTimebankId;
@@ -46,6 +47,7 @@ class TimebankModel extends DataModel {
     this.members =
         map.containsKey("members") ? List.castFrom(map['members']) : [];
     this.protected = map.containsKey("protected") ? map["protected"] : false;
+    this.private = map.containsKey("private") ? map["private"] : false;
     this.parentTimebankId =
         map.containsKey("parent_timebank_id") ? map["parent_timebank_id"] : '';
     this.communityId =
@@ -121,6 +123,10 @@ class TimebankModel extends DataModel {
     if (key == 'protected') {
       this.protected = value;
     }
+
+    if (key == 'private') {
+      this.private = value;
+    }
     if (key == 'parentTimebankId') {
       this.parentTimebankId = value;
     }
@@ -178,6 +184,7 @@ class TimebankModel extends DataModel {
           ? null
           : new List<dynamic>.from(members.map((x) => x)),
       "protected": protected == null ? null : protected,
+      "private": private == null ? null : private,
       "parent_timebank_id": parentTimebankId == null ? null : parentTimebankId,
       "community_id": communityId == null ? null : communityId,
       "root_timebank_id": rootTimebankId == null ? null : rootTimebankId,
@@ -195,7 +202,7 @@ class TimebankModel extends DataModel {
 
   @override
   String toString() {
-    return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address, creatorId: $creatorId, photoUrl: $photoUrl, createdAt: $createdAt, admins: $admins, coordinators: $coordinators, members: $members, protected: $protected, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, location: $location}';
+    return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address, creatorId: $creatorId, photoUrl: $photoUrl, createdAt: $createdAt, admins: $admins, coordinators: $coordinators, members: $members, protected: $protected, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, location: $location, private: $private}';
   }
 }
 

@@ -14,6 +14,7 @@ import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
@@ -152,6 +153,18 @@ class NotificationsView extends State<NotificationViewHolder> {
                         notification.senderUserId,
                         notification.id,
                       );
+                      break;
+
+                    case NotificationType.TypeMemberAdded:
+                      UserAddedModel userAddedModel =
+                          UserAddedModel.fromMap(notification.data);
+
+                      return getUserAddedNotificationWidget(
+                          userAddedModel: userAddedModel,
+                          timebankId: notification.timebankId,
+                          communityId: notification.communityId,
+                          buildContext: context,
+                          notificationId: notification.id);
                       break;
 
                     case NotificationType.RequestReject:
@@ -495,6 +508,37 @@ class NotificationsView extends State<NotificationViewHolder> {
         );
       },
     );
+  }
+
+  Widget getUserAddedNotificationWidget(
+      {UserAddedModel userAddedModel,
+      String notificationId,
+      BuildContext buildContext,
+      String timebankId,
+      String communityId}) {
+    // assert(user != null);
+
+    return Dismissible(
+        background: dismissibleBackground,
+        key: Key(Utils.getUuid()),
+        onDismissed: (direction) {
+          String userEmail = SevaCore.of(buildContext).loggedInUser.email;
+          FirestoreManager.readUserNotification(notificationId, userEmail);
+        },
+        child: Container(
+          margin: notificationPadding,
+          decoration: notificationDecoration,
+          child: ListTile(
+            title: Text("Timebank Join"),
+            leading: userAddedModel.timebankImage != null
+                ? CircleAvatar(
+                    backgroundImage: NetworkImage(userAddedModel.timebankImage),
+                  )
+                : Offstage(),
+            subtitle: Text(
+                '${userAddedModel.adminName.toLowerCase()} has added you to ${userAddedModel.timebankName} Timebank'),
+          ),
+        ));
   }
 
   void _handleFeedBackNotificationAction(

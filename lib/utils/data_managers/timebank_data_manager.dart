@@ -208,9 +208,11 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
             CommunityModel model = CommunityModel(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
 
-            model.softDelete
+            model.softDelete || model.private == true
                 ? print("Removed soft deleted item")
                 : communityList.add(model);
+
+            // communityList.add(model);
           },
         );
         requestSink.add(communityList);

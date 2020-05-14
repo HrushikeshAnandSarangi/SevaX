@@ -93,10 +93,14 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  flutter_localizations:
+    sdk: flutter
+
 flutter:
   uses-material-design: true
 
   assets:
+    - lib/assets/lang/en.json
     - lib/assets/splash_images/1.jpg
     - lib/assets/splash_images/2.jpg
     - lib/assets/splash_images/3.jpg

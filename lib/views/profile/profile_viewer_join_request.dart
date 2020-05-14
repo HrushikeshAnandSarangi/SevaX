@@ -126,7 +126,7 @@ class ProfileViewerJoinRequest extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.only(left: 25.0, right: 25.0),
                   child: Text(
-                    snapshot.data['bio'] ?? '',
+                    snapshot.data['bio'] ?? 'User not updated bio',
                     style:
                         TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400),
                   ),
