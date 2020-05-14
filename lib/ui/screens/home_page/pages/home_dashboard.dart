@@ -248,11 +248,17 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: Container(
-                          color: Colors.white,
+                          decoration: BoxDecoration(color: Colors.white),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              SizedBox(width: 10),
+                              SizedBox(width: 5),
+                              Container(
+                                height: 30,
+                                width: 1,
+                                color: Colors.grey,
+                              ),
+                              SizedBox(width: 5),
                               GestureDetector(
                                 onTap: () {
                                   _timebankController.animateTo(8);
