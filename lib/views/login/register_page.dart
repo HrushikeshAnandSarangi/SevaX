@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -17,6 +16,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/profile/timezone.dart';
 import 'package:sevaexchange/views/splash_view.dart' as DefaultSplashView;
 
 class RegisterPage extends StatefulWidget {
@@ -508,6 +508,7 @@ class _RegisterPageState extends State<RegisterPage>
       } else {
         user.photoURL = defaultUserImageURL;
       }
+      user.timezone = new TimezoneListData().getTimeZoneByCodeData(DateTime.now().timeZoneName);
       await FirestoreManager.updateUser(user: user);
 
       Navigator.pop(dialogContext);

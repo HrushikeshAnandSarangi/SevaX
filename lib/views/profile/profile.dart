@@ -9,6 +9,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -188,8 +189,7 @@ class _ProfilePageState extends State<ProfilePage>
                               ),
                               child: CircleAvatar(
                                 backgroundImage: NetworkImage(
-                                  user.photoURL ??
-                                      'https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg',
+                                  user.photoURL ?? defaultUserImageURL,
                                 ),
                                 backgroundColor: Colors.white,
                                 radius: MediaQuery.of(context).size.width / 4.5,
@@ -289,7 +289,7 @@ class _ProfilePageState extends State<ProfilePage>
                               icon: Icon(Icons.add_circle_outline),
                               onPressed: () async {
                                 var timebankAdvisory =
-                                    "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
+                                    "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks. In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
                                 Map<String, bool> onActivityResult =
                                     await showTimebankAdvisory(
                                         dialogTitle: timebankAdvisory);
@@ -1340,7 +1340,8 @@ class CommunityCard extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: NetworkImage(community.logo_url),
+                  image:
+                      NetworkImage(community.logo_url ?? defaultUserImageURL),
                 ),
               ),
             ),

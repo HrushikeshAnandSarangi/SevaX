@@ -9,10 +9,12 @@ import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 import '../core.dart';
 
@@ -60,7 +62,7 @@ class EditGroupFormState extends State<EditGroupForm> {
 
     if (widget.timebankModel.location != null) {
       location = widget.timebankModel.location;
-      _getLocation();
+      selectedAddress = widget.timebankModel.address;
     }
     searchTextController =
         new TextEditingController(text: widget.timebankModel.name);
@@ -219,31 +221,18 @@ class EditGroupFormState extends State<EditGroupForm> {
           //     color: Colors.grey,
           //   ),
           // ),
-          // deleteGroup,
           headingText('Is this pin at a right place?', false),
           Container(
             margin: EdgeInsets.all(20),
             child: Center(
-              child: FlatButton.icon(
-                icon: Icon(Icons.add_location),
-                label: Text(
-                  selectedAddress == null || selectedAddress.isEmpty
-                      ? 'Add Location'
-                      : selectedAddress,
-                ),
-                color: Colors.grey[200],
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<GeoFirePoint>(
-                      builder: (context) => LocationPicker(
-                        selectedLocation: location,
-                      ),
-                    ),
-                  ).then((point) {
-                    if (point != null) location = point;
-                    _getLocation();
-                    log('ReceivedLocation: $selectedAddress');
+              child: LocationPickerWidget(
+                selectedAddress: selectedAddress,
+                location: location,
+                onChanged: (LocationDataModel dataModel) {
+                  log("received data model");
+                  setState(() {
+                    location = dataModel.geoPoint;
+                    this.selectedAddress = dataModel.location;
                   });
                 },
               ),
@@ -289,10 +278,6 @@ class EditGroupFormState extends State<EditGroupForm> {
       ),
     );
   }
-
-
-
-/////
 
   Widget get createTimebankHumanityFirst {
     return Column(
@@ -485,14 +470,17 @@ class EditGroupFormState extends State<EditGroupForm> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute<GeoFirePoint>(
+                  MaterialPageRoute<LocationDataModel>(
                     builder: (context) => LocationPicker(
                       selectedLocation: location,
                     ),
                   ),
-                ).then((point) {
-                  if (point != null) location = point;
-                  _getLocation();
+                ).then((dataModel) {
+                  if (dataModel != null) location = dataModel.geoPoint;
+                  // _getLocation();
+                  setState(() {
+                    this.selectedAddress = dataModel.location;
+                  });
                   log('ReceivedLocation: $selectedAddress');
                 });
               },

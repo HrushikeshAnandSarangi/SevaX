@@ -116,6 +116,7 @@ Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
   var query = Firestore.instance
       .collection('projects')
       .where('timebank_id', isEqualTo: timebankid)
+      .where('softDelete', isEqualTo: false)
       .orderBy("created_at", descending: true);
 
   var data = query.snapshots();
@@ -213,7 +214,6 @@ Stream<List<RequestModel>> getPersonalRequestListStream(
       .where('sevauserid', isEqualTo: sevauserid)
       .where('accepted', isEqualTo: false)
       .where('requestMode', isEqualTo: 'PERSONAL_REQUEST');
-
   var data = query.snapshots();
 
   yield* data.transform(
@@ -950,8 +950,9 @@ Stream<List<TransactionModel>> getTimebankCreditsDebitsStream({
 }) async* {
   var data = Firestore.instance
       .collection('transactions')
-      .where('transactionbetween', arrayContains: timebankid)
       .where("isApproved", isEqualTo: true)
+      .where('transactionbetween', arrayContains: timebankid)
+      .orderBy("timestamp", descending: true)
       .snapshots();
 
   yield* data.transform(
@@ -975,8 +976,8 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
 }) async* {
   var data = Firestore.instance
       .collection('transactions')
-      .where('transactionbetween', arrayContains: userId)
       .where("isApproved", isEqualTo: true)
+      .where('transactionbetween', arrayContains: userId)
       .orderBy("timestamp", descending: true)
       .snapshots();
 

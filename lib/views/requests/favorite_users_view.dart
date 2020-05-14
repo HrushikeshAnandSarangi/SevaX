@@ -75,9 +75,7 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
             userList.add(model);
           });
 
-          // print("length ${userList.length}");
           userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
-          //print("length ${userList.length}");
           if (userList.length == 0) {
             return getEmptyWidget('Users', 'No user found');
           }
@@ -85,9 +83,6 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
             itemCount: userList.length,
             itemBuilder: (context, index) {
               UserModel user = userList.elementAt(index);
-              print(
-                  "looger user ${loggedinUser.currentCommunity + loggedinUser.sevaUserID}");
-
               return RequestCardWidget(
                 timebankModel: timebank.model,
                 requestModel: requestModel,

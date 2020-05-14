@@ -92,7 +92,7 @@ class _CompletedListState extends State<CompletedList> {
                   );
                 }
                 return CircleAvatar(
-                  backgroundImage: NetworkImage(user.photoURL),
+                  backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
                 );
               },
             ),

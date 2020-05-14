@@ -58,7 +58,6 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
 
-    // print('nsdjfjsdf ${widget.loggedInUser.toString()}');
     Observable(_textUpdates.stream)
         .debounceTime(Duration(milliseconds: 400))
         .forEach((s) {
@@ -73,50 +72,6 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
         });
       }
     });
-    // if (isAdmin) {
-    //   _firestore
-    //       .collection("users")
-    //       .where(
-    //         'favoriteByTimeBank',
-    //         arrayContains: widget.timebankId,
-    //       )
-    //       .getDocuments()
-    //       .then(
-    //     (QuerySnapshot querysnapshot) {
-    //       querysnapshot.documents.forEach(
-    //         (DocumentSnapshot user) => users.add(
-    //           UserModel.fromMap(
-    //             user.data,
-    //           ),
-    //         ),
-    //       );
-
-    //       // setState(() {});
-    //     },
-    //   );
-    // } else {
-    //   //    print('admin is false ');
-    //   _firestore
-    //       .collection("users")
-    //       .where(
-    //         'favoriteByMember',
-    //         arrayContains: widget.sevaUserId,
-    //       )
-    //       .getDocuments()
-    //       .then(
-    //     (QuerySnapshot querysnapshot) {
-    //       querysnapshot.documents.forEach(
-    //         (DocumentSnapshot user) => users.add(
-    //           UserModel.fromMap(
-    //             user.data,
-    //           ),
-    //         ),
-    //       );
-
-    //       // setState(() {});
-    //     },
-    //   );
-    // }
   }
 
   void _search(String queryString) {
@@ -240,7 +195,6 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         .snapshots()
         .listen((reqModel) {
       requestModel = RequestModel.fromMap(reqModel.data);
-
       try {
         setState(() {});
       } on Exception {}
@@ -275,7 +229,6 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
       stream: SearchManager.searchForUserWithTimebankId(
           queryString: widget.controller.text, validItems: widget.validItems),
       builder: (context, snapshot) {
-        //  print("users snapshot is --- " + '$snapshot');
 
         if (snapshot.hasError) {
           Text(snapshot.error.toString());
@@ -289,12 +242,9 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
             ),
           );
         }
-        print("length-----> ${snapshot.data}");
 
         List<UserModel> userList = snapshot.data;
-        print("length ${userList.length}");
         userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
-        print("length ${userList.length}");
 
         if (userList.length == 0) {
           return getEmptyWidget('Users', 'No user found');
@@ -303,13 +253,9 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
           itemCount: userList.length,
           itemBuilder: (context, index) {
             UserModel user = userList[index];
-            // List<String> timeBankIds = user.favoriteByTimeBank ?? [];
             List<String> timeBankIds =
                 snapshot.data[index].favoriteByTimeBank ?? [];
             List<String> memberId = user.favoriteByMember ?? [];
-
-            //      print("fav mem  ${memberId} " + 'fav tb ${timeBankIds}');
-            //    print("is Admin  ${widget.timebankModel.id} + ${timeBankIds}");
 
             return RequestCardWidget(
               userModel: user,
@@ -320,7 +266,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
               currentCommunity: loggedinUser.currentCommunity,
               loggedUserId: loggedinUser.sevaUserID,
               isFavorite: isAdmin
-                  ? timeBankIds.contains(widget.timebankModel.id)
+                  ? timeBankIds.contains(requestModel.timebankId)
                   : memberId.contains(widget.sevaUserId),
               reqStatus: getRequestUserStatus(
                 requestModel: requestModel,
@@ -335,11 +281,16 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   }
 
   refresh() {
-    setState(() {
-      buildWidget();
+    _firestore
+        .collection('requests')
+        .document(widget.requestModelId)
+        .snapshots()
+        .listen((reqModel) {
+      requestModel = RequestModel.fromMap(reqModel.data);
+      try {
+        setState(() {buildWidget();});
+      } on Exception {}
     });
-//    setState(() {
-//    });
   }
 
   Widget getEmptyWidget(String title, String notFoundValue) {

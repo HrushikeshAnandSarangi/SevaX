@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
@@ -125,7 +126,7 @@ class TimebankRequestsState extends State<TimebankRequests> {
                   child: ListTile(
                     title: Text(userModel.fullname),
                     leading: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
+                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
                     ),
                     subtitle: Text(
                       'Pending approval',
@@ -176,7 +177,7 @@ class TimebankRequestsState extends State<TimebankRequests> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
+                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(
@@ -506,7 +507,7 @@ class ApprovedMembers extends StatelessWidget {
                   child: ListTile(
                     title: Text(userModel.fullname),
                     leading: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
+                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
                     ),
                     subtitle: Text(
                       'Approved Member',
@@ -546,7 +547,7 @@ class ApprovedMembers extends StatelessWidget {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
+                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(

@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -790,7 +791,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                             label: Container(
                               width: MediaQuery.of(context).size.width - 170,
                               child: Text(
-                                "$address",
+                                model.address ?? address,
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 17,
@@ -821,8 +822,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                         width: 40,
                         child: CircleAvatar(
                           backgroundImage: NetworkImage(
-                            '${model.photoUrl}',
-//                              'https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg',
+                            model.photoUrl ?? defaultUserImageURL,
                           ),
                           minRadius: 40.0,
                         ),

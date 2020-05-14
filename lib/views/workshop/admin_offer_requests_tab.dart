@@ -77,6 +77,7 @@ class _AdminOfferRequestsTabState extends State<AdminOfferRequestsTab> {
                     isTimebankRequest: true,
                     parentContext: context,
                     userModel: widget.userModel,
+                    showAppBar : false
                   ),
                 ],
               ),

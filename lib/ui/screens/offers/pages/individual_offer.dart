@@ -1,13 +1,12 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:sevaexchange/components/location_picker.dart';
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 class IndividualOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -169,34 +168,19 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           StreamBuilder<CustomLocation>(
                               stream: _bloc.location,
                               builder: (context, snapshot) {
-                                return FlatButton.icon(
-                                  textColor: snapshot.error != null
-                                      ? Colors.red
-                                      : Colors.green,
-                                  icon: Icon(Icons.add_location),
-                                  label: Text(
-                                    snapshot.data?.address == null
-                                        ? 'Add Location'
-                                        : snapshot.data.address,
-                                  ),
-                                  color: Colors.grey[200],
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute<GeoFirePoint>(
-                                        builder: (context) => LocationPicker(
-                                          selectedLocation:
-                                              snapshot.data?.location,
-                                        ),
+                                return LocationPickerWidget(
+                                  selectedAddress: snapshot.data?.address,
+                                  location: snapshot.data?.location,
+                                  color: snapshot.error == null
+                                      ? Colors.green
+                                      : Colors.red,
+                                  onChanged: (LocationDataModel dataModel) {
+                                    _bloc.onLocatioChanged(
+                                      CustomLocation(
+                                        dataModel.geoPoint,
+                                        dataModel.location,
                                       ),
-                                    ).then((point) {
-                                      if (point != null) {
-                                        _getLocation(point).then((address) {
-                                          _bloc.onLocatioChanged(
-                                              CustomLocation(point, address));
-                                        });
-                                      }
-                                    });
+                                    );
                                   },
                                 );
                               }),
@@ -274,12 +258,4 @@ class _IndividualOfferState extends State<IndividualOffer> {
       ),
     );
   }
-}
-
-Future<String> _getLocation(GeoFirePoint location) async {
-  String address = await LocationUtility().getFormattedAddress(
-    location.latitude,
-    location.longitude,
-  );
-  return address;
 }

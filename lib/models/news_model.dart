@@ -44,6 +44,7 @@ class NewsModel extends DataModel {
     this.reports,
     this.root_timebank_id,
     this.isPinned,
+    this.userPhotoURL,
   });
 
   Map<String, dynamic> toMap() {
@@ -71,6 +72,10 @@ class NewsModel extends DataModel {
 
     if (this.placeAddress != null) {
       map['placeAddress'] = placeAddress;
+    }
+
+    if (this.userPhotoURL != null) {
+      map['userPhotoURL'] = userPhotoURL;
     }
 
     if (this.imageScraped != null) {
@@ -180,6 +185,10 @@ class NewsModel extends DataModel {
     if (map.containsKey('newsimageurl')) {
       this.newsImageUrl = map['newsimageurl'];
     }
+
+    if (map.containsKey('userPhotoURL')) {
+      this.userPhotoURL = map['userPhotoURL'];
+    }
     if (map.containsKey('photocredits')) {
       this.photoCredits = map['photocredits'];
     }
@@ -229,6 +238,9 @@ class NewsModel extends DataModel {
 
     if (map.containsKey('id')) {
       this.id = map['id'];
+    }
+    if (map.containsKey('userPhotoURL')) {
+      this.userPhotoURL = map['userPhotoURL'];
     }
     if (map.containsKey('title')) {
       this.title = map['title'];

@@ -6,6 +6,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -292,7 +293,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   decoration: notificationDecoration,
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL),
+                      backgroundImage:
+                          NetworkImage(user.photoURL ?? defaultUserImageURL),
                     ),
                     title: Text('Credited'),
                     subtitle: RichText(
@@ -367,7 +369,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
               decoration: notificationDecoration,
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage(user.photoURL),
+                  backgroundImage:
+                      NetworkImage(user.photoURL ?? defaultUserImageURL),
                 ),
                 title: Text('Debited'),
                 subtitle: RichText(
@@ -434,7 +437,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             decoration: notificationDecoration,
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
+                backgroundImage:
+                    NetworkImage(user.photoURL ?? defaultUserImageURL),
               ),
               title: Text(model.title),
               subtitle: RichText(
@@ -559,7 +563,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         decoration: notificationDecoration,
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundImage: NetworkImage(user.photoURL),
+                            backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
                           ),
                           title: Text(model.title),
                           subtitle: RichText(
@@ -700,7 +704,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                 decoration: notificationDecoration,
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(user.photoURL),
+                    backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
                   ),
                   title: Text(model.title),
                   subtitle: RichText(
@@ -809,7 +813,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
+                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(
@@ -1017,30 +1021,37 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     JoinRequestModel model,
     BuildContext context,
   ) {
-    return GestureDetector(
-      child: Container(
-        margin: notificationPadding,
-        decoration: notificationDecoration,
-        child: ListTile(
-          title: Text("Join request"),
-          leading: user.photoURL != null
-              ? CircleAvatar(
-                  backgroundImage: NetworkImage(user.photoURL),
-                )
-              : Offstage(),
-          subtitle: Text(
-              '${user.fullname.toLowerCase()} has requested to join ${model.timebankTitle}.'),
-        ),
-      ),
-      onTap: () {
-        showDialogForJoinRequestApproval(
-          context: context,
-          userModel: user,
-          model: model,
-          notificationId: notificationId,
-        );
-      },
-    );
+    return Dismissible(
+        background: dismissibleBackground,
+        key: Key(Utils.getUuid()),
+        onDismissed: (direction) {
+          String userEmail = SevaCore.of(context).loggedInUser.email;
+          FirestoreManager.readUserNotification(notificationId, userEmail);
+        },
+        child: GestureDetector(
+          child: Container(
+            margin: notificationPadding,
+            decoration: notificationDecoration,
+            child: ListTile(
+              title: Text("Join request"),
+              leading: user.photoURL != null
+                  ? CircleAvatar(
+                      backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
+                    )
+                  : Offstage(),
+              subtitle: Text(
+                  '${user.fullname.toLowerCase()} has requested to join ${model.timebankTitle}.'),
+            ),
+          ),
+          onTap: () {
+            showDialogForJoinRequestApproval(
+              context: context,
+              userModel: user,
+              model: model,
+              notificationId: notificationId,
+            );
+          },
+        ));
   }
 
   BuildContext showProgressForOnboardingUserContext;
@@ -1080,7 +1091,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
+                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(
@@ -1305,7 +1316,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             child: ListTile(
               title: Text("Offer Accepted"),
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
+                backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
               ),
               subtitle: Text(
                   '${user.fullname.toLowerCase()} has shown interest in your offer'),

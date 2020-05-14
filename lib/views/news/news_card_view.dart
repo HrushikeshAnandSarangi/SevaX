@@ -287,11 +287,8 @@ class NewsCardView extends StatelessWidget {
             height: 40,
             width: 40,
             child: CircleAvatar(
-              backgroundImage: NetworkImage(
-                newsModel.userPhotoURL == null
-                    ? defaultUserImageURL
-                    : newsModel.userPhotoURL,
-              ),
+              backgroundImage:
+                  NetworkImage(newsModel.userPhotoURL ?? defaultUserImageURL),
               minRadius: 40.0,
             ),
           ),
