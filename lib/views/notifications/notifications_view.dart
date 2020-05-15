@@ -351,7 +351,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                         groupInviteUserModel,
                         notification.id,
                         context,
-                        notification.timebankId,
                         notification.communityId,
                       );
                       break;
@@ -983,7 +982,6 @@ class NotificationsView extends State<NotificationViewHolder> {
       GroupInviteUserModel groupInviteUserModel,
       String notificationId,
       BuildContext buildContext,
-      String timebankId,
       String communityId) {
     // assert(user != null);
 
@@ -1000,7 +998,7 @@ class NotificationsView extends State<NotificationViewHolder> {
             builder: (context) {
               return GroupJoinRejectDialogView(
                 groupInviteUserModel: groupInviteUserModel,
-                timeBankId: timebankId,
+                timeBankId: groupInviteUserModel.groupId,
                 notificationId: notificationId,
                 userModel: SevaCore.of(buildContext).loggedInUser,
               );

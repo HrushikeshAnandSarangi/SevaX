@@ -15,7 +15,6 @@ import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
-import 'package:sevaexchange/ui/screens/add_members/pages/add_members.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
@@ -23,6 +22,7 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/invite_members.dart';
+import 'package:sevaexchange/views/timebanks/invite_members_group.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../switch_timebank.dart';
@@ -1148,10 +1148,13 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   }
 
   void _navigateToAddMembers() {
-    Navigator.of(context).push(
-      AddMembers.route(
-        timebankId: timebankModel.id,
-        communityId: timebankModel.communityId,
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => InviteMembersGroup(
+          parenttimebankid: SevaCore.of(context).loggedInUser.currentTimebank,
+          timebankModel: timebankModel,
+        ),
       ),
     );
   }

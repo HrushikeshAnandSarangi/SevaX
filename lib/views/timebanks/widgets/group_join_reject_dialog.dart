@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -116,15 +117,8 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
-                    onPressed: () async {
-                      //Once approved
-
-                      // showProgressDialog(context, 'Accepting Invitation');
-//                      approveInvitationForVolunteerRequest(
-//                          model: groupInviteUserModel,
-//                          notificationId: widget.notificationId,
-//                          user: userModel);
-
+                    onPressed: () {
+                      addMemberToGroup().commit();
                       if (progressContext != null) {
                         Navigator.pop(progressContext);
                       }
@@ -145,14 +139,9 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
-                    onPressed: () async {
-                      // request declined
-                      //   showProgressDialog(context, 'Rejecting Invitation');
-
-//                      declineInvitationbRequest(
-//                          model: groupInviteUserModel,
-//                          notificationId: widget.notificationId,
-//                          userModel: userModel);
+                    onPressed: () {
+                      FirestoreManager.readUserNotification(
+                          notificationId, userModel.email);
 
                       if (progressContext != null) {
                         Navigator.pop(progressContext);
@@ -167,6 +156,25 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
         ),
       ),
     );
+  }
+
+  WriteBatch addMemberToGroup() {
+    WriteBatch batch = Firestore.instance.batch();
+    var timebankRef = Firestore.instance
+        .collection('timebanknew')
+        .document(groupInviteUserModel.groupId);
+
+    var userNotificationReference = Firestore.instance
+        .collection('users')
+        .document(userModel.email)
+        .collection("notifications")
+        .document(notificationId);
+
+    batch.updateData(timebankRef, {
+      'members': FieldValue.arrayUnion([userModel.sevaUserID]),
+    });
+    batch.updateData(userNotificationReference, {'isRead': true});
+    return batch;
   }
 
   void showProgressDialog(BuildContext context, String message) {

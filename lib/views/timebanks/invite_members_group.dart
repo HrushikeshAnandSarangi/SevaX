@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 
@@ -11,10 +15,11 @@ import '../../flavor_config.dart';
 class InviteMembersGroup extends StatefulWidget {
   final TimebankModel timebankModel;
   final String parenttimebankid;
-  final bool isFromCreate;
 
-  InviteMembersGroup(
-      {this.timebankModel, this.parenttimebankid, this.isFromCreate});
+  InviteMembersGroup({
+    this.timebankModel,
+    this.parenttimebankid,
+  });
 
   @override
   _InviteMembersGroupState createState() => _InviteMembersGroupState();
@@ -32,11 +37,12 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    print(
+        ("group id ${widget.timebankModel.id}  parenttimebank ${widget.parenttimebankid}"));
     _setTimebankModel();
     getParentTimebankMembersList();
-    if (!widget.isFromCreate) {
-      getMembersList();
-    }
+    getMembersList();
     searchTextController.addListener(() {
       setState(() {});
     });
@@ -205,10 +211,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   }) {
     bool isJoined = false;
 
-    if (!widget.isFromCreate) {
-      if (groupMembersList.contains(user.sevaUserID)) {
-        isJoined = true;
-      }
+    if (groupMembersList.contains(user.sevaUserID)) {
+      isJoined = true;
     }
 
     return ListTile(
@@ -247,24 +251,30 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
 
   void sendInvitationNotification({
     UserModel userModel,
-  }) {
-//    GroupInviteUserModel groupInviteUserModel = GroupInviteUserModel();
-//
-//    NotificationsModel notification = NotificationsModel(
-//        id: utils.Utils.getUuid(),
-//        timebankId: FlavorConfig.values.timebankId,
-//        data: userAddedModel.toMap(),
-//        isRead: false,
-//        type: NotificationType.TypeMemberAdded,
-//        communityId: communityId,
-//        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-//        targetUserId: sevaUserId);
-//
-//    await Firestore.instance
-//        .collection('users')
-//        .document(userEmail)
-//        .collection("notifications")
-//        .document(notification.id)
-//        .setData(notification.toMap());
+  }) async {
+    GroupInviteUserModel groupInviteUserModel = GroupInviteUserModel(
+        timebankId: widget.parenttimebankid,
+        timebankName: widget.timebankModel.name,
+        timebankImage: widget.timebankModel.photoUrl,
+        aboutTimebank: widget.timebankModel.missionStatement,
+        adminName: SevaCore.of(context).loggedInUser.fullname,
+        groupId: widget.timebankModel.id);
+
+    NotificationsModel notification = NotificationsModel(
+        id: utils.Utils.getUuid(),
+        timebankId: widget.parenttimebankid,
+        data: groupInviteUserModel.toMap(),
+        isRead: false,
+        type: NotificationType.GroupJoinInvite,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        targetUserId: userModel.sevaUserID);
+
+    await Firestore.instance
+        .collection('users')
+        .document(userModel.email)
+        .collection("notifications")
+        .document(notification.id)
+        .setData(notification.toMap());
   }
 }
