@@ -965,25 +965,26 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         'members': FieldValue.arrayRemove([user.sevaUserID]),
       });
     }
+
     var communities = List<String>();
-
-    if (user.communities != null &&
-        user.communities.contains(currentCommunity)) {
-      communities.addAll(user.communities);
-      communities.remove(currentCommunity);
-      batch.updateData(userRef, {
-        'communities': FieldValue.arrayRemove([currentCommunity]),
-        'currentCommunity': communities.length > 0 ? communities[0] : ''
-      });
-      if (communities.length > 0) {
-        SevaCore.of(context).loggedInUser.currentCommunity = communities[0];
+    if (!widget.isFromGroup) {
+      if (user.communities != null &&
+          user.communities.contains(currentCommunity)) {
+        communities.addAll(user.communities);
+        communities.remove(currentCommunity);
+        batch.updateData(userRef, {
+          'communities': FieldValue.arrayRemove([currentCommunity]),
+          'currentCommunity': communities.length > 0 ? communities[0] : ''
+        });
+        if (communities.length > 0) {
+          SevaCore.of(context).loggedInUser.currentCommunity = communities[0];
+        }
       }
-    }
-
-    if (communityModel.members.contains(user.sevaUserID)) {
-      batch.updateData(communityRef, {
-        'members': FieldValue.arrayRemove([user.sevaUserID]),
-      });
+      if (communityModel.members.contains(user.sevaUserID)) {
+        batch.updateData(communityRef, {
+          'members': FieldValue.arrayRemove([user.sevaUserID]),
+        });
+      }
     }
 
     sendNotificationToAdmin(
