@@ -1500,37 +1500,37 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  Future<bool> isCommunityFound(String enteredName) async {
-    List<CommunityModel> communities = List<CommunityModel>();
-    var communitiesFound =
-        await searchCommunityByName(enteredName, communities);
+//  Future<bool> isCommunityFound(String enteredName) async {
+//    List<CommunityModel> communities = List<CommunityModel>();
+//    var communitiesFound =
+//        await searchCommunityByName(enteredName, communities);
+//
+//    if (communities == null || communities.length == 0) {
+//      return false;
+//    } else {
+//      return true;
+//    }
+//  }
 
-    if (communities == null || communities.length == 0) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  Future<List<CommunityModel>> searchCommunityByName(
-      String name, List<CommunityModel> communities) async {
-    communities.clear();
-    if (name.isNotEmpty && name.length > 4) {
-      await Firestore.instance
-          .collection('communities')
-          .where('name', isEqualTo: name)
-          .getDocuments()
-          .then((QuerySnapshot querySnapshot) {
-        querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-          var community = CommunityModel(documentSnapshot.data);
-          print("community data ${community.name}");
-
-          communities.add(community);
-        });
-      });
-    }
-    return communities;
-  }
+//  Future<List<CommunityModel>> searchCommunityByName(
+//      String name, List<CommunityModel> communities) async {
+//    communities.clear();
+//    if (name.isNotEmpty && name.length > 4) {
+//      await Firestore.instance
+//          .collection('communities')
+//          .where('name', isEqualTo: name)
+//          .getDocuments()
+//          .then((QuerySnapshot querySnapshot) {
+//        querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+//          var community = CommunityModel(documentSnapshot.data);
+//          print("community data ${community.name}");
+//
+//          communities.add(community);
+//        });
+//      });
+//    }
+//    return communities;
+//  }
 
   void addVolunteers() async {
     print(
@@ -1562,45 +1562,6 @@ class CreateEditCommunityViewFormState
       print("No users where selected");
       //no users where selected
     }
-  }
-
-  Future<Map> showTimebankAdvisory({String dialogTitle}) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext viewContext) {
-          return AlertDialog(
-            title: Text(
-              dialogTitle,
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(viewContext).pop({'PROCEED': false});
-                },
-              ),
-              FlatButton(
-                child: Text(
-                  'Proceed',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                onPressed: () {
-                  return Navigator.of(viewContext).pop({'PROCEED': true});
-                },
-              ),
-            ],
-          );
-        });
   }
 
   void showDialogForSuccess({String dialogTitle, bool err}) {

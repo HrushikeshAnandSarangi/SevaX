@@ -23,7 +23,6 @@ import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
-import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 
@@ -170,7 +169,6 @@ class RequestsState extends State<RequestsModule> {
                   selectedColor: Theme.of(context).primaryColor,
                   children: logoWidgets,
                   borderColor: Colors.grey,
-
                   padding: EdgeInsets.only(left: 0, right: 5.0),
                   groupValue: sharedValue,
                   onValueChanged: (int val) {
@@ -248,17 +246,6 @@ class RequestsState extends State<RequestsModule> {
           ],
         );
       },
-    );
-  }
-
-  void createSubTimebank(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TimebankCreate(
-          timebankId: FlavorConfig.values.timebankId,
-        ),
-      ),
     );
   }
 
@@ -762,8 +749,7 @@ class NearRequestListItems extends StatelessWidget {
                                       .email) ||
                                   model.approvedUsers.contains(
                                       SevaCore.of(context).loggedInUser.email)
-                              ?
-                              Container(
+                              ? Container(
                                   margin: EdgeInsets.only(top: 10, bottom: 10),
                                   width: 100,
                                   height: 32,
@@ -905,8 +891,7 @@ class RequestListItemsState extends State<RequestListItems> {
                   return Text("");
                 });
           });
-    }
-    else {
+    } else {
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
@@ -1032,7 +1017,6 @@ class RequestListItemsState extends State<RequestListItems> {
 
   Widget getFromNormalRequest(
       {RequestModel model, String loggedintimezone, String userEmail}) {
-
     return Container(
       decoration: containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
@@ -1106,8 +1090,7 @@ class RequestListItemsState extends State<RequestListItems> {
                         children: <Widget>[
                           model.acceptors.contains(userEmail) ||
                                   model.approvedUsers.contains(userEmail)
-                              ?
-                              Container(
+                              ? Container(
                                   margin: EdgeInsets.only(top: 10, bottom: 10),
                                   width: 100,
                                   height: 32,

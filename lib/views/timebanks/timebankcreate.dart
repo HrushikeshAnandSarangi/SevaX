@@ -14,9 +14,12 @@ import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/location_model.dart';
+import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
@@ -129,14 +132,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     List<String> members = [SevaCore.of(context).loggedInUser.sevaUserID];
-    globals.addedMembersId.forEach((m) {
-      members.add(m);
-    });
-
-    selectedUsers.forEach((key, user) {
-      print("Selected member with key $key");
-      members.add(user.sevaUserID);
-    });
 
     print("Final arrray $members");
 
@@ -170,7 +165,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         "timebanks": FieldValue.arrayUnion([id]),
       },
     );
-
+    sendInviteNotification();
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
   }
@@ -756,6 +751,41 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         ),
       ],
     );
+  }
+
+  void sendInviteNotification() {
+//    globals.addedMembersId.forEach((m) {
+//      members.add(m);
+//    });
+    if (selectedUsers.length > 0) {
+      selectedUsers.forEach((key, user) async {
+        print("Selected member with key $key");
+        GroupInviteUserModel groupInviteUserModel = GroupInviteUserModel(
+            timebankId: widget.timebankId,
+            timebankName: timebankModel.name,
+            timebankImage: timebankModel.photoUrl,
+            aboutTimebank: timebankModel.missionStatement,
+            adminName: SevaCore.of(context).loggedInUser.fullname,
+            groupId: timebankModel.id);
+
+        NotificationsModel notification = NotificationsModel(
+            id: utils.Utils.getUuid(),
+            timebankId: widget.timebankId,
+            data: groupInviteUserModel.toMap(),
+            isRead: false,
+            type: NotificationType.GroupJoinInvite,
+            communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+            senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+            targetUserId: user.sevaUserID);
+
+        await Firestore.instance
+            .collection('users')
+            .document(user.email)
+            .collection("notifications")
+            .document(notification.id)
+            .setData(notification.toMap());
+      });
+    }
   }
 
   void addVolunteers() async {

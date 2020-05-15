@@ -3,13 +3,18 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 
 import '../../flavor_config.dart';
 
 class InviteMembersGroup extends StatefulWidget {
   final TimebankModel timebankModel;
+  final String parenttimebankid;
+  final bool isFromCreate;
 
-  InviteMembersGroup({this.timebankModel});
+  InviteMembersGroup(
+      {this.timebankModel, this.parenttimebankid, this.isFromCreate});
 
   @override
   _InviteMembersGroupState createState() => _InviteMembersGroupState();
@@ -19,15 +24,19 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   final TextEditingController searchTextController =
       new TextEditingController();
   Future<TimebankModel> getTimebankDetails;
-  TimebankModel timebankModel;
-  var validItems = List<String>();
+  TimebankModel parenttimebankModel;
+  var parentTimebankMembersList = List<String>();
+  var groupMembersList = List<String>();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getMembersList();
-
+    _setTimebankModel();
+    getParentTimebankMembersList();
+    if (!widget.isFromCreate) {
+      getMembersList();
+    }
     searchTextController.addListener(() {
       setState(() {});
     });
@@ -38,9 +47,25 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
       timebankId: widget.timebankModel.id,
     ).then((onValue) {
       setState(() {
-        validItems = onValue;
+        groupMembersList = onValue;
       });
     });
+  }
+
+  void getParentTimebankMembersList() {
+    FirestoreManager.getAllTimebankIdStream(
+      timebankId: widget.parenttimebankid,
+    ).then((onValue) {
+      setState(() {
+        parentTimebankMembersList = onValue;
+      });
+    });
+  }
+
+  void _setTimebankModel() async {
+    parenttimebankModel = await getTimebankDetailsbyFuture(
+      timebankId: widget.parenttimebankid,
+    );
   }
 
   @override
@@ -134,7 +159,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
     // ListView contains a group of widgets that scroll inside the drawer
     return StreamBuilder<List<UserModel>>(
         stream: SearchManager.searchForUserWithTimebankId(
-            queryString: searchTextController.text, validItems: validItems),
+            queryString: searchTextController.text,
+            validItems: parentTimebankMembersList),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Please try again later');
@@ -149,6 +175,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
             );
           }
           List<UserModel> userlist = snapshot.data;
+          userlist.removeWhere((user) =>
+              user.sevaUserID == SevaCore.of(context).loggedInUser.sevaUserID);
           print("user list ${snapshot.data}");
           print("user  ${userlist}");
           if (userlist.length == 0) {
@@ -164,7 +192,6 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                   shrinkWrap: true,
                   itemCount: userlist.length,
                   itemBuilder: (context, index) {
-//
                     //  return userInviteWidget(email: "Umesha@uipep.com");
                     return userWidget(
                       user: userlist[index],
@@ -177,8 +204,11 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
     UserModel user,
   }) {
     bool isJoined = false;
-    if (validItems.contains(user.sevaUserID)) {
-      isJoined = true;
+
+    if (!widget.isFromCreate) {
+      if (groupMembersList.contains(user.sevaUserID)) {
+        isJoined = true;
+      }
     }
 
     return ListTile(
@@ -203,15 +233,38 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         onPressed: !isJoined
             ? () async {
                 setState(() {
-                  //getMembersList();
+                  sendInvitationNotification(userModel: user);
                 });
               }
             : null,
-        child: Text(isJoined ? "Joined" : "Add"),
+        child: Text(isJoined ? "Joined" : "Invite"),
         color: FlavorConfig.values.theme.accentColor,
         textColor: FlavorConfig.values.buttonTextColor,
         shape: StadiumBorder(),
       ),
     );
+  }
+
+  void sendInvitationNotification({
+    UserModel userModel,
+  }) {
+//    GroupInviteUserModel groupInviteUserModel = GroupInviteUserModel();
+//
+//    NotificationsModel notification = NotificationsModel(
+//        id: utils.Utils.getUuid(),
+//        timebankId: FlavorConfig.values.timebankId,
+//        data: userAddedModel.toMap(),
+//        isRead: false,
+//        type: NotificationType.TypeMemberAdded,
+//        communityId: communityId,
+//        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+//        targetUserId: sevaUserId);
+//
+//    await Firestore.instance
+//        .collection('users')
+//        .document(userEmail)
+//        .collection("notifications")
+//        .document(notification.id)
+//        .setData(notification.toMap());
   }
 }

@@ -25,7 +25,6 @@ import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
-import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
@@ -778,17 +777,6 @@ class DiscussionListState extends State<DiscussionList> {
 //      ],
 //    );
 //  }
-
-  void createSubTimebank(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TimebankCreate(
-          timebankId: FlavorConfig.values.timebankId,
-        ),
-      ),
-    );
-  }
 
   final Map<int, Widget> logoWidgets = const <int, Widget>{
     0: Text(
