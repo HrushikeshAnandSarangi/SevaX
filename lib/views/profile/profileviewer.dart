@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/models/reported_members_model.dart';
+import 'package:sevaexchange/ui/screens/reported_members/pages/report_member_page.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -235,67 +235,74 @@ class ProfileViewerState extends State<ProfileViewer> {
 
   void onReportClick(
       {UserModel reportedUserModel, UserModel reporterUserModel}) {
-    showDialog(
-      context: context,
-      builder: (BuildContext viewContext) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: Text('Report Member?'),
-          content: Text(
-            'Do you want to report this member to admin?',
-          ),
-          actions: <Widget>[
-            FlatButton(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              color: Theme.of(context).accentColor,
-              textColor: FlavorConfig.values.buttonTextColor,
-              child: Text(
-                'Report',
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
-              ),
-              onPressed: () {
-                print(reportedUserModel.sevaUserID);
-                Report report = Report(
-                  reporterId: reporterUserModel.sevaUserID,
-                  attachment: "some url",
-                  message: "test message",
-                  reporterImage: reporterUserModel.photoURL,
-                  reporterName: reporterUserModel.fullname,
-                );
-                Firestore.instance
-                    .collection('reported_users_list')
-                    .document(
-                        "${reportedUserModel.sevaUserID}*${widget.timebankId}")
-                    .setData({
-                  "reportedId": reportedUserModel.sevaUserID,
-                  "timebankId": widget.timebankId,
-                  "reportedUserName": reportedUserModel.fullname,
-                  "reportedUserImage": reportedUserModel.photoURL,
-                  "reporterId": FieldValue.arrayUnion(
-                    [reporterUserModel.sevaUserID],
-                  ),
-                  "reports": FieldValue.arrayUnion([report.toMap()])
-                }, merge: true).then((result) => {
-                          Navigator.pop(viewContext),
-                          Navigator.of(context).pop()
-                        });
-              },
-            ),
-            FlatButton(
-              child: Text(
-                'Cancel',
-                style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
-              ),
-              onPressed: () {
-                Navigator.of(viewContext).pop();
-              },
-            ),
-          ],
-        );
-      },
+    Navigator.of(context).push(
+      ReportMemberPage.route(
+        reportedUserModel: reportedUserModel,
+        reportingUserModel: reporterUserModel,
+        timebankId: widget.timebankId,
+      ),
     );
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext viewContext) {
+    //     // return object of type Dialog
+    //     return AlertDialog(
+    //       title: Text('Report Member?'),
+    //       content: Text(
+    //         'Do you want to report this member to admin?',
+    //       ),
+    //       actions: <Widget>[
+    //         FlatButton(
+    //           padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+    //           color: Theme.of(context).accentColor,
+    //           textColor: FlavorConfig.values.buttonTextColor,
+    //           child: Text(
+    //             'Report',
+    //             style: TextStyle(
+    //               fontSize: dialogButtonSize,
+    //             ),
+    //           ),
+    //           onPressed: () {
+    //             print(reportedUserModel.sevaUserID);
+    //             Report report = Report(
+    //               reporterId: reporterUserModel.sevaUserID,
+    //               attachment: "some url",
+    //               message: "test message",
+    //               reporterImage: reporterUserModel.photoURL,
+    //               reporterName: reporterUserModel.fullname,
+    //             );
+    //             Firestore.instance
+    //                 .collection('reported_users_list')
+    //                 .document(
+    //                     "${reportedUserModel.sevaUserID}*${widget.timebankId}")
+    //                 .setData({
+    //               "reportedId": reportedUserModel.sevaUserID,
+    //               "timebankId": widget.timebankId,
+    //               "reportedUserName": reportedUserModel.fullname,
+    //               "reportedUserImage": reportedUserModel.photoURL,
+    //               "reporterId": FieldValue.arrayUnion(
+    //                 [reporterUserModel.sevaUserID],
+    //               ),
+    //               "reports": FieldValue.arrayUnion([report.toMap()])
+    //             }, merge: true).then((result) => {
+    //                       Navigator.pop(viewContext),
+    //                       Navigator.of(context).pop()
+    //                     });
+    //           },
+    //         ),
+    //         FlatButton(
+    //           child: Text(
+    //             'Cancel',
+    //             style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
+    //           ),
+    //           onPressed: () {
+    //             Navigator.of(viewContext).pop();
+    //           },
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
   }
 
   void blockMember(ACTION action) {
