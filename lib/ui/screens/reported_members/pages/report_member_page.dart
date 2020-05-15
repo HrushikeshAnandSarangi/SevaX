@@ -124,13 +124,24 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                                           ),
                                           child: Container(
                                             height: 20,
-                                            child: LinearProgressIndicator(
-                                              backgroundColor: Colors.white,
-                                              value: progressPercent,
-                                              valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
-                                                Theme.of(context).primaryColor,
-                                              ),
+                                            child: Stack(
+                                              children: <Widget>[
+                                                LinearProgressIndicator(
+                                                  backgroundColor: Colors.white,
+                                                  value: progressPercent,
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(
+                                                    Theme.of(context)
+                                                        .primaryColor,
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                      "Uploading"), //needs to be updated
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         )
