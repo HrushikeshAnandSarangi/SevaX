@@ -17,6 +17,7 @@ import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -48,14 +49,13 @@ class CreateEditCommunityView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var title = 'Create a Timebank';
     return isCreateTimebank
         ? Scaffold(
             appBar: AppBar(
               elevation: 0.5,
               automaticallyImplyLeading: true,
               title: Text(
-                title,
+                AppLocalizations.of(context).translate('createtimebank', 'title'),
                 style: TextStyle(
                   fontSize: 18,
                 ),
@@ -180,12 +180,9 @@ class CreateEditCommunityViewFormState
             if (commFound) {
               setState(() {
                 communityFound = true;
-                print(
-                    "fkcin name ----- ${communitynName} and ${searchTextController.text}");
                 errTxt = 'Timebank name already exists';
               });
             } else {
-              print("inside fkcin else");
               setState(() {
                 communityFound = false;
                 errTxt = null;
@@ -279,7 +276,7 @@ class CreateEditCommunityViewFormState
   Widget get createSevaX {
     var colums = StreamBuilder(
         stream: createEditCommunityBloc.createEditCommunity,
-        builder: (context, snapshot) {
+        builder: (_, snapshot) {
           if (snapshot.data != null) {
             if (selectedAddress != null) {
               if ((selectedAddress.length > 0 &&
@@ -292,7 +289,8 @@ class CreateEditCommunityViewFormState
             }
             // print("  snapshots data   ${snapshot.data.timebanks}");
 
-            return SingleChildScrollView(
+            return new Builder(builder: (BuildContext context){
+              return SingleChildScrollView(
               physics: BouncingScrollPhysics(),
               controller: _controller,
               child: Column(
@@ -302,7 +300,7 @@ class CreateEditCommunityViewFormState
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: widget.isCreateTimebank
                         ? Text(
-                            'A TimeBank is a community of volunteers that give and receive time to each other and to the larger community',
+                      AppLocalizations.of(context).translate('createtimebank','desc'),
                             textAlign: TextAlign.center,
                           )
                         : Container(),
@@ -319,7 +317,7 @@ class CreateEditCommunityViewFormState
                                 ),
                           Text(''),
                           Text(
-                            'Timebank Logo',
+                            AppLocalizations.of(this.parentContext).translate('createtimebank','logo'),
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.grey,
@@ -335,7 +333,7 @@ class CreateEditCommunityViewFormState
                       ),
                     ),
                   ),
-                  headingText('Name your timebank'),
+                  headingText(AppLocalizations.of(context).translate('createtimebank','name')),
                   TextFormField(
                     focusNode: nameFocus,
                     textCapitalization: TextCapitalization.sentences,
@@ -356,7 +354,7 @@ class CreateEditCommunityViewFormState
                     },
                     decoration: InputDecoration(
                       errorText: errTxt,
-                      hintText: "Ex: Pets-in-town, Citizen collab",
+                      hintText: AppLocalizations.of(context).translate('createtimebank','name_hinttext'),
                     ),
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.text,
@@ -371,9 +369,9 @@ class CreateEditCommunityViewFormState
                     // onSaved: (value) => enteredName = value,
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Timebank name cannot be empty';
+                        return AppLocalizations.of(context).translate('createtimebank','name_err_empty');
                       } else if (communityFound) {
-                        return 'Timebank name already exist';
+                        return AppLocalizations.of(context).translate('createtimebank','name_err_exists');
                       } else {
                         enteredName = value.replaceAll("[^a-zA-Z0-9]", "");
                         snapshot.data.community.updateValueByKey(
@@ -384,11 +382,11 @@ class CreateEditCommunityViewFormState
                       return null;
                     },
                   ),
-                  headingText('About'),
+                  headingText(AppLocalizations.of(context).translate('createtimebank','about')),
                   TextFormField(
                     focusNode: aboutFocus,
                     decoration: InputDecoration(
-                      hintText: 'Ex: A bit more about your timebank',
+                      hintText: AppLocalizations.of(context).translate('createtimebank','about_hint_text'),
                     ),
                     keyboardType: TextInputType.multiline,
                     textInputAction: TextInputAction.done,
@@ -401,7 +399,7 @@ class CreateEditCommunityViewFormState
                     },
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Tell us more about your timebank.';
+                        return AppLocalizations.of(context).translate('createtimebank','tell_more');;
                       }
                       snapshot.data.community.updateValueByKey('about', value);
 
@@ -419,7 +417,7 @@ class CreateEditCommunityViewFormState
                     offstage: widget.isCreateTimebank,
                     child: Row(
                       children: <Widget>[
-                        headingText('Timebank Members'),
+                        headingText(AppLocalizations.of(context).translate('createtimebank','name_err_empty')),
                         Padding(
                           padding: EdgeInsets.only(left: 10, top: 15),
                           child: IconButton(
@@ -463,7 +461,7 @@ class CreateEditCommunityViewFormState
 
                   Row(
                     children: <Widget>[
-                      headingText('Protected Timebank'),
+                      headingText(AppLocalizations.of(context).translate('createtimebank','protected')),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(2, 15, 0, 0),
                         child: infoButton(
@@ -504,7 +502,7 @@ class CreateEditCommunityViewFormState
                       : Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            headingText('Select Tax percentage'),
+                            headingText(AppLocalizations.of(context).translate('createtimebank','tax_percentage')),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(2, 15, 0, 0),
                               child: infoButton(
@@ -538,7 +536,7 @@ class CreateEditCommunityViewFormState
                     child: Row(
                       children: <Widget>[
                         Text(
-                          'Current Tax Percentage : ${taxPercentage.toInt()}%',
+                          AppLocalizations.of(context).translate('createtimebank','current_tax_percentage') +' : ${taxPercentage.toInt()}%',
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey,
@@ -548,9 +546,9 @@ class CreateEditCommunityViewFormState
                     ),
                   ),
                   widget.isCreateTimebank ? Container() : SizedBox(height: 20),
-                  headingText('Your timebank location.'),
+                  headingText(AppLocalizations.of(context).translate('createtimebank','timebank_location')),
                   Text(
-                    'List the place or address where your community meets (such as a cafe, library, or church.).',
+                    AppLocalizations.of(context).translate('createtimebank','timebank_location_hinttext'),
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
@@ -621,9 +619,9 @@ class CreateEditCommunityViewFormState
                             Scaffold.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                    "Please check your internet connection."),
+                                    AppLocalizations.of(context).translate('shared','check_internet')),
                                 action: SnackBarAction(
-                                  label: 'Dismiss',
+                                  label: AppLocalizations.of(context).translate('shared','dismiss'),
                                   onPressed: () => Scaffold.of(context)
                                       .hideCurrentSnackBar(),
                                 ),
@@ -633,7 +631,7 @@ class CreateEditCommunityViewFormState
                           }
                           if (errTxt != null) {
                             showDialogForSuccess(
-                                dialogTitle: "Timebank name already exists !",
+                                dialogTitle: AppLocalizations.of(context).translate('createtimebank','timebank_exists_dialog'),
                                 err: true);
                             return;
                           }
@@ -642,7 +640,7 @@ class CreateEditCommunityViewFormState
                             if (!hasRegisteredLocation()) {
                               showDialogForSuccess(
                                   dialogTitle:
-                                      "Please add your timebank location",
+                                  AppLocalizations.of(context).translate('createtimebank','location_err_empty'),
                                   err: true);
                               return;
                             }
@@ -656,11 +654,11 @@ class CreateEditCommunityViewFormState
                                 if (globals.timebankAvatarURL == null) {
                                   setState(() {
                                     this.communityImageError =
-                                        'Timebank logo is mandatory';
+                                        AppLocalizations.of(context).translate('createtimebank','logo_mandatory');
                                     moveToTop();
                                   });
                                 } else {
-                                  showProgressDialog('Creating timebank');
+                                  showProgressDialog(AppLocalizations.of(context).translate('createtimebank','progress'));
 
                                   setState(() {
                                     this.communityImageError = '';
@@ -687,7 +685,7 @@ class CreateEditCommunityViewFormState
                                       snapshot.data.timebank.id;
                                   snapshot.data.community.location = location;
 
-                                  createEditCommunityBloc.createCommunity(
+                                  await createEditCommunityBloc.createCommunity(
                                     snapshot.data,
                                     SevaCore.of(context).loggedInUser,
                                   );
@@ -718,7 +716,8 @@ class CreateEditCommunityViewFormState
                                       SevaCore.of(context).loggedInUser;
                                   _formKey.currentState.reset();
                                   // _billingInformationKey.currentState.reset();
-                                  Navigator.of(context).pushReplacement(
+                                  Navigator.pushReplacement(
+                                    context,
                                     MaterialPageRoute(
                                       builder: (context) => BillingPlanDetails(
                                         user: user,
@@ -738,7 +737,7 @@ class CreateEditCommunityViewFormState
                               } else {
                                 setState(() {
                                   this._billingDetailsError =
-                                      'Please configure your personal information details';
+                                      AppLocalizations.of(context).translate('createtimebank','billing_err');
                                 });
                               }
                             } else {}
@@ -746,12 +745,12 @@ class CreateEditCommunityViewFormState
                             if (!hasRegisteredLocation()) {
                               showDialogForSuccess(
                                   dialogTitle:
-                                      "Please add your timebank location",
+                                  AppLocalizations.of(context).translate('createtimebank','location_err_empty'),
                                   err: true);
                               return;
                             }
 
-                            showProgressDialog('Updating timebank');
+                            showProgressDialog(AppLocalizations.of(context).translate('createtimebank','progress_updating'));
                             if (globals.timebankAvatarURL != null) {
                               communityModel.logo_url =
                                   globals.timebankAvatarURL;
@@ -827,8 +826,8 @@ class CreateEditCommunityViewFormState
                         shape: StadiumBorder(),
                         child: Text(
                           widget.isCreateTimebank
-                              ? 'Create a Timebank'
-                              : 'Save',
+                              ? AppLocalizations.of(context).translate('createtimebank','title')
+                              : AppLocalizations.of(context).translate('createtimebank','save'),
                           style: TextStyle(fontSize: 16.0, color: Colors.white),
                         ),
                         textColor: FlavorConfig.values.buttonTextColor,
@@ -846,6 +845,7 @@ class CreateEditCommunityViewFormState
                 ],
               ),
             );
+            });
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
@@ -884,8 +884,8 @@ class CreateEditCommunityViewFormState
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text("Signing out"),
-          content: Text("Acknowledge the verification mail and login back"),
+          title: Text(AppLocalizations.of(context).translate('shared','signing_out')),
+          content: Text(AppLocalizations.of(context).translate('createtimebank','ack_dialog')),
           actions: <Widget>[
             RaisedButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
@@ -893,7 +893,7 @@ class CreateEditCommunityViewFormState
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
               child: Text(
-                "Ok, Sign out",
+                AppLocalizations.of(context).translate('createtimebank','ok_signout'),
                 style: TextStyle(
                   fontSize: 16,
                 ),
@@ -908,7 +908,7 @@ class CreateEditCommunityViewFormState
             FlatButton(
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                 child: Text(
-                  "No, I'll do it later",
+                  AppLocalizations.of(context).translate('createtimebank','illdolater'),
                   style: TextStyle(fontSize: 16, color: Colors.red),
                 ),
                 onPressed: () => Navigator.of(context).pop()),
@@ -967,7 +967,7 @@ class CreateEditCommunityViewFormState
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Configure profile information',
+              AppLocalizations.of(context).translate('createtimebank','configure_profile'),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.blue,
@@ -1100,7 +1100,7 @@ class CreateEditCommunityViewFormState
             Column(
               children: <Widget>[
                 Text(
-                  'Profile Information',
+                  AppLocalizations.of(context).translate('createtimebank','profile_info_title'),
                   style: TextStyle(
                       color: FlavorConfig.values.theme.primaryColor,
                       fontSize: 20,
@@ -1171,12 +1171,12 @@ class CreateEditCommunityViewFormState
               ? controller.community.billing_address.state
               : '',
           validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank*' : null;
+            return value.isEmpty ? AppLocalizations.of(context).translate('createtimebank','err_empty') : null;
           },
           focusNode: focusNodes[1],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
-            fieldTitle: "State",
+            fieldTitle: AppLocalizations.of(context).translate('createtimebank','state'),
           ),
         ),
       );
@@ -1200,12 +1200,12 @@ class CreateEditCommunityViewFormState
               ? controller.community.billing_address.city
               : '',
           validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank*' : null;
+            return value.isEmpty ? AppLocalizations.of(context).translate('createtimebank','err_empty') : null;
           },
           focusNode: focusNodes[0],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
-            fieldTitle: "City",
+            fieldTitle: AppLocalizations.of(context).translate('createtimebank','city'),
           ),
         ),
       );
@@ -1228,14 +1228,14 @@ class CreateEditCommunityViewFormState
               ? controller.community.billing_address.pincode.toString()
               : '',
           validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank*' : null;
+            return value.isEmpty ? AppLocalizations.of(context).translate('createtimebank','err_empty') : null;
           },
           focusNode: focusNodes[3],
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
           maxLength: 15,
           decoration: getInputDecoration(
-            fieldTitle: "ZIP Code",
+            fieldTitle: AppLocalizations.of(context).translate('createtimebank','zip'),
           ),
         ),
       );
@@ -1268,7 +1268,7 @@ class CreateEditCommunityViewFormState
           focusNode: focusNodes[7],
           textInputAction: TextInputAction.done,
           decoration: getInputDecoration(
-            fieldTitle: "Additional Notes",
+            fieldTitle: AppLocalizations.of(context).translate('createtimebank','additional_notes'),
           ),
         ),
       );
@@ -1289,7 +1289,7 @@ class CreateEditCommunityViewFormState
             createEditCommunityBloc.onChange(controller);
           },
           validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank*' : null;
+            return value.isEmpty ? AppLocalizations.of(context).translate('createtimebank','err_empty') : null;
           },
           focusNode: focusNodes[4],
           textInputAction: TextInputAction.done,
@@ -1298,7 +1298,7 @@ class CreateEditCommunityViewFormState
                   ? controller.community.billing_address.street_address1
                   : '',
           decoration: getInputDecoration(
-            fieldTitle: "Street Address 1",
+            fieldTitle: AppLocalizations.of(context).translate('createtimebank','street_add1'),
           ),
         ),
       );
@@ -1325,7 +1325,7 @@ class CreateEditCommunityViewFormState
                     ? controller.community.billing_address.street_address2
                     : '',
             decoration: getInputDecoration(
-              fieldTitle: "Street Address 2",
+              fieldTitle: AppLocalizations.of(context).translate('createtimebank','street_add2'),
             )),
       );
     }
@@ -1353,7 +1353,7 @@ class CreateEditCommunityViewFormState
           focusNode: focusNodes[6],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
-            fieldTitle: "Company Name",
+            fieldTitle: AppLocalizations.of(context).translate('createtimebank','company_name'),
           ),
         ),
       );
@@ -1376,12 +1376,12 @@ class CreateEditCommunityViewFormState
               ? controller.community.billing_address.country
               : '',
           validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank*' : null;
+            return value.isEmpty ? AppLocalizations.of(context).translate('createtimebank','err_empty') : null;
           },
           focusNode: focusNodes[2],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
-            fieldTitle: "Country Name",
+            fieldTitle: AppLocalizations.of(context).translate('createtimebank','country_name'),
           ),
         ),
       );
@@ -1392,7 +1392,7 @@ class CreateEditCommunityViewFormState
         padding: const EdgeInsets.fromLTRB(100, 10, 100, 20),
         child: RaisedButton(
           child: Text(
-            "Continue",
+            AppLocalizations.of(context).translate('createtimebank','continue'),
             style: Theme.of(context).primaryTextTheme.button,
           ),
           onPressed: () {
@@ -1501,7 +1501,7 @@ class CreateEditCommunityViewFormState
 
   void addVolunteers() async {
     print(
-        " Selected users before ${selectedUsers.length} with timebank id as ${SevaCore.of(context).loggedInUser.currentTimebank}");
+        AppLocalizations.of(context).translate('createtimebank','selected_users') +" ${selectedUsers.length} " + AppLocalizations.of(context).translate('createtimebank','with_timebank_id') + "${SevaCore.of(context).loggedInUser.currentTimebank}");
 
     onActivityResult = await Navigator.of(context).push(
       MaterialPageRoute(

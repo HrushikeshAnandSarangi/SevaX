@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/interests.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -46,7 +47,7 @@ class _BioViewState extends State<BioPage> {
           appBar: AppBar(
             elevation: 0.5,
             title: Text(
-              'Bio',
+              AppLocalizations.of(context).translate('bio','title'),
               style: TextStyle(fontSize: 18),
             ),
             centerTitle: true,
@@ -62,7 +63,7 @@ class _BioViewState extends State<BioPage> {
                       padding: const EdgeInsets.only(
                           left: 0.0, top: 0.0, bottom: 10.0),
                       child: Text(
-                        'Please tell us a little about yourself in a few sentences. For example, what makes you unique.',
+                        AppLocalizations.of(context).translate('bio','description'),
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 16,
@@ -82,7 +83,7 @@ class _BioViewState extends State<BioPage> {
                             decoration: InputDecoration(
                               fillColor: Colors.grey[300],
                               filled: true,
-                              hintText: 'Tell us a little about yourself.',
+                              hintText: AppLocalizations.of(context).translate('bio','hint_biotext'),
                               border: textFieldBorder,
                               enabledBorder: textFieldBorder,
                               focusedBorder: textFieldBorder,
@@ -94,11 +95,11 @@ class _BioViewState extends State<BioPage> {
                             maxLength: 150,
                             validator: (value) {
                               if (value.trim().isEmpty) {
-                                return 'Its easy, please fill few words about you.';
+                                return AppLocalizations.of(context).translate('bio','motiviation_text');
                               }
                               if (value.length < 50) {
                                 this.bio = value;
-                                return '* min 50 characters';
+                                return AppLocalizations.of(context).translate('bio','min_char_limit');
                               }
                               this.bio = value;
                             },
@@ -122,7 +123,7 @@ class _BioViewState extends State<BioPage> {
                     }
                   },
                   child: Text(
-                    'Next',
+                    AppLocalizations.of(context).translate('shared','next'),
                     style: Theme.of(context).primaryTextTheme.button,
                   ),
                 ),
@@ -134,8 +135,8 @@ class _BioViewState extends State<BioPage> {
                 },
                 child: Text(
                   AppConfig.prefs.getBool(AppConfig.skip_bio) == null
-                      ? 'Skip'
-                      : 'Cancel',
+                      ? AppLocalizations.of(context).translate('bio','skip')
+                      : AppLocalizations.of(context).translate('bio','capital_cancel'),
                   style: TextStyle(color: Theme.of(context).accentColor),
                 ),
               ),

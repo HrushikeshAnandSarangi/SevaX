@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -97,7 +98,7 @@ class _ChatViewState extends State<ChatView> {
       widget.isFromRejectCompletion = false;
     if (widget.isFromRejectCompletion)
       textcontroller.text =
-          'I am rejecting your task completion request because ';
+          '${AppLocalizations.of(context).translate('chat','rejecting_becz')} ';
     if (widget.isFromShare == null) widget.isFromShare = false;
     //here is we keep id
     if (widget.isFromShare) {
@@ -193,7 +194,7 @@ class _ChatViewState extends State<ChatView> {
                 future: _fetchAppBarData,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
-                    return new Text('Error');
+                    return new Text(AppLocalizations.of(context).translate('chat','error2'));
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center();
@@ -220,7 +221,7 @@ class _ChatViewState extends State<ChatView> {
                 color: Color(0xffb71c1c),
                 child: Container(
                   child: Text(
-                    'Block',
+                    AppLocalizations.of(context).translate('chat','block'),
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -257,7 +258,7 @@ class _ChatViewState extends State<ChatView> {
                   AsyncSnapshot<List<MessageModel>> chatListSnapshot) {
                 if (chatListSnapshot.hasError) {
                   _scrollToBottom();
-                  return new Text('Error: ${chatListSnapshot.error}');
+                  return new Text('${AppLocalizations.of(context).translate('chat','error')} ${chatListSnapshot.error}');
                 }
 
                 if (!chatListSnapshot.hasData) {
@@ -269,7 +270,7 @@ class _ChatViewState extends State<ChatView> {
                     print("Inside chat view");
                     List<MessageModel> chatModelList = chatListSnapshot.data;
                     if (chatModelList.length == 0) {
-                      return Center(child: Text('No Messages'));
+                      return Center(child: Text(AppLocalizations.of(context).translate('chat','no_messages')));
                     }
 
                     var email = SevaCore.of(context).loggedInUser.email;
@@ -312,13 +313,13 @@ class _ChatViewState extends State<ChatView> {
                     key: _formKey,
                     child: TextFormField(
                       controller: textcontroller,
-                      decoration: InputDecoration(hintText: 'Type message'),
+                      decoration: InputDecoration(hintText: AppLocalizations.of(context).translate('chat','type')),
                       maxLines: null,
                       keyboardType: TextInputType.text,
                       textCapitalization: TextCapitalization.sentences,
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please type message';
+                          return AppLocalizations.of(context).translate('chat','type_empty');
                         }
                         messageContent = value;
 
@@ -434,7 +435,7 @@ class _ChatViewState extends State<ChatView> {
         future: FirestoreManager.getNewsForId(messageModel.message),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return new Text('Couldn\'t load the post!');
+            return new Text(AppLocalizations.of(context).translate('chat','couldnt_post'));
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container();
@@ -565,16 +566,16 @@ class _ChatViewState extends State<ChatView> {
       context: viewContext,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text('Block' + " ${partnerUser.fullname.split(' ')[0]}."),
+          title: new Text(AppLocalizations.of(context).translate('chat','block') + " ${partnerUser.fullname.split(' ')[0]}."),
           content: new Text(
-              "${partnerUser.fullname.split(' ')[0]} will no longer be available to send you messages and engage with the content you create"),
+              "${partnerUser.fullname.split(' ')[0]} ${AppLocalizations.of(context).translate('chat','block_warn')}"),
           actions: <Widget>[
             new FlatButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
               child: new Text(
-                'Block',
+                AppLocalizations.of(context).translate('chat','block'),
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                 ),
@@ -585,7 +586,7 @@ class _ChatViewState extends State<ChatView> {
             ),
             new FlatButton(
               child: new Text(
-                "Cancel",
+                AppLocalizations.of(context).translate('shared','cancel'),
                 style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
               ),
               onPressed: () {

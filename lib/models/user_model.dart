@@ -11,7 +11,7 @@ class UserModel extends DataModel {
   String fullname;
   List<String> interests;
   List<String> skills;
-  List<String> communities;
+  List<String> communities = new List();
   String currentCommunity;
   String calendar;
   List<String> membershipTimebanks;
@@ -95,7 +95,7 @@ class UserModel extends DataModel {
       List<String> pasthires = List.castFrom(map['past_hires']);
       this.pastHires = pasthires;
     } else {
-      this.pastHires = [];
+      this.pastHires = List();
     }
     if (map.containsKey('emailSent')) {
       this.emailSent = map['emailSent'] ?? false;
@@ -128,7 +128,9 @@ class UserModel extends DataModel {
       List<String> communities = List.castFrom(map['communities']);
       this.communities = communities;
     } else {
-      this.communities = List();
+      print("worked");
+      this.communities = new List();
+      this.communities.add('asdfadf');
     }
 
     if (map.containsKey('blockedBy')) {
@@ -289,7 +291,7 @@ class UserModel extends DataModel {
     if (this.communities != null && this.communities.isNotEmpty) {
       object['communities'] = this.communities;
     } else {
-      object['communities'] = [];
+      object['communities'] = List();
     }
     if (this.favoriteByTimeBank != null && this.favoriteByTimeBank.isNotEmpty) {
       object['favoriteByTimeBank'] = this.favoriteByTimeBank;

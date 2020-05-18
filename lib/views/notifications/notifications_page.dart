@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/views/notifications/notifications_view.dart';
 
 class NotificationsPage extends StatelessWidget {
@@ -10,7 +11,7 @@ class NotificationsPage extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'Notifications',
+          AppLocalizations.of(context).translate('notifications','title'),
           style: TextStyle(fontSize: 18),
         ),
         centerTitle: true,

@@ -11,6 +11,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -180,7 +181,7 @@ class _ProfilePageState extends State<ProfilePage>
                           splashColor: Colors.transparent,
                           onTap: navigateToSettings,
                           child: Hero(
-                            tag: "ProfileImage",
+                            tag: AppLocalizations.of(context).translate('profile','image_hint'),
                             child: Container(
                               padding: EdgeInsets.all(1),
                               decoration: BoxDecoration(
@@ -218,7 +219,7 @@ class _ProfilePageState extends State<ProfilePage>
                             children: [
                               !firebaseUser.isEmailVerified
                                   ? TextSpan(
-                                      text: '\nVerify Email',
+                                      text: '\n${AppLocalizations.of(context).translate('profile','verify_email')}',
                                       style: TextStyle(
                                         color: firebaseUser.isEmailVerified
                                             ? Colors.black
@@ -244,9 +245,9 @@ class _ProfilePageState extends State<ProfilePage>
                               Scaffold.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                      "Please check your internet connection."),
+                                      AppLocalizations.of(context).translate('shared','check_internet')),
                                   action: SnackBarAction(
-                                    label: 'Dismiss',
+                                    label: AppLocalizations.of(context).translate('shared','dismiss'),
                                     onPressed: () => Scaffold.of(context)
                                         .hideCurrentSnackBar(),
                                   ),
@@ -281,7 +282,7 @@ class _ProfilePageState extends State<ProfilePage>
                             Padding(
                               padding: EdgeInsets.only(left: 10),
                               child: Text(
-                                'Select a Timebank',
+                                AppLocalizations.of(context).translate('profile','select_timebank'),
                                 style: TextStyle(fontSize: 18),
                               ),
                             ),
@@ -289,7 +290,7 @@ class _ProfilePageState extends State<ProfilePage>
                               icon: Icon(Icons.add_circle_outline),
                               onPressed: () async {
                                 var timebankAdvisory =
-                                    "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks. In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
+                                AppLocalizations.of(context).translate('profile','dialog_text');
                                 Map<String, bool> onActivityResult =
                                     await showTimebankAdvisory(
                                         dialogTitle: timebankAdvisory);
@@ -500,7 +501,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   Padding(
                                     padding: const EdgeInsets.only(left: 15),
                                     child: Text(
-                                      'My Timezone',
+                                      AppLocalizations.of(context).translate('profile','timezone'),
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black,
@@ -531,7 +532,7 @@ class _ProfilePageState extends State<ProfilePage>
                 children: <Widget>[
                   CircularProgressIndicator(),
                   SizedBox(height: 5),
-                  Text('Loading ...'),
+                  Text(AppLocalizations.of(context).translate('profile','loading')),
                 ],
               ),
             ),
@@ -566,7 +567,7 @@ class _ProfilePageState extends State<ProfilePage>
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  'Cancel',
+                  AppLocalizations.of(context).translate('shared','cancel'),
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -577,7 +578,7 @@ class _ProfilePageState extends State<ProfilePage>
               ),
               FlatButton(
                 child: Text(
-                  'Proceed',
+                  AppLocalizations.of(context).translate('profile','proceed'),
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -614,7 +615,7 @@ class _ProfilePageState extends State<ProfilePage>
                   Padding(
                     padding: const EdgeInsets.only(left: 15),
                     child: Text(
-                      'Help',
+                      AppLocalizations.of(context).translate('profile','help'),
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
@@ -942,8 +943,8 @@ class _ProfilePageState extends State<ProfilePage>
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text("Signing out"),
-          content: Text("Acknowledge the verification mail and login back"),
+          title: Text(AppLocalizations.of(context).translate('profile','sign_out')),
+          content: Text(AppLocalizations.of(context).translate('profile','acknowledge')),
           actions: <Widget>[
             RaisedButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
@@ -951,7 +952,7 @@ class _ProfilePageState extends State<ProfilePage>
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
               child: Text(
-                "Ok, Sign out",
+                "",
                 style: TextStyle(
                   fontSize: 16,
                 ),
@@ -966,7 +967,7 @@ class _ProfilePageState extends State<ProfilePage>
             FlatButton(
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                 child: Text(
-                  "No, I'll do it later",
+                  AppLocalizations.of(context).translate('profile','will_do_later'),
                   style: TextStyle(fontSize: 16, color: Colors.red),
                 ),
                 onPressed: () => Navigator.of(context).pop()),

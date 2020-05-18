@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -49,14 +50,13 @@ class MyTasksList extends StatelessWidget {
             sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return new Text('Error: ${snapshot.error}');
+            return new Text('${AppLocalizations.of(context).translate('tasks','error')} ${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
           UserModel userModel = snapshot.data;
           String usertimezone = userModel.timezone;
-          print("Sample ereadaf adsk aklfjadsf");
           print(SevaCore.of(context).loggedInUser.sevaUserID);
           return StreamBuilder<List<RequestModel>>(
             stream: FirestoreManager.getTaskStreamForUserWithEmail(
@@ -78,7 +78,7 @@ class MyTasksList extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(top: 58.0),
                   child: Text(
-                    'No pending tasks',
+                    AppLocalizations.of(context).translate('tasks','no_pending'),
                     textAlign: TextAlign.center,
                   ),
                 );
@@ -435,7 +435,7 @@ class TaskCardViewState extends State<TaskCardView> {
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
-                        'From:  ' +
+                        '${AppLocalizations.of(context).translate('tasks','from')}  ' +
                             DateFormat('MMMM dd, yyyy @ h:mm a').format(
                               getDateTimeAccToUserTimezone(
                                   dateTime: DateTime.fromMillisecondsSinceEpoch(
@@ -448,7 +448,7 @@ class TaskCardViewState extends State<TaskCardView> {
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
-                        'Until:  ' +
+                        '${AppLocalizations.of(context).translate('tasks','untill')}  ' +
                             DateFormat('MMMM dd, yyyy @ h:mm a').format(
                               getDateTimeAccToUserTimezone(
                                   dateTime: DateTime.fromMillisecondsSinceEpoch(
@@ -460,13 +460,13 @@ class TaskCardViewState extends State<TaskCardView> {
                     Container(
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
-                      child: Text('Posted By: ' + requestModel.fullName),
+                      child: Text('${AppLocalizations.of(context).translate('tasks','posted_by')} ' + requestModel.fullName),
                     ),
                     Container(
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
-                        'PostDate:  ' +
+                        '${AppLocalizations.of(context).translate('tasks','posted_date')}  ' +
                             DateFormat('MMMM dd, yyyy @ h:mm a').format(
                               getDateTimeAccToUserTimezone(
                                   dateTime: DateTime.fromMillisecondsSinceEpoch(
@@ -501,15 +501,15 @@ class TaskCardViewState extends State<TaskCardView> {
                                           EdgeInsets.only(bottom: 20)),
                                   validator: (value) {
                                     if (value == null) {
-                                      return 'Enter hours';
+                                      return AppLocalizations.of(context).translate('tasks','enterhours');
                                     }
                                     if (value.isEmpty) {
-                                      return 'Select hours';
+                                      return AppLocalizations.of(context).translate('tasks','selecthours');
                                     }
                                     this.selectedHourValue = value;
                                   },
                                 ),
-                                Text('Hours'),
+                                Text(AppLocalizations.of(context).translate('tasks','hours')),
                               ],
                             ),
                           ),
@@ -533,10 +533,10 @@ class TaskCardViewState extends State<TaskCardView> {
                                 DropdownButtonFormField<String>(
                                   validator: (value) {
                                     if (value == null) {
-                                      return 'Minutes cannot be null';
+                                      return AppLocalizations.of(context).translate('tasks','minutes_null');
                                     }
                                     if (value.isEmpty) {
-                                      return 'Minutes cannot be Empty';
+                                      return AppLocalizations.of(context).translate('tasks','minutes_empty');
                                     }
                                     selectedMinuteValue = value;
                                   },
@@ -551,7 +551,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                   },
                                   value: selectedMinuteValue,
                                 ),
-                                Text('Minutes'),
+                                Text(AppLocalizations.of(context).translate('tasks','minutes')),
                               ],
                             ),
                           ),
@@ -567,7 +567,7 @@ class TaskCardViewState extends State<TaskCardView> {
                           subject.add(0);
                         },
                         child: Text(
-                          'Completed',
+                          AppLocalizations.of(context).translate('tasks','completed'),
                           style: Theme.of(context).primaryTextTheme.button,
                         ),
                       ),
@@ -591,7 +591,7 @@ class TaskCardViewState extends State<TaskCardView> {
             content: Text(content),
             actions: <Widget>[
               FlatButton(
-                child: Text("Close"),
+                child: Text(AppLocalizations.of(context).translate('shared','close')),
                 onPressed: () {
                   Navigator.of(buildContext).pop();
                 },
@@ -614,16 +614,16 @@ class TaskCardViewState extends State<TaskCardView> {
 
     if (creditRequest > maxClaim) {
       showDialogFoInfo(
-        title: "Limit exceeded!",
+        title: AppLocalizations.of(context).translate('tasks','limited_exceeded'),
         content:
-            "You can only request a maximum of $maxClaim Hours of credit from this request.",
+            "${AppLocalizations.of(context).translate('tasks','only_request')} $maxClaim ${AppLocalizations.of(context).translate('tasks','hours_of_credit')}",
       );
       return;
       //show dialog
     } else if (creditRequest == 0) {
       showDialogFoInfo(
-        title: "Enter hours",
-        content: "Please enter valid number of hours!",
+        title: AppLocalizations.of(context).translate('tasks','enter_hours'),
+        content: AppLocalizations.of(context).translate('tasks','enter_valid_hours'),
       );
       return;
     }
@@ -650,7 +650,7 @@ class TaskCardViewState extends State<TaskCardView> {
         builder: (BuildContext context) {
           creditRequestDialogContext = context;
           return AlertDialog(
-            title: Text("Please wait..."),
+            title: Text(AppLocalizations.of(context).translate('tasks','wait')),
             content: LinearProgressIndicator(),
           );
         });

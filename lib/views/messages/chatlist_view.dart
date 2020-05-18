@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -54,7 +55,7 @@ class _ChatListViewState extends State<ChatListView> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'Messages',
+          AppLocalizations.of(context).translate('messages','title'),
           style: TextStyle(fontSize: 18),
         ),
         centerTitle: true,
@@ -74,7 +75,7 @@ class _ChatListViewState extends State<ChatListView> {
             );
           }
           if (chatListSnapshot.hasError) {
-            return new Text('Error: ${chatListSnapshot.error}');
+            return new Text('${AppLocalizations.of(context).translate('chat','error')} ${chatListSnapshot.error}');
           }
           // setState(() {
 
@@ -91,7 +92,7 @@ class _ChatListViewState extends State<ChatListView> {
 
               List<ChatModel> chatModelList = allChalModelList;
               if (chatModelList.length == 0) {
-                return Center(child: Text('No Messages'));
+                return Center(child: Text(AppLocalizations.of(context).translate('chat','no_messages')));
               }
 
               return ListView.builder(
@@ -112,7 +113,7 @@ class _ChatListViewState extends State<ChatListView> {
             icon: Icon(
               Icons.chat,
             ),
-            label: Text('New Message'),
+            label: Text(AppLocalizations.of(context).translate('chat','new_message')),
             foregroundColor: FlavorConfig.values.buttonTextColor,
             onPressed: () {
               if (SevaCore.of(context).loggedInUser.associatedWithTimebanks >
@@ -158,7 +159,7 @@ class _ChatListViewState extends State<ChatListView> {
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         ),
         builder: (context, snapshot) {
-          if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+          if (snapshot.hasError) return new Text('${AppLocalizations.of(context).translate('chat','error')} ${snapshot.error}');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
@@ -243,7 +244,7 @@ class _ChatListViewState extends State<ChatListView> {
     if (chatModel.lastMessage == null) {
       lastmessage = '';
     } else if (feedsExpression.hasMatch(chatModel.lastMessage)) {
-      lastmessage = "Shared a post";
+      lastmessage = AppLocalizations.of(context).translate('chat','shared_post');
     } else {
       lastmessage = chatModel.lastMessage;
     }
@@ -319,7 +320,7 @@ class _ChatListViewState extends State<ChatListView> {
                                 left: 5, right: 5, top: 2, bottom: 2),
                             // color: Colors.green,
                             child: Text(
-                              "Timebank",
+                              AppLocalizations.of(context).translate('chat','timebank'),
                               style: TextStyle(
                                 fontSize: 10,
                                 color: Colors.white,
@@ -337,7 +338,7 @@ class _ChatListViewState extends State<ChatListView> {
                           ),
                           child: Text(
                             chatModel.messagTitleUserName == null
-                                ? 'Not added '
+                                ? '${AppLocalizations.of(context).translate('chat','not_added')} '
                                 : chatModel.messagTitleUserName,
                             style: Theme.of(parentContext).textTheme.subhead,
                           ),
@@ -365,7 +366,7 @@ class _ChatListViewState extends State<ChatListView> {
                                 DateTime.fromMillisecondsSinceEpoch(
                                     chatModel.timestamp),
                               )
-                              .replaceAll('hours ago', 'h'),
+                              .replaceAll(AppLocalizations.of(context).translate('chat','hours_ago'), 'h'),
                           style: TextStyle(fontSize: 10),
                         ),
                       ),
@@ -597,8 +598,8 @@ class _ChatListViewState extends State<ChatListView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Delete chat'),
-          content: const Text('Are you sure you want to delete this chat'),
+          title: Text(AppLocalizations.of(context).translate('chat','delete_title')),
+          content: Text(AppLocalizations.of(context).translate('chat','delete_desc')),
           actions: <Widget>[
             FlatButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
@@ -651,7 +652,7 @@ class _ChatListViewState extends State<ChatListView> {
             ),
             FlatButton(
               child: Text(
-                'Cancel',
+                AppLocalizations.of(context).translate('shared','cancel'),
                 style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
               ),
               onPressed: () {

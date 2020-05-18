@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 
@@ -36,15 +40,15 @@ class AboutApp extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          getHelpButton(context, getOnTap(context, "About SevaX", 'aboutSeva'),
+          getHelpButton(context, getOnTap(context, AppLocalizations.of(context).translate('help','about_sevax'), 'aboutSeva'),
               "About SevaX"),
-          getHelpButton(context, getOnTap(context, "About Us", 'aboutUsLink'),
+          getHelpButton(context, getOnTap(context, AppLocalizations.of(context).translate('help','about_us'), 'aboutUsLink'),
               "About Us"),
           getHelpButton(
               context,
-              getOnTap(context, "Training Video", 'trainingVideo'),
+              getOnTap(context, AppLocalizations.of(context).translate('help','training_video'), 'trainingVideo'),
               "Training Video"),
-          getHelpButton(context, contactUsOnTap(context), "Contact Us"),
+          getHelpButton(context, contactUsOnTap(context), AppLocalizations.of(context).translate('help','contact_us')),
         ],
       ),
       bottomSheet: Container(
@@ -55,8 +59,8 @@ class AboutApp extends StatelessWidget {
           children: <Widget>[
             Text(
               globals.currentVersionNumber != null
-                  ? 'Version ${globals.currentVersionNumber}' ?? 'Version'
-                  : 'Version 1.2.1',
+                  ? 'Version ${globals.currentVersionNumber}' ?? AppLocalizations.of(context).translate('help','version')
+                  : '${AppLocalizations.of(context).translate('help','version')} 1.2.1',
               style: TextStyle(
                   fontFamily: 'Europa',
                   fontSize: 14,
@@ -91,13 +95,13 @@ class AboutApp extends StatelessWidget {
 
             navigateToWebView(
               aboutMode: AboutMode(
-                  title: "About SevaX", urlToHit: dynamicLinks['aboutSeva']),
+                  title: AppLocalizations.of(context).translate('help','about_sevax'), urlToHit: dynamicLinks['aboutSeva']),
               context: context,
             );
           },
           child: Container(
             child: Text(
-              "About SevaX",
+              AppLocalizations.of(context).translate('help','about_sevax'),
               style: TextStyle(
                 color: Colors.blue,
                 fontSize: 16,
@@ -164,13 +168,13 @@ class AboutApp extends StatelessWidget {
 
             navigateToWebView(
               aboutMode: AboutMode(
-                  title: "About Us", urlToHit: dynamicLinks['aboutUsLink']),
+                  title: AppLocalizations.of(context).translate('help','about_us'), urlToHit: dynamicLinks['aboutUsLink']),
               context: context,
             );
           },
           child: Container(
             child: Text(
-              "About Us",
+              AppLocalizations.of(context).translate('help','about_us'),
               style: TextStyle(
                 color: Colors.blue,
                 fontSize: 16,
@@ -193,7 +197,7 @@ class AboutApp extends StatelessWidget {
 
             navigateToWebView(
               aboutMode: AboutMode(
-                title: "Training Video",
+                title: AppLocalizations.of(context).translate('help','training_video'),
                 urlToHit: dynamicLinks['trainingVideo'],
               ),
               context: context,
@@ -201,7 +205,7 @@ class AboutApp extends StatelessWidget {
           },
           child: Container(
             child: Text(
-              "Training Video",
+              AppLocalizations.of(context).translate('help','training_video'),
               style: TextStyle(
                 color: Colors.blue,
                 fontSize: 16,
@@ -222,13 +226,13 @@ class AboutApp extends StatelessWidget {
         builder: (BuildContext dialogContext) {
           // return object of type Dialog
           return AlertDialog(
-            title: new Text("Please let us know about your valuable feedback"),
+            title: new Text(AppLocalizations.of(context).translate('help','alert_text')),
             content: Form(
               key: formkey,
               child: TextFormField(
                 decoration: InputDecoration(
-                  hintText: 'Feedback',
-                  labelText: 'Feedback',
+                  hintText: AppLocalizations.of(context).translate('help','feedback'),
+                  labelText: AppLocalizations.of(context).translate('help','feedback'),
                   border: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(20.0),
@@ -243,7 +247,7 @@ class AboutApp extends StatelessWidget {
                 maxLines: 1,
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Please enter youur feedback';
+                    return AppLocalizations.of(context).translate('help','enter_feedback');
                   }
                   feedbackText = value;
                 },
@@ -256,7 +260,7 @@ class AboutApp extends StatelessWidget {
                 color: Theme.of(context).accentColor,
                 textColor: FlavorConfig.values.buttonTextColor,
                 child: new Text(
-                  "Send feedback",
+                  AppLocalizations.of(context).translate('help','send_feedback'),
                   style: TextStyle(
                       fontSize: dialogButtonSize, fontFamily: 'Europa'),
                 ),
@@ -266,7 +270,7 @@ class AboutApp extends StatelessWidget {
                     print("------------------------------------");
                     Navigator.of(dialogContext).pop();
 
-                    showProgressDialog(context, "Sending feedback");
+                    showProgressDialog(context, AppLocalizations.of(context).translate('help','send_feedback'));
 
                     await http.post(
                         "${FlavorConfig.values.cloudFunctionBaseURL}/sendFeedbackToTimebank",
@@ -281,7 +285,7 @@ class AboutApp extends StatelessWidget {
               ),
               new FlatButton(
                 child: new Text(
-                  "Close",
+                  AppLocalizations.of(context).translate('help','close'),
                   style: TextStyle(
                       fontSize: dialogButtonSize,
                       color: Colors.red,

@@ -6,6 +6,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -40,10 +41,10 @@ enum CompareUserStatus { JOINED, REQUESTED, REJECTED, JOIN }
 class FindCommunitiesViewState extends State<FindCommunitiesView> {
   final TextEditingController searchTextController =
       new TextEditingController();
-  static const String JOIN = "Join";
-  static const String JOINED = "Joined";
+  static  String JOIN;
+  static String JOINED;
   bool showAppbar = false;
-  String nearTimebankText = 'Timebanks near you';
+  String nearTimebankText;
   var radius;
 
   @override
@@ -80,6 +81,9 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   @override
   Widget build(BuildContext context) {
+    JOIN = AppLocalizations.of(context).translate('findtimebank',"join");
+    JOINED = AppLocalizations.of(context).translate('findtimebank',"joined");
+    nearTimebankText = AppLocalizations.of(context).translate('findtimebank','timebanks_near_you');
     bool showBachBtn = widget.showBackBtn;
     showAppbar = widget.isFromHome;
     print("isdash trueee ---${widget.isFromHome}");
@@ -108,7 +112,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     )
                   : Offstage(),
               title: Text(
-                'Find your Timebank',
+                AppLocalizations.of(context).translate('findtimebank','find_your_timebank'),
                 style: TextStyle(
                   fontSize: 18,
                 ),
@@ -126,11 +130,11 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Logout"),
+          title: new Text(AppLocalizations.of(context).translate('shared','logout')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text("Are you sure you want to logout?"),
+              Text(AppLocalizations.of(context).translate('shared','sure_logout')),
               SizedBox(height: 10),
               Row(
                 children: <Widget>[
@@ -140,7 +144,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: new Text(
-                      "Logout",
+                      AppLocalizations.of(context).translate('shared','logout'),
                       style: TextStyle(fontFamily: 'Europa'),
                     ),
                     onPressed: () {
@@ -154,7 +158,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   ),
                   new FlatButton(
                     child: new Text(
-                      "Cancel",
+                      AppLocalizations.of(context).translate('shared','cancel'),
                       style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
                     ),
                     onPressed: () {
@@ -190,7 +194,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
         ),
         Text(
-          'Looking for an existing timebank to join',
+          AppLocalizations.of(context).translate('findtimebank','looking_existing'),
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
@@ -234,7 +238,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                   borderRadius: new BorderRadius.circular(25.7)),
-              hintText: 'Type your timebank name. Ex: Alaska (min 1 char)',
+              hintText: AppLocalizations.of(context).translate('findtimebank','help_text'),
               hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
         ),
         SizedBox(height: 20),
@@ -297,14 +301,14 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
                   child: Center(
-                    child: Text("No timebanks found",
+                    child: Text(AppLocalizations.of(context).translate('findtimebank','no_timebanks_found'),
                         style: TextStyle(fontFamily: "Europa", fontSize: 14)),
                   ),
                 );
               }
             }
           } else if (snapshot.hasError) {
-            return Text('Please try again later');
+            return Text(AppLocalizations.of(context).translate('shared','try_later'));
           }
           /*else if(snapshot.data==null){
             return Expanded(
@@ -330,17 +334,17 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
           if (snapshot.hasError) {
             return Text(
-              "Timebank",
+              AppLocalizations.of(context).translate('findtimebank','timebank'),
             );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Text("...");
           } else if (snapshot.hasData) {
             return Text(
-              "Created by " + snapshot.data.fullname,
+              AppLocalizations.of(context).translate('findtimebank','created_by') + snapshot.data.fullname,
             );
           } else {
             return Text(
-              "Community",
+              AppLocalizations.of(context).translate('findtimebank','community'),
             );
           }
         },
@@ -449,7 +453,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
                 child: Center(
-                  child: Text("No timebanks found",
+                  child: Text(AppLocalizations.of(context).translate('findtimebank','no_timebanks_found'),
                       style: TextStyle(fontFamily: "Europa", fontSize: 14)),
                 ),
               );
@@ -458,7 +462,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             return Padding(
                 padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 16.0),
                 child: Text(
-                    "Please make sure you have GPS turned on. see the list of timebanks around you"));
+                    AppLocalizations.of(context).translate('findtimebank','timebanks_around_you')));
             // return Text("Couldn't load results");
           }
           /*else if(snapshot.data==null){
@@ -541,12 +545,12 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             children: <Widget>[
               RaisedButton(
                 child: Text(
-                  'Create a Timebank',
+                  AppLocalizations.of(context).translate('findtimebank','create_timebank'),
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
                 onPressed: () async {
                   var timebankAdvisory =
-                      "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks. In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
+                  AppLocalizations.of(context).translate('findtimebank','create_timebank_warn');
                   Map<String, bool> onActivityResult =
                       await showTimebankAdvisory(dialogTitle: timebankAdvisory);
                   if (onActivityResult['PROCEED']) {
@@ -607,7 +611,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  'Cancel',
+                  AppLocalizations.of(context).translate('shared','capital_cancel'),
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -618,7 +622,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               ),
               FlatButton(
                 child: Text(
-                  'Proceed',
+                  AppLocalizations.of(context).translate('shared','proceed'),
                   style: TextStyle(
                     fontSize: 16,
                   ),

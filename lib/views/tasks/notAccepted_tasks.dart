@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -41,7 +42,7 @@ class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
     if (requestList.length == 0) {
       return Padding(
         padding: const EdgeInsets.only(top: 58.0),
-        child: Text('There are currenlty none', textAlign: TextAlign.center),
+        child: Text(AppLocalizations.of(context).translate('tasks','there_none'), textAlign: TextAlign.center),
       );
     }
     return ListView.builder(

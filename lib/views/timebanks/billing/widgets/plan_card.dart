@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/billing_plan_details.dart';
 import 'package:sevaexchange/models/user_model.dart';
 
@@ -77,7 +78,7 @@ class BillingPlanCard extends StatelessWidget {
                   child: Row(
                     children: <Widget>[
                       Text(
-                        "Click here for more info",
+                        AppLocalizations.of(context).translate('billing_plans','info_click'),
                         style: TextStyle(fontSize: 10, color: textColor),
                       ),
                       SizedBox(width: 8),
@@ -121,8 +122,8 @@ class BillingPlanCard extends StatelessWidget {
                   color: textColor,
                   child: Text(
                     isPlanActive
-                        ? isSelected ? 'Currently Active' : 'Change'
-                        : 'Choose',
+                        ? isSelected ? AppLocalizations.of(context).translate('billing_plans','active') : AppLocalizations.of(context).translate('billing_plans','change')
+                        : AppLocalizations.of(context).translate('billing_plans','choose'),
                     style: TextStyle(
                       color: isSelected
                           ? Theme.of(context).primaryColor
@@ -203,7 +204,7 @@ class BillingPlanCard extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Billable transactions"),
+          title: new Text(AppLocalizations.of(context).translate('billing_plans','billable_transactions')),
           content: Container(
             height: 300,
             width: 300,
@@ -234,13 +235,13 @@ class BillingPlanCard extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Plan change"),
+          title: new Text(AppLocalizations.of(context).translate('billing_plans','alert_title')),
           content: Container(
-            child: Text('Please contact SevaX support to change the plans'),
+            child: Text(AppLocalizations.of(context).translate('billing_plans','contact')),
           ),
           actions: <Widget>[
             new FlatButton(
-              child: new Text("Close"),
+              child: new Text(AppLocalizations.of(context).translate('billing_plans','close')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -266,7 +267,7 @@ class BillingPlanCard extends StatelessWidget {
             "payment": {
               "payment_success": true,
               "planId": plan.id,
-              "message": "You are on Community Plan"
+              "message": AppLocalizations.of(context).translate('billing_plans','community_plan')
             }
           },
         ).then((_) {
@@ -284,7 +285,7 @@ class BillingPlanCard extends StatelessWidget {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text("Taking you to your new Timebank..."),
+              Text(AppLocalizations.of(context).translate('billing_plans','progress')),
               // Text('It may take couple of minutes to synchronize your payment'),
             ],
           ),

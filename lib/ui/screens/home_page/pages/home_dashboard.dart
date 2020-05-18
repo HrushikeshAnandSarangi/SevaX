@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -50,17 +51,6 @@ class _HomeDashBoardState extends State<HomeDashBoard>
     controller = TabController(initialIndex: 0, length: 3, vsync: this);
     _timebankController =
         TabController(initialIndex: 0, length: 7, vsync: this);
-    tabs = [
-      Tab(
-          text:
-              "${selectedCommunity != null ? selectedCommunity.name : ''} Timebank"),
-      Center(child: Tab(text: "Feeds")),
-      Tab(text: "Projects"),
-      Tab(text: "Requests"),
-      Tab(text: "Offers"),
-      Tab(text: "About"),
-      Tab(text: "Members")
-    ];
     super.initState();
     Future.delayed(Duration.zero, () {
       _homeDashBoardBloc.getAllCommunities(SevaCore.of(context).loggedInUser);
@@ -88,6 +78,17 @@ class _HomeDashBoardState extends State<HomeDashBoard>
 
   @override
   Widget build(BuildContext context) {
+    tabs = [
+      Tab(
+          text:
+          "${selectedCommunity != null ? selectedCommunity.name : ''} ${AppLocalizations.of(context).translate('main','timebank')}"),
+      Center(child: Tab(text: AppLocalizations.of(context).translate('main','feeds'))),
+      Tab(text: AppLocalizations.of(context).translate('main','projects')),
+      Tab(text: AppLocalizations.of(context).translate('main','requests')),
+      Tab(text: AppLocalizations.of(context).translate('main','offers')),
+      Tab(text: AppLocalizations.of(context).translate('main','about')),
+      Tab(text: AppLocalizations.of(context).translate('main','members'))
+    ];
     log("home dashboard page build");
     final _user = BlocProvider.of<UserDataBloc>(context);
     // print("user bloc ${_user.user.email}");
@@ -151,7 +152,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                         ),
                       ),
                     )
-                  : Text('Loading');
+                  : Text(AppLocalizations.of(context).translate('main','loading'));
             },
           ),
           actions: <Widget>[
@@ -205,7 +206,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                 isAdmin = true;
                 _timebankController = TabController(length: 10, vsync: this);
 
-                tabs.add(Tab(text: 'Manage'));
+                tabs.add(Tab(text: AppLocalizations.of(context).translate('main','manage')));
                 tabs.add(
                   GetActiveTimebankNotifications(
                       timebankId: primaryTimebank.id),

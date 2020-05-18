@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 
 class SevaCoinWidget extends StatelessWidget {
   final double amount;
@@ -39,7 +40,7 @@ class SevaCoinWidget extends StatelessWidget {
             ),
             SizedBox(width: 8),
             Text(
-              '${amount != null ? double.parse(amount.toStringAsFixed(2)) : 0} Seva Credits',
+              '${amount != null ? double.parse(amount.toStringAsFixed(2)) : 0} ${AppLocalizations.of(context).translate('profile','seva_credits')}',
               style: TextStyle(
                 color: amount > 0 ? Colors.blue : Colors.red,
                 fontWeight: FontWeight.bold,

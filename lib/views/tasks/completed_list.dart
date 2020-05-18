@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -12,7 +13,7 @@ class CompletedListPage extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
-            'Completed Tasks',
+            AppLocalizations.of(context).translate('tasks','completed_tasks'),
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -60,7 +61,7 @@ class _CompletedListState extends State<CompletedList> {
     if (requestList.length == 0) {
       return Padding(
         padding: const EdgeInsets.only(top: 58.0),
-        child: Text('You have not completed any tasks',
+        child: Text(AppLocalizations.of(context).translate('tasks','no_completed_tasks'),
             textAlign: TextAlign.center),
       );
     }
@@ -107,7 +108,7 @@ class _CompletedListState extends State<CompletedList> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text('${transmodel.credits}'),
-                  Text('Seva Credits',
+                  Text(AppLocalizations.of(context).translate('shared','seva_credits'),
                       style: TextStyle(
                         fontSize: 9,
                         fontWeight: FontWeight.w600,

@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -41,13 +42,13 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   TimebankModel timebankModel;
   JoinRequestModel joinRequestModel = new JoinRequestModel();
   UserModel ownerModel;
-  String title = 'Loading';
+  String title;
   String loggedInUser;
   final formkey = GlobalKey<FormState>();
-  static const String JOIN = "Join";
-  static const String JOINED = "Joined";
-  static const String REQUESTED = "Requested";
-  static const String REJECTED = "Rejected";
+  String JOIN;
+  String JOINED;
+  String REQUESTED;
+  String REJECTED;
   bool hasError = false;
   String errorMessage1 = '';
   List<JoinRequestModel> _joinRequestModels;
@@ -78,6 +79,11 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   }
 
   Widget build(BuildContext context) {
+    title = AppLocalizations.of(context).translate('jointimebank_sub','loading');
+    JOIN = AppLocalizations.of(context).translate('jointimebank_sub','join');
+    JOINED = AppLocalizations.of(context).translate('jointimebank_sub','joined');
+    REQUESTED = AppLocalizations.of(context).translate('jointimebank_sub','requested');
+    REJECTED = AppLocalizations.of(context).translate('jointimebank_sub','rejected');
     final _bloc = BlocProvider.of<UserDataBloc>(context);
 
     print("in explore ==> ${_bloc.user.email}");
@@ -131,7 +137,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
             primaryTimebankId: widget.communityPrimaryTimebankId),
         builder: (context, snapshot) {
           //    print('timee ${snapshot.data}');
-          if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+          if (snapshot.hasError) return new Text('${AppLocalizations.of(context).translate('jointimebank_sub','error_text')} ${snapshot.error}');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
@@ -140,7 +146,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
             return Container(
               margin: EdgeInsets.all(20),
               child: Center(
-                child: Text("No groups found"),
+                child: Text(AppLocalizations.of(context).translate('jointimebank_sub','no_groups')),
               ),
             );
           }
@@ -160,7 +166,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
                   child: Text(
-                    "Groups within a Timebank allow for granular activities. You can join one of the groups below or create your own group",
+                    AppLocalizations.of(context).translate('jointimebank_sub','desc'),
                   ),
                 ),
                 ListView.separated(
@@ -179,7 +185,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                         timebank.members
                             .contains(widget.loggedInUserModel.sevaUserID)) {
                       status = CompareToTimeBank.JOINED;
-                      userStatus = 'Joined';
+                      userStatus = AppLocalizations.of(context).translate('jointimebank_sub','joined');
                       //    setState(() {});
                       return makeItem(timebank, status, bloc,
                           userStatus: userStatus);
@@ -196,15 +202,15 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                               joinRequestModel.accepted == false) {
                             campareStatus = CompareToTimeBank.REJECTED;
                             print('request us rejected ${timebank.id}');
-                            userStatus = 'Rejected';
+                            userStatus = AppLocalizations.of(context).translate('jointimebank_sub','rejected');
                           }
                           if (joinRequestModel.operationTaken == false) {
                             campareStatus = CompareToTimeBank.REQUESTED;
-                            userStatus = 'Requested';
+                            userStatus = AppLocalizations.of(context).translate('jointimebank_sub','requested');
                           }
                           if (joinRequestModel.accepted == true) {
                             campareStatus = CompareToTimeBank.JOINED;
-                            userStatus = 'Joined';
+                            userStatus = AppLocalizations.of(context).translate('jointimebank_sub','joined');
                           }
                           campareStatus = CompareToTimeBank.JOIN;
 
@@ -219,7 +225,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                           userStatus: userStatus);
                     }
 
-                    userStatus = 'Join';
+                    userStatus = AppLocalizations.of(context).translate('jointimebank_sub','join');
                     status = CompareToTimeBank.JOIN;
                     return makeItem(timebank, status, bloc,
                         userStatus: userStatus);
@@ -269,7 +275,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                   imageUrl: timebank.photoUrl ?? defaultGroupImageURL,
                   fit: BoxFit.fitWidth,
                   errorWidget: (context, url, error) =>
-                      Center(child: Text('No Image Avaialable')),
+                      Center(child: Text(AppLocalizations.of(context).translate('jointimebank_sub','no_image'))),
                   placeholder: (conext, url) {
                     return Center(
                       child: CircularProgressIndicator(),
@@ -405,7 +411,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
       entityId: subtimebankId,
       entityType: EntityType.Timebank,
       operationTaken: false,
-      reason: "I want to volunteer.",
+      reason: AppLocalizations.of(context).translate('jointimebank_sub','reason'),
       timestamp: DateTime.now().millisecondsSinceEpoch,
       userId: userIdForNewMember,
       isFromGroup: true,

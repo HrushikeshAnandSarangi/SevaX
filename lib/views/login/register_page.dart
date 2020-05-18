@@ -12,6 +12,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
@@ -42,7 +43,7 @@ class _RegisterPageState extends State<RegisterPage>
   String imageUrl;
   String confirmPassword;
   File selectedImage;
-  String isImageSelected = 'Add Photo';
+  String isImageSelected;
 
   ImagePickerHandler imagePicker;
   bool isEmailVerified = false;
@@ -63,13 +64,14 @@ class _RegisterPageState extends State<RegisterPage>
 
   @override
   Widget build(BuildContext context) {
+    isImageSelected = AppLocalizations.of(context).translate('signup','add_photo');
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
         elevation: 0.5,
         title: new Text(
-          'Your details',
+          AppLocalizations.of(context).translate('signup','your_details'),
           style: TextStyle(
             fontSize: 18,
           ),
@@ -99,7 +101,7 @@ class _RegisterPageState extends State<RegisterPage>
                             SizedBox(height: 24),
                             registerButton,
                             SizedBox(height: 8),
-                            Text('or'),
+                            Text(AppLocalizations.of(context).translate('signup','or')),
                             SizedBox(height: 8),
                             signUpWithGoogle,
                             SizedBox(height: 8),
@@ -211,8 +213,8 @@ class _RegisterPageState extends State<RegisterPage>
               FocusScope.of(context).requestFocus(emailFocus);
             },
             shouldRestrictLength: true,
-            hint: 'Full Name',
-            validator: (value) => value.isEmpty ? 'Name cannot be empty' : null,
+            hint: AppLocalizations.of(context).translate('signup','full_name'),
+            validator: (value) => value.isEmpty ? AppLocalizations.of(context).translate('signup','full_name_err') : null,
             capitalization: TextCapitalization.words,
             onSave: (value) => this.fullName = value,
           ),
@@ -222,10 +224,10 @@ class _RegisterPageState extends State<RegisterPage>
               FocusScope.of(context).requestFocus(pwdFocus);
             },
             shouldRestrictLength: false,
-            hint: 'Email Address',
+            hint: AppLocalizations.of(context).translate('signup','email_address'),
             validator: (value) {
               if (!isValidEmail(value.trim())) {
-                return 'Enter a valid email address';
+                return AppLocalizations.of(context).translate('signup','email_address_err');
               }
               return null;
             },
@@ -238,12 +240,12 @@ class _RegisterPageState extends State<RegisterPage>
               FocusScope.of(context).requestFocus(confirmPwdFocus);
             },
             shouldRestrictLength: false,
-            hint: 'Password',
+            hint: AppLocalizations.of(context).translate('signup','password'),
             shouldObscure: shouldObscurePassword,
             validator: (value) {
               this.password = '';
               if (value.length < 6) {
-                return 'Password should have atleast 6 characters';
+                return AppLocalizations.of(context).translate('signup','password_err');
               }
               this.password = value;
               return null;
@@ -271,14 +273,14 @@ class _RegisterPageState extends State<RegisterPage>
               FocusScope.of(context).requestFocus(FocusNode());
             },
             shouldRestrictLength: false,
-            hint: 'Confirm Password',
+            hint: AppLocalizations.of(context).translate('signup','confirm_password'),
             shouldObscure: shouldObscureConfirmPassword,
             validator: (value) {
               if (value.length < 6) {
-                return 'Password should have atleast 6 characters';
+                return AppLocalizations.of(context).translate('signup','confirm_password_err');
               }
               if (value != password) {
-                return 'Passwords do not match';
+                return AppLocalizations.of(context).translate('signup','confirm_password_err2');
               }
               return null;
             },
@@ -358,9 +360,9 @@ class _RegisterPageState extends State<RegisterPage>
                 if(connResult == ConnectivityResult.none){
                   _scaffoldKey.currentState.showSnackBar(
                     SnackBar(
-                      content: Text("Please check your internet connection."),
+                      content: Text(AppLocalizations.of(context).translate('shared','check_internet')),
                       action: SnackBarAction(
-                        label: 'Dismiss',
+                        label: AppLocalizations.of(context).translate('shared','dismiss'),
                         onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
                       ),
                     ),
@@ -382,12 +384,12 @@ class _RegisterPageState extends State<RegisterPage>
                       return WillPopScope(
                         onWillPop: () {},
                         child: AlertDialog(
-                          title: Text('Add Photo?'),
-                          content: Text('Do you want to add profile pic?'),
+                          title: Text(AppLocalizations.of(context).translate('signup','add_photo')),
+                          content: Text(AppLocalizations.of(context).translate('signup','add_photo_des')),
                           actions: <Widget>[
                             FlatButton(
                               child: Text(
-                                'Skip and register',
+                                AppLocalizations.of(context).translate('signup','skip_register'),
                                 style: TextStyle(
                                     fontSize: dialogButtonSize,
                                     color: Colors.red,
@@ -409,7 +411,7 @@ class _RegisterPageState extends State<RegisterPage>
                               color: Theme.of(context).accentColor,
                               textColor: FlavorConfig.values.buttonTextColor,
                               child: Text(
-                                'Add Photo',
+                                AppLocalizations.of(context).translate('signup','add_photo'),
                                 style: TextStyle(
                                     fontSize: dialogButtonSize,
                                     fontFamily: 'Europa'),
@@ -437,7 +439,7 @@ class _RegisterPageState extends State<RegisterPage>
                 }
               },
         child: Text(
-          'Sign Up',
+          AppLocalizations.of(context).translate('login','signup'),
           style: TextStyle(
             color: Colors.white,
             fontSize: 18,
@@ -479,7 +481,7 @@ class _RegisterPageState extends State<RegisterPage>
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text('Creating account'),
+            title: Text(AppLocalizations.of(context).translate('login','create_account')),
             content: LinearProgressIndicator(),
           );
         });
@@ -522,7 +524,7 @@ class _RegisterPageState extends State<RegisterPage>
         SnackBar(
           content: Text(error.message),
           action: SnackBarAction(
-            label: 'Dismiss',
+            label: AppLocalizations.of(context).translate('shared','dismiss'),
             onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
           ),
         ),
@@ -544,7 +546,7 @@ class _RegisterPageState extends State<RegisterPage>
     setState(() {
       this.selectedImage = _image;
       // File some = File.fromRawPath();
-      isImageSelected = 'Update Photo';
+      isImageSelected = AppLocalizations.of(context).translate('signup','upload_photo');
     });
   }
 
@@ -580,7 +582,7 @@ class _RegisterPageState extends State<RegisterPage>
         children: <Widget>[
           FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
               ? Text(
-                  'Humanity\nFirst'.toUpperCase(),
+            AppLocalizations.of(context).translate('splash','humanity_first').toUpperCase(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     letterSpacing: 5,
@@ -635,7 +637,7 @@ class _RegisterPageState extends State<RegisterPage>
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             horizontalLine(),
-            Text("Sign up with"),
+            Text(AppLocalizations.of(context).translate('signup','signup_with')),
             horizontalLine()
           ],
         ),
@@ -756,7 +758,7 @@ class _RegisterPageState extends State<RegisterPage>
   Widget get googleLoginiPhone {
     return signInButton(
       imageRef: 'lib/assets/google-logo-png-open-2000.png',
-      msg: 'Sign in with Google',
+      msg: AppLocalizations.of(context).translate('login','signin_with_google'),
       operation: useGoogleSignIn,
     );
   }
@@ -764,7 +766,7 @@ class _RegisterPageState extends State<RegisterPage>
   Widget get appleLoginiPhone {
     return signInButton(
       imageRef: 'lib/assets/images/apple-logo.png',
-      msg: 'Sign in with Apple',
+      msg: AppLocalizations.of(context).translate('login','signin_with_apple'),
       operation: appleLogIn,
     );
   }
@@ -774,9 +776,9 @@ class _RegisterPageState extends State<RegisterPage>
     if(connResult == ConnectivityResult.none){
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
-          content: Text("Please check your internet connection."),
+          content: Text(AppLocalizations.of(context).translate('shared','check_internet')),
           action: SnackBarAction(
-            label: 'Dismiss',
+            label: AppLocalizations.of(context).translate('shared','dismiss'),
             onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
           ),
         ),
@@ -810,9 +812,9 @@ class _RegisterPageState extends State<RegisterPage>
     if(connResult == ConnectivityResult.none){
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
-          content: Text("Please check your internet connection."),
+          content: Text(AppLocalizations.of(context).translate('shared','check_internet')),
           action: SnackBarAction(
-            label: 'Dismiss',
+            label: AppLocalizations.of(context).translate('shared','dismiss'),
             onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
           ),
         ),
@@ -829,9 +831,9 @@ class _RegisterPageState extends State<RegisterPage>
       if (erorr.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
         _scaffoldKey.currentState.showSnackBar(
           SnackBar(
-            content: Text("This email already registered"),
+            content: Text(AppLocalizations.of(context).translate('signup','already_registered')),
             action: SnackBarAction(
-              label: 'Dismiss',
+              label: AppLocalizations.of(context).translate('shared','dismiss'),
               onPressed: () {
                 _scaffoldKey.currentState.hideCurrentSnackBar();
               },
@@ -869,7 +871,7 @@ class _RegisterPageState extends State<RegisterPage>
         SnackBar(
           content: Text(error.message),
           action: SnackBarAction(
-            label: 'Dismiss',
+            label: AppLocalizations.of(context).translate('shared','dismiss'),
             onPressed: () {
               _scaffoldKey.currentState.hideCurrentSnackBar();
             },
@@ -881,7 +883,7 @@ class _RegisterPageState extends State<RegisterPage>
         SnackBar(
           content: Text(error.message),
           action: SnackBarAction(
-            label: 'Change password',
+            label: AppLocalizations.of(context).translate('shared','change_password'),
             onPressed: () {
               resetPassword(email);
               _scaffoldKey.currentState.hideCurrentSnackBar();
@@ -892,9 +894,9 @@ class _RegisterPageState extends State<RegisterPage>
     } else if (error.message.contains("already")) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
-          content: Text('This email is already registered'),
+          content: Text(AppLocalizations.of(context).translate('shared','already_registered')),
           action: SnackBarAction(
-            label: 'Dismiss',
+            label: AppLocalizations.of(context).translate('shared','dismiss'),
             onPressed: () {
               _scaffoldKey.currentState.hideCurrentSnackBar();
             },
@@ -909,9 +911,9 @@ class _RegisterPageState extends State<RegisterPage>
         .sendPasswordResetEmail(email: email)
         .then((onValue) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text("We\'ve sent the reset link to your email address"),
+        content: Text(AppLocalizations.of(context).translate('signup','sent_reset_link')),
         action: SnackBarAction(
-          label: 'Dismiss',
+          label: AppLocalizations.of(context).translate('shared','dismiss'),
           onPressed: () {
             _scaffoldKey.currentState.hideCurrentSnackBar();
           },

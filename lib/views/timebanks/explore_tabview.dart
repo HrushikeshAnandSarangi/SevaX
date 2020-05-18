@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -49,7 +50,7 @@ class _ExploreTabViewState extends State<ExploreTabView> {
           elevation: 0.5,
           centerTitle: true,
           title: Text(
-            "Explore",
+            AppLocalizations.of(context).translate('explore','title'),
             style: TextStyle(fontSize: 18, fontFamily: 'Europa'),
           ),
         ),
@@ -72,10 +73,10 @@ class _ExploreTabViewState extends State<ExploreTabView> {
                   isScrollable: true,
                   tabs: [
                     Tab(
-                      text: "Find Timebanks",
+                      text: AppLocalizations.of(context).translate('explore','find_timebanks'),
                     ),
                     Tab(
-                      text: "Groups within ${snapshot.data.name ?? "Timebank"}  ",
+                      text: "${AppLocalizations.of(context).translate('explore','groups_within')} ${snapshot.data.name ?? "Timebank"}  ",
                     ),
                   ],
                 ),

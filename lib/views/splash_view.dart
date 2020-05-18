@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/onboarding/email_verify_page.dart';
@@ -225,7 +226,7 @@ class _SplashViewState extends State<SplashView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Humanity\nFirst'.toUpperCase(),
+                AppLocalizations.of(context).translate('splash','humanityfirst').toUpperCase(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   letterSpacing: 5,
@@ -455,7 +456,7 @@ class _SplashViewState extends State<SplashView> {
 
   Future<void> handleLoggedInUserIdResponse(String userId) async {
     if (userId == null || userId.isEmpty) {
-      loadingMessage = 'Hang on tight';
+      loadingMessage = AppLocalizations.of(context).translate('splash','hang_on');
       _navigateToLoginPage();
       return;
     }
@@ -776,13 +777,13 @@ class _SplashViewState extends State<SplashView> {
             Navigator.pop(context);
             loggedInUser.skills = skills;
             updateUserData(loggedInUser);
-            loadingMessage = 'Updating skills';
+            loadingMessage = AppLocalizations.of(context).translate('skills','updating_loader');
           },
           onSkipped: () {
             Navigator.pop(context);
             AppConfig.prefs.setBool(AppConfig.skip_skill, true);
             loggedInUser.skills = [];
-            loadingMessage = 'Skipping skills';
+            loadingMessage =  AppLocalizations.of(context).translate('skills','skipping_loader');
           },
         ),
       ),
@@ -809,13 +810,13 @@ class _SplashViewState extends State<SplashView> {
             Navigator.pop(context);
             loggedInUser.interests = interests;
             updateUserData(loggedInUser);
-            loadingMessage = 'Updating interests';
+            loadingMessage =  AppLocalizations.of(context).translate('interests','updating_loader');
           },
           onSkipped: () {
             Navigator.pop(context);
             loggedInUser.interests = [];
             AppConfig.prefs.setBool(AppConfig.skip_interest, true);
-            loadingMessage = 'Skipping interests';
+            loadingMessage =  AppLocalizations.of(context).translate('interests','skipping_loader');
           },
           onBacked: () {
             AppConfig.prefs.setBool(AppConfig.skip_skill, null);
@@ -881,7 +882,6 @@ class _SplashViewState extends State<SplashView> {
 
   void _navigateToCoreView(UserModel loggedInUser) {
     assert(loggedInUser != null, 'Logged in User cannot be empty');
-
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => SevaCore(

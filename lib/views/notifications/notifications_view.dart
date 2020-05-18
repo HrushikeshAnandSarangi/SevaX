@@ -10,6 +10,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
@@ -76,7 +77,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 
         if (notifications.length == 0) {
           return Center(
-            child: Text('No Notifications'),
+            child: Text(AppLocalizations.of(context).translate('notifications','no_notifications')),
           );
         }
         ClearNotificationModel clearNotificationModel =
@@ -93,7 +94,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Icon(Icons.clear_all),
-                    Text("Clear all notifications"),
+                    Text(AppLocalizations.of(context).translate('notifications','clear_all')),
                   ],
                 ),
                 onPressed: () {
@@ -353,7 +354,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                       return NotificationCard(
                         photoUrl:
                             '', //get timebank photourl// data.participantDetails.photourl,
-                        title: "Credited",
+                        title: AppLocalizations.of(context).translate('notifications','credited'),
                         subTitle: UserNotificationMessage.CREDIT_FROM_OFFER
                             .replaceFirst(
                               '*n',
@@ -374,7 +375,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 
                       return NotificationCard(
                         photoUrl: data.participantDetails.photourl,
-                        title: "New member signed up",
+                        title: AppLocalizations.of(context).translate('notifications','new_member_signup'),
                         subTitle: UserNotificationMessage
                             .NEW_MEMBER_SIGNUP_OFFER
                             .replaceFirst(
@@ -394,7 +395,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                       return NotificationCard(
                         photoUrl:
                             '', //get timebank photourl// data.participantDetails.photourl,
-                        title: "Credits for ${data.classDetails.classTitle}",
+                        title: "${AppLocalizations.of(context).translate('notifications','creditsfor')} ${data.classDetails.classTitle}",
                         subTitle: UserNotificationMessage
                             .OFFER_FULFILMENT_ACHIEVED
                             .replaceFirst(
@@ -419,7 +420,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 
                       return NotificationCard(
                         photoUrl: data.participantDetails.photourl,
-                        title: "Debited",
+                        title: AppLocalizations.of(context).translate('notifications','debited'),
                         subTitle: UserNotificationMessage.DEBIT_FROM_OFFER
                             .replaceFirst(
                               '*n',
@@ -438,7 +439,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 
                       return NotificationCard(
                         photoUrl: data.participantDetails.photourl,
-                        title: "Signed up for class",
+                        title: AppLocalizations.of(context).translate('notifications','signup_for_class'),
                         subTitle: UserNotificationMessage
                             .OFFER_SUBSCRIPTION_COMPLETED
                             .replaceFirst(
@@ -457,7 +458,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 
                       return NotificationCard(
                         photoUrl: data.participantDetails.photourl,
-                        title: "Feedback request",
+                        title: AppLocalizations.of(context).translate('notifications','feedback_request'),
                         subTitle: UserNotificationMessage
                             .FEEDBACK_FROM_SIGNUP_MEMBER
                             .replaceFirst(
@@ -558,13 +559,13 @@ class NotificationsView extends State<NotificationViewHolder> {
                     leading: CircleAvatar(
                       backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
                     ),
-                    title: Text('Credited'),
+                    title: Text(AppLocalizations.of(context).translate('notifications','credited')),
                     subtitle: RichText(
                       text: TextSpan(
                         children: [
                           TextSpan(
                             // text: 'Congrats, ${user.fullname} has credited ',
-                            text: 'Congrats,  ',
+                            text: '${AppLocalizations.of(context).translate('notifications','congrats')}  ',
                             style: TextStyle(
                               color: Colors.grey,
                             ),
@@ -573,10 +574,10 @@ class NotificationsView extends State<NotificationViewHolder> {
                             text: () {
                               return FlavorConfig.appFlavor ==
                                       Flavor.HUMANITY_FIRST
-                                  ? '${model.credits} Yang Bucks'
+                                  ? '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Yang_Bucks')}'
                                   : FlavorConfig.appFlavor == Flavor.TULSI
-                                      ? '${model.credits} Tulsi Tokens'
-                                      : '${model.credits} Seva Credits';
+                                      ? '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Tulsi_Tokens')}'
+                                      : '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Seva_Credits')}';
                             }(),
                             style: TextStyle(
                               color: Colors.black,
@@ -584,7 +585,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                           ),
                           TextSpan(
                             text: () {
-                              return " have been credited to your account.";
+                              return " ${AppLocalizations.of(context).translate('notifications','creditedto')}";
                             }(),
                             style: TextStyle(
                               color: Colors.black,
@@ -630,17 +631,17 @@ class NotificationsView extends State<NotificationViewHolder> {
                   backgroundImage:
                       NetworkImage(user.photoURL ?? defaultUserImageURL),
                 ),
-                title: Text('Debited'),
+                title: Text(AppLocalizations.of(context).translate('notifications','debited')),
                 subtitle: RichText(
                   text: TextSpan(
                     children: [
                       TextSpan(
                         text: () {
                           return FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                              ? '${model.credits} Yang Bucks '
+                              ? '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Yang_Bucks')}'
                               : FlavorConfig.appFlavor == Flavor.TULSI
-                                  ? '${model.credits} Tulsi TOkens '
-                                  : '${model.credits} Seva Credits ';
+                                  ? '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Tulsi_Tokens')}'
+                                  : '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Seva_Credits')}';
                         }(),
                         style: TextStyle(
                           color: Colors.black,
@@ -648,7 +649,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                       ),
                       TextSpan(
                         text:
-                            'has been debited from your account', //credited to ${user.fullname}',
+                        AppLocalizations.of(context).translate('notifications','debited_to'), //credited to ${user.fullname}',
                         style: TextStyle(
                           color: Colors.grey,
                         ),
@@ -696,14 +697,14 @@ class NotificationsView extends State<NotificationViewHolder> {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: '${model.fullName} approved the task completion for ',
+                  text: '${model.fullName} ${AppLocalizations.of(context).translate('notifications','approved_for')} ',
                   style: TextStyle(
                     color: Colors.grey,
                   ),
                 ),
                 TextSpan(
                   text: () {
-                    return '${transactionModel.credits} hours';
+                    return '${transactionModel.credits} ${AppLocalizations.of(context).translate('notifications','hours')}';
                   }(),
                   style: TextStyle(
                     color: Colors.black,
@@ -826,7 +827,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                               children: [
                                 TextSpan(
                                   text:
-                                      '${user.fullname} sent request for your offer ',
+                                      '${user.fullname} ${AppLocalizations.of(context).translate('notifications','send_request_for')} ',
                                   style: TextStyle(
                                     color: Colors.grey,
                                   ),
@@ -909,7 +910,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       "reviewed": reviewed,
       "ratings": results['selection'],
       "requestId": requestId,
-      "comments": (results['didComment'] ? results['comment'] : "No comments")
+      "comments": (results['didComment'] ? results['comment'] : AppLocalizations.of(context).translate('notifications','no_comments'))
     });
     approveTransaction(requestModel, userId, notificationId, sevaCore);
   }
@@ -946,7 +947,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 
                 if (!canApproveTransaction) {
                   showDiologForMessage(
-                      "Your seva credits are not sufficient to approve the credit request.");
+                      AppLocalizations.of(context).translate('notifications','no_sufficient'));
                   return;
                 }
 
@@ -972,14 +973,14 @@ class NotificationsView extends State<NotificationViewHolder> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: '${user.fullname} completed the task in ',
+                          text: '${user.fullname} ${AppLocalizations.of(context).translate('notifications','completed_in')} ',
                           style: TextStyle(
                             color: Colors.grey,
                           ),
                         ),
                         TextSpan(
                           text: () {
-                            return '${transactionModel.credits} hours';
+                            return '${transactionModel.credits} ${AppLocalizations.of(context).translate('notifications','hours')}';
                           }(),
                           style: TextStyle(
                             color: Colors.black,
@@ -987,7 +988,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                         ),
                         TextSpan(
                           text: () {
-                            return ', waiting for your approval.';
+                            return ', ${AppLocalizations.of(context).translate('notifications','waiting_for')}';
                           }(),
                           style: TextStyle(
                             color: Colors.grey,
@@ -1012,7 +1013,7 @@ class NotificationsView extends State<NotificationViewHolder> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  'OK',
+                  AppLocalizations.of(context).translate('notifications','ok'),
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -1046,7 +1047,7 @@ class NotificationsView extends State<NotificationViewHolder> {
             margin: notificationPadding,
             decoration: notificationDecoration,
             child: ListTile(
-              title: Text("Join request"),
+              title: Text(AppLocalizations.of(context).translate('notifications','join_request')),
               leading: requestInvitationModel.timebankImage != null
                   ? CircleAvatar(
                       backgroundImage:
@@ -1054,7 +1055,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                     )
                   : Offstage(),
               subtitle: Text(
-                  '${requestInvitationModel.timebankName.toLowerCase()} has requested you to join ${requestInvitationModel.requestTitle}, Tap to view join request'),
+                  '${requestInvitationModel.timebankName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications','requested_join')} ${requestInvitationModel.requestTitle}, ${AppLocalizations.of(context).translate('notifications','tap_toview')}'),
             ),
           ),
           onTap: () {
@@ -1115,7 +1116,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                     Padding(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                        "About ${userModel.fullname}",
+                        "${AppLocalizations.of(context).translate('notifications','about')} ${userModel.fullname}",
                         style: TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
@@ -1135,7 +1136,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                       padding: EdgeInsets.all(8.0),
                       child: Center(
                         child: Text(
-                          "By approving, you accept that ${userModel.fullname} has worked for $credits hours",
+                          "${AppLocalizations.of(context).translate('notifications','by_approving')} ${userModel.fullname} has worked for $credits hours",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
@@ -1154,7 +1155,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                         width: double.infinity,
                         child: RaisedButton(
                           child: Text(
-                            'Approve',
+                            AppLocalizations.of(context).translate('notifications','appove'),
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
@@ -1176,7 +1177,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                         child: RaisedButton(
                           color: Theme.of(context).accentColor,
                           child: Text(
-                            'Reject',
+                            AppLocalizations.of(context).translate('notifications','reject'),
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
@@ -1222,7 +1223,7 @@ class NotificationsView extends State<NotificationViewHolder> {
     }
     return Padding(
       padding: EdgeInsets.all(8.0),
-      child: Text("Bio not yet updated"),
+      child: Text(AppLocalizations.of(context).translate('notifications','bio_notupdated')),
     );
   }
 
@@ -1331,14 +1332,14 @@ class NotificationsView extends State<NotificationViewHolder> {
             margin: notificationPadding,
             decoration: notificationDecoration,
             child: ListTile(
-              title: Text("Join request"),
+              title: Text(AppLocalizations.of(context).translate('notifications','join_request')),
               leading: user.photoURL != null
                   ? CircleAvatar(
                       backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
                     )
                   : Offstage(),
               subtitle: Text(
-                  '${user.fullname.toLowerCase()} has requested to join ${model.timebankTitle}, Tap to view all join requests'),
+                  '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications','requested_join')} ${model.timebankTitle}, ${AppLocalizations.of(context).translate('notifications','tap_toview')}'),
             ),
           ),
           onTap: () {
@@ -1367,12 +1368,12 @@ class NotificationsView extends State<NotificationViewHolder> {
             margin: notificationPadding,
             decoration: notificationDecoration,
             child: ListTile(
-              title: Text("Offer Accepted"),
+              title: Text(AppLocalizations.of(context).translate('notifications','offer_accepted')),
               leading: CircleAvatar(
                 backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
               ),
               subtitle: Text(
-                  '${user.fullname.toLowerCase()} has shown interest in your offer'),
+                  '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications','show_interest')}'),
             ),
           ),
           onTap: () {},
@@ -1400,7 +1401,7 @@ class NotificationsView extends State<NotificationViewHolder> {
               backgroundImage: model.photoUrl != null
                   ? NetworkImage(model.photoUrl)
                   : AssetImage("lib/assets/images/approved.png")),
-          subtitle: Text('Request approved by ${model.fullName}'),
+          subtitle: Text('${AppLocalizations.of(context).translate('notifications','approved_by')} ${model.fullName}'),
         ),
       ),
     );
@@ -1444,7 +1445,7 @@ class NotificationsView extends State<NotificationViewHolder> {
               backgroundImage: model.photoUrl != null
                   ? NetworkImage(model.photoUrl)
                   : AssetImage("lib/assets/images/profile.png")),
-          subtitle: Text('Request rejected by ${model.fullName}'),
+          subtitle: Text('${AppLocalizations.of(context).translate('notifications','rejected_by')} ${model.fullName}'),
         ),
       ),
     );
@@ -1486,7 +1487,7 @@ class NotificationsView extends State<NotificationViewHolder> {
           leading: CircleAvatar(
             backgroundImage: NetworkImage(model.photoUrl ?? defaultUserImageURL),
           ),
-          subtitle: Text('Task completion rejected by ${model.fullName}'),
+          subtitle: Text('${AppLocalizations.of(context).translate('notifications','task_rejected_by')} ${model.fullName}'),
           onTap: () {
             // hibernated for release, check timebank protection status
             // String loggedInEmail = SevaCore.of(context).loggedInUser.email;
@@ -1539,11 +1540,11 @@ class NotificationsView extends State<NotificationViewHolder> {
     var body = jsonEncode({
       "request_start": model.requestStart,
       "notification": {
-        "title": "${model.title} event is about to start sometime",
-        "body": "${model.title} would be starting in less than two hours",
+        "title": "${model.title} ${AppLocalizations.of(context).translate('notifications','event_about_to')}",
+        "body": "${model.title} ${AppLocalizations.of(context).translate('notifications','would_be_starting')}",
         "icon": "firebase-icon.png"
       },
-      "data": {"message": "Enter your message here"},
+      "data": {"message": AppLocalizations.of(context).translate('notifications','enter_message')},
       "to": userModel.tokens
     });
 
@@ -1596,7 +1597,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                     subtitle: Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                       child: Text(
-                          'Request accepted by ${user.fullname}, waiting for your approval'),
+                          '${AppLocalizations.of(context).translate('notifications','request_accepted_by')} ${user.fullname}, ${AppLocalizations.of(context).translate('notifications','waiting_for')}'),
                     ),
                   )),
             ));
@@ -1688,7 +1689,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                     Padding(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                        "About ${userModel.fullname}",
+                        "${AppLocalizations.of(context).translate('notifications','about')} ${userModel.fullname}",
                         style: TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
@@ -1706,7 +1707,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 //                  ),
                   Center(
                     child: Text(
-                        "By approving, ${userModel.fullname} will be added to the event.",
+                        "${AppLocalizations.of(context).translate('notifications','by_approving_short')}, ${userModel.fullname} ${AppLocalizations.of(context).translate('notifications','add_to')}.",
                         style: TextStyle(
                           fontStyle: FontStyle.italic,
                         ),
@@ -1723,7 +1724,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                         child: RaisedButton(
                           color: FlavorConfig.values.theme.primaryColor,
                           child: Text(
-                            'Approve',
+                            AppLocalizations.of(context).translate('notifications','approve'),
                             style: TextStyle(
                                 color: Colors.white, fontFamily: 'Europa'),
                           ),
@@ -1745,7 +1746,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                         child: RaisedButton(
                           color: Theme.of(context).accentColor,
                           child: Text(
-                            'Decline',
+                            AppLocalizations.of(context).translate('notifications','decline'),
                             style: TextStyle(
                               color: Colors.white,
                             ),

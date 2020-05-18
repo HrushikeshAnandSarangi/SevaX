@@ -217,10 +217,10 @@ class CommunityApiProvider {
         }
       }
     } else {
-      user.communities = [];
+      user.communities = new List();
     }
     if (!found) {
-      user.communities.add(communityId);
+      user.communities = [...user.communities, ...[communityId]];
     }
     found = false;
     if (user.membershipTimebanks != null) {
@@ -233,7 +233,7 @@ class CommunityApiProvider {
       user.membershipTimebanks = [];
     }
     if (!found) {
-      user.membershipTimebanks.add(timebankId);
+      user.membershipTimebanks = [...user.membershipTimebanks, ...[timebankId]];
     }
     await Firestore.instance
         .collection('users')
