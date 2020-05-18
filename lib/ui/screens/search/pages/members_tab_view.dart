@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -7,11 +8,23 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 
 class MembersTabView extends StatefulWidget {
+
   @override
   _MembersTabViewState createState() => _MembersTabViewState();
 }
 
 class _MembersTabViewState extends State<MembersTabView> {
+  QuerySnapshot skillsListSnap;
+  QuerySnapshot interestsListSnap;
+
+  void initState(){
+    getAllSkillsInterests();
+  }
+  void getAllSkillsInterests () async {
+    skillsListSnap = await Firestore.instance.collection('skills').getDocuments();
+    interestsListSnap = await Firestore.instance.collection('interests').getDocuments();
+  }
+
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<SearchBloc>(context);
@@ -27,7 +40,8 @@ class _MembersTabViewState extends State<MembersTabView> {
               queryString: search.data,
               loggedInUser: _bloc.user,
               currentCommunityOfUser: _bloc.community,
-              
+              skillsListSnap: skillsListSnap,
+              interestsListSnap: interestsListSnap,
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {

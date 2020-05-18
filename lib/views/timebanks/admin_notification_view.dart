@@ -145,7 +145,11 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       UserModel user = snapshot.data;
                       return user != null && user.fullname != null
                           ? getJoinReuqestsNotificationWidget(
-                              user, notification.id, model, context)
+                              user,
+                              notification.id,
+                              model,
+                              context,
+                            )
                           : Offstage();
                     });
                 break;
@@ -1554,38 +1558,40 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return notificationShimmer;
         }
-
         UserModel user = snapshot.data;
+
         return Slidable(
-            delegate: SlidableBehindDelegate(),
-            actions: <Widget>[],
-            secondaryActions: <Widget>[],
-            child: GestureDetector(
-              onTap: () {
-                showDialogForApproval(
-                    context: context,
-                    userModel: user,
-                    notificationId: notificationId,
-                    requestModel: model);
-              },
-              child: Container(
-                  margin: notificationPadding,
-                  decoration: notificationDecoration,
-                  child: ListTile(
-                    title: Padding(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text(model.title),
-                    ),
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL),
-                    ),
-                    subtitle: Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                      child: Text(
-                          'Request accepted by ${user.fullname}, waiting for your approval'),
-                    ),
-                  )),
-            ));
+          delegate: SlidableBehindDelegate(),
+          actions: <Widget>[],
+          secondaryActions: <Widget>[],
+          child: GestureDetector(
+            onTap: () {
+              showDialogForApproval(
+                  context: context,
+                  userModel: user,
+                  notificationId: notificationId,
+                  requestModel: model);
+            },
+            child: Container(
+              margin: notificationPadding,
+              decoration: notificationDecoration,
+              child: ListTile(
+                title: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Text(model.title),
+                ),
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(user.photoURL),
+                ),
+                subtitle: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                  child: Text(
+                      'Request accepted by ${user.fullname}, waiting for your approval'),
+                ),
+              ),
+            ),
+          ),
+        );
       },
     );
   }

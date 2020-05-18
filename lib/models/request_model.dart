@@ -222,7 +222,7 @@ class RequestModel extends DataModel {
       List<String> invitedUsersList = List.castFrom(map['invitedUsers']);
       this.invitedUsers = invitedUsersList;
     } else {
-      this.invitedUsers = [];
+      this.invitedUsers = new List();
     }
     if (map.containsKey('durationofrequest')) {
       this.durationOfRequest = map['durationofrequest'];

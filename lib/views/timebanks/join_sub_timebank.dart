@@ -127,11 +127,12 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
     return FutureBuilder<List<TimebankModel>>(
         future: getTimebanksForCommunity(
-            communityId: widget.loggedInUserModel.currentCommunity,
-            primaryTimebankId: widget.communityPrimaryTimebankId),
+          communityId: widget.loggedInUserModel.currentCommunity,
+          primaryTimebankId: widget.communityPrimaryTimebankId,
+        ),
         builder: (context, snapshot) {
           //    print('timee ${snapshot.data}');
-          if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+          if (snapshot.hasError) return new Text('Somthing went wrong!');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
@@ -503,11 +504,13 @@ Future<List<TimebankModel>> getTimebanksForCommunity(
   return Firestore.instance
       .collection('timebanknew')
       .where('community_id', isEqualTo: communityId)
+      .where('softDelete', isEqualTo: false)
       .getDocuments()
       .then((QuerySnapshot timebankModel) {
     timebankModel.documents.forEach((timebank) {
       var model = TimebankModel.fromMap(timebank.data);
-      if (model.id != primaryTimebankId) {
+
+      if (model.id != primaryTimebankId && model.private == false) {
         timebankList.add(model);
       }
     });

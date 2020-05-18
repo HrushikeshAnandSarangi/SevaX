@@ -170,6 +170,7 @@ enum NotificationType {
   JoinRequest,
   AcceptedOffer,
   TypeMemberExitTimebank,
+  TypeMemberAdded,
   TYPE_DEBIT_FROM_OFFER,
   TYPE_CREDIT_FROM_OFFER_ON_HOLD,
   TYPE_CREDIT_FROM_OFFER_APPROVED,
@@ -204,6 +205,7 @@ Map<String, NotificationType> typeMapper = {
   "JoinRequest": NotificationType.JoinRequest,
   "AcceptedOffer": NotificationType.AcceptedOffer,
   "TypeMemberExitTimebank": NotificationType.TypeMemberExitTimebank,
+  "TypeMemberAdded": NotificationType.TypeMemberAdded,
   "TYPE_DEBIT_FROM_OFFER": NotificationType.TYPE_DEBIT_FROM_OFFER,
   "TYPE_CREDIT_FROM_OFFER_ON_HOLD":
       NotificationType.TYPE_CREDIT_FROM_OFFER_ON_HOLD,

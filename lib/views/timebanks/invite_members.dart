@@ -8,6 +8,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
@@ -261,8 +262,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       // onTap: goToNext(snapshot.data),
       title: Text(user.fullname,
           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
-
-      ///  subtitle: Text(user.email),
+      subtitle: Text(user.email),
       trailing: RaisedButton(
         // onPressed: () async {
         //   String inviteeEmail = "burhan@uipep.com";
@@ -575,6 +575,40 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       'members': FieldValue.arrayUnion([sevaUserId]),
     });
 
+    sendNotificationToMember(
+        communityId: communityId,
+        timebankId: timebankId,
+        sevaUserId: sevaUserId,
+        userEmail: userEmail);
+
     return batch;
+  }
+
+  Future<void> sendNotificationToMember(
+      {String communityId,
+      String sevaUserId,
+      String timebankId,
+      String userEmail}) async {
+    UserAddedModel userAddedModel = UserAddedModel(
+        timebankImage: timebankModel.photoUrl,
+        timebankName: timebankModel.name,
+        adminName: SevaCore.of(context).loggedInUser.fullname);
+
+    NotificationsModel notification = NotificationsModel(
+        id: utils.Utils.getUuid(),
+        timebankId: FlavorConfig.values.timebankId,
+        data: userAddedModel.toMap(),
+        isRead: false,
+        type: NotificationType.RequestInvite,
+        communityId: communityId,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        targetUserId: sevaUserId);
+
+    await Firestore.instance
+        .collection('users')
+        .document(userEmail)
+        .collection("notifications")
+        .document(notification.id)
+        .setData(notification.toMap());
   }
 }
