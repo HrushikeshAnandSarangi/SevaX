@@ -12,6 +12,7 @@ import 'package:sevaexchange/models/reports_model.dart';
 import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/views/timebanks/invite_members_group.dart';
 
 import '../app_config.dart';
 
@@ -31,25 +32,38 @@ Future<void> createJoinInvite(
 }
 
 ////to get all the user invites --
-Future<List<InvitationModel>> getGroupInvitations({
+Future<String> getGroupInvitationStatus({
   @required String timebankId,
+  @required String sevauserid,
 }) async {
   Query query = Firestore.instance
       .collection('invitations')
       .where('invitationType', isEqualTo: 'GroupInvite')
+      .where('invitedUserId', isEqualTo: sevauserid)
       .where('timebankId', isEqualTo: timebankId);
+
   QuerySnapshot snapshot = await query.getDocuments();
-  //print('ghghgh ${snapshot.documents}');
-  if (snapshot.documents == null) {
-    return [];
-  }
-  List<InvitationModel> invitationsList = List<InvitationModel>();
+  print('ghghgh ${snapshot.documents}');
+  GroupInviteStatus status;
+  String title;
+
+//  if (snapshot.documents == null) {
+//    return GroupInviteStatus.INVITE;
+//  } else {
+  // return GroupInviteStatus.INVITED;
   snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
     InvitationModel model = InvitationModel.fromMap(documentSnapshot.data);
+    print('ghghgh ${documentSnapshot.data}  $sevauserid');
 
-    invitationsList.add(model);
+    if (model.invitedUserId == sevauserid) {
+      status = GroupInviteStatus.INVITED;
+      title = 'Invited';
+    } else {
+      status = GroupInviteStatus.INVITE;
+      title = 'Invite';
+    }
   });
-  return invitationsList;
+  return title;
 }
 
 /// Get all timebanknew associated with a User

@@ -15,6 +15,7 @@ import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
@@ -684,7 +685,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         return AlertDialog(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text('Exit Timebank', style: TextStyle(fontSize: 15.0)),
+          title: Text('Exit ${widget.isFromGroup ? 'Group' : 'Timebank'}',
+              style: TextStyle(fontSize: 15.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -746,37 +748,46 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                       setState(() {
                         isProgressBarActive = true;
                       });
-                      if (isAdmin) {
-                        List<String> admins =
-                            timebankModel.admins.map((s) => s).toList();
-                        admins.remove(user.sevaUserID);
-                        _updateTimebank(timebankModel, admins: admins);
-                      } else {
-                        List<String> members =
-                            timebankModel.members.map((s) => s).toList();
-                        members.remove(user.sevaUserID);
-                        if (widget.isCommunity != null && widget.isCommunity) {
-                          CommunityModel communityModel =
-                              await getCommunityDetailsByCommunityId(
-                                  communityId: SevaCore.of(context)
-                                      .loggedInUser
-                                      .currentCommunity);
+                      List<String> members =
+                          timebankModel.members.map((s) => s).toList();
+                      members.remove(user.sevaUserID);
 
-                          await _exitFromTimebank(
-                                  model: timebankModel,
-                                  userId: user.sevaUserID,
-                                  communityModel: communityModel)
-                              .commit();
-//                          _removeUserFromCommunityAndUpdateUserCommunityList(
-//                              model: timebankModel,
-//                              members: members,
-//                              userId: user.sevaUserID,
-//                              isUserExit: true);
-                        } else {
-                          _updateTimebank(timebankModel, members: members);
-                        }
+                      if (widget.isCommunity != null && widget.isCommunity) {
+                        CommunityModel communityModel =
+                            await getCommunityDetailsByCommunityId(
+                                communityId: SevaCore.of(context)
+                                    .loggedInUser
+                                    .currentCommunity);
+
+                        await _exitFromTimebank(
+                                model: timebankModel,
+                                userId: user.sevaUserID,
+                                communityModel: communityModel)
+                            .commit();
+                      } else {
+                        model.members = members;
+
+                        print(" time id ${model.id}");
+                        print(" members  ${model.members}");
+                        print(" reason  ${reason}");
+
+                        sendNotificationToAdmin(
+                            user: user,
+                            timebank: model,
+                            communityId: SevaCore.of(context)
+                                .loggedInUser
+                                .currentCommunity);
+
+                        await FirestoreManager.updateTimebank(
+                            timebankModel: model);
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomePageRouter(),
+                          ),
+                        );
                       }
-                      Navigator.pop(viewContext);
                     },
                   ),
                   FlatButton(
@@ -995,23 +1006,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         builder: (context) => SwitchTimebank(),
       ),
     );
-//    Navigator.of(context).pushAndRemoveUntil(
-//        MaterialPageRoute(
-//          builder: (context1) => SevaCore(
-//            loggedInUser: user,
-//            child: HomePageRouter(),
-//          ),
-//        ),
-//        (Route<dynamic> route) => false);
 
-//    var communities = List<String>();
-//
-//    user.communities = communities.length > 0 ? communities : null;
-//    if (user.communities == null) {
-//      user.currentCommunity = '';
-//    } else if (user.communities.contains(currentCommunity)) {
-//      user.currentCommunity = user.communities.length > 0 ? user.communities[0] : '';
-//    }
     return batch;
   }
 
@@ -1077,7 +1072,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         communityId: communityId,
         senderUserId: user.sevaUserID,
         targetUserId: timebank.creatorId);
-
+    print("bhhfhff ${userExitModel} ");
+    print(" timebank id ${timebank.id + timebank.members.toString()}");
     await Firestore.instance
         .collection('timebanknew')
         .document(timebank.id)

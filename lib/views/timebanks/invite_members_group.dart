@@ -37,6 +37,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   static const String INVITE = "Invite";
   static const String JOINED = "Joined";
   static const String INVITED = "Invited";
+
   @override
   void initState() {
     // TODO: implement initState
@@ -44,19 +45,12 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
 
     print(
         ("group id ${widget.timebankModel.id}  parenttimebank ${widget.parenttimebankid}"));
-    getInvitationList();
     _setTimebankModel();
     getParentTimebankMembersList();
     getMembersList();
     searchTextController.addListener(() {
       setState(() {});
     });
-  }
-
-  void getInvitationList() async {
-    listInvitationModel = await FirestoreManager.getGroupInvitations(
-        timebankId: widget.timebankModel.id);
-    print("group invits ${listInvitationModel}");
   }
 
   void getMembersList() {
@@ -194,8 +188,6 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
           List<UserModel> userlist = snapshot.data;
           userlist.removeWhere((user) =>
               user.sevaUserID == SevaCore.of(context).loggedInUser.sevaUserID);
-          print("user list ${snapshot.data}");
-          print("user  ${userlist}");
           if (userlist.length == 0) {
             return Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -210,14 +202,25 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                   itemCount: userlist.length,
                   itemBuilder: (context, index) {
                     //  return userInviteWidget(email: "Umesha@uipep.com");
+                    GroupInviteStatus status;
+                    String title = "";
+
+                    if (groupMembersList.contains(userlist[index].sevaUserID)) {
+                      status = GroupInviteStatus.JOINED;
+                      title = "Joined";
+                      return userWidget(
+                          user: userlist[index], status: status, title: title);
+                    }
+                    print("sttat $title");
+
                     return userWidget(
-                      user: userlist[index],
-                    );
+                        user: userlist[index], status: status, title: title);
                   }));
         });
   }
 
   String getGroupUserStatusTitle(GroupInviteStatus status) {
+    print(" check satttt $status");
     switch (status) {
       case GroupInviteStatus.INVITED:
         return INVITED;
@@ -232,11 +235,9 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
 
   Widget userWidget({
     UserModel user,
+    GroupInviteStatus status,
+    String title,
   }) {
-    bool isJoined = false;
-    GroupInviteStatus status;
-    status = _getGroupUserInviteStatus(
-        listInvitationModel: listInvitationModel, userId: user.sevaUserID);
     return ListTile(
       leading: user.photoURL != null
           ? ClipOval(
@@ -256,14 +257,14 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
       subtitle: Text(user.email),
       trailing: RaisedButton(
-        onPressed: status == GroupInviteStatus.INVITE
+        onPressed: title == "Invite"
             ? () {
                 setState(() {
                   sendInvitationNotification(userModel: user);
                 });
               }
             : null,
-        child: Text(getGroupUserStatusTitle(status) ?? ""),
+        child: Text(title ?? ""),
         color: FlavorConfig.values.theme.accentColor,
         textColor: FlavorConfig.values.buttonTextColor,
         shape: StadiumBorder(),
@@ -310,21 +311,6 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         .setData(notification.toMap());
 
     setState(() {});
-  }
-
-  GroupInviteStatus _getGroupUserInviteStatus(
-      {List<InvitationModel> listInvitationModel, String userId}) {
-    if (groupMembersList.contains(userId)) {
-      return GroupInviteStatus.JOINED;
-    } else if (listInvitationModel != null) {
-      listInvitationModel.forEach((invitatioModel) {
-        if (invitatioModel.invitedUserId == userId) {
-          return GroupInviteStatus.INVITED;
-        }
-      });
-    } else {
-      return GroupInviteStatus.INVITE;
-    }
   }
 }
 

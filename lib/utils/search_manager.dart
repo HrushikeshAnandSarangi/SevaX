@@ -140,7 +140,7 @@ class SearchManager {
         break;
       }
     }
-    ;
+
     return commFound;
 //    int count =
 //        await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
