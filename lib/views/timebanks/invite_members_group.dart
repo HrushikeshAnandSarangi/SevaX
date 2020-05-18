@@ -211,6 +211,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                       return userWidget(
                           user: userlist[index], status: status, title: title);
                     }
+
                     print("sttat $title");
 
                     return userWidget(
@@ -238,6 +239,10 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
     GroupInviteStatus status,
     String title,
   }) {
+//    title = getStatus(widget.timebankModel.id, userlist[index].sevaUserID);
+//    await FirestoreManager.getGroupInvitationStatus(
+//        timebankId: widget.timebankModel.id,
+//        sevauserid: userlist[index].sevaUserID);
     return ListTile(
       leading: user.photoURL != null
           ? ClipOval(

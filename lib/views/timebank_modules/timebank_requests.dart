@@ -155,13 +155,17 @@ class RequestsState extends State<RequestsModule> {
                 ),
               ),
               Spacer(),
-              IconButton(
-                icon: Image.asset(
-                  'lib/assets/images/help.png',
+              Container(
+                height: 40,
+                width: 40,
+                child: IconButton(
+                  icon: Image.asset(
+                    'lib/assets/images/help.png',
+                  ),
+                  color: FlavorConfig.values.theme.primaryColor,
+                  //iconSize: 16,
+                  onPressed: showRequestsWebPage,
                 ),
-                color: FlavorConfig.values.theme.primaryColor,
-                iconSize: 24,
-                onPressed: showRequestsWebPage,
               ),
               Container(
                 width: 120,
