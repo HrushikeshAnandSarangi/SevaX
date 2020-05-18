@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/attachment_page.dart';
@@ -13,71 +14,68 @@ class ReportInfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(radius),
-        ),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  report.reporterImage != null
-                      ? CustomNetworkImage(
-                          report.reporterImage,
-                          fit: BoxFit.fitWidth,
-                        )
-                      : CustomAvatar(name: report.reporterName),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(height: 6),
-                        Text(
-                          report.reporterName,
-                          style: TextStyle(fontSize: 18),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                report.reporterImage != null
+                    ? CustomNetworkImage(
+                        report.reporterImage,
+                        fit: BoxFit.fitWidth,
+                        size: 60,
+                      )
+                    : CustomAvatar(name: report.reporterName),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(height: 6),
+                      Text(
+                        report.reporterName,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                        SizedBox(height: 20),
-                        Text("Reason: ${report.message}"),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Offstage(
-              offstage: report.attachment == null,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    Attachment.route(attachment: report.attachment),
-                  );
-                },
-                child: Container(
-                  width: double.infinity,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(8),
-                      bottomRight: Radius.circular(8),
-                    ),
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  child: Center(
-                    child: Text(
-                      "View attachment",
-                      style: TextStyle(color: Colors.white),
-                    ),
+                      ),
+                      Text(
+                        "2h ago",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Text("${report.message}"),
+                      SizedBox(height: 20),
+                      report.attachment == null
+                          ? Container()
+                          : LayoutBuilder(
+                              builder: (context, constraints) =>
+                                  GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    Attachment.route(
+                                        attachment: report.attachment),
+                                  );
+                                },
+                                child: Container(
+                                  width: constraints.maxWidth / 2,
+                                  child: CachedNetworkImage(
+                                      imageUrl: report.attachment),
+                                ),
+                              ),
+                            ),
+                    ],
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
