@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/bloc/report_member_bloc.dart';
@@ -11,15 +10,19 @@ class ReportMemberPage extends StatefulWidget {
   final UserModel reportedUserModel;
   final String timebankId;
 
-  const ReportMemberPage(
-      {Key key,
-      this.reportingUserModel,
-      this.reportedUserModel,
-      this.timebankId})
-      : super(key: key);
+  const ReportMemberPage({
+    Key key,
+    this.reportingUserModel,
+    this.reportedUserModel,
+    this.timebankId,
+  }) : super(key: key);
 
-  static Route<dynamic> route(
-          {Key key, reportingUserModel, reportedUserModel, timebankId}) =>
+  static Route<dynamic> route({
+    Key key,
+    reportingUserModel,
+    reportedUserModel,
+    timebankId,
+  }) =>
       MaterialPageRoute(
         builder: (BuildContext context) => ReportMemberPage(
           key: key,
@@ -35,145 +38,197 @@ class ReportMemberPage extends StatefulWidget {
 
 class _ReportMemberPageState extends State<ReportMemberPage> {
   final ReportMemberBloc _bloc = ReportMemberBloc();
+  final FocusNode messageNode = FocusNode();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      messageNode.requestFocus();
+    });
   }
 
   @override
   void dispose() {
     _bloc.dispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
           "Report Member",
           style: TextStyle(fontSize: 18),
         ),
+        centerTitle: true,
       ),
-      body: Container(
-        child: Column(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20.0,
+          vertical: 20,
+        ),
+        child: ListView(
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40),
-              child: StreamBuilder<String>(
-                stream: _bloc.message,
-                builder: (context, snapshot) {
-                  return TextField(
-                    onChanged: _bloc.onMessageChanged,
-                    textCapitalization: TextCapitalization.sentences,
-                    decoration: InputDecoration(
-                      errorText: snapshot.error,
-                      hintText: "Reason",
-                    ),
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline,
-                  );
-                },
-              ),
+            Text(
+              "Please inform, why you are reporting this user.",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
-            StreamBuilder<File>(
-              stream: _bloc.image,
+            SizedBox(height: 8),
+            Text(
+              "Please provide as much detail as possible",
+            ),
+            StreamBuilder<String>(
+              stream: _bloc.message,
               builder: (context, snapshot) {
-                return StreamBuilder<StorageTaskEvent>(
-                  stream: _bloc.uploadEvent,
-                  builder: (context, uploadEvent) {
-                    double progressPercent = uploadEvent.data != null
-                        ? uploadEvent.data.snapshot.bytesTransferred /
-                            uploadEvent.data.snapshot.totalByteCount
-                        : 0;
-                    return Container(
-                      width: 200,
-                      child: ImagePickerWidget(
-                        isAspectRatioFixed: false,
-                        child: snapshot.data == null
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Icon(Icons.file_upload),
-                                  Text("Upload image"),
-                                ],
-                              )
-                            : Column(
-                                children: <Widget>[
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      // border: Border.all(color: Colors.black),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(8),
-                                        topRight: Radius.circular(8),
-                                      ),
-                                      child: Image.file(snapshot.data),
-                                    ),
-                                  ),
-                                  uploadEvent.data != null
-                                      ? ClipRRect(
-                                          borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(8),
-                                            bottomRight: Radius.circular(8),
-                                          ),
-                                          child: Container(
-                                            height: 20,
-                                            child: Stack(
-                                              children: <Widget>[
-                                                LinearProgressIndicator(
-                                                  backgroundColor: Colors.white,
-                                                  value: progressPercent,
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation<
-                                                          Color>(
-                                                    Theme.of(context)
-                                                        .primaryColor,
-                                                  ),
-                                                ),
-                                                Align(
-                                                  alignment: Alignment.center,
-                                                  child: Text(
-                                                      "Uploading"), //needs to be updated
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                      : Container(),
-                                  SizedBox(height: 8),
-                                  FlatButton(
-                                    textColor: Colors.red,
-                                    child: Text("Remove Image"),
-                                    onPressed: () {
-                                      _bloc.clearImage();
-                                    },
-                                  )
-                                ],
-                              ),
-                        onChanged: (File file) {
-                          _bloc.uploadImage(
-                            file,
-                            "${widget.timebankId}*${widget.reportingUserModel.sevaUserID}*${widget.reportedUserModel.sevaUserID}",
-                          );
-                        },
-                      ),
-                    );
-                  },
+                return TextField(
+                  onChanged: _bloc.onMessageChanged,
+                  focusNode: messageNode,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    errorText: snapshot.error,
+                  ),
+                  maxLines: null,
+                  keyboardType: TextInputType.multiline,
+                  textCapitalization: TextCapitalization.sentences,
                 );
               },
             ),
-            RaisedButton(
-              child: Text("Report"),
-              onPressed: () {
-                _bloc.createReport();
+            SizedBox(height: 30),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: StreamBuilder<File>(
+                stream: _bloc.image,
+                builder: (context, snapshot) {
+                  return snapshot.data == null
+                      ? ImagePickerWidget(
+                          isAspectRatioFixed: false,
+                          onChanged: (File file) {
+                            _bloc.uploadImage(file);
+                          },
+                          child: Container(
+                            width: 70,
+                            height: 70,
+                            color: Color(0xFF0FAFAFA),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.image,
+                                  color: Colors.grey,
+                                  size: 30,
+                                ),
+                                Text(
+                                  "0/1",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : Container(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          child: Stack(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.file(snapshot.data),
+                              ),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _bloc.clearImage();
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                    ),
+                                    child: Icon(
+                                      Icons.cancel,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                },
+              ),
+            ),
+            SizedBox(height: 10),
+            Divider(thickness: 1),
+            StreamBuilder<bool>(
+              stream: _bloc.buttonStatus,
+              builder: (context, snapshot) {
+                bool isEnabled =
+                    snapshot.data ?? false; //(snapshot.data?.length ?? 0) > 10;
+                return RaisedButton(
+                  child: Text("Report"),
+                  onPressed: isEnabled
+                      ? () {
+                          _showSnackBar(
+                            "Reporting member",
+                            isLongDuration: true,
+                          );
+                          _bloc
+                              .createReport(
+                            reportedUserModel: widget.reportedUserModel,
+                            reportingUserModel: widget.reportingUserModel,
+                            timebankId: widget.timebankId,
+                          )
+                              .then((status) {
+                            _showSnackBar("Member reported successfully");
+                            Future.delayed(
+                              Duration(seconds: 1),
+                              () => Navigator.of(context).pop(),
+                            );
+                          }).catchError((e) {
+                            _showSnackBar("Failed to report member! Try again");
+                          });
+                        }
+                      : null,
+                );
               },
             )
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showSnackBar(String message, {bool isLongDuration = false}) {
+    _scaffoldKey.currentState?.hideCurrentSnackBar();
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        duration: isLongDuration ? Duration(minutes: 1) : Duration(seconds: 4),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(message),
+            isLongDuration
+                ? Container(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).accentColor,
+                      ),
+                    ),
+                  )
+                : Container(height: 0),
           ],
         ),
       ),
