@@ -6,6 +6,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/invitation_model.dart';
 import 'package:sevaexchange/models/models.dart' as prefix0;
 import 'package:sevaexchange/models/reports_model.dart';
 import 'package:sevaexchange/new_baseline/models/card_model.dart';
@@ -19,6 +20,36 @@ Future<void> createTimebank({@required TimebankModel timebankModel}) async {
       .collection('timebanknew')
       .document(timebankModel.id)
       .setData(timebankModel.toMap());
+}
+
+Future<void> createJoinInvite(
+    {@required InvitationModel invitationModel}) async {
+  return await Firestore.instance
+      .collection('invitations')
+      .document(invitationModel.id)
+      .setData(invitationModel.toMap());
+}
+
+////to get all the user invites --
+Future<List<InvitationModel>> getGroupInvitations({
+  @required String timebankId,
+}) async {
+  Query query = Firestore.instance
+      .collection('invitations')
+      .where('invitationType', isEqualTo: 'GroupInvite')
+      .where('timebankId', isEqualTo: timebankId);
+  QuerySnapshot snapshot = await query.getDocuments();
+  //print('ghghgh ${snapshot.documents}');
+  if (snapshot.documents == null) {
+    return [];
+  }
+  List<InvitationModel> invitationsList = List<InvitationModel>();
+  snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+    InvitationModel model = InvitationModel.fromMap(documentSnapshot.data);
+
+    invitationsList.add(model);
+  });
+  return invitationsList;
 }
 
 /// Get all timebanknew associated with a User

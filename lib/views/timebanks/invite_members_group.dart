@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/invitation_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
@@ -32,7 +33,10 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   TimebankModel parenttimebankModel;
   var parentTimebankMembersList = List<String>();
   var groupMembersList = List<String>();
-
+  List<InvitationModel> listInvitationModel;
+  static const String INVITE = "Invite";
+  static const String JOINED = "Joined";
+  static const String INVITED = "Invited";
   @override
   void initState() {
     // TODO: implement initState
@@ -40,12 +44,19 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
 
     print(
         ("group id ${widget.timebankModel.id}  parenttimebank ${widget.parenttimebankid}"));
+    getInvitationList();
     _setTimebankModel();
     getParentTimebankMembersList();
     getMembersList();
     searchTextController.addListener(() {
       setState(() {});
     });
+  }
+
+  void getInvitationList() async {
+    listInvitationModel = await FirestoreManager.getGroupInvitations(
+        timebankId: widget.timebankModel.id);
+    print("group invits ${listInvitationModel}");
   }
 
   void getMembersList() {
@@ -206,15 +217,26 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         });
   }
 
+  String getGroupUserStatusTitle(GroupInviteStatus status) {
+    switch (status) {
+      case GroupInviteStatus.INVITED:
+        return INVITED;
+
+      case GroupInviteStatus.JOINED:
+        return JOINED;
+
+      default:
+        return INVITE;
+    }
+  }
+
   Widget userWidget({
     UserModel user,
   }) {
     bool isJoined = false;
-
-    if (groupMembersList.contains(user.sevaUserID)) {
-      isJoined = true;
-    }
-
+    GroupInviteStatus status;
+    status = _getGroupUserInviteStatus(
+        listInvitationModel: listInvitationModel, userId: user.sevaUserID);
     return ListTile(
       leading: user.photoURL != null
           ? ClipOval(
@@ -234,14 +256,14 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
       subtitle: Text(user.email),
       trailing: RaisedButton(
-        onPressed: !isJoined
-            ? () async {
+        onPressed: status == GroupInviteStatus.INVITE
+            ? () {
                 setState(() {
                   sendInvitationNotification(userModel: user);
                 });
               }
             : null,
-        child: Text(isJoined ? "Joined" : "Invite"),
+        child: Text(getGroupUserStatusTitle(status) ?? ""),
         color: FlavorConfig.values.theme.accentColor,
         textColor: FlavorConfig.values.buttonTextColor,
         shape: StadiumBorder(),
@@ -260,6 +282,16 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         adminName: SevaCore.of(context).loggedInUser.fullname,
         groupId: widget.timebankModel.id);
 
+    InvitationModel invitationModel = InvitationModel(
+        timebankId: widget.timebankModel.id,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        type: InvitationType.GroupInvite,
+        data: groupInviteUserModel.toMap(),
+        id: utils.Utils.getUuid(),
+        invitedUserId: userModel.sevaUserID,
+        adminId: SevaCore.of(context).loggedInUser.sevaUserID,
+        timestamp: DateTime.now().millisecondsSinceEpoch);
+
     NotificationsModel notification = NotificationsModel(
         id: utils.Utils.getUuid(),
         timebankId: widget.parenttimebankid,
@@ -269,12 +301,31 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
         targetUserId: userModel.sevaUserID);
-
+    await FirestoreManager.createJoinInvite(invitationModel: invitationModel);
     await Firestore.instance
         .collection('users')
         .document(userModel.email)
         .collection("notifications")
         .document(notification.id)
         .setData(notification.toMap());
+
+    setState(() {});
+  }
+
+  GroupInviteStatus _getGroupUserInviteStatus(
+      {List<InvitationModel> listInvitationModel, String userId}) {
+    if (groupMembersList.contains(userId)) {
+      return GroupInviteStatus.JOINED;
+    } else if (listInvitationModel != null) {
+      listInvitationModel.forEach((invitatioModel) {
+        if (invitatioModel.invitedUserId == userId) {
+          return GroupInviteStatus.INVITED;
+        }
+      });
+    } else {
+      return GroupInviteStatus.INVITE;
+    }
   }
 }
+
+enum GroupInviteStatus { INVITE, INVITED, JOINED }
