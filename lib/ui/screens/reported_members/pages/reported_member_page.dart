@@ -57,6 +57,7 @@ class _ReportedMembersPageState extends State<ReportedMembersPage> {
             }
 
             return ListView.builder(
+              padding: EdgeInsets.all(12),
               itemCount: snapshot.data.length,
               itemBuilder: (_, index) {
                 return ReportedMemberCard(model: snapshot.data[index]);

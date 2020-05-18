@@ -24,9 +24,10 @@ class ReportedMemberInfo extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Reports",
+          "Report of ${model.reportedUserName}",
           style: TextStyle(fontSize: 18),
         ),
+        centerTitle: true,
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (value) {
@@ -46,12 +47,17 @@ class ReportedMemberInfo extends StatelessWidget {
         ],
       ),
       body: Container(
-        child: ListView.builder(
+        child: ListView.separated(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           itemCount: model.reports.length,
           itemBuilder: (context, index) {
             return ReportInfoCard(
               report: model.reports[index],
+            );
+          },
+          separatorBuilder: (_, __) {
+            return Divider(
+              thickness: 1,
             );
           },
         ),
