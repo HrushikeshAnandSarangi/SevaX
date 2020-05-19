@@ -178,11 +178,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: SizedBox(
-                height: 48,
-                width: 48,
-                child: CircularProgressIndicator(),
-              ),
+              child: CircularProgressIndicator(),
             );
           }
           List<UserModel> userlist = snapshot.data;
@@ -196,35 +192,21 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                 ));
           }
           return Padding(
-              padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: userlist.length,
-                  itemBuilder: (context, index) {
-                    //  return userInviteWidget(email: "Umesha@uipep.com");
-                    bool isJoined = false;
+            padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
+            child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: userlist.length,
+                itemBuilder: (context, index) {
+                  //  return userInviteWidget(email: "Umesha@uipep.com");
+                  bool isJoined = false;
 
-                    if (groupMembersList.contains(userlist[index].sevaUserID)) {
-                      isJoined = true;
-                    }
-                    return userWidget(
-                        user: userlist[index], isJoined: isJoined);
-                  }));
+                  if (groupMembersList.contains(userlist[index].sevaUserID)) {
+                    isJoined = true;
+                  }
+                  return userWidget(user: userlist[index], isJoined: isJoined);
+                }),
+          );
         });
-  }
-
-  String getGroupUserStatusTitle(GroupInviteStatus status) {
-    print(" check satttt $status");
-    switch (status) {
-      case GroupInviteStatus.INVITED:
-        return INVITED;
-
-      case GroupInviteStatus.JOINED:
-        return JOINED;
-
-      default:
-        return INVITE;
-    }
   }
 
   Widget userWidget({

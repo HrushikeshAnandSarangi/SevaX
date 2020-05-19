@@ -210,6 +210,8 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
 
   var radius = 20;
   try {
+    print('inside near');
+
     radius = json.decode(AppConfig.remoteConfig.getString('radius'));
   } on Exception {
     print("Exception raised while getting radius ");
@@ -218,9 +220,7 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
       "radius is fetched from remote config near community list stream ${radius.toDouble()}");
 
   GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
-  var query = Firestore.instance.collection('communities').where(
-        'softDelete',
-      );
+  var query = Firestore.instance.collection('communities');
   var data = geo.collection(collectionRef: query).within(
         center: center,
         radius: radius.toDouble(),
@@ -238,7 +238,7 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
             CommunityModel model = CommunityModel(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
 
-            model.softDelete || model.private == true
+            model.softDelete == true || model.private == true
                 ? print("Removed soft deleted item")
                 : communityList.add(model);
 

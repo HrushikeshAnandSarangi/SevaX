@@ -156,9 +156,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             ),
           ),
         ),
-        Expanded(
-          child: buildList(),
-        ),
+        buildList(),
         !widget.timebankModel.private == true
             ? Padding(
                 padding: EdgeInsets.all(5),
@@ -201,7 +199,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           if (snapshot.hasError) {
             return Text('Please try again later');
           }
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: SizedBox(
                 height: 48,
@@ -211,6 +209,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             );
           }
           List<UserModel> userlist = snapshot.data;
+          userlist.removeWhere((user) =>
+              user.sevaUserID == SevaCore.of(context).loggedInUser.sevaUserID);
+
           print("user list ${snapshot.data}");
           print("user  ${userlist}");
           if (userlist.length == 0) {
@@ -228,16 +229,18 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               ),
             );
           }
-          return Padding(
-              padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: userlist.length,
-                  itemBuilder: (context, index) {
-                    return userWidget(
-                      user: userlist[index],
-                    );
-                  }));
+          return Expanded(
+            child: Padding(
+                padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: userlist.length,
+                    itemBuilder: (context, index) {
+                      return userWidget(
+                        user: userlist[index],
+                      );
+                    })),
+          );
 
           return Text("");
         });
