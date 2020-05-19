@@ -33,4 +33,14 @@ class InvitationViaLink {
 
     return mapForInvitation;
   }
+
+  factory InvitationViaLink.fromMap(Map<String, dynamic> data) {
+    return InvitationViaLink.createInvitation(
+      communityId: data['data']['communityId'],
+      inviteeEmail: data['data']['inviteeEmail'],
+      senderEmail: data['data']['senderEmail'],
+      timebankId: data['data']['timebankId'],
+      timebankTitle: data['data']['timebankTitle'],
+    ).setInvitationLink(data['data']['invitationLink']);
+  }
 }

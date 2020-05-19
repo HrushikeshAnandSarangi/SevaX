@@ -7,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
+import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
@@ -35,7 +37,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       new TextEditingController();
   Future<TimebankModel> getTimebankDetails;
   TimebankModel timebankModel;
+
   var validItems = List<String>();
+  InvitationManager inivitationManager = InvitationManager();
 
   @override
   void initState() {
@@ -189,13 +193,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   Widget buildList() {
-    print("search ${searchTextController.text}");
-
-//    if (searchTextController.text.trim().length < 1) {
-//      //  print('Search requires minimum 1 character');
-//      return Offstage();
-//    }
-    // ListView contains a group of widgets that scroll inside the drawer
     return StreamBuilder<List<UserModel>>(
         stream: SearchManager.searchUserInSevaX(
           queryString: searchTextController.text,
@@ -204,7 +201,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           if (snapshot.hasError) {
             return Text('Please try again later');
           }
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (!snapshot.hasData) {
             return Center(
               child: SizedBox(
                 height: 48,
@@ -225,9 +222,10 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Center(
-                  child: searchTextController.text.length > 1
-                      ? Text("${searchTextController.text} not found")
-                      : Container()),
+                child: searchTextController.text.length > 1
+                    ? Text("${searchTextController.text} not found")
+                    : Container(),
+              ),
             );
           }
           return Padding(
@@ -236,8 +234,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                   shrinkWrap: true,
                   itemCount: userlist.length,
                   itemBuilder: (context, index) {
-//
-                    //  return userInviteWidget(email: "Umesha@uipep.com");
                     return userWidget(
                       user: userlist[index],
                     );
@@ -250,7 +246,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   bool isvalidEmailId(String value) {
     RegExp emailPattern = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-    //if (value.isEmpty) return 'Enter email';
     if (emailPattern.hasMatch(value)) return true;
     return false;
   }
@@ -258,27 +253,93 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Widget userInviteWidget({
     String email,
   }) {
-    bool isInvited = false;
-//    if (validItems.contains(user.sevaUserID)) {
-//      isInvited = true;
-//    }
-
+    inivitationManager.initDialogForProgress(context: context);
     return ListTile(
       leading: CircleAvatar(),
-      // onTap: goToNext(snapshot.data),
       title: Text(email,
           style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w700)),
       trailing: Container(
         height: 40,
         padding: EdgeInsets.all(2),
-        child: RaisedButton(
-          onPressed: !isInvited ? () async {} : null,
-          child: Text(isInvited ? "Invited" : "Invite"),
-          color: Colors.indigo,
-          textColor: Colors.white,
-          shape: StadiumBorder(),
+        child: FutureBuilder(
+          future:
+              inivitationManager.checkInvitationStatus(email, timebankModel.id),
+          builder:
+              (BuildContext context, AsyncSnapshot<InvitationStatus> snapshot) {
+            if (!snapshot.hasData) {
+              return gettigStatus();
+            }
+            var invitationStatus = snapshot.data;
+            if (invitationStatus.isInvited) {
+              return resendInvitation(
+                invitation: inivitationManager.getInvitationForEmailFromCache(
+                  inviteeEmail: email,
+                ),
+              );
+            }
+            return inviteMember(
+              inviteeEmail: email,
+              timebankModel: timebankModel,
+            );
+          },
         ),
       ),
+    );
+  }
+
+  Widget inviteMember({
+    String inviteeEmail,
+    TimebankModel timebankModel,
+  }) {
+    return RaisedButton(
+      onPressed: () async {
+        inivitationManager.showProgress(title: "Please wait...");
+        await inivitationManager.inviteMemberToTimebankViaLink(
+          invitation: InvitationViaLink.createInvitation(
+            timebankTitle: timebankModel.name,
+            timebankId: timebankModel.id,
+            senderEmail: SevaCore.of(context).loggedInUser.email,
+            inviteeEmail: inviteeEmail,
+            communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+          ),
+        );
+        inivitationManager.hideProgress();
+        setState(() {});
+      },
+      child: Text('Invite'),
+      color: Colors.indigo,
+      textColor: Colors.white,
+      shape: StadiumBorder(),
+    );
+  }
+
+  void showProgressDialog() {}
+
+  Widget resendInvitation({InvitationViaLink invitation}) {
+    return RaisedButton(
+      onPressed: () async {
+        inivitationManager.showProgress(title: "Please wait...");
+        await inivitationManager.resendInvitationToMember(
+          invitation: invitation,
+        );
+        inivitationManager.hideProgress();
+
+        setState(() {});
+      },
+      child: Text('Resend'),
+      color: Colors.indigo,
+      textColor: Colors.white,
+      shape: StadiumBorder(),
+    );
+  }
+
+  Widget gettigStatus() {
+    return RaisedButton(
+      onPressed: null,
+      child: Text('...'),
+      color: Colors.indigo,
+      textColor: Colors.white,
+      shape: StadiumBorder(),
     );
   }
 
@@ -309,23 +370,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
       subtitle: Text(user.email),
       trailing: RaisedButton(
-        // onPressed: () async {
-        //   String inviteeEmail = "burhan@uipep.com";
-        //   print("________________________________________INITITATED");
-
-        //   var onActivityResult = await inviteMemberToTimebankViaLink(
-        //     invitation: InvitationViaLink.createInvitation(
-        //       timebankTitle: timebankModel.name,
-        //       timebankId: timebankModel.id,
-        //       senderEmail: SevaCore.of(context).loggedInUser.email,
-        //       inviteeEmail: inviteeEmail,
-        //       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-        //     ),
-        //   );
-
-        //   print(
-        //       "________________________________________COMPLETED with onactivityResult -> $onActivityResult");
-        // },
         onPressed: !isJoined
             ? () async {
                 await addMemberToTimebank(
@@ -354,11 +398,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
           }
-
-          print("timebank Code --> ${widget.timebankId}");
           List<TimebankCodeModel> codeList = snapshot.data.reversed.toList();
 
           if (codeList.length == 0) {
@@ -447,18 +489,12 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                   );
                 }),
           );
-
-          // return SizedBox(
-          //     height: MediaQuery.of(context).size.height - 120,
-          //     child: );
         });
   }
 
   String shareText(TimebankCodeModel timebankCode) {
-    // var text =  "Please download the SevaX volunteer app and join my Timebank ${timebankModel.name} by using the code \"${timebankCode.timebankCode}\"";
     var text =
         "${SevaCore.of(context).loggedInUser.fullname} has invited you to join \"${timebankModel.name}\" Timebank. Timebanks are communities that allow you to volunteer and also receive time credits towards getting things done for you. Use the code \"${timebankCode.timebankCode}\" when prompted to join this Timebank. Please download the app from the links provided at https://sevaxapp.com";
-
     return text;
   }
 
@@ -564,17 +600,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         .collection('timebankCodes')
         .document(codeModel.timebankCodeId)
         .setData(codeModel.toMap());
-
-//    Firestore.instance.collection("timebankCodes").add({
-//      "timebankId": timebankId,
-//      "timebankCode": timebankCode,
-//      "timebankCodeId": utils.Utils.getUuid(),
-//      "validUpto": validUpto,
-//      "createdOn": DateTime.now().millisecondsSinceEpoch,
-//      "communityId": communityId,
-//    }).then((doc) {
-//      // task completed
-//    });
   }
 
   void deleteShareCode(String timebankCodeId) {
