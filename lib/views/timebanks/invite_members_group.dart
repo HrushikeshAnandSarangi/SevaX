@@ -202,20 +202,13 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                   itemCount: userlist.length,
                   itemBuilder: (context, index) {
                     //  return userInviteWidget(email: "Umesha@uipep.com");
-                    GroupInviteStatus status;
-                    String title = "";
+                    bool isJoined = false;
 
                     if (groupMembersList.contains(userlist[index].sevaUserID)) {
-                      status = GroupInviteStatus.JOINED;
-                      title = "Joined";
-                      return userWidget(
-                          user: userlist[index], status: status, title: title);
+                      isJoined = true;
                     }
-
-                    print("sttat $title");
-
                     return userWidget(
-                        user: userlist[index], status: status, title: title);
+                        user: userlist[index], isJoined: isJoined);
                   }));
         });
   }
@@ -236,13 +229,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
 
   Widget userWidget({
     UserModel user,
-    GroupInviteStatus status,
-    String title,
+    bool isJoined,
   }) {
-//    title = getStatus(widget.timebankModel.id, userlist[index].sevaUserID);
-//    await FirestoreManager.getGroupInvitationStatus(
-//        timebankId: widget.timebankModel.id,
-//        sevauserid: userlist[index].sevaUserID);
     return ListTile(
       leading: user.photoURL != null
           ? ClipOval(
@@ -261,19 +249,56 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
       title: Text(user.fullname,
           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
       subtitle: Text(user.email),
-      trailing: RaisedButton(
-        onPressed: title == "Invite"
-            ? () {
-                setState(() {
-                  sendInvitationNotification(userModel: user);
-                });
-              }
-            : null,
-        child: Text(title ?? ""),
-        color: FlavorConfig.values.theme.accentColor,
-        textColor: FlavorConfig.values.buttonTextColor,
-        shape: StadiumBorder(),
-      ),
+      trailing: !isJoined
+          ? FutureBuilder(
+              future: FirestoreManager.getGroupInvitationStatus(
+                  timebankId: widget.timebankModel.id,
+                  sevauserid: user.sevaUserID),
+              builder: (BuildContext context,
+                  AsyncSnapshot<GroupInvitationStatus> snapshot) {
+                if (!snapshot.hasData) {
+                  return gettigStatus();
+                }
+                var groupInviteStatus = snapshot.data;
+                if (groupInviteStatus.isInvited) {
+                  return RaisedButton(
+                    onPressed: null,
+                    child: Text("Invited"),
+                    color: FlavorConfig.values.theme.accentColor,
+                    textColor: FlavorConfig.values.buttonTextColor,
+                    shape: StadiumBorder(),
+                  );
+                }
+                return RaisedButton(
+                  onPressed: () {
+                    setState(() {
+                      sendInvitationNotification(userModel: user);
+                    });
+                  },
+                  child: Text('Invite'),
+                  color: FlavorConfig.values.theme.accentColor,
+                  textColor: FlavorConfig.values.buttonTextColor,
+                  shape: StadiumBorder(),
+                );
+              },
+            )
+          : RaisedButton(
+              onPressed: null,
+              child: Text("Joined"),
+              color: FlavorConfig.values.theme.accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
+              shape: StadiumBorder(),
+            ),
+    );
+  }
+
+  Widget gettigStatus() {
+    return RaisedButton(
+      onPressed: null,
+      child: Text('...'),
+      color: Colors.indigo,
+      textColor: Colors.white,
+      shape: StadiumBorder(),
     );
   }
 
@@ -315,8 +340,19 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         .document(notification.id)
         .setData(notification.toMap());
 
-    setState(() {});
+    // setState(() {});
   }
 }
 
 enum GroupInviteStatus { INVITE, INVITED, JOINED }
+
+class GroupInvitationStatus {
+  bool isInvited;
+
+  GroupInvitationStatus.notYetInvited() {
+    this.isInvited = false;
+  }
+  GroupInvitationStatus.isInvited() {
+    this.isInvited = true;
+  }
+}

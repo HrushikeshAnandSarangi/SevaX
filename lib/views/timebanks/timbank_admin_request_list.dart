@@ -101,7 +101,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
   @override
   bool get wantKeepAlive => true;
-
+  BuildContext parentContext;
   @override
   void dispose() {
     _listController.removeListener(_scrollListener);
@@ -122,6 +122,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
   @override
   Widget build(BuildContext context) {
+    parentContext = context;
     return Scaffold(
       key: _scaffoldKey,
       body: getTimebackList(context, widget.timebankId),
@@ -777,16 +778,14 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                             communityId: SevaCore.of(context)
                                 .loggedInUser
                                 .currentCommunity);
+                        // TODO this is temporory fix a full fetched refreshing scienario is needed
+                        Navigator.of(parentContext).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) => HomePageRouter(),
+                            ),
+                            (Route<dynamic> route) => false);
 
-                        await FirestoreManager.updateTimebank(
-                            timebankModel: model);
-
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomePageRouter(),
-                          ),
-                        );
+                        FirestoreManager.updateTimebank(timebankModel: model);
                       }
                     },
                   ),
@@ -978,24 +977,22 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     }
 
     var communities = List<String>();
-    if (!widget.isFromGroup) {
-      if (user.communities != null &&
-          user.communities.contains(currentCommunity)) {
-        communities.addAll(user.communities);
-        communities.remove(currentCommunity);
-        batch.updateData(userRef, {
-          'communities': FieldValue.arrayRemove([currentCommunity]),
-          'currentCommunity': communities.length > 0 ? communities[0] : ''
-        });
-        if (communities.length > 0) {
-          SevaCore.of(context).loggedInUser.currentCommunity = communities[0];
-        }
+    if (user.communities != null &&
+        user.communities.contains(currentCommunity)) {
+      communities.addAll(user.communities);
+      communities.remove(currentCommunity);
+      batch.updateData(userRef, {
+        'communities': FieldValue.arrayRemove([currentCommunity]),
+        'currentCommunity': communities.length > 0 ? communities[0] : ''
+      });
+      if (communities.length > 0) {
+        SevaCore.of(context).loggedInUser.currentCommunity = communities[0];
       }
-      if (communityModel.members.contains(user.sevaUserID)) {
-        batch.updateData(communityRef, {
-          'members': FieldValue.arrayRemove([user.sevaUserID]),
-        });
-      }
+    }
+    if (communityModel.members.contains(user.sevaUserID)) {
+      batch.updateData(communityRef, {
+        'members': FieldValue.arrayRemove([user.sevaUserID]),
+      });
     }
 
     sendNotificationToAdmin(
