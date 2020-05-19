@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_page.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
@@ -181,6 +182,28 @@ class _ManageGroupView extends State<ManageGroupView> {
     );
   }
 
+  Widget viewReportedMembers({BuildContext context}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          ReportedMembersPage.route(
+            timebankId: widget.timebankModel.id,
+            communityId: widget.timebankModel.communityId,
+            isFromTimebank: false,
+          ),
+        );
+      },
+      child: Text(
+        'Reported Members',
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          color: Colors.red,
+        ),
+      ),
+    );
+  }
+
   Widget get deleteGroup {
     return GestureDetector(
       onTap: () {
@@ -241,6 +264,10 @@ class _ManageGroupView extends State<ManageGroupView> {
             height: 30,
           ),
           viewRequests(context: context),
+          SizedBox(
+            height: 30,
+          ),
+          viewReportedMembers(context: context),
           SizedBox(
             height: 30,
           ),

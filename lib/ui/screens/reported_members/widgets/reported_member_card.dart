@@ -7,13 +7,19 @@ import 'package:sevaexchange/ui/utils/icons.dart';
 
 class ReportedMemberCard extends StatelessWidget {
   final ReportedMembersModel model;
-  const ReportedMemberCard({Key key, this.model}) : super(key: key);
+  final bool isFromTimebank;
+  const ReportedMemberCard({Key key, this.model, this.isFromTimebank})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
+    int userCount = reportedByCount(model, isFromTimebank);
     return InkWell(
       onTap: () {
         Navigator.of(context).push(
-          ReportedMemberInfo.route(model: model),
+          ReportedMemberInfo.route(
+            model: model,
+            isFromTimebank: isFromTimebank,
+          ),
         );
       },
       child: Card(
@@ -61,7 +67,7 @@ class ReportedMemberCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "Reported by ${model.reporterId.length} ${model.reporterId.length == 1 ? "user" : "users"}",
+                      "Reported by $userCount ${userCount == 1 ? "user" : "users"}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -98,5 +104,19 @@ class ReportedMemberCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  int reportedByCount(ReportedMembersModel model, bool isFromTimebank) {
+    if (isFromTimebank) {
+      return model.reporterIds.length;
+    } else {
+      int count = 0;
+      model.reports.forEach((Report report) {
+        if (report.isTimebankReport == isFromTimebank) {
+          count++;
+        }
+      });
+      return count;
+    }
   }
 }

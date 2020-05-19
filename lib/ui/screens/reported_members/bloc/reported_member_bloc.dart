@@ -10,13 +10,20 @@ class ReportedMembersBloc {
   Stream<List<ReportedMembersModel>> get reportedMembers =>
       _reportedMembers.stream;
 
-  void fetchReportedMembers(String timebankId) {
+  void fetchReportedMembers(
+      String timebankId, String communityId, bool isFromTimebank) {
     log("fetching members for timebank $timebankId");
-    Firestore.instance
-        .collection("reported_users_list")
-        .where("timebankId", isEqualTo: timebankId)
-        .snapshots()
-        .listen((QuerySnapshot event) {
+    Query query = isFromTimebank
+        ? Firestore.instance.collection("reported_users_list").where(
+              "communityId",
+              isEqualTo: communityId,
+            )
+        : Firestore.instance.collection("reported_users_list").where(
+              "timebankIds",
+              arrayContains: timebankId,
+            );
+
+    query.snapshots().listen((QuerySnapshot event) {
       List<ReportedMembersModel> members = [];
       event.documents.forEach((DocumentSnapshot element) {
         ReportedMembersModel member =

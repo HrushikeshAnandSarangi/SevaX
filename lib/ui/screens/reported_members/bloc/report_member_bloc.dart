@@ -38,10 +38,13 @@ class ReportMemberBloc {
     }
   }
 
-  Future<bool> createReport(
-      {UserModel reportedUserModel,
-      UserModel reportingUserModel,
-      String timebankId}) async {
+  Future<bool> createReport({
+    UserModel reportedUserModel,
+    UserModel reportingUserModel,
+    String timebankId,
+    bool isTimebankReport,
+    String entityName,
+  }) async {
     _buttonStatus.add(false);
     String filePath = DateTime.now().toString();
     String attachmentUrl;
@@ -62,21 +65,24 @@ class ReportMemberBloc {
       message: _message.value.trim(),
       reporterImage: reportingUserModel.photoURL,
       reporterName: reportingUserModel.fullname,
+      entityName: entityName,
+      isTimebankReport: isTimebankReport,
+      timestamp: DateTime.now().millisecondsSinceEpoch,
     );
     try {
       await Firestore.instance
           .collection('reported_users_list')
-          .document("${reportedUserModel.sevaUserID}*$timebankId")
+          .document(
+              "${reportedUserModel.sevaUserID}*${reportingUserModel.currentCommunity}")
           .setData(
         {
+          "communityId": reportingUserModel.currentCommunity,
           "reportedId": reportedUserModel.sevaUserID,
-          "timebankId": timebankId,
           "reportedUserName": reportedUserModel.fullname,
           "reportedUserImage": reportedUserModel.photoURL,
-          "reporterId": FieldValue.arrayUnion(
-            [reportingUserModel.sevaUserID],
-          ),
-          "reports": FieldValue.arrayUnion([report.toMap()])
+          "reports": FieldValue.arrayUnion([report.toMap()]),
+          "reporterIds": FieldValue.arrayUnion([reportingUserModel.sevaUserID]),
+          "timebankIds": FieldValue.arrayUnion([timebankId]),
         },
         merge: true,
       );

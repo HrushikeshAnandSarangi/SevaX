@@ -8,13 +8,19 @@ enum ACTIONS { REMOVE, MESSAGE }
 
 class ReportedMemberInfo extends StatelessWidget {
   final ReportedMembersModel model;
+  final bool isFromTimebank;
 
-  const ReportedMemberInfo({Key key, this.model}) : super(key: key);
+  const ReportedMemberInfo({Key key, this.model, this.isFromTimebank})
+      : assert(isFromTimebank != null),
+        assert(model != null),
+        super(key: key);
 
-  static Route<dynamic> route({ReportedMembersModel model}) {
+  static Route<dynamic> route(
+      {ReportedMembersModel model, bool isFromTimebank}) {
     return MaterialPageRoute(
       builder: (BuildContext context) => ReportedMemberInfo(
         model: model,
+        isFromTimebank: isFromTimebank,
       ),
     );
   }
@@ -51,14 +57,25 @@ class ReportedMemberInfo extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           itemCount: model.reports.length,
           itemBuilder: (context, index) {
-            return ReportInfoCard(
-              report: model.reports[index],
-            );
+            Report report = model.reports[index];
+            return (isFromTimebank
+                    ? true
+                    : report.isTimebankReport == isFromTimebank)
+                ? ReportInfoCard(
+                    report: model.reports[index],
+                    isFromTimebank: isFromTimebank,
+                  )
+                : Container();
           },
-          separatorBuilder: (_, __) {
-            return Divider(
-              thickness: 1,
-            );
+          separatorBuilder: (_, index) {
+            Report report = model.reports[index];
+            return (isFromTimebank
+                    ? true
+                    : report.isTimebankReport == isFromTimebank)
+                ? Divider(
+                    thickness: 1,
+                  )
+                : Container();
           },
         ),
       ),

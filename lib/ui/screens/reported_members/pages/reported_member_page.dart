@@ -5,14 +5,20 @@ import 'package:sevaexchange/ui/screens/reported_members/widgets/reported_member
 
 class ReportedMembersPage extends StatefulWidget {
   final String timebankId;
+  final String communityId;
+  final bool isFromTimebank;
 
-  const ReportedMembersPage({Key key, this.timebankId}) : super(key: key);
+  const ReportedMembersPage(
+      {Key key, this.timebankId, this.communityId, this.isFromTimebank})
+      : super(key: key);
 
-  static Route<dynamic> route({String timebankId}) {
+  static Route<dynamic> route(
+      {String timebankId, String communityId, bool isFromTimebank}) {
     return MaterialPageRoute(
       builder: (BuildContext context) => ReportedMembersPage(
-        timebankId: timebankId,
-      ),
+          timebankId: timebankId,
+          communityId: communityId,
+          isFromTimebank: isFromTimebank),
     );
   }
 
@@ -25,7 +31,11 @@ class _ReportedMembersPageState extends State<ReportedMembersPage> {
 
   @override
   void initState() {
-    _bloc.fetchReportedMembers(widget.timebankId);
+    _bloc.fetchReportedMembers(
+      widget.timebankId,
+      widget.communityId,
+      widget.isFromTimebank,
+    );
     super.initState();
   }
 
@@ -60,7 +70,10 @@ class _ReportedMembersPageState extends State<ReportedMembersPage> {
               padding: EdgeInsets.all(12),
               itemCount: snapshot.data.length,
               itemBuilder: (_, index) {
-                return ReportedMemberCard(model: snapshot.data[index]);
+                return ReportedMemberCard(
+                  model: snapshot.data[index],
+                  isFromTimebank: widget.isFromTimebank,
+                );
               },
             );
           },

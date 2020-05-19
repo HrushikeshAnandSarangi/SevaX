@@ -222,7 +222,11 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
-          ReportedMembersPage.route(timebankId: widget.timebankModel.id),
+          ReportedMembersPage.route(
+            timebankId: widget.timebankModel.id,
+            communityId: widget.timebankModel.communityId,
+            isFromTimebank: true,
+          ),
         );
       },
       child: Text(

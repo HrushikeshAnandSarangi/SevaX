@@ -8,8 +8,12 @@ import 'package:sevaexchange/ui/utils/avatar.dart';
 class ReportInfoCard extends StatelessWidget {
   final Report report;
   final double radius = 8;
+  final bool isFromTimebank;
 
-  const ReportInfoCard({Key key, this.report}) : super(key: key);
+  const ReportInfoCard({Key key, this.report, this.isFromTimebank})
+      : assert(report != null),
+        assert(isFromTimebank != null),
+        super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -48,6 +52,16 @@ class ReportInfoCard extends StatelessWidget {
                           color: Colors.grey,
                         ),
                       ),
+                      Offstage(
+                        offstage: !isFromTimebank,
+                        child: Text(
+                          "Reported in: ${report.entityName}",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
                       SizedBox(height: 20),
                       Text("${report.message}"),
                       SizedBox(height: 20),
@@ -59,13 +73,15 @@ class ReportInfoCard extends StatelessWidget {
                                 onTap: () {
                                   Navigator.of(context).push(
                                     Attachment.route(
-                                        attachment: report.attachment),
+                                      attachment: report.attachment,
+                                    ),
                                   );
                                 },
                                 child: Container(
                                   width: constraints.maxWidth / 2,
                                   child: CachedNetworkImage(
-                                      imageUrl: report.attachment),
+                                    imageUrl: report.attachment,
+                                  ),
                                 ),
                               ),
                             ),

@@ -1,25 +1,27 @@
 class ReportedMembersModel {
-  List<String> reporterId;
+  List<String> reporterIds;
+  List<String> timebankIds;
   String reportedId;
-  String timebankId;
   List<Report> reports;
   String reportedUserName;
   String reportedUserImage;
+  String communityId;
 
   ReportedMembersModel({
-    this.reporterId,
+    this.reporterIds,
     this.reportedId,
-    this.timebankId,
+    this.timebankIds,
     this.reports,
     this.reportedUserName,
     this.reportedUserImage,
+    this.communityId,
   });
 
   factory ReportedMembersModel.fromMap(Map<String, dynamic> map) =>
       ReportedMembersModel(
-        reporterId: List<String>.from(map["reporterId"].map((x) => x)),
+        reporterIds: List<String>.from(map["reporterIds"].map((x) => x)),
         reportedId: map["reportedId"],
-        timebankId: map["timebankId"],
+        timebankIds: List<String>.from(map["timebankIds"].map((x) => x)),
         reports: List<Report>.from(
           map["reports"].map(
             (x) => Report.fromMap(
@@ -29,15 +31,17 @@ class ReportedMembersModel {
         ),
         reportedUserName: map["reportedUserName"],
         reportedUserImage: map["reportedUserImage"],
+        communityId: map["communityId"],
       );
 
   Map<String, dynamic> toMap() => {
-        "reporterId": List<dynamic>.from(reporterId.map((x) => x)),
+        "reporterId": List<dynamic>.from(reporterIds.map((x) => x)),
         "reportedId": reportedId,
-        "timebankId": timebankId,
+        "timebankIds": timebankIds,
         "reports": List<dynamic>.from(reports.map((x) => x.toMap())),
         "reportedUserName": reportedUserName,
         "reportedUserImage": reportedUserImage,
+        "communityId": communityId,
       };
 }
 
@@ -47,6 +51,9 @@ class Report {
   String reporterId;
   String reporterName;
   String reporterImage;
+  String entityName;
+  bool isTimebankReport;
+  int timestamp;
 
   Report({
     this.attachment,
@@ -54,6 +61,9 @@ class Report {
     this.reporterId,
     this.reporterImage,
     this.reporterName,
+    this.entityName,
+    this.isTimebankReport,
+    this.timestamp,
   });
 
   factory Report.fromMap(Map<String, dynamic> map) => Report(
@@ -62,6 +72,9 @@ class Report {
         reporterId: map["reporterId"],
         reporterName: map["reporterName"],
         reporterImage: map["reporterImage"],
+        entityName: map["entityName"],
+        isTimebankReport: map["isTimebankReport"],
+        timestamp: map["timeStamp"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -70,5 +83,8 @@ class Report {
         "reporterId": reporterId,
         "reporterName": reporterName,
         "reporterImage": reporterImage,
+        "entityName": entityName,
+        "isTimebankReport": isTimebankReport,
+        "timestamp": timestamp,
       };
 }

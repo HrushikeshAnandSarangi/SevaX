@@ -9,19 +9,30 @@ class ReportMemberPage extends StatefulWidget {
   final UserModel reportingUserModel;
   final UserModel reportedUserModel;
   final String timebankId;
+  final String entityName;
+  final bool isFromTimebank;
 
   const ReportMemberPage({
     Key key,
     this.reportingUserModel,
     this.reportedUserModel,
     this.timebankId,
-  }) : super(key: key);
+    this.entityName,
+    this.isFromTimebank,
+  })  : assert(reportedUserModel != null),
+        assert(reportedUserModel != null),
+        assert(timebankId != null),
+        assert(entityName != null),
+        assert(isFromTimebank != null),
+        super(key: key);
 
   static Route<dynamic> route({
     Key key,
-    reportingUserModel,
-    reportedUserModel,
-    timebankId,
+    UserModel reportingUserModel,
+    UserModel reportedUserModel,
+    String timebankId,
+    String entityName,
+    bool isFromTimebank,
   }) =>
       MaterialPageRoute(
         builder: (BuildContext context) => ReportMemberPage(
@@ -29,6 +40,8 @@ class ReportMemberPage extends StatefulWidget {
           reportingUserModel: reportingUserModel,
           reportedUserModel: reportedUserModel,
           timebankId: timebankId,
+          entityName: entityName,
+          isFromTimebank: isFromTimebank,
         ),
       );
 
@@ -188,6 +201,8 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                             reportedUserModel: widget.reportedUserModel,
                             reportingUserModel: widget.reportingUserModel,
                             timebankId: widget.timebankId,
+                            entityName: widget.entityName,
+                            isTimebankReport: widget.isFromTimebank,
                           )
                               .then((status) {
                             _showSnackBar("Member reported successfully");
