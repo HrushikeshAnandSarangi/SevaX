@@ -1,10 +1,14 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
+
+import '../../flavor_config.dart';
 
 class InvitationManager {
   Map<String, InvitationViaLink> cacheList;
@@ -74,7 +78,7 @@ class InvitationManager {
   }) async {
     return await mailCodeToInvitedMember(
       mailContent:
-          "You have been invited again to ${invitation.timebankTitle} timebank, you can join the same by clicking on the link ${invitation.invitationLink}.",
+          "You have been invited to ${invitation.timebankTitle} timebank, you can join the same by clicking on the link ${invitation.invitationLink}",
       mailReciever: invitation.inviteeEmail,
       mailSender: invitation.senderEmail,
       mailSubject: "Awesome!, You've recieved an invitation.",
@@ -87,12 +91,13 @@ class InvitationManager {
     return await createDynamicLinkFor(
       communityId: invitation.communityId,
       inviteeEmail: invitation.inviteeEmail,
+      primaryTimebankId: invitation.timebankId,
     )
         .then((String invitationLink) async {
           invitation.setInvitationLink(invitationLink);
           await mailCodeToInvitedMember(
             mailContent:
-                "You have been invited to to ${invitation.timebankTitle} timebank, you can join the same by clicking on the link $invitationLink.",
+                "You have been invited to to ${invitation.timebankTitle} timebank, you can join the same by clicking on the link $invitationLink",
             mailReciever: invitation.inviteeEmail,
             mailSender: invitation.senderEmail,
             mailSubject: "Awesome!, You've recieved an invitation.",
@@ -120,6 +125,80 @@ class InvitationManager {
         })
         .then((_) => true)
         .catchError((_) => false);
+  }
+
+  static Future<bool> registerMemberToCommunity({
+    @required String communityId,
+    @required String primaryTimebankId,
+    @required String memberJoiningSevaUserId,
+    @required String newMemberJoinedEmail,
+  }) async {
+    return await _addMemberToTimebank(
+      communityId: communityId,
+      primaryTimebankId: primaryTimebankId,
+      memberJoiningSevaUserId: memberJoiningSevaUserId,
+      newMemberJoinedEmail: newMemberJoinedEmail,
+    ).commit().then((onValue) => true).catchError((onError) => false);
+  }
+
+  static WriteBatch _addMemberToTimebank({
+    @required String communityId,
+    @required String primaryTimebankId,
+    @required String memberJoiningSevaUserId,
+    @required String newMemberJoinedEmail,
+  }) {
+    //add to timebank members
+
+    WriteBatch batch = Firestore.instance.batch();
+    var timebankRef = Firestore.instance
+        .collection('timebanknew')
+        .document(primaryTimebankId);
+
+    var newMemberDocumentReference =
+        Firestore.instance.collection('users').document(newMemberJoinedEmail);
+
+    batch.updateData(timebankRef, {
+      'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
+    });
+
+    batch.updateData(newMemberDocumentReference, {
+      'communities': FieldValue.arrayUnion([communityId]),
+      'currentCommunity': communityId,
+    });
+
+    var addToCommunityRef =
+        Firestore.instance.collection('communities').document(communityId);
+    batch.updateData(addToCommunityRef, {
+      'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
+    });
+
+    return batch;
+  }
+
+  static Future<bool> mailCodeToInvitedMember({
+    String mailSender,
+    String mailReciever,
+    String mailSubject,
+    String mailContent,
+  }) async {
+    try {
+      await http.post(
+        "${FlavorConfig.values.cloudFunctionBaseURL}/mailForSoftDelete",
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(
+          {
+            "mailSender": mailSender,
+            "mailSubject": mailSubject,
+            "mailBody": mailContent,
+            // 'mailReceiver': mailReciever,
+            'mailReceiver': "burhan@uipep.com",
+          },
+        ),
+      );
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 }
 

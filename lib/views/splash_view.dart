@@ -14,7 +14,7 @@ import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/onboarding/email_verify_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
-import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
+import 'package:sevaexchange/utils/deep_link_manager/onboard_via_link.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
@@ -461,8 +461,10 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
+    await fetchLinkData();
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
+
     print("---> ${loggedInUser.currentCommunity}");
     if ((loggedInUser.currentCommunity == " " ||
             loggedInUser.currentCommunity == "" ||
@@ -482,11 +484,7 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
-
-    // print('logger${loggedInUser}');
     UserData.shared.user = loggedInUser;
-
-    // AppConfig.remoteConfig = await RemoteConfig.instance;
 
     await AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 3));
     await AppConfig.remoteConfig.activateFetched();
@@ -537,25 +535,24 @@ class _SplashViewState extends State<SplashView> {
       _navigateToCoreView(loggedInUser);
     }
 
-    await FirebaseAuth.instance
-        .currentUser()
-        .then((FirebaseUser firebaseUser) async {
-      if (firebaseUser != null) {
-        if (!firebaseUser.isEmailVerified) {
-          await Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => VerifyEmail(
-                  firebaseUser: firebaseUser,
-                  email: loggedInUser.email,
-                  emailSent: loggedInUser.emailSent,
+    if (FlavorConfig.appFlavor != Flavor.SEVA_DEV)
+      await FirebaseAuth.instance
+          .currentUser()
+          .then((FirebaseUser firebaseUser) async {
+        if (firebaseUser != null) {
+          if (!firebaseUser.isEmailVerified) {
+            await Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => VerifyEmail(
+                    firebaseUser: firebaseUser,
+                    email: loggedInUser.email,
+                    emailSent: loggedInUser.emailSent,
+                  ),
                 ),
-              ),
-              (Route<dynamic> route) => false);
+                (Route<dynamic> route) => false);
+          }
         }
-      }
-    });
-
-    await fetchLinkData(loggedInUser: loggedInUser);
+      });
 
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);

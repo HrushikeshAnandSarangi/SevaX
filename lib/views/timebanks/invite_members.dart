@@ -293,7 +293,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }) {
     return RaisedButton(
       onPressed: () async {
-        inivitationManager.showProgress(title: "Please wait...");
+        inivitationManager.showProgress(title: "Sending invitation...");
         await inivitationManager.inviteMemberToTimebankViaLink(
           invitation: InvitationViaLink.createInvitation(
             timebankTitle: timebankModel.name,
@@ -318,7 +318,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Widget resendInvitation({InvitationViaLink invitation}) {
     return RaisedButton(
       onPressed: () async {
-        inivitationManager.showProgress(title: "Please wait...");
+        inivitationManager.showProgress(title: "Sending invitation...");
         await inivitationManager.resendInvitationToMember(
           invitation: invitation,
         );
@@ -326,7 +326,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
         setState(() {});
       },
-      child: Text('Resend'),
+      child: Text(
+        'Resend\nInvitation',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 10,
+        ),
+      ),
       color: Colors.indigo,
       textColor: Colors.white,
       shape: StadiumBorder(),
