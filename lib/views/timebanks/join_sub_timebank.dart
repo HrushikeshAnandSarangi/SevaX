@@ -508,7 +508,7 @@ Future<List<TimebankModel>> getTimebanksForCommunity(
     timebankModel.documents.forEach((timebank) {
       var model = TimebankModel.fromMap(timebank.data);
       if (model.id != primaryTimebankId &&
-          model.softDelete &&
+          !model.softDelete &&
           model.private == false) {
         timebankList.add(model);
       }

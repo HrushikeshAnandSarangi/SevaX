@@ -32,11 +32,11 @@ Future<void> createJoinInvite(
 }
 
 ////to get all the user invites --
-Future<String> getGroupInvitationStatus({
+Future<GroupInvitationStatus> getGroupInvitationStatus({
   @required String timebankId,
   @required String sevauserid,
 }) async {
-  Query query = Firestore.instance
+  var query = Firestore.instance
       .collection('invitations')
       .where('invitationType', isEqualTo: 'GroupInvite')
       .where('invitedUserId', isEqualTo: sevauserid)
@@ -44,26 +44,11 @@ Future<String> getGroupInvitationStatus({
 
   QuerySnapshot snapshot = await query.getDocuments();
   print('ghghgh ${snapshot.documents}');
-  GroupInviteStatus status;
-  String title;
-
-//  if (snapshot.documents == null) {
-//    return GroupInviteStatus.INVITE;
-//  } else {
-  // return GroupInviteStatus.INVITED;
-  snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-    InvitationModel model = InvitationModel.fromMap(documentSnapshot.data);
-    print('ghghgh ${documentSnapshot.data}  $sevauserid');
-
-    if (model.invitedUserId == sevauserid) {
-      status = GroupInviteStatus.INVITED;
-      title = 'Invited';
-    } else {
-      status = GroupInviteStatus.INVITE;
-      title = 'Invite';
-    }
-  });
-  return title;
+  if (snapshot.documents.length > 0) {
+    return GroupInvitationStatus.isInvited();
+  } else {
+    return GroupInvitationStatus.notYetInvited();
+  }
 }
 
 /// Get all timebanknew associated with a User
@@ -225,6 +210,8 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
 
   var radius = 20;
   try {
+    print('inside near');
+
     radius = json.decode(AppConfig.remoteConfig.getString('radius'));
   } on Exception {
     print("Exception raised while getting radius ");
@@ -233,9 +220,7 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
       "radius is fetched from remote config near community list stream ${radius.toDouble()}");
 
   GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
-  var query = Firestore.instance.collection('communities').where(
-        'softDelete',
-      );
+  var query = Firestore.instance.collection('communities');
   var data = geo.collection(collectionRef: query).within(
         center: center,
         radius: radius.toDouble(),
@@ -253,7 +238,7 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
             CommunityModel model = CommunityModel(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
 
-            model.softDelete || model.private == true
+            model.softDelete == true || model.private == true
                 ? print("Removed soft deleted item")
                 : communityList.add(model);
 
