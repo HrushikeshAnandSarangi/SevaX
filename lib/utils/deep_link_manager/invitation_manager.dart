@@ -190,8 +190,8 @@ class InvitationManager {
             "mailSender": mailSender,
             "mailSubject": mailSubject,
             "mailBody": mailContent,
-            // 'mailReceiver': mailReciever,
-            'mailReceiver': "burhan@uipep.com",
+            'mailReceiver': mailReciever,
+            // 'mailReceiver': "burhan@uipep.com",
           },
         ),
       );

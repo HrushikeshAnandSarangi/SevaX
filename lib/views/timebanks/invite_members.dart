@@ -330,7 +330,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         setState(() {});
       },
       child: Text(
-        'Resend\nInvitation',
+        'Resend Invitation',
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 10,
