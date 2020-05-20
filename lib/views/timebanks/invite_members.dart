@@ -199,7 +199,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           if (snapshot.hasError) {
             return Text('Please try again later');
           }
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (!snapshot.hasData) {
             return Center(
               child: SizedBox(
                 height: 48,

@@ -76,9 +76,11 @@ class InvitationManager {
   Future<bool> resendInvitationToMember({
     InvitationViaLink invitation,
   }) async {
+    var mailContent =
+        "<p>You are invited to download the SevaX app and join the Timebank ${invitation.timebankTitle}. The SevaX App uses Timebanking, a reciprocity-based system where community members help each other out in exchange for Seva Credits. Please click on this <a href=\"${invitation.invitationLink};&nbsp;\">link</a> to join.</p>";
+
     return await mailCodeToInvitedMember(
-      mailContent:
-          "You have been invited to ${invitation.timebankTitle} timebank, you can join the same by clicking on the link ${invitation.invitationLink}",
+      mailContent: mailContent,
       mailReciever: invitation.inviteeEmail,
       mailSender: invitation.senderEmail,
       mailSubject: "Awesome!, You've recieved an invitation.",
@@ -94,10 +96,11 @@ class InvitationManager {
       primaryTimebankId: invitation.timebankId,
     )
         .then((String invitationLink) async {
+          var mailContent =
+              "<p>You are invited to download the SevaX app and join the Timebank ${invitation.timebankTitle}. The SevaX App uses Timebanking, a reciprocity-based system where community members help each other out in exchange for Seva Credits. Please click on this <a href=\"$invitationLink;&nbsp;\">link</a> to join.</p>";
           invitation.setInvitationLink(invitationLink);
           await mailCodeToInvitedMember(
-            mailContent:
-                "You have been invited to to ${invitation.timebankTitle} timebank, you can join the same by clicking on the link $invitationLink",
+            mailContent: mailContent,
             mailReciever: invitation.inviteeEmail,
             mailSender: invitation.senderEmail,
             mailSubject: "Awesome!, You've recieved an invitation.",
@@ -189,9 +192,10 @@ class InvitationManager {
           {
             "mailSender": mailSender,
             "mailSubject": mailSubject,
-            "mailBody": mailContent,
-            'mailReceiver': mailReciever,
-            // 'mailReceiver': "burhan@uipep.com",
+            "mailBody": "",
+            "mailBodyHtml": mailContent,
+            'mailReceiver': "burhan@uipep.com",
+            // 'mailReceiver': mailReciever,
           },
         ),
       );
