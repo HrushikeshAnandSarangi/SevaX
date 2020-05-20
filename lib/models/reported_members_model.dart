@@ -6,6 +6,7 @@ class ReportedMembersModel {
   String reportedUserName;
   String reportedUserImage;
   String communityId;
+  String reportedUserEmail;
 
   ReportedMembersModel({
     this.reporterIds,
@@ -15,6 +16,7 @@ class ReportedMembersModel {
     this.reportedUserName,
     this.reportedUserImage,
     this.communityId,
+    this.reportedUserEmail,
   });
 
   factory ReportedMembersModel.fromMap(Map<String, dynamic> map) =>
@@ -31,6 +33,7 @@ class ReportedMembersModel {
         ),
         reportedUserName: map["reportedUserName"],
         reportedUserImage: map["reportedUserImage"],
+        reportedUserEmail: map["reportedUserEmail"],
         communityId: map["communityId"],
       );
 
@@ -42,6 +45,7 @@ class ReportedMembersModel {
         "reportedUserName": reportedUserName,
         "reportedUserImage": reportedUserImage,
         "communityId": communityId,
+        "reportedUserEmail": reportedUserEmail,
       };
 }
 
@@ -52,6 +56,7 @@ class Report {
   String reporterName;
   String reporterImage;
   String entityName;
+  String entityId;
   bool isTimebankReport;
   int timestamp;
 
@@ -64,6 +69,7 @@ class Report {
     this.entityName,
     this.isTimebankReport,
     this.timestamp,
+    this.entityId,
   });
 
   factory Report.fromMap(Map<String, dynamic> map) => Report(
@@ -73,8 +79,9 @@ class Report {
         reporterName: map["reporterName"],
         reporterImage: map["reporterImage"],
         entityName: map["entityName"],
+        entityId: map["entityId"],
         isTimebankReport: map["isTimebankReport"],
-        timestamp: map["timeStamp"],
+        timestamp: map["timestamp"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -84,7 +91,9 @@ class Report {
         "reporterName": reporterName,
         "reporterImage": reporterImage,
         "entityName": entityName,
+        "entityId": entityId,
         "isTimebankReport": isTimebankReport,
         "timestamp": timestamp,
+        "isNotified": false, //for backend notification check//do not change
       };
 }
