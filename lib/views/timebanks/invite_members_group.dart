@@ -40,7 +40,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   static const String JOINED = "Joined";
   static const String DECLINED = "Declined";
   static const String INVITED = "Invited";
-
+  InvitationModel invitationModel = InvitationModel();
   @override
   void initState() {
     // TODO: implement initState
@@ -229,7 +229,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         if (snapshot.hasData) {
           print("----------------- has data");
 
-          InvitationModel invitationModel = snapshot.data;
+          invitationModel = snapshot.data;
           GroupInviteUserModel groupInviteUserModel =
               GroupInviteUserModel.fromMap(invitationModel.data);
           if (groupInviteUserModel.declined == true) {
@@ -396,7 +396,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
           timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
     );
     return Text(
-      statusText + " on " + date,
+      "Invitation " + statusText + " on " + date,
       style: TextStyle(
           color: groupInviteUserModel.declined ? Colors.red : Colors.blue,
           fontFamily: 'Europa'),
@@ -410,7 +410,21 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
     if (groupInviteStatus == GroupInviteStatus.INVITED ||
         groupInviteStatus == GroupInviteStatus.DECLINED) {
       return RaisedButton(
-        onPressed: () {},
+        onPressed: () {
+          if (groupInviteStatus == GroupInviteStatus.INVITED) {
+            setState(() {
+              resendNotification(
+                  userEmail: user.email,
+                  notificationId: groupInviteUserModel.notificationId);
+            });
+          } else {
+            setState(() {
+              resendNotificationIfDeclined(
+                  userEmail: user.email,
+                  notificationId: groupInviteUserModel.notificationId);
+            });
+          }
+        },
         child: Text("Resend Invitate", style: TextStyle(fontFamily: 'Europa')),
         color: FlavorConfig.values.theme.primaryColor,
         textColor: Colors.white,
@@ -458,9 +472,52 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
     );
   }
 
+  void resendNotification({String userEmail, String notificationId}) async {
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    await Firestore.instance
+        .collection('invitations')
+        .document(invitationModel.id)
+        .updateData({
+      'data.timestamp': timestamp,
+    });
+    await Firestore.instance
+        .collection('users')
+        .document(userEmail)
+        .collection('notifications')
+        .document(notificationId)
+        .updateData({
+      'data.timestamp': timestamp,
+    });
+  }
+
+  void resendNotificationIfDeclined(
+      {String notificationId, String userEmail}) async {
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    await Firestore.instance
+        .collection('invitations')
+        .document(invitationModel.id)
+        .updateData({
+      'data.timestamp': timestamp,
+      'data.declined': false,
+    });
+    await Firestore.instance
+        .collection('users')
+        .document(userEmail)
+        .collection('notifications')
+        .document(notificationId)
+        .updateData({
+      'isRead': false,
+      'data.declined': false,
+      'data.timestamp': timestamp,
+    });
+  }
+
   void sendInvitationNotification({
     UserModel userModel,
   }) async {
+    String notificationId = utils.Utils.getUuid();
     GroupInviteUserModel groupInviteUserModel = GroupInviteUserModel(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         timebankId: widget.parenttimebankid,
@@ -472,7 +529,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
         invitedUserId: userModel.sevaUserID,
         declined: false,
         declinedTimestamp: 0,
-        adminId: SevaCore.of(context).loggedInUser.sevaUserID);
+        adminId: SevaCore.of(context).loggedInUser.sevaUserID,
+        notificationId: notificationId);
 
     InvitationModel invitationModel = InvitationModel(
       timebankId: widget.timebankModel.id,
@@ -482,7 +540,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
     );
 
     NotificationsModel notification = NotificationsModel(
-        id: utils.Utils.getUuid(),
+        id: notificationId,
         timebankId: widget.parenttimebankid,
         data: groupInviteUserModel.toMap(),
         isRead: false,

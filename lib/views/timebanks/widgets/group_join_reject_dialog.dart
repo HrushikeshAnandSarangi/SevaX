@@ -4,7 +4,6 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class GroupJoinRejectDialogView extends StatefulWidget {
   final GroupInviteUserModel groupInviteUserModel;
@@ -196,15 +195,23 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
     String notificationId,
     String userEmail,
   }) async {
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
     await Firestore.instance
         .collection('invitations')
         .document(invitationId)
+        .updateData(
+            {'data.declined': true, 'data.declinedTimestamp': timestamp});
+    await Firestore.instance
+        .collection('users')
+        .document(userEmail)
+        .collection('notifications')
+        .document(notificationId)
         .updateData({
-      'isDeclined': true,
-      'declinedTimestamp': DateTime.now().millisecondsSinceEpoch
+      'isRead': true,
+      'data.declined': true,
+      'data.declinedTimestamp': timestamp,
     });
-
-    FirestoreManager.readUserNotification(notificationId, userEmail);
+    //  FirestoreManager.readUserNotification(notificationId, userEmail);
   }
 
   Widget _getCloseButton(BuildContext context) {

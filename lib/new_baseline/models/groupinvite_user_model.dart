@@ -13,6 +13,7 @@ class GroupInviteUserModel extends DataModel {
   String communityId;
   bool declined;
   int declinedTimestamp;
+  String notificationId;
 
   GroupInviteUserModel(
       {this.adminName,
@@ -26,7 +27,8 @@ class GroupInviteUserModel extends DataModel {
       this.communityId,
       this.adminId,
       this.declined,
-      this.declinedTimestamp}); //  String adminName;
+      this.declinedTimestamp,
+      this.notificationId}); //  String adminName;
 
   @override
   Map<String, dynamic> toMap() {
@@ -72,6 +74,10 @@ class GroupInviteUserModel extends DataModel {
       object['declinedTimestamp'] = this.declinedTimestamp;
     }
 
+    if (this.notificationId != null) {
+      object['notificationId'] = this.notificationId;
+    }
+
     object['timestamp'] = DateTime.now().millisecondsSinceEpoch;
 
     return object;
@@ -109,6 +115,11 @@ class GroupInviteUserModel extends DataModel {
     if (map.containsKey('adminId')) {
       this.adminId = map['adminId'];
     }
+
+    if (map.containsKey('notificationId')) {
+      this.notificationId = map['notificationId'];
+    }
+
     if (map.containsKey('timestamp')) {
       this.timestamp = map['timestamp'];
     }
