@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/attachment_page.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:timeago/timeago.dart' as timeAgo;
 
 class ReportInfoCard extends StatelessWidget {
   final Report report;
@@ -46,7 +47,13 @@ class ReportInfoCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "2h ago",
+                        report.timestamp == null
+                            ? "" //error message when timestamp is null
+                            : timeAgo.format(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                  report.timestamp,
+                                ),
+                              ),
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey,
@@ -55,7 +62,7 @@ class ReportInfoCard extends StatelessWidget {
                       Offstage(
                         offstage: !isFromTimebank,
                         child: Text(
-                          "Reported in: ${report.entityName}",
+                          'Reported within ${report.isTimebankReport ? "Timebank" : "Group : ${report.entityName}"}',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.red,
