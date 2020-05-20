@@ -199,7 +199,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           if (snapshot.hasError) {
             return Text('Please try again later');
           }
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (!snapshot.hasData) {
             return Center(
               child: SizedBox(
                 height: 48,
@@ -320,7 +320,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }) {
     return RaisedButton(
       onPressed: () async {
-        inivitationManager.showProgress(title: "Please wait...");
+        inivitationManager.showProgress(title: "Sending invitation...");
         await inivitationManager.inviteMemberToTimebankViaLink(
           invitation: InvitationViaLink.createInvitation(
             timebankTitle: timebankModel.name,
@@ -345,7 +345,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Widget resendInvitation({InvitationViaLink invitation}) {
     return RaisedButton(
       onPressed: () async {
-        inivitationManager.showProgress(title: "Please wait...");
+        inivitationManager.showProgress(title: "Sending invitation...");
         await inivitationManager.resendInvitationToMember(
           invitation: invitation,
         );
@@ -353,7 +353,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
         setState(() {});
       },
-      child: Text('Resend'),
+      child: Text(
+        'Resend Invitation',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 10,
+        ),
+      ),
       color: Colors.indigo,
       textColor: Colors.white,
       shape: StadiumBorder(),
