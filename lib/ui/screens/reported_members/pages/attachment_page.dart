@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/ui/screens/reported_members/widgets/zoom_image.dart';
 
 class Attachment extends StatelessWidget {
   final String attachment;
@@ -25,9 +26,8 @@ class Attachment extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: CachedNetworkImage(
-          imageUrl: attachment,
-          fit: BoxFit.cover,
+        child: ZoomableImage(
+          CachedNetworkImageProvider(attachment),
         ),
       ),
     );
