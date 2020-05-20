@@ -16,9 +16,10 @@ class ReportedMembersPage extends StatefulWidget {
       {String timebankId, String communityId, bool isFromTimebank}) {
     return MaterialPageRoute(
       builder: (BuildContext context) => ReportedMembersPage(
-          timebankId: timebankId,
-          communityId: communityId,
-          isFromTimebank: isFromTimebank),
+        timebankId: timebankId,
+        communityId: communityId,
+        isFromTimebank: isFromTimebank,
+      ),
     );
   }
 
@@ -59,11 +60,11 @@ class _ReportedMembersPageState extends State<ReportedMembersPage> {
           stream: _bloc.reportedMembers,
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
+              return Center(child: CircularProgressIndicator());
             }
 
             if (snapshot.data == null || snapshot.data.isEmpty) {
-              return Text("No data");
+              return Center(child: Text("No data"));
             }
 
             return ListView.builder(
@@ -73,6 +74,7 @@ class _ReportedMembersPageState extends State<ReportedMembersPage> {
                 return ReportedMemberCard(
                   model: snapshot.data[index],
                   isFromTimebank: widget.isFromTimebank,
+                  timebankId: widget.timebankId,
                 );
               },
             );

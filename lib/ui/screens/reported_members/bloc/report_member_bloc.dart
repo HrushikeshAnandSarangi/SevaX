@@ -66,6 +66,7 @@ class ReportMemberBloc {
       reporterImage: reportingUserModel.photoURL,
       reporterName: reportingUserModel.fullname,
       entityName: entityName,
+      entityId: timebankId,
       isTimebankReport: isTimebankReport,
       timestamp: DateTime.now().millisecondsSinceEpoch,
     );
@@ -80,6 +81,7 @@ class ReportMemberBloc {
           "reportedId": reportedUserModel.sevaUserID,
           "reportedUserName": reportedUserModel.fullname,
           "reportedUserImage": reportedUserModel.photoURL,
+          "reportedUserEmail": reportedUserModel.email,
           "reports": FieldValue.arrayUnion([report.toMap()]),
           "reporterIds": FieldValue.arrayUnion([reportingUserModel.sevaUserID]),
           "timebankIds": FieldValue.arrayUnion([timebankId]),

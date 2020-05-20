@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -15,11 +17,20 @@ import 'package:sevaexchange/views/messages/chatview.dart';
 class ProfileViewer extends StatefulWidget {
   final String userEmail;
   final String timebankId;
+  final String entityName;
+  final bool isFromTimebank;
   //UserModel userModel;
   //bool isBlocked = false;
 
-  ProfileViewer({this.userEmail, @required this.timebankId});
-
+  ProfileViewer({
+    this.userEmail,
+    @required this.timebankId,
+    this.isFromTimebank,
+    this.entityName,
+  })  : assert(userEmail != null),
+        assert(entityName != null),
+        assert(timebankId != null),
+        assert(isFromTimebank != null);
   @override
   State<StatefulWidget> createState() {
     return ProfileViewerState();
@@ -29,6 +40,12 @@ class ProfileViewer extends StatefulWidget {
 class ProfileViewerState extends State<ProfileViewer> {
   UserModel user;
   bool isBlocked;
+
+  @override
+  initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     print("**********************${widget.timebankId}");
@@ -108,6 +125,12 @@ class ProfileViewerState extends State<ProfileViewer> {
                                       reporterUserModel: userData,
                                       reportedUserModel: user,
                                     ),
+                            reportStatus: getReportedStatus(
+                              timebankId: widget.timebankId,
+                              currentUserId:
+                                  SevaCore.of(context).loggedInUser.sevaUserID,
+                              profileUserId: user.sevaUserID,
+                            ),
                           ),
                         ],
                       ),
@@ -235,13 +258,18 @@ class ProfileViewerState extends State<ProfileViewer> {
 
   void onReportClick(
       {UserModel reportedUserModel, UserModel reporterUserModel}) {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       ReportMemberPage.route(
-        reportedUserModel: reportedUserModel,
-        reportingUserModel: reporterUserModel,
-        timebankId: widget.timebankId,
-      ),
-    );
+          reportedUserModel: reportedUserModel,
+          reportingUserModel: reporterUserModel,
+          timebankId: widget.timebankId,
+          isFromTimebank: widget.isFromTimebank,
+          entityName: widget.entityName),
+    )
+        .then((_) {
+      setState(() {});
+    });
     // showDialog(
     //   context: context,
     //   builder: (BuildContext viewContext) {
@@ -601,6 +629,7 @@ class ProfileHeader extends StatelessWidget {
   final Function block;
   final Function report;
   final bool isBlocked;
+  final Future<bool> reportStatus;
 
   const ProfileHeader({
     Key key,
@@ -611,6 +640,7 @@ class ProfileHeader extends StatelessWidget {
     this.block,
     this.report,
     this.isBlocked,
+    this.reportStatus,
   }) : super(key: key);
 
   @override
@@ -703,12 +733,19 @@ class ProfileHeader extends StatelessWidget {
                 tooltip: isBlocked ? 'Unblock' : 'Block',
                 color: isBlocked ? Colors.red : Theme.of(context).accentColor,
               ),
-              IconButton(
-                icon: Icon(Icons.flag),
-                onPressed: report,
-                tooltip: 'Report member',
-                color: Theme.of(context).accentColor,
-              ),
+              FutureBuilder<bool>(
+                  future: reportStatus,
+                  builder: (context, snapshot) {
+                    log(snapshot.data.toString());
+                    return IconButton(
+                      icon: Icon(Icons.flag),
+                      onPressed: !(snapshot.data ?? true) ? report : null,
+                      tooltip: 'Report member',
+                      color: !(snapshot.data ?? true)
+                          ? Theme.of(context).accentColor
+                          : Colors.grey,
+                    );
+                  }),
             ],
           ),
         )
@@ -910,4 +947,27 @@ class SkillAndInterestBuilder extends StatelessWidget {
       },
     );
   }
+}
+
+Future<bool> getReportedStatus({
+  String timebankId,
+  String currentUserId,
+  String profileUserId,
+}) async {
+  bool flag = false;
+  QuerySnapshot query = await Firestore.instance
+      .collection('reported_users_list')
+      .where("reportedId", isEqualTo: profileUserId)
+      .where("reporterIds", arrayContains: currentUserId)
+      // .where("timebankIds", arrayContains: timebankId)
+      .getDocuments();
+  query.documents.forEach((data) {
+    if (data.data['timebankIds'].contains(timebankId)) {
+      flag = true;
+    } else {
+      flag = false;
+    }
+  });
+
+  return flag;
 }

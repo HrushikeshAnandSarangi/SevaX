@@ -1,14 +1,21 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_info.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
+import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/views/messages/chatview.dart';
 
 class ReportedMemberCard extends StatelessWidget {
   final ReportedMembersModel model;
+  final String timebankId;
   final bool isFromTimebank;
-  const ReportedMemberCard({Key key, this.model, this.isFromTimebank})
+  const ReportedMemberCard(
+      {Key key, this.model, this.isFromTimebank, this.timebankId})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -19,6 +26,13 @@ class ReportedMemberCard extends StatelessWidget {
           ReportedMemberInfo.route(
             model: model,
             isFromTimebank: isFromTimebank,
+            removeMember: () => removeMember(),
+            messageMember: () => messageMember(
+              context: context,
+              userEmail: model.reportedUserEmail,
+              timebankId: timebankId,
+              communityId: model.communityId,
+            ),
           ),
         );
       },
@@ -88,7 +102,12 @@ class ReportedMemberCard extends StatelessWidget {
                     height: 22,
                   ),
                 ),
-                onTap: () {},
+                onTap: () => messageMember(
+                  context: context,
+                  userEmail: model.reportedUserEmail,
+                  timebankId: timebankId,
+                  communityId: model.communityId,
+                ),
               ),
               SizedBox(width: 16),
               GestureDetector(
@@ -97,7 +116,7 @@ class ReportedMemberCard extends StatelessWidget {
                   width: 22,
                   height: 22,
                 ),
-                onTap: () {},
+                onTap: removeMember,
               ),
             ],
           ),
@@ -118,5 +137,36 @@ class ReportedMemberCard extends StatelessWidget {
       });
       return count;
     }
+  }
+
+  void messageMember({
+    @required BuildContext context,
+    @required String userEmail,
+    @required String timebankId,
+    @required String communityId,
+  }) {
+    log("message member");
+    List users = [userEmail, timebankId];
+    users.sort();
+    ChatModel chatModel = ChatModel();
+    chatModel.communityId = communityId;
+    chatModel.user1 = users[0];
+    chatModel.user2 = users[1];
+    chatModel.timebankId = timebankId;
+    createChat(chat: chatModel);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatView(
+          useremail: userEmail,
+          chatModel: chatModel,
+        ),
+      ),
+    );
+  }
+
+  void removeMember() {
+    log("remove member");
   }
 }

@@ -563,7 +563,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         decoration: notificationDecoration,
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
+                            backgroundImage: NetworkImage(
+                                user.photoURL ?? defaultUserImageURL),
                           ),
                           title: Text(model.title),
                           subtitle: RichText(
@@ -704,7 +705,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                 decoration: notificationDecoration,
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
+                    backgroundImage:
+                        NetworkImage(user.photoURL ?? defaultUserImageURL),
                   ),
                   title: Text(model.title),
                   subtitle: RichText(
@@ -813,7 +815,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
+                      backgroundImage: NetworkImage(
+                          userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(
@@ -987,10 +990,10 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       communityid: SevaCore.of(context).loggedInUser.currentCommunity,
     );
     // creating chat with a timebank
-    String loggedInEmail = model.timebankId;
+    String timebankId = model.timebankId;
 
     // String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-    List users = [user.email, loggedInEmail];
+    List users = [user.email, timebankId];
     users.sort();
     ChatModel chatModel = ChatModel();
     chatModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
@@ -1036,7 +1039,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
               title: Text("Join request"),
               leading: user.photoURL != null
                   ? CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
+                      backgroundImage:
+                          NetworkImage(user.photoURL ?? defaultUserImageURL),
                     )
                   : Offstage(),
               subtitle: Text(
@@ -1091,7 +1095,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
+                      backgroundImage: NetworkImage(
+                          userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(
@@ -1316,7 +1321,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             child: ListTile(
               title: Text("Offer Accepted"),
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
+                backgroundImage:
+                    NetworkImage(user.photoURL ?? defaultUserImageURL),
               ),
               subtitle: Text(
                   '${user.fullname.toLowerCase()} has shown interest in your offer'),

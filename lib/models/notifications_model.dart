@@ -178,6 +178,7 @@ enum NotificationType {
   TYPE_OFFER_FULFILMENT_ACHIEVED,
   TYPE_OFFER_SUBSCRIPTION_COMPLETED,
   TYPE_FEEDBACK_FROM_SIGNUP_MEMBER,
+  TYPE_REPORT_MEMBER,
 }
 
 //Check the method
@@ -217,6 +218,7 @@ Map<String, NotificationType> typeMapper = {
       NotificationType.TYPE_OFFER_SUBSCRIPTION_COMPLETED,
   "TYPE_FEEDBACK_FROM_SIGNUP_MEMBER":
       NotificationType.TYPE_FEEDBACK_FROM_SIGNUP_MEMBER,
+  "TYPE_REPORT_MEMBER": NotificationType.TYPE_REPORT_MEMBER,
 };
 
 ClearNotificationModel clearNotificationModelFromJson(String str) =>

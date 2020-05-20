@@ -11,6 +11,7 @@ import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
 import 'package:sevaexchange/ui/screens/add_members/pages/add_members.dart';
+import 'package:sevaexchange/ui/screens/reported_members/widgets/reported_member_navigator_widget.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
@@ -592,6 +593,17 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         admins: timebankModel.admins);
     _adminsWidgets = [];
     _adminEmails = [];
+    // _adminsWidgets.add(reportedMemberBuilder(
+    //     SevaCore.of(context).loggedInUser.currentCommunity));
+    if (widget.isUserAdmin ||
+        SevaCore.of(context).loggedInUser.sevaUserID ==
+            timebankModel.creatorId) {
+      _adminsWidgets.add(ReportedMemberNavigatorWidget(
+        isTimebankReport: !widget.isFromGroup,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        timebankId: widget.timebankId,
+      ));
+    }
     _adminsWidgets.add(getSectionTitle(context, 'Admins & Organizers'));
     SplayTreeMap<String, dynamic>.from(adminUserModel, (a, b) => a.compareTo(b))
         .forEach((key, user) {
@@ -602,6 +614,21 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     });
   }
 
+  Widget reportedMemberBuilder(String communityId) {
+    return FutureBuilder(
+      future: Firestore.instance
+          .collection("reported_users_list")
+          .where("communityId", isEqualTo: communityId)
+          .getDocuments(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data != null) {
+          return Text(snapshot.data.documents.length.toString());
+        }
+        return Container();
+      },
+    );
+  }
+
   Widget getUserWidget(UserModel user, BuildContext context,
       TimebankModel model, bool isAdmin, bool isPromoteBottonVisible) {
     user.photoURL = user.photoURL == null ? defaultUserImageURL : user.photoURL;
@@ -610,11 +637,16 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         padding: EdgeInsets.all(10),
         child: InkWell(
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
+            Navigator.of(context).push(
+              MaterialPageRoute(
                 builder: (context) => ProfileViewer(
-                      userEmail: user.email,
-                      timebankId: timebankModel.id,
-                    )));
+                  userEmail: user.email,
+                  timebankId: timebankModel.id,
+                  entityName: timebankModel.name,
+                  isFromTimebank: !widget.isFromGroup,
+                ),
+              ),
+            );
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
