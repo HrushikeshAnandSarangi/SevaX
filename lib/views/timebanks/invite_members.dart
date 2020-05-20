@@ -257,35 +257,59 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     String email,
   }) {
     inivitationManager.initDialogForProgress(context: context);
-    return ListTile(
-      leading: CircleAvatar(),
-      title: Text(email,
-          style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w700)),
-      trailing: Container(
-        height: 40,
-        padding: EdgeInsets.all(2),
-        child: FutureBuilder(
-          future:
-              inivitationManager.checkInvitationStatus(email, timebankModel.id),
-          builder:
-              (BuildContext context, AsyncSnapshot<InvitationStatus> snapshot) {
-            if (!snapshot.hasData) {
-              return gettigStatus();
-            }
-            var invitationStatus = snapshot.data;
-            if (invitationStatus.isInvited) {
-              return resendInvitation(
-                invitation: inivitationManager.getInvitationForEmailFromCache(
-                  inviteeEmail: email,
+    return Card(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ListTile(
+                  leading: CircleAvatar(),
+                  title: Text(email,
+                      style: TextStyle(
+                          fontSize: 15.0, fontWeight: FontWeight.w700)),
                 ),
-              );
-            }
-            return inviteMember(
-              inviteeEmail: email,
-              timebankModel: timebankModel,
-            );
-          },
-        ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Container(
+                      height: 40,
+                      padding: EdgeInsets.only(right: 8),
+                      child: FutureBuilder(
+                        future: inivitationManager.checkInvitationStatus(
+                            email, timebankModel.id),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<InvitationStatus> snapshot) {
+                          if (!snapshot.hasData) {
+                            return gettigStatus();
+                          }
+                          var invitationStatus = snapshot.data;
+                          if (invitationStatus.isInvited) {
+                            return resendInvitation(
+                              invitation: inivitationManager
+                                  .getInvitationForEmailFromCache(
+                                inviteeEmail: email,
+                              ),
+                            );
+                          }
+                          return inviteMember(
+                            inviteeEmail: email,
+                            timebankModel: timebankModel,
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

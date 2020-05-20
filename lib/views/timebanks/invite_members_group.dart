@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/invitation_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
@@ -36,6 +38,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   List<InvitationModel> listInvitationModel;
   static const String INVITE = "Invite";
   static const String JOINED = "Joined";
+  static const String DECLINED = "Declined";
   static const String INVITED = "Invited";
 
   @override
@@ -198,80 +201,251 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                 itemCount: userlist.length,
                 itemBuilder: (context, index) {
                   //  return userInviteWidget(email: "Umesha@uipep.com");
-                  bool isJoined = false;
 
                   if (groupMembersList.contains(userlist[index].sevaUserID)) {
-                    isJoined = true;
+                    return joinedUserWidget(user: userlist[index]);
+                  } else {
+                    return getInvitationStatus(
+                      userModel: userlist[index],
+                    );
                   }
-                  return userWidget(user: userlist[index], isJoined: isJoined);
                 }),
           );
         });
   }
 
-  Widget userWidget({
-    UserModel user,
-    bool isJoined,
+  Widget getInvitationStatus({
+    UserModel userModel,
   }) {
-    return ListTile(
-      leading: user.photoURL != null
-          ? ClipOval(
-              child: FadeInImage.assetNetwork(
-                fadeInCurve: Curves.easeIn,
-                fadeInDuration: Duration(milliseconds: 400),
-                fadeOutDuration: Duration(milliseconds: 200),
-                width: 50,
-                height: 50,
-                placeholder: 'lib/assets/images/noimagefound.png',
-                image: user.photoURL,
-              ),
-            )
-          : CircleAvatar(),
-      // onTap: goToNext(snapshot.data),
-      title: Text(user.fullname,
-          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
-      subtitle: Text(user.email),
-      trailing: !isJoined
-          ? FutureBuilder(
-              future: FirestoreManager.getGroupInvitationStatus(
-                  timebankId: widget.timebankModel.id,
-                  sevauserid: user.sevaUserID),
-              builder: (BuildContext context,
-                  AsyncSnapshot<GroupInvitationStatus> snapshot) {
-                if (!snapshot.hasData) {
-                  return gettigStatus();
-                }
-                var groupInviteStatus = snapshot.data;
-                if (groupInviteStatus.isInvited) {
-                  return RaisedButton(
-                    onPressed: null,
-                    child: Text("Invited"),
-                    color: FlavorConfig.values.theme.accentColor,
-                    textColor: FlavorConfig.values.buttonTextColor,
-                    shape: StadiumBorder(),
-                  );
-                }
-                return RaisedButton(
-                  onPressed: () {
-                    setState(() {
-                      sendInvitationNotification(userModel: user);
-                    });
-                  },
-                  child: Text('Invite'),
-                  color: FlavorConfig.values.theme.accentColor,
-                  textColor: FlavorConfig.values.buttonTextColor,
-                  shape: StadiumBorder(),
-                );
-              },
-            )
-          : RaisedButton(
-              onPressed: null,
-              child: Text("Joined"),
-              color: FlavorConfig.values.theme.accentColor,
-              textColor: FlavorConfig.values.buttonTextColor,
-              shape: StadiumBorder(),
-            ),
+    return FutureBuilder<InvitationModel>(
+      future: FirestoreManager.getInvitationModel(
+          timebankId: widget.timebankModel.id,
+          sevauserid: userModel.sevaUserID),
+      builder: (context, snapshot) {
+        GroupInviteStatus groupInviteStatus;
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return Offstage();
+        if (snapshot.hasError) return Offstage();
+        if (snapshot.hasData) {
+          print("----------------- has data");
+
+          InvitationModel invitationModel = snapshot.data;
+          GroupInviteUserModel groupInviteUserModel =
+              GroupInviteUserModel.fromMap(invitationModel.data);
+          if (groupInviteUserModel.declined == true) {
+            groupInviteStatus = GroupInviteStatus.DECLINED;
+            return userWidget(
+                user: userModel,
+                status: "Declined",
+                groupInviteUserModel: groupInviteUserModel,
+                groupInviteStatus: groupInviteStatus);
+          }
+          groupInviteStatus = GroupInviteStatus.INVITED;
+          return userWidget(
+              groupInviteStatus: groupInviteStatus,
+              user: userModel,
+              groupInviteUserModel: groupInviteUserModel,
+              status: 'Invited');
+        } else {
+          print("----------------- no data");
+
+          groupInviteStatus = GroupInviteStatus.INVITE;
+          return userWidget(
+              user: userModel,
+              status: "Invite",
+              groupInviteStatus: groupInviteStatus);
+        }
+      },
     );
+  }
+
+  Widget joinedUserWidget({
+    UserModel user,
+  }) {
+    return Card(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ListTile(
+                  leading: user.photoURL != null
+                      ? ClipOval(
+                          child: FadeInImage.assetNetwork(
+                            fadeInCurve: Curves.easeIn,
+                            fadeInDuration: Duration(milliseconds: 400),
+                            fadeOutDuration: Duration(milliseconds: 200),
+                            width: 50,
+                            height: 50,
+                            placeholder: 'lib/assets/images/noimagefound.png',
+                            image: user.photoURL,
+                          ),
+                        )
+                      : CircleAvatar(),
+                  // onTap: goToNext(snapshot.data),
+                  title: Text(user.fullname,
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'Europa')),
+                  subtitle:
+                      Text(user.email, style: TextStyle(fontFamily: 'Europa')),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: RaisedButton(
+                        onPressed: null,
+                        child: Text(JOINED,
+                            style: TextStyle(fontFamily: 'Europa')),
+                        color: FlavorConfig.values.theme.accentColor,
+                        textColor: FlavorConfig.values.buttonTextColor,
+                        shape: StadiumBorder(),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget userWidget({
+    GroupInviteStatus groupInviteStatus,
+    UserModel user,
+    String status,
+    GroupInviteUserModel groupInviteUserModel,
+  }) {
+    return Card(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ListTile(
+                  leading: user.photoURL != null
+                      ? ClipOval(
+                          child: FadeInImage.assetNetwork(
+                            fadeInCurve: Curves.easeIn,
+                            fadeInDuration: Duration(milliseconds: 400),
+                            fadeOutDuration: Duration(milliseconds: 200),
+                            width: 50,
+                            height: 50,
+                            placeholder: 'lib/assets/images/noimagefound.png',
+                            image: user.photoURL,
+                          ),
+                        )
+                      : CircleAvatar(),
+                  // onTap: goToNext(snapshot.data),
+                  title: Text(user.fullname,
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'Europa')),
+                  subtitle: groupInviteStatus == GroupInviteStatus.INVITE
+                      ? Text(user.email, style: TextStyle(fontFamily: 'Europa'))
+                      : invitationStatusText(
+                          status, groupInviteUserModel, groupInviteStatus),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: buttonWidget(
+                          user: user,
+                          groupInviteUserModel: groupInviteUserModel,
+                          groupInviteStatus: groupInviteStatus),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget invitationStatusText(
+      String status,
+      GroupInviteUserModel groupInviteUserModel,
+      GroupInviteStatus groupInviteStatus) {
+    String statusText = getGroupUserStatusTitle(groupInviteStatus);
+    String date = DateFormat('dd MMM yyyy').format(
+      getDateTimeAccToUserTimezone(
+          dateTime: DateTime.fromMillisecondsSinceEpoch(
+              groupInviteUserModel.declined
+                  ? groupInviteUserModel.declinedTimestamp
+                  : groupInviteUserModel.timestamp),
+          timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
+    );
+    return Text(
+      statusText + " on " + date,
+      style: TextStyle(
+          color: groupInviteUserModel.declined ? Colors.red : Colors.blue,
+          fontFamily: 'Europa'),
+    );
+  }
+
+  Widget buttonWidget(
+      {UserModel user,
+      GroupInviteUserModel groupInviteUserModel,
+      GroupInviteStatus groupInviteStatus}) {
+    if (groupInviteStatus == GroupInviteStatus.INVITED ||
+        groupInviteStatus == GroupInviteStatus.DECLINED) {
+      return RaisedButton(
+        onPressed: () {},
+        child: Text("Resend Invitate", style: TextStyle(fontFamily: 'Europa')),
+        color: FlavorConfig.values.theme.primaryColor,
+        textColor: Colors.white,
+        shape: StadiumBorder(),
+      );
+    } else {
+      return RaisedButton(
+        onPressed: () {
+          setState(() {
+            sendInvitationNotification(userModel: user);
+          });
+        },
+        child: Text('Invite', style: TextStyle(fontFamily: 'Europa')),
+        color: FlavorConfig.values.theme.primaryColor,
+        textColor: Colors.white,
+        shape: StadiumBorder(),
+      );
+    }
+  }
+
+  String getGroupUserStatusTitle(GroupInviteStatus status) {
+    print(" check satttt $status");
+    switch (status) {
+      case GroupInviteStatus.INVITED:
+        return INVITED;
+
+      case GroupInviteStatus.JOINED:
+        return JOINED;
+
+      case GroupInviteStatus.DECLINED:
+        return DECLINED;
+
+      default:
+        return INVITE;
+    }
   }
 
   Widget gettigStatus() {
@@ -288,22 +462,24 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
     UserModel userModel,
   }) async {
     GroupInviteUserModel groupInviteUserModel = GroupInviteUserModel(
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         timebankId: widget.parenttimebankid,
         timebankName: widget.timebankModel.name,
         timebankImage: widget.timebankModel.photoUrl,
         aboutTimebank: widget.timebankModel.missionStatement,
         adminName: SevaCore.of(context).loggedInUser.fullname,
-        groupId: widget.timebankModel.id);
+        groupId: widget.timebankModel.id,
+        invitedUserId: userModel.sevaUserID,
+        declined: false,
+        declinedTimestamp: 0,
+        adminId: SevaCore.of(context).loggedInUser.sevaUserID);
 
     InvitationModel invitationModel = InvitationModel(
-        timebankId: widget.timebankModel.id,
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-        type: InvitationType.GroupInvite,
-        data: groupInviteUserModel.toMap(),
-        id: utils.Utils.getUuid(),
-        invitedUserId: userModel.sevaUserID,
-        adminId: SevaCore.of(context).loggedInUser.sevaUserID,
-        timestamp: DateTime.now().millisecondsSinceEpoch);
+      timebankId: widget.timebankModel.id,
+      type: InvitationType.GroupInvite,
+      data: groupInviteUserModel.toMap(),
+      id: utils.Utils.getUuid(),
+    );
 
     NotificationsModel notification = NotificationsModel(
         id: utils.Utils.getUuid(),
@@ -326,15 +502,15 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
   }
 }
 
-enum GroupInviteStatus { INVITE, INVITED, JOINED }
+enum GroupInviteStatus { INVITE, INVITED, JOINED, DECLINED }
 
-class GroupInvitationStatus {
-  bool isInvited;
-
-  GroupInvitationStatus.notYetInvited() {
-    this.isInvited = false;
-  }
-  GroupInvitationStatus.isInvited() {
-    this.isInvited = true;
-  }
-}
+//class GroupInvitationStatus {
+//  bool isInvited;
+//
+//  GroupInvitationStatus.notYetInvited() {
+//    this.isInvited = false;
+//  }
+//  GroupInvitationStatus.isInvited() {
+//    this.isInvited = true;
+//  }
+//}

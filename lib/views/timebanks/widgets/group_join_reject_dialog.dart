@@ -4,8 +4,6 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
-import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class GroupJoinRejectDialogView extends StatefulWidget {
@@ -13,17 +11,19 @@ class GroupJoinRejectDialogView extends StatefulWidget {
   final String timeBankId;
   final String notificationId;
   final UserModel userModel;
+  final String invitationId;
 
   GroupJoinRejectDialogView(
       {this.groupInviteUserModel,
       this.timeBankId,
       this.notificationId,
-      this.userModel});
+      this.userModel,
+      this.invitationId});
 
   @override
   _GroupJoinRejectDialogViewState createState() =>
-      _GroupJoinRejectDialogViewState(
-          groupInviteUserModel, timeBankId, notificationId, userModel);
+      _GroupJoinRejectDialogViewState(groupInviteUserModel, timeBankId,
+          notificationId, userModel, invitationId);
 }
 
 class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
@@ -31,9 +31,10 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
   final String timeBankId;
   final String notificationId;
   final UserModel userModel;
+  final String invitationId;
 
   _GroupJoinRejectDialogViewState(this.groupInviteUserModel, this.timeBankId,
-      this.notificationId, this.userModel);
+      this.notificationId, this.userModel, this.invitationId);
 
   BuildContext progressContext;
 
@@ -140,8 +141,9 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
                     onPressed: () {
-                      FirestoreManager.readUserNotification(
-                          notificationId, userModel.email);
+                      declineInvitationRequest(
+                          userEmail: userModel.email,
+                          notificationId: notificationId);
 
                       if (progressContext != null) {
                         Navigator.pop(progressContext);
@@ -190,35 +192,19 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
         });
   }
 
-  void declineInvitationbRequest({
-    RequestInvitationModel model,
+  void declineInvitationRequest({
     String notificationId,
-    UserModel userModel,
-  }) {
-    print(
-        'decline data ${model.toString() + notificationId + userModel.toString()}');
-    rejectInviteRequest(
-      requestId: model.requestId,
-      rejectedUserId: userModel.sevaUserID,
-      notificationId: notificationId,
-    );
+    String userEmail,
+  }) async {
+    await Firestore.instance
+        .collection('invitations')
+        .document(invitationId)
+        .updateData({
+      'isDeclined': true,
+      'declinedTimestamp': DateTime.now().millisecondsSinceEpoch
+    });
 
-    FirestoreManager.readUserNotification(notificationId, userModel.email);
-  }
-
-  void approveInvitationForVolunteerRequest({
-    RequestInvitationModel model,
-    String notificationId,
-    UserModel user,
-  }) {
-    acceptInviteRequest(
-      requestId: model.requestId,
-      acceptedUserEmail: user.email,
-      acceptedUserId: user.sevaUserID,
-      notificationId: notificationId,
-    );
-
-    FirestoreManager.readUserNotification(notificationId, user.email);
+    FirestoreManager.readUserNotification(notificationId, userEmail);
   }
 
   Widget _getCloseButton(BuildContext context) {
