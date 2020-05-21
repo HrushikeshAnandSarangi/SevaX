@@ -78,6 +78,7 @@ class CommunityCreateEditController {
 
   CommunityCreateEditController() {
     print(timebank);
+    timebank.preventAccedentalDelete = true;
   }
 
   UpdateCommunityDetails(user, timebankimageurl, location) {
@@ -115,6 +116,8 @@ class CommunityCreateEditController {
         .updateValueByKey('rootTimebankId', FlavorConfig.values.timebankId);
     this.timebank.updateValueByKey('community_id', this.community.id);
     this.timebank.updateValueByKey('address', this.timebank.address);
+    this.timebank.updateValueByKey(
+        'preventAccedentalDelete', this.timebank.preventAccedentalDelete);
     this.timebank.updateValueByKey('location',
         location == null ? GeoFirePoint(40.754387, -73.984291) : location);
   }
@@ -156,16 +159,6 @@ class TransactionBloc {
   Observable<TransactionController> get trasactionController =>
       _transactionController.stream;
 
-//  fetchCommunities(name) async {
-//    CommunityListModel communityListModel = CommunityListModel();
-//    communityListModel.loading = true;
-//    _communitiesFetcher.sink.add(communityListModel);
-//    communityListModel =
-//    await _repository.searchCommunityByName(name, communityListModel);
-//    communityListModel.loading = false;
-//    print(communityListModel.communities.length);
-//    _communitiesFetcher.sink.add(communityListModel);
-//  }
   handleApprovedTransaction(
       isApproved, from, to, timebankid, type, credits) async {
     if (isApproved) {
@@ -515,7 +508,6 @@ class CommunityCreateEditBloc {
 
     var timebanks = await _repository.getSubTimebanksForUser(
         SevaCore.of(context).loggedInUser.currentCommunity);
-    //  var timebanks = await _repository.getSubTimebanksForUser(community.loggedinuser.currentCommunity,context);
     community.timebanks = timebanks;
     _createEditCommunity.add(community);
   }
@@ -549,14 +541,19 @@ class CommunityCreateEditBloc {
   }
 
   createCommunity(
-      CommunityCreateEditController community, UserModel user) async {
+    CommunityCreateEditController community,
+    UserModel user,
+  ) async {
     // create a community flow;
     await _repository.createCommunityByName(community.community);
     // create a timebank flow;
     await _repository.createTimebankById(community.timebank);
     // update user to the timebank.
     await _repository.updateUserWithTimeBankIdCommunityId(
-        user, community.timebank.id, community.community.id);
+      user,
+      community.timebank.id,
+      community.community.id,
+    );
   }
 
   updateUser(timebank) async {
@@ -564,8 +561,10 @@ class CommunityCreateEditBloc {
     var communitytemp =
         await _repository.getCommunityDetailsByCommunityIdrepo(tm.communityId);
 
-    await _repository.updateCommunityWithUserId(communitytemp.id,
-        this._createEditCommunity.value.loggedinuser.sevaUserID);
+    await _repository.updateCommunityWithUserId(
+      communitytemp.id,
+      this._createEditCommunity.value.loggedinuser.sevaUserID,
+    );
 
     await _repository.updateUserWithTimeBankIdCommunityId(
         this._createEditCommunity.value.loggedinuser, tm.id, communitytemp.id);

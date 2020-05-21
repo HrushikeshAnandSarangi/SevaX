@@ -273,10 +273,7 @@ class _SplashViewState extends State<SplashView> {
             colors: [
               Theme.of(context).primaryColor,
               Theme.of(context).primaryColor,
-              // Colors.red,
-              // Colors.red[400],
             ],
-            //stops: [0, 0.6, 1],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -333,10 +330,7 @@ class _SplashViewState extends State<SplashView> {
             colors: [
               Theme.of(context).primaryColor,
               Theme.of(context).primaryColor,
-              // Colors.red,
-              // Colors.red[400],
             ],
-            //stops: [0, 0.6, 1],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -345,16 +339,6 @@ class _SplashViewState extends State<SplashView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Text(
-              //   'Humanity\nFirst'.toUpperCase(),
-              //   textAlign: TextAlign.center,
-              //   style: TextStyle(
-              //     letterSpacing: 5,
-              //     fontSize: 24,
-              //     color: Colors.white,
-              //     fontWeight: FontWeight.w700,
-              //   ),
-              // ),
               SizedBox(
                 height: 16,
               ),
@@ -535,24 +519,23 @@ class _SplashViewState extends State<SplashView> {
       _navigateToCoreView(loggedInUser);
     }
 
-    if (FlavorConfig.appFlavor != Flavor.SEVA_DEV)
-      await FirebaseAuth.instance
-          .currentUser()
-          .then((FirebaseUser firebaseUser) async {
-        if (firebaseUser != null) {
-          if (!firebaseUser.isEmailVerified) {
-            await Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (context) => VerifyEmail(
-                    firebaseUser: firebaseUser,
-                    email: loggedInUser.email,
-                    emailSent: loggedInUser.emailSent,
-                  ),
+    await FirebaseAuth.instance
+        .currentUser()
+        .then((FirebaseUser firebaseUser) async {
+      if (firebaseUser != null) {
+        if (!firebaseUser.isEmailVerified) {
+          await Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => VerifyEmail(
+                  firebaseUser: firebaseUser,
+                  email: loggedInUser.email,
+                  emailSent: loggedInUser.emailSent,
                 ),
-                (Route<dynamic> route) => false);
-          }
+              ),
+              (Route<dynamic> route) => false);
         }
-      });
+      }
+    });
 
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);

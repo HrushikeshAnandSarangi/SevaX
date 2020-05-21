@@ -82,6 +82,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 
   void initState() {
     super.initState();
+    timebankModel.preventAccedentalDelete = true;
     var _searchText = "";
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
@@ -269,7 +270,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                   type: InfoType.PRIVATE_GROUP,
                 ),
               ),
-              // Divider(),
               Padding(
                 padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
                 child: Checkbox(
@@ -280,74 +280,31 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       timebankModel.private = value;
                     });
                     print(timebankModel.private);
-
-//                      snapshot.data.community
-//                          .updateValueByKey('private', value);
-//                      communityModel.private = value;
-//                      snapshot.data.timebank.updateValueByKey('private', value);
-//                      createEditCommunityBloc.onChange(snapshot.data);
+                  },
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              headingText('Private accedental delete', true),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                child: Checkbox(
+                  value: timebankModel.preventAccedentalDelete,
+                  onChanged: (bool value) {
+                    print(value);
+                    setState(() {
+                      timebankModel.preventAccedentalDelete = value;
+                    });
+                    print(timebankModel.preventAccedentalDelete);
                   },
                 ),
               ),
             ],
           ),
           tappableInviteMembers,
-//          Row(
-//            children: <Widget>[
-//              headingText('Protected group', false),
-//              Column(
-//                children: <Widget>[
-//                  Divider(),
-//                  Checkbox(
-//                    checkColor: Colors.white,
-//                    activeColor: Colors.green,
-//                    value: protectedVal,
-//                    onChanged: (bool value) {
-//                      setState(() {
-//                        protectedVal = value;
-//                      });
-//                    },
-//                  ),
-//                ],
-//              ),
-//            ],
-//          ),
-//          Text(
-//            'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled.',
-//            style: TextStyle(
-//              fontSize: 12,
-//              color: Colors.grey,
-//            ),
-//          ),
           headingText('Is this pin at a right place?', false),
-          // Center(
-          //   child: FlatButton.icon(
-          //     icon: Icon(Icons.add_location),
-          //     label: Text(
-          //       selectedAddress == null || selectedAddress.isEmpty
-          //           ? 'Add Location'
-          //           : selectedAddress,
-          //     ),
-          //     color: Colors.grey[200],
-          //     onPressed: () {
-          //       Navigator.push(
-          //         context,
-          //         MaterialPageRoute<LocationDataModel>(
-          //           builder: (context) => LocationPicker(
-          //             selectedLocation: location,
-          //           ),
-          //         ),
-          //       ).then((dataModel) {
-          //         if (dataModel != null) location = dataModel.geoPoint;
-          //         setState(() {
-          //           this.selectedAddress = dataModel.location;
-          //         });
-          //         // _getLocation();
-          //         log('ReceivedLocation: $selectedAddress');
-          //       });
-          //     },
-          //   ),
-          // ),
           Center(
             child: LocationPickerWidget(
               selectedAddress: selectedAddress,
