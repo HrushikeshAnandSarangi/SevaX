@@ -375,11 +375,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               ],
 
               validator: (value) {
-                if (value.isEmpty) {
-                  return 'Mobile Number cannot be empty.';
-                } else {
-                  projectModel.phoneNumber = '+' + value;
-                }
+                projectModel.phoneNumber = '+' + value;
                 return null;
               },
               maxLength: 15,
