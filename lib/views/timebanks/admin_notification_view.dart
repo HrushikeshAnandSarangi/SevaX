@@ -11,6 +11,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
+import 'package:sevaexchange/models/reported_member_notification_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
@@ -239,6 +240,23 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   },
                 );
                 break;
+
+              case NotificationType.TYPE_REPORT_MEMBER:
+                ReportedMemberNotificationModel data =
+                    ReportedMemberNotificationModel.fromMap(notification.data);
+                return NotificationCard(
+                  title: "Member Reported",
+                  subTitle: TimebankNotificationMessage.MEMBER_REPORT
+                      .replaceFirst('*name', data.reportedUserName),
+                  photoUrl: data.reportedUserImage,
+                  entityName: data.reportedUserName,
+                  onDismissed: () {
+                    _clearNotification(
+                      notification.timebankId,
+                      notification.id,
+                    );
+                  },
+                );
 
               default:
                 log("Unhandled timebank notification type ${notification.type} ${notification.id}");
