@@ -335,6 +335,18 @@ Future<void> readUserNotification(
   });
 }
 
+Future<void> unreadUserNotification(
+    String notificationId, String userEmail) async {
+  await Firestore.instance
+      .collection('users')
+      .document(userEmail)
+      .collection('notifications')
+      .document(notificationId)
+      .updateData({
+    'isRead': false,
+  });
+}
+
 Future<void> readTimeBankNotification(
     {String notificationId, String timebankId}) async {
   await Firestore.instance

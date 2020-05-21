@@ -12,7 +12,6 @@ import 'package:sevaexchange/models/reports_model.dart';
 import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/views/timebanks/invite_members_group.dart';
 
 import '../app_config.dart';
 
@@ -31,24 +30,49 @@ Future<void> createJoinInvite(
       .setData(invitationModel.toMap());
 }
 
-////to get all the user invites --
-Future<GroupInvitationStatus> getGroupInvitationStatus({
+//////to get all the user invites --
+//Future<GroupInvitationStatus> getGroupInvitationStatus({
+//  @required String timebankId,
+//  @required String sevauserid,
+//}) async {
+//  var query = Firestore.instance
+//      .collection('invitations')
+//      .where('invitationType', isEqualTo: 'GroupInvite')
+//      .where('data.invitedUserId', isEqualTo: sevauserid)
+//      .where('timebankId', isEqualTo: timebankId);
+//
+//  QuerySnapshot snapshot = await query.getDocuments();
+//  print('ghghgh ${snapshot.documents}');
+//  if (snapshot.documents.length > 0) {
+//    return GroupInvitationStatus.isInvited();
+//  } else {
+//    return GroupInvitationStatus.notYetInvited();
+//  }
+//}
+
+////to get the user invites --
+Future<InvitationModel> getInvitationModel({
   @required String timebankId,
   @required String sevauserid,
 }) async {
   var query = Firestore.instance
       .collection('invitations')
       .where('invitationType', isEqualTo: 'GroupInvite')
-      .where('invitedUserId', isEqualTo: sevauserid)
+      .where('data.invitedUserId', isEqualTo: sevauserid)
       .where('timebankId', isEqualTo: timebankId);
-
   QuerySnapshot snapshot = await query.getDocuments();
-  print('ghghgh ${snapshot.documents}');
-  if (snapshot.documents.length > 0) {
-    return GroupInvitationStatus.isInvited();
-  } else {
-    return GroupInvitationStatus.notYetInvited();
+  if (snapshot.documents.length == 0) {
+    return null;
   }
+  InvitationModel invitationModel;
+
+  print("query ${snapshot.documents.length}");
+
+  snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+    invitationModel = InvitationModel.fromMap(documentSnapshot.data);
+  });
+
+  return invitationModel;
 }
 
 /// Get all timebanknew associated with a User

@@ -257,35 +257,59 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     String email,
   }) {
     inivitationManager.initDialogForProgress(context: context);
-    return ListTile(
-      leading: CircleAvatar(),
-      title: Text(email,
-          style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w700)),
-      trailing: Container(
-        height: 40,
-        padding: EdgeInsets.all(2),
-        child: FutureBuilder(
-          future:
-              inivitationManager.checkInvitationStatus(email, timebankModel.id),
-          builder:
-              (BuildContext context, AsyncSnapshot<InvitationStatus> snapshot) {
-            if (!snapshot.hasData) {
-              return gettigStatus();
-            }
-            var invitationStatus = snapshot.data;
-            if (invitationStatus.isInvited) {
-              return resendInvitation(
-                invitation: inivitationManager.getInvitationForEmailFromCache(
-                  inviteeEmail: email,
+    return Card(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ListTile(
+                  leading: CircleAvatar(),
+                  title: Text(email,
+                      style: TextStyle(
+                          fontSize: 15.0, fontWeight: FontWeight.w700)),
                 ),
-              );
-            }
-            return inviteMember(
-              inviteeEmail: email,
-              timebankModel: timebankModel,
-            );
-          },
-        ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Container(
+                      height: 40,
+                      padding: EdgeInsets.only(right: 8),
+                      child: FutureBuilder(
+                        future: inivitationManager.checkInvitationStatus(
+                            email, timebankModel.id),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<InvitationStatus> snapshot) {
+                          if (!snapshot.hasData) {
+                            return gettigStatus();
+                          }
+                          var invitationStatus = snapshot.data;
+                          if (invitationStatus.isInvited) {
+                            return resendInvitation(
+                              invitation: inivitationManager
+                                  .getInvitationForEmailFromCache(
+                                inviteeEmail: email,
+                              ),
+                            );
+                          }
+                          return inviteMember(
+                            inviteeEmail: email,
+                            timebankModel: timebankModel,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                )
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -360,42 +384,68 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       isJoined = true;
     }
 
-    return ListTile(
-      leading: user.photoURL != null
-          ? ClipOval(
-              child: FadeInImage.assetNetwork(
-                fadeInCurve: Curves.easeIn,
-                fadeInDuration: Duration(milliseconds: 400),
-                fadeOutDuration: Duration(milliseconds: 200),
-                width: 50,
-                height: 50,
-                placeholder: 'lib/assets/images/noimagefound.png',
-                image: user.photoURL,
-              ),
-            )
-          : CircleAvatar(),
-      // onTap: goToNext(snapshot.data),
-      title: Text(user.fullname,
-          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
-      subtitle: Text(user.email),
-      trailing: RaisedButton(
-        onPressed: !isJoined
-            ? () async {
-                await addMemberToTimebank(
-                        sevaUserId: user.sevaUserID,
-                        timebankId: timebankModel.id,
-                        communityId: timebankModel.communityId,
-                        userEmail: user.email)
-                    .commit();
-                setState(() {
-                  getMembersList();
-                });
-              }
-            : null,
-        child: Text(isJoined ? "Joined" : "Add"),
-        color: FlavorConfig.values.theme.accentColor,
-        textColor: FlavorConfig.values.buttonTextColor,
-        shape: StadiumBorder(),
+    return Card(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ListTile(
+                  leading: user.photoURL != null
+                      ? ClipOval(
+                          child: FadeInImage.assetNetwork(
+                            fadeInCurve: Curves.easeIn,
+                            fadeInDuration: Duration(milliseconds: 400),
+                            fadeOutDuration: Duration(milliseconds: 200),
+                            width: 50,
+                            height: 50,
+                            placeholder: 'lib/assets/images/noimagefound.png',
+                            image: user.photoURL,
+                          ),
+                        )
+                      : CircleAvatar(),
+                  // onTap: goToNext(snapshot.data),
+                  title: Text(user.fullname,
+                      style: TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.w700)),
+                  subtitle: Text(user.email),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: RaisedButton(
+                        onPressed: !isJoined
+                            ? () async {
+                                await addMemberToTimebank(
+                                        sevaUserId: user.sevaUserID,
+                                        timebankId: timebankModel.id,
+                                        communityId: timebankModel.communityId,
+                                        userEmail: user.email)
+                                    .commit();
+                                setState(() {
+                                  getMembersList();
+                                });
+                              }
+                            : null,
+                        child: Text(isJoined ? "Joined" : "Add"),
+                        color: FlavorConfig.values.theme.primaryColor,
+                        textColor: Colors.white,
+                        shape: StadiumBorder(),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -478,8 +528,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                 ),
                                 GestureDetector(
                                   child: IconButton(
-                                    icon: Image.asset(
-                                      'lib/assets/images/recycle-bin.png',
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: Colors.grey,
                                     ),
                                     iconSize: 30,
                                     onPressed: () {
