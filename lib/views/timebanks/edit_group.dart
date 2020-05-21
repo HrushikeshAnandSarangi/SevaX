@@ -14,6 +14,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 import '../core.dart';
@@ -142,24 +143,25 @@ class EditGroupFormState extends State<EditGroupForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Center(
-              child: Padding(
-            padding: EdgeInsets.all(5.0),
-            child: Column(
-              children: <Widget>[
-                TimebankAvatar(
-                  photoUrl: widget.timebankModel.photoUrl ?? null,
-                ),
-                SizedBox(height: 5),
-                Text(
-                  'Group logo',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+            child: Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Column(
+                children: <Widget>[
+                  TimebankAvatar(
+                    photoUrl: widget.timebankModel.photoUrl ?? null,
                   ),
-                )
-              ],
+                  SizedBox(height: 5),
+                  Text(
+                    'Group logo',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  )
+                ],
+              ),
             ),
-          )),
+          ),
           headingText('Name your group', true),
           TextFormField(
             textInputAction: TextInputAction.done,
@@ -193,33 +195,51 @@ class EditGroupFormState extends State<EditGroupForm> {
               widget.timebankModel.missionStatement = value;
             },
           ),
-          // Row(
-          //   children: <Widget>[
-          //     headingText('Protected group', false),
-          //     Column(
-          //       children: <Widget>[
-          //         Divider(),
-          //         Checkbox(
-          //           checkColor: Colors.white,
-          //           activeColor: Colors.green,
-          //           value: widget.timebankModel.protected,
-          //           onChanged: (bool value) {
-          //             setState(() {
-          //               widget.timebankModel.protected = value;
-          //             });
-          //           },
-          //         ),
-          //       ],
-          //     ),
-          //   ],
-          // ),
-          // Text(
-          //   'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled.',
-          //   style: TextStyle(
-          //     fontSize: 12,
-          //     color: Colors.grey,
-          //   ),
-          // ),
+          Row(
+            children: <Widget>[
+              headingText('Private accedental delete', true),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                child: Checkbox(
+                  value: widget.timebankModel.preventAccedentalDelete,
+                  onChanged: (bool value) {
+                    print(value);
+                    setState(() {
+                      widget.timebankModel.preventAccedentalDelete = value;
+                    });
+                    print(widget.timebankModel.preventAccedentalDelete);
+                  },
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              headingText('Private Group', true),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                child: infoButton(
+                  context: context,
+                  key: GlobalKey(),
+                  type: InfoType.PRIVATE_GROUP,
+                ),
+              ),
+              Column(
+                children: <Widget>[
+                  Divider(),
+                  Checkbox(
+                    value: widget.timebankModel.private,
+                    onChanged: (bool value) {
+                      print(value);
+                      setState(() {
+                        widget.timebankModel.private = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
           headingText('Is this pin at a right place?', false),
           Container(
             margin: EdgeInsets.all(20),
@@ -228,7 +248,6 @@ class EditGroupFormState extends State<EditGroupForm> {
                 selectedAddress: selectedAddress,
                 location: location,
                 onChanged: (LocationDataModel dataModel) {
-                  log("received data model");
                   setState(() {
                     location = dataModel.geoPoint;
                     this.selectedAddress = dataModel.location;

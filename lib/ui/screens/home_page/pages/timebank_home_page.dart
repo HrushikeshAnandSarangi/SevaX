@@ -253,13 +253,17 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                           onPressed: navigateToCreateGroup,
                         ),
                         Spacer(),
-                        IconButton(
-                          icon: Image.asset(
-                            'lib/assets/images/help.png',
+                        Container(
+                          height: 40,
+                          width: 40,
+                          child: IconButton(
+                            icon: Image.asset(
+                              'lib/assets/images/help.png',
+                            ),
+                            color: FlavorConfig.values.theme.primaryColor,
+                            //iconSize: 16,
+                            onPressed: showGroupsWebPage,
                           ),
-                          color: FlavorConfig.values.theme.primaryColor,
-                          iconSize: 24,
-                          onPressed: showGroupsWebPage,
                         ),
                       ],
                     ),

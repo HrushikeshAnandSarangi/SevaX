@@ -77,6 +77,9 @@ class MainApplication extends StatelessWidget {
 
   const MainApplication({Key key, this.skipToHomePage = false, this.appLanguage})
       : super(key: key);
+
+  @override
+  void initState() {}
   @override
   Widget build(BuildContext context) {
     NewsModel news;

@@ -15,6 +15,7 @@ import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/onboarding/email_verify_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/deep_link_manager/onboard_via_link.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
@@ -105,9 +106,10 @@ class _SplashViewState extends State<SplashView> {
 
   void initFlurry() async {
     await Flurry.initialize(
-        androidKey: "NZN3QTYM42M6ZQXV3GJ8",
-        iosKey: "H9RX59248T458TDZGX3Y",
-        enableLog: true);
+      androidKey: "NZN3QTYM42M6ZQXV3GJ8",
+      iosKey: "H9RX59248T458TDZGX3Y",
+      enableLog: true,
+    );
   }
 
   @override
@@ -272,10 +274,7 @@ class _SplashViewState extends State<SplashView> {
             colors: [
               Theme.of(context).primaryColor,
               Theme.of(context).primaryColor,
-              // Colors.red,
-              // Colors.red[400],
             ],
-            //stops: [0, 0.6, 1],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -332,10 +331,7 @@ class _SplashViewState extends State<SplashView> {
             colors: [
               Theme.of(context).primaryColor,
               Theme.of(context).primaryColor,
-              // Colors.red,
-              // Colors.red[400],
             ],
-            //stops: [0, 0.6, 1],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -344,16 +340,6 @@ class _SplashViewState extends State<SplashView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Text(
-              //   'Humanity\nFirst'.toUpperCase(),
-              //   textAlign: TextAlign.center,
-              //   style: TextStyle(
-              //     letterSpacing: 5,
-              //     fontSize: 24,
-              //     color: Colors.white,
-              //     fontWeight: FontWeight.w700,
-              //   ),
-              // ),
               SizedBox(
                 height: 16,
               ),
@@ -460,8 +446,10 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
+    await fetchLinkData();
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
+
     print("---> ${loggedInUser.currentCommunity}");
     if ((loggedInUser.currentCommunity == " " ||
             loggedInUser.currentCommunity == "" ||
@@ -481,11 +469,7 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
-
-    // print('logger${loggedInUser}');
     UserData.shared.user = loggedInUser;
-
-    // AppConfig.remoteConfig = await RemoteConfig.instance;
 
     await AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 3));
     await AppConfig.remoteConfig.activateFetched();
@@ -531,80 +515,6 @@ class _SplashViewState extends State<SplashView> {
       });
     }
 
-    // return;
-
-    // json.decode(AppConfig.remoteConfig.getString('app_version'))
-
-    if (FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST) {
-      //check app version
-      bool isLatestVersion =
-          await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-        String appName = packageInfo.appName;
-        String packageName = packageInfo.packageName;
-        String version = packageInfo.version;
-
-        String buildNumber = packageInfo.buildNumber;
-        return Firestore.instance
-            .collection("vitals")
-            .document(Platform.isAndroid ? "vital_android" : "vital_ios")
-            .get()
-            .then((onValue) {
-          if (Platform.isAndroid) {
-            // we are on android platform
-            if (onValue.data.containsKey("latest_build_number")) {
-              var isForced = onValue.data['forced'];
-              var latestBuildNumber = onValue.data['latest_build_number'];
-              var latestVersionNumber = onValue.data['latest_version_number'];
-              int result = int.parse(version.replaceAll(".", ""));
-              int verionNumber =
-                  int.parse(latestVersionNumber.replaceAll(".", ""));
-              print(result);
-              print(verionNumber);
-
-              if (int.parse(buildNumber) < latestBuildNumber) {
-                this.mainForced = isForced;
-                print("App is Out of date");
-                return false;
-              } else {
-                print("App is up to date");
-                return true;
-              }
-            }
-          } else {
-            if (onValue.data.containsKey("latest_version_number")) {
-              var latestVersionNumber = onValue.data['latest_version_number'];
-              var isForced = onValue.data['forced'];
-              int result = int.parse(version.replaceAll(".", ""));
-              int verionNumber =
-                  int.parse(latestVersionNumber.replaceAll(".", ""));
-//            print(result);
-//            print(verionNumber);
-
-              if (result < verionNumber) {
-                print("App is Out of date");
-                this.mainForced = isForced;
-                return false;
-              } else {
-                return true;
-              }
-            }
-
-            return true;
-            //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number");
-          }
-          return true;
-        });
-      });
-
-      if (!isLatestVersion) {
-        await _navigateToUpdatePage(loggedInUser, mainForced);
-      }
-    }
-
-    // if (!loggedInUser.completedIntro) {
-    //   await _navogateToIntro(loggedInUser);
-    // }
-
     if (widget.skipToHomePage) {
       print('Navigating to home page');
       _navigateToCoreView(loggedInUser);
@@ -628,68 +538,31 @@ class _SplashViewState extends State<SplashView> {
       }
     });
 
-    print("reached here------->><><>");
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);
     }
 
-    print("===?${!(AppConfig.prefs.getBool(AppConfig.skip_skill) ?? false)}");
     if (!(AppConfig.prefs.getBool(AppConfig.skip_skill) ?? false) &&
         loggedInUser.skills == null) {
-      print("reached here------->><><> skill");
       await _navigateToSkillsView(loggedInUser);
     }
 
     if (!(AppConfig.prefs.getBool(AppConfig.skip_interest) ?? false) &&
         loggedInUser.interests == null) {
-      print("reached here------->><><> interest");
       await _navigateToInterestsView(loggedInUser);
     }
 
     if (!(AppConfig.prefs.getBool(AppConfig.skip_bio) ?? false) &&
         loggedInUser.bio == null) {
-      print("reached here------->><><> bio");
       await _navigateToBioView(loggedInUser);
     }
-    // if (loggedInUser.skills == null) {
-    //   await _navigateToSkillsView(loggedInUsesr);
-    // }
-
-    // if (loggedInUser.interests == null) {
-    //   await _navigateToInterestsView(loggedInUser);
-    // }
-
-    // if (loggedInUser.bio == null) {
-    //   await _navigateToBioView(loggedInUser);
-    // }
     loadingMessage = 'We met before';
 
-    // print(loggedInUser.communities);
     if (loggedInUser.communities == null || loggedInUser.communities.isEmpty) {
       await _navigateToFindCommunitiesView(loggedInUser);
     } else {
       _navigateToCoreView(loggedInUser);
-//      await _navigateToxxxview();
     }
-
-    // _navigateToCoreView(loggedInUser);
-
-    // if (loggedInUser.currentCommunity != null ||
-    //     loggedInUser.currentCommunity != "") {
-    //   await _navigateToHome_DashBoardView(loggedInUser);
-    // }
-
-    // if ()
-
-//    String location = loggedInUser.availability.location;
-//    print(location);
-//     if (loggedInUser.availability == null) {
-//       await _navigateToCalendarView(loggedInUser);
-//     }
-
-//     if (loggedInUser.requestStatus == "pending") {
-//       await _navigateToWaitingView(loggedInUser);
-//     }
   }
 
   Future<UserModel> _getSignedInUserDocs(String userId) async {
@@ -740,6 +613,11 @@ class _SplashViewState extends State<SplashView> {
         print("Error Updating introduction");
       });
     }
+  }
+
+  Future _addMemberToCommunity(UserModel loggedInUser) async {
+    // await Firestore.instance.collection('users').document(loggedInUser.email);
+    print("Here we go we found the member from match");
   }
 
   Future _navogateToIntro(UserModel loggedInUser) async {

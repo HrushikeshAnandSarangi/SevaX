@@ -259,7 +259,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 //      return nearByTimebanks();
 
     if (searchTextController.text.trim().length < 1) {
-      //  print('Search requires minimum 1 character');
       return Column(
         children: <Widget>[
           getEmptyWidget('Users', nearTimebankText),
@@ -279,6 +278,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             } else {
               if (snapshot.data.length != 0) {
                 List<CommunityModel> communityList = snapshot.data;
+                print("comm list ${communityList}");
+//                communityList
+//                    .removeWhere((community) => community.private == true);
+
                 return Padding(
                     padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
                     child: ListView.builder(
@@ -425,9 +428,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             return Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasData) {
-            //  print('near by comminities ${snapshot.data}');
+            print('near by comminities ${snapshot.data}');
             if (snapshot.data.length != 0) {
               List<CommunityModel> communityList = snapshot.data;
+
               return ListView.builder(
                   padding: EdgeInsets.only(
                     bottom: 180,

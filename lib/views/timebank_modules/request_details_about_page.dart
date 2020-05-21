@@ -358,7 +358,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
     return address;
   }
-
   bool isApplied = false;
   Widget getBottombar() {
     return Container(

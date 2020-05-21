@@ -209,28 +209,85 @@ class _HomeDashBoardState extends State<HomeDashBoard>
 
                 tabs.add(Tab(text: AppLocalizations.of(context).translate('main','manage')));
                 tabs.add(
-                  GetActiveTimebankNotifications(
-                      timebankId: primaryTimebank.id),
+                  Container(
+                    width: 14,
+                    height: 10,
+                    color: Colors.green,
+                  ),
+                  // GetActiveTimebankNotifications(
+                  //     timebankId: primaryTimebank.id),
                 );
                 tabs.add(
-                  getMessagingTab(
-                    timebankId: primaryTimebank.id,
-                    communityId:
-                        SevaCore.of(context).loggedInUser.currentCommunity,
+                  Container(
+                    width: 28,
+                    height: 10,
+                    color: Colors.red,
                   ),
+                  // getMessagingTab(
+                  //   timebankId: primaryTimebank.id,
+                  //   communityId:
+                  //       SevaCore.of(context).loggedInUser.currentCommunity,
+                  // ),
                 );
               }
             }
             return Column(
               children: <Widget>[
                 ShowLimitBadge(),
-                TabBar(
-                  controller: _timebankController,
-                  indicatorColor: Theme.of(context).primaryColor,
-                  unselectedLabelColor: Colors.black,
-                  labelColor: Theme.of(context).primaryColor,
-                  isScrollable: true,
-                  tabs: tabs,
+                Stack(
+                  children: <Widget>[
+                    TabBar(
+                      labelPadding: EdgeInsets.symmetric(horizontal: 10),
+                      controller: _timebankController,
+                      indicatorColor: Theme.of(context).primaryColor,
+                      unselectedLabelColor: Colors.black,
+                      labelColor: Theme.of(context).primaryColor,
+                      isScrollable: true,
+                      tabs: tabs,
+                    ),
+                    Offstage(
+                      offstage: !isAdmin,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          decoration: BoxDecoration(color: Colors.white),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              SizedBox(width: 5),
+                              Container(
+                                height: 30,
+                                width: 1,
+                                color: Colors.grey,
+                              ),
+                              SizedBox(width: 5),
+                              GestureDetector(
+                                onTap: () {
+                                  _timebankController.animateTo(8);
+                                },
+                                child: GetActiveTimebankNotifications(
+                                  timebankId: primaryTimebank.id,
+                                ),
+                              ),
+                              SizedBox(width: 14),
+                              GestureDetector(
+                                onTap: () {
+                                  _timebankController.animateTo(9);
+                                },
+                                child: getMessagingTab(
+                                  timebankId: primaryTimebank.id,
+                                  communityId: SevaCore.of(context)
+                                      .loggedInUser
+                                      .currentCommunity,
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Expanded(
                   child: TabBarView(
@@ -253,18 +310,12 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                         timebankModel: primaryTimebank,
                         isFromSettings: false,
                       ),
-                      // OffersModule.of(
-                      //   timebankId: primaryTimebank.id,
-                      //   timebankModel: primaryTimebank,
-                      // ),
+
                       OfferRouter(
                         timebankId: primaryTimebank.id,
                         timebankModel: primaryTimebank,
                       ),
-//                      ProjectRequests(
-//                        timebankId: primaryTimebank.id,
-//                        timebankModel: primaryTimebank,
-//                      ),
+
                       TimeBankAboutView.of(
                         timebankModel: primaryTimebank,
                         email: SevaCore.of(context).loggedInUser.email,

@@ -14,12 +14,16 @@ import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/location_model.dart';
+import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 class TimebankCreate extends StatelessWidget {
@@ -78,6 +82,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 
   void initState() {
     super.initState();
+    timebankModel.preventAccedentalDelete = true;
     var _searchText = "";
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
@@ -128,14 +133,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     List<String> members = [SevaCore.of(context).loggedInUser.sevaUserID];
-    globals.addedMembersId.forEach((m) {
-      members.add(m);
-    });
-
-    selectedUsers.forEach((key, user) {
-      print("Selected member with key $key");
-      members.add(user.sevaUserID);
-    });
 
     print("Final arrray $members");
 
@@ -147,6 +144,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.photoUrl = globals.timebankAvatarURL;
     timebankModel.createdAt = timestamp;
     timebankModel.admins = [SevaCore.of(context).loggedInUser.sevaUserID];
+    timebankModel.emailId = SevaCore.of(context).loggedInUser.email;
     timebankModel.coordinators = [];
     timebankModel.members = members;
     timebankModel.children = [];
@@ -168,7 +166,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         "timebanks": FieldValue.arrayUnion([id]),
       },
     );
-
+    sendInviteNotification();
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
   }
@@ -261,63 +259,52 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               timebankModel.missionStatement = value;
             },
           ),
+          Row(
+            children: <Widget>[
+              headingText('Private Group', true),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                child: infoButton(
+                  context: context,
+                  key: GlobalKey(),
+                  type: InfoType.PRIVATE_GROUP,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                child: Checkbox(
+                  value: timebankModel.private,
+                  onChanged: (bool value) {
+                    print(value);
+                    setState(() {
+                      timebankModel.private = value;
+                    });
+                    print(timebankModel.private);
+                  },
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              headingText('Private accedental delete', true),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                child: Checkbox(
+                  value: timebankModel.preventAccedentalDelete,
+                  onChanged: (bool value) {
+                    print(value);
+                    setState(() {
+                      timebankModel.preventAccedentalDelete = value;
+                    });
+                    print(timebankModel.preventAccedentalDelete);
+                  },
+                ),
+              ),
+            ],
+          ),
           tappableInviteMembers,
-//          Row(
-//            children: <Widget>[
-//              headingText('Protected group', false),
-//              Column(
-//                children: <Widget>[
-//                  Divider(),
-//                  Checkbox(
-//                    checkColor: Colors.white,
-//                    activeColor: Colors.green,
-//                    value: protectedVal,
-//                    onChanged: (bool value) {
-//                      setState(() {
-//                        protectedVal = value;
-//                      });
-//                    },
-//                  ),
-//                ],
-//              ),
-//            ],
-//          ),
-//          Text(
-//            'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled.',
-//            style: TextStyle(
-//              fontSize: 12,
-//              color: Colors.grey,
-//            ),
-//          ),
           headingText('Is this pin at a right place?', false),
-          // Center(
-          //   child: FlatButton.icon(
-          //     icon: Icon(Icons.add_location),
-          //     label: Text(
-          //       selectedAddress == null || selectedAddress.isEmpty
-          //           ? 'Add Location'
-          //           : selectedAddress,
-          //     ),
-          //     color: Colors.grey[200],
-          //     onPressed: () {
-          //       Navigator.push(
-          //         context,
-          //         MaterialPageRoute<LocationDataModel>(
-          //           builder: (context) => LocationPicker(
-          //             selectedLocation: location,
-          //           ),
-          //         ),
-          //       ).then((dataModel) {
-          //         if (dataModel != null) location = dataModel.geoPoint;
-          //         setState(() {
-          //           this.selectedAddress = dataModel.location;
-          //         });
-          //         // _getLocation();
-          //         log('ReceivedLocation: $selectedAddress');
-          //       });
-          //     },
-          //   ),
-          // ),
           Center(
             child: LocationPickerWidget(
               selectedAddress: selectedAddress,
@@ -490,6 +477,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
           keyboardType: TextInputType.emailAddress,
           maxLines: 1,
+          initialValue: SevaCore.of(context).loggedInUser.email,
           validator: (value) {
             if (value.isEmpty) {
               return 'Please enter email';
@@ -720,6 +708,41 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         ),
       ],
     );
+  }
+
+  void sendInviteNotification() {
+//    globals.addedMembersId.forEach((m) {
+//      members.add(m);
+//    });
+    if (selectedUsers.length > 0) {
+      selectedUsers.forEach((key, user) async {
+        print("Selected member with key $key");
+        GroupInviteUserModel groupInviteUserModel = GroupInviteUserModel(
+            timebankId: widget.timebankId,
+            timebankName: timebankModel.name,
+            timebankImage: timebankModel.photoUrl,
+            aboutTimebank: timebankModel.missionStatement,
+            adminName: SevaCore.of(context).loggedInUser.fullname,
+            groupId: timebankModel.id);
+
+        NotificationsModel notification = NotificationsModel(
+            id: utils.Utils.getUuid(),
+            timebankId: widget.timebankId,
+            data: groupInviteUserModel.toMap(),
+            isRead: false,
+            type: NotificationType.GroupJoinInvite,
+            communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+            senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+            targetUserId: user.sevaUserID);
+
+        await Firestore.instance
+            .collection('users')
+            .document(user.email)
+            .collection("notifications")
+            .document(notification.id)
+            .setData(notification.toMap());
+      });
+    }
   }
 
   void addVolunteers() async {

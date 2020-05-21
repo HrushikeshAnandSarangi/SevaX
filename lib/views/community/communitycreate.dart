@@ -101,7 +101,7 @@ class CreateEditCommunityViewFormState
     extends State<CreateEditCommunityViewForm> {
   // Create a global key that will uniquely identify the Form widget and allow
   // us to validate the form
-  //
+  // preventAccedentalDelete
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
   double taxPercentage = 0.0;
   CommunityModel communityModel = CommunityModel({});
@@ -443,27 +443,47 @@ class CreateEditCommunityViewFormState
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Europa'),
                         ),
-//                        FlatButton(
-//                          onPressed: () {
-//                            print("clicked");
-//                          },
-//                          child: Text(
-//                            "manage",
-//                            style: TextStyle(
-//                                color: Colors.grey,
-//                                fontFamily: 'Europa',
-//                                fontSize: 16),
-//                          ),
-//                        ),
                       ],
                     ),
                   ),
-
+                  Row(
+                    children: <Widget>[
+                      headingText('Private Timebank'),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                        child: infoButton(
+                          context: context,
+                          key: GlobalKey(),
+                          type: InfoType.PRIVATE_TIMEBANK,
+                        ),
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Divider(),
+                          Checkbox(
+                            value: widget.isCreateTimebank
+                                ? snapshot.data.timebank.private
+                                : timebankModel.private,
+                            onChanged: (bool value) {
+                              print(value);
+                              timebankModel.private = value;
+                              snapshot.data.community
+                                  .updateValueByKey('private', value);
+                              communityModel.private = value;
+                              snapshot.data.timebank
+                                  .updateValueByKey('private', value);
+                              createEditCommunityBloc.onChange(snapshot.data);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                   Row(
                     children: <Widget>[
                       headingText(AppLocalizations.of(context).translate('createtimebank','protected')),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(2, 15, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
                         child: infoButton(
                           context: context,
                           key: GlobalKey(),
@@ -489,13 +509,31 @@ class CreateEditCommunityViewFormState
                       ),
                     ],
                   ),
-//                  Text(
-//                    'Protected timebanks are for political campaigns and certain nonprofits where user to user transactions are disabled."',
-//                    style: TextStyle(
-//                      fontSize: 12,
-//                      color: Colors.grey,
-//                    ),
-//                  ),
+                  Row(
+                    children: <Widget>[
+                      headingText('Prevent accedental delete'),
+                      Column(
+                        children: <Widget>[
+                          Divider(),
+                          Checkbox(
+                            value: widget.isCreateTimebank
+                                ? snapshot.data.timebank.preventAccedentalDelete
+                                : timebankModel.preventAccedentalDelete,
+                            onChanged: (bool value) {
+                              print(
+                                  "$value --->>>> ${timebankModel.preventAccedentalDelete} -- ${snapshot.data.timebank.preventAccedentalDelete}");
+                              timebankModel.preventAccedentalDelete = value;
+                              snapshot.data.timebank.updateValueByKey(
+                                'preventAccedentalDelete',
+                                value,
+                              );
+                              createEditCommunityBloc.onChange(snapshot.data);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                   widget.isCreateTimebank ? Container() : SizedBox(height: 10),
                   widget.isCreateTimebank
                       ? Container()
@@ -812,14 +850,10 @@ class CreateEditCommunityViewFormState
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SwitchTimebank(
-                                      content: 'Updating'),
+                                  builder: (context) =>
+                                      SwitchTimebank(content: 'Updating'),
                                 ),
                               );
-                              // showDialogForSuccess(
-                              //     dialogTitle:
-                              //         "Timebank updated successfully, Please restart your app to see the updated changes.",
-                              //     err: false);
                             }
                           }
                         },
@@ -1405,8 +1439,6 @@ class CreateEditCommunityViewFormState
                 isBillingDetailsProvided = true;
                 print("All Good");
                 Navigator.pop(context);
-                //   _pc.close();
-                // scrollIsOpen = false;
               }
             }
           },
@@ -1467,38 +1499,6 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  Future<bool> isCommunityFound(String enteredName) async {
-    List<CommunityModel> communities = List<CommunityModel>();
-    var communitiesFound =
-        await searchCommunityByName(enteredName, communities);
-
-    if (communities == null || communities.length == 0) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  Future<List<CommunityModel>> searchCommunityByName(
-      String name, List<CommunityModel> communities) async {
-    communities.clear();
-    if (name.isNotEmpty && name.length > 4) {
-      await Firestore.instance
-          .collection('communities')
-          .where('name', isEqualTo: name)
-          .getDocuments()
-          .then((QuerySnapshot querySnapshot) {
-        querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-          var community = CommunityModel(documentSnapshot.data);
-          print("community data ${community.name}");
-
-          communities.add(community);
-        });
-      });
-    }
-    return communities;
-  }
-
   void addVolunteers() async {
     print(
         AppLocalizations.of(context).translate('createtimebank','selected_users') +" ${selectedUsers.length} " + AppLocalizations.of(context).translate('createtimebank','with_timebank_id') + "${SevaCore.of(context).loggedInUser.currentTimebank}");
@@ -1529,45 +1529,6 @@ class CreateEditCommunityViewFormState
       print("No users where selected");
       //no users where selected
     }
-  }
-
-  Future<Map> showTimebankAdvisory({String dialogTitle}) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext viewContext) {
-          return AlertDialog(
-            title: Text(
-              dialogTitle,
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(viewContext).pop({'PROCEED': false});
-                },
-              ),
-              FlatButton(
-                child: Text(
-                  'Proceed',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                onPressed: () {
-                  return Navigator.of(viewContext).pop({'PROCEED': true});
-                },
-              ),
-            ],
-          );
-        });
   }
 
   void showDialogForSuccess({String dialogTitle, bool err}) {

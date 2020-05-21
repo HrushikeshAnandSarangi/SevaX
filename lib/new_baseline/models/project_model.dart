@@ -97,6 +97,7 @@ class ProjectModel extends DataModel {
         "created_at": createdAt == null ? null : createdAt,
         "start_time": startTime == null ? null : startTime,
         "end_time": endTime == null ? null : endTime,
+        "softDelete": false,
         "location": location?.data,
         "members": members == null
             ? null

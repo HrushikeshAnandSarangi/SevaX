@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -55,9 +56,9 @@ class _ExplorePageState extends State<SearchPage>
       initialIndex: 0,
       vsync: this,
     );
-    Future.delayed(Duration.zero, () {
-      selectedCommunity = SevaCore.of(context).loggedInUser.currentCommunity;
-    });
+//    Future.delayed(Duration.zero, () {
+//    });
+
     super.initState();
   }
 
@@ -80,40 +81,6 @@ class _ExplorePageState extends State<SearchPage>
             widget.community.name,
             style: TextStyle(fontSize: 18),
           ),
-          // title: StreamBuilder<List<CommunityModel>>(
-          //   stream: widget.bloc.communities,
-          //   builder: (context, snapshot) {
-          //     return snapshot.data != null
-          //         ? Theme(
-          //             data: Theme.of(context).copyWith(
-          //               canvasColor: Theme.of(context).primaryColor,
-          //             ),
-          //             child: DropdownButtonHideUnderline(
-          //               child: DropdownButton<String>(
-          //                 style: TextStyle(color: Colors.white),
-          //                 focusColor: Colors.white,
-          //                 iconEnabledColor: Colors.white,
-          //                 value: selectedCommunity,
-          //                 onChanged: (v) {
-          //                   selectedCommunity = v;
-          //                   setState(() {});
-          //                 },
-          //                 items: List.generate(
-          //                   snapshot.data.length,
-          //                   (index) => DropdownMenuItem(
-          //                     value: snapshot.data[index].id,
-          //                     child: Text(
-          //                       snapshot.data[index].name,
-          //                       style: TextStyle(fontSize: 18),
-          //                     ),
-          //                   ),
-          //                 ),
-          //               ),
-          //             ),
-          //           )
-          //         : Text('Loading');
-          //   },
-          // ),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.clear),

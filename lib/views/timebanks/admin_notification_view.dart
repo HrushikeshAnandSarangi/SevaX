@@ -14,6 +14,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
@@ -25,6 +26,7 @@ import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+import 'package:sevaexchange/views/timebanks/widgets/timebank_user_exit_dialog.dart';
 import 'package:shimmer/shimmer.dart';
 
 class TimebankNotificationsView extends StatefulWidget {
@@ -113,7 +115,20 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
                 RequestModel model = RequestModel.fromMap(notification.data);
                 return Text(AppLocalizations.of(context).translate('notifications','request_reject'));
                 break;
+              case NotificationType.TypeMemberExitTimebank:
+                // TODO: Handle this case.
 
+                print("notification data ${notification.data}");
+                UserExitModel userExitModel =
+                    UserExitModel.fromMap(notification.data);
+                return getUserExitNotificationWidget(
+                  userExitModel,
+                  notification.id,
+                  context,
+                  notification.timebankId,
+                  notification.communityId,
+                );
+                break;
               case NotificationType.JoinRequest:
                 JoinRequestModel model =
                     JoinRequestModel.fromMap(notification.data);
@@ -130,7 +145,11 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
                       UserModel user = snapshot.data;
                       return user != null && user.fullname != null
                           ? getJoinReuqestsNotificationWidget(
-                              user, notification.id, model, context)
+                              user,
+                              notification.id,
+                              model,
+                              context,
+                            )
                           : Offstage();
                     });
                 break;
@@ -559,7 +578,8 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
                         decoration: notificationDecoration,
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
+                            backgroundImage: NetworkImage(
+                                user.photoURL ?? defaultUserImageURL),
                           ),
                           title: Text(model.title),
                           subtitle: RichText(
@@ -592,6 +612,53 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
             });
       },
     );
+  }
+
+  Widget getUserExitNotificationWidget(
+      UserExitModel userExitModel,
+      String notificationId,
+      BuildContext buildContext,
+      String timebankId,
+      String communityId) {
+    // assert(user != null);
+
+    return Dismissible(
+        background: dismissibleBackground,
+        key: Key(Utils.getUuid()),
+        onDismissed: (direction) {
+          FirestoreManager.readTimeBankNotification(
+            notificationId: notificationId,
+            timebankId: widget.timebankId,
+          );
+        },
+        child: GestureDetector(
+          child: Container(
+            margin: notificationPadding,
+            decoration: notificationDecoration,
+            child: ListTile(
+              title: Text("Timebank Exit"),
+              leading: userExitModel.userPhotoUrl != null
+                  ? CircleAvatar(
+                      backgroundImage: NetworkImage(userExitModel.userPhotoUrl),
+                    )
+                  : Offstage(),
+              subtitle: Text(
+                  '${userExitModel.userName.toLowerCase()} has exited from ${userExitModel.timebank}, Tap to view details'),
+            ),
+          ),
+          onTap: () {
+            showDialog(
+                context: buildContext,
+                builder: (context) {
+                  return TimebankUserExitDialogView(
+                    userExitModel: userExitModel,
+                    timeBankId: timebankId,
+                    notificationId: notificationId,
+                    userModel: SevaCore.of(buildContext).loggedInUser,
+                  );
+                });
+          },
+        ));
   }
 
   void approveTransaction(RequestModel model, String userId,
@@ -700,7 +767,8 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
                 decoration: notificationDecoration,
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
+                    backgroundImage:
+                        NetworkImage(user.photoURL ?? defaultUserImageURL),
                   ),
                   title: Text(model.title),
                   subtitle: RichText(
@@ -809,7 +877,8 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
+                      backgroundImage: NetworkImage(
+                          userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(
@@ -1032,7 +1101,8 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
               title: Text(AppLocalizations.of(context).translate('notifications','join_request')),
               leading: user.photoURL != null
                   ? CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
+                      backgroundImage:
+                          NetworkImage(user.photoURL ?? defaultUserImageURL),
                     )
                   : Offstage(),
               subtitle: Text(
@@ -1087,7 +1157,8 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
+                      backgroundImage: NetworkImage(
+                          userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(
@@ -1312,7 +1383,8 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
             child: ListTile(
               title: Text(AppLocalizations.of(context).translate('notifications','offer_accepted')),
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
+                backgroundImage:
+                    NetworkImage(user.photoURL ?? defaultUserImageURL),
               ),
               subtitle: Text(
                   '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications','show_interest')}'),
@@ -1494,38 +1566,40 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return notificationShimmer;
         }
-
         UserModel user = snapshot.data;
+
         return Slidable(
-            delegate: SlidableBehindDelegate(),
-            actions: <Widget>[],
-            secondaryActions: <Widget>[],
-            child: GestureDetector(
-              onTap: () {
-                showDialogForApproval(
-                    context: context,
-                    userModel: user,
-                    notificationId: notificationId,
-                    requestModel: model);
-              },
-              child: Container(
-                  margin: notificationPadding,
-                  decoration: notificationDecoration,
-                  child: ListTile(
-                    title: Padding(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text(model.title),
-                    ),
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL),
-                    ),
-                    subtitle: Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                      child: Text(
-                          '${AppLocalizations.of(context).translate('notifications','request_accepted_by')} ${user.fullname}, ${AppLocalizations.of(context).translate('notifications','waiting_for')}'),
-                    ),
-                  )),
-            ));
+          delegate: SlidableBehindDelegate(),
+          actions: <Widget>[],
+          secondaryActions: <Widget>[],
+          child: GestureDetector(
+            onTap: () {
+              showDialogForApproval(
+                  context: context,
+                  userModel: user,
+                  notificationId: notificationId,
+                  requestModel: model);
+            },
+            child: Container(
+              margin: notificationPadding,
+              decoration: notificationDecoration,
+              child: ListTile(
+                title: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Text(model.title),
+                ),
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(user.photoURL),
+                ),
+                subtitle: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                  child: Text(
+                      '${AppLocalizations.of(context).translate('notifications','request_accepted_by')} ${user.fullname}, ${AppLocalizations.of(context).translate('notifications','waiting_for')}'),
+                ),
+              ),
+            ),
+          ),
+        );
       },
     );
   }

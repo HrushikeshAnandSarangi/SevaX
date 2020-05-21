@@ -108,13 +108,17 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   ),
                 ),
                 Spacer(),
-                IconButton(
-                  icon: Image.asset(
-                    'lib/assets/images/help.png',
+                Container(
+                  height: 40,
+                  width: 40,
+                  child: IconButton(
+                    icon: Image.asset(
+                      'lib/assets/images/help.png',
+                    ),
+                    color: FlavorConfig.values.theme.primaryColor,
+                    //iconSize: 16,
+                    onPressed: showProjectsWebPage,
                   ),
-                  color: FlavorConfig.values.theme.primaryColor,
-                  iconSize: 24,
-                  onPressed: showProjectsWebPage,
                 ),
               ],
             ),

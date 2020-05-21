@@ -6,8 +6,6 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 
-
-
 class TimeBankCard extends StatelessWidget {
   final TimebankModel timebank;
   final UserDataBloc user;
@@ -37,11 +35,12 @@ class TimeBankCard extends StatelessWidget {
         child: Container(
           margin: EdgeInsets.only(right: 10),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              image: DecorationImage(
-                  image: CachedNetworkImageProvider(
-                      timebank.photoUrl ?? defaultGroupImageURL),
-                  fit: BoxFit.cover)),
+            borderRadius: BorderRadius.circular(12),
+            image: DecorationImage(
+                image: CachedNetworkImageProvider(
+                    timebank.photoUrl ?? defaultGroupImageURL),
+                fit: BoxFit.cover),
+          ),
           child: Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(

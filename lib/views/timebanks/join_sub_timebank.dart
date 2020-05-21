@@ -133,8 +133,9 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
     return FutureBuilder<List<TimebankModel>>(
         future: getTimebanksForCommunity(
-            communityId: widget.loggedInUserModel.currentCommunity,
-            primaryTimebankId: widget.communityPrimaryTimebankId),
+          communityId: widget.loggedInUserModel.currentCommunity,
+          primaryTimebankId: widget.communityPrimaryTimebankId,
+        ),
         builder: (context, snapshot) {
           //    print('timee ${snapshot.data}');
           if (snapshot.hasError) return new Text('${AppLocalizations.of(context).translate('jointimebank_sub','error_text')} ${snapshot.error}');
@@ -513,7 +514,9 @@ Future<List<TimebankModel>> getTimebanksForCommunity(
       .then((QuerySnapshot timebankModel) {
     timebankModel.documents.forEach((timebank) {
       var model = TimebankModel.fromMap(timebank.data);
-      if (model.id != primaryTimebankId) {
+      if (model.id != primaryTimebankId &&
+          !model.softDelete &&
+          model.private == false) {
         timebankList.add(model);
       }
     });

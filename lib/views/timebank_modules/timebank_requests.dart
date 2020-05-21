@@ -24,7 +24,6 @@ import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
-import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 
@@ -73,11 +72,6 @@ class RequestsState extends State<RequestsModule> {
   Widget build(BuildContext context) {
     _setORValue();
     timebankId = widget.timebankModel.id;
-    print("lakalaka----------->>>$timebankId");
-
-//    return Scaffold(
-//      body: Text("Hello"),
-//    );
     var body = Container(
       margin: EdgeInsets.only(left: 0, right: 0, top: 7),
       child: Column(
@@ -162,13 +156,17 @@ class RequestsState extends State<RequestsModule> {
                 ),
               ),
               Spacer(),
-              IconButton(
-                icon: Image.asset(
-                  'lib/assets/images/help.png',
+              Container(
+                height: 40,
+                width: 40,
+                child: IconButton(
+                  icon: Image.asset(
+                    'lib/assets/images/help.png',
+                  ),
+                  color: FlavorConfig.values.theme.primaryColor,
+                  //iconSize: 16,
+                  onPressed: showRequestsWebPage,
                 ),
-                color: FlavorConfig.values.theme.primaryColor,
-                iconSize: 24,
-                onPressed: showRequestsWebPage,
               ),
               Container(
                 width: 120,
@@ -176,7 +174,6 @@ class RequestsState extends State<RequestsModule> {
                   selectedColor: Theme.of(context).primaryColor,
                   children: logoWidgets,
                   borderColor: Colors.grey,
-
                   padding: EdgeInsets.only(left: 0, right: 5.0),
                   groupValue: sharedValue,
                   onValueChanged: (int val) {
@@ -192,7 +189,6 @@ class RequestsState extends State<RequestsModule> {
                       });
                     }
                   },
-                  //groupValue: sharedValue,
                 ),
               ),
               Padding(
@@ -233,24 +229,6 @@ class RequestsState extends State<RequestsModule> {
       );
     }
     return body;
-//    if (widget.isFromSettings) {
-//      return Scaffold(
-//        body: body,
-//      );
-//    }
-//    return Scaffold(
-//      appBar: AppBar(
-//        elevation: 0.5,
-//        automaticallyImplyLeading: true,
-//        title: Text(
-//          "hello",
-//          style: TextStyle(
-//            fontSize: 18,
-//          ),
-//        ),
-//      ),
-//      body: Text("hello"),
-//    );
   }
 
   void _showProtectedTimebankMessage() {
@@ -273,17 +251,6 @@ class RequestsState extends State<RequestsModule> {
           ],
         );
       },
-    );
-  }
-
-  void createSubTimebank(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TimebankCreate(
-          timebankId: FlavorConfig.values.timebankId,
-        ),
-      ),
     );
   }
 
@@ -594,7 +561,6 @@ class _RequestCardViewState extends State<RequestCardView> {
   Future<void> deleteRequest({
     @required RequestModel requestModel,
   }) async {
-
     return await Firestore.instance
         .collection('requests')
         .document(requestModel.id)
@@ -647,9 +613,6 @@ class NearRequestListItems extends StatelessWidget {
                 default:
                   List<RequestModel> requestModelList =
                       requestListSnapshot.data;
-                  requestModelList
-                      .removeWhere((request) => request.projectId.isNotEmpty);
-
                   requestModelList = filterBlockedRequestsContent(
                       context: context, requestModelList: requestModelList);
 
@@ -791,9 +754,7 @@ class NearRequestListItems extends StatelessWidget {
                                       .email) ||
                                   model.approvedUsers.contains(
                                       SevaCore.of(context).loggedInUser.email)
-                              ?
-//                          || model.invitedUsers.contains(userEmail) ?
-                              Container(
+                              ? Container(
                                   margin: EdgeInsets.only(top: 10, bottom: 10),
                                   width: 100,
                                   height: 32,
@@ -842,10 +803,11 @@ class NearRequestListItems extends StatelessWidget {
       borderRadius: BorderRadius.all(Radius.circular(12.0)),
       boxShadow: [
         BoxShadow(
-            color: Colors.black.withAlpha(10),
-            spreadRadius: 4,
-            offset: Offset(0, 3),
-            blurRadius: 6)
+          color: Colors.black.withAlpha(10),
+          spreadRadius: 4,
+          offset: Offset(0, 3),
+          blurRadius: 6,
+        )
       ],
       color: Colors.white,
     );
@@ -909,10 +871,6 @@ class RequestListItemsState extends State<RequestListItems> {
                   if (snapshot.hasData) {
                     List<RequestModel> requestModelList =
                         snapshot.data.requests;
-
-                    requestModelList
-                        .removeWhere((request) => request.projectId.isNotEmpty);
-
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
 
@@ -962,9 +920,6 @@ class RequestListItemsState extends State<RequestListItems> {
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
-                    requestModelList
-                        .removeWhere((request) => request.projectId.isNotEmpty);
-
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
 
@@ -1067,9 +1022,6 @@ class RequestListItemsState extends State<RequestListItems> {
 
   Widget getFromNormalRequest(
       {RequestModel model, String loggedintimezone, String userEmail}) {
-    if (model.projectId != null && model.projectId.isNotEmpty) {
-      return Container();
-    }
     return Container(
       decoration: containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
@@ -1143,9 +1095,7 @@ class RequestListItemsState extends State<RequestListItems> {
                         children: <Widget>[
                           model.acceptors.contains(userEmail) ||
                                   model.approvedUsers.contains(userEmail)
-                              ?
-//                          || model.invitedUsers.contains(userEmail) ?
-                              Container(
+                              ? Container(
                                   margin: EdgeInsets.only(top: 10, bottom: 10),
                                   width: 100,
                                   height: 32,
