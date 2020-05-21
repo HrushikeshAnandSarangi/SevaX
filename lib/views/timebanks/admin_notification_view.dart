@@ -8,6 +8,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
@@ -26,18 +27,17 @@ import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
-class AdminNotificationViewHolder extends StatefulWidget {
+class TimebankNotificationsView extends StatefulWidget {
   final String timebankId;
 
-  AdminNotificationViewHolder({this.timebankId});
+  TimebankNotificationsView({this.timebankId});
 
   @override
-  State<StatefulWidget> createState() {
-    return AdminNotificationsView();
-  }
+  AdminNotificationsView createState() => AdminNotificationsView();
 }
 
-class AdminNotificationsView extends State<AdminNotificationViewHolder> {
+
+class AdminNotificationsView extends State<TimebankNotificationsView> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<NotificationsModel>>(
@@ -64,7 +64,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
 
         if (notifications.length == 0) {
           return Center(
-            child: Text('No Notifications'),
+            child: Text(AppLocalizations.of(context).translate('notifications','no_notifications')),
           );
         }
         return ListView.builder(
@@ -111,7 +111,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
 
               case NotificationType.RequestReject:
                 RequestModel model = RequestModel.fromMap(notification.data);
-                return Text("NotificationType.RequestReject");
+                return Text(AppLocalizations.of(context).translate('notifications','request_reject'));
                 break;
 
               case NotificationType.JoinRequest:
@@ -162,7 +162,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                 break;
               case NotificationType.RequestCompletedRejected:
                 RequestModel model = RequestModel.fromMap(notification.data);
-                return Text("NotificationType.RequestCompletedRejected");
+                return Text(AppLocalizations.of(context).translate('notifications','request_completed_rejected'));
 
                 break;
               case NotificationType.TransactionCredit:
@@ -180,17 +180,17 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                 break;
               case NotificationType.OfferAccept:
                 OfferModel offerModel = OfferModel.fromMap(notification.data);
-                return Text("NotificationType.OfferAccept");
+                return Text(AppLocalizations.of(context).translate('notifications','notificationtype_offeraccept'));
                 break;
               case NotificationType.OfferReject:
-                return Text("NotificationType.OfferReject");
+                return Text(AppLocalizations.of(context).translate('notifications','notificationtype_offerreject'));
                 break;
               case NotificationType.AcceptedOffer:
-                return Text("NotificationType.AcceptedOffer");
+                return Text(AppLocalizations.of(context).translate('notifications','notificationtype_acceptedoffer'));
                 break;
 
               case NotificationType.RequestInvite:
-                return Text("NotificationType.RequestInvite");
+                return Text(AppLocalizations.of(context).translate('notifications','notificationtype_requestinvite'));
                 break;
 
               //One to many timebank notification
@@ -199,7 +199,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                 OneToManyNotificationDataModel data =
                     OneToManyNotificationDataModel.fromJson(notification.data);
                 return NotificationCard(
-                  title: "Debited",
+                  title: AppLocalizations.of(context).translate('notifications','debited'),
                   subTitle:
                       TimebankNotificationMessage.DEBIT_FULFILMENT_FROM_TIMEBANK
                           .replaceFirst(
@@ -221,7 +221,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                 OneToManyNotificationDataModel data =
                     OneToManyNotificationDataModel.fromJson(notification.data);
                 return NotificationCard(
-                  title: "Credited",
+                  title: AppLocalizations.of(context).translate('notifications','credited'),
                   subTitle: TimebankNotificationMessage
                       .CREDIT_FROM_OFFER_APPROVED
                       .replaceFirst(
@@ -292,13 +292,13 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       backgroundImage:
                           NetworkImage(user.photoURL ?? defaultUserImageURL),
                     ),
-                    title: Text('Credited'),
+                    title: Text(AppLocalizations.of(context).translate('notifications','credited')),
                     subtitle: RichText(
                       text: TextSpan(
                         children: [
                           TextSpan(
                             // text: 'Congrats, ${user.fullname} has credited ',
-                            text: 'Congrats,  ',
+                            text: '${AppLocalizations.of(context).translate('notifications','congrats')},  ',
                             style: TextStyle(
                               color: Colors.grey,
                               fontFamily: 'Europa',
@@ -308,10 +308,10 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             text: () {
                               return FlavorConfig.appFlavor ==
                                       Flavor.HUMANITY_FIRST
-                                  ? '${model.credits} Yang Bucks'
+                                  ? '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Yang_Bucks')}'
                                   : FlavorConfig.appFlavor == Flavor.TULSI
-                                      ? '${model.credits} Tulsi Tokens'
-                                      : '${model.credits} Seva Credits';
+                                      ? '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Tulsi_Tokens')}'
+                                      : '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Seva_Credits')}';
                             }(),
                             style: TextStyle(
                               color: Colors.black,
@@ -320,7 +320,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                           ),
                           TextSpan(
                             text: () {
-                              return " have been credited to your account.";
+                              return " ${AppLocalizations.of(context).translate('notifications','credited_to')}.";
                             }(),
                             style: TextStyle(
                               color: Colors.black,
@@ -348,7 +348,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
           if (snapshot.hasError) return Container();
           if (snapshot.connectionState == ConnectionState.waiting) {
             // return notificationShimmer;
-            return Text('getNotificationDebit');
+            return Text(AppLocalizations.of(context).translate('notifications','notification_debit'));
           }
           UserModel user = snapshot.data;
           return Dismissible(
@@ -368,17 +368,17 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   backgroundImage:
                       NetworkImage(user.photoURL ?? defaultUserImageURL),
                 ),
-                title: Text('Debited'),
+                title: Text(AppLocalizations.of(context).translate('notifications','debited')),
                 subtitle: RichText(
                   text: TextSpan(
                     children: [
                       TextSpan(
                         text: () {
                           return FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                              ? '${model.credits} Yang Bucks '
+                              ? '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Yang_Bucks')}'
                               : FlavorConfig.appFlavor == Flavor.TULSI
-                                  ? '${model.credits} Tulsi TOkens '
-                                  : '${model.credits} Seva Credits ';
+                                  ? '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Tulsi_Tokens')}'
+                                  : '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Seva_Credits')}';
                         }(),
                         style: TextStyle(
                           color: Colors.black,
@@ -386,7 +386,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         ),
                       ),
                       TextSpan(
-                        text: 'has been debited to ${user.fullname}',
+                        text: '${AppLocalizations.of(context).translate('notifications','debited_to_so')} ${user.fullname}',
                         style: TextStyle(
                           color: Colors.grey,
                           fontFamily: 'Europa',
@@ -442,7 +442,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   children: [
                     TextSpan(
                       text:
-                          '${user.fullname} approved the task completion for ',
+                          '${user.fullname} ${AppLocalizations.of(context).translate('notifications','approved_for')} ',
                       style: TextStyle(
                         color: Colors.grey,
                         fontFamily: 'Europa',
@@ -450,7 +450,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     ),
                     TextSpan(
                       text: () {
-                        return '${transactionModel.credits} hours';
+                        return '${transactionModel.credits} ${AppLocalizations.of(context).translate('notifications','hours')}';
                       }(),
                       style: TextStyle(
                         color: Colors.black,
@@ -480,7 +480,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
         if (snapshot.hasError) return Container();
         if (snapshot.connectionState == ConnectionState.waiting) {
           // return notificationShimmer;
-          return Text('getOfferAcceptNotification');
+          return Text(AppLocalizations.of(context).translate('notifications','getofferacceptnotification'));
         }
         UserModel user = snapshot.data;
         //bool fromOffer;
@@ -501,7 +501,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           // return notificationShimmer;
-                          return Text('getOfferAcceptNotification');
+                          return Text(AppLocalizations.of(context).translate('notifications','getofferacceptnotification'));
                         }
                         return SlideAction(
                           onTap: () {
@@ -552,7 +552,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       if (snapshot.hasError) return Container();
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         // return notificationShimmer;
-                        return Text('getOfferAcceptNotification');
+                        return Text(AppLocalizations.of(context).translate('notifications','getofferacceptnotification'));
                       }
                       return Container(
                         margin: notificationPadding,
@@ -567,7 +567,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                               children: [
                                 TextSpan(
                                   text:
-                                      '${user.fullname} sent request for your offer: ${getOfferTitle(offerDataModel: offermodel)} ',
+                                      '${user.fullname} ${AppLocalizations.of(context).translate('notifications','send_request_for')}: ${getOfferTitle(offerDataModel: offermodel)} ',
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontFamily: 'Europa',
@@ -659,7 +659,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       "reviewed": reviewed,
       "ratings": results['selection'],
       "requestId": requestId,
-      "comments": (results['didComment'] ? results['comment'] : "No comments")
+      "comments": (results['didComment'] ? results['comment'] : AppLocalizations.of(context).translate('notifications','no_comments'))
     });
     approveTransaction(requestModel, userId, notificationId, sevaCore);
   }
@@ -707,7 +707,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: '${user.fullname} completed the task in ',
+                          text: '${user.fullname} ${AppLocalizations.of(context).translate('notifications','completed_in')} ',
                           style: TextStyle(
                             color: Colors.grey,
                             fontFamily: 'Europa',
@@ -715,7 +715,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         ),
                         TextSpan(
                           text: () {
-                            return '${transactionModel.credits ?? "0"} hours';
+                            return '${transactionModel.credits ?? "0"} ${AppLocalizations.of(context).translate('notifications','hours')}';
                           }(),
                           style: TextStyle(
                             color: Colors.black,
@@ -723,7 +723,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         ),
                         TextSpan(
                           text: () {
-                            return ', waiting for your approval.';
+                            return ', ${AppLocalizations.of(context).translate('notifications','waiting_for')}.';
                           }(),
                           style: TextStyle(
                             color: Colors.grey,
@@ -760,7 +760,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             margin: notificationPadding,
             decoration: notificationDecoration,
             child: ListTile(
-              title: Text("Join request"),
+              title: Text(AppLocalizations.of(context).translate('notifications','join_request')),
               leading: requestInvitationModel.timebankImage != null
                   ? CircleAvatar(
                       backgroundImage:
@@ -768,7 +768,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     )
                   : Offstage(),
               subtitle: Text(
-                  '${requestInvitationModel.timebankName.toLowerCase()} has requested to join ${requestInvitationModel.requestTitle}, Tap to view join request'),
+                  '${requestInvitationModel.timebankName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications','requested_join')} ${requestInvitationModel.requestTitle}, ${AppLocalizations.of(context).translate('notifications','tap_toview')}'),
             ),
           ),
           onTap: () {
@@ -830,7 +830,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     Padding(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                        "About ${userModel.fullname}",
+                        "${AppLocalizations.of(context).translate('notifications','about')} ${userModel.fullname}",
                         style: TextStyle(
                             fontFamily: 'Europa',
                             fontSize: 13,
@@ -842,7 +842,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       padding: EdgeInsets.all(8.0),
                       child: Center(
                         child: Text(
-                          "By approving, you accept that ${userModel.fullname} has worked for $credits hours",
+                          "${AppLocalizations.of(context).translate('notifications','by_approving_that')} ${userModel.fullname} has worked for $credits hours",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'Europa',
@@ -863,7 +863,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         child: RaisedButton(
                           color: FlavorConfig.values.theme.primaryColor,
                           child: Text(
-                            'Approve',
+                            AppLocalizations.of(context).translate('notifications','approve'),
                             style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'Europa',
@@ -890,7 +890,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         child: RaisedButton(
                           color: Theme.of(context).accentColor,
                           child: Text(
-                            'Reject',
+                            AppLocalizations.of(context).translate('notifications','reject'),
                             style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'Europa',
@@ -942,7 +942,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     }
     return Padding(
       padding: EdgeInsets.all(8.0),
-      child: Text("Bio not yet updated"),
+      child: Text(AppLocalizations.of(context).translate('offers','no_bio')),
     );
   }
 
@@ -1029,14 +1029,14 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             margin: notificationPadding,
             decoration: notificationDecoration,
             child: ListTile(
-              title: Text("Join request"),
+              title: Text(AppLocalizations.of(context).translate('notifications','join_request')),
               leading: user.photoURL != null
                   ? CircleAvatar(
                       backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
                     )
                   : Offstage(),
               subtitle: Text(
-                  '${user.fullname.toLowerCase()} has requested to join ${model.timebankTitle}.'),
+                  '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications','requested_join')} ${model.timebankTitle}.'),
             ),
           ),
           onTap: () {
@@ -1059,7 +1059,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
         builder: (createDialogContext) {
           showProgressForOnboardingUserContext = createDialogContext;
           return AlertDialog(
-            title: Text('Updating timebank..'),
+            title: Text(AppLocalizations.of(context).translate('notifications','updating_timebank')),
             content: LinearProgressIndicator(),
           );
         });
@@ -1112,7 +1112,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     Padding(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                        "About ${userModel.fullname}",
+                        "${AppLocalizations.of(context).translate('notifications','about')} ${userModel.fullname}",
                         style: TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
@@ -1121,7 +1121,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
-                      "Reason to join:",
+                      "${AppLocalizations.of(context).translate('notifications','reason_to_join')}:",
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         fontSize: 16,
@@ -1131,7 +1131,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   ),
                   Padding(
                     padding: EdgeInsets.all(4.0),
-                    child: Text(model.reason ?? "Reason not mentioned"),
+                    child: Text(model.reason ?? AppLocalizations.of(context).translate('notifications','not_mentioned')),
                   ),
                   Padding(
                     padding: EdgeInsets.all(5.0),
@@ -1145,7 +1145,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         child: RaisedButton(
                           color: FlavorConfig.values.theme.primaryColor,
                           child: Text(
-                            'Allow',
+                            AppLocalizations.of(context).translate('notifications','allow'),
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
@@ -1177,7 +1177,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         child: RaisedButton(
                           color: Theme.of(context).accentColor,
                           child: Text(
-                            'Reject',
+                            AppLocalizations.of(context).translate('notifications','reject'),
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
@@ -1310,12 +1310,12 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             margin: notificationPadding,
             decoration: notificationDecoration,
             child: ListTile(
-              title: Text("Offer Accepted"),
+              title: Text(AppLocalizations.of(context).translate('notifications','offer_accepted')),
               leading: CircleAvatar(
                 backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
               ),
               subtitle: Text(
-                  '${user.fullname.toLowerCase()} has shown interest in your offer'),
+                  '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications','show_interest')}'),
             ),
           ),
           onTap: () {},
@@ -1345,7 +1345,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                 ? NetworkImage(model.photoUrl)
                 : AssetImage("lib/assets/images/approved.png"),
           ),
-          subtitle: Text('Request approved by ${model.fullName.toLowerCase()}'),
+          subtitle: Text('${AppLocalizations.of(context).translate('notifications','approved_by')} ${model.fullName.toLowerCase()}'),
         ),
       ),
     );
@@ -1377,7 +1377,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
               backgroundImage: model.photoUrl != null
                   ? NetworkImage(model.photoUrl)
                   : AssetImage("lib/assets/images/profile.png")),
-          subtitle: Text('Request rejected by ${model.fullName.toLowerCase()}'),
+          subtitle: Text('${AppLocalizations.of(context).translate('notifications','rejected_by')} ${model.fullName.toLowerCase()}'),
         ),
       ),
     );
@@ -1468,11 +1468,11 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     var body = jsonEncode({
       "request_start": model.requestStart,
       "notification": {
-        "title": "${model.title} event is about to start sometime",
-        "body": "${model.title} would be starting in less than two hours",
+        "title": "${model.title} ${AppLocalizations.of(context).translate('notifications','event_about_to')}",
+        "body": "${model.title} ${AppLocalizations.of(context).translate('notifications','would_be_starting')}",
         "icon": "firebase-icon.png"
       },
-      "data": {"message": "Enter your message here"},
+      "data": {"message": AppLocalizations.of(context).translate('notifications','enter_message')},
       "to": userModel.tokens
     });
 
@@ -1522,7 +1522,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     subtitle: Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                       child: Text(
-                          'Request accepted by ${user.fullname}, waiting for your approval'),
+                          '${AppLocalizations.of(context).translate('notifications','request_accepted_by')} ${user.fullname}, ${AppLocalizations.of(context).translate('notifications','waiting_for')}'),
                     ),
                   )),
             ));
@@ -1615,7 +1615,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     Padding(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                        "About ${userModel.fullname}",
+                        "${AppLocalizations.of(context).translate('notifications','about')} ${userModel.fullname}",
                         style: TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
@@ -1629,7 +1629,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     children: <Widget>[
                       Center(
                         child: Text(
-                            "By approving, ${userModel.fullname} will be added to the event.",
+                            "${AppLocalizations.of(context).translate('notifications','by_approving_short')}, ${userModel.fullname} ${AppLocalizations.of(context).translate('notifications','add_to')}.",
                             style: TextStyle(
                               fontStyle: FontStyle.italic,
                             ),
@@ -1640,7 +1640,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         child: RaisedButton(
                           color: FlavorConfig.values.theme.primaryColor,
                           child: Text(
-                            'Approve',
+                            AppLocalizations.of(context).translate('notifications','approve'),
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
@@ -1659,7 +1659,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         child: RaisedButton(
                           color: Theme.of(context).accentColor,
                           child: Text(
-                            'Decline',
+                            AppLocalizations.of(context).translate('notifications','decline'),
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {

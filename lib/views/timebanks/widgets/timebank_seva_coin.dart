@@ -5,6 +5,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
@@ -68,7 +69,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                     child: RaisedButton(
                       onPressed: _showFontSizePickerDialog,
                       child: Text(
-                        'Donate',
+                        AppLocalizations.of(context).translate('coins','donate'),
                         style: Theme.of(context).primaryTextTheme.button,
                       ),
                     ))
@@ -84,9 +85,9 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
     if (connResult == ConnectivityResult.none) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text("Please check your internet connection."),
+          content: Text(AppLocalizations.of(context).translate('shared','check_internet')),
           action: SnackBarAction(
-            label: 'Dismiss',
+            label: AppLocalizations.of(context).translate('shared','dismiss'),
             onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
           ),
         ),
@@ -99,9 +100,9 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
     if (this.widget.loggedInUser.currentBalance <= 0) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text("You do not have sufficient credits to donate!"),
+          content: Text(AppLocalizations.of(context).translate('coins','not_enough')),
           action: SnackBarAction(
-            label: 'Dismiss',
+            label: AppLocalizations.of(context).translate('shared','dismiss'),
             onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
           ),
         ),
@@ -174,14 +175,14 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Donate seva coins to timebank'),
+      title: Text(AppLocalizations.of(context).translate('coins','donate_coins')),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text('Your current seva coins is ' +
+          Text('${AppLocalizations.of(context).translate('coins','current_coins')} ' +
               widget.maxAmount.toStringAsFixed(2).toString()),
           Slider(
-            label: "Donate " + _donateAmount.toStringAsFixed(2) + " Coins",
+            label: "${AppLocalizations.of(context).translate('coins','donate')} " + _donateAmount.toStringAsFixed(2) + " ${AppLocalizations.of(context).translate('coins','coins')}",
             value: _donateAmount,
             min: 0,
             max: widget.maxAmount,
@@ -195,12 +196,12 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
               });
             },
           ),
-          Text('On click of donate your balance will be adjusted'),
+          Text(AppLocalizations.of(context).translate('coins','hint')),
           SizedBox(
             height: 15,
           ),
           donatezeroerror ? Text(
-            "You cannot donate 0 credits",
+            AppLocalizations.of(context).translate('coins','donate'),
             style: TextStyle(fontSize: 16, color: Colors.red),
           ): Text("")
         ],
@@ -211,7 +212,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
           color: Theme.of(context).accentColor,
           textColor: FlavorConfig.values.buttonTextColor,
           child: Text(
-            'Donate',
+            AppLocalizations.of(context).translate('coins','donate'),
             style: TextStyle(
               fontSize: dialogButtonSize,
             ),
@@ -231,7 +232,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
         ),
         FlatButton(
           child: Text(
-            'Cancel',
+            AppLocalizations.of(context).translate('shared','cancel'),
             style: TextStyle(color: Colors.red, fontSize: dialogButtonSize),
           ),
           onPressed: () {
@@ -270,11 +271,11 @@ class _InputDonateSuccessDialogState extends State<InputDonateSuccessDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Donate seva coins to timebank'),
+      title: Text(AppLocalizations.of(context).translate('coins','donate_totimebank')),
       content: Container(
           height: MediaQuery.of(context).size.height / 10,
           width: MediaQuery.of(context).size.width / 12,
-          child: Text('You have donated credits successfully')),
+          child: Text(AppLocalizations.of(context).translate('coins','donate_success'))),
     );
   }
 }

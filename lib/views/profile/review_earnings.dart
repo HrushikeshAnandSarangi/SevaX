@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -15,7 +16,7 @@ class ReviewEarningsPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            'Review Earnings',
+            AppLocalizations.of(context).translate('earnings','title'),
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -75,7 +76,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
   Widget build(BuildContext context) {
     if (requestList.length == 0) {
       return Center(
-        child: Text('You do not have any transaction yet'),
+        child: Text(AppLocalizations.of(context).translate('earnings','none')),
       );
     }
     return FutureBuilder<Object>(
@@ -83,7 +84,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
             sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return new Text('Somthing went wrong!');
+            return new Text(AppLocalizations.of(context).translate('earnings','wrong'));
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -156,7 +157,7 @@ class _EarningListItemState extends State<EarningListItem> {
                           fontSize: 17,
                           fontWeight: FontWeight.w500,
                         )),
-                    Text('Seva Credits',
+                    Text(AppLocalizations.of(context).translate('earnings','credits'),
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w600,
@@ -168,7 +169,7 @@ class _EarningListItemState extends State<EarningListItem> {
               subtitle: EarningItem(
                   name: type == 'user'
                       ? snapshot.data.fullname == null
-                          ? "Anonymous"
+                          ? AppLocalizations.of(context).translate('earnings','anonymous')
                           : snapshot.data.fullname
                       : snapshot.data.name + " (Timebank)",
                   timestamp: widget.model.timestamp,
@@ -198,7 +199,7 @@ class EarningItem extends StatelessWidget {
           height: 2,
         ),
         Text(
-          'Date:  ' +
+          '${AppLocalizations.of(context).translate('earnings','date')}  ' +
               DateFormat('MMMM dd, yyyy @ h:mm a').format(
                 getDateTimeAccToUserTimezone(
                     dateTime: DateTime.fromMillisecondsSinceEpoch(timestamp),

@@ -24,14 +24,21 @@ import 'package:timeago/timeago.dart' as timeAgo;
 import '../core.dart';
 import 'list_members_timebank.dart';
 
-class ChatListView extends StatefulWidget {
-  const ChatListView({Key key}) : super(key: key);
+class ChatListView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return _ChatListView();
+  }
+}
+
+class _ChatListView extends StatefulWidget {
+  const _ChatListView();
 
   @override
   _ChatListViewState createState() => _ChatListViewState();
 }
 
-class _ChatListViewState extends State<ChatListView> {
+class _ChatListViewState extends State<_ChatListView> {
   // final BuildContext parentContext;
   // _ChatListViewState(this.parentContext);
 
@@ -40,7 +47,7 @@ class _ChatListViewState extends State<ChatListView> {
   @override
   void initState() {
     super.initState();
-
+    setState(() {});
     log("chat page init");
   }
 
@@ -55,7 +62,7 @@ class _ChatListViewState extends State<ChatListView> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          AppLocalizations.of(context).translate('messages','title'),
+          AppLocalizations.of(context).translate('chat','title'),
           style: TextStyle(fontSize: 18),
         ),
         centerTitle: true,

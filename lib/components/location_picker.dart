@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:app_settings/app_settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,6 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/ui/screens/location/widgets/location_confirmation_card.dart';
 
@@ -46,7 +48,7 @@ class _LocationPickerState extends State<LocationPicker> {
   Set<Marker> markers = {};
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
   LocationData locationData;
-  String address = 'Fetching location ...*';
+  String address;
   // CameraPosition cameraPosition;
   LatLng defaultLatLng = LatLng(41.678510, -87.494080);
   LocationDataModel locationDataFromSearch = LocationDataModel(
@@ -70,6 +72,14 @@ class _LocationPickerState extends State<LocationPicker> {
 
   @override
   void initState() {
+    super.initState();
+    if (SchedulerBinding.instance.schedulerPhase == SchedulerPhase.persistentCallbacks) {
+      SchedulerBinding.instance.addPostFrameCallback((_) => () => {
+        address = AppLocalizations.of(context).translate('shared','fetching_location'),
+        _addMarker(latLng: defaultLatLng)
+      });
+    }
+
     if (widget.selectedLocation != null) {
       locationDataFromSearch = LocationDataModel(
         widget.selectedAddress,
@@ -79,8 +89,7 @@ class _LocationPickerState extends State<LocationPicker> {
     }
     log('init state called for ${this.runtimeType.toString()}');
     // loadCameraPosition();
-    super.initState();
-    _addMarker(latLng: defaultLatLng);
+
     loadInitialLocation();
   }
 
@@ -110,7 +119,7 @@ class _LocationPickerState extends State<LocationPicker> {
         // iconTheme: IconThemeData(color: Colors.black),
         // backgroundColor: Colors.white,
         title: Text(
-          'Add Location',
+          AppLocalizations.of(context).translate('shared','add_location'),
           style: TextStyle(fontSize: 18),
         ),
         actions: <Widget>[
@@ -151,7 +160,7 @@ class _LocationPickerState extends State<LocationPicker> {
         LocationConfimationCard(
           locationDataModel: locationDataFromSearch.location == null
               ? LocationDataModel(
-                  address,
+                  address == null ? "": address,
                   point?.latitude,
                   point?.longitude,
                 )
@@ -199,7 +208,7 @@ class _LocationPickerState extends State<LocationPicker> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Missing Permission'),
+          title: Text(AppLocalizations.of(context).translate('shared','missing_permission')),
           content: Text(
               '${FlavorConfig.values.appName} requires permission to access your location.'),
           actions: <Widget>[
@@ -207,7 +216,7 @@ class _LocationPickerState extends State<LocationPicker> {
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               child: Text(
-                'Open Settings',
+                AppLocalizations.of(context).translate('shared','open_settings'),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: dialogButtonSize,
@@ -219,7 +228,7 @@ class _LocationPickerState extends State<LocationPicker> {
             ),
             FlatButton(
               child: Text(
-                'Cancel',
+                AppLocalizations.of(context).translate('shared','cancel'),
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                   color: Colors.red,
@@ -302,7 +311,7 @@ class _LocationPickerState extends State<LocationPicker> {
         return "$locality*${place.name}${locality.notNullLocation}${place.subAdministrativeArea.notNullLocation}${place.administrativeArea.notNullLocation}${place.country.notNullLocation}";
       } catch (e) {
         log(e.toString());
-        return "Failed to fetch location*";
+        return AppLocalizations.of(context).translate('shared','fetching_location_failed');
       }
     } else {
       return address;
@@ -347,7 +356,7 @@ class _LocationPickerState extends State<LocationPicker> {
       markerId: MarkerId('1'),
       position: latLng ?? target,
       icon: BitmapDescriptor.defaultMarker,
-      infoWindow: InfoWindow(title: 'Marker'),
+      infoWindow: InfoWindow(title: AppLocalizations.of(context).translate('shared','marker')),
     );
 
     setState(() {

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
@@ -26,7 +27,7 @@ class OfferListItems extends StatelessWidget {
         stream: getOffersStream(timebankId: timebankId),
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
-          if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+          if (snapshot.hasError) return new Text('${AppLocalizations.of(context).translate('requests','error')}: ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
@@ -40,7 +41,7 @@ class OfferListItems extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
-                    child: Text('No Offers'),
+                    child: Text(AppLocalizations.of(context).translate('offers','no_offers')),
                   ),
                 );
               }
@@ -58,7 +59,7 @@ class OfferListItems extends StatelessWidget {
         stream: getAllOffersStream(),
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
-          if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+          if (snapshot.hasError) return new Text('${AppLocalizations.of(context).translate('requests','error')} ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
@@ -72,7 +73,7 @@ class OfferListItems extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
-                    child: Text('No Offers'),
+                    child: Text(AppLocalizations.of(context).translate('offers','no_offers')),
                   ),
                 );
               }
@@ -97,7 +98,7 @@ class OfferListItems extends StatelessWidget {
                 .loggedInUser
                 .blockedBy
                 .contains(request.sevaUserId)
-        ? "Filtering blocked content"
+        ? AppLocalizations.of(context).translate('offers','filtering_offers_content')
         : filteredList.add(request));
     return filteredList;
   }
@@ -212,7 +213,7 @@ class NearOfferListItems extends StatelessWidget {
         stream: getNearOffersStream(timebankId: timebankId),
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
-          if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+          if (snapshot.hasError) return new Text('${AppLocalizations.of(context).translate('requests','error')} ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
@@ -226,7 +227,7 @@ class NearOfferListItems extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
-                    child: Text('No Offers'),
+                    child: Text(AppLocalizations.of(context).translate('offers','no_offers')),
                   ),
                 );
               }
@@ -250,7 +251,7 @@ class NearOfferListItems extends StatelessWidget {
         stream: getNearOffersStream(),
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
-          if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+          if (snapshot.hasError) return new Text('${AppLocalizations.of(context).translate('requests','error')} ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
@@ -264,7 +265,7 @@ class NearOfferListItems extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
-                    child: Text('No Offers'),
+                    child: Text(AppLocalizations.of(context).translate('offers','no_offers')),
                   ),
                 );
               }
@@ -297,7 +298,7 @@ class NearOfferListItems extends StatelessWidget {
                 .loggedInUser
                 .blockedBy
                 .contains(request.sevaUserId)
-        ? "Filtering blocked content"
+        ? AppLocalizations.of(context).translate('offers','filtering_offers_content')
         : filteredList.add(request));
     return filteredList;
   }

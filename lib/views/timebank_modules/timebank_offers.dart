@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/offer_list_items.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -58,7 +59,7 @@ class OffersState extends State<OffersModule> {
                         FlatButton(
                           onPressed: () {},
                           child: Text(
-                            'My Offers',
+                            AppLocalizations.of(context).translate('offers','my_offers'),
                             style: (TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 18)),
                           ),
@@ -158,7 +159,7 @@ class OffersState extends State<OffersModule> {
     var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
     navigateToWebView(
       aboutMode: AboutMode(
-          title: "Offers Help", urlToHit: dynamicLinks['offersInfoLink']),
+          title: AppLocalizations.of(context).translate('offers','my_offers_help'), urlToHit: dynamicLinks['offersInfoLink']),
       context: context,
     );
   }

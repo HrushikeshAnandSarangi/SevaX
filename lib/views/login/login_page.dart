@@ -20,8 +20,6 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'package:provider/provider.dart';
-import 'package:sevaexchange/internationalization/applanguage.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage();
@@ -103,7 +101,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    var appLanguage = Provider.of<AppLanguage>(context);
     UserData.shared.isFromLogin = true;
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
     ScreenUtil.instance =
@@ -365,23 +362,6 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                     SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        RaisedButton(
-                          onPressed: () {
-                            appLanguage.changeLanguage(Locale("en"));
-                          },
-                          child: Text('English'),
-                        ),
-                        RaisedButton(
-                          onPressed: () {
-                            appLanguage.changeLanguage(Locale("pt"));
-                          },
-                          child: Text('Portuguese'),
-                        )
-                      ],
-                    ),
                     Container(
                       width: 134,
                       height: 39,

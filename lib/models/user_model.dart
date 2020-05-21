@@ -28,6 +28,7 @@ class UserModel extends DataModel {
   String locationName;
   String lat_lng;
   bool emailSent;
+  String language;
 
   int notificationsRead;
   Map<dynamic, dynamic> notificationsReadCount;
@@ -79,7 +80,8 @@ class UserModel extends DataModel {
       this.currentPosition,
       this.currentCommunity,
       this.communities,
-      this.emailSent}) {}
+      this.emailSent,
+      this.language}) {}
 
   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {
@@ -212,6 +214,11 @@ class UserModel extends DataModel {
     if (map.containsKey('currentCommunity')) {
       this.currentCommunity = map['currentCommunity'];
     }
+    if (map.containsKey('language')) {
+      this.language = map['language'];
+    } else {
+      this.language = 'en';
+    }
 
     if (map.containsKey('notificationsReadCount') &&
         map['notificationsReadCount'] != null) {
@@ -313,6 +320,11 @@ class UserModel extends DataModel {
     } else {
       object['timezone'] = 'Pacific Standard Time';
     }
+    if (this.language != null) {
+      object['language'] = this.language;
+    } else {
+      object['language'] = 'en';
+    }
 
     if (this.completedIntro != null) {
       this.completedIntro = object['completedIntro'];
@@ -353,6 +365,7 @@ class UserModel extends DataModel {
       ${this.otp.toString()},
       ${this.requestStatus.toString()},
       ${this.timezone.toString()},
+      ${this.language.toString()},
       ${this.tokens.toString()},
       ${this.reportedUsers.toString()},
       ${this.blockedMembers.toString()},

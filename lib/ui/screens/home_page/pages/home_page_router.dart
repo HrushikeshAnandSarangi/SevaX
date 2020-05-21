@@ -66,6 +66,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
             supportedLocales: [
               Locale('en', 'US'),
               Locale('pt', 'PT'),
+              Locale('es', 'ES'),
             ],
             localizationsDelegates: [
               AppLocalizations.delegate,

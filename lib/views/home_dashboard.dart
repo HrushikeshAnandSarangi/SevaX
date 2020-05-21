@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -14,7 +15,7 @@ import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
-import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart';
+import 'package:sevaexchange/views/timebanks/admin_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
@@ -22,8 +23,6 @@ import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
 
 import 'messages/timebank_chats.dart';
-// import 'package:sevaexchange/views/timebanks/timebank_notification_view.dart';
-// import 'package:sevaexchange/views/timebanks/admin_notification_view.dart';
 
 class HomeDashBoard extends StatelessWidget {
   HomeDashBoard();
@@ -59,17 +58,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     controller = TabController(initialIndex: 0, length: 3, vsync: this);
     _timebankController =
         TabController(initialIndex: 0, length: 7, vsync: this);
-    tabs = [
-      Tab(
-          text:
-              "${selectedCommunity != null ? selectedCommunity.name : ''} Timebank"),
-      Tab(text: "Feeds"),
-      Tab(text: "Requests"),
-      Tab(text: "Offers"),
-      Tab(text: "About"),
-      Tab(text: "Bookmarked Offers"),
-      Tab(text: "Members")
-    ];
     super.initState();
     Future.delayed(Duration.zero, () {
       _homeDashBoardBloc.getAllCommunities(SevaCore.of(context).loggedInUser);
@@ -97,9 +85,17 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // final _user = BlocProvider.of<UserDataBloc>(context);
-    // print("user bloc ${_user.user.email}");
-
+    tabs = [
+      Tab(
+          text:
+          "${selectedCommunity != null ? selectedCommunity.name : ''} ${AppLocalizations.of(context).translate('chat','timebank')}"),
+      Tab(text: AppLocalizations.of(context).translate('homepage','feeds')),
+      Tab(text: AppLocalizations.of(context).translate('homepage','requests')),
+      Tab(text: AppLocalizations.of(context).translate('homepage','offers')),
+      Tab(text: AppLocalizations.of(context).translate('homepage','about')),
+      Tab(text: AppLocalizations.of(context).translate('homepage','bookmarked_offers')),
+      Tab(text: AppLocalizations.of(context).translate('homepage','member'))
+    ];
     return BlocProvider(
       bloc: _homeDashBoardBloc,
       child: Scaffold(
@@ -148,7 +144,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         ),
                       ),
                     ))
-                  : Text('Loading');
+                  : Text(AppLocalizations.of(context).translate('main','loading'));
             },
           ),
         ),
@@ -180,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 isAdmin = true;
                 _timebankController = TabController(length: 10, vsync: this);
 
-                tabs.add(Tab(text: 'Manage'));
+                tabs.add(Tab(text: AppLocalizations.of(context).translate('homepage','manage')));
                 tabs.add(
                   GetActiveTimebankNotifications(
                       timebankId: primaryTimebank.id),

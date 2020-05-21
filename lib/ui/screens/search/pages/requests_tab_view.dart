@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
@@ -19,7 +20,7 @@ class RequestsTabView extends StatelessWidget {
         stream: _bloc.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
-            return Center(child: Text("Search Something"));
+            return Center(child: Text(AppLocalizations.of(context).translate('search','search_something')));
           }
           return StreamBuilder<List<RequestModel>>(
             stream: Searches.searchRequests(
@@ -36,7 +37,7 @@ class RequestsTabView extends StatelessWidget {
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 print("===>> ${snapshot.data}");
                 return Center(
-                  child: Text("No data found !"),
+                  child: Text(AppLocalizations.of(context).translate('search','no_data')),
                 );
               }
 

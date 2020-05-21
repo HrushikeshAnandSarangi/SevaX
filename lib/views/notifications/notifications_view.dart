@@ -54,6 +54,11 @@ class NotificationsView extends State<NotificationViewHolder> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     log("notification page build");
     return StreamBuilder<List<NotificationsModel>>(

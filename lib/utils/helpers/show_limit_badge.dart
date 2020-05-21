@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
@@ -28,8 +29,8 @@ class ShowLimitBadge extends StatelessWidget {
                 isAdmin
                     ? (_userBloc.community.payment['message'] != null
                         ? _userBloc.community.payment['message']
-                        : "Payment Data Syncing")
-                    : "Actions not allowed, Please contact admin",
+                        : AppLocalizations.of(context).translate('homepage','payment_data_syncing'))
+                    : AppLocalizations.of(context).translate('homepage','actions_not_allowed'),
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -92,8 +93,8 @@ class TransactionLimitCheck extends StatelessWidget {
               ),
               Text(
                 isAdmin
-                    ? 'Billing Failed, Click below to configure billing'
-                    : 'Action not allowed, please contact the admin',
+                    ? AppLocalizations.of(context).translate('homepage','failed')
+                    : AppLocalizations.of(context).translate('homepage','contact_admin'),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 10),
@@ -102,7 +103,7 @@ class TransactionLimitCheck extends StatelessWidget {
                 child: FlatButton(
                   color: Theme.of(context).accentColor,
                   child: new Text(
-                    "Configure Billing",
+                    AppLocalizations.of(context).translate('homepage','configure'),
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
@@ -125,7 +126,7 @@ class TransactionLimitCheck extends StatelessWidget {
               FlatButton(
                 color: Theme.of(context).accentColor,
                 child: new Text(
-                  "Close",
+                  AppLocalizations.of(context).translate('billing_plans','close'),
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () {

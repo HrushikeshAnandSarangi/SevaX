@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/models/timebank_model.dart';
@@ -62,25 +63,25 @@ class TabarView extends StatelessWidget {
             tabs: [
               Tab(
                 child: Text(
-                  'Find Volunteers',
+                  AppLocalizations.of(context).translate('requests','find_volunteers'),
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               Tab(
                 child: Text(
-                  'Invited',
+                  AppLocalizations.of(context).translate('requests','invited'),
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               Tab(
                 child: Text(
-                  'Favourites',
+                  AppLocalizations.of(context).translate('requests','favourites'),
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               Tab(
                 child: Text(
-                  'Past Hired',
+                  AppLocalizations.of(context).translate('requests','past_hired'),
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),

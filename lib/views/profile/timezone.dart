@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -697,7 +698,7 @@ class _TimezoneViewState extends State<TimezoneView> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            'My Timezone',
+            AppLocalizations.of(context).translate('settings','my_timezone'),
             style: TextStyle(fontSize: 18),
           ),
         ),

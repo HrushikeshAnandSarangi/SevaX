@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -51,7 +52,7 @@ class OfferDetails extends StatelessWidget {
                       color: Colors.grey,
                     ),
                     title: Text(
-                      'Posted on',
+                      AppLocalizations.of(context).translate('offers','posted_on'),
                       style: titleStyle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -85,7 +86,7 @@ class OfferDetails extends StatelessWidget {
                           ),
                           color: Color.fromRGBO(44, 64, 140, 1),
                           child: Text(
-                            'Edit',
+                            AppLocalizations.of(context).translate('offers','edit'),
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () => _onEdit(context),
@@ -99,7 +100,7 @@ class OfferDetails extends StatelessWidget {
                       color: Colors.grey,
                     ),
                     title: Text(
-                      "Location",
+                      AppLocalizations.of(context).translate('offers','location'),
                       style: titleStyle,
                       maxLines: 1,
                     ),
@@ -115,7 +116,7 @@ class OfferDetails extends StatelessWidget {
                       color: Colors.grey,
                     ),
                     title: Text(
-                      "Offered by ${offerModel.fullName}",
+                      "${AppLocalizations.of(context).translate('offers','offered_by')} ${offerModel.fullName}",
                       style: titleStyle,
                       maxLines: 1,
                     ),
@@ -195,8 +196,8 @@ class OfferDetails extends StatelessWidget {
                     children: [
                       TextSpan(
                         text: isCreator
-                            ? "You created this offer"
-                            : 'You have${isAccepted ? '' : " not yet"} ${offerModel.offerType == OfferType.GROUP_OFFER ? "signed up for" : "bookmarked"} this offer.',
+                            ? AppLocalizations.of(context).translate('offers','created_this_offer')
+                            : '${AppLocalizations.of(context).translate('offers','you_have')} ${isAccepted ? '' : " ${AppLocalizations.of(context).translate('offers','not_yet')}"} ${offerModel.offerType == OfferType.GROUP_OFFER ? AppLocalizations.of(context).translate('offers','signed_upfor') : AppLocalizations.of(context).translate('offers','bookmarked')} ${AppLocalizations.of(context).translate('offers','thisoffer')}.',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

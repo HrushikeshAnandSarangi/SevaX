@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -127,13 +128,13 @@ class ProjectsCard extends StatelessWidget {
                             ),
                             children: [
                               TextSpan(
-                                text: "$tasks Tasks",
+                                text: "$tasks ${AppLocalizations.of(context).translate('projects','tasks')}",
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                 ),
                               ),
                               TextSpan(text: "     "),
-                              TextSpan(text: "$pendingTask Pending"),
+                              TextSpan(text: "$pendingTask ${AppLocalizations.of(context).translate('projects','pending')}"),
                             ],
                           ),
                         ),

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
@@ -153,7 +154,7 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
         //print("length ${userList.length}");
 
         if (userList.length == 0) {
-          return getEmptyWidget('Users', 'No user found');
+          return getEmptyWidget('Users', AppLocalizations.of(context).translate('requests','no_users'));
         }
 
         return ListView.builder(
@@ -176,7 +177,7 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
                 isFavorite: isAdmin
                     ? timeBankIds.contains(widget.timebankId)
                     : memberId.contains(widget.sevaUserId),
-                reqStatus: 'Invited',
+                reqStatus: AppLocalizations.of(context).translate('requests','invited'),
               );
             });
         //return

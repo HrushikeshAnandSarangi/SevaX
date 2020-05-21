@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -35,8 +36,8 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
     requestModel = _requestModel;
   }
 
-  static const String ACCEPTED = "Accepted";
-  static const String APPROVED = "Approved";
+  static String ACCEPTED;
+  static String APPROVED;
 
   @override
   void initState() {
@@ -63,6 +64,9 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 
   @override
   Widget build(BuildContext context) {
+
+    ACCEPTED = AppLocalizations.of(context).translate('requests','accepted');
+    APPROVED = AppLocalizations.of(context).translate('requests','approved');
     return list;
   }
 
@@ -82,7 +86,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
         future: Future.wait(futures),
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
+            return Text('${AppLocalizations.of(context).translate('requests','error')} ${snapshot.error}');
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -91,7 +95,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 
           if (snapshot.data.length == 0) {
             return Center(
-              child: Text('No pending requests'),
+              child: Text(AppLocalizations.of(context).translate('requests','no_pending')),
             );
           }
           var snap = snapshot.data.map((f) {
@@ -190,7 +194,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
               ),
               Expanded(
                 child: Text(
-                  userModel.bio ?? "User not updated bio",
+                  userModel.bio ?? AppLocalizations.of(context).translate('requests','updated_bio'),
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 12,
@@ -217,7 +221,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                                 context: context,
                               );
                             },
-                            child: const Text('Approve',
+                            child:  Text(AppLocalizations.of(context).translate('requests','approve'),
                                 style: TextStyle(fontSize: 12)),
                           ),
                         ),
@@ -238,7 +242,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                                   notificationId: "sampleID",
                                   user: userModel);
                             },
-                            child: const Text('Reject',
+                            child:  Text(AppLocalizations.of(context).translate('requests','reject'),
                                 style: TextStyle(fontSize: 12)),
                           ),
                         ),
@@ -258,7 +262,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                             onPressed: () {
                               print("approved");
                             },
-                            child: Text('Approved',
+                            child: Text(AppLocalizations.of(context).translate('requests','approved'),
                                 style: TextStyle(
                                   fontSize: 12,
                                 )),
@@ -336,7 +340,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                     padding: EdgeInsets.all(4.0),
                     child: Text(
                       userModel.fullname == null
-                          ? "Anonymous"
+                          ? AppLocalizations.of(context).translate('requests','Anonymous')
                           : userModel.fullname,
                       style: TextStyle(
                         fontSize: 18,
@@ -348,7 +352,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                     child: Text(
                       userModel.email == null
-                          ? "User email not updated"
+                          ? AppLocalizations.of(context).translate('requests','no_updated')
                           : userModel.email,
                     ),
                   ),
@@ -356,7 +360,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                     Padding(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                        "About ${userModel.fullname}",
+                        "${AppLocalizations.of(context).translate('requests','about')} ${userModel.fullname}",
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
@@ -367,7 +371,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                     padding: EdgeInsets.all(8.0),
                     child: Text(
                       userModel.bio == null
-                          ? "Bio not yet updated"
+                          ? AppLocalizations.of(context).translate('notifications','bio_notupdated')
                           : userModel.bio,
                       maxLines: 5,
                       overflow: TextOverflow.ellipsis,
@@ -375,7 +379,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                   ),
                   Center(
                     child: Text(
-                        "By approving, ${userModel.fullname} will be added to the event.",
+                        "${AppLocalizations.of(context).translate('requests','by_approving')}, ${userModel.fullname} ${AppLocalizations.of(context).translate('requests','my_requests')}",
                         style: TextStyle(
                           fontStyle: FontStyle.italic,
                         ),
@@ -392,7 +396,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                         child: RaisedButton(
                           color: FlavorConfig.values.theme.primaryColor,
                           child: Text(
-                            'Approve',
+                            AppLocalizations.of(context).translate('requests','approve'),
                             style: TextStyle(
                                 color: Colors.white, fontFamily: 'Europa'),
                           ),
@@ -415,7 +419,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                         child: RaisedButton(
                           color: Theme.of(context).accentColor,
                           child: Text(
-                            'Decline',
+                            AppLocalizations.of(context).translate('requests','decline'),
                             style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'Europa',

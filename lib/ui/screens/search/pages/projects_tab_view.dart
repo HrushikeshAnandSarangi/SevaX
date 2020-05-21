@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
@@ -21,7 +22,7 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
         stream: _bloc.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
-            return Center(child: Text("Search Something"));
+            return Center(child: Text(AppLocalizations.of(context).translate('search','search_something')));
           }
           return StreamBuilder<List<ProjectModel>>(
             stream: Searches.searchProjects(

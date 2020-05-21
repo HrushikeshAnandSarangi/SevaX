@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
@@ -27,7 +28,7 @@ class NewsCreate extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(
-            "Create feed",
+            AppLocalizations.of(context).translate('create_feed','title'),
             style: TextStyle(fontSize: 18),
           ),
           centerTitle: false,
@@ -182,8 +183,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             decoration: InputDecoration(
                               labelStyle: TextStyle(color: Colors.grey),
                               alignLabelWithHint: false,
-                              hintText: 'Text, URL and Hashtags ',
-                              labelText: 'What would you like to share*',
+                              hintText: AppLocalizations.of(context).translate('create_feed','hint'),
+                              labelText: AppLocalizations.of(context).translate('create_feed','placeholder'),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(12.0),
@@ -225,7 +226,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             maxLines: 5,
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Please enter some text';
+                                return AppLocalizations.of(context).translate('create_feed','empty_err');
                               }
                               newsObject.subheading = value;
                               // print("object");
@@ -278,9 +279,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
                           content:
-                              Text("Please check your internet connection."),
+                              Text(AppLocalizations.of(context).translate('shared','check_internet')),
                           action: SnackBarAction(
-                            label: 'Dismiss',
+                            label: AppLocalizations.of(context).translate('shared','dismiss'),
                             onPressed: () =>
                                 Scaffold.of(context).hideCurrentSnackBar(),
                           ),
@@ -297,7 +298,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             builder: (createDialogContext) {
                               dialogContext = createDialogContext;
                               return AlertDialog(
-                                title: Text('Creating feed'),
+                                title: Text(AppLocalizations.of(context).translate('create_feed','progress')),
                                 content: LinearProgressIndicator(),
                               );
                             });
@@ -314,13 +315,13 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     } else {
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Location not added'),
+                          content: Text(AppLocalizations.of(context).translate('create_feed','location_notadded')),
                         ),
                       );
                     }
                   },
                   child: Text(
-                    'Create feed',
+                    AppLocalizations.of(context).translate('shared','create_button'),
                     style: Theme.of(context).primaryTextTheme.button,
                   ),
                 ),
@@ -373,20 +374,20 @@ class NewsCreateFormState extends State<NewsCreateForm> {
       padding: EdgeInsets.only(bottom: 20.0),
       child: DropdownButtonFormField<DataModel>(
         decoration: InputDecoration.collapsed(
-          hintText: '+ Category',
+          hintText: '+ ${AppLocalizations.of(context).translate('create_feed','category')}',
           hintStyle: Theme.of(context).textTheme.title.copyWith(
                 color: Theme.of(context).hintColor,
               ),
         ),
         validator: (value) {
           if (value == null) {
-            return 'Please select a category';
+            return AppLocalizations.of(context).translate('create_feed','select_category');
           }
         },
         items: dataList.map((dataModel) {
           if (dataModel.runtimeType == EntityModel) {
             return DropdownMenuItem<DataModel>(
-              child: Text('General', style: textStyle),
+              child: Text(AppLocalizations.of(context).translate('homepage','general'), style: textStyle),
               value: dataModel,
             );
           } else if (dataModel.runtimeType == TimebankModel) {
@@ -410,7 +411,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
           }
           return DropdownMenuItem<DataModel>(
             child: Text(
-              'Undefined',
+              AppLocalizations.of(context).translate('homepage','undefined'),
               style: textStyle,
             ),
             value: null,

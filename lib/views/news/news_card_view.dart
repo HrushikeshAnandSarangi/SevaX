@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -426,11 +427,11 @@ class NewsCardView extends StatelessWidget {
       barrierDismissible: true,
       builder: (context) {
         return AlertDialog(
-          title: Text('Delete feed'),
+          title: Text(AppLocalizations.of(context).translate('chat','delete_feed')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text('Are you sure you want to delete this news feed?'),
+              Text(AppLocalizations.of(context).translate('chat','are_you_sure_feed')),
               SizedBox(
                 height: 15,
               ),
@@ -442,7 +443,7 @@ class NewsCardView extends StatelessWidget {
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      'Delete',
+                      AppLocalizations.of(context).translate('chat','delete_button'),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: dialogButtonSize,
@@ -450,13 +451,13 @@ class NewsCardView extends StatelessWidget {
                     ),
                     onPressed: () {
                       Navigator.pop(context);
-                      showProgressDialog("Deleting feed", parentContext);
+                      showProgressDialog(AppLocalizations.of(context).translate('chat','delete_feed_progress'), parentContext);
                       _deleteNews(parentContext);
                     },
                   ),
                   FlatButton(
                     child: Text(
-                      'Cancel',
+                      AppLocalizations.of(context).translate('shared','cancel'),
                       style: TextStyle(
                         color: Colors.red,
                         fontSize: dialogButtonSize,

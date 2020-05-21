@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
@@ -23,7 +24,7 @@ class _OffersTabViewState extends State<OffersTabView> {
         stream: _bloc.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
-            return Center(child: Text("Search Something"));
+            return Center(child: Text(AppLocalizations.of(context).translate('search','search_something')));
           }
           return StreamBuilder<List<OfferModel>>(
             stream: Searches.searchOffers(
@@ -40,7 +41,7 @@ class _OffersTabViewState extends State<OffersTabView> {
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 print("===>> ${snapshot.data}");
                 return Center(
-                  child: Text("No data found !"),
+                  child: Text(AppLocalizations.of(context).translate('search','no_data')),
                 );
               }
 

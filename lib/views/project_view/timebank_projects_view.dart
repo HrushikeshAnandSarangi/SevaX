@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/project_card.dart';
@@ -50,7 +51,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                       FlatButton(
                         onPressed: () {},
                         child: Text(
-                          'Projects',
+                          AppLocalizations.of(context).translate('projects','title'),
                           style: (TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18)),
                         ),
@@ -125,7 +126,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
               builder: (BuildContext context,
                   AsyncSnapshot<List<ProjectModel>> projectListSnapshot) {
                 if (projectListSnapshot.hasError) {
-                  return new Text('Error: ${projectListSnapshot.error}');
+                  return new Text('${AppLocalizations.of(context).translate('tasks','error')} ${projectListSnapshot.error}');
                 }
                 switch (projectListSnapshot.connectionState) {
                   case ConnectionState.waiting:
@@ -145,10 +146,10 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                                 TextSpan(
                                   style: TextStyle(
                                       color: Colors.grey, fontSize: 14),
-                                  text: 'No projects available.Try ',
+                                  text: '${AppLocalizations.of(context).translate('projects','no_available')} ',
                                 ),
                                 TextSpan(
-                                    text: 'creating one',
+                                    text: AppLocalizations.of(context).translate('projects','create_one'),
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
                                     ),
@@ -207,11 +208,11 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Projects Alert"),
-          content: new Text("Only admin can create projects"),
+          title: new Text(AppLocalizations.of(context).translate('projects','alert')),
+          content: new Text(AppLocalizations.of(context).translate('projects','admin_can')),
           actions: <Widget>[
             new FlatButton(
-              child: new Text("Close"),
+              child: new Text(AppLocalizations.of(context).translate('shared','close')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -239,7 +240,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
     var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
     navigateToWebView(
       aboutMode: AboutMode(
-          title: "Projects Help", urlToHit: dynamicLinks['projectsInfoLink']),
+          title: AppLocalizations.of(context).translate('projects','help'), urlToHit: dynamicLinks['projectsInfoLink']),
       context: context,
     );
   }
@@ -285,7 +286,7 @@ void showInfoOfConcept({String dialogTitle, BuildContext mContext}) {
           actions: <Widget>[
             FlatButton(
               child: Text(
-                'Ok',
+                AppLocalizations.of(mContext).translate('projects','ok'),
                 style: TextStyle(
                   fontSize: 16,
                 ),

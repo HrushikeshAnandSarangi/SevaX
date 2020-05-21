@@ -75,21 +75,22 @@ class CommonAppBarViewModel extends BaseViewModel {
 
   void gotoChatListView(BuildContext context) {
     log.i('gotoChatListView:');
-    Navigator.push(
-      context,
+    Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => ChatListView(),
+        builder: (context) {
+          return ChatListView();
+        },
       ),
     );
   }
 
   void gotoNotificationsPage(BuildContext context) {
     log.i('gotoNotificationsPage:');
-    Navigator.push(
-      context,
+    Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => NotificationsPage(
-        ),
+        builder: (context) {
+          return NotificationsPage();
+        },
       ),
     );
   }

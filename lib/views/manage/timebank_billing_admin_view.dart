@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
@@ -72,7 +73,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      headingText("Plan Details"),
+                      headingText(AppLocalizations.of(context).translate('billing_admin','plan_details')),
                       _bloc.community.payment["planId"] == "community_plan"
                           ? Padding(
                               padding: const EdgeInsets.only(left: 20.0),
@@ -81,9 +82,9 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                                   style: TextStyle(color: Colors.black),
                                   children: [
                                     TextSpan(
-                                        text: "You are on Community Plan  "),
+                                        text: "${AppLocalizations.of(context).translate('billing_admin','community_plan')}  "),
                                     TextSpan(
-                                      text: 'change plan',
+                                      text: AppLocalizations.of(context).translate('billing_admin','change_plan'),
                                       style: TextStyle(
                                           color: Theme.of(context).primaryColor,
                                           fontSize: 16,
@@ -115,7 +116,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      headingText("Plan Details"),
+                      headingText(AppLocalizations.of(context).translate('billing_admin','plan_details')),
                       StreamBuilder<CardModel>(
                         stream: FirestoreManager.getCardModelStream(
                             communityId: SevaCore.of(context)
@@ -145,10 +146,10 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                                     if (cardModel.currentPlan ==
                                         "grande_plan") {
                                       data =
-                                          "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying yearly for \$1500 and additional charges of \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10} per transaction billed monthly upon exceeding free monthly quota.";
+                                          "${AppLocalizations.of(context).translate('billing_admin','on_the')} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${AppLocalizations.of(context).translate('billing_admin','plan_yearly1500')} \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10} ${AppLocalizations.of(context).translate('billing_admin','plan_details_quota1')}.";
                                     } else {
                                       data =
-                                          "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} yearly and additional charges of \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10}  per transaction billed annualy upon exceeding free monthly quota.";
+                                          "${AppLocalizations.of(context).translate('billing_admin','on_the')} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${AppLocalizations.of(context).translate('billing_admin','paying')} \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} ${AppLocalizations.of(context).translate('billing_admin','charges_of')} \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10}  ${AppLocalizations.of(context).translate('billing_admin','per_transaction')}.";
                                     }
                                     return spendingsTextWidgettwo(data ?? "");
                                   } else {
@@ -167,7 +168,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                           }
                         },
                       ),
-                      headingText("Status"),
+                      headingText(AppLocalizations.of(context).translate('billing_admin','status')),
                       statusWidget(),
                     ],
                   ),
@@ -206,7 +207,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
               text: data,
             ),
             TextSpan(
-              text: data != "" ? ' change plan' : 'View selected plans',
+              text: data != "" ? ' ${AppLocalizations.of(context).translate('billing_admin','change_plan')}' : AppLocalizations.of(context).translate('billing_admin','view_selected'),
               style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 16,
@@ -296,7 +297,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
 
   Widget emptyText() {
     return Center(
-      child: Text("No data available"),
+      child: Text(AppLocalizations.of(context).translate('billing_admin','no_data')),
     );
   }
 
@@ -317,7 +318,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              headingText("Monthly subscriptions"),
+              headingText(AppLocalizations.of(context).translate('billing_admin','montly_subsciption')),
               Padding(
                 padding: EdgeInsets.only(left: 10, top: 15, right: 10),
                 child: IconButton(

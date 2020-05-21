@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -150,7 +151,7 @@ class NewsImageState extends State<NewsImage>
                                     ? widget.photoCredits
                                     : '',
                                 decoration: InputDecoration(
-                                  hintText: '+ Photo Credits',
+                                  hintText: '+ ${AppLocalizations.of(context).translate('create_feed','imagehint')}',
                                 ),
                                 keyboardType: TextInputType.text,
                                 textAlign: TextAlign.center,
@@ -169,7 +170,7 @@ class NewsImageState extends State<NewsImage>
             label: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                _image != null ? "Change image" : "Add image",
+                _image != null ? AppLocalizations.of(context).translate('create_feed','change') : AppLocalizations.of(context).translate('create_feed','add'),
               ),
             ),
             onPressed: () {

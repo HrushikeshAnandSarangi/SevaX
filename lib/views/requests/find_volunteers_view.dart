@@ -4,6 +4,7 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
@@ -124,7 +125,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
                   enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: new BorderRadius.circular(15.7)),
-                  hintText: 'Type your team members name',
+                  hintText: AppLocalizations.of(context).translate('requests','type_team_member_name'),
                   hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
             ),
           ),
@@ -223,7 +224,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         ),
       );
     } else if (widget.controller.text.trim().length < 3) {
-      return getEmptyWidget('Users', 'Search requires minimum 3 characters');
+      return getEmptyWidget('Users', AppLocalizations.of(context).translate('requests','min_search_err'));
     }
     return StreamBuilder<List<UserModel>>(
       stream: SearchManager.searchForUserWithTimebankId(
@@ -247,7 +248,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
 
         if (userList.length == 0) {
-          return getEmptyWidget('Users', 'No user found');
+          return getEmptyWidget('Users', AppLocalizations.of(context).translate('requests','no_users'));
         }
         return ListView.builder(
           itemCount: userList.length,

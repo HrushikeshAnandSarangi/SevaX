@@ -17,8 +17,11 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 import 'package:sevaexchange/views/splash_view.dart' as DefaultSplashView;
+import 'package:provider/provider.dart';
+import 'package:sevaexchange/internationalization/applanguage.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -495,7 +498,7 @@ class _RegisterPageState extends State<RegisterPage>
 
   Future createUser() async {
     showDialogForAccountCreation();
-
+    var appLanguage = Provider.of<AppLanguage>(context);
     log('Called createUser');
     Auth auth = AuthProvider.of(context).auth;
     try {
@@ -511,6 +514,10 @@ class _RegisterPageState extends State<RegisterPage>
         user.photoURL = defaultUserImageURL;
       }
       user.timezone = new TimezoneListData().getTimeZoneByCodeData(DateTime.now().timeZoneName);
+      Locale myLocale = Localizations.localeOf(context);
+      var language = new LanguageListData().getLanguageSupported(myLocale.toString());
+      appLanguage.changeLanguage(Locale(language.code));
+      user.language = language.code;
       await FirestoreManager.updateUser(user: user);
 
       Navigator.pop(dialogContext);

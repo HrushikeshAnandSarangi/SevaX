@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/views/requests/request_accepted_spending_view.dart';
 import 'package:sevaexchange/views/requests/request_participants_view.dart';
@@ -38,13 +39,13 @@ class TabarView extends StatelessWidget {
             tabs: [
               Tab(
                 child: Text(
-                  'Participants',
+                  AppLocalizations.of(context).translate('requests','participants'),
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               Tab(
                 child: Text(
-                  'Completed',
+                  AppLocalizations.of(context).translate('requests','completed'),
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),

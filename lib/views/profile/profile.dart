@@ -23,6 +23,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/community/about_app.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
 
@@ -502,6 +503,43 @@ class _ProfilePageState extends State<ProfilePage>
                                     padding: const EdgeInsets.only(left: 15),
                                     child: Text(
                                       AppLocalizations.of(context).translate('profile','timezone'),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Icon(Icons.navigate_next),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return LanguageView();
+                                },
+                              ),
+                            );
+                          },
+                          child: Card(
+                            elevation: 2,
+                            child: Container(
+                              height: 60,
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 15),
+                                    child: Text(
+                                      AppLocalizations.of(context).translate('settings','language'),
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black,

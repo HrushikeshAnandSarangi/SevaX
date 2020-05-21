@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/location_picker.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 
 class LocationPickerWidget extends StatelessWidget {
@@ -27,7 +28,7 @@ class LocationPickerWidget extends StatelessWidget {
         ),
         child: Text(
           selectedAddress == '' || selectedAddress == null
-              ? 'Add Location'
+              ? AppLocalizations.of(context).translate('shared','add_location')
               : selectedAddress,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,

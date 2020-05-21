@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -20,6 +21,7 @@ import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
+import 'package:sevaexchange/views/timebanks/admin_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/group_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
@@ -155,28 +157,28 @@ Widget createAdminTabBar(
             isScrollable: true,
             tabs: [
               Tab(
-                text: "Feeds",
+                text: AppLocalizations.of(context).translate('homepage', "feeds"),
               ),
               Tab(
-                text: "Projects",
+                text: AppLocalizations.of(context).translate('homepage', "projects"),
               ),
               Tab(
-                text: "Requests",
+                text: AppLocalizations.of(context).translate('homepage', "requests"),
               ),
               Tab(
-                text: "Offers",
+                text: AppLocalizations.of(context).translate('homepage', "offers"),
               ),
               Tab(
-                text: "About",
+                text: AppLocalizations.of(context).translate('homepage', "about"),
               ),
               // Tab(
               //   text: "Bookmarked Offers",
               // ),
               Tab(
-                text: "Members",
+                text: AppLocalizations.of(context).translate('homepage', "members"),
               ),
               Tab(
-                text: "Manage",
+                text: AppLocalizations.of(context).translate('homepage', "manage"),
               ),
               GetActiveTimebankNotifications(timebankId: timebankId),
               getMessagingTab(
@@ -355,25 +357,25 @@ Widget createJoinedUserTabBar(
             isScrollable: true,
             tabs: [
               Tab(
-                text: "Feeds",
+                text: AppLocalizations.of(context).translate('homepage', "feeds"),
               ),
               Tab(
-                text: "Projects",
+                text: AppLocalizations.of(context).translate('homepage', "projects"),
               ),
               Tab(
-                text: "Requests",
+                text: AppLocalizations.of(context).translate('homepage', "requests"),
               ),
               Tab(
-                text: "Offers",
+                text: AppLocalizations.of(context).translate('homepage', "offers"),
               ),
               Tab(
-                text: "About",
+                text: AppLocalizations.of(context).translate('homepage', "about"),
               ),
               // Tab(
               //   text: "Bookmarked Offers",
               // ),
               Tab(
-                text: "Members",
+                text: AppLocalizations.of(context).translate('homepage', "members"),
               ),
             ],
           ),
@@ -441,10 +443,10 @@ Widget createNormalUserTabBar(
               isScrollable: true,
               tabs: [
                 Tab(
-                  text: "About",
+                  text: AppLocalizations.of(context).translate('homepage','about'),
                 ),
                 Tab(
-                  text: "Members",
+                  text: AppLocalizations.of(context).translate('homepage','members'),
                 )
               ],
             )),
@@ -514,7 +516,7 @@ class DiscussionListState extends State<DiscussionList> {
                 padding: EdgeInsets.only(left: 10),
               ),
               Text(
-                "Feeds",
+                AppLocalizations.of(context).translate('homepage','feeds'),
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
               ),
               Padding(
@@ -562,7 +564,7 @@ class DiscussionListState extends State<DiscussionList> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        ' Start a new feed....',
+                        AppLocalizations.of(context).translate('homepage','start_feed'),
                         maxLines: 1,
                         textAlign: TextAlign.start,
                         style: TextStyle(fontSize: 16),
@@ -578,7 +580,7 @@ class DiscussionListState extends State<DiscussionList> {
           stream: FirestoreManager.getNewsStream(timebankID: widget.timebankId),
           builder: (context, snapshot) {
             if (snapshot.hasError)
-              return Text('Please make sure you have GPS turned on.');
+              return Text(AppLocalizations.of(context).translate('homepage','gps_on'));
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
                 return Container(
@@ -609,7 +611,7 @@ class DiscussionListState extends State<DiscussionList> {
                       if (newsList.length == 0) {
                         return Padding(
                           padding: const EdgeInsets.all(28.0),
-                          child: Center(child: Text('Your feed is empty')),
+                          child: Center(child: Text(AppLocalizations.of(context).translate('homepage','feed_empty'))),
                         );
                       }
                       return Expanded(
@@ -781,12 +783,12 @@ class DiscussionListState extends State<DiscussionList> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Access denied."),
-          content: new Text("You are not authorized to pin a feed."),
+          title: new Text(AppLocalizations.of(context).translate('homepage','access_denied')),
+          content: new Text(AppLocalizations.of(context).translate('homepage','not_auth')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Close"),
+              child: new Text(AppLocalizations.of(context).translate('homepage','close')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -1112,13 +1114,13 @@ class DiscussionListState extends State<DiscussionList> {
                                                   // return object of type Dialog
                                                   return AlertDialog(
                                                     title: Text(
-                                                        'Already reported!'),
+                                                        AppLocalizations.of(context).translate('homepage','reported_already')),
                                                     content: Text(
-                                                        'You already reported this feed'),
+                                                        AppLocalizations.of(context).translate('homepage','reported_done')),
                                                     actions: <Widget>[
                                                       FlatButton(
                                                         child: Text(
-                                                          'OK',
+                                                          AppLocalizations.of(context).translate('homepage','ok'),
                                                           style: TextStyle(
                                                             fontSize:
                                                                 dialogButtonSize,
@@ -1141,9 +1143,9 @@ class DiscussionListState extends State<DiscussionList> {
                                                     (BuildContext viewContext) {
                                                   // return object of type Dialog
                                                   return AlertDialog(
-                                                    title: Text('Report Feed?'),
+                                                    title: Text(AppLocalizations.of(context).translate('homepage','report')),
                                                     content: Text(
-                                                        'Do you want to report this feed?'),
+                                                        AppLocalizations.of(context).translate('homepage','want_report')),
                                                     actions: <Widget>[
                                                       FlatButton(
                                                         padding:
@@ -1155,7 +1157,7 @@ class DiscussionListState extends State<DiscussionList> {
                                                             .values
                                                             .buttonTextColor,
                                                         child: Text(
-                                                          'Report Feed',
+                                                          AppLocalizations.of(context).translate('homepage','report_feed'),
                                                           style: TextStyle(
                                                             fontSize:
                                                                 dialogButtonSize,
@@ -1198,7 +1200,7 @@ class DiscussionListState extends State<DiscussionList> {
                                                       ),
                                                       FlatButton(
                                                         child: Text(
-                                                          'Cancel',
+                                                          AppLocalizations.of(context).translate('shared','cancel'),
                                                           style: TextStyle(
                                                               color:
                                                                   Colors.red),
@@ -1401,7 +1403,7 @@ class DiscussionListState extends State<DiscussionList> {
     if (newsModel.entity == null) {
       chipText = null;
     } else {
-      chipText = newsModel.entity.entityName ?? 'General';
+      chipText = newsModel.entity.entityName ?? AppLocalizations.of(context).translate('homepage','general');
     }
 
     return chipText == null

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/requests/request_accepted_content_holder.dart';
 import 'package:sevaexchange/views/requests/request_users_content_holder.dart';
@@ -7,9 +8,10 @@ import 'package:sevaexchange/views/timebank_modules/request_details_about_page.d
 class RequestTabHolder extends StatelessWidget {
   bool isAdmin;
   RequestTabHolder({this.isAdmin});
-  final List<String> titles = ['About', 'Search', 'Accepted'];
+  List<String> titles;
   @override
   Widget build(BuildContext context) {
+    titles = [AppLocalizations.of(context).translate('requests','about'), AppLocalizations.of(context).translate('requests','search'), AppLocalizations.of(context).translate('requests','accepted')];
     return StreamBuilder(
         stream: timeBankBloc.timebankController,
         builder: (context, AsyncSnapshot<TimebankController> snapshot) {

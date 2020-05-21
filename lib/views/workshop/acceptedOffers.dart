@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -104,7 +105,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
           );
         } else {
           return Center(
-            child: Text("No offers bookmarked"),
+            child: Text(AppLocalizations.of(context).translate('offers','no_bookmarked')),
           );
         }
       },
@@ -280,7 +281,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                        "About ${userModel.fullname}",
+                        "${AppLocalizations.of(context).translate('offers','about')} ${userModel.fullname}",
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
@@ -292,7 +293,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                   getBio(userModel),
                   Center(
                     child: Text(
-                        "${userModel.fullname} will be automatically added to the request.",
+                        "${userModel.fullname} ${AppLocalizations.of(context).translate('offers','added')}",
                         style: TextStyle(
                           fontStyle: FontStyle.italic,
                         ),
@@ -308,7 +309,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                         child: Container(
                           width: double.infinity,
                           child: Text(
-                            'Create Request',
+                            AppLocalizations.of(context).translate('offers','create_request'),
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.white),
                           ),
@@ -346,7 +347,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                         child: Container(
                           width: double.infinity,
                           child: Text(
-                            'Add to Existing Request',
+                            AppLocalizations.of(context).translate('offers','adding_existing'),
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.white),
                           ),
@@ -390,7 +391,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                             width: double.infinity,
                             child: Center(
                               child: Text(
-                                'Cancel',
+                                AppLocalizations.of(context).translate('shared','cancel'),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.white),
                               ),

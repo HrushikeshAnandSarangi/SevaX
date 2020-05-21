@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
@@ -107,7 +108,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
           //print("length ${userList.length}");
           if (userList.length == 0) {
             return Center(
-              child: getEmptyWidget('Users', 'No user found'),
+              child: getEmptyWidget('Users', AppLocalizations.of(context).translate('requests','no_users')),
             );
           }
           return ListView.builder(

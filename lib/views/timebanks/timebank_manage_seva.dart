@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -61,10 +62,10 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
               labelColor: Colors.black,
               isScrollable: false,
               tabs: <Widget>[
-                Tab(text: "Edit Timebank"),
+                Tab(text: AppLocalizations.of(context).translate('manage','edit_timebank')),
                 // Tab(text: "Upgrade"),
-                Tab(text: "Billing"),
-                Tab(text: "Settings"),
+                Tab(text: AppLocalizations.of(context).translate('manage','billing')),
+                Tab(text: AppLocalizations.of(context).translate('manage','settings')),
               ],
 //              onTap: (index) {
 //                if (_indextab != index) {
@@ -99,8 +100,8 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
               labelColor: Colors.black,
               isScrollable: false,
               tabs: <Widget>[
-                Tab(text: "Edit Timebank"),
-                Tab(text: "Settings"),
+                Tab(text: AppLocalizations.of(context).translate('manage','edit_timebank')),
+                Tab(text: AppLocalizations.of(context).translate('manage','settings')),
               ],
 //                onTap: (index) {
 //                  if (_indextab != index) {
@@ -183,7 +184,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         );
       },
       child: Text(
-        'View requests',
+        AppLocalizations.of(context).translate('manage','view_requests'),
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
@@ -276,7 +277,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 
   Widget get getTitle {
     return Text(
-      "Manage ${widget.timebankModel.name}",
+      "${AppLocalizations.of(context).translate('manage','manage')} ${widget.timebankModel.name}",
       style: TextStyle(
         fontSize: 20,
         color: Colors.black,

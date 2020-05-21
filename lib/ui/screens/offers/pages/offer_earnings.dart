@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
@@ -23,7 +24,7 @@ class OfferEarnings extends StatelessWidget {
           stream: _bloc.participants,
           builder: (context, snapshot) {
             if (snapshot.data == null || snapshot.data.isEmpty) {
-              return Center(child: Text("No data available"));
+              return Center(child: Text(AppLocalizations.of(context).translate('offers','no_data')));
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return CircularProgressIndicator();
@@ -40,7 +41,7 @@ class OfferEarnings extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     SevaCoinStarWidget(
-                      title: 'Your earnings',
+                      title: AppLocalizations.of(context).translate('offers','your_earnings'),
                       amount: offerModel.groupOfferDataModel.creditStatus == 1
                           ? (offerModel.groupOfferDataModel.numberOfClassHours +
                                   offerModel.groupOfferDataModel
@@ -49,7 +50,7 @@ class OfferEarnings extends StatelessWidget {
                           : '0',
                     ),
                     SevaCoinStarWidget(
-                      title: 'Timebank earnings',
+                      title: AppLocalizations.of(context).translate('offers','timebank_earnings'),
                       amount: offerModel.groupOfferDataModel.creditStatus == 1
                           ? (offerModel.groupOfferDataModel.creditsApproved -
                                   (offerModel.groupOfferDataModel

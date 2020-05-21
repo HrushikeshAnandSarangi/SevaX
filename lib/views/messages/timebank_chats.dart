@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -60,7 +61,7 @@ class _ChatListViewState extends State<TimebankChatListView> {
             );
           }
           if (chatListSnapshot.hasError) {
-            return new Text('Error: ${chatListSnapshot.error}');
+            return new Text('${AppLocalizations.of(context).translate('chat','error')} ${chatListSnapshot.error}');
           }
 
           // setState(() {
@@ -77,7 +78,7 @@ class _ChatListViewState extends State<TimebankChatListView> {
 
               List<ChatModel> chatModelList = allChalModelList;
               if (chatModelList.length == 0) {
-                return Center(child: Text('No Messages'));
+                return Center(child: Text(AppLocalizations.of(context).translate('chat','no_messages')));
               }
 
               return ListView.builder(
@@ -141,7 +142,7 @@ class _ChatListViewState extends State<TimebankChatListView> {
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         ),
         builder: (context, snapshot) {
-          if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+          if (snapshot.hasError) return new Text('${AppLocalizations.of(context).translate('chat','error')} ${snapshot.error}');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
@@ -289,7 +290,7 @@ class _ChatListViewState extends State<TimebankChatListView> {
                       children: <Widget>[
                         Text(
                           chatModel.messagTitleUserName == null
-                              ? 'Not added '
+                              ? '${AppLocalizations.of(context).translate('chat','not_added')} '
                               : chatModel.messagTitleUserName,
                           style: Theme.of(parentContext).textTheme.subhead,
                         ),
@@ -545,11 +546,11 @@ class _ChatListViewState extends State<TimebankChatListView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Delete chat'),
+          title: Text(AppLocalizations.of(context).translate('chat','delete')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const Text('Are you sure you want to delete this chat'),
+              Text(AppLocalizations.of(context).translate('chat','are_you_sure')),
               Row(
                 children: <Widget>[
                   FlatButton(
@@ -557,7 +558,7 @@ class _ChatListViewState extends State<TimebankChatListView> {
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      'Delete',
+                      AppLocalizations.of(context).translate('chat','delete_button'),
                       style: TextStyle(
                         fontSize: dialogButtonSize,
                       ),
@@ -603,7 +604,7 @@ class _ChatListViewState extends State<TimebankChatListView> {
                   ),
                   FlatButton(
                     child: Text(
-                      'Cancel',
+                      AppLocalizations.of(context).translate('shared','cancel'),
                       style: TextStyle(
                           fontSize: dialogButtonSize, color: Colors.red),
                     ),

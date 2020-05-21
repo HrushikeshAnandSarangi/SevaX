@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -173,7 +174,7 @@ class AdminChatViewState extends State<AdminChatView> {
                 future: _fetchAppBarData,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
-                    return new Text('Error');
+                    return new Text(AppLocalizations.of(context).translate('chat','error2'));
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center();
@@ -200,7 +201,7 @@ class AdminChatViewState extends State<AdminChatView> {
                 color: Color(0xffb71c1c),
                 child: Container(
                   child: Text(
-                    'Block',
+                    AppLocalizations.of(context).translate('chat','block'),
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -247,7 +248,7 @@ class AdminChatViewState extends State<AdminChatView> {
                     print("Inside chat view");
                     List<MessageModel> chatModelList = chatListSnapshot.data;
                     if (chatModelList.length == 0) {
-                      return Center(child: Text('No Messages'));
+                      return Center(child: Text(AppLocalizations.of(context).translate('chat','no_messages')));
                     }
 
                     var email = SevaCore.of(context).loggedInUser.email;
@@ -287,13 +288,13 @@ class AdminChatViewState extends State<AdminChatView> {
                     key: _formKey,
                     child: TextFormField(
                       controller: textcontroller,
-                      decoration: InputDecoration(hintText: 'Type message'),
+                      decoration: InputDecoration(hintText: AppLocalizations.of(context).translate('chat','type')),
                       maxLines: null,
                       keyboardType: TextInputType.text,
                       textCapitalization: TextCapitalization.sentences,
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please type message';
+                          return AppLocalizations.of(context).translate('chat','type_empty');
                         }
                         messageModel.message = value;
                       },
@@ -374,7 +375,7 @@ class AdminChatViewState extends State<AdminChatView> {
           future: FirestoreManager.getNewsForId(messageModel.message),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return new Text('Error: ${snapshot.error}');
+              return new Text('${AppLocalizations.of(context).translate('chat','error')} ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return messageModel.fromId == loggedinEmail
@@ -478,16 +479,16 @@ class AdminChatViewState extends State<AdminChatView> {
       context: viewContext,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text('Block' + " ${partnerUser.fullname.split(' ')[0]}."),
+          title: new Text(AppLocalizations.of(context).translate('chat','block') + " ${partnerUser.fullname.split(' ')[0]}."),
           content: new Text(
-              "${partnerUser.fullname.split(' ')[0]} will no longer be available to send you messages and engage with the content you create"),
+              "${partnerUser.fullname.split(' ')[0]} ${AppLocalizations.of(context).translate('chat','warn')}"),
           actions: <Widget>[
             new FlatButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
               child: new Text(
-                'Block',
+                AppLocalizations.of(context).translate('chat','block'),
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                   fontFamily: 'Europa',
@@ -499,7 +500,7 @@ class AdminChatViewState extends State<AdminChatView> {
             ),
             new FlatButton(
               child: new Text(
-                "Cancel",
+                AppLocalizations.of(context).translate('shared','cancel'),
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                   color: Colors.red,
