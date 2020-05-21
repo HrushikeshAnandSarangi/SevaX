@@ -28,6 +28,7 @@ void showAdvisoryBeforeDeletion({
   String associatedId,
   String email,
   String associatedContentTitle,
+  bool isAccedentalDeleteEnabled,
 }) {
   progressDialog = ProgressDialog(
     context,
@@ -39,6 +40,16 @@ void showAdvisoryBeforeDeletion({
       ),
     ),
   );
+
+  if (softDeleteType == SoftDelete.REQUEST_DELETE_GROUP ||
+      softDeleteType == SoftDelete.REQUEST_DELETE_TIMEBANK) {
+    if (isAccedentalDeleteEnabled) {
+      _showAccedentalDeleteConfirmation(
+        context: context,
+      );
+      return;
+    }
+  }
 
   showDialog(
     context: context,
@@ -100,6 +111,29 @@ void showAdvisoryBeforeDeletion({
               ),
             ),
           )
+        ],
+      );
+    },
+  );
+}
+
+void _showAccedentalDeleteConfirmation({BuildContext context}) {
+  showDialog(
+    context: context,
+    builder: (BuildContext accedentalDialogContext) {
+      return AlertDialog(
+        title: Text(
+          "Accendetal Deletion enabled!",
+        ),
+        content: Text(
+            "You have enabled Prevent accedental delete, please uncheck it and try again!"),
+        actions: <Widget>[
+          RaisedButton(
+            onPressed: () {
+              Navigator.pop(accedentalDialogContext);
+            },
+            child: Text("  Dismiss  "),
+          ),
         ],
       );
     },

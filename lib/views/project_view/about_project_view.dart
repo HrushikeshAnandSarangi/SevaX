@@ -204,6 +204,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
           softDeleteType: SoftDelete.REQUEST_DELETE_PROJECT,
           associatedContentTitle: projectModel.name,
           email: SevaCore.of(context).loggedInUser.email,
+          isAccedentalDeleteEnabled: false,
         );
       },
       child: Container(

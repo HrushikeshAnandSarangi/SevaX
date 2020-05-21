@@ -190,6 +190,8 @@ class _ManageGroupView extends State<ManageGroupView> {
           softDeleteType: SoftDelete.REQUEST_DELETE_GROUP,
           associatedContentTitle: widget.timebankModel.name,
           email: SevaCore.of(context).loggedInUser.email,
+          isAccedentalDeleteEnabled:
+              widget.timebankModel.preventAccedentalDelete,
         );
       },
       child: Text(
