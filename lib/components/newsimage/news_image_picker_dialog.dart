@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import './image_picker_handler.dart';
+import 'news_image_picker_handler.dart';
 
-class ImagePickerDialog extends StatelessWidget {
-  ImagePickerHandler _listener;
+class NewsImagePickerDialog extends StatelessWidget {
+  NewsImagePickerHandler _listener;
   AnimationController _controller;
   BuildContext context;
 
-  ImagePickerDialog(this._listener, this._controller);
+  NewsImagePickerDialog(this._listener, this._controller);
 
   Animation<double> _drawerContentsOpacity;
   Animation<Offset> _drawerDetailsPosition;
@@ -99,6 +99,18 @@ class ImagePickerDialog extends StatelessWidget {
                       const Color(0xFFFFFFFF),
                       Icon(
                         Icons.image,
+                        color: Colors.white,
+                      )),
+                ),
+                new GestureDetector(
+                  onTap: () => _listener.openDocument(),
+                  child: roundedButton(
+                      "PDF Document",
+                      EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                      const Color(0x0FF766FE0),
+                      const Color(0xFFFFFFFF),
+                      Icon(
+                        Icons.assignment,
                         color: Colors.white,
                       )),
                 ),

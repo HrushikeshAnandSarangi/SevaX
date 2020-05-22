@@ -368,6 +368,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   ),
                 ],
               ),
+
               Container(
                 margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
                 alignment: Alignment(0, 1),

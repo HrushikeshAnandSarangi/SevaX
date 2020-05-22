@@ -17,6 +17,8 @@ String projectsAvtaarURL;
 String campaignAvatarURL;
 
 String newsImageURL;
+String newsDocumentURL;
+String newsDocumentName;
 
 //DYNAMIC LISTS
 List<dynamic> interests = [];

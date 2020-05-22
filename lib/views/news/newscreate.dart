@@ -106,6 +106,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.root_timebank_id = FlavorConfig.values.timebankId;
     newsObject.photoCredits = photoCredits == null ? "" : photoCredits;
     newsObject.userPhotoURL = SevaCore.of(context).loggedInUser.photoURL;
+    newsObject.newsDocumentUrl = globals.newsDocumentURL ?? '';
+    newsObject.newsDocumentName = globals.newsDocumentName ?? '';
 
 //    EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(
@@ -119,6 +121,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     print("Model goes like this : $entityModel");
     await FirestoreManager.createNews(newsObject: newsObject);
     globals.newsImageURL = null;
+    globals.newsDocumentURL = null;
     if (dialogContext != null) {
       Navigator.pop(dialogContext);
     }

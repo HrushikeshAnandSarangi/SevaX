@@ -71,6 +71,7 @@ class NewsCardView extends StatelessWidget {
               newsImage,
               photoCredits,
               subHeadings,
+              document,
               tags,
               listOfHashTags,
               listOfLinks
@@ -384,6 +385,39 @@ class NewsCardView extends StatelessWidget {
               ],
             ),
           );
+  }
+
+  Widget get document {
+    return Container(
+      child: newsModel.newsDocumentUrl == null
+          ? Offstage()
+          : GestureDetector(
+              onTap: () => _launchURL(),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  color: Colors.grey[100],
+                  child: ListTile(
+                    leading: Icon(Icons.attachment),
+                    title: Text(
+                      newsModel.newsDocumentName ?? "Document.pdf",
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+    );
+  }
+
+  _launchURL() async {
+    print("url ${newsModel.newsDocumentUrl}");
+    String url = newsModel.newsDocumentUrl;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   Widget get subHeadings {
