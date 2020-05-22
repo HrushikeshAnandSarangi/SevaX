@@ -101,7 +101,7 @@ class CreateEditCommunityViewFormState
     extends State<CreateEditCommunityViewForm> {
   // Create a global key that will uniquely identify the Form widget and allow
   // us to validate the form
-  //
+  // preventAccedentalDelete
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
   double taxPercentage = 0.0;
   CommunityModel communityModel = CommunityModel({});
@@ -445,18 +445,6 @@ class CreateEditCommunityViewFormState
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Europa'),
                         ),
-//                        FlatButton(
-//                          onPressed: () {
-//                            print("clicked");
-//                          },
-//                          child: Text(
-//                            "manage",
-//                            style: TextStyle(
-//                                color: Colors.grey,
-//                                fontFamily: 'Europa',
-//                                fontSize: 16),
-//                          ),
-//                        ),
                       ],
                     ),
                   ),
@@ -514,7 +502,6 @@ class CreateEditCommunityViewFormState
                             onChanged: (bool value) {
                               print(value);
                               timebankModel.protected = value;
-
                               snapshot.data.timebank
                                   .updateValueByKey('protected', value);
                               createEditCommunityBloc.onChange(snapshot.data);
@@ -524,13 +511,31 @@ class CreateEditCommunityViewFormState
                       ),
                     ],
                   ),
-//                  Text(
-//                    'Protected timebanks are for political campaigns and certain nonprofits where user to user transactions are disabled."',
-//                    style: TextStyle(
-//                      fontSize: 12,
-//                      color: Colors.grey,
-//                    ),
-//                  ),
+                  Row(
+                    children: <Widget>[
+                      headingText('Prevent accedental delete'),
+                      Column(
+                        children: <Widget>[
+                          Divider(),
+                          Checkbox(
+                            value: widget.isCreateTimebank
+                                ? snapshot.data.timebank.preventAccedentalDelete
+                                : timebankModel.preventAccedentalDelete,
+                            onChanged: (bool value) {
+                              print(
+                                  "$value --->>>> ${timebankModel.preventAccedentalDelete} -- ${snapshot.data.timebank.preventAccedentalDelete}");
+                              timebankModel.preventAccedentalDelete = value;
+                              snapshot.data.timebank.updateValueByKey(
+                                'preventAccedentalDelete',
+                                value,
+                              );
+                              createEditCommunityBloc.onChange(snapshot.data);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                   widget.isCreateTimebank ? Container() : SizedBox(height: 10),
                   widget.isCreateTimebank
                       ? Container()
@@ -850,10 +855,6 @@ class CreateEditCommunityViewFormState
                                       SwitchTimebank(content: 'Updating'),
                                 ),
                               );
-                              // showDialogForSuccess(
-                              //     dialogTitle:
-                              //        "Timebank updated successfully, Please restart your app to see the updated changes.",
-                              //     err: false);
                             }
                           }
                         },
@@ -1438,8 +1439,6 @@ class CreateEditCommunityViewFormState
                 isBillingDetailsProvided = true;
                 print("All Good");
                 Navigator.pop(context);
-                //   _pc.close();
-                // scrollIsOpen = false;
               }
             }
           },
@@ -1499,38 +1498,6 @@ class CreateEditCommunityViewFormState
       duration: const Duration(milliseconds: 300),
     );
   }
-
-//  Future<bool> isCommunityFound(String enteredName) async {
-//    List<CommunityModel> communities = List<CommunityModel>();
-//    var communitiesFound =
-//        await searchCommunityByName(enteredName, communities);
-//
-//    if (communities == null || communities.length == 0) {
-//      return false;
-//    } else {
-//      return true;
-//    }
-//  }
-
-//  Future<List<CommunityModel>> searchCommunityByName(
-//      String name, List<CommunityModel> communities) async {
-//    communities.clear();
-//    if (name.isNotEmpty && name.length > 4) {
-//      await Firestore.instance
-//          .collection('communities')
-//          .where('name', isEqualTo: name)
-//          .getDocuments()
-//          .then((QuerySnapshot querySnapshot) {
-//        querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-//          var community = CommunityModel(documentSnapshot.data);
-//          print("community data ${community.name}");
-//
-//          communities.add(community);
-//        });
-//      });
-//    }
-//    return communities;
-//  }
 
   void addVolunteers() async {
     print(

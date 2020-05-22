@@ -25,6 +25,8 @@ class TimebankModel extends DataModel {
   num balance;
   GeoFirePoint location;
   bool softDelete;
+  bool preventAccedentalDelete;
+  bool requestedSoftDelete;
 
   // CompareToTimeBank joinStatus;
 
@@ -59,6 +61,13 @@ class TimebankModel extends DataModel {
     this.balance = map.containsKey("balance") ? map["balance"] : 0.0;
     this.location = getLocation(map);
     this.softDelete = map.containsKey("softDelete") ? map["softDelete"] : false;
+    this.preventAccedentalDelete = map.containsKey("preventAccedentalDelete")
+        ? map["preventAccedentalDelete"]
+        : true;
+
+    this.requestedSoftDelete = map.containsKey("requestedSoftDelete")
+        ? map["requestedSoftDelete"]
+        : false;
 
     // joinStatus = CompareToTimeBank.JOIN;
   }
@@ -122,6 +131,7 @@ class TimebankModel extends DataModel {
     }
     if (key == 'protected') {
       this.protected = value;
+      print("its coming here-------------------------------------- protected ");
     }
 
     if (key == 'private') {
@@ -141,6 +151,11 @@ class TimebankModel extends DataModel {
     }
     if (key == 'community_id') {
       this.communityId = value;
+    }
+    if (key == 'preventAccedentalDelete') {
+      print(
+          "its coming here-------------------------------------- preventAccedentalDelete ");
+      this.preventAccedentalDelete = value;
     }
   }
 
@@ -192,11 +207,31 @@ class TimebankModel extends DataModel {
           ? null
           : new List<dynamic>.from(children.map((x) => x)),
       "balance": balance == null ? null : balance,
-      'softDelete': false,
     };
+
     if (this.location != null) {
       map['location'] = this.location.data;
     }
+
+    if (this.preventAccedentalDelete != null) {
+      map['preventAccedentalDelete'] = this.preventAccedentalDelete;
+    } else {
+      map['preventAccedentalDelete'] = false;
+    }
+
+    if (this.softDelete != null) {
+      map['softDelete'] = this.softDelete;
+    } else {
+      map['softDelete'] = false;
+    }
+
+    if (this.requestedSoftDelete != null) {
+      map['requestedSoftDelete'] = this.requestedSoftDelete;
+    } else {
+      map['requestedSoftDelete'] = false;
+    }
+
+    print("----------------Here  is the update part----------------");
     return map;
   }
 

@@ -197,6 +197,24 @@ class EditGroupFormState extends State<EditGroupForm> {
           ),
           Row(
             children: <Widget>[
+              headingText('Private accedental delete', true),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                child: Checkbox(
+                  value: widget.timebankModel.preventAccedentalDelete,
+                  onChanged: (bool value) {
+                    print(value);
+                    setState(() {
+                      widget.timebankModel.preventAccedentalDelete = value;
+                    });
+                    print(widget.timebankModel.preventAccedentalDelete);
+                  },
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
               headingText('Private Group', true),
               Padding(
                 padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
@@ -216,40 +234,12 @@ class EditGroupFormState extends State<EditGroupForm> {
                       setState(() {
                         widget.timebankModel.private = value;
                       });
-                      // print(widget.timebankModel.private);
                     },
                   ),
                 ],
               ),
             ],
           ),
-          // Row(
-          //   children: <Widget>[
-          //     headingText('Protected group', false),
-          //     Column(
-          //       children: <Widget>[
-          //         Divider(),
-          //         Checkbox(
-          //           checkColor: Colors.white,
-          //           activeColor: Colors.green,
-          //           value: widget.timebankModel.protected,
-          //           onChanged: (bool value) {
-          //             setState(() {
-          //               widget.timebankModel.protected = value;
-          //             });
-          //           },
-          //         ),
-          //       ],
-          //     ),
-          //   ],
-          // ),
-          // Text(
-          //   'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled.',
-          //   style: TextStyle(
-          //     fontSize: 12,
-          //     color: Colors.grey,
-          //   ),
-          // ),
           headingText('Is this pin at a right place?', false),
           Container(
             margin: EdgeInsets.all(20),
@@ -258,7 +248,6 @@ class EditGroupFormState extends State<EditGroupForm> {
                 selectedAddress: selectedAddress,
                 location: location,
                 onChanged: (LocationDataModel dataModel) {
-                  log("received data model");
                   setState(() {
                     location = dataModel.geoPoint;
                     this.selectedAddress = dataModel.location;

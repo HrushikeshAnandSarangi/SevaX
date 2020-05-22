@@ -327,6 +327,8 @@ Future<void> updateTimebankDetails(
     'location': timebankModel.location.data,
     'protected': timebankModel.protected,
     'photo_url': timebankModel.photoUrl,
+    'preventAccedentalDelete': timebankModel.preventAccedentalDelete,
+    'private': timebankModel.private,
     'members': FieldValue.arrayUnion(members),
   });
 }

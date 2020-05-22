@@ -179,6 +179,8 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
           softDeleteType: SoftDelete.REQUEST_DELETE_TIMEBANK,
           associatedContentTitle: widget.timebankModel.name,
           email: SevaCore.of(context).loggedInUser.email,
+          isAccedentalDeleteEnabled:
+              widget.timebankModel.preventAccedentalDelete,
         );
       },
       child: Text(
