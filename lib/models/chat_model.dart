@@ -133,6 +133,7 @@ class ChatModel extends DataModel {
     map['unread_status'] = this.unreadStatus;
 
     map['communityId'] = this.communityId;
+    map["users"] = [this.user1, this.user2];
 
     if (candidateLocation != null) map['location'] = candidateLocation.data;
 
