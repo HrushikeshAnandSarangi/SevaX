@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/bottom_nav_bar.dart';
+import 'package:sevaexchange/ui/screens/message/pages/message_page_router.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/messages/chatlist_view.dart';
 import 'package:sevaexchange/views/notifications/notifications_page.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/splash_view.dart';
@@ -28,7 +28,8 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
     ExploreTabView(),
     NotificationsPage(),
     HomeDashBoard(),
-    ChatListView(),
+    MessagePageRouter(),
+    // ChatListView(),
     ProfilePage(),
   ];
 
