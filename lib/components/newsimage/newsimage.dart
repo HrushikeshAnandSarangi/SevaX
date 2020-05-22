@@ -242,6 +242,12 @@ class NewsImageState extends State<NewsImage>
                                 globals.newsDocumentName ?? "Document.pdf",
                                 overflow: TextOverflow.ellipsis,
                               ),
+                              trailing: IconButton(
+                                icon: Icon(Icons.clear),
+                                onPressed: () => setState(() {
+                                  globals.newsDocumentURL = null;
+                                }),
+                              ),
                             ),
                           ),
                         ),
