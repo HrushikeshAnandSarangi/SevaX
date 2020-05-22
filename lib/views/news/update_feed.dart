@@ -93,6 +93,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.location = location;
     newsObject.root_timebank_id = FlavorConfig.values.timebankId;
     newsObject.photoCredits = photoCredits != null ? photoCredits : '';
+    newsObject.newsDocumentUrl = globals.newsDocumentURL ?? '';
+    newsObject.newsDocumentName = globals.newsDocumentName ?? '';
     //EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(
       entityId: widget.timebankId,
@@ -106,6 +108,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     // await FirestoreManager.createNews(newsObject: newsObject);
     await FirestoreManager.updateNews(newsObject: newsObject);
     globals.newsImageURL = null;
+    globals.newsImageURL = null;
+    globals.newsDocumentURL = null;
     if (dialogContext != null) {
       Navigator.pop(dialogContext);
     }
