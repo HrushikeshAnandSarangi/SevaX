@@ -4,9 +4,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/new_chat_model.dart' as prefix;
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
@@ -334,40 +336,30 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
             if (user.email == SevaCore.of(context).loggedInUser.email) {
               return null;
             } else {
-              List users = [
-                user.email,
-                SevaCore.of(context).loggedInUser.email
-              ];
-              print("Listing users");
-              users.sort();
-
-              ChatModel model = ChatModel();
-              model.communityId =
-                  SevaCore.of(context).loggedInUser.currentCommunity;
-              model.user1 = users[0];
-              model.user2 = users[1];
-              model.timebankId = timebankModel.id;
-              print("Model1" + model.user1);
-              print("Model2" + model.user2);
-
-              showProgressDialog();
-
-              await createChat(chat: model);
-              Navigator.of(dialogLoadingContext).pop();
-
-              Navigator.of(context).pop();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ChatView(
-                    useremail: user.email,
-                    chatModel: model,
-                    isFromShare: false,
-                    news: NewsModel(),
-                    isFromNewChat: fromNewChat,
-                  ),
-                ),
+              UserModel loggedInUser = SevaCore.of(context).loggedInUser;
+              prefix.ParticipantInfo sender = prefix.ParticipantInfo(
+                id: loggedInUser.sevaUserID,
+                name: loggedInUser.fullname,
+                photoUrl: loggedInUser.photoURL,
+                type: prefix.MessageType.TYPE_PERSONAL,
               );
+
+              prefix.ParticipantInfo reciever = prefix.ParticipantInfo(
+                id: user.sevaUserID,
+                name: user.fullname,
+                photoUrl: user.photoURL,
+                type: prefix.MessageType.TYPE_PERSONAL,
+              );
+              createAndOpenChat(
+                context: context,
+                timebankId: widget.timebankId,
+                sender: sender,
+                reciever: reciever,
+                isFromRejectCompletion: true,
+              );
+              showProgressDialog();
+              Navigator.of(dialogLoadingContext).pop();
+              Navigator.of(context).pop();
             }
             return user.email == SevaCore.of(context).loggedInUser.email
                 ? null
@@ -402,7 +394,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
                 MaterialPageRoute(
                   builder: (context) => ChatView(
                     useremail: user.email,
-                    chatModel: model,
+                    // chatModel: model,
                     isFromShare: true,
                     news: widget.newsModel,
                     isFromNewChat: IsFromNewChat(
@@ -424,7 +416,8 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
               color: isSelected(user.email) ? Colors.green : Colors.white,
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
+                  backgroundImage:
+                      NetworkImage(user.photoURL ?? defaultUserImageURL),
                 ),
                 title: Text(
                   user.fullname,
