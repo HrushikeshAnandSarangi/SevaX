@@ -2,21 +2,23 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/new_chat_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
 class MessageBloc extends BlocBase {
   final _personalMessage = BehaviorSubject<List<ChatModel>>();
-  final _adminMessage = BehaviorSubject<List<ChatModel>>();
+  final _adminMessage = BehaviorSubject<List<AdminMessageWrapperModel>>();
 
   Stream<List<ChatModel>> get personalMessage => _personalMessage.stream;
-  Stream<List<ChatModel>> get adminMessage => _adminMessage.stream;
+  Stream<List<AdminMessageWrapperModel>> get adminMessage =>
+      _adminMessage.stream;
 
-  void fetchAllMessage(String communityId, String userEmail) {
-    log("$communityId    $userEmail");
+  Future<void> fetchAllMessage(String communityId, String userId) async {
+    log("$communityId");
     Firestore.instance
         .collection("chatsnew")
-        .where("users", arrayContains: userEmail)
+        .where("participants", arrayContains: userId)
         .where("communityId", isEqualTo: communityId)
         .snapshots()
         .listen((QuerySnapshot querySnapshot) {
@@ -30,6 +32,26 @@ class MessageBloc extends BlocBase {
       print(chats);
       _personalMessage.add(chats);
     });
+
+    Firestore.instance
+        .collection("timebanknew")
+        .where("community_id", isEqualTo: communityId)
+        .where("admins", arrayContains: userId)
+        .snapshots()
+        .listen((QuerySnapshot query) {
+      List<AdminMessageWrapperModel> temp = [];
+      query.documents.forEach((DocumentSnapshot snapshot) {
+        TimebankModel model = TimebankModel(snapshot.data);
+        temp.add(
+          AdminMessageWrapperModel(
+            id: model.id,
+            photoUrl: model.photoUrl,
+            name: model.name,
+          ),
+        );
+      });
+      _adminMessage.add(temp);
+    });
   }
 
   @override
@@ -37,4 +59,14 @@ class MessageBloc extends BlocBase {
     _personalMessage.close();
     _adminMessage.close();
   }
+}
+
+class AdminMessageWrapperModel {
+  final String id;
+  final String photoUrl;
+  final String name;
+  final String newMessageCount;
+
+  AdminMessageWrapperModel(
+      {this.id, this.photoUrl, this.name, this.newMessageCount});
 }
