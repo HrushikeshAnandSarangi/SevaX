@@ -23,8 +23,10 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () {
-      _bloc.fetchAllMessage(SevaCore.of(context).loggedInUser.currentCommunity,
-          SevaCore.of(context).loggedInUser.email);
+      _bloc.fetchAllMessage(
+        SevaCore.of(context).loggedInUser.currentCommunity,
+        SevaCore.of(context).loggedInUser.sevaUserID,
+      );
     });
     super.initState();
   }
