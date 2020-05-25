@@ -414,7 +414,9 @@ class NewsCardView extends StatelessWidget {
     print("url ${newsModel.newsDocumentUrl}");
     String url = newsModel.newsDocumentUrl;
     if (await canLaunch(url)) {
-      await launch(url);
+      await launch(
+        url,
+      );
     } else {
       throw 'Could not launch $url';
     }
