@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/new_chat_model.dart' as prefix;
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -92,12 +93,11 @@ class ProfileViewerState extends State<ProfileViewer> {
                             name: snapshot.data['fullname'],
                             email: snapshot.data['email'],
                             isBlocked: isBlocked,
-                            message:
-                                widget.userEmail == loggedInEmail || isBlocked
-                                    ? null
-                                    : () => onMessageClick(
-                                          loggedInEmail,
-                                        ),
+                            message: widget.userEmail == loggedInEmail ||
+                                    isBlocked
+                                ? null
+                                : () => onMessageClick(
+                                    user, SevaCore.of(context).loggedInUser),
                             block: widget.userEmail == loggedInEmail
                                 ? null
                                 : onBlockClick,
@@ -185,18 +185,31 @@ class ProfileViewerState extends State<ProfileViewer> {
     );
   }
 
-  void onMessageClick(loggedInEmail) {
-    List users = [widget.userEmail, loggedInEmail];
-    users.sort();
-    ChatModel model = ChatModel();
-    model.user1 = users[0];
-    model.user2 = users[1];
-    model.timebankId = widget.timebankId;
-    model.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
+  Future<void> onMessageClick(UserModel user, UserModel currentUser) async {
+    List<String> participants = [user.sevaUserID, currentUser.sevaUserID];
+    participants.sort();
+    prefix.ChatModel model = prefix.ChatModel(
+      participants: participants,
+      timebankId: widget.timebankId,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      participantInfo: [
+        prefix.ParticipantInfo(
+          id: user.sevaUserID,
+          name: user.fullname,
+          photoUrl: user.photoURL,
+          type: prefix.MessageType.TYPE_PERSONAL,
+        ),
+        prefix.ParticipantInfo(
+          id: currentUser.sevaUserID,
+          name: currentUser.fullname,
+          photoUrl: currentUser.photoURL,
+          type: prefix.MessageType.TYPE_PERSONAL,
+        ),
+      ],
+    );
 
-    print("_+_+_+_+_+++++++++++++${model.timebankId}");
-    // model.communityId =
-    createChat(chat: model);
+    await createNewChat(chat: model);
+
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -718,9 +731,10 @@ class CompletedList extends StatelessWidget {
 
   final UserModel userModel;
 
-  CompletedList(
-      {this.requestList,
-      this.userModel}); //  requestStream = FirestoreManager.getCompletedRequestStream(
+  CompletedList({
+    this.requestList,
+    this.userModel,
+  }); //  requestStream = FirestoreManager.getCompletedRequestStream(
 
   @override
   Widget build(BuildContext context) {

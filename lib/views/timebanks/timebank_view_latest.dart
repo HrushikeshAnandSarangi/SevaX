@@ -1,15 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/models/new_chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_seva_coin.dart';
 // import 'package:sevaexchange/views/core.dart';
 
@@ -400,8 +398,12 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                                 SevaCore.of(context).loggedInUser.sevaUserID)) {
                               _showAdminMessage();
                             } else {
-                              startChat(widget.timebankModel.id, widget.email,
-                                  context, widget.timebankModel.id);
+                              startChat(
+                                widget.timebankModel.id,
+                                widget.email,
+                                context,
+                                widget.timebankModel,
+                              );
                             }
                           },
                           child: Text(
@@ -484,38 +486,31 @@ void startChat(
   String email,
   String loggedUserEmail,
   BuildContext context,
-  String timbebankId,
+  TimebankModel timebankModel,
 ) async {
   if (email == loggedUserEmail) {
     return null;
   } else {
-    List users = [email, loggedUserEmail];
-    print("Listing users");
-    users.sort();
-    ChatModel model = ChatModel();
-    model.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
-    model.user1 = users[0];
-    model.user2 = users[1];
-    model.timebankId = timbebankId;
-    print("Model2" + model.user2);
+    UserModel loggedInUser = SevaCore.of(context).loggedInUser;
+    ParticipantInfo sender = ParticipantInfo(
+      id: loggedInUser.sevaUserID,
+      name: loggedInUser.fullname,
+      photoUrl: loggedInUser.photoURL,
+      type: MessageType.TYPE_PERSONAL,
+    );
 
-    await createChat(chat: model).then(
-      (_) {
-//        Navigator.of(context).pop();
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ChatView(
-              useremail: email,
-              chatModel: model,
-              isFromShare: false,
-              news: NewsModel(),
-              isFromNewChat: IsFromNewChat(true, timeStamp),
-            ),
-          ),
-        );
-      },
+    ParticipantInfo reciever = ParticipantInfo(
+      id: timebankModel.id,
+      name: timebankModel.name,
+      photoUrl: timebankModel.photoUrl,
+      type: MessageType.TYPE_TIMEBANK,
+    );
+    createAndOpenChat(
+      context: context,
+      timebankId: timebankModel.id,
+      sender: sender,
+      reciever: reciever,
+      isTimebankMessage: true,
     );
   }
 }

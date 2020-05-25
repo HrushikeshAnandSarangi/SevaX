@@ -17,6 +17,7 @@ Future<void> createAndOpenChat({
   String timebankId,
   String communityId,
   bool isFromRejectCompletion = false,
+  bool isTimebankMessage = false,
   bool isFromShare = false,
   NewsModel news,
   IsFromNewChat isFromNewChat,
@@ -28,6 +29,7 @@ Future<void> createAndOpenChat({
     timebankId: timebankId,
     communityId: communityId,
     participantInfo: [sender, reciever],
+    isTimebankMessage: isTimebankMessage,
   );
 
   await createNewChat(chat: model);

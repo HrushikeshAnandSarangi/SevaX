@@ -8,6 +8,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/new_chat_model.dart' as prefix;
 import 'package:sevaexchange/views/messages/chatview.dart';
 
 /// Create a [chat]
@@ -24,6 +25,16 @@ Future<void> createChat({
       .collection('chatsnew')
       .document(
           "${chat.user1}*${chat.user2}*${FlavorConfig.values.timebankId}*${chat.communityId}")
+      .setData(chat.toMap(), merge: true);
+}
+
+Future<void> createNewChat({
+  @required prefix.ChatModel chat,
+}) async {
+  return await Firestore.instance
+      .collection('chatsnew')
+      .document(
+          "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
       .setData(chat.toMap(), merge: true);
 }
 
