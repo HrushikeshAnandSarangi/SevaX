@@ -1,17 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
+import 'package:sevaexchange/ui/screens/message/pages/timebank_message_page.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 
 class AdminMessageCard extends StatelessWidget {
-  final String photoUrl;
-  final String name;
-  final String message;
-  final int timestamp;
+  final AdminMessageWrapperModel model;
   const AdminMessageCard({
     Key key,
-    this.photoUrl,
-    this.name,
-    this.message,
-    this.timestamp,
+    this.model,
   }) : super(key: key);
 
   @override
@@ -22,15 +19,19 @@ class AdminMessageCard extends StatelessWidget {
         children: <Widget>[
           InkWell(
             splashColor: Colors.transparent,
-            onTap: () => print("clicked"),
+            onTap: () => Navigator.of(context).push(
+              TimebankMessagePage.route(adminMessageWrapperModel: model),
+            ),
             child: Row(
               children: <Widget>[
-                photoUrl != null
+                model.photoUrl != null
                     ? CircleAvatar(
                         radius: 30,
+                        backgroundImage:
+                            CachedNetworkImageProvider(model.photoUrl),
                       )
                     : CustomAvatar(
-                        name: name,
+                        name: model.name,
                         radius: 30,
                       ),
                 SizedBox(width: 20),
@@ -38,7 +39,7 @@ class AdminMessageCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      name,
+                      model.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
