@@ -27,7 +27,7 @@ class NewsCreate extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(
-            "Create feed",
+            "Create post",
             style: TextStyle(fontSize: 18),
           ),
           centerTitle: false,

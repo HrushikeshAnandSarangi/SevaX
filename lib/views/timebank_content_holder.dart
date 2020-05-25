@@ -607,7 +607,7 @@ class DiscussionListState extends State<DiscussionList> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        ' Start a new feed....',
+                        ' Create new post....',
                         maxLines: 1,
                         textAlign: TextAlign.start,
                         style: TextStyle(fontSize: 16),
