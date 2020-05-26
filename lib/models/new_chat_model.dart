@@ -2,7 +2,7 @@ class ChatModel {
   List<String> participants;
   List<ParticipantInfo> participantInfo;
   String lastMessage;
-  Map<String, dynamic> unreadStatus;
+  Map<String, int> unreadStatus;
   List<String> softDeletedBy;
   Map<dynamic, dynamic> deletedBy;
   bool isTimebankMessage;
@@ -28,7 +28,9 @@ class ChatModel {
         participantInfo: List<ParticipantInfo>.from(map["participantInfo"]
             .map((x) => ParticipantInfo.fromMap(Map<String, dynamic>.from(x)))),
         lastMessage: map["lastMessage"],
-        unreadStatus: map["unreadStatus"],
+        unreadStatus: map["unreadStatus"] != null
+            ? Map<String, int>.from(map["unreadStatus"])
+            : {},
         softDeletedBy: map["softDeletedBy"] == null
             ? []
             : List<String>.from(map["softDeletedBy"].map((x) => x)),
