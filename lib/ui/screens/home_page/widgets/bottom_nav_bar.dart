@@ -1,11 +1,6 @@
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/nav_bar_model.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 
 import 'custom_navigation_item.dart';
@@ -22,30 +17,30 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   build(BuildContext context) {
     return StreamBuilder<NavBarBadgeModel>(
-      stream: CombineLatestStream.combine2(
-        Firestore.instance
-            .collection('users')
-            .document(SevaCore.of(context).loggedInUser.email)
-            .collection('notifications')
-            .where("communityId",
-                isEqualTo: SevaCore.of(context).loggedInUser.currentCommunity)
-            .where("isRead", isEqualTo: false)
-            .snapshots()
-            .transform(
-          StreamTransformer.fromHandlers(
-            handleData: (QuerySnapshot snapshot, sink) {
-              sink.add(snapshot.documents.length);
-            },
-          ),
-        ),
-        getChatsforUser(
-          email: SevaCore.of(context).loggedInUser.email,
-          blockedBy: SevaCore.of(context).loggedInUser.blockedBy,
-          blockedMembers: SevaCore.of(context).loggedInUser.blockedMembers,
-          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-        ),
-        (n, m) => NavBarBadgeModel(notificationCount: n, chats: m),
-      ),
+      // stream: CombineLatestStream.combine2(
+      //   Firestore.instance
+      //       .collection('users')
+      //       .document(SevaCore.of(context).loggedInUser.email)
+      //       .collection('notifications')
+      //       .where("communityId",
+      //           isEqualTo: SevaCore.of(context).loggedInUser.currentCommunity)
+      //       .where("isRead", isEqualTo: false)
+      //       .snapshots()
+      //       .transform(
+      //     StreamTransformer.fromHandlers(
+      //       handleData: (QuerySnapshot snapshot, sink) {
+      //         sink.add(snapshot.documents.length);
+      //       },
+      //     ),
+      //   ),
+      //   getChatsforUser(
+      //     email: SevaCore.of(context).loggedInUser.email,
+      //     blockedBy: SevaCore.of(context).loggedInUser.blockedBy,
+      //     blockedMembers: SevaCore.of(context).loggedInUser.blockedMembers,
+      //     communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      //   ),
+      //   (n, m) => NavBarBadgeModel(notificationCount: n, chats: m),
+      // ),
       builder: (context, AsyncSnapshot<NavBarBadgeModel> snapshot) {
         int notificationCount = 0;
         int chatCount = 0;
