@@ -27,26 +27,29 @@ class MessageBloc extends BlocBase {
       querySnapshot.documents.forEach((DocumentSnapshot snapshot) {
         ChatModel chat = ChatModel.fromMap(snapshot.data);
         chats.add(chat);
-        print(chat);
       });
-      print(chats);
-      _personalMessage.add(chats);
+
+      if (!_personalMessage.isClosed) _personalMessage.add(chats);
     });
 
     Firestore.instance
         .collection("timebanknew")
         .where("community_id", isEqualTo: communityId)
         .where("admins", arrayContains: userId)
+        .orderBy("lastMessageTimestamp", descending: true)
         .snapshots()
         .listen((QuerySnapshot query) {
       List<AdminMessageWrapperModel> temp = [];
       query.documents.forEach((DocumentSnapshot snapshot) {
         TimebankModel model = TimebankModel(snapshot.data);
+        log("${model.unreadMessageCount} message ");
         temp.add(
           AdminMessageWrapperModel(
             id: model.id,
             photoUrl: model.photoUrl,
             name: model.name,
+            newMessageCount: model.unreadMessageCount,
+            timestamp: model.lastMessageTimestamp,
           ),
         );
       });
@@ -65,8 +68,14 @@ class AdminMessageWrapperModel {
   final String id;
   final String photoUrl;
   final String name;
-  final String newMessageCount;
+  final int newMessageCount;
+  final DateTime timestamp;
 
-  AdminMessageWrapperModel(
-      {this.id, this.photoUrl, this.name, this.newMessageCount});
+  AdminMessageWrapperModel({
+    this.id,
+    this.timestamp,
+    this.photoUrl,
+    this.name,
+    this.newMessageCount,
+  });
 }

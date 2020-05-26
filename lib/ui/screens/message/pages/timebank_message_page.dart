@@ -61,6 +61,7 @@ class _TimebankMessagePageState extends State<TimebankMessagePage> {
               ChatModel chat = snapshot.data[index];
               return MessageCard(
                 model: chat,
+                isAdminMessage: true,
               );
             },
           );

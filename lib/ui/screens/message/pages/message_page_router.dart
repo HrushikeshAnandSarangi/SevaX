@@ -70,7 +70,8 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SelectTimeBankForNewChat()),
+                            builder: (context) => SelectTimeBankForNewChat(),
+                          ),
                         );
                       } else {
                         Navigator.push(
