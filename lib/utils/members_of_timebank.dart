@@ -350,16 +350,19 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
                 photoUrl: user.photoURL,
                 type: prefix.MessageType.TYPE_PERSONAL,
               );
+              showProgressDialog();
               createAndOpenChat(
                 context: context,
                 timebankId: widget.timebankId,
+                communityId: loggedInUser.currentCommunity,
                 sender: sender,
                 reciever: reciever,
-                isFromRejectCompletion: true,
+                isFromRejectCompletion: false,
+                onChatCreate: () {
+                  Navigator.of(dialogLoadingContext).pop();
+                  Navigator.of(context).pop();
+                },
               );
-              showProgressDialog();
-              Navigator.of(dialogLoadingContext).pop();
-              Navigator.of(context).pop();
             }
             return user.email == SevaCore.of(context).loggedInUser.email
                 ? null
@@ -393,7 +396,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ChatView(
-                    useremail: user.email,
+                    senderId: user.email,
                     // chatModel: model,
                     isFromShare: true,
                     news: widget.newsModel,

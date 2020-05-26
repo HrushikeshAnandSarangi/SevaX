@@ -21,6 +21,7 @@ Future<void> createAndOpenChat({
   bool isFromShare = false,
   NewsModel news,
   IsFromNewChat isFromNewChat,
+  VoidCallback onChatCreate,
 }) async {
   List<String> participants = [sender.id, reciever.id];
   participants.sort();
@@ -33,15 +34,19 @@ Future<void> createAndOpenChat({
   );
 
   await createNewChat(chat: model);
+  if (onChatCreate != null) {
+    onChatCreate();
+  }
 
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => ChatView(
-          useremail: sender.id,
-          chatModel: model,
-          isFromRejectCompletion: isFromRejectCompletion,
-          isFromNewChat: isFromNewChat),
+        senderId: sender.id,
+        chatModel: model,
+        isFromRejectCompletion: isFromRejectCompletion,
+        isFromNewChat: isFromNewChat,
+      ),
     ),
   );
 }
@@ -82,7 +87,7 @@ Future<void> createAndOpenTimebankChat({
     context,
     MaterialPageRoute(
       builder: (context) => ChatView(
-        useremail: sender,
+        senderId: sender,
         chatModel: model,
         isFromRejectCompletion: isFromRejectCompletion,
       ),
