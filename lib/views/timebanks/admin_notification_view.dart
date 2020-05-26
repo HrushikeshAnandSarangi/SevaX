@@ -15,13 +15,12 @@ import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
@@ -1052,26 +1051,33 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       communityid: SevaCore.of(context).loggedInUser.currentCommunity,
     );
     // creating chat with a timebank
-    String loggedInEmail = model.timebankId;
+    // String loggedInEmail = model.timebankId;
 
-    // String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-    List users = [user.email, loggedInEmail];
-    users.sort();
-    ChatModel chatModel = ChatModel();
-    chatModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
-    chatModel.user1 = users[0];
-    chatModel.user2 = users[1];
-    chatModel.timebankId = widget.timebankId;
-    createChat(chat: chatModel);
+    // List users = [user.email, loggedInEmail];
+    // users.sort();
+    // ChatModel chatModel = ChatModel();
+    // chatModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
+    // chatModel.user1 = users[0];
+    // chatModel.user2 = users[1];
+    // chatModel.timebankId = widget.timebankId;
+    // createChat(chat: chatModel);
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => ChatView(
-                useremail: user.email,
-                chatModel: chatModel,
-                isFromRejectCompletion: true,
-              )),
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //       builder: (context) => ChatView(
+    //             useremail: user.email,
+    //             // chatModel: chatModel,
+    //             isFromRejectCompletion: true,
+    //           )),
+    // );
+
+    createAndOpenTimebankChat(
+      context: context,
+      isFromRejectCompletion: true,
+      reciever: user,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      sender: model.timebankId,
     );
 
     FirestoreManager.readTimeBankNotification(

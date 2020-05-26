@@ -510,6 +510,7 @@ void startChat(
       timebankId: timebankModel.id,
       sender: sender,
       reciever: reciever,
+      communityId: loggedInUser.currentCommunity,
       isTimebankMessage: true,
     );
   }

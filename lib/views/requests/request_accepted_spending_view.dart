@@ -507,7 +507,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
             decoration: notificationDecoration,
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
+                backgroundImage:
+                    NetworkImage(user.photoURL ?? defaultUserImageURL),
               ),
               title: Text(model.title),
               subtitle: RichText(
@@ -589,7 +590,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
+                      backgroundImage: NetworkImage(
+                          userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(
@@ -752,8 +754,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       context,
       MaterialPageRoute(
           builder: (context) => ChatView(
-                useremail: user.email,
-                chatModel: chatModel,
+                senderId: user.email,
+                // chatModel: chatModel,
                 isFromRejectCompletion: true,
               )),
     );

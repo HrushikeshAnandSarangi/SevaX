@@ -182,8 +182,8 @@ class _SelectMembersView extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ChatView(
-                    useremail: user.email,
-                    chatModel: model,
+                    // useremail: user.email,
+                    // chatModel: model,
                     isFromShare: isFromShare,
                     news: isFromShare ? newsModel : NewsModel(),
                     isFromNewChat: fromNewChat,

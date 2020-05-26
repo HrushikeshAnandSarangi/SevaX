@@ -214,7 +214,7 @@ class ProfileViewerState extends State<ProfileViewer> {
       context,
       MaterialPageRoute(
         builder: (context) => ChatView(
-          useremail: widget.userEmail,
+          senderId: widget.userEmail,
           chatModel: model,
         ),
       ),
