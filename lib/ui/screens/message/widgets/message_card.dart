@@ -5,12 +5,15 @@ import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class MessageCard extends StatelessWidget {
   final ChatModel model;
+  final bool isAdminMessage;
   const MessageCard({
     Key key,
     this.model,
+    this.isAdminMessage = false,
   }) : super(key: key);
 
   @override
@@ -27,7 +30,12 @@ class MessageCard extends StatelessWidget {
             splashColor: Colors.transparent,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => ChatView(chatModel: model),
+                builder: (context) => ChatView(
+                  chatModel: model,
+                  senderId: isAdminMessage
+                      ? model.timebankId
+                      : SevaCore.of(context).loggedInUser.sevaUserID,
+                ),
               ),
             ),
             child: Row(
@@ -47,6 +55,24 @@ class MessageCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      isAdminMessage || info.type == MessageType.TYPE_PERSONAL
+                          ? Container()
+                          : Container(
+                              decoration: BoxDecoration(
+                                color: info.type == MessageType.TYPE_TIMEBANK
+                                    ? Colors.green
+                                    : Theme.of(context).primaryColor,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 3),
+                              child: Text(
+                                info.type == MessageType.TYPE_TIMEBANK
+                                    ? "Timebank"
+                                    : "Group",
+                                style: TextStyle(
+                                    fontSize: 10, color: Colors.white),
+                              ),
+                            ),
                       Text(
                         info.name,
                         maxLines: 1,
@@ -79,7 +105,12 @@ class MessageCard extends StatelessWidget {
               ),
               SizedBox(width: 20),
               Text(
-                "Now 10:00 pm",
+                model.timestamp == null
+                    ? ""
+                    : timeago.format(
+                        DateTime.fromMillisecondsSinceEpoch(model.timestamp),
+                      ),
+                // "Now 10:00 pm",
                 style: TextStyle(fontSize: 12),
               ),
             ],

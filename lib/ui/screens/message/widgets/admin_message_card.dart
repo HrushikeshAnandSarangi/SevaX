@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/timebank_message_page.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class AdminMessageCard extends StatelessWidget {
   final AdminMessageWrapperModel model;
@@ -48,16 +49,16 @@ class AdminMessageCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 8),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                      color: Colors.grey[300],
-                      child: Row(
-                        children: <Widget>[
-                          Text("13 new messages"),
-                          Icon(Icons.keyboard_arrow_down, color: Colors.grey),
-                        ],
-                      ),
-                    ),
+                    model.newMessageCount > 0
+                        ? Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
+                            color: Colors.grey[300],
+                            child: Text(
+                              getMessageCountText(model.newMessageCount),
+                            ),
+                          )
+                        : Container(),
                   ],
                 ),
               ],
@@ -75,7 +76,11 @@ class AdminMessageCard extends StatelessWidget {
               ),
               SizedBox(width: 20),
               Text(
-                "Now 10:00 pm",
+                model.timestamp == null
+                    ? ""
+                    : timeago.format(
+                        model.timestamp,
+                      ),
                 style: TextStyle(fontSize: 12),
               ),
             ],
@@ -83,5 +88,16 @@ class AdminMessageCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String getMessageCountText(int count) {
+    if (count == null || count < 1) {
+      return "";
+    }
+    if (count == 1) {
+      return "1 new message";
+    } else {
+      return "$count new messages";
+    }
   }
 }
