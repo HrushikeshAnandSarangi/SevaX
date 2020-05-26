@@ -8,6 +8,7 @@ import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_i
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 
 class ReportedMemberCard extends StatelessWidget {
@@ -95,7 +96,7 @@ class ReportedMemberCard extends StatelessWidget {
               ),
               GestureDetector(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
+                  padding: const EdgeInsets.only(top: 5.0,),
                   child: Image.asset(
                     messageIcon,
                     width: 22,
@@ -116,7 +117,7 @@ class ReportedMemberCard extends StatelessWidget {
                   width: 22,
                   height: 22,
                 ),
-                onTap: removeMember,
+                onTap:isFromTimebank? removeMemberGroupFn:removeMemberTimebankFn,
               ),
             ],
           ),
@@ -166,9 +167,33 @@ class ReportedMemberCard extends StatelessWidget {
     );
   }
 
-  void removeMember() async {
+  void removeMemberGroupFn() async {
     log("remove member");
+    var responseData = await removeMemberFromGroup();
+    if(responseData['deletable']==true){
 
+    }else{
+      if(responseData['softDeleteCheck']==false && responseData['groupOwnershipCheck']==false){
 
+      }
+      else if(responseData['softDeleteCheck']==true && responseData['groupOwnershipCheck']==false){
+
+      }
+    }
+  }
+
+  void removeMemberTimebankFn() async {
+    log("remove member");
+    var responseData = await removeMemberFromTimebank();
+    if(responseData['deletable']==true){
+
+    }else{
+      if(responseData['softDeleteCheck']==false && responseData['groupOwnershipCheck']==false){
+
+      }
+      else if(responseData['softDeleteCheck']==true && responseData['groupOwnershipCheck']==false){
+
+      }
+    }
   }
 }

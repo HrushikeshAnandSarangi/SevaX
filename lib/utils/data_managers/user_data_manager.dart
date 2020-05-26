@@ -216,6 +216,22 @@ Stream<UserModel> getUserForEmailStream(String userEmailAddress) async* {
   );
 }
 
-//Future<Map<String,dynamic>> removeMemberFromTimebank({})async{
-//
-//}
+Future<Map<String,dynamic>> removeMemberFromGroup({String sevauserid, String groupId, }) async {
+  String urlLink = FlavorConfig.values.cloudFunctionBaseURL + "/removeMemberFromGroup?sevauserid=$sevauserid&groupId=$groupId";
+
+  print("removeMemberFromGroupLink==============$urlLink==============");
+  var res = await http
+      .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+  var data = json.decode(res.body);
+  return data;
+}
+
+Future<Map<String,dynamic>> removeMemberFromTimebank({String sevauserid, String timebankId, }) async {
+  String urlLink = FlavorConfig.values.cloudFunctionBaseURL + "/removeMemberFromTimebank?sevauserid=$sevauserid&timebankId=$timebankId";
+
+  print("removeMemberFromTimebankLink==============$urlLink==============");
+  var res = await http
+      .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+  var data = json.decode(res.body);
+  return data;
+}
