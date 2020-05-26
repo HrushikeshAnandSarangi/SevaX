@@ -12,10 +12,8 @@ import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
 import 'package:sevaexchange/ui/screens/search/pages/search_page.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/messages/timebank_chats.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
@@ -203,29 +201,15 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
                   tabs.length == 7) {
                 isAdmin = true;
-                _timebankController = TabController(length: 10, vsync: this);
+                _timebankController = TabController(length: 9, vsync: this);
 
                 tabs.add(Tab(text: 'Manage'));
                 tabs.add(
                   Container(
-                    width: 14,
+                    width: 35,
                     height: 10,
                     color: Colors.green,
                   ),
-                  // GetActiveTimebankNotifications(
-                  //     timebankId: primaryTimebank.id),
-                );
-                tabs.add(
-                  Container(
-                    width: 28,
-                    height: 10,
-                    color: Colors.red,
-                  ),
-                  // getMessagingTab(
-                  //   timebankId: primaryTimebank.id,
-                  //   communityId:
-                  //       SevaCore.of(context).loggedInUser.currentCommunity,
-                  // ),
                 );
               }
             }
@@ -247,40 +231,32 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                       offstage: !isAdmin,
                       child: Align(
                         alignment: Alignment.centerRight,
-                        child: Container(
-                          decoration: BoxDecoration(color: Colors.white),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              SizedBox(width: 5),
-                              Container(
-                                height: 30,
-                                width: 1,
-                                color: Colors.grey,
-                              ),
-                              SizedBox(width: 5),
-                              GestureDetector(
-                                onTap: () {
-                                  _timebankController.animateTo(8);
-                                },
-                                child: GetActiveTimebankNotifications(
-                                  timebankId: primaryTimebank.id,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 6),
+                          child: Container(
+                            decoration: BoxDecoration(color: Colors.white),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(width: 5),
+                                Container(
+                                  height: 30,
+                                  width: 1,
+                                  // color: Colors.red,
                                 ),
-                              ),
-                              SizedBox(width: 14),
-                              GestureDetector(
-                                onTap: () {
-                                  _timebankController.animateTo(9);
-                                },
-                                child: getMessagingTab(
-                                  timebankId: primaryTimebank.id,
-                                  communityId: SevaCore.of(context)
-                                      .loggedInUser
-                                      .currentCommunity,
+                                SizedBox(width: 5),
+                                GestureDetector(
+                                  onTap: () {
+                                    _timebankController.animateTo(8);
+                                  },
+                                  child: GetActiveTimebankNotifications(
+                                    timebankId: primaryTimebank.id,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(width: 10),
-                            ],
+                                SizedBox(width: 10),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -335,9 +311,6 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                               TimebankNotificationsView(
                                 timebankId: primaryTimebank.id,
                               ),
-                              TimebankChatListView(
-                                timebankId: primaryTimebank.id,
-                              ),
                             ]
                           : []
                     ],
@@ -353,16 +326,19 @@ class _HomeDashBoardState extends State<HomeDashBoard>
 
   Widget getMessagingTab({String timebankId, String communityId}) {
     return StreamBuilder<List<ChatModel>>(
-      stream: getChatsForTimebank(
-        timebankId: timebankId,
-        communityId: communityId,
-      ),
+      // stream: getChatsForTimebank(
+      //   timebankId: timebankId,
+      //   communityId: communityId,
+      // ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Tab(
             icon: gettingMessages,
           );
         }
+        return Tab(
+          icon: gettingMessages,
+        );
         var unreadCount = 0;
         snapshot.data.forEach((model) {
           model.unreadStatus.containsKey(timebankId)
