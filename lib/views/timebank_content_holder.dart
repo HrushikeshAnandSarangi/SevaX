@@ -9,7 +9,6 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
@@ -30,7 +29,6 @@ import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../flavor_config.dart';
 import 'core.dart';
-import 'messages/timebank_chats.dart';
 
 class TimebankTabsViewHolder extends StatelessWidget {
   final String timebankId;
@@ -299,9 +297,10 @@ Widget createAdminTabBar(
               TimebankNotificationsView(
                 timebankId: timebankModel.id,
               ),
-              TimebankChatListView(
-                timebankId: timebankId,
-              ),
+              Container(),
+              // TimebankChatListView(
+              //   timebankId: timebankId,
+              // ),
             ],
           ),
         ),
@@ -349,10 +348,10 @@ Widget badge(int count) => Positioned(
 
 Widget getMessagingTab({String timebankId, String communityId}) {
   return StreamBuilder<List<ChatModel>>(
-    stream: getChatsForTimebank(
-      timebankId: timebankId,
-      communityId: communityId,
-    ),
+    // stream: getChatsForTimebank(
+    //   timebankId: timebankId,
+    //   communityId: communityId,
+    // ),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         return Tab(
