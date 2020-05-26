@@ -27,6 +27,7 @@ import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../flavor_config.dart';
 import 'core.dart';
@@ -606,7 +607,7 @@ class DiscussionListState extends State<DiscussionList> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        ' Start a new feed....',
+                        ' Create new post....',
                         maxLines: 1,
                         textAlign: TextAlign.start,
                         style: TextStyle(fontSize: 16),
@@ -778,16 +779,16 @@ class DiscussionListState extends State<DiscussionList> {
 //    );
 //  }
 
-  final Map<int, Widget> logoWidgets = const <int, Widget>{
-    0: Text(
-      'All',
-      style: TextStyle(fontSize: 10.0),
-    ),
-    1: Text(
-      'Near Me',
-      style: TextStyle(fontSize: 10.0),
-    ),
-  };
+//  final Map<int, Widget> logoWidgets = const <int, Widget>{
+//    0: Text(
+//      'All',
+//      style: TextStyle(fontSize: 10.0),
+//    ),
+//    1: Text(
+//      'Near Me',
+//      style: TextStyle(fontSize: 10.0),
+//    ),
+//  };
   List<NewsModel> filterPinnedNews(
       List<NewsModel> newsList, BuildContext context) {
     List<NewsModel> filteredNewsList = [];
@@ -806,28 +807,28 @@ class DiscussionListState extends State<DiscussionList> {
     return filteredNewsList;
   }
 
-  void _showAdminAccessMessage() {
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Text("Access denied."),
-          content: new Text("You are not authorized to pin a feed."),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text("Close"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+//  void _showAdminAccessMessage() {
+//    // flutter defined function
+//    showDialog(
+//      context: context,
+//      builder: (BuildContext context) {
+//        // return object of type Dialog
+//        return AlertDialog(
+//          title: new Text("Access denied."),
+//          content: new Text("You are not authorized to pin a feed."),
+//          actions: <Widget>[
+//            // usually buttons at the bottom of the dialog
+//            new FlatButton(
+//              child: new Text("Close"),
+//              onPressed: () {
+//                Navigator.of(context).pop();
+//              },
+//            ),
+//          ],
+//        );
+//      },
+//    );
+//  }
 
   List<NewsModel> filterBlockedContent(
       List<NewsModel> newsList, BuildContext context) {
@@ -846,6 +847,18 @@ class DiscussionListState extends State<DiscussionList> {
           : filteredNewsList.add(news);
     });
     return filteredNewsList;
+  }
+
+  _launchURL(String newsDocumentUrl) async {
+    print("url ${newsDocumentUrl}");
+    String url = newsDocumentUrl;
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   Widget getNewsCard(NewsModel news, bool isFromMessage) {
@@ -1311,6 +1324,22 @@ class DiscussionListState extends State<DiscussionList> {
                                     }
                                   },
                                 ),
+                                news.newsDocumentUrl != null
+                                    ? getOptionButtons(
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 6, vertical: 2),
+                                          child: Icon(
+                                            Icons.attach_file,
+                                            color: Colors.black,
+                                            size: 20,
+                                          ),
+                                        ),
+                                        () {
+                                          _launchURL(news.newsDocumentUrl);
+                                        },
+                                      )
+                                    : Offstage(),
                                 getOptionButtons(
                                   Row(
                                     children: <Widget>[

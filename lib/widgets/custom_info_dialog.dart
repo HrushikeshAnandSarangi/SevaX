@@ -41,7 +41,7 @@ Map<InfoType, String> infoDescriptionMapper = {
   InfoType.PRIVATE_TIMEBANK:
       'Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.',
   InfoType.PRIVATE_GROUP:
-      'Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.',
+      'Check this box if you want to create a Private Group.  That is, users cannot find this Private Group (from the Explore tab) and request to join. They need to be explicitly invited by one of the admins of the Group. Activity within Private Groups are not displayed in Search results.',
   InfoType.TAX_CONFIGURATION:
       'At the time that a user is credited Seva Credits for completing a request (for the Timebank), the Timebank Admin can specify a Tax - which is credited to the Timebank. Slide the ruler to specify the amount of the Tax.',
 };
