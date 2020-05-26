@@ -115,7 +115,7 @@ Widget getUserRole(
 ) {
   switch (role) {
     case AboutUserRole.ADMIN:
-      TabController controller = TabController(vsync: vsync, length: 9);
+      TabController controller = TabController(vsync: vsync, length: 8);
       return createAdminTabBar(
         context,
         timebankModel,
@@ -207,11 +207,6 @@ Widget createAdminTabBar(
                   // height: 10,
                   // color: Colors.green,
                 ),
-                Container(
-                  width: 20,
-                  // height: 10,
-                  // color: Colors.green,
-                ),
               ],
             ),
             Align(
@@ -236,17 +231,8 @@ Widget createAdminTabBar(
                         timebankId: timebankId,
                       ),
                     ),
-                    SizedBox(width: 14),
-                    GestureDetector(
-                      onTap: () {
-                        controller.animateTo(8);
-                      },
-                      child: getMessagingTab(
-                        communityId:
-                            SevaCore.of(context).loggedInUser.currentCommunity,
-                        timebankId: timebankId,
-                      ),
-                    ),
+                    // SizedBox(width: 14),
+
                     SizedBox(width: 10),
                   ],
                 ),
@@ -297,10 +283,6 @@ Widget createAdminTabBar(
               TimebankNotificationsView(
                 timebankId: timebankModel.id,
               ),
-              Container(),
-              // TimebankChatListView(
-              //   timebankId: timebankId,
-              // ),
             ],
           ),
         ),
