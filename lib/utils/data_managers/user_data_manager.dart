@@ -72,22 +72,6 @@ Future<UserModel> getUserForEmail({
     return null;
   }
   userModel = UserModel.fromMap(documentSnapshot.data);
-
-  // DocumentSnapshot walletSnapshot = await Firestore.instance
-  //     .collection('wallet')
-  //     .document(emailAddress)
-  //     .get();
-
-  // num currentBalance = 0;
-
-  // if (userModel == null) return null;
-  // if (walletSnapshot != null && walletSnapshot.data != null) {
-  //   currentBalance = walletSnapshot.data['currentBalance'];
-  // }
-
-// 73191597
-  // userModel.currentBalance = currentBalance;
-
   return userModel;
 }
 
@@ -210,18 +194,6 @@ Future<UserModel> getUserForIdFuture({@required String sevaUserId}) async {
   }).catchError((onError) {
     return UserModel();
   });
-
-  // yield* data.transform(
-  //   StreamTransformer<QuerySnapshot, UserModel>.fromHandlers(
-  //     handleData: (snapshot, userSink) async {
-  //       DocumentSnapshot documentSnapshot = snapshot.documents[0];
-  //       UserModel model = UserModel.fromMap(documentSnapshot.data);
-
-  //       model.sevaUserID = sevaUserId;
-  //       userSink.add(model);
-  //     },
-  //   ),
-  // );
 }
 
 Stream<UserModel> getUserForEmailStream(String userEmailAddress) async* {
@@ -243,3 +215,7 @@ Stream<UserModel> getUserForEmailStream(String userEmailAddress) async* {
     ),
   );
 }
+
+//Future<Map<String,dynamic>> removeMemberFromTimebank({})async{
+//
+//}

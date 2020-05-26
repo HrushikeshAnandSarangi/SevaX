@@ -166,7 +166,9 @@ class ReportedMemberCard extends StatelessWidget {
     );
   }
 
-  void removeMember() {
+  void removeMember() async {
     log("remove member");
+
+
   }
 }
