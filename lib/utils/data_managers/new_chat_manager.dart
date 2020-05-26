@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:core' as prefix0;
 import 'dart:core';
 
@@ -21,117 +20,123 @@ Future<void> createChat({
 
 Future<void> updateChat(
     {@required prefix.ChatModel chat, String userId}) async {
+  String key = chat.participants[0] != userId
+      ? chat.participants[0]
+      : chat.participants[1];
   return await Firestore.instance
       .collection('chatsnew')
       .document(
           "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
-      .updateData({
-    'softDeletedBy': chat.softDeletedBy,
-    'lastMessage': chat.lastMessage,
-    'timestamp': DateTime.now().millisecondsSinceEpoch,
-  });
-}
-
-@Deprecated("Feature not implemmented yet")
-Future<void> updateReadStatus(prefix.ChatModel chat, String userId) async {
-  return await Firestore.instance
-      .collection("chatsnew")
-      .document(
-          "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
-      .get()
-      .then((messageModel) {
-    prefix.ChatModel chatModel = prefix.ChatModel.fromMap(messageModel.data);
-    Map<dynamic, dynamic> unreadCount = HashMap();
-    unreadCount = chatModel.unreadStatus;
-    chat.unreadStatus[userId] = 0;
-  });
+      .setData(
+    {
+      'softDeletedBy': chat.softDeletedBy,
+      'lastMessage': chat.lastMessage,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      "unreadStatus": {
+        key: FieldValue.increment(1),
+      }
+    },
+    merge: true,
+  );
 }
 
 //tested and working
 /// Update a [chat]
 
-Future<void> updateMessagingReadStatus({
-  @required prefix.ChatModel chat,
-  @required String userId,
-  @required String userEmail,
-  bool isAdmin = false,
-  bool once = false,
-}) async {
-  await Firestore.instance
-      .collection("chatsnew")
-      .document(
-          "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
-      .get()
-      .then((messageModel) {
-    prefix.ChatModel chatModel = prefix.ChatModel.fromMap(messageModel.data);
-    //Data retrieved from firebase of chat model
-
-    //Frame the updated data count
-    var lastUnreadCount = chatModel.unreadStatus[userEmail] == null
-        ? 0
-        : chatModel.unreadStatus[userEmail];
-
-    prefix0.Map<String, int> unreadStatus = HashMap();
-    unreadStatus[userId] = 0;
-    unreadStatus[userEmail] = once ? lastUnreadCount : lastUnreadCount + 1;
-
-    //
-    return Firestore.instance
-        .collection('chatsnew')
-        .document(
-            "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
-        .updateData({'unread_status': unreadStatus});
-  });
-}
+// Future<void> updateMessageUnReadStatus({
+//   @required prefix.ChatModel chat,
+//   @required String userId,
+// }) async {
+//   String key = chat.participants[0] != userId
+//       ? chat.participants[0]
+//       : chat.participants[1];
+//   await Firestore.instance
+//       .collection("chatsnew")
+//       .document(
+//           "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
+//       .setData({
+//     "unreadStatus": {
+//       key: FieldValue.increment(1),
+//     }
+//   }, merge: true);
+// }
 
 // updating chatcommunity Id
 /// Update a [chat]
-Future<void> updateMessagingReadStatusForMe({
+Future<void> markMessageAsRead({
   @required prefix.ChatModel chat,
   @required String userId,
-  @required String userEmail,
 }) async {
-  await Firestore.instance
-      .collection("chatsnew")
+  return Firestore.instance
+      .collection('chatsnew')
       .document(
           "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
-      .get()
-      .then((messageModel) {
-    prefix.ChatModel chatModel = prefix.ChatModel.fromMap(messageModel.data);
-    //Data retrieved from firebase of chat model
-
-    prefix0.Map<dynamic, dynamic> unreadStatus = HashMap();
-    unreadStatus = chatModel.unreadStatus;
-    unreadStatus[userId] = 0;
-    //
-
-    return Firestore.instance
-        .collection('chatsnew')
-        .document(
-            "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
-        .updateData({
-      'unread_status': unreadStatus,
-      //   'location': chat.candidateLocation != null
-      //       ? chat.candidateLocation.data
-      //       : GeoFirePoint(40.754387, -73.984291).data
-    });
-  });
+      .setData(
+    {
+      'unreadStatus': {userId: 0}
+    },
+    merge: true,
+  );
 }
 
-//Create a message
-Future<void> createmessage({
-  @required prefix.ChatModel chat,
-  @required MessageModel messagemodel,
+Future<void> createNewMessage({
+  @required String chatId,
+  @required String recieverId,
+  @required MessageModel messageModel,
+  @required bool isAdmin,
+  @required timebankId,
+  bool isTimebankMessage = false,
 }) async {
-  // log.i(
-  var docId =
-      "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}";
-  return await Firestore.instance
-      .collection('chatsnew')
-      .document(docId)
-      .collection('messages')
-      .document()
-      .setData(messagemodel.toMap());
+  WriteBatch batch = Firestore.instance.batch();
+
+  //Create new messages
+  batch.setData(
+    Firestore.instance
+        .collection('chatsnew')
+        .document(chatId)
+        .collection('messages')
+        .document(),
+    messageModel.toMap(),
+  );
+
+  //if sender is admin , mark the previous messages as read
+
+  if (isAdmin) {
+    batch.setData(
+      Firestore.instance.collection("timebanknew").document(timebankId),
+      {
+        "unreadMessages": FieldValue.arrayRemove([chatId]),
+        // "lastMessageTimestamp": null,
+      },
+      merge: true,
+    );
+  }
+
+  //if timebank message add it to timebankModel for count purpose
+  if (isTimebankMessage && !isAdmin) {
+    batch.setData(
+      Firestore.instance.collection("timebanknew").document(timebankId),
+      {
+        "unreadMessages": FieldValue.arrayUnion([chatId]),
+        "lastMessageTimestamp": FieldValue.serverTimestamp(),
+      },
+      merge: true,
+    );
+  }
+
+  //update chat with last message, timestamp and unreadStatus
+  batch.setData(
+    Firestore.instance.collection("chatsnew").document(chatId),
+    {
+      'lastMessage': messageModel.message,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      "unreadStatus": {
+        recieverId: FieldValue.increment(1),
+      },
+    },
+    merge: true,
+  );
+  batch.commit();
 }
 
 Stream<List<MessageModel>> getMessagesforChat({
