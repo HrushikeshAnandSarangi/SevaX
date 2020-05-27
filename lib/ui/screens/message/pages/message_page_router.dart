@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/personal_message_page.dart';
+import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -59,9 +60,7 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
                 children: <Widget>[
                   IconButton(
                     color: Theme.of(context).primaryColor,
-                    icon: Icon(
-                      Icons.create_new_folder,
-                    ),
+                    icon: Image.asset(createMessageIcon, width: 20, height: 20),
                     onPressed: () {
                       if (SevaCore.of(context)
                               .loggedInUser
