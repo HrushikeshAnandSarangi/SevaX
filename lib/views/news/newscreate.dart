@@ -180,6 +180,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         Padding(
                           padding: EdgeInsets.only(bottom: 0.0),
                           child: TextFormField(
+                            textCapitalization: TextCapitalization.sentences,
                             controller: subheadingController,
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(

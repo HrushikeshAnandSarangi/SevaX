@@ -258,7 +258,7 @@ class NewsImageState extends State<NewsImage>
             label: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                _image != null ? "Change attachment" : "Add attachment",
+                "Add attachment",
               ),
             ),
             onPressed: () {
