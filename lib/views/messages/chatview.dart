@@ -439,23 +439,23 @@ class _ChatViewState extends State<ChatView> {
           : _getSharedNewDetails(messageModel: messageModel);
     } else
       return Container(
-        padding: messageModel.fromId == loggedinEmail
+        padding: messageModel.fromId == widget.senderId
             ? EdgeInsets.fromLTRB(
                 MediaQuery.of(context).size.width / 10, 5, 0, 5)
             : EdgeInsets.fromLTRB(
                 0, 5, MediaQuery.of(context).size.width / 10, 5),
-        alignment: messageModel.fromId == loggedinEmail
+        alignment: messageModel.fromId == widget.senderId
             ? Alignment.topRight
             : Alignment.topLeft,
         child: Wrap(
           children: <Widget>[
             Container(
-              decoration: messageModel.fromId == loggedinEmail
+              decoration: messageModel.fromId == widget.senderId
                   ? myBoxDecorationsend()
                   : myBoxDecorationreceive(),
               padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
               child: Column(
-                crossAxisAlignment: messageModel.fromId != loggedinEmail
+                crossAxisAlignment: messageModel.fromId != widget.senderId
                     ? CrossAxisAlignment.start
                     : CrossAxisAlignment.end,
                 children: <Widget>[
@@ -487,23 +487,22 @@ class _ChatViewState extends State<ChatView> {
     MessageModel messageModel,
   }) {
     return Container(
-      padding: messageModel.fromId ==
-              SevaCore.of(context).loggedInUser.sevaUserID
+      padding: messageModel.fromId == widget.senderId
           ? EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 10, 5, 0, 5)
           : EdgeInsets.fromLTRB(
               0, 5, MediaQuery.of(context).size.width / 10, 5),
-      alignment: messageModel.fromId == loggedinEmail
+      alignment: messageModel.fromId == widget.senderId
           ? Alignment.topRight
           : Alignment.topLeft,
       child: Wrap(
         children: <Widget>[
           Container(
-            decoration: messageModel.fromId == loggedinEmail
+            decoration: messageModel.fromId == widget.senderId
                 ? myBoxDecorationsend()
                 : myBoxDecorationreceive(),
-            padding: messageModel.fromId == loggedinEmail && news != null
+            padding: messageModel.fromId == widget.senderId && news != null
                 ? EdgeInsets.fromLTRB(0, 0, 5, 2)
-                : messageModel.fromId != loggedinEmail && news != null
+                : messageModel.fromId != widget.senderId && news != null
                     ? EdgeInsets.fromLTRB(0, 0, 0, 2)
                     : EdgeInsets.fromLTRB(10, 5, 10, 5),
             child: Column(
