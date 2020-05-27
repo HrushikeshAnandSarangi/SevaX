@@ -89,12 +89,17 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.email = SevaCore.of(context).loggedInUser.email;
     newsObject.fullName = SevaCore.of(context).loggedInUser.fullname;
     newsObject.sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
-    newsObject.newsImageUrl = globals.newsImageURL ?? '';
+    newsObject.newsImageUrl = globals.newsImageURL == null
+        ? newsObject.newsImageUrl ?? ''
+        : globals.newsImageURL ?? '';
     newsObject.location = location;
     newsObject.root_timebank_id = FlavorConfig.values.timebankId;
     newsObject.photoCredits = photoCredits != null ? photoCredits : '';
-    newsObject.newsDocumentUrl = globals.newsDocumentURL ?? '';
-    newsObject.newsDocumentName = globals.newsDocumentName ?? '';
+    newsObject.newsDocumentUrl = globals.newsDocumentURL == null
+        ? newsObject.newsDocumentUrl ?? ''
+        : globals.newsDocumentURL;
+    newsObject.newsDocumentName =
+        globals.newsDocumentName ?? newsObject.newsDocumentName ?? '';
     //EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(
       entityId: widget.timebankId,
