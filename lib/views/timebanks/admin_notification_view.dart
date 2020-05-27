@@ -13,6 +13,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
+import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
@@ -22,6 +23,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:sevaexchange/views/notifications/notification_utils.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
@@ -231,8 +233,10 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                           .replaceFirst('*class', data.classDetails.classTitle),
                   entityName: data.classDetails.classHost,
                   onDismissed: () {
-                    _clearNotification(
-                        notification.timebankId, notification.id);
+                    dismissTimebankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
                   },
                 );
                 break;
@@ -249,11 +253,41 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   // photoUrl: data.participantDetails.photourl,
                   entityName: data.participantDetails.fullname,
                   onDismissed: () {
-                    _clearNotification(
-                        notification.timebankId, notification.id);
+                    dismissTimebankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
                   },
                 );
                 break;
+
+              case NotificationType.TYPE_DELETION_REQUEST_OUTPUT:
+                var requestData =
+                    SoftDeleteRequestDataHolder.fromMap(notification.data);
+                print("---------------> " + requestData.toMap().toString());
+
+                return NotificationCard(
+                  entityName: requestData.entityTitle ?? "Deletion Request",
+                  photoUrl: null,
+                  title: requestData.requestAccepted
+                      ? "${requestData.entityTitle} was deleted!"
+                      : "${requestData.entityTitle} couldn't be deleted!",
+                  subTitle: requestData.requestAccepted
+                      ? "${requestData.entityTitle} you requested to delete has been successfully deleted!"
+                      : "${requestData.entityTitle} couldn't be deleted because you are still some pending transactions!",
+                  onPressed: () => !requestData.requestAccepted
+                      ? showDialogForIncompleteTransactions(
+                          context: context,
+                          deletionRequest: requestData,
+                        )
+                      : null,
+                  onDismissed: () {
+                    dismissTimebankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
+                );
 
               default:
                 log("Unhandled timebank notification type ${notification.type} ${notification.id}");
@@ -270,17 +304,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
           },
         );
       },
-    );
-  }
-
-  void _clearNotification(String timebankId, String notificationId) {
-    Firestore.instance
-        .collection("timebanknew")
-        .document(timebankId)
-        .collection("notifications")
-        .document(notificationId)
-        .updateData(
-      {"isRead": true},
     );
   }
 
