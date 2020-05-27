@@ -873,7 +873,7 @@ class NotificationsView extends State<NotificationViewHolder> {
   ) {
     return FutureBuilder<UserModel>(
       future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
-      builder: (context, snapshot) {
+      builder: (_context, snapshot) {
         if (snapshot.hasError) return Container();
         if (snapshot.connectionState == ConnectionState.waiting) {
           return notificationShimmer;
@@ -1155,11 +1155,12 @@ class NotificationsView extends State<NotificationViewHolder> {
                           onPressed: () async {
                             // reject the claim
                             rejectMemberClaimForEvent(
-                                context: context,
-                                model: requestModel,
-                                notificationId: notificationId,
-                                user: userModel,
-                                userId: userId);
+                              context: context,
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                              userId: userId,
+                            );
                             Navigator.pop(viewContext);
                           },
                         ),
@@ -1275,6 +1276,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       type: MessageType.TYPE_PERSONAL,
     );
     createAndOpenChat(
+      communityId: loggedInUser.currentCommunity,
       context: context,
       timebankId: widget.timebankId,
       sender: sender,

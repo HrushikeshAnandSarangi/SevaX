@@ -26,7 +26,6 @@ Future<void> createAndOpenChat({
   List<String> participants = [sender.id, reciever.id];
   participants.sort();
   ChatModel model = ChatModel(
-    
     participants: participants,
     timebankId: timebankId,
     communityId: communityId,
