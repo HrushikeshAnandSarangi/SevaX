@@ -15,7 +15,6 @@ import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
-import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -1072,13 +1071,13 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     //           )),
     // );
 
-    createAndOpenTimebankChat(
-      context: context,
-      isFromRejectCompletion: true,
-      reciever: user,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-      sender: model.timebankId,
-    );
+    // createAndOpenTimebankChat(
+    //   context: context,
+    //   isFromRejectCompletion: true,
+    //   reciever: user,
+    //   communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+    //   sender: model.timebankId,
+    // );
 
     FirestoreManager.readTimeBankNotification(
       notificationId: notificationId,

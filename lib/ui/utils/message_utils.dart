@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 
@@ -18,11 +17,14 @@ Future<void> createAndOpenChat({
   String communityId,
   bool isFromRejectCompletion = false,
   bool isTimebankMessage = false,
-  bool isFromShare = false,
+  bool isFromShare,
   NewsModel news,
   IsFromNewChat isFromNewChat,
   VoidCallback onChatCreate,
 }) async {
+
+  print("-------------------------------------$isFromShare--------------------------------------------");
+
   List<String> participants = [sender.id, reciever.id];
   participants.sort();
   ChatModel model = ChatModel(
@@ -42,6 +44,8 @@ Future<void> createAndOpenChat({
     context,
     MaterialPageRoute(
       builder: (context) => ChatView(
+        news: news,
+        isFromShare: isFromShare,
         senderId: sender.id,
         chatModel: model,
         isFromRejectCompletion: isFromRejectCompletion,
@@ -51,46 +55,46 @@ Future<void> createAndOpenChat({
   );
 }
 
-Future<void> createAndOpenTimebankChat({
-  BuildContext context,
-  String sender,
-  UserModel reciever,
-  String communityId,
-  bool isFromRejectCompletion = false,
-  MessageType type = MessageType.TYPE_PERSONAL,
-}) async {
-  List<String> participants = [sender, reciever.sevaUserID];
-  participants.sort();
-  ChatModel model = ChatModel(
-    participants: participants,
-    timebankId: sender,
-    communityId: communityId,
-    participantInfo: [
-      ParticipantInfo(
-        id: reciever.sevaUserID,
-        name: reciever.fullname,
-        photoUrl: reciever.photoURL,
-        type: MessageType.TYPE_TIMEBANK,
-      ),
-      ParticipantInfo(
-        id: sender,
-        // name: sender.name,
-        // photoUrl: sender.photoUrl,
-        type: MessageType.TYPE_TIMEBANK,
-      ),
-    ],
-  );
+// Future<void> createAndOpenTimebankChat({
+//   BuildContext context,
+//   String sender,
+//   UserModel reciever,
+//   String communityId,
+//   bool isFromRejectCompletion = false,
+//   MessageType type = MessageType.TYPE_PERSONAL,
+// }) async {
+//   List<String> participants = [sender, reciever.sevaUserID];
+//   participants.sort();
+//   ChatModel model = ChatModel(
+//     participants: participants,
+//     timebankId: sender,
+//     communityId: communityId,
+//     participantInfo: [
+//       ParticipantInfo(
+//         id: reciever.sevaUserID,
+//         name: reciever.fullname,
+//         photoUrl: reciever.photoURL,
+//         type: MessageType.TYPE_TIMEBANK,
+//       ),
+//       ParticipantInfo(
+//         id: sender,
+//         // name: sender.name,
+//         // photoUrl: sender.photoUrl,
+//         type: MessageType.TYPE_TIMEBANK,
+//       ),
+//     ],
+//   );
 
-  await createNewChat(chat: model);
+//   await createNewChat(chat: model);
 
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => ChatView(
-        senderId: sender,
-        chatModel: model,
-        isFromRejectCompletion: isFromRejectCompletion,
-      ),
-    ),
-  );
-}
+//   Navigator.push(
+//     context,
+//     MaterialPageRoute(
+//       builder: (context) => ChatView(
+//         senderId: sender,
+//         chatModel: model,
+//         isFromRejectCompletion: isFromRejectCompletion,
+//       ),
+//     ),
+//   );
+// }
