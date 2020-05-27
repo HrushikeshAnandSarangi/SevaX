@@ -217,7 +217,7 @@ class _SelectMembersView extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Text(
         title,
-        style: Theme.of(context).textTheme.subtitle2,
+        style: Theme.of(context).textTheme.subtitle,
       ),
     );
   }

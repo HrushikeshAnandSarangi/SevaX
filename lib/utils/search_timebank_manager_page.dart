@@ -184,6 +184,9 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
               );
 
               createAndOpenChat(
+                onChatCreate: () {
+                  Navigator.of(context).pop();
+                },
                 context: context,
                 timebankId: widget.timebankId,
                 communityId: loggedInUser.currentCommunity,
@@ -194,7 +197,6 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
                 isFromNewChat:
                     IsFromNewChat(true, DateTime.now().millisecondsSinceEpoch),
               );
-              Navigator.of(context).pop();
             }
             return user.email == SevaCore.of(context).loggedInUser.email
                 ? null
@@ -221,7 +223,10 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
                 type: MessageType.TYPE_PERSONAL,
               );
 
-              createAndOpenChat(
+              await createAndOpenChat(
+                onChatCreate: () {
+                  Navigator.of(context).pop();
+                },
                 context: context,
                 timebankId: widget.timebankId,
                 communityId: loggedInUser.currentCommunity,
@@ -234,7 +239,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
                   DateTime.now().millisecondsSinceEpoch,
                 ),
               );
-              Navigator.of(context).pop();
+              // Navigator.of(context).pop();
             }
             return user.email == SevaCore.of(context).loggedInUser.email
                 ? null
@@ -255,12 +260,6 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
           ),
           title: Text(
             user.fullname,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-          subtitle: Text(
-            user.email,
             style: TextStyle(
               color: Colors.black,
             ),

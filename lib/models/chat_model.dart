@@ -27,7 +27,7 @@ class ChatModel {
         participants: List<String>.from(map["participants"].map((x) => x)),
         participantInfo: List<ParticipantInfo>.from(map["participantInfo"]
             .map((x) => ParticipantInfo.fromMap(Map<String, dynamic>.from(x)))),
-        lastMessage: map["lastMessage"],
+        lastMessage: map.containsKey('lastMessage') ? map["lastMessage"] : null,
         unreadStatus: map["unreadStatus"] != null
             ? Map<String, int>.from(map["unreadStatus"])
             : {},
@@ -44,7 +44,7 @@ class ChatModel {
         "participants": List<dynamic>.from(participants.map((x) => x)),
         "participantInfo":
             List<dynamic>.from(participantInfo.map((x) => x.toMap())),
-        "lastMessage": lastMessage,
+        // "lastMessage": lastMessage,
         "unreadStatus": unreadStatus,
         "softDeletedBy": softDeletedBy,
         "isTimebankMessage": isTimebankMessage,
