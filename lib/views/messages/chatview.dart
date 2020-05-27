@@ -77,8 +77,7 @@ class _ChatViewState extends State<ChatView> {
         setState(() {
           this.loggedInUser = userModel;
         });
-      } else
-        return Center(child: CircularProgressIndicator());
+      }
     });
   }
 
@@ -308,13 +307,10 @@ class _ChatViewState extends State<ChatView> {
                       maxLines: null,
                       keyboardType: TextInputType.text,
                       textCapitalization: TextCapitalization.sentences,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please type message';
-                        }
+                      validator: (value) =>
+                          value.isEmpty ? 'Please type message' : null,
+                      onSaved: (value) {
                         messageContent = value;
-
-                        setState(() {});
                       },
                     ),
                   ),
@@ -334,7 +330,7 @@ class _ChatViewState extends State<ChatView> {
                     if (_formKey.currentState.validate()) {
                       // This statment clears the soft delete parameter and message becomes visible to both the parties
                       // pushNewMessage(messageContent);
-
+                      _formKey.currentState.save();
                       pushNewMessage(
                         messageContent: messageContent,
                         communityId: loggedInUser.currentCommunity,
