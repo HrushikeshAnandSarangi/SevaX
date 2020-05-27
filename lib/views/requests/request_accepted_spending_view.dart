@@ -50,6 +50,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   @override
   void initState() {
     super.initState();
+
     Future.delayed(Duration.zero, () {
       RequestManager.getRequestStreamById(requestId: requestModel.id)
           .listen((_requestModel) {
@@ -569,13 +570,14 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         });
   }
 
-  Future<Widget> showMemberClaimConfirmation(
-      {BuildContext context,
-      UserModel userModel,
-      RequestModel requestModel,
-      String notificationId,
-      String userId,
-      num credits}) async {
+  Future<Widget> showMemberClaimConfirmation({
+    BuildContext context,
+    UserModel userModel,
+    RequestModel requestModel,
+    String notificationId,
+    String userId,
+    num credits,
+  }) async {
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
@@ -691,6 +693,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                               user: userModel,
                               userId: userId,
                               credits: credits,
+                              timebankModel: widget.timebankModel,
                             );
                           },
                         ),
@@ -704,13 +707,15 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         });
   }
 
-  Future rejectMemberClaimForEvent(
-      {RequestModel model,
-      String userId,
-      BuildContext context,
-      UserModel user,
-      String notificationId,
-      num credits}) async {
+  Future rejectMemberClaimForEvent({
+    RequestModel model,
+    String userId,
+    BuildContext context,
+    UserModel user,
+    String notificationId,
+    num credits,
+    TimebankModel timebankModel,
+  }) async {
     List<TransactionModel> transactions =
         model.transactions.map((t) => t).toList();
     transactions.removeWhere((t) => t.to == userId);
@@ -746,8 +751,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         reciever = ParticipantInfo(
           id: model.timebankId,
           type: ChatType.TYPE_TIMEBANK,
-          name: "Timebank Title",
-          photoUrl: "Timebank photo URL",
+          name: timebankModel.name,
+          photoUrl: timebankModel.photoUrl,
         );
         break;
     }
