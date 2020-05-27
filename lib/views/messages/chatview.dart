@@ -117,7 +117,6 @@ class _ChatViewState extends State<ChatView> {
     if (widget.isFromShare) {
       textcontroller.text = widget.news.id;
       print("Priniting new message ");
-// widget.chatModel.user1 ==
 
       pushNewMessage(
         communityId: widget.chatModel.communityId,

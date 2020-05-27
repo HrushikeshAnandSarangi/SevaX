@@ -331,6 +331,8 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
 
         switch (widget.selectionMode) {
           case MEMBER_SELECTION_MODE.NEW_CHAT:
+            print(
+                "----------------------------MEMBER_SELECTION_MODE.NEW_CHAT-------------------------");
             if (user.email == SevaCore.of(context).loggedInUser.email) {
               return null;
             } else {
@@ -369,6 +371,9 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
             break;
 
           case MEMBER_SELECTION_MODE.SHARE_FEED:
+            print(
+                "----------------------------MEMBER_SELECTION_MODE.SHARE_FEED-------------------------");
+
             if (user.email == SevaCore.of(context).loggedInUser.email) {
               return null;
             } else {

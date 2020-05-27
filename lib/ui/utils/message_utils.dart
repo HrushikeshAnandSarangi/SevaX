@@ -17,11 +17,14 @@ Future<void> createAndOpenChat({
   String communityId,
   bool isFromRejectCompletion = false,
   bool isTimebankMessage = false,
-  bool isFromShare = false,
+  bool isFromShare,
   NewsModel news,
   IsFromNewChat isFromNewChat,
   VoidCallback onChatCreate,
 }) async {
+
+  print("-------------------------------------$isFromShare--------------------------------------------");
+
   List<String> participants = [sender.id, reciever.id];
   participants.sort();
   ChatModel model = ChatModel(
@@ -41,6 +44,8 @@ Future<void> createAndOpenChat({
     context,
     MaterialPageRoute(
       builder: (context) => ChatView(
+        news: news,
+        isFromShare: isFromShare,
         senderId: sender.id,
         chatModel: model,
         isFromRejectCompletion: isFromRejectCompletion,
