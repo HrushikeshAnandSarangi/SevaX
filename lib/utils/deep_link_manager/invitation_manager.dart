@@ -1,14 +1,11 @@
 import 'dart:collection';
-import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
-
-import '../../flavor_config.dart';
+import 'package:sevaexchange/utils/helpers/mailer.dart';
 
 class InvitationManager {
   Map<String, InvitationViaLink> cacheList;
@@ -57,8 +54,6 @@ class InvitationManager {
         .where('data.inviteeEmail', isEqualTo: email)
         .where('data.timebankId', isEqualTo: timebankId)
         .getDocuments();
-    print("from database----------------------");
-
     if (invitationStatus.documents.length > 0) {
       var invitationData =
           InvitationViaLink.fromMap(invitationStatus.documents.first.data);
@@ -118,8 +113,6 @@ class InvitationManager {
   Future<bool> registerRecordInDatabase({
     InvitationViaLink invitation,
   }) async {
-    print(
-        "________________________________________registerRecordInDatabase _ started");
     return await Firestore.instance
         .collection('invitations')
         .add({
@@ -184,25 +177,14 @@ class InvitationManager {
     String mailSubject,
     String mailContent,
   }) async {
-    try {
-      await http.post(
-        "${FlavorConfig.values.cloudFunctionBaseURL}/mailForSoftDelete",
-        headers: {"Content-Type": "application/json"},
-        body: json.encode(
-          {
-            "mailSender": mailSender,
-            "mailSubject": mailSubject,
-            "mailBody": "",
-            "mailBodyHtml": mailContent,
-            // 'mailReceiver': "burhan@uipep.com",
-            'mailReceiver': mailReciever,
-          },
-        ),
-      );
-      return true;
-    } catch (_) {
-      return false;
-    }
+    return SevaMailer.createAndSendEmail(
+      mailContent: MailContent.createMail(
+        mailSender: mailSender,
+        mailReciever: mailReciever,
+        mailContent: mailContent,
+        mailSubject: mailSubject,
+      ),
+    );
   }
 }
 

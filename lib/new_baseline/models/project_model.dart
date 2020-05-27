@@ -22,26 +22,31 @@ class ProjectModel extends DataModel {
   List<String> members;
   List<String> pendingRequests;
   List<String> completedRequests;
+  bool requestedSoftDelete;
+  bool softDelete;
 
-  ProjectModel(
-      {this.id,
-      this.name,
-      this.timebankId,
-      this.communityId,
-      this.description,
-      this.emailId,
-      this.phoneNumber,
-      this.creatorId,
-      this.address,
-      this.photoUrl,
-      this.mode,
-      this.createdAt,
-      this.startTime,
-      this.endTime,
-      this.members,
-      this.location,
-      this.pendingRequests,
-      this.completedRequests});
+  ProjectModel({
+    this.id,
+    this.name,
+    this.timebankId,
+    this.communityId,
+    this.description,
+    this.emailId,
+    this.phoneNumber,
+    this.creatorId,
+    this.address,
+    this.photoUrl,
+    this.mode,
+    this.createdAt,
+    this.startTime,
+    this.endTime,
+    this.members,
+    this.location,
+    this.pendingRequests,
+    this.completedRequests,
+    this.softDelete,
+    this.requestedSoftDelete,
+  });
 
   factory ProjectModel.fromMap(Map<String, dynamic> json) => new ProjectModel(
         id: json["id"] == null ? null : json["id"],
@@ -58,9 +63,10 @@ class ProjectModel extends DataModel {
         createdAt: json["created_at"] == null ? null : json["created_at"],
         startTime: json["start_time"] == null ? null : json["start_time"],
         endTime: json["end_time"] == null ? null : json["end_time"],
-        //Firebase gives GeoPoint directly as dataType
-        //Elastic search gives geopoint as map instead of GeoPoint datatype
-        //hence mapping required
+        softDelete: json["softDelete"] == null ? false : json["softDelete"],
+        requestedSoftDelete: json["requestedSoftDelete"] == null
+            ? false
+            : json["requestedSoftDelete"],
         location: json.containsKey('location')
             ? json['location']['geopoint'] is GeoPoint
                 ? GeoFirePoint(
@@ -97,7 +103,8 @@ class ProjectModel extends DataModel {
         "created_at": createdAt == null ? null : createdAt,
         "start_time": startTime == null ? null : startTime,
         "end_time": endTime == null ? null : endTime,
-        "softDelete": false,
+        "softDelete": softDelete ?? false,
+        "requestedSoftDelete": requestedSoftDelete ?? false,
         "location": location?.data,
         "members": members == null
             ? null
@@ -107,7 +114,9 @@ class ProjectModel extends DataModel {
             : new List<dynamic>.from(pendingRequests.map((x) => x)),
         "completedRequests": completedRequests == null
             ? null
-            : new List<dynamic>.from(completedRequests.map((x) => x)),
+            : new List<dynamic>.from(
+                completedRequests.map((x) => x),
+              ),
       };
 
   @override
