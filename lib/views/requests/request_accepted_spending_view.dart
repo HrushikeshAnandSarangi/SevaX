@@ -23,8 +23,9 @@ import '../core.dart';
 
 class RequestAcceptedSpendingView extends StatefulWidget {
   final RequestModel requestModel;
-
-  RequestAcceptedSpendingView({@required this.requestModel});
+  final TimebankModel timebankModel;
+  RequestAcceptedSpendingView(
+      {@required this.requestModel, this.timebankModel});
 
   @override
   _RequestAcceptedSpendingState createState() =>
