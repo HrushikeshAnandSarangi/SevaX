@@ -748,14 +748,24 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         break;
 
       case RequestMode.TIMEBANK_REQUEST:
-        reciever = ParticipantInfo(
-          id: model.timebankId,
-          type: ChatType.TYPE_TIMEBANK,
+        sender = ParticipantInfo(
+          id: timebankModel.id,
+          type: timebankModel.parentTimebankId ==
+                  '73d0de2c-198b-4788-be64-a804700a88a4' //check if timebank is primary timebank
+              ? ChatType.TYPE_TIMEBANK
+              : ChatType.TYPE_GROUP,
           name: timebankModel.name,
           photoUrl: timebankModel.photoUrl,
         );
         break;
     }
+
+    reciever = ParticipantInfo(
+      id: user.sevaUserID,
+      name: user.fullname,
+      photoUrl: user.photoURL,
+      type: ChatType.TYPE_PERSONAL,
+    );
 
     createAndOpenChat(
       context: context,
