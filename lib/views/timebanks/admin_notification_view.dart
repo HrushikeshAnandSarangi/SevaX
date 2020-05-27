@@ -220,6 +220,10 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     _clearNotification(
                         notification.timebankId, notification.id);
                   },
+//                  onDismissed: () async {
+//                    await _clearNotification(
+//                        notification.timebankId, notification.id);
+//                  },
                 );
                 break;
               case NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED:
