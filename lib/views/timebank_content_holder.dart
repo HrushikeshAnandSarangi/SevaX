@@ -797,7 +797,7 @@ class DiscussionListState extends State<DiscussionList> {
                       Icons.location_on,
                       color: Theme.of(context).primaryColor,
                     ),
-                    Text(gitgetLocation(news.placeAddress)),
+                    Text(getLocation(news.placeAddress)),
                     Spacer(),
                     Text(
                       timeAgo.format(
