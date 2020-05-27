@@ -830,7 +830,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 //            Navigator.push(
 //              context,
 //              MaterialPageRoute(
-//                builder: (context) => TransferOwnerShipView(timebankModel: timebankModel,),
+//                builder: (context) => TransferOwnerShipView(
+//                  timebankModel: timebankModel,
+//                ),
 //              ),
 //            );
             _exitTimebankOrGroup(

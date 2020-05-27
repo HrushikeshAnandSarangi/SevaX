@@ -80,14 +80,6 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
               SizedBox(
                 height: 15,
               ),
-              Text(
-                'Select data to transfer :',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Europa',
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
               getDataList(),
               SizedBox(
                 height: 15,
@@ -275,10 +267,6 @@ Widget timeBankOrGroupCard() {
   return Card(
     elevation: 1,
     child: ListTile(
-      leading: Checkbox(
-        value: false,
-        onChanged: (value) {},
-      ),
       title: Text("Group or Timebank Name"),
     ),
   );
