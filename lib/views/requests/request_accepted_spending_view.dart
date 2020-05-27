@@ -723,25 +723,38 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       communityid: SevaCore.of(context).loggedInUser.currentCommunity,
     );
 
+    var loggedInUser = SevaCore.of(context).loggedInUser;
+
     setState(() {
       isProgressBarActive = false;
     });
 
-    ParticipantInfo sender = ParticipantInfo(
-      id: user.sevaUserID,
-      name: user.fullname,
-      photoUrl: user.photoURL,
-      type: ChatType.TYPE_PERSONAL,
-    );
-    ParticipantInfo reciever = ParticipantInfo(
-      id: model.timebankId,
-      type: ChatType.TYPE_TIMEBANK,
-    );
+    ParticipantInfo sender, reciever;
+
+    switch (requestModel.requestMode) {
+      case RequestMode.PERSONAL_REQUEST:
+        sender = ParticipantInfo(
+          id: loggedInUser.sevaUserID,
+          name: loggedInUser.fullname,
+          photoUrl: loggedInUser.photoURL,
+          type: ChatType.TYPE_PERSONAL,
+        );
+        break;
+
+      case RequestMode.TIMEBANK_REQUEST:
+        reciever = ParticipantInfo(
+          id: model.timebankId,
+          type: ChatType.TYPE_TIMEBANK,
+          name: "Timebank Title",
+          photoUrl: "Timebank photo URL",
+        );
+        break;
+    }
 
     createAndOpenChat(
       context: context,
       timebankId: model.timebankId,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      communityId: loggedInUser.currentCommunity,
       sender: sender,
       reciever: reciever,
       isFromRejectCompletion: true,
