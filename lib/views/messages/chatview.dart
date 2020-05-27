@@ -439,23 +439,23 @@ class _ChatViewState extends State<ChatView> {
           : _getSharedNewDetails(messageModel: messageModel);
     } else
       return Container(
-        padding: messageModel.fromId == loggedinEmail
+        padding: messageModel.fromId == loggedInUser.sevaUserID
             ? EdgeInsets.fromLTRB(
                 MediaQuery.of(context).size.width / 10, 5, 0, 5)
             : EdgeInsets.fromLTRB(
                 0, 5, MediaQuery.of(context).size.width / 10, 5),
-        alignment: messageModel.fromId == loggedinEmail
+        alignment: messageModel.fromId == loggedInUser.sevaUserID
             ? Alignment.topRight
             : Alignment.topLeft,
         child: Wrap(
           children: <Widget>[
             Container(
-              decoration: messageModel.fromId == loggedinEmail
+              decoration: messageModel.fromId == loggedInUser.sevaUserID
                   ? myBoxDecorationsend()
                   : myBoxDecorationreceive(),
               padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
               child: Column(
-                crossAxisAlignment: messageModel.fromId != loggedinEmail
+                crossAxisAlignment: messageModel.fromId != loggedInUser.sevaUserID
                     ? CrossAxisAlignment.start
                     : CrossAxisAlignment.end,
                 children: <Widget>[
