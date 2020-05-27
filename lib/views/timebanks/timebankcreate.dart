@@ -261,7 +261,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
           Row(
             children: <Widget>[
-              headingText('Private Group', true),
+              headingText('Private Group', false),
               Padding(
                 padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
                 child: infoButton(
@@ -287,7 +287,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
           Row(
             children: <Widget>[
-              headingText('Private accedental delete', true),
+              headingText('Private accedental delete', false),
               Padding(
                 padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
                 child: Checkbox(
