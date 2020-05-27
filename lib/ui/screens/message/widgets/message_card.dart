@@ -22,101 +22,107 @@ class MessageCard extends StatelessWidget {
       SevaCore.of(context).loggedInUser.sevaUserID,
       model.participantInfo,
     );
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Column(
-        children: <Widget>[
-          InkWell(
-            splashColor: Colors.transparent,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ChatView(
-                  chatModel: model,
-                  senderId: isAdminMessage
-                      ? model.timebankId
-                      : SevaCore.of(context).loggedInUser.sevaUserID,
-                ),
-              ),
-            ),
-            child: Row(
+    return model.lastMessage == null
+        ? Container()
+        : Container(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Column(
               children: <Widget>[
-                info.photoUrl != null
-                    ? CircleAvatar(
-                        radius: 30,
-                        backgroundImage:
-                            CachedNetworkImageProvider(info.photoUrl),
-                      )
-                    : CustomAvatar(
-                        name: info.name,
-                        radius: 30,
+                InkWell(
+                  splashColor: Colors.transparent,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ChatView(
+                        chatModel: model,
+                        senderId: isAdminMessage
+                            ? model.timebankId
+                            : SevaCore.of(context).loggedInUser.sevaUserID,
                       ),
-                SizedBox(width: 20),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                  ),
+                  child: Row(
                     children: <Widget>[
-                      isAdminMessage || info.type == MessageType.TYPE_PERSONAL
-                          ? Container()
-                          : Container(
-                              decoration: BoxDecoration(
-                                color: info.type == MessageType.TYPE_TIMEBANK
-                                    ? Colors.green
-                                    : Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                              padding: EdgeInsets.symmetric(horizontal: 3),
-                              child: Text(
-                                info.type == MessageType.TYPE_TIMEBANK
-                                    ? "Timebank"
-                                    : "Group",
-                                style: TextStyle(
-                                    fontSize: 10, color: Colors.white),
+                      info.photoUrl != null
+                          ? CircleAvatar(
+                              radius: 30,
+                              backgroundImage:
+                                  CachedNetworkImageProvider(info.photoUrl),
+                            )
+                          : CustomAvatar(
+                              name: info.name,
+                              radius: 30,
+                            ),
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            isAdminMessage ||
+                                    info.type == MessageType.TYPE_PERSONAL
+                                ? Container()
+                                : Container(
+                                    decoration: BoxDecoration(
+                                      color:
+                                          info.type == MessageType.TYPE_TIMEBANK
+                                              ? Colors.green
+                                              : Theme.of(context).primaryColor,
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 3),
+                                    child: Text(
+                                      info.type == MessageType.TYPE_TIMEBANK
+                                          ? "Timebank"
+                                          : "Group",
+                                      style: TextStyle(
+                                          fontSize: 10, color: Colors.white),
+                                    ),
+                                  ),
+                            Text(
+                              info.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                      Text(
-                        info.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                            Text(
+                              model.lastMessage ?? '',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
-                      ),
-                      Text(
-                        model.lastMessage ?? '',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      )
                     ],
                   ),
-                )
+                ),
+                SizedBox(height: 12),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: Divider(
+                        thickness: 1,
+                        // color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    Text(
+                      model.timestamp == null
+                          ? ""
+                          : timeago.format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  model.timestamp),
+                            ),
+                      // "Now 10:00 pm",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
               ],
             ),
-          ),
-          SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: Divider(
-                  thickness: 1,
-                  // color: Colors.grey,
-                ),
-              ),
-              SizedBox(width: 20),
-              Text(
-                model.timestamp == null
-                    ? ""
-                    : timeago.format(
-                        DateTime.fromMillisecondsSinceEpoch(model.timestamp),
-                      ),
-                // "Now 10:00 pm",
-                style: TextStyle(fontSize: 12),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+          );
   }
 }
