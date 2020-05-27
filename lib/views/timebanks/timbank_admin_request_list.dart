@@ -835,6 +835,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 //                ),
 //              ),
 //            );
+
             _exitTimebankOrGroup(
                 user: user, context: context, model: model, isAdmin: isAdmin);
           },

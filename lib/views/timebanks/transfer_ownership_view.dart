@@ -24,6 +24,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getMembersList();
   }
 
   void getMembersList() {
@@ -77,6 +78,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                   fontFamily: 'Europa',
                 ),
               ),
+              searchUser(),
               SizedBox(
                 height: 15,
               ),
@@ -109,7 +111,6 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
               SizedBox(
                 height: 10,
               ),
-              searchUser(),
               SizedBox(
                 height: 15,
               ),
