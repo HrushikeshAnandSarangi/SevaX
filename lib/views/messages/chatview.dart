@@ -120,9 +120,7 @@ class _ChatViewState extends State<ChatView> {
 
       pushNewMessage(
         communityId: widget.chatModel.communityId,
-        loggedInEmailId: widget.senderId == widget.chatModel.participants[0]
-            ? widget.chatModel.participants[0]
-            : widget.chatModel.participants[1],
+        senderId: widget.senderId,
         messageContent: widget.news.id,
       );
     }
@@ -338,7 +336,7 @@ class _ChatViewState extends State<ChatView> {
                       pushNewMessage(
                         messageContent: messageContent,
                         communityId: loggedInUser.currentCommunity,
-                        loggedInEmailId: loggedInUser.email,
+                        senderId: widget.senderId,
                       );
 
                       //FocusScope.of(context).requestFocus(FocusNode());
@@ -378,12 +376,12 @@ class _ChatViewState extends State<ChatView> {
 
   void pushNewMessage({
     String messageContent,
-    String loggedInEmailId,
+    String senderId,
     String communityId,
   }) {
     // widget.chatModel.softDeletedBy = [];
     // widget.chatModel.communityId = communityId;
-    messageModel.fromId = loggedInEmailId;
+    messageModel.fromId = senderId;
     messageModel.toId = widget.senderId;
     messageModel.message = messageContent;
     messageModel.timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -493,7 +491,8 @@ class _ChatViewState extends State<ChatView> {
     MessageModel messageModel,
   }) {
     return Container(
-      padding: messageModel.fromId == loggedinEmail
+      padding: messageModel.fromId ==
+              SevaCore.of(context).loggedInUser.sevaUserID
           ? EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 10, 5, 0, 5)
           : EdgeInsets.fromLTRB(
               0, 5, MediaQuery.of(context).size.width / 10, 5),
