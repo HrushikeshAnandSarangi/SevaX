@@ -730,11 +730,11 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       id: user.sevaUserID,
       name: user.fullname,
       photoUrl: user.photoURL,
-      type: MessageType.TYPE_PERSONAL,
+      type: ChatType.TYPE_PERSONAL,
     );
     ParticipantInfo reciever = ParticipantInfo(
       id: model.timebankId,
-      type: MessageType.TYPE_TIMEBANK,
+      type: ChatType.TYPE_TIMEBANK,
     );
 
     createAndOpenChat(

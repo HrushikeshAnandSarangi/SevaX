@@ -58,20 +58,19 @@ class MessageCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             isAdminMessage ||
-                                    info.type == MessageType.TYPE_PERSONAL
+                                    info.type == ChatType.TYPE_PERSONAL
                                 ? Container()
                                 : Container(
                                     decoration: BoxDecoration(
-                                      color:
-                                          info.type == MessageType.TYPE_TIMEBANK
-                                              ? Colors.green
-                                              : Theme.of(context).primaryColor,
+                                      color: info.type == ChatType.TYPE_TIMEBANK
+                                          ? Colors.green
+                                          : Theme.of(context).primaryColor,
                                       borderRadius: BorderRadius.circular(2),
                                     ),
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 3),
                                     child: Text(
-                                      info.type == MessageType.TYPE_TIMEBANK
+                                      info.type == ChatType.TYPE_TIMEBANK
                                           ? "Timebank"
                                           : "Group",
                                       style: TextStyle(

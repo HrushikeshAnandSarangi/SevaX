@@ -496,14 +496,14 @@ void startChat(
       id: loggedInUser.sevaUserID,
       name: loggedInUser.fullname,
       photoUrl: loggedInUser.photoURL,
-      type: MessageType.TYPE_PERSONAL,
+      type: ChatType.TYPE_PERSONAL,
     );
 
     ParticipantInfo reciever = ParticipantInfo(
       id: timebankModel.id,
       name: timebankModel.name,
       photoUrl: timebankModel.photoUrl,
-      type: MessageType.TYPE_TIMEBANK,
+      type: ChatType.TYPE_TIMEBANK,
     );
     createAndOpenChat(
       context: context,

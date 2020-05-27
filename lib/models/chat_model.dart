@@ -58,7 +58,7 @@ class ParticipantInfo {
   String id;
   String name;
   String photoUrl;
-  MessageType type;
+  ChatType type;
 
   ParticipantInfo({
     this.id,
@@ -82,14 +82,14 @@ class ParticipantInfo {
       };
 }
 
-enum MessageType {
+enum ChatType {
   TYPE_PERSONAL,
   TYPE_TIMEBANK,
   TYPE_GROUP,
 }
 
-Map<String, MessageType> typeMapper = {
-  "TYPE_PERSONAL": MessageType.TYPE_PERSONAL,
-  "TYPE_TIMEBANK": MessageType.TYPE_TIMEBANK,
-  "TYPE_GROUP": MessageType.TYPE_GROUP,
+Map<String, ChatType> typeMapper = {
+  "TYPE_PERSONAL": ChatType.TYPE_PERSONAL,
+  "TYPE_TIMEBANK": ChatType.TYPE_TIMEBANK,
+  "TYPE_GROUP": ChatType.TYPE_GROUP,
 };

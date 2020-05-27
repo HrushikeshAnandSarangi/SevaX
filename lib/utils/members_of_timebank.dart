@@ -341,14 +341,14 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
                 id: loggedInUser.sevaUserID,
                 name: loggedInUser.fullname,
                 photoUrl: loggedInUser.photoURL,
-                type: prefix.MessageType.TYPE_PERSONAL,
+                type: prefix.ChatType.TYPE_PERSONAL,
               );
 
               prefix.ParticipantInfo reciever = prefix.ParticipantInfo(
                 id: user.sevaUserID,
                 name: user.fullname,
                 photoUrl: user.photoURL,
-                type: prefix.MessageType.TYPE_PERSONAL,
+                type: prefix.ChatType.TYPE_PERSONAL,
               );
               showProgressDialog();
               createAndOpenChat(
@@ -382,14 +382,14 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
                 id: loggedInUser.sevaUserID,
                 name: loggedInUser.fullname,
                 photoUrl: loggedInUser.photoURL,
-                type: prefix.MessageType.TYPE_PERSONAL,
+                type: prefix.ChatType.TYPE_PERSONAL,
               );
 
               prefix.ParticipantInfo reciever = prefix.ParticipantInfo(
                 id: user.sevaUserID,
                 name: user.fullname,
                 photoUrl: user.photoURL,
-                type: prefix.MessageType.TYPE_PERSONAL,
+                type: prefix.ChatType.TYPE_PERSONAL,
               );
               showProgressDialog();
               createAndOpenChat(

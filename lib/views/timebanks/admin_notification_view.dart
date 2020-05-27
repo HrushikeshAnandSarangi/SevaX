@@ -1055,14 +1055,14 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     ParticipantInfo sender = ParticipantInfo(
       id: model.timebankId,
-      type: MessageType.TYPE_PERSONAL,
+      type: ChatType.TYPE_PERSONAL,
     );
 
     ParticipantInfo reciever = ParticipantInfo(
       id: user.sevaUserID,
       photoUrl: user.photoURL,
       name: user.fullname,
-      type: MessageType.TYPE_PERSONAL,
+      type: ChatType.TYPE_PERSONAL,
     );
 
     await createAndOpenChat(

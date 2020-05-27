@@ -1266,14 +1266,14 @@ class NotificationsView extends State<NotificationViewHolder> {
       id: loggedInUser.sevaUserID,
       name: loggedInUser.fullname,
       photoUrl: loggedInUser.photoURL,
-      type: MessageType.TYPE_PERSONAL,
+      type: ChatType.TYPE_PERSONAL,
     );
 
     ParticipantInfo reciever = ParticipantInfo(
       id: user.sevaUserID,
       name: user.fullname,
       photoUrl: user.photoURL,
-      type: MessageType.TYPE_PERSONAL,
+      type: ChatType.TYPE_PERSONAL,
     );
     createAndOpenChat(
       communityId: loggedInUser.currentCommunity,

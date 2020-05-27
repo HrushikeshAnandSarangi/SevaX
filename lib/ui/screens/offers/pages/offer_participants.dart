@@ -68,14 +68,14 @@ class OfferParticipants extends StatelessWidget {
       id: loggedInUser.sevaUserID,
       photoUrl: loggedInUser.photoURL,
       name: loggedInUser.fullname,
-      type: MessageType.TYPE_PERSONAL,
+      type: ChatType.TYPE_PERSONAL,
     );
 
     ParticipantInfo reciever = ParticipantInfo(
       id: user.sevauserid,
       photoUrl: user.photourl,
       name: user.fullname,
-      type: MessageType.TYPE_PERSONAL,
+      type: ChatType.TYPE_PERSONAL,
     );
 
     createAndOpenChat(
