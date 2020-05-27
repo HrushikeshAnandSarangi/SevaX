@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/models/new_chat_model.dart';
 import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';

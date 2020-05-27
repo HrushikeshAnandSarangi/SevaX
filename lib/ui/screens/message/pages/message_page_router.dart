@@ -93,7 +93,14 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
                   ),
                 ],
               ),
-              messageSwitch(),
+              StreamBuilder<List<AdminMessageWrapperModel>>(
+                  stream: _bloc.adminMessage,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData && snapshot.data.length > 0) {
+                      return messageSwitch();
+                    }
+                    return Container();
+                  }),
               Expanded(
                 child: [
                   PersonalMessagePage(),

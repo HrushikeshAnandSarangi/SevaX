@@ -3,12 +3,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/models/new_chat_model.dart' as prefix;
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/messages/chatview.dart';
 
 //TODO update bio and remove un-necessary stuff
 
@@ -185,39 +184,27 @@ class ProfileViewerState extends State<ProfileViewer> {
     );
   }
 
-  Future<void> onMessageClick(UserModel user, UserModel currentUser) async {
-    List<String> participants = [user.sevaUserID, currentUser.sevaUserID];
-    participants.sort();
-    prefix.ChatModel model = prefix.ChatModel(
-      participants: participants,
-      timebankId: widget.timebankId,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-      participantInfo: [
-        prefix.ParticipantInfo(
-          id: user.sevaUserID,
-          name: user.fullname,
-          photoUrl: user.photoURL,
-          type: prefix.MessageType.TYPE_PERSONAL,
-        ),
-        prefix.ParticipantInfo(
-          id: currentUser.sevaUserID,
-          name: currentUser.fullname,
-          photoUrl: currentUser.photoURL,
-          type: prefix.MessageType.TYPE_PERSONAL,
-        ),
-      ],
+  Future<void> onMessageClick(UserModel user, UserModel loggedInUser) async {
+    ParticipantInfo sender = ParticipantInfo(
+      id: loggedInUser.sevaUserID,
+      name: loggedInUser.fullname,
+      photoUrl: loggedInUser.photoURL,
+      type: MessageType.TYPE_PERSONAL,
     );
 
-    await createNewChat(chat: model);
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChatView(
-          senderId: widget.userEmail,
-          chatModel: model,
-        ),
-      ),
+    ParticipantInfo reciever = ParticipantInfo(
+      id: user.sevaUserID,
+      name: user.fullname,
+      photoUrl: user.photoURL,
+      type: MessageType.TYPE_PERSONAL,
+    );
+    createAndOpenChat(
+      context: context,
+      timebankId: widget.timebankId,
+      communityId: loggedInUser.currentCommunity,
+      sender: sender,
+      reciever: reciever,
+      isFromRejectCompletion: false,
     );
   }
 

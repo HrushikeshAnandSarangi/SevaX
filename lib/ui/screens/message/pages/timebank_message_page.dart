@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/models/new_chat_model.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/timebank_message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/message_card.dart';

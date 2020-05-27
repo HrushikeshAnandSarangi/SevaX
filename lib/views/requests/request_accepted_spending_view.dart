@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/claimedRequestStatus.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart'
     as RequestNotificationManager;
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
@@ -14,7 +15,6 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -721,14 +721,33 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       userId: userId,
       communityid: SevaCore.of(context).loggedInUser.currentCommunity,
     );
-    // creating chat
-    // String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-    List users = [user.email, model.timebankId];
-    users.sort();
-    ChatModel chatModel = ChatModel();
-    chatModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
-    chatModel.user1 = users[0];
-    chatModel.user2 = users[1];
+
+    setState(() {
+      isProgressBarActive = false;
+    });
+
+    ParticipantInfo sender = ParticipantInfo(
+      id: user.sevaUserID,
+      name: user.fullname,
+      photoUrl: user.photoURL,
+      type: MessageType.TYPE_PERSONAL,
+    );
+    ParticipantInfo reciever = ParticipantInfo(
+      id: model.timebankId,
+      type: MessageType.TYPE_TIMEBANK,
+    );
+
+    createAndOpenChat(
+      context: context,
+      timebankId: model.timebankId,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      sender: sender,
+      reciever: reciever,
+      isFromRejectCompletion: true,
+      onChatCreate: () {
+        Navigator.pop(context);
+      },
+    );
 
     var claimedRequestStatus = ClaimedRequestStatusModel(
       isAccepted: false,
@@ -741,25 +760,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     await FirestoreManager.saveRequestFinalAction(
       model: claimedRequestStatus,
     );
-    await createChat(
-      chat: chatModel,
-    );
-
-    setState(() {
-      isProgressBarActive = false;
-    });
-    Navigator.pop(context);
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => ChatView(
-                senderId: user.email,
-                // chatModel: chatModel,
-                isFromRejectCompletion: true,
-              )),
-    );
-
     await FirestoreManager.readUserNotification(
         notificationId, SevaCore.of(context).loggedInUser.email);
   }

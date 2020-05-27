@@ -328,32 +328,6 @@ Widget badge(int count) => Positioned(
       ),
     );
 
-Widget getMessagingTab({String timebankId, String communityId}) {
-  return StreamBuilder<List<ChatModel>>(
-    // stream: getChatsForTimebank(
-    //   timebankId: timebankId,
-    //   communityId: communityId,
-    // ),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Tab(
-          icon: gettingMessages,
-        );
-      }
-      var unreadCount = 0;
-      snapshot.data.forEach((model) {
-        model.unreadStatus.containsKey(timebankId)
-            ? unreadCount += model.unreadStatus[timebankId]
-            : print("not found");
-      });
-
-      return Tab(
-        icon: unreadMessages(unreadCount),
-      );
-    },
-  );
-}
-
 Widget createJoinedUserTabBar(
   BuildContext context,
   TimebankModel timebankModel,

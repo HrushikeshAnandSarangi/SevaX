@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
@@ -323,35 +322,4 @@ class _HomeDashBoardState extends State<HomeDashBoard>
       ),
     );
   }
-
-  Widget getMessagingTab({String timebankId, String communityId}) {
-    return StreamBuilder<List<ChatModel>>(
-      // stream: getChatsForTimebank(
-      //   timebankId: timebankId,
-      //   communityId: communityId,
-      // ),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Tab(
-            icon: gettingMessages,
-          );
-        }
-        return Tab(
-          icon: gettingMessages,
-        );
-        var unreadCount = 0;
-        snapshot.data.forEach((model) {
-          model.unreadStatus.containsKey(timebankId)
-              ? unreadCount += model.unreadStatus[timebankId]
-              : print("not found");
-        });
-
-        return Tab(
-          icon: unreadMessages(unreadCount),
-        );
-      },
-    );
-  }
 }
-
-// class HomePageTabControllerBloc

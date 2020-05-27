@@ -8,8 +8,8 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/models/new_chat_model.dart' as prefix0;
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart'
     as newChatManager;
@@ -27,7 +27,7 @@ class IsFromNewChat {
 }
 
 class ChatView extends StatefulWidget {
-  final prefix0.ChatModel chatModel;
+  final ChatModel chatModel;
   bool isFromRejectCompletion;
   bool isFromShare;
   NewsModel news;
@@ -176,7 +176,7 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    prefix0.ParticipantInfo senderInfo = getSenderInfo(
+    ParticipantInfo senderInfo = getSenderInfo(
       SevaCore.of(context).loggedInUser.sevaUserID,
       widget.chatModel.participantInfo,
     );

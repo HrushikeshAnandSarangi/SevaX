@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/models/new_chat_model.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/views/core.dart';

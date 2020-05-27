@@ -4,12 +4,12 @@ import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/models/new_chat_model.dart' as prefix;
 import 'package:sevaexchange/views/messages/chatview.dart';
 
 Future<void> createChat({
-  @required prefix.ChatModel chat,
+  @required ChatModel chat,
 }) async {
   return await Firestore.instance
       .collection('chatsnew')
@@ -18,8 +18,7 @@ Future<void> createChat({
       .setData(chat.toMap(), merge: true);
 }
 
-Future<void> updateChat(
-    {@required prefix.ChatModel chat, String userId}) async {
+Future<void> updateChat({@required ChatModel chat, String userId}) async {
   String key = chat.participants[0] != userId
       ? chat.participants[0]
       : chat.participants[1];
@@ -40,11 +39,24 @@ Future<void> updateChat(
   );
 }
 
+Future<void> createNewChat({
+  @required ChatModel chat,
+}) async {
+  return await Firestore.instance
+      .collection('chatsnew')
+      .document(
+          "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
+      .setData(
+        chat.toMap(),
+        merge: true,
+      );
+}
+
 //tested and working
 /// Update a [chat]
 
 // Future<void> updateMessageUnReadStatus({
-//   @required prefix.ChatModel chat,
+//   @required ChatModel chat,
 //   @required String userId,
 // }) async {
 //   String key = chat.participants[0] != userId
@@ -64,7 +76,7 @@ Future<void> updateChat(
 // updating chatcommunity Id
 /// Update a [chat]
 Future<void> markMessageAsRead({
-  @required prefix.ChatModel chat,
+  @required ChatModel chat,
   @required String userId,
 }) async {
   return Firestore.instance
@@ -140,7 +152,7 @@ Future<void> createNewMessage({
 }
 
 Stream<List<MessageModel>> getMessagesforChat({
-  @required prefix.ChatModel chat,
+  @required ChatModel chat,
   String userId,
   IsFromNewChat isFromNewChat,
 }) async* {
@@ -192,4 +204,20 @@ Stream<List<MessageModel>> getMessagesforChat({
       },
     ),
   );
+}
+
+Future<DocumentSnapshot> getUserInfo(String userEmail) {
+  return Firestore.instance
+      .collection(isValidEmail(userEmail) ? "users" : "timebanknew")
+      .document(userEmail)
+      .get()
+      .then((onValue) {
+    return onValue;
+  });
+}
+
+bool isValidEmail(String email) {
+  return RegExp(
+          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+      .hasMatch(email);
 }

@@ -1,3 +1,4 @@
+//TODO needs update
 import 'chat_model.dart';
 
 class NavBarBadgeModel {
@@ -6,13 +7,13 @@ class NavBarBadgeModel {
 
   NavBarBadgeModel({this.notificationCount, this.chats});
 
-  int chatCount(String email) {
-    int count = 0;
-    chats.forEach((element) {
-      if (element.unreadStatus.containsKey(email) && !element.isBlocked) {
-        count += element.unreadStatus[email];
-      }
-    });
-    return count;
-  }
+  // int chatCount(String email) {
+  //   int count = 0;
+  //   chats.forEach((element) {
+  //     if (element.unreadStatus.containsKey(email) && !element.isBlocked) {
+  //       count += element.unreadStatus[email];
+  //     }
+  //   });
+  //   return count;
+  // }
 }

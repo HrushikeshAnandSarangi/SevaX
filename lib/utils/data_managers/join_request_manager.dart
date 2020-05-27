@@ -6,7 +6,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 
-import 'chat_data_manager.dart';
+import 'new_chat_manager.dart';
 
 Future<void> updateJoinRequest({@required JoinRequestModel model}) async {
   Query query = Firestore.instance

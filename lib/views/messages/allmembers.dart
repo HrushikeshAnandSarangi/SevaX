@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/models/new_chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart'
     as prefix0;
 import 'package:sevaexchange/ui/utils/message_utils.dart';

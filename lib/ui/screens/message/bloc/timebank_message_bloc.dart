@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/models/new_chat_model.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 
 class TimebankMessageBloc {
   final _messages = BehaviorSubject<List<ChatModel>>();

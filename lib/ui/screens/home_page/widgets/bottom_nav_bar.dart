@@ -1,7 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/nav_bar_model.dart';
-import 'package:sevaexchange/views/core.dart';
 
 import 'custom_navigation_item.dart';
 
@@ -46,8 +45,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
         int chatCount = 0;
         if (snapshot.hasData && snapshot.data != null) {
           notificationCount = snapshot.data.notificationCount;
-          chatCount =
-              snapshot.data.chatCount(SevaCore.of(context).loggedInUser.email);
+          // chatCount =
+          //     snapshot.data.chatCount(SevaCore.of(context).loggedInUser.email);
         }
 
         return CurvedNavigationBar(

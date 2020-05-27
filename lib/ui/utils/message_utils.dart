@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/models/new_chat_model.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 
 ParticipantInfo getSenderInfo(
