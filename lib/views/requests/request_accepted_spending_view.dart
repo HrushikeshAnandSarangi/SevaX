@@ -10,6 +10,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart'
     as RequestNotificationManager;
+import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
     as RequestManager;
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -194,6 +195,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   }
 
   Future getUserModel() async {
+    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+
     var totalCredits = 0.0;
     _avtars = [];
     List<Widget> _localAvtars = [];
@@ -366,24 +369,28 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         actions: <Widget>[],
         secondaryActions: <Widget>[],
         child: GestureDetector(
-          onTap: () async {
-            setState(() {
-              isProgressBarActive = true;
-            });
-            var notificationId =
-                await RequestNotificationManager.getNotificationId(
-                    user, requestModel);
+          onTap: () {
+            // print(
+            //     "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            // setState(() {
+            //   isProgressBarActive = true;
+            // });
 
-            setState(() {
-              isProgressBarActive = false;
-            });
-            showMemberClaimConfirmation(
-                context: context,
-                notificationId: notificationId,
-                requestModel: requestModel,
-                userId: user.sevaUserID,
-                userModel: user,
-                credits: transactionModel.credits);
+            // var notificationId =
+            //     await RequestNotificationManager.getNotificationId(
+            //         user, requestModel);
+            // print("here is the notficiation id -> ----------------------" +
+            //     notificationId);
+            // setState(() {
+            //   isProgressBarActive = false;
+            // });
+            // showMemberClaimConfirmation(
+            //     context: context,
+            //     notificationId: notificationId,
+            //     requestModel: requestModel,
+            //     userId: user.sevaUserID,
+            //     userModel: user,
+            //     credits: transactionModel.credits);
           },
           child: Container(
             margin: notificationPadding,
@@ -417,9 +424,14 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                   textColor: Colors.white,
                   elevation: 5,
                   onPressed: () async {
+                    print("+++++++++++++++++++++++++++++++++++++++++++++++++");
                     var notificationId =
                         await RequestNotificationManager.getNotificationId(
-                            user, requestModel);
+                      user,
+                      requestModel,
+                    );
+
+                    print("==============$notificationId+++++++++++++");
 
                     if (requestModel.requestMode ==
                         RequestMode.PERSONAL_REQUEST) {
@@ -578,6 +590,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     String userId,
     num credits,
   }) async {
+    print(
+        "showMemberClaimConfirmation ===================================================$notificationId");
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
@@ -716,6 +730,9 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     num credits,
     TimebankModel timebankModel,
   }) async {
+    print(
+        "rejectMemberClaimForEvent ===================================================$notificationId");
+
     List<TransactionModel> transactions =
         model.transactions.map((t) => t).toList();
     transactions.removeWhere((t) => t.to == userId);
@@ -736,7 +753,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     });
 
     ParticipantInfo sender, reciever;
-
     switch (requestModel.requestMode) {
       case RequestMode.PERSONAL_REQUEST:
         sender = ParticipantInfo(
@@ -751,7 +767,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         sender = ParticipantInfo(
           id: timebankModel.id,
           type: timebankModel.parentTimebankId ==
-                  '73d0de2c-198b-4788-be64-a804700a88a4' //check if timebank is primary timebank
+                  FlavorConfig
+                      .values.timebankId //check if timebank is primary timebank
               ? ChatType.TYPE_TIMEBANK
               : ChatType.TYPE_GROUP,
           name: timebankModel.name,
@@ -777,6 +794,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     );
 
     createAndOpenChat(
+      isTimebankMessage:
+          requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
       context: context,
       timebankId: model.timebankId,
       communityId: loggedInUser.currentCommunity,
@@ -784,11 +803,25 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       reciever: reciever,
       isFromRejectCompletion: true,
       onChatCreate: () {
+        print("===============INSIDE ON CREATE OPEN CHAT======");
         FirestoreManager.saveRequestFinalAction(
           model: claimedRequestStatus,
         );
-        FirestoreManager.readUserNotification(
-            notificationId, SevaCore.of(context).loggedInUser.email);
+
+        if (requestModel.requestMode == RequestMode.PERSONAL_REQUEST) {
+          print("===============INSIDE ON CREATE OPEN CHAT======");
+
+          FirestoreManager.readUserNotification(
+              notificationId, SevaCore.of(context).loggedInUser.email);
+        } else {
+          print("==========timrbank NOTIFICATION=========== ");
+
+          readTimeBankNotification(
+            notificationId: notificationId,
+            timebankId: requestModel.timebankId,
+          );
+        }
+
         Navigator.pop(context);
       },
     );

@@ -17,13 +17,13 @@ Future<void> createAndOpenChat({
   String communityId,
   bool isFromRejectCompletion = false,
   bool isTimebankMessage = false,
-  bool isFromShare,
+  bool isFromShare = false,
   NewsModel news,
   IsFromNewChat isFromNewChat,
   VoidCallback onChatCreate,
 }) async {
-
-  print("-------------------------------------$isFromShare--------------------------------------------");
+  print(
+      "-------------------------------------$isFromShare--------------------------------------------");
 
   List<String> participants = [sender.id, reciever.id];
   participants.sort();

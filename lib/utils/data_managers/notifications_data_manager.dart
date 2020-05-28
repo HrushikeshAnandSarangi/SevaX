@@ -111,15 +111,39 @@ Future<void> withdrawAcceptRequestNotification({
   }
 }
 
+Future<QuerySnapshot> _getQueryForNotification({
+  RequestModel requestModel,
+}) async {
+  switch (requestModel.requestMode) {
+    case RequestMode.PERSONAL_REQUEST:
+      return await Firestore.instance
+          .collection('users')
+          .document(requestModel.email)
+          .collection('notifications')
+          .where('type', isEqualTo: '')
+          .where('data.id', isEqualTo: requestModel.id)
+          .getDocuments();
+
+    case RequestMode.TIMEBANK_REQUEST:
+      return Firestore.instance
+          .collection('timebanknew')
+          .document(requestModel.timebankId)
+          .collection('notifications')
+          .where('data.id', isEqualTo: requestModel.id)
+          .getDocuments();
+
+    default:
+      return null;
+  }
+}
+
 Future<String> getNotificationId(
   UserModel user,
   RequestModel request,
 ) async {
-  var notifications = await Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .collection('notifications')
-      .getDocuments();
+  QuerySnapshot notifications = await _getQueryForNotification(
+    requestModel: request,
+  );
 
   var result = "";
   for (var i = 0; i < notifications.documents.length; i++) {
@@ -324,7 +348,9 @@ Future<void> offerRejectNotification({
 }
 
 Future<void> readUserNotification(
-    String notificationId, String userEmail) async {
+  String notificationId,
+  String userEmail,
+) async {
   await Firestore.instance
       .collection('users')
       .document(userEmail)
@@ -347,8 +373,12 @@ Future<void> unreadUserNotification(
   });
 }
 
-Future<void> readTimeBankNotification(
-    {String notificationId, String timebankId}) async {
+Future<void> readTimeBankNotification({
+  String notificationId,
+  String timebankId,
+}) async {
+  print(
+      "Updating status of $timebankId for $notificationId <<<<<<<<<<<<<<<<<<<,");
   await Firestore.instance
       .collection('timebanknew')
       .document(timebankId)
