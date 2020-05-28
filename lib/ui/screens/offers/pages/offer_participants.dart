@@ -81,6 +81,7 @@ class OfferParticipants extends StatelessWidget {
     createAndOpenChat(
       context: context,
       timebankId: timebankId,
+      communityId: communityId,
       sender: sender,
       reciever: reciever,
     );
