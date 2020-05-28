@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
@@ -58,7 +59,7 @@ class _CreateRequestState extends State<CreateRequest> {
         appBar: AppBar(
           title: Text(
             FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                ? "Create Yang Gang Request"
+                ? AppLocalizations.of(context).translate('create_request','humanity_first_create')
                 : _title,
             style: TextStyle(fontSize: 18),
           ),
@@ -68,7 +69,7 @@ class _CreateRequestState extends State<CreateRequest> {
             stream: userBloc.getLoggedInUser,
             builder: (context, snapshot) {
               if (snapshot.hasError)
-                return new Text('Error: ${snapshot.error}');
+                return new Text('${AppLocalizations.of(context).translate('shared','error')}: ${snapshot.error}');
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               }
@@ -91,9 +92,9 @@ class _CreateRequestState extends State<CreateRequest> {
     if (widget.projectId == null ||
         widget.projectId.isEmpty ||
         widget.projectId == "") {
-      return "Create Request";
+      return AppLocalizations.of(context).translate('create_request','create');
     }
-    return "Create Project Request";
+    return AppLocalizations.of(context).translate('create_request','create_project');
   }
 }
 
@@ -131,7 +132,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   GeoFirePoint location;
 
   double sevaCoinsValue = 0;
-  String hoursMessage = ' Click to Set Duration';
+  String hoursMessage;
   String selectedAddress;
   int sharedValue = 0;
 
@@ -224,6 +225,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
   @override
   Widget build(BuildContext context) {
+    hoursMessage =  AppLocalizations.of(context).translate('create_request','set_duration');
     TextStyle textStyle = TextStyle(
       fontSize: 14,
       // fontWeight: FontWeight.bold,
@@ -273,8 +275,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 Text(
                   FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                      ? "Yang gang request title"
-                      : "Request title*",
+                      ? AppLocalizations.of(context).translate('create_request','yang_gang_request_title')
+                      : AppLocalizations.of(context).translate('create_request','request_title'),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -291,8 +293,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ],
                   decoration: InputDecoration(
                     hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                        ? "Yang gang request title"
-                        : "Ex: Small carpentry work...",
+                        ? AppLocalizations.of(context).translate('create_request','yang_gang_request_title')
+                        : AppLocalizations.of(context).translate('create_request','small_carpenty'),
                     hintStyle: hintTextStyle,
                   ),
                   textInputAction: TextInputAction.next,
@@ -305,21 +307,21 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   textCapitalization: TextCapitalization.sentences,
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please enter the subject of your request';
+                      return AppLocalizations.of(context).translate('create_request','subject');
                     }
                     requestModel.title = value;
                   },
                 ),
                 SizedBox(height: 30),
                 OfferDurationWidget(
-                  title: ' Request duration',
+                  title: AppLocalizations.of(context).translate('create_request','duration'),
                 ),
                 SizedBox(height: 12),
                 SizedBox(height: 20),
                 Text(
                   FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                      ? "Yang Gang Request description"
-                      : "Request description*",
+                      ? AppLocalizations.of(context).translate('create_request','yang_desc')
+                      : AppLocalizations.of(context).translate('create_request','desc'),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -334,7 +336,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   },
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                    hintText: 'Your Request and any #hashtags',
+                    hintText: AppLocalizations.of(context).translate('create_request','request_hash'),
                     hintStyle: hintTextStyle,
                   ),
                   initialValue: widget.offer != null && widget.isOfferRequest
@@ -346,14 +348,45 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   maxLines: 1,
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please enter some text';
+                      return AppLocalizations.of(context).translate('create_request','request_hash_empty');
                     }
                     requestModel.description = value;
                   },
                 ),
                 SizedBox(height: 20),
                 Text(
-                  'Total no. of hours *',
+                  AppLocalizations.of(context).translate('create_request','add_to_project'),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.black,
+                  ),
+                ),
+                FlatButton.icon(
+                    icon: Icon(Icons.assignment),
+                    textColor: Colors.green,
+                    label: Container(
+                      constraints: BoxConstraints.loose(
+                        Size(MediaQuery
+                            .of(context)
+                            .size
+                            .width - 140, 50),
+                      ),
+                      child: Text(
+                        selectedAddress == '' || selectedAddress == null
+                            ? AppLocalizations.of(context).translate(
+                            'create_request', 'none_project')
+                            : selectedAddress,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    color: Colors.grey[200],
+                    onPressed: () async {}),
+                SizedBox(height: 20),
+                Text(
+                  AppLocalizations.of(context).translate('create_request','total_hours'),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -368,18 +401,18 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     },
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
-                      hintText: 'Total no. of hours required',
+                      hintText: AppLocalizations.of(context).translate('create_request','hours_required'),
                       hintStyle: hintTextStyle,
                       // labelText: 'No. of volunteers',
                     ),
                     keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Please enter the number of hours required';
+                        return AppLocalizations.of(context).translate('create_request','hours_required_err');
                       } else if (int.parse(value) < 0) {
-                        return 'No. of hours cannot be lesser than 0';
+                        return AppLocalizations.of(context).translate('create_request','hours_required_zero');
                       } else if (int.parse(value) == 0) {
-                        return 'No. of hours cannot be 0';
+                        return AppLocalizations.of(context).translate('create_request','hours_required_not_zero');
                       } else {
                         requestModel.numberOfHours = int.parse(value);
                         return null;
@@ -387,7 +420,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     }),
                 SizedBox(height: 20),
                 Text(
-                  'No. of volunteers*',
+                  AppLocalizations.of(context).translate('create_request','no_of_volunteers'),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -401,18 +434,18 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     FocusScope.of(context).unfocus();
                   },
                   decoration: InputDecoration(
-                    hintText: 'No. of volunteers*',
+                    hintText: AppLocalizations.of(context).translate('create_request','no_of_volunteers'),
                     hintStyle: hintTextStyle,
                     // labelText: 'No. of volunteers',
                   ),
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please enter the number of volunteers needed';
+                      return AppLocalizations.of(context).translate('create_request','no_of_volunteers_zero');
                     } else if (int.parse(value) < 0) {
-                      return 'No. of volunteers cannot be lesser than 0';
+                      return AppLocalizations.of(context).translate('create_request','no_of_volunteers_zero_err');
                     } else if (int.parse(value) == 0) {
-                      return 'No. of volunteers cannot be 0';
+                      return AppLocalizations.of(context).translate('create_request','no_of_volunteers_zero_err1');
                     } else {
                       requestModel.numberOfApprovals = int.parse(value);
                       return null;
@@ -441,7 +474,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                       child: RaisedButton(
                         onPressed: createRequest,
                         child: Text(
-                          "Create Request".padLeft(10).padRight(10),
+                          AppLocalizations.of(context).translate('create_request','create_request_button').padLeft(10).padRight(10),
                           style: Theme.of(context).primaryTextTheme.button,
                         ),
                       ),
@@ -465,7 +498,16 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         width: double.infinity,
         child: CupertinoSegmentedControl<int>(
           selectedColor: Theme.of(context).primaryColor,
-          children: logoWidgets,
+          children: {
+            0: Text(
+              AppLocalizations.of(context).translate('shared','timebank_request'),
+              style: TextStyle(fontSize: 12.0),
+            ),
+            1: Text(
+              AppLocalizations.of(context).translate('shared','personal_request'),
+              style: TextStyle(fontSize: 12.0),
+            ),
+          },
           borderColor: Colors.grey,
           padding: EdgeInsets.only(left: 5.0, right: 5.0),
           groupValue: sharedValue,
@@ -501,17 +543,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     }
   }
 
-  final Map<int, Widget> logoWidgets = const <int, Widget>{
-    0: Text(
-      'Timebank Request',
-      style: TextStyle(fontSize: 15.0),
-    ),
-    1: Text(
-      'Personal Request',
-      style: TextStyle(fontSize: 15.0),
-    ),
-  };
-
   BuildContext dialogContext;
 
   void createRequest() async {
@@ -519,9 +550,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     if (connResult == ConnectivityResult.none) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text("Please check your internet connection."),
+          content: Text(AppLocalizations.of(context).translate('shared','check_internet')),
           action: SnackBarAction(
-            label: 'Dismiss',
+            label: AppLocalizations.of(context).translate('shared','dismiss'),
             onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
           ),
         ),
@@ -539,12 +570,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       if (requestModel.requestStart == 0 || requestModel.requestEnd == 0) {
         showDialogForTitle(
             dialogTitle:
-                "Please mention the start and end date of the request");
+            AppLocalizations.of(context).translate('create_request','start_date_error'));
         return;
       }
 
       if (!hasRegisteredLocation()) {
-        showDialogForTitle(dialogTitle: "Please add location to your request");
+        showDialogForTitle(dialogTitle: AppLocalizations.of(context).translate('create_request','add_location'));
         return;
       }
 
@@ -605,7 +636,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text('Creating Request..'),
+            title: Text(AppLocalizations.of(context).translate('create_request','progress')),
             content: LinearProgressIndicator(),
           );
         });
@@ -617,11 +648,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         builder: (BuildContext viewContext) {
           return AlertDialog(
             title: Text(
-                'Your seva credits are not sufficient to create the request.'),
+                AppLocalizations.of(context).translate('create_request','not_enough_seva')),
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  'OK',
+                  AppLocalizations.of(context).translate('create_request','ok'),
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -661,7 +692,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   Map<String, UserModel> selectedUsers;
   Map onActivityResult;
 
-  String memberAssignment = "Assign to volunteers";
+  String memberAssignment;
 
   Widget addVolunteersForAdmin() {
     if (selectedUsers == null) {
@@ -673,13 +704,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       map[widget.userModel.email] = widget.userModel;
       selectedUsers.addAll(map);
     }
-
+    memberAssignment = AppLocalizations.of(context).translate('create_request','assign_members');
     return Container(
       margin: EdgeInsets.all(10),
       width: double.infinity,
       child: RaisedButton(
         child: Text(selectedUsers != null && selectedUsers.length > 0
-            ? "${selectedUsers.length} members selected"
+            ? "${selectedUsers.length} ${AppLocalizations.of(context).translate('create_request','selected')}"
             : memberAssignment),
         onPressed: () async {
           print("addVolunteersForAdmin():");
@@ -702,10 +733,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             selectedUsers = onActivityResult['membersSelected'];
             setState(() {
               if (selectedUsers.length == 0)
-                memberAssignment = "Assign to volunteers";
+                memberAssignment = AppLocalizations.of(context).translate('create_request','assign_to_vol');
               else
                 memberAssignment =
-                    "${selectedUsers.length} volunteers selected";
+                    "${selectedUsers.length} ${AppLocalizations.of(context).translate('create_request','vol_selected')}";
             });
             print("Data is present Selected users ${selectedUsers.length}");
           } else {

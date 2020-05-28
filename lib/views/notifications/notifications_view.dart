@@ -622,7 +622,7 @@ class NotificationsView extends State<NotificationViewHolder> {
           },
           onPressed: null,
           photoUrl: user.fullname,
-          title: Text(AppLocalizations.of(context).translate('notifications','credited')),
+          title: AppLocalizations.of(context).translate('notifications','credited'),
           subTitle:
           '${AppLocalizations.of(context).translate('notifications','congrats')}  ',
         );
@@ -655,7 +655,7 @@ class NotificationsView extends State<NotificationViewHolder> {
             },
             onPressed: null,
             photoUrl: user.photoURL,
-            title: Text(AppLocalizations.of(context).translate('notifications','debited')),
+            title: AppLocalizations.of(context).translate('notifications','debited'),
             subTitle: AppLocalizations.of(context).translate('notifications','debited_to'),
           );
         });
@@ -1046,7 +1046,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       },
       photoUrl: requestInvitationModel.timebankImage,
       subTitle:
-      '${requestInvitationModel.timebankName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications','requested_join')} ${requestInvitationModel.requestTitle}, ${AppLocalizations.of(context).translate('notifications','tap_toview')}'),
+      '${requestInvitationModel.timebankName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications','requested_join')} ${requestInvitationModel.requestTitle}, ${AppLocalizations.of(context).translate('notifications','tap_toview')}',
       title: AppLocalizations.of(context).translate('notifications','join_request'),
     );
   }

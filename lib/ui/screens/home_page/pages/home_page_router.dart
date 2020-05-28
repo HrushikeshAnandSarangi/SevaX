@@ -67,11 +67,13 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
               Locale('en', 'US'),
               Locale('pt', 'PT'),
               Locale('es', 'ES'),
+              Locale('fr', 'FR'),
             ],
             localizationsDelegates: [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate
             ],
             title: AppConfig.appName,
             debugShowCheckedModeBanner: false,

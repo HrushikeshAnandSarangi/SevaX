@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -138,7 +139,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   Widget getTimebackList(BuildContext context, String timebankId) {
     if (isProgressBarActive) {
       return AlertDialog(
-        title: Text('Updating Users'),
+        title: Text(AppLocalizations.of(context).translate('members','updating_users')),
         content: LinearProgressIndicator(),
       );
     }
@@ -290,7 +291,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
   Future loadAllRequest(List<JoinRequestModel> modelItemList) async {
     _requestsWidgets = [];
-    _requestsWidgets.add(getSectionTitle(context, 'Requests'));
+    _requestsWidgets.add(getSectionTitle(context, AppLocalizations.of(context).translate('members','requests')));
     for (var i = 0; i < modelItemList.length; i++) {
       if (modelItemList[i] == null ||
           modelItemList[i].operationTaken ||
@@ -565,7 +566,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       child: Padding(
         padding: EdgeInsets.all(10),
         child: Center(
-          child: Text('No user found'),
+          child: Text(AppLocalizations.of(context).translate('members','no_users')),
         ),
       ),
     );
@@ -607,7 +608,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         admins: timebankModel.admins);
     _adminsWidgets = [];
     _adminEmails = [];
-    _adminsWidgets.add(getSectionTitle(context, 'Admins & Organizers'));
+    _adminsWidgets.add(getSectionTitle(context, AppLocalizations.of(context).translate('members','admin_organizers')));
     SplayTreeMap<String, dynamic>.from(adminUserModel, (a, b) => a.compareTo(b))
         .forEach((key, user) {
       String email = user.email.toString().trim();
@@ -686,7 +687,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         return AlertDialog(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text('Exit ${widget.isFromGroup ? 'Group' : 'Timebank'}',
+          title: Text('${AppLocalizations.of(context).translate('members','exit')} ${widget.isFromGroup ? AppLocalizations.of(context).translate('members','group') : AppLocalizations.of(context).translate('members','timebank')}',
               style: TextStyle(fontSize: 15.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -694,7 +695,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
               Form(
                 key: _formKey,
                 child: TextFormField(
-                  decoration: InputDecoration(hintText: 'Enter reason to exit'),
+                  decoration: InputDecoration(hintText: AppLocalizations.of(context).translate('members','enter_reason')),
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,
                   style: TextStyle(fontSize: 17.0),
@@ -703,7 +704,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                   ],
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please enter reason to exit';
+                      return AppLocalizations.of(context).translate('members','reason_1');
                     }
                     reason = value;
                   },
@@ -720,7 +721,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      'Exit',
+                      AppLocalizations.of(context).translate('members','exit'),
                       style: TextStyle(
                         fontSize: dialogButtonSize,
                       ),
@@ -731,9 +732,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
                             content:
-                                Text("Please check your internet connection."),
+                                Text(AppLocalizations.of(context).translate('shared','check_internet')),
                             action: SnackBarAction(
-                              label: 'Dismiss',
+                              label: AppLocalizations.of(context).translate('shared','dismiss'),
                               onPressed: () => _scaffoldKey.currentState
                                   .hideCurrentSnackBar(),
                             ),
@@ -791,7 +792,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                   ),
                   FlatButton(
                     child: Text(
-                      'Cancel',
+                      AppLocalizations.of(context).translate('shared','cancel'),
                       style: TextStyle(
                           fontSize: dialogButtonSize, color: Colors.red),
                     ),
@@ -866,7 +867,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
                       Map<String, bool> onActivityResult = await showAdvisory(
                           dialogTitle:
-                              "Are you sure you want to remove ${user.fullname}?");
+                              "${AppLocalizations.of(context).translate('members','are_you_sure')} ${user.fullname}?");
                       if (onActivityResult['PROCEED']) {
                         setState(() {
                           isProgressBarActive = true;
@@ -1092,7 +1093,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           admins: timebankModel.admins);
       _adminsWidgets = [];
       _adminEmails = [];
-      _adminsWidgets.add(getSectionTitle(context, 'Coordinators'));
+      _adminsWidgets.add(getSectionTitle(context, AppLocalizations.of(context).translate('members','co_ordinators')));
       SplayTreeMap<String, dynamic>.from(onValue, (a, b) => a.compareTo(b))
           .forEach((key, user) {
         _adminEmails.add(user.email);
@@ -1160,7 +1161,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           child: GestureDetector(
             child: Row(
               children: <Widget>[
-                getSectionTitle(context, 'Members '),
+                getSectionTitle(context, AppLocalizations.of(context).translate('members','members')),
                 CircleAvatar(
                   backgroundColor: Colors.white,
                   radius: 10,
@@ -1186,7 +1187,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         _membersWidgets.add(gesture);
       } else {
         _membersWidgets.add(
-          getSectionTitle(context, 'Members '),
+          getSectionTitle(context, AppLocalizations.of(context).translate('members','members')),
         );
       }
     }
@@ -1276,7 +1277,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        getSectionTitle(context, 'Coordinators'),
+        getSectionTitle(context, AppLocalizations.of(context).translate('members','co_ordinators')),
         ...model.coordinators.map((coordinator) {
           return FutureBuilder<UserModel>(
             future: FirestoreManager.getUserForId(sevaUserId: coordinator),

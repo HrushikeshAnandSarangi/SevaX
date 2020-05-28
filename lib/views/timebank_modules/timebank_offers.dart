@@ -119,7 +119,16 @@ class OffersState extends State<OffersModule> {
               width: 120,
               child: CupertinoSegmentedControl<int>(
                 selectedColor: Theme.of(context).primaryColor,
-                children: logoWidgets,
+                children: {
+                  0: Text(
+                    AppLocalizations.of(context).translate('shared','all'),
+                    style: TextStyle(fontSize: 10.0),
+                  ),
+                  1: Text(
+                    AppLocalizations.of(context).translate('shared','near_me'),
+                    style: TextStyle(fontSize: 10.0),
+                  ),
+                },
                 borderColor: Colors.grey,
                 padding: EdgeInsets.only(left: 0, right: 5.0),
                 groupValue: sharedValue,
@@ -179,15 +188,4 @@ class OffersState extends State<OffersModule> {
       ),
     );
   }
-
-  final Map<int, Widget> logoWidgets = const <int, Widget>{
-    0: Text(
-      'All',
-      style: TextStyle(fontSize: 10.0),
-    ),
-    1: Text(
-      'Near Me',
-      style: TextStyle(fontSize: 10.0),
-    ),
-  };
 }

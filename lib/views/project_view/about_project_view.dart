@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -110,7 +111,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                                   ));
                             },
                             child: Text(
-                              'Edit',
+                              AppLocalizations.of(context).translate('projects','edit'),
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'Europa',
@@ -121,9 +122,9 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                           ),
                         )
                       : Container(),
-                  headingText('Title'),
+                  headingText(AppLocalizations.of(context).translate('projects','title_about')),
                   Text(projectModel.name ?? ""),
-                  headingText('Mission Statement'),
+                  headingText(AppLocalizations.of(context).translate('projects','mission_statement')),
                   SizedBox(height: 8),
                   Wrap(
                     crossAxisAlignment: WrapCrossAlignment.center,
@@ -150,7 +151,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                   ),
                   SizedBox(height: 10),
                   Text(projectModel.description ?? ""),
-                  headingText('Organiser'),
+                  headingText(AppLocalizations.of(context).translate('projects','organizer')),
                   SizedBox(height: 10),
                   Row(
                     children: <Widget>[
@@ -210,7 +211,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
       child: Container(
         margin: EdgeInsets.only(top: 20),
         child: Text(
-          "Delete Project",
+          AppLocalizations.of(context).translate('projects','delete_project'),
           textAlign: TextAlign.left,
           style: TextStyle(
             fontWeight: FontWeight.bold,

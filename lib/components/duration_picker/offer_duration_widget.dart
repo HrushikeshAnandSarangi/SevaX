@@ -2,6 +2,7 @@
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 
 import 'calendar_picker.dart';
 
@@ -145,7 +146,7 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
 
   String getTimeString(DateTime dateTime, DurationType type) {
     if (dateTime == null) {
-      return '${type == DurationType.START ? 'Start' : 'End'}\ndate & time';
+      return '${type == DurationType.START ? AppLocalizations.of(context).translate('create_request','start') : AppLocalizations.of(context).translate('create_request','end')}\n${AppLocalizations.of(context).translate('create_request','start_end')}';
     }
     String dateTimeString = '';
     DateFormat format = DateFormat('dd MMM,\nhh:mm a');

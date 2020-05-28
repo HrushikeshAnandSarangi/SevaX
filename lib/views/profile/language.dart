@@ -17,6 +17,9 @@ class LanguageListData {
         languageName:'Portuguese',
         code: 'pt'),
     LanguageModel(
+      languageName: 'French',
+      code: 'fr'),
+    LanguageModel(
         languageName:'Spanish',
         code: 'es')
   ];

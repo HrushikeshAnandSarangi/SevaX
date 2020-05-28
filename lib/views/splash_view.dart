@@ -7,6 +7,7 @@ import 'package:flurry/flurry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/internationalization/app_localization.dart';
@@ -30,6 +31,7 @@ import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 import 'onboarding/interests_view.dart';
 import 'onboarding/skills_view.dart';
 
+import 'package:sevaexchange/internationalization/applanguage.dart';
 //class UserData {
 //  static UserModel user;
 //
@@ -116,7 +118,7 @@ class _SplashViewState extends State<SplashView> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_initialized) {
-      loadingMessage = 'Hang on tight';
+      loadingMessage = AppLocalizations.of(context).translate('splash','hang_on');
       _precacheImage().then((_) {
         initiateLogin();
       });
@@ -381,7 +383,7 @@ class _SplashViewState extends State<SplashView> {
   }
 
   void initiateLogin() {
-    loadingMessage = 'Checking, if we met before';
+    loadingMessage = AppLocalizations.of(context).translate('splash', 'check_met');
     _getLoggedInUserId().then(handleLoggedInUserIdResponse).catchError((error) {
       print("Inside -> Error $error");
     });
@@ -449,7 +451,8 @@ class _SplashViewState extends State<SplashView> {
     await fetchLinkData();
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
-
+    var appLanguage = Provider.of<AppLanguage>(context);
+    appLanguage.changeLanguage(Locale(loggedInUser.language));
     print("---> ${loggedInUser.currentCommunity}");
     if ((loggedInUser.currentCommunity == " " ||
             loggedInUser.currentCommunity == "" ||
@@ -465,7 +468,7 @@ class _SplashViewState extends State<SplashView> {
     }
 
     if (loggedInUser == null) {
-      loadingMessage = 'Welcome to the world of communities';
+      loadingMessage = AppLocalizations.of(context).translate('splash','world');
       _navigateToLoginPage();
       return;
     }
@@ -556,7 +559,7 @@ class _SplashViewState extends State<SplashView> {
         loggedInUser.bio == null) {
       await _navigateToBioView(loggedInUser);
     }
-    loadingMessage = 'We met before';
+    loadingMessage = AppLocalizations.of(context).translate('splash','we_met');
 
     if (loggedInUser.communities == null || loggedInUser.communities.isEmpty) {
       await _navigateToFindCommunitiesView(loggedInUser);

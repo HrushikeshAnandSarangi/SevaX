@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -19,8 +20,9 @@ import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
+import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-
+import 'package:sevaexchange/internationalization/applanguage.dart';
 class LoginPage extends StatefulWidget {
   LoginPage();
 
@@ -101,6 +103,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    var appLanguage = Provider.of<AppLanguage>(context);
+    Locale myLocale = Localizations.localeOf(context);
+    var language = new LanguageListData().getLanguageSupported(myLocale.toString());
+    appLanguage.changeLanguage(Locale(language.code));
     UserData.shared.isFromLogin = true;
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
     ScreenUtil.instance =
@@ -363,7 +369,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: 20),
                     Container(
-                      width: 134,
+                      width: 145,
                       height: 39,
                       child: RaisedButton(
                         shape: StadiumBorder(),

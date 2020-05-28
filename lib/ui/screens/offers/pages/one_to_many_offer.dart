@@ -2,6 +2,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/one_to_many_offer_bloc.dart';
@@ -65,7 +66,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
       appBar: widget.offerModel != null
           ? AppBar(
               title: Text(
-                "Edit",
+                  AppLocalizations.of(context).translate('create_offer','edit'),
                 style: TextStyle(fontSize: 18),
               ),
             )
@@ -91,8 +92,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                       SnackBar(
                         content: Text(
                           widget.offerModel == null
-                              ? 'Creating Offer'
-                              : 'Updating offer',
+                              ? AppLocalizations.of(context).translate('create_offer','creating')
+                              : AppLocalizations.of(context).translate('create_offer','updating'),
                         ),
                       ),
                     );
@@ -106,8 +107,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                       SnackBar(
                         content: Text(
                           widget.offerModel == null
-                              ? 'There was error creating your offer, Please try again.'
-                              : 'There was error updating offer, Please try again.',
+                              ? AppLocalizations.of(context).translate('create_offer','error_creating')
+                              : AppLocalizations.of(context).translate('create_offer','error_updating'),
                         ),
                       ),
                     );
@@ -138,9 +139,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: "Title*",
+                                heading: "${AppLocalizations.of(context).translate('create_offer','title_title')}*",
                                 onChanged: _bloc.onTitleChanged,
-                                hint: "Ex teaching a python class..",
+                                hint: AppLocalizations.of(context).translate('create_offer','tutor'),
                                 maxLength: null,
                                 error: snapshot.error,
                               );
@@ -148,7 +149,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                           ),
                           SizedBox(height: 20),
                           OfferDurationWidget(
-                            title: ' Offer duration',
+                            title: AppLocalizations.of(context).translate('create_offer','offer_duration'),
                             startTime: widget.offerModel != null
                                 ? DateTime.fromMillisecondsSinceEpoch(
                                     widget.offerModel.groupOfferDataModel
@@ -174,9 +175,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: "No. of preparation hours *",
+                                heading: "${AppLocalizations.of(context).translate('create_offer','prep_hours')} *",
                                 onChanged: _bloc.onPreparationHoursChanged,
-                                hint: "No. of preparation hours required",
+                                hint: AppLocalizations.of(context).translate('create_offer','prep_hours_required'),
                                 error: snapshot.error,
                                 textInputType: TextInputType.number,
                               );
@@ -194,9 +195,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: "No. of class hours *",
+                                heading: "${AppLocalizations.of(context).translate('create_offer','no_of_class')} *",
                                 onChanged: _bloc.onClassHoursChanged,
-                                hint: "No. of class hours required",
+                                hint: AppLocalizations.of(context).translate('create_offer','no_of_class_hours'),
                                 error: snapshot.error,
                                 textInputType: TextInputType.number,
                               );
@@ -214,9 +215,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: "Size of class *",
+                                heading: "${AppLocalizations.of(context).translate('create_offer','size_class')} *",
                                 onChanged: _bloc.onClassSizeChanged,
-                                hint: "Enter the number of participants",
+                                hint: AppLocalizations.of(context).translate('create_offer','enter_participants'),
                                 error: snapshot.error,
                                 textInputType: TextInputType.number,
                               );
@@ -233,9 +234,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: "Class description",
+                                heading: AppLocalizations.of(context).translate('create_offer','class_desc'),
                                 onChanged: _bloc.onclassDescriptionChanged,
-                                hint: 'Please enter some class description',
+                                hint: AppLocalizations.of(context).translate('create_offer','class_desc_err'),
                                 maxLength: 500,
                                 error: snapshot.error,
                                 textInputType: TextInputType.multiline,
@@ -273,9 +274,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                       _scaffoldKey.currentState.showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                              "Please check your internet connection."),
+                                            AppLocalizations.of(context).translate('shared','check_internet')),
                                           action: SnackBarAction(
-                                            label: 'Dismiss',
+                                            label: AppLocalizations.of(context).translate('shared','dismiss'),
                                             onPressed: () => _scaffoldKey
                                                 .currentState
                                                 .hideCurrentSnackBar(),
@@ -305,8 +306,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                     } else {
                                       errorDialog(
                                         context: context,
-                                        error:
-                                            "Please enter start and end date",
+                                        error:AppLocalizations.of(context).translate('create_offer','enter_start_end'),
                                       );
                                     }
                                   },
@@ -316,8 +316,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                     children: <Widget>[
                                       Text(
                                         widget.offerModel == null
-                                            ? "Creating Offer"
-                                            : "Updating offer",
+                                            ? AppLocalizations.of(context).translate('create_offer','creating')
+                                            : AppLocalizations.of(context).translate('create_offer','updating'),
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       SizedBox(width: 8),
@@ -336,8 +336,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                   )
                                 : Text(
                                     widget.offerModel == null
-                                        ? "Create Offer"
-                                        : "Update offer",
+                                        ? AppLocalizations.of(context).translate('create_offer','title')
+                                        : AppLocalizations.of(context).translate('create_offer','title_update'),
                                     style: TextStyle(fontSize: 16),
                                   ),
                           ),

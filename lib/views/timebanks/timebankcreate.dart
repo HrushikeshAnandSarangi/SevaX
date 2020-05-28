@@ -13,6 +13,7 @@ import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -38,7 +39,7 @@ class TimebankCreate extends StatelessWidget {
         // leading: BackButton(color: Colors.black54),
         title: Text(
           // 'Create a ${FlavorConfig.values.timebankTitle}',
-          'Create Group',
+          AppLocalizations.of(context).translate('groups','create_group'),
           style: TextStyle(
             fontSize: 20,
           ),
@@ -111,7 +112,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             .then((groupFound) {
           if (groupFound) {
             setState(() {
-              errTxt = 'Group name already exists';
+              errTxt = AppLocalizations.of(context).translate('groups','exists');
             });
           } else {
             setState(() {
@@ -125,7 +126,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
-  String memberAssignment = "+ Add Members";
+  String memberAssignment;
 
   void _writeToDB() {
     // _checkTimebankName();
@@ -175,6 +176,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 
   @override
   Widget build(BuildContext context) {
+    memberAssignment = "+ ${AppLocalizations.of(context).translate('groups','add_members')}";
     return Form(
         key: _formKey,
         child: Container(
@@ -189,7 +191,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Text(
-              'Group is a subset of a timebank that may be temporary. Ex: committees, project teams.',
+              AppLocalizations.of(context).translate('groups','group_subset'),
               textAlign: TextAlign.center,
             ),
           ),
@@ -201,7 +203,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 TimebankAvatar(),
                 SizedBox(height: 5),
                 Text(
-                  'Group logo',
+                  AppLocalizations.of(context).translate('groups','logo'),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.grey,
@@ -210,7 +212,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               ],
             ),
           )),
-          headingText('Name your group', true),
+          headingText(AppLocalizations.of(context).translate('groups','name'), true),
           TextFormField(
             textCapitalization: TextCapitalization.sentences,
             focusNode: nameNode,
@@ -224,7 +226,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorText: errTxt,
-              hintText: "Ex: Pets-in-town, Citizen collab",
+              hintText: AppLocalizations.of(context).translate('groups','name_group'),
             ),
             // keyboardType: TextInputType.multiline,
             // maxLines: 1,
@@ -233,12 +235,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             ],
             validator: (value) {
               if (value.isEmpty) {
-                return 'Please enter some text';
+                return AppLocalizations.of(context).translate('groups','please_enter');
               }
               timebankModel.name = value.trim();
             },
           ),
-          headingText('About', true),
+          headingText(AppLocalizations.of(context).translate('groups','about'), true),
           TextFormField(
             textCapitalization: TextCapitalization.sentences,
 
@@ -248,20 +250,20 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             },
             textInputAction: TextInputAction.done,
             decoration: InputDecoration(
-              hintText: 'Ex: A bit more about your group',
+              hintText: AppLocalizations.of(context).translate('groups','example'),
             ),
             // keyboardType: TextInputType.multiline,
             maxLines: 1,
             validator: (value) {
               if (value.isEmpty) {
-                return 'Please enter some text';
+                return AppLocalizations.of(context).translate('groups','please_enter');
               }
               timebankModel.missionStatement = value;
             },
           ),
           Row(
             children: <Widget>[
-              headingText('Private Group', true),
+              headingText(AppLocalizations.of(context).translate('groups','private_group'), true),
               Padding(
                 padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
                 child: infoButton(
@@ -287,7 +289,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
           Row(
             children: <Widget>[
-              headingText('Private accedental delete', true),
+              headingText(AppLocalizations.of(context).translate('groups','private_delete'), true),
               Padding(
                 padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
                 child: Checkbox(
@@ -304,7 +306,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             ],
           ),
           tappableInviteMembers,
-          headingText('Is this pin at a right place?', false),
+          headingText(AppLocalizations.of(context).translate('groups','is_pin_right'), false),
           Center(
             child: LocationPickerWidget(
               selectedAddress: selectedAddress,
@@ -325,7 +327,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 child: FutureBuilder<Object>(
                     future: getTimeBankForId(timebankId: widget.timebankId),
                     builder: (context, snapshot) {
-                      if (snapshot.hasError) return Text('Error');
+                      if (snapshot.hasError) return Text(AppLocalizations.of(context).translate('chat','error2'));
                       if (snapshot.connectionState == ConnectionState.waiting)
                         return Offstage();
                       TimebankModel parentTimebank = snapshot.data;
@@ -345,7 +347,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                             try {
                               parentTimebank.children.add(timebankModel.id);
                             } catch (e) {
-                              print("Error:$e");
+                              print("${AppLocalizations.of(context).translate('chat','error')}$e");
                             }
                             updateTimebank(timebankModel: parentTimebank);
                             Navigator.pop(context);
@@ -357,7 +359,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Text(
-                            'Create Group',
+                            AppLocalizations.of(context).translate('groups','create_group'),
                             style: Theme.of(context).primaryTextTheme.button,
                           ),
                         ),
@@ -766,9 +768,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
       selectedUsers = onActivityResult['membersSelected'];
       setState(() {
         if (selectedUsers.length == 0)
-          memberAssignment = "Assign to volunteers";
+          memberAssignment = AppLocalizations.of(context).translate('groups','assign_volunteer');
         else
-          memberAssignment = "${selectedUsers.length} volunteers selected";
+          memberAssignment = "${selectedUsers.length} ${AppLocalizations.of(context).translate('groups','selected')}";
       });
       // print("Data is present Selected users ${selectedUsers.length}");
       print("Data is present Selected users ${selectedUsers.toString()}");
@@ -801,7 +803,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             child: Padding(
               padding: EdgeInsets.only(top: 15),
               child: Text(
-                'Invite members +',
+                '${AppLocalizations.of(context).translate('groups','invite')} +',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.blue,

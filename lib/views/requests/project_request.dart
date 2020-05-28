@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -96,8 +97,8 @@ class RequestsState extends State<ProjectRequests>
                   labelColor: Colors.white,
                   isScrollable: false,
                   tabs: <Widget>[
-                    Tab(text: "Requests"),
-                    Tab(text: "About"),
+                    Tab(text: AppLocalizations.of(context).translate('projects','requests')),
+                    Tab(text: AppLocalizations.of(context).translate('projects','about')),
                   ],
                 ),
               ),
@@ -467,12 +468,12 @@ class ProjectRequestListState extends State<ProjectRequestList> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Access denied."),
-          content: new Text("You are not authorized to create a request."),
+          title: new Text(AppLocalizations.of(context).translate('projects','access_denied')),
+          content: new Text(AppLocalizations.of(context).translate('projects','not_auth')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Close"),
+              child: new Text(AppLocalizations.of(context).translate('shared','close')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -518,7 +519,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                 FlatButton(
                   onPressed: () {},
                   child: Text(
-                    'Add Requests',
+                    AppLocalizations.of(context).translate('projects','add_requests'),
                     style:
                         (TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                   ),
@@ -574,7 +575,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
     var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
     navigateToWebView(
       aboutMode: AboutMode(
-          title: "Requests Help", urlToHit: dynamicLinks['requestsInfoLink']),
+          title: AppLocalizations.of(context).translate('projects','requests_help'), urlToHit: dynamicLinks['requestsInfoLink']),
       context: context,
     );
   }
@@ -623,7 +624,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
       builder: (BuildContext context,
           AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
         if (requestListSnapshot.hasError) {
-          return new Text('Error: ${requestListSnapshot.error}');
+          return new Text('${AppLocalizations.of(context).translate('shared','error')}: ${requestListSnapshot.error}');
         }
         switch (requestListSnapshot.connectionState) {
           case ConnectionState.waiting:
@@ -645,10 +646,10 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                       children: <TextSpan>[
                         TextSpan(
                           style: TextStyle(color: Colors.grey, fontSize: 14),
-                          text: 'No requests available.Try ',
+                          text: AppLocalizations.of(context).translate('projects','no_requests_a'),
                         ),
                         TextSpan(
-                            text: 'creating one',
+                            text: AppLocalizations.of(context).translate('projects','createing_one'),
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                             ),
@@ -682,7 +683,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                             model: requestModelList.elementAt(index),
                             loggedintimezone: widget.userModel.timezone,
                             mContext: context,
-                            address: "Fetching location",
+                            address: AppLocalizations.of(context).translate('projects','fetching_loc'),
                           );
                         default:
                           return getProjectRequestWidget(
@@ -890,15 +891,15 @@ class ProjectRequestListState extends State<ProjectRequestList> {
       height: 75,
       width: MediaQuery.of(context).size.width,
       alignment: Alignment.center,
-      color: Color.fromRGBO(250, 231, 53, 0.2),
+      color: Colors.black12,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Row(
             children: <Widget>[
-              setTitle(num: '${totalRequests ?? ""}', title: 'Requests'),
-              setTitle(num: '${pendingRequest ?? ""}', title: 'Pending'),
-              setTitle(num: '${completedRequest ?? ""}', title: 'Completed'),
+              setTitle(num: '${totalRequests ?? ""}', title: AppLocalizations.of(context).translate('projects','requests_ti')),
+              setTitle(num: '${pendingRequest ?? ""}', title: AppLocalizations.of(context).translate('projects','pending_ti')),
+              setTitle(num: '${completedRequest ?? ""}', title: AppLocalizations.of(context).translate('projects','completed')),
             ],
           ),
         ],
@@ -930,7 +931,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                 .loggedInUser
                 .blockedBy
                 .contains(request.sevaUserId)
-        ? "Filtering blocked content"
+        ? AppLocalizations.of(context).translate('projects','filtering_blocked')
         : filteredList.add(request));
 
     return filteredList;

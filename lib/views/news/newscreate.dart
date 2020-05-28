@@ -321,7 +321,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     }
                   },
                   child: Text(
-                    AppLocalizations.of(context).translate('shared','create_button'),
+                    AppLocalizations.of(context).translate('create_feed','create_button'),
                     style: Theme.of(context).primaryTextTheme.button,
                   ),
                 ),

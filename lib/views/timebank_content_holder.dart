@@ -783,16 +783,6 @@ class DiscussionListState extends State<DiscussionList> {
 //    );
 //  }
 
-  final Map<int, Widget> logoWidgets = const <int, Widget>{
-    0: Text(
-      'All',
-      style: TextStyle(fontSize: 10.0),
-    ),
-    1: Text(
-      'Near Me',
-      style: TextStyle(fontSize: 10.0),
-    ),
-  };
   List<NewsModel> filterPinnedNews(
       List<NewsModel> newsList, BuildContext context) {
     List<NewsModel> filteredNewsList = [];

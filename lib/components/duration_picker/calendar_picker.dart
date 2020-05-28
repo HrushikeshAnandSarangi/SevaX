@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 
 import 'calendar_widget.dart';
 import 'date_time_selector_widget.dart';
@@ -64,7 +65,7 @@ class CalendarPickerState extends State<CalendarPicker> {
             children: <Widget>[
               Expanded(
                 child: DateTimeSelector(
-                  title: 'Start',
+                  title: AppLocalizations.of(context).translate('create_request','start'),
                   onPressed: () {
                     setState(() => {
                     selectionType = SelectionType.START_DATE});
@@ -76,7 +77,7 @@ class CalendarPickerState extends State<CalendarPicker> {
               ),
               Expanded(
                 child: DateTimeSelector(
-                  title: 'End',
+                  title: AppLocalizations.of(context).translate('create_request','end'),
                   onPressed: () {
                     setState(() => {selectionType = SelectionType.END_DATE});
                     log("end date : $endDate");
@@ -113,7 +114,7 @@ class CalendarPickerState extends State<CalendarPicker> {
                   padding: EdgeInsets.fromLTRB(16, 8, 8, 8),
                   color: Color(0xfff2f2f2),
                   child: Text(
-                    'Time',
+                    AppLocalizations.of(context).translate('create_request','time'),
                     style: TextStyle(
                         fontFamily: 'Europa',
                         fontSize: 14,
@@ -159,7 +160,7 @@ class CalendarPickerState extends State<CalendarPicker> {
             } else {
               Navigator.pop(context, [startDate, endDate]);
             }
-          }, 'Done'),
+          }, AppLocalizations.of(context).translate('create_request','done')),
         ],
       ),
     );
@@ -169,13 +170,13 @@ class CalendarPickerState extends State<CalendarPicker> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Date Selection issue"),
+          title: new Text(AppLocalizations.of(context).translate('create_request','date_selection_issue')),
           content: Container(
-            child: Text('End Date cannot be before Start Date '),
+            child: Text(AppLocalizations.of(context).translate('create_request','end_date_start_date')),
           ),
           actions: <Widget>[
             new FlatButton(
-              child: new Text("Close"),
+              child: new Text(AppLocalizations.of(context).translate('create_request','close')),
               onPressed: () {
                 Navigator.of(context).pop();
               },

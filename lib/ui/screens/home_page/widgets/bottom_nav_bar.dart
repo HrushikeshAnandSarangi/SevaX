@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/nav_bar_model.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -66,35 +67,35 @@ class CustomBottomNavigationBar extends StatelessWidget {
           items: <CustomNavigationItem>[
             CustomNavigationItem(
               primaryIcon: Icons.explore,
-              title: 'Explore',
+              title: AppLocalizations.of(context).translate('tabs','explore'),
               isSelected: selected == 0,
             ),
             CustomNavigationItem(
               key: UniqueKey(),
               primaryIcon: Icons.notifications,
               secondaryIcon: Icons.notifications_none,
-              title: 'Notifications',
+              title: AppLocalizations.of(context).translate('tabs','notifications'),
               isSelected: selected == 1,
               showBadge: notificationCount > 0,
               count: notificationCount.toString(),
             ),
             CustomNavigationItem(
               primaryIcon: Icons.home,
-              title: 'Home',
+              title: AppLocalizations.of(context).translate('tabs','home'),
               isSelected: selected == 2,
             ),
             CustomNavigationItem(
               key: UniqueKey(),
               primaryIcon: Icons.chat_bubble,
               secondaryIcon: Icons.chat_bubble_outline,
-              title: 'Messages',
+              title: AppLocalizations.of(context).translate('tabs','messages'),
               isSelected: selected == 3,
               showBadge: chatCount > 0,
               count: chatCount.toString(),
             ),
             CustomNavigationItem(
               primaryIcon: Icons.settings,
-              title: 'Profile',
+              title: AppLocalizations.of(context).translate('tabs','profile'),
               isSelected: selected == 4,
             ),
           ],

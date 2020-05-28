@@ -185,7 +185,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         );
       },
       child: Text(
-        "Delete Timebank",
+        AppLocalizations.of(context).translate('manage','delete_timebank'),
         textAlign: TextAlign.left,
         style: TextStyle(
           fontWeight: FontWeight.bold,

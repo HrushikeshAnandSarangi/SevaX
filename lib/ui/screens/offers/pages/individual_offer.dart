@@ -1,5 +1,6 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
@@ -52,7 +53,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
       appBar: widget.offerModel != null
           ? AppBar(
               title: Text(
-                "Edit",
+                  AppLocalizations.of(context).translate('create_offer','edit'),
                 style: TextStyle(fontSize: 18),
               ),
             )
@@ -74,8 +75,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       SnackBar(
                         content: Text(
                           widget.offerModel == null
-                              ? 'Creating Offer'
-                              : 'Updating offer',
+                              ? AppLocalizations.of(context).translate('create_offer','creating')
+                              : AppLocalizations.of(context).translate('create_offer','updating'),
                         ),
                       ),
                     );
@@ -89,8 +90,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       SnackBar(
                         content: Text(
                           widget.offerModel == null
-                              ? 'There was error creating your offer, Please try again.'
-                              : 'There was error updating offer, Please try again.',
+                              ? AppLocalizations.of(context).translate('create_offer','error_creating')
+                              : AppLocalizations.of(context).translate('create_offer','error_updating'),
                         ),
                       ),
                     );
@@ -117,9 +118,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: "Title*",
+                                heading: "${AppLocalizations.of(context).translate('create_offer','title_title')}*",
                                 onChanged: _bloc.onTitleChanged,
-                                hint: "Ex babysitting..",
+                                hint: "${AppLocalizations.of(context).translate('create_offer','baby_sitting')}..",
                                 maxLength: null,
                                 error: snapshot.error,
                               );
@@ -137,9 +138,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: "Offer description*",
+                                heading: "${AppLocalizations.of(context).translate('create_offer','offer_desc')}*",
                                 onChanged: _bloc.onOfferDescriptionChanged,
-                                hint: "Your offer and any #hashtags",
+                                hint: AppLocalizations.of(context).translate('create_offer','offer_desc_hash'),
                                 maxLength: 500,
                                 error: snapshot.error,
                               );
@@ -156,9 +157,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: "Availability",
+                                heading: AppLocalizations.of(context).translate('create_offer','availablity'),
                                 onChanged: _bloc.onAvailabilityChanged,
-                                hint: "Describe my availability",
+                                hint: AppLocalizations.of(context).translate('create_offer','availablity_desc'),
                                 maxLength: 100,
                                 error: snapshot.error,
                               );
@@ -195,9 +196,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                       _scaffoldKey.currentState.showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                              "Please check your internet connection."),
+                                            AppLocalizations.of(context).translate('shared','check_internet')),
                                           action: SnackBarAction(
-                                            label: 'Dismiss',
+                                            label: AppLocalizations.of(context).translate('shared','dismiss'),
                                             onPressed: () => _scaffoldKey
                                                 .currentState
                                                 .hideCurrentSnackBar(),
@@ -223,8 +224,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                     children: <Widget>[
                                       Text(
                                         widget.offerModel == null
-                                            ? "Creating Offer"
-                                            : "Updating offer",
+                                            ? AppLocalizations.of(context).translate('create_offer','creating')
+                                            : AppLocalizations.of(context).translate('create_offer','updating'),
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       SizedBox(width: 8),
@@ -243,8 +244,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   )
                                 : Text(
                                     widget.offerModel == null
-                                        ? "Create Offer"
-                                        : "Update offer",
+                                        ? AppLocalizations.of(context).translate('create_offer','title')
+                                        : AppLocalizations.of(context).translate('create_offer','title_update'),
                                     style: TextStyle(fontSize: 16),
                                   ),
                           ),

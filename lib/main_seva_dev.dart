@@ -86,7 +86,6 @@ class MainApplication extends StatelessWidget {
     return ChangeNotifierProvider<AppLanguage>(
         builder: (_) => appLanguage,
     child: Consumer<AppLanguage>(builder: (context, model, child) {
-      print(model);
       return AuthProvider(
         auth: Auth(),
         child: MaterialApp(
@@ -94,12 +93,14 @@ class MainApplication extends StatelessWidget {
           supportedLocales: [
             Locale('en', 'US'),
             Locale('pt', 'PT'),
+            Locale('fr', 'FR'),
             Locale('es', 'ES'),
           ],
           localizationsDelegates: [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
           ],
           debugShowCheckedModeBanner: false,
           theme: FlavorConfig.values.theme,

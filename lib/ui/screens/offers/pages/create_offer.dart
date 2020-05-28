@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/individual_offer.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/one_to_many_offer.dart';
 
@@ -20,7 +21,7 @@ class _CreateOfferState extends State<CreateOffer> {
         // iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          'Create Offer',
+          AppLocalizations.of(context).translate('create_offer','title'),
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -55,7 +56,16 @@ class _CreateOfferState extends State<CreateOffer> {
       width: double.infinity,
       child: CupertinoSegmentedControl<int>(
         selectedColor: Theme.of(context).primaryColor,
-        children: logoWidgets,
+        children: {
+          0: Text(
+            AppLocalizations.of(context).translate('shared','individual_offer'),
+            style: TextStyle(fontSize: 12.0),
+          ),
+          1: Text(
+            AppLocalizations.of(context).translate('shared','one_to_many'),
+            style: TextStyle(fontSize: 12.0),
+          ),
+        },
         borderColor: Colors.grey,
 
         padding: EdgeInsets.only(left: 0.0, right: 0),
@@ -72,15 +82,4 @@ class _CreateOfferState extends State<CreateOffer> {
       ),
     );
   }
-
-  final Map<int, Widget> logoWidgets = const <int, Widget>{
-    0: Text(
-      'Individual offer',
-      style: TextStyle(fontSize: 15.0),
-    ),
-    1: Text(
-      'One to many',
-      style: TextStyle(fontSize: 15.0),
-    ),
-  };
 }

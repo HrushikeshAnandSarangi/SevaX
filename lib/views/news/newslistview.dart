@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -163,7 +164,16 @@ class NewsListState extends State<NewsList> {
             Container(
               width: 105,
               child: CupertinoSegmentedControl<int>(
-                children: logoWidgets,
+                children: {
+                  0: Text(
+                    AppLocalizations.of(context).translate('shared','all'),
+                    style: TextStyle(fontSize: 10.0),
+                  ),
+                  1: Text(
+                    AppLocalizations.of(context).translate('shared','near_me'),
+                    style: TextStyle(fontSize: 10.0),
+                  ),
+                },
                 padding: EdgeInsets.only(left: 5.0, right: 5.0),
                 selectedColor: Color.fromARGB(255, 4, 47, 110),
                 groupValue: sharedValue,
@@ -382,17 +392,6 @@ class NewsListState extends State<NewsList> {
       ],
     );
   }
-
-  final Map<int, Widget> logoWidgets = const <int, Widget>{
-    0: Text(
-      'All',
-      style: TextStyle(fontSize: 10.0),
-    ),
-    1: Text(
-      'Near Me',
-      style: TextStyle(fontSize: 10.0),
-    ),
-  };
 
   List<NewsModel> filterBlockedContent(
       List<NewsModel> newsList, BuildContext context) {

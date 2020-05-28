@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -75,8 +76,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       appBar: AppBar(
         title: Text(
           FlavorConfig.values.timebankName == "Yang 2020"
-              ? "Yang Gang Codes"
-              : "Invite Members",
+              ? AppLocalizations.of(context).translate('members','yang_yang_codes')
+              : AppLocalizations.of(context).translate('members','invite_members'),
           style: TextStyle(
             fontSize: 18,
           ),
@@ -139,7 +140,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                     borderRadius: new BorderRadius.circular(25.7)),
-                hintText: 'Invite members via email',
+                hintText: AppLocalizations.of(context).translate('members','invite_via_email'),
                 hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
           ),
         ),
@@ -148,7 +149,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           child: Container(
             height: 25,
             child: Text(
-              "Members",
+              AppLocalizations.of(context).translate('members','members'),
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
@@ -166,7 +167,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     child: Row(
                       children: <Widget>[
                         Text(
-                          "Invite via code",
+                          AppLocalizations.of(context).translate('members','invite_via_code'),
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -197,7 +198,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         ),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text('Please try again later');
+            return Text(AppLocalizations.of(context).translate('members','please_try_later'));
           }
           if (!snapshot.hasData) {
             return Center(
@@ -224,7 +225,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               padding: const EdgeInsets.all(16.0),
               child: Center(
                 child: searchTextController.text.length > 1
-                    ? Text("${searchTextController.text} not found")
+                    ? Text("${searchTextController.text} ${AppLocalizations.of(context).translate('members','not_found')}")
                     : Container(),
               ),
             );
@@ -320,7 +321,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }) {
     return RaisedButton(
       onPressed: () async {
-        inivitationManager.showProgress(title: "Sending invitation...");
+        inivitationManager.showProgress(title: AppLocalizations.of(context).translate('members','sending_invitation'));
         await inivitationManager.inviteMemberToTimebankViaLink(
           invitation: InvitationViaLink.createInvitation(
             timebankTitle: timebankModel.name,
@@ -333,7 +334,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         inivitationManager.hideProgress();
         setState(() {});
       },
-      child: Text('Invite'),
+      child: Text(AppLocalizations.of(context).translate('members','invite')),
       color: Colors.indigo,
       textColor: Colors.white,
       shape: StadiumBorder(),
@@ -345,7 +346,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Widget resendInvitation({InvitationViaLink invitation}) {
     return RaisedButton(
       onPressed: () async {
-        inivitationManager.showProgress(title: "Sending invitation...");
+        inivitationManager.showProgress(title: AppLocalizations.of(context).translate('members','sending_invitation'));
         await inivitationManager.resendInvitationToMember(
           invitation: invitation,
         );
@@ -354,7 +355,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         setState(() {});
       },
       child: Text(
-        'Resend Invitation',
+        AppLocalizations.of(context).translate('members','resend_invite'),
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 10,
@@ -369,7 +370,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Widget gettigStatus() {
     return RaisedButton(
       onPressed: null,
-      child: Text('...'),
+      child: Text(AppLocalizations.of(context).translate('members','dots')),
       color: Colors.indigo,
       textColor: Colors.white,
       shape: StadiumBorder(),
@@ -431,7 +432,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                 });
                               }
                             : null,
-                        child: Text(isJoined ? "Joined" : "Add"),
+                        child: Text(isJoined ? AppLocalizations.of(context).translate('members','joined') : AppLocalizations.of(context).translate('members','add')),
                         color: FlavorConfig.values.theme.primaryColor,
                         textColor: Colors.white,
                         shape: StadiumBorder(),
@@ -466,7 +467,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Text('No codes generated yet.'),
+                child: Text(AppLocalizations.of(context).translate('members','no_codes')),
               ),
             );
           }
@@ -479,15 +480,15 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
                   TimebankCodeModel timebankCode = codeList.elementAt(index);
                   if (timebankCode.usersOnBoarded == null) {
-                    length = "Not yet redeemed";
+                    length = AppLocalizations.of(context).translate('members','no_yet_redeemed');
                   } else {
                     if (timebankCode.usersOnBoarded.length == 1) {
-                      length = "Redeemed by 1 user";
+                      length = AppLocalizations.of(context).translate('members','by_1');
                     } else if (timebankCode.usersOnBoarded.length > 1) {
                       length =
-                          "Redeemed by ${timebankCode.usersOnBoarded.length} users";
+                          "${AppLocalizations.of(context).translate('members','by_n')} ${timebankCode.usersOnBoarded.length} ${AppLocalizations.of(context).translate('members','users')}";
                     } else {
-                      length = "Not yet redeemed";
+                      length = AppLocalizations.of(context).translate('members','no_yet_redeemed');
                     }
                   }
                   return GestureDetector(
@@ -500,16 +501,16 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(FlavorConfig.values.timebankName == "Yang 2020"
-                                ? "Yang Gang Code : " +
+                                ? AppLocalizations.of(context).translate('members','yang_code') +
                                     timebankCode.timebankCode
-                                : "Timebank code : " +
+                                : AppLocalizations.of(context).translate('members','timebank_code') +
                                     timebankCode.timebankCode),
                             Text(length),
                             Text(
                               DateTime.now().millisecondsSinceEpoch >
                                       timebankCode.validUpto
-                                  ? "Expired"
-                                  : "Active",
+                                  ? AppLocalizations.of(context).translate('members','expired')
+                                  : AppLocalizations.of(context).translate('members','active'),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -521,7 +522,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                   child: Container(
                                     margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
                                     child: Text(
-                                      'Share code',
+                                      AppLocalizations.of(context).translate('members','share_code'),
                                       style: TextStyle(color: Colors.blue),
                                     ),
                                   ),
@@ -554,7 +555,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
   String shareText(TimebankCodeModel timebankCode) {
     var text =
-        "${SevaCore.of(context).loggedInUser.fullname} has invited you to join \"${timebankModel.name}\" Timebank. Timebanks are communities that allow you to volunteer and also receive time credits towards getting things done for you. Use the code \"${timebankCode.timebankCode}\" when prompted to join this Timebank. Please download the app from the links provided at https://sevaxapp.com";
+        "${SevaCore.of(context).loggedInUser.fullname} ${AppLocalizations.of(context).translate('members','invited_you')} \"${timebankModel.name}\" ${AppLocalizations.of(context).translate('members','invite_text')} \"${timebankCode.timebankCode}\" ${AppLocalizations.of(context).translate('members','prompt_text')}";
     return text;
   }
 
@@ -591,10 +592,10 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           false, // dialog is dismissible with a tap on the barrier
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Code generated"),
+          title: Text(AppLocalizations.of(context).translate('members','code_generated')),
           content: new Row(
             children: <Widget>[
-              Text(timebankCode + " is your code."),
+              Text(timebankCode + AppLocalizations.of(context).translate('members','is_code')),
             ],
           ),
           actions: <Widget>[
@@ -603,7 +604,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
               child: Text(
-                'Publish code',
+                AppLocalizations.of(context).translate('members',AppLocalizations.of(context).translate('members','publish_code')),
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                 ),
@@ -623,7 +624,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             ),
             FlatButton(
               child: Text(
-                'Cancel',
+                AppLocalizations.of(context).translate('shared','cancel'),
                 style: TextStyle(color: Colors.red, fontSize: dialogButtonSize),
               ),
               onPressed: () {

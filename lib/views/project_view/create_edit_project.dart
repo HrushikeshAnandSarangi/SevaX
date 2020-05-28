@@ -145,7 +145,16 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             width: double.infinity,
             child: CupertinoSegmentedControl<int>(
               selectedColor: Theme.of(context).primaryColor,
-              children: logoWidgets,
+              children: {
+                0: Text(
+                  AppLocalizations.of(context).translate('shared','timebank_project'),
+                  style: TextStyle(fontSize: 10.0),
+                ),
+                1: Text(
+                  AppLocalizations.of(context).translate('shared','personal_project'),
+                  style: TextStyle(fontSize: 10.0),
+                ),
+              },
               borderColor: Colors.grey,
               padding: EdgeInsets.only(left: 5.0, right: 5.0),
               groupValue: sharedValue,
@@ -175,16 +184,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     );
   }
 
-  final Map<int, Widget> logoWidgets =  <int, Widget>{
-    0: Text(
-      'Timebank Project',
-      style: TextStyle(fontSize: 15.0),
-    ),
-    1: Text(
-      'Personal Project',
-      style: TextStyle(fontSize: 15.0),
-    ),
-  };
   Widget get createProjectForm {
     return SingleChildScrollView(
       controller: _controller,
@@ -377,7 +376,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 
               validator: (value) {
                 if (value.isEmpty) {
-                  return AppLocalizations.of(context).translate('projects','phone_empty_err');
+                  return null;
                 } else {
                   projectModel.phoneNumber = '+' + value;
                 }

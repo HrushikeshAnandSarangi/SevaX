@@ -9,6 +9,7 @@ import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -102,8 +103,7 @@ class EditGroupFormState extends State<EditGroupForm> {
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
-  String memberAssignment = "+ Add Members";
-
+  String memberAssignment;
   void updateGroupDetails() {
     widget.timebankModel.photoUrl =
         globals.timebankAvatarURL ?? widget.timebankModel.photoUrl;
@@ -122,6 +122,7 @@ class EditGroupFormState extends State<EditGroupForm> {
 
   @override
   Widget build(BuildContext context) {
+    memberAssignment = "+ ${AppLocalizations.of(context).translate('edit_group','add_members')}";
     return Form(
       key: _formKey,
       child: Container(
@@ -152,7 +153,7 @@ class EditGroupFormState extends State<EditGroupForm> {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    'Group logo',
+                    AppLocalizations.of(context).translate('edit_group','group_logo'),
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.grey,
@@ -162,42 +163,42 @@ class EditGroupFormState extends State<EditGroupForm> {
               ),
             ),
           ),
-          headingText('Name your group', true),
+          headingText(AppLocalizations.of(context).translate('edit_group','name'), true),
           TextFormField(
             textInputAction: TextInputAction.done,
             controller: searchTextController,
             decoration: InputDecoration(
               errorText: errTxt,
-              hintText: "Ex: Pets-in-town, Citizen collab",
+              hintText: AppLocalizations.of(context).translate('edit_group','hint_text'),
             ),
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             validator: (value) {
               if (value.isEmpty) {
-                return 'Please enter some text';
+                return AppLocalizations.of(context).translate('edit_group','enter_text');
               }
               widget.timebankModel.name = value;
             },
           ),
-          headingText('About', true),
+          headingText(AppLocalizations.of(context).translate('edit_group','about'), true),
           TextFormField(
             initialValue: widget.timebankModel.missionStatement ?? "",
             decoration: InputDecoration(
-              hintText: 'Ex: A bit more about your group',
+              hintText: AppLocalizations.of(context).translate('edit_group','a_bit_more'),
             ),
             textInputAction: TextInputAction.done,
             keyboardType: TextInputType.multiline,
             maxLines: null,
             validator: (value) {
               if (value.isEmpty) {
-                return 'Please enter some text';
+                return AppLocalizations.of(context).translate('edit_group','enter_text');
               }
               widget.timebankModel.missionStatement = value;
             },
           ),
           Row(
             children: <Widget>[
-              headingText('Private accedental delete', true),
+              headingText(AppLocalizations.of(context).translate('edit_group','private_accidental'), true),
               Padding(
                 padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
                 child: Checkbox(
@@ -215,7 +216,7 @@ class EditGroupFormState extends State<EditGroupForm> {
           ),
           Row(
             children: <Widget>[
-              headingText('Private Group', true),
+              headingText(AppLocalizations.of(context).translate('edit_group','private'), true),
               Padding(
                 padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
                 child: infoButton(
@@ -240,7 +241,7 @@ class EditGroupFormState extends State<EditGroupForm> {
               ),
             ],
           ),
-          headingText('Is this pin at a right place?', false),
+          headingText(AppLocalizations.of(context).translate('edit_group','is_pin_right'), false),
           Container(
             margin: EdgeInsets.all(20),
             child: Center(
@@ -270,7 +271,7 @@ class EditGroupFormState extends State<EditGroupForm> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
-                    'Update',
+                    AppLocalizations.of(context).translate('edit_group','update'),
                     style: Theme.of(context).primaryTextTheme.button,
                   ),
                 ),
@@ -558,7 +559,7 @@ class EditGroupFormState extends State<EditGroupForm> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  'OK',
+                  AppLocalizations.of(context).translate('edit_group','ok'),
                   style: TextStyle(
                     fontSize: 16,
                   ),
