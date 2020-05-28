@@ -9,10 +9,15 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 class MessageBloc extends BlocBase {
   final _personalMessage = BehaviorSubject<List<ChatModel>>();
   final _adminMessage = BehaviorSubject<List<AdminMessageWrapperModel>>();
+  final _personalMessageCount = BehaviorSubject<int>();
+  final _adminMessageCount = BehaviorSubject<int>();
 
   Stream<List<ChatModel>> get personalMessage => _personalMessage.stream;
   Stream<List<AdminMessageWrapperModel>> get adminMessage =>
       _adminMessage.stream;
+
+  Stream<int> get messageCount => CombineLatestStream.combine2(
+      _personalMessageCount, _adminMessageCount, (int p, int a) => p + a);
 
   Future<void> fetchAllMessage(String communityId, String userId) async {
     log("$communityId");
@@ -23,13 +28,19 @@ class MessageBloc extends BlocBase {
         .snapshots()
         .listen((QuerySnapshot querySnapshot) {
       List<ChatModel> chats = [];
+      int unreadCount = 0;
       log(querySnapshot.documents.length.toString());
       querySnapshot.documents.forEach((DocumentSnapshot snapshot) {
         ChatModel chat = ChatModel.fromMap(snapshot.data);
+        if (chat.unreadStatus.containsKey(userId) &&
+            chat.unreadStatus[userId] > 0) {
+          unreadCount++;
+        }
         chats.add(chat);
       });
-
       if (!_personalMessage.isClosed) _personalMessage.add(chats);
+      if (!_personalMessageCount.isClosed)
+        _personalMessageCount.add(unreadCount);
     });
 
     Firestore.instance
@@ -40,9 +51,12 @@ class MessageBloc extends BlocBase {
         .snapshots()
         .listen((QuerySnapshot query) {
       List<AdminMessageWrapperModel> temp = [];
+      int unreadCount = 0;
       query.documents.forEach((DocumentSnapshot snapshot) {
         TimebankModel model = TimebankModel(snapshot.data);
-        log("${model.unreadMessageCount} message ");
+        if (model.unreadMessageCount > 0) {
+          unreadCount++;
+        }
         temp.add(
           AdminMessageWrapperModel(
             id: model.id,
@@ -53,7 +67,9 @@ class MessageBloc extends BlocBase {
           ),
         );
       });
-      _adminMessage.add(temp);
+      if (!_adminMessage.isClosed) _adminMessage.add(temp);
+      print("unread count ==> $unreadCount");
+      if (!_adminMessageCount.isClosed) _adminMessageCount.add(unreadCount);
     });
   }
 
@@ -61,6 +77,8 @@ class MessageBloc extends BlocBase {
   void dispose() {
     _personalMessage.close();
     _adminMessage.close();
+    _personalMessageCount.close();
+    _adminMessageCount.close();
   }
 }
 
