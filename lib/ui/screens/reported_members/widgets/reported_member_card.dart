@@ -10,6 +10,8 @@ import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ReportedMemberCard extends StatelessWidget {
   final ReportedMembersModel model;
@@ -27,7 +29,7 @@ class ReportedMemberCard extends StatelessWidget {
           ReportedMemberInfo.route(
             model: model,
             isFromTimebank: isFromTimebank,
-            removeMember: () => removeMember(),
+            removeMember: () => isFromTimebank?removeMemberTimebankFn(context):removeMemberGroupFn(context),
             messageMember: () => messageMember(
               context: context,
               userEmail: model.reportedUserEmail,
@@ -117,7 +119,7 @@ class ReportedMemberCard extends StatelessWidget {
                   width: 22,
                   height: 22,
                 ),
-                onTap:isFromTimebank? removeMemberGroupFn:removeMemberTimebankFn,
+                onTap:()=> isFromTimebank? removeMemberGroupFn(context):removeMemberTimebankFn(context),
               ),
             ],
           ),
@@ -167,33 +169,138 @@ class ReportedMemberCard extends StatelessWidget {
     );
   }
 
-  void removeMemberGroupFn() async {
+  void removeMemberGroupFn(BuildContext context) async {
     log("remove member");
-    var responseData = await removeMemberFromGroup();
+    Map<String, dynamic> responseData = await removeMemberFromGroup(sevauserid:model.reportedId, groupId: timebankId);
     if(responseData['deletable']==true){
-
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          // return object of type Dialog
+          return AlertDialog(
+            content: new Text("User is successfully removed from the group"),
+            actions: <Widget>[
+              // usually buttons at the bottom of the dialog
+              new FlatButton(
+                child: new Text("Close"),
+                textColor: Colors.red,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     }else{
       if(responseData['softDeleteCheck']==false && responseData['groupOwnershipCheck']==false){
-
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            // return object of type Dialog
+            return AlertDialog(
+              title: new Text("User cannot be deleted from this group"),
+              content: new Text("User has \n"
+                  "${responseData['pendingProjects']['unfinishedProjects']} pending projects,\n"
+                  "${responseData['pendingRequests']['unfinishedRequests']} pending requests,\n"
+                  "${responseData['pendingOffers']['unfinishedOffers']} pending offers.\n "
+                  "Please clear the transactions and try again. "),
+              actions: <Widget>[
+                // usually buttons at the bottom of the dialog
+                new FlatButton(
+                  child: new Text("Close"),
+                  textColor: Colors.red,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
       }
       else if(responseData['softDeleteCheck']==true && responseData['groupOwnershipCheck']==false){
-
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            // return object of type Dialog
+            return AlertDialog(
+              content: new Text("Cannot remove yourself from the group. Instead, please try deleting the group."),
+              actions: <Widget>[
+                // usually buttons at the bottom of the dialog
+                new FlatButton(
+                  child: new Text("Close"),
+                  textColor: Colors.red,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
       }
     }
   }
 
-  void removeMemberTimebankFn() async {
+  void removeMemberTimebankFn(BuildContext context) async {
     log("remove member");
-    var responseData = await removeMemberFromTimebank();
+    Map<String, dynamic> responseData = await removeMemberFromTimebank(sevauserid:model.reportedId, timebankId: timebankId);
     if(responseData['deletable']==true){
-
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          // return object of type Dialog
+          return AlertDialog(
+            content: new Text("User is successfully removed from the timebank"),
+            actions: <Widget>[
+              // usually buttons at the bottom of the dialog
+              new FlatButton(
+                child: new Text("Close"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     }else{
       if(responseData['softDeleteCheck']==false && responseData['groupOwnershipCheck']==false){
-
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            // return object of type Dialog
+            return AlertDialog(
+              title: new Text("User cannot be deleted from this timebank"),
+              content: new Text("User has \n"
+                  "${responseData['pendingProjects']['unfinishedProjects']} pending projects,\n"
+                  "${responseData['pendingRequests']['unfinishedRequests']} pending requests,\n"
+                  "${responseData['pendingOffers']['unfinishedOffers']} pending offers.\n "
+                  "Please clear the transactions and try again. "),
+              actions: <Widget>[
+                // usually buttons at the bottom of the dialog
+                new FlatButton(
+                  child: new Text("Close"),
+                  textColor: Colors.red,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
       }
       else if(responseData['softDeleteCheck']==true && responseData['groupOwnershipCheck']==false){
-
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TransferOwnerShipView(timebankId: timebankId, responseData: responseData,reportedMemberModel: model,),
+          ),
+        );
       }
     }
   }
+
 }
