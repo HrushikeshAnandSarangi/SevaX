@@ -24,7 +24,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
   TextEditingController _textEditingController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   var groupMembersList = List<String>();
-  List<Map<String, dynamic>> ownerGroupsArr;
+  var ownerGroupsArr;
   UserModel selectedNewOwner = null;
   var allItems = List<String>();
   var admins, coordinators, members;
@@ -65,7 +65,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
           icon: Icon(Icons.arrow_back_ios),
         ),
         title: Text(
-          'Delete User',
+          'Remove User',
           style: TextStyle(
               fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Europa'),
         ),
@@ -96,11 +96,14 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                   fontFamily: 'Europa',
                 ),
               ),
-              searchUser(),
               SizedBox(
                 height: 15,
               ),
               getDataList(ownerGroupsArr),
+              SizedBox(
+                height: 15,
+              ),
+              searchUser(),
               SizedBox(
                 height: 15,
               ),
@@ -149,13 +152,13 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
             Navigator.pop(context);
           },
           child: Text(
-            "CANCEL",
+            "Cancel",
             style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa'),
           ),
           textColor: Colors.grey,
         ),
         FlatButton(
-          child: Text("DELETE",
+          child: Text("Remove",
               style:
               TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa')),
           textColor: FlavorConfig.values.theme.primaryColor,
@@ -166,30 +169,42 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                   futures.add(Firestore.instance
                       .collection('users')
                       .document(group['id'])
-                      .updateData({"creator_id":tbmodel.creatorId}))
+                      .updateData({"creator_id":tbmodel.creatorId, "email_id":tbmodel.emailId}))
+
               );
               await Future.wait(futures);
               Map<String, dynamic> responseObj = await removeMemberFromTimebank(sevauserid: widget.reportedMemberModel.reportedId, timebankId: tbmodel.id);
               if(responseObj['deletable']==true){
+                print("else block---done transferring and removing the user from timebank");
                 getSuccessDialog(context);
+                Navigator.of(context).pop();
               }else{
+                print("else error block");
                 getErrorDialog(context);
+                Navigator.of(context).pop();
               }
 
             }else{
+
               print("new owner creator id is ${selectedNewOwner.sevaUserID}");
-              ownerGroupsArr.forEach((group)=>
-                  futures.add(Firestore.instance
-                      .collection('users')
-                      .document(group['id'])
-                      .updateData({"creator_id":selectedNewOwner.sevaUserID}))
-              );
+              ownerGroupsArr.forEach((group){
+                print("groupppppp=== ${group['id']}");
+                futures.add(Firestore.instance
+                .collection('timebanknew')
+                .document(group['id'])
+                .updateData({"creator_id":selectedNewOwner.sevaUserID, "email_id":selectedNewOwner.email}));
+              });
               await Future.wait(futures);
               Map<String, dynamic> responseObj = await removeMemberFromTimebank(sevauserid: widget.reportedMemberModel.reportedId, timebankId: tbmodel.id);
+              print("===response data of removal is${responseObj.toString()}===");
               if(responseObj['deletable']==true){
+                print("else block---done transferring and removing the user from timebank");
                 getSuccessDialog(context);
+                Navigator.of(context).pop();
               }else{
+                print("else error block");
                 getErrorDialog(context);
+                Navigator.of(context).pop();
               }
             }
           },
@@ -310,7 +325,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
         });
   }
 
-    getSuccessDialog(context) {
+   getSuccessDialog(BuildContext context) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -358,7 +373,7 @@ Widget timeBankOrGroupCard(ownerGroupData) {
   return Card(
     elevation: 1,
     child: ListTile(
-      title: Text(ownerGroupData[' name ']),
+      title: Text(ownerGroupData['name']),
     ),
   );
 }

@@ -179,6 +179,9 @@ flutter:
     # card images
     - images/
     - images/card_provider/
+    # report members related images
+    - images/icons/message.png
+    - images/icons/remove_user.png
   fonts:
     - family: Montserrat
       fonts:

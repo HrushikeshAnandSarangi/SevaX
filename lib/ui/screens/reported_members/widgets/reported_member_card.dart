@@ -29,7 +29,7 @@ class ReportedMemberCard extends StatelessWidget {
           ReportedMemberInfo.route(
             model: model,
             isFromTimebank: isFromTimebank,
-            removeMember: () => isFromTimebank?removeMemberTimebankFn(context):removeMemberGroupFn(context),
+            removeMember: () => isFromTimebank ? removeMemberTimebankFn(context) : removeMemberGroupFn(context),
             messageMember: () => messageMember(
               context: context,
               userEmail: model.reportedUserEmail,
@@ -119,7 +119,7 @@ class ReportedMemberCard extends StatelessWidget {
                   width: 22,
                   height: 22,
                 ),
-                onTap:()=> isFromTimebank? removeMemberGroupFn(context):removeMemberTimebankFn(context),
+                onTap:()=> isFromTimebank? removeMemberTimebankFn(context) : removeMemberGroupFn(context),
               ),
             ],
           ),
@@ -244,8 +244,9 @@ class ReportedMemberCard extends StatelessWidget {
   }
 
   void removeMemberTimebankFn(BuildContext context) async {
-    log("remove member");
+    print(model.reportedId+" removing member ongoing "+timebankId);
     Map<String, dynamic> responseData = await removeMemberFromTimebank(sevauserid:model.reportedId, timebankId: timebankId);
+    print("reported members removal response is --- "+responseData['ownerGroupsArr'].toString());
     if(responseData['deletable']==true){
       showDialog(
         context: context,
