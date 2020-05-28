@@ -173,7 +173,7 @@ class _ChatViewState extends State<ChatView> {
   @override
   Widget build(BuildContext context) {
     ParticipantInfo senderInfo = getSenderInfo(
-      SevaCore.of(context).loggedInUser.sevaUserID,
+      widget.senderId,
       widget.chatModel.participantInfo,
     );
 
