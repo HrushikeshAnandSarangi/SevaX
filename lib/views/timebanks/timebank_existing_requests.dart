@@ -45,7 +45,7 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
         .then((onValue) {
       timebankModel = onValue;
     });
-    timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankId);
+    //  timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankId);
   }
 
   @override

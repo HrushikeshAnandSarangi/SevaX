@@ -22,6 +22,7 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -293,7 +294,9 @@ class CreateEditCommunityViewFormState
               return SingleChildScrollView(
               physics: BouncingScrollPhysics(),
               controller: _controller,
-              child: Column(
+              child: FadeAnimation(
+              1.4,
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Padding(
@@ -344,10 +347,10 @@ class CreateEditCommunityViewFormState
                     onChanged: (value) {
                       enteredName = value.replaceAll("[^a-zA-Z0-9_ ]*", "");
 
-                      print(
-                          "name ------ ${enteredName.replaceAll("[^a-zA-Z0-9_ ]*", "")}");
-                      communityModel.name =
-                          value.replaceAll("[^a-zA-Z0-9_ ]*", "");
+                        print(
+                            "name ------ ${enteredName.replaceAll("[^a-zA-Z0-9_ ]*", "")}");
+                        communityModel.name =
+                            value.replaceAll("[^a-zA-Z0-9_ ]*", "");
 
                       timebankModel.name =
                           value.replaceAll("[^a-zA-Z0-9_ ]*", "");
@@ -403,15 +406,15 @@ class CreateEditCommunityViewFormState
                       }
                       snapshot.data.community.updateValueByKey('about', value);
 
-                      snapshot.data.timebank
-                          .updateValueByKey('missionStatement', value);
-                      createEditCommunityBloc.onChange(snapshot.data);
-                      return null;
-                    },
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                  ),
+                        snapshot.data.timebank
+                            .updateValueByKey('missionStatement', value);
+                        createEditCommunityBloc.onChange(snapshot.data);
+                        return null;
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                    ),
 
                   Offstage(
                     offstage: widget.isCreateTimebank,
@@ -600,21 +603,21 @@ class CreateEditCommunityViewFormState
                       onChanged: (LocationDataModel dataModel) {
                         log("received data model ");
 
-                        setState(() {
-                          location = dataModel.geoPoint;
-                          this.selectedAddress = dataModel.location;
-                        });
-                      },
+                          setState(() {
+                            location = dataModel.geoPoint;
+                            this.selectedAddress = dataModel.location;
+                          });
+                        },
+                      ),
                     ),
-                  ),
 
-                  SizedBox(height: 10),
-                  widget.isCreateTimebank
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 0),
-                          child: tappableAddBillingDetails,
-                        )
-                      : Container(),
+                    SizedBox(height: 10),
+                    widget.isCreateTimebank
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 0),
+                            child: tappableAddBillingDetails,
+                          )
+                        : Container(),
 //                  Offstage(
 //                    offstage: !widget.isCreateTimebank,
 //                    child: Padding(
@@ -698,54 +701,54 @@ class CreateEditCommunityViewFormState
                                 } else {
                                   showProgressDialog(AppLocalizations.of(context).translate('createtimebank','progress'));
 
-                                  setState(() {
-                                    this.communityImageError = '';
-                                  });
+                                    setState(() {
+                                      this.communityImageError = '';
+                                    });
 
-                                  // creation of community;
-                                  snapshot.data.UpdateCommunityDetails(
-                                    SevaCore.of(context).loggedInUser,
-                                    globals.timebankAvatarURL,
-                                    location,
-                                  );
-                                  // creation of default timebank;
-                                  snapshot.data.UpdateTimebankDetails(
-                                    SevaCore.of(context).loggedInUser,
-                                    globals.timebankAvatarURL,
-                                    widget,
-                                  );
-                                  // updating the community with default timebank id
-                                  snapshot.data.community.timebanks = [
-                                    snapshot.data.timebank.id
-                                  ].cast<String>();
+                                    // creation of community;
+                                    snapshot.data.UpdateCommunityDetails(
+                                      SevaCore.of(context).loggedInUser,
+                                      globals.timebankAvatarURL,
+                                      location,
+                                    );
+                                    // creation of default timebank;
+                                    snapshot.data.UpdateTimebankDetails(
+                                      SevaCore.of(context).loggedInUser,
+                                      globals.timebankAvatarURL,
+                                      widget,
+                                    );
+                                    // updating the community with default timebank id
+                                    snapshot.data.community.timebanks = [
+                                      snapshot.data.timebank.id
+                                    ].cast<String>();
 
-                                  snapshot.data.community.primary_timebank =
-                                      snapshot.data.timebank.id;
-                                  snapshot.data.community.location = location;
+                                    snapshot.data.community.primary_timebank =
+                                        snapshot.data.timebank.id;
+                                    snapshot.data.community.location = location;
 
                                   await createEditCommunityBloc.createCommunity(
                                     snapshot.data,
                                     SevaCore.of(context).loggedInUser,
                                   );
 
-                                  await Firestore.instance
-                                      .collection("users")
-                                      .document(SevaCore.of(context)
-                                          .loggedInUser
-                                          .email)
-                                      .updateData({
-                                    'communities': FieldValue.arrayUnion(
-                                        [snapshot.data.community.id]),
-                                    'currentCommunity':
-                                        snapshot.data.community.id
-                                  });
-
-                                  setState(() {
-                                    SevaCore.of(context)
+                                    await Firestore.instance
+                                        .collection("users")
+                                        .document(SevaCore.of(context)
                                             .loggedInUser
-                                            .currentCommunity =
-                                        snapshot.data.community.id;
-                                  });
+                                            .email)
+                                        .updateData({
+                                      'communities': FieldValue.arrayUnion(
+                                          [snapshot.data.community.id]),
+                                      'currentCommunity':
+                                          snapshot.data.community.id
+                                    });
+
+                                    setState(() {
+                                      SevaCore.of(context)
+                                              .loggedInUser
+                                              .currentCommunity =
+                                          snapshot.data.community.id;
+                                    });
 
                                   Navigator.pop(dialogContext);
                                   //   _formKey.currentState.reset();
@@ -796,44 +799,45 @@ class CreateEditCommunityViewFormState
                                   globals.timebankAvatarURL;
                             }
 
-                            timebankModel.location = location;
-                            ;
-                            timebankModel.address = selectedAddress;
+                              timebankModel.location = location;
+                              ;
+                              timebankModel.address = selectedAddress;
 
-                            if (selectedUsers != null) {
-                              selectedUsers.forEach((key, user) {
-                                print("Selected member with key $key");
-                                if (timebankModel.members
-                                    .contains(user.sevaUserID)) {
-                                  selectedUsers.remove(user);
-                                }
+                              if (selectedUsers != null) {
+                                selectedUsers.forEach((key, user) {
+                                  print("Selected member with key $key");
+                                  if (timebankModel.members
+                                      .contains(user.sevaUserID)) {
+                                    selectedUsers.remove(user);
+                                  }
+                                });
+                                selectedUsers.forEach((key, user) {
+                                  print("Selected member with key $key");
+                                  members.add(user.sevaUserID);
+                                });
+                              }
+                              if (widget.isCreateTimebank) {
+                                var taxDefaultVal = (json.decode(AppConfig
+                                        .remoteConfig
+                                        .getString('defaultTaxPercentValue')))
+                                    .toDouble();
+                                snapshot.data.community.updateValueByKey(
+                                    'taxPercentage', taxDefaultVal / 100);
+                                communityModel.taxPercentage =
+                                    taxDefaultVal / 100;
+                              }
+
+                              // creation of community;
+
+                              // updating timebank with latest values
+                              await FirestoreManager.updateTimebankDetails(
+                                      timebankModel: timebankModel,
+                                      members: members)
+                                  .then((onValue) {
+                                print("timebank updated");
                               });
-                              selectedUsers.forEach((key, user) {
-                                print("Selected member with key $key");
-                                members.add(user.sevaUserID);
-                              });
-                            }
-                            if (widget.isCreateTimebank) {
-                              var taxDefaultVal = (json.decode(AppConfig
-                                      .remoteConfig
-                                      .getString('defaultTaxPercentValue')))
-                                  .toDouble();
-                              snapshot.data.community.updateValueByKey(
-                                  'taxPercentage', taxDefaultVal / 100);
                               communityModel.taxPercentage =
-                                  taxDefaultVal / 100;
-                            }
-
-                            // creation of community;
-
-                            // updating timebank with latest values
-                            await FirestoreManager.updateTimebankDetails(
-                                    timebankModel: timebankModel,
-                                    members: members)
-                                .then((onValue) {
-                              print("timebank updated");
-                            });
-                            communityModel.taxPercentage = taxPercentage / 100;
+                                  taxPercentage / 100;
 //                            //updating community with latest values
                             await FirestoreManager.updateCommunityDetails(
                                     communityModel: communityModel)
@@ -877,7 +881,7 @@ class CreateEditCommunityViewFormState
                     ),
                   )
                 ],
-              ),
+              )),
             );
             });
           } else if (snapshot.hasError) {

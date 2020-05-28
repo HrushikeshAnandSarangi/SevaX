@@ -399,7 +399,7 @@ class _LoginPageState extends State<LoginPage> {
                                 return ;
                               }
 
-                              signInWithEmailAndPassword();
+                                signInWithEmailAndPassword();
                               },
                       ),
                     ),
@@ -452,7 +452,8 @@ class _LoginPageState extends State<LoginPage> {
                       height: ScreenUtil.getInstance().setHeight(30),
                     ),
 //                    futureLoginBtn,
-                    (FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)
+                    (FlavorConfig.appFlavor == Flavor.APP ||
+                            FlavorConfig.appFlavor == Flavor.SEVA_DEV)
                         ? Offstage()
                         : poweredBySevaLogo,
                     SizedBox(height: 16),
@@ -632,7 +633,7 @@ class _LoginPageState extends State<LoginPage> {
                     cursorColor: Colors.black54,
                     validator: _validateEmailId,
                     onSaved: _saveEmail,
-                    onFieldSubmitted: (v){
+                    onFieldSubmitted: (v) {
                       FocusScope.of(context).requestFocus(pwdFocus);
                     },
                     decoration: InputDecoration(
@@ -855,14 +856,18 @@ class _LoginPageState extends State<LoginPage> {
     if (Platform.isIOS) {
       return Container(
         width: double.infinity,
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            appleLogin,
+            googleLogin,
+            SizedBox(
+              height: 10,
+            ),
             Container(
               width: 16,
             ),
-            googleLogin,
+
+            appleLogin,
 
 //            Container(
 //              height: 10,
@@ -875,17 +880,27 @@ class _LoginPageState extends State<LoginPage> {
       child: googleLogin,
     );
   }
+
   Widget get appleLogin {
     return Material(
-      color: Colors.white,
-      shape: CircleBorder(),
       child: InkWell(
-        customBorder: CircleBorder(),
         onTap: appleLogIn,
-        child:  SizedBox(
-          height: 44,
-          width: 44,
-          child: Image.asset('lib/assets/images/signin_apple.png'),
+        child: Card(
+          color: Colors.black,
+          child: ListTile(
+            leading: SizedBox(
+              height: 30,
+              width: 30,
+              child: Image.asset(
+                'lib/assets/images/apple-logo.png',
+                color: Colors.white,
+              ),
+            ),
+            title: Text(
+              'Sign in with Apple',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
         ),
       ),
     );
@@ -894,14 +909,17 @@ class _LoginPageState extends State<LoginPage> {
   Widget get googleLogin {
     return Material(
       color: Colors.white,
-      shape: CircleBorder(),
       child: InkWell(
-        customBorder: CircleBorder(),
         onTap: useGoogleSignIn,
-        child: SizedBox(
-          height: 44,
-          width: 44,
-          child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
+        child: Card(
+          child: ListTile(
+            leading: SizedBox(
+              height: 30,
+              width: 30,
+              child: Image.asset('lib/assets/images/g.png'),
+            ),
+            title: Text('Sign in with Google'),
+          ),
         ),
       ),
     );
@@ -975,7 +993,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void appleLogIn() async {
     var connResult = await Connectivity().checkConnectivity();
-    if(connResult == ConnectivityResult.none){
+    if (connResult == ConnectivityResult.none) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
           content: Text(AppLocalizations.of(context).translate('shared','check_internet')),
@@ -985,7 +1003,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       );
-      return ;
+      return;
     }
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
@@ -1024,7 +1042,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void useGoogleSignIn() async {
     var connResult = await Connectivity().checkConnectivity();
-    if(connResult == ConnectivityResult.none){
+    if (connResult == ConnectivityResult.none) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
           content: Text(AppLocalizations.of(context).translate('shared','check_internet')),
@@ -1034,7 +1052,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       );
-      return ;
+      return;
     }
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
@@ -1049,7 +1067,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void signInWithEmailAndPassword() async {
-
     if (!_formKey.currentState.validate()) return;
     FocusScope.of(context).requestFocus(FocusNode());
     _formKey.currentState.save();

@@ -16,6 +16,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
+import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
@@ -88,6 +89,7 @@ class NotificationsView extends State<NotificationViewHolder> {
             child: Text(AppLocalizations.of(context).translate('notifications','no_notifications')),
           );
         }
+
         ClearNotificationModel clearNotificationModel =
             clearNotificationModelFromJson(
                 AppConfig.remoteConfig.getString("clear_notification_type"));
@@ -117,8 +119,11 @@ class NotificationsView extends State<NotificationViewHolder> {
                 padding: EdgeInsets.only(bottom: 20),
                 itemCount: notifications.length,
                 itemBuilder: (context, index) {
+                  print(
+                      "----------------------------------------------------->>>");
                   NotificationsModel notification =
                       notifications.elementAt(index);
+
                   Future<void> onDismissed() async {
                     await _clearNotification(
                       notificationId: notification.id,
@@ -510,6 +515,30 @@ class NotificationsView extends State<NotificationViewHolder> {
                         onDismissed: onDismissed,
                       );
                       break;
+
+                    case NotificationType.TYPE_DELETION_REQUEST_OUTPUT:
+                      var requestData = SoftDeleteRequestDataHolder.fromMap(
+                          notification.data);
+                      print(
+                          "---------------> " + requestData.toMap().toString());
+
+                      return NotificationCard(
+                        entityName:
+                            requestData.entityTitle ?? "Deletion Request",
+                        photoUrl: null,
+                        title: requestData.requestAccepted
+                            ? "${requestData.entityTitle} was deleted!"
+                            : "${requestData.entityTitle} couldn't be deleted!",
+                        subTitle: requestData.requestAccepted
+                            ? "${requestData.entityTitle} you requested to delete has been successfully deleted!"
+                            : "${requestData.entityTitle} couldn't be deleted because you are still some pending transactions!",
+                        onPressed: () => !requestData.requestAccepted
+                            ? showDialogForIncompleteTransactions(
+                                requestData,
+                              )
+                            : null,
+                        onDismissed: onDismissed,
+                      );
 
                     default:
                       log("Unhandled user notification type ${notification.type} ${notification.id}");
@@ -1015,6 +1044,42 @@ class NotificationsView extends State<NotificationViewHolder> {
           '${groupInviteUserModel.adminName.toLowerCase()} has invited you to join ${groupInviteUserModel.timebankName}, Tap to view invitation',
       title: "Group join invite",
     );
+  }
+
+  void showDialogForIncompleteTransactions(
+      SoftDeleteRequestDataHolder deletionRequest) {
+    var reason =
+        "We couldn\'t process you request for deletion of ${deletionRequest.entityTitle}, as you are still having open transactions which are as : \n";
+    if (deletionRequest.noOfOpenOffers > 0) {
+      reason += '${deletionRequest.noOfOpenOffers} one to many offers\n';
+    }
+
+    if (deletionRequest.noOfOpenRequests > 0) {
+      reason += '${deletionRequest.noOfOpenOffers} open requests\n';
+    }
+
+    showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(deletionRequest.entityTitle.trim()),
+            content: Text(reason),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  "Dismiss",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.red,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   Widget getInvitedRequestsNotificationWidget(

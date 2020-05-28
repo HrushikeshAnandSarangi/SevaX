@@ -3,13 +3,11 @@ import 'dart:collection';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -19,6 +17,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
@@ -178,10 +177,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   Widget build(BuildContext context) {
     memberAssignment = "+ ${AppLocalizations.of(context).translate('groups','add_members')}";
     return Form(
-        key: _formKey,
-        child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-            child: SingleChildScrollView(child: createSevaX)));
+      key: _formKey,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+        child: SingleChildScrollView(child: FadeAnimation(1.4, createSevaX)),
+      ),
+    );
   }
 
   Widget get createSevaX {
@@ -263,7 +264,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
           Row(
             children: <Widget>[
-              headingText(AppLocalizations.of(context).translate('groups','private_group'), true),
+              headingText(AppLocalizations.of(context).translate('groups','private_group'), false),
               Padding(
                 padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
                 child: infoButton(
@@ -289,7 +290,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
           Row(
             children: <Widget>[
-              headingText(AppLocalizations.of(context).translate('groups','private_delete'), true),
+              headingText(AppLocalizations.of(context).translate('groups','private_delete'), false),
               Padding(
                 padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
                 child: Checkbox(
@@ -386,7 +387,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     );
   }
 
-  Widget get createTimebankHumanityFirst {
+/*  Widget get createTimebankHumanityFirst {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -710,7 +711,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         ),
       ],
     );
-  }
+  }*/
 
   void sendInviteNotification() {
 //    globals.addedMembersId.forEach((m) {

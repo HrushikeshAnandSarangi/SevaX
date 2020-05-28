@@ -20,7 +20,6 @@ Future<TimebankModel> fetchTimebankData(String timebankId) async {
       .collection('timebanknew')
       .document(timebankId)
       .get();
-
   return TimebankModel.fromMap(timebank.data);
 }
 
@@ -28,12 +27,7 @@ Future<TimebankModel> fetchTimebankData(String timebankId) async {
 Future<void> createAcceptRequestNotification({
   NotificationsModel notificationsModel,
 }) async {
-  print("Notification model---------------------${notificationsModel}");
-
   var requestModel = RequestModel.fromMap(notificationsModel.data);
-
-  print("Request mode---------------------${requestModel}");
-
   switch (requestModel.requestMode) {
     case RequestMode.PERSONAL_REQUEST:
       UserModel user =
@@ -446,7 +440,8 @@ Stream<List<NotificationsModel>> getNotificationsForTimebank({
                 model.type ==
                     NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED ||
                 model.type ==
-                    NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK) {
+                    NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK ||
+                model.type == NotificationType.TYPE_DELETION_REQUEST_OUTPUT) {
               notifications.add(model);
             }
           }

@@ -1,15 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
-import './image_picker_handler.dart';
 
-class ImagePickerDialog extends StatelessWidget {
-  ImagePickerHandler _listener;
+import 'news_image_picker_handler.dart';
+
+class NewsImagePickerDialog extends StatelessWidget {
+  NewsImagePickerHandler _listener;
   AnimationController _controller;
   BuildContext context;
 
-  ImagePickerDialog(this._listener, this._controller);
+  NewsImagePickerDialog(this._listener, this._controller);
 
   Animation<double> _drawerContentsOpacity;
   Animation<Offset> _drawerDetailsPosition;
@@ -81,7 +81,7 @@ class ImagePickerDialog extends StatelessWidget {
                 new GestureDetector(
                   onTap: () => _listener.openCamera(),
                   child: roundedButton(
-                      AppLocalizations.of(context).translate('create_feed','camera'),
+                      "Camera",
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0x0FF766FE0),
                       const Color(0xFFFFFFFF),
@@ -93,12 +93,24 @@ class ImagePickerDialog extends StatelessWidget {
                 new GestureDetector(
                   onTap: () => _listener.openGallery(),
                   child: roundedButton(
-                      AppLocalizations.of(context).translate('create_feed','gallery'),
+                      "Gallery",
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0x0FF766FE0),
                       const Color(0xFFFFFFFF),
                       Icon(
                         Icons.image,
+                        color: Colors.white,
+                      )),
+                ),
+                new GestureDetector(
+                  onTap: () => _listener.openDocument(),
+                  child: roundedButton(
+                      "PDF Document",
+                      EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                      const Color(0x0FF766FE0),
+                      const Color(0xFFFFFFFF),
+                      Icon(
+                        Icons.assignment,
                         color: Colors.white,
                       )),
                 ),
@@ -108,7 +120,7 @@ class ImagePickerDialog extends StatelessWidget {
                   child: new Padding(
                     padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
                     child: roundedButton(
-                        AppLocalizations.of(context).translate('shared','cancel'),
+                        "Cancel",
                         EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                         const Color(0x0FF766FE0),
                         const Color(0xFFFFFFFF),

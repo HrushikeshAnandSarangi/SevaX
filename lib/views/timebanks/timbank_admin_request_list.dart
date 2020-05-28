@@ -828,6 +828,15 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           debouncer: debounceValue,
           action: Actions.Exit,
           onTap: () async {
+//            Navigator.push(
+//              context,
+//              MaterialPageRoute(
+//                builder: (context) => TransferOwnerShipView(
+//                  timebankModel: timebankModel,
+//                ),
+//              ),
+//            );
+
             _exitTimebankOrGroup(
                 user: user, context: context, model: model, isAdmin: isAdmin);
           },

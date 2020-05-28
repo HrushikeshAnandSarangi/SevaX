@@ -89,10 +89,17 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.email = SevaCore.of(context).loggedInUser.email;
     newsObject.fullName = SevaCore.of(context).loggedInUser.fullname;
     newsObject.sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
-    newsObject.newsImageUrl = globals.newsImageURL ?? '';
+    newsObject.newsImageUrl = globals.newsImageURL == null
+        ? newsObject.newsImageUrl ?? ''
+        : globals.newsImageURL ?? '';
     newsObject.location = location;
     newsObject.root_timebank_id = FlavorConfig.values.timebankId;
     newsObject.photoCredits = photoCredits != null ? photoCredits : '';
+    newsObject.newsDocumentUrl = globals.newsDocumentURL == null
+        ? newsObject.newsDocumentUrl ?? ''
+        : globals.newsDocumentURL;
+    newsObject.newsDocumentName =
+        globals.newsDocumentName ?? newsObject.newsDocumentName ?? '';
     //EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(
       entityId: widget.timebankId,
@@ -106,6 +113,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     // await FirestoreManager.createNews(newsObject: newsObject);
     await FirestoreManager.updateNews(newsObject: newsObject);
     globals.newsImageURL = null;
+    globals.newsImageURL = null;
+    globals.newsDocumentURL = null;
     if (dialogContext != null) {
       Navigator.pop(dialogContext);
     }
@@ -368,6 +377,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   ),
                 ],
               ),
+
               Container(
                 margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
                 alignment: Alignment(0, 1),

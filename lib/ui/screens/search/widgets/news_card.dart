@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class NewsCard extends StatelessWidget {
@@ -8,9 +9,13 @@ class NewsCard extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String userImageUrl;
+  final String address;
+  final String documentUrl;
+  final String documentName;
   final String userName;
   final int timestamp;
   final bool isFavorite;
+  final bool isAdmin;
   final bool isBookMarked;
   final double radius;
   final Function onShare;
@@ -31,12 +36,157 @@ class NewsCard extends StatelessWidget {
     this.onBookMark,
     this.radius = 4,
     this.id,
+    this.address,
+    this.documentUrl,
+    this.documentName,
+    this.isAdmin,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     print(imageUrl);
+
+    String loggedinemail = SevaCore.of(context).loggedInUser.email;
+
     return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 12.0, 0, 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0, right: 12),
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.location_on,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  Text(address),
+                  Spacer(),
+                  Text(
+                    timeago.format(
+                      DateTime.fromMillisecondsSinceEpoch(timestamp),
+                    ),
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+            // SizedBox(height: 16),
+            //Pinning ui
+            Padding(
+              padding: const EdgeInsets.only(left: 12.0, top: 10, bottom: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(top: 5),
+                          child: Text(
+                            title != null && title != "NoData"
+                                ? title.trim()
+                                : "titile",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 7,
+                            style: TextStyle(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Europa"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  //  SizedBox(width: 8.0),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 12.0, right: 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundImage:
+                        NetworkImage(userImageUrl ?? defaultUserImageURL),
+                  ),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Text(
+                          userName != null
+                              ? userName.trim()
+                              : "User name not available",
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 7,
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        document(),
+                        //  SizedBox(height: 10),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            //feed image
+            Offstage(
+              offstage: imageUrl == null || imageUrl == "NoData",
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(radius),
+                  topRight: Radius.circular(radius),
+                ),
+                child: AspectRatio(
+                  aspectRatio: 3 / 2,
+                  child: id != null
+                      ? Hero(
+                          tag: id + "*",
+                          child: CustomNetworkImage(
+                            imageUrl ?? defaultUserImageURL,
+                          ),
+                        )
+                      : CustomNetworkImage(
+                          imageUrl ?? defaultUserImageURL,
+                        ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            //feed options
+            cardButtons(),
+            SizedBox(
+              height: 5,
+            )
+          ],
+        ),
+      ),
+    );
+
+    /* return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius),
       ),
@@ -108,24 +258,47 @@ class NewsCard extends StatelessWidget {
           SizedBox(height: 20),
         ],
       ),
+    );*/
+  }
+
+  Widget getOptionButtons(Widget child, VoidCallback onPressed) {
+    return Material(
+      color: Colors.white,
+      child: InkWell(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: child,
+          ),
+          onTap: onPressed),
     );
   }
 
   Widget cardButtons() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         InkWell(
           onTap: onBookMark,
           child: Icon(
             isBookMarked ? Icons.flag : Icons.outlined_flag,
+            // color: isBookMarked ? Colors.red : null,
           ),
         ),
-        SizedBox(width: 5),
+        SizedBox(width: 10),
+
+        InkWell(
+          onTap: onFavorite,
+          child: Icon(
+            isFavorite ? Icons.favorite : Icons.favorite_border,
+            color: isFavorite ? Colors.red : null,
+          ),
+        ),
+        SizedBox(width: 10),
         InkWell(
           onTap: onShare,
           child: Icon(Icons.share),
         ),
-        SizedBox(width: 10),
+        SizedBox(width: 15),
         // InkWell(
         //   onTap: onFavorite,
         //   child: Icon(
@@ -135,6 +308,40 @@ class NewsCard extends StatelessWidget {
         // SizedBox(width: 10),
       ],
     );
+  }
+
+  Widget document() {
+    return documentUrl == null
+        ? Offstage()
+        : Container(
+            height: 30,
+            width: 150,
+            decoration: BoxDecoration(
+              borderRadius: new BorderRadius.circular(15.7),
+              color: Colors.grey[200],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 0),
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.attach_file,
+                    size: 15,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    documentName ?? "Document",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+          );
   }
 }
 

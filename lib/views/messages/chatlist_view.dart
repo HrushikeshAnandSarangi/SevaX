@@ -663,7 +663,7 @@ class _ChatListViewState extends State<_ChatListView> {
                 style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
               ),
               onPressed: () {
-                setState(() {});
+                // setState(() {});
                 Navigator.of(context).pop();
               },
             ),

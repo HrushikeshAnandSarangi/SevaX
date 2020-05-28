@@ -30,6 +30,7 @@ class SearchField extends StatelessWidget {
             decoration: InputDecoration(
               contentPadding: EdgeInsets.only(bottom: 15, top: 10),
               errorText: snapshot.error,
+              hintText: "Search",
               prefixIcon: Icon(Icons.search),
               suffixIcon: Offstage(
                 offstage: !(snapshot.hasData ?? false),

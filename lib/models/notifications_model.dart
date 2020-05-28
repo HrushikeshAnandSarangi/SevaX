@@ -30,6 +30,11 @@ class NotificationsModel extends DataModel {
     if (map.containsKey('id')) {
       this.id = map['id'];
     }
+
+    if (map.containsKey('type')) {
+      this.type = typeMapper[map['type']];
+    }
+
     if (map.containsKey('timebankId')) {
       this.timebankId = map['timebankId'];
     }
@@ -42,64 +47,13 @@ class NotificationsModel extends DataModel {
       this.senderUserId = map['senderUserId'];
     }
 
-    if (map.containsKey('type')) {
-      this.type = typeMapper[map['type']];
-      // this.type = stringToNotificationType(map['type']);
-      // this.type =
-      //     stringToNotificationType(map['type']) ?? NotificationType.UNKNOWN;
-      // print(this.type);
-
-      // String typeString = map['type'];
-      // if (typeString == 'RequestAccept') {
-      //   this.type = NotificationType.RequestAccept;
-      // }
-
-      // if (typeString == 'JoinRequest') {
-      //   this.type = NotificationType.JoinRequest;
-      // }
-
-      // if (typeString == 'RequestApprove') {
-      //   this.type = NotificationType.RequestApprove;
-      // }
-      // if (typeString == 'RequestReject') {
-      //   this.type = NotificationType.RequestReject;
-      // }
-      // if (typeString == 'RequestCompleted') {
-      //   this.type = NotificationType.RequestCompleted;
-      // }
-      // if (typeString == 'RequestCompletedApproved') {
-      //   this.type = NotificationType.RequestCompletedApproved;
-      // }
-      // if (typeString == 'RequestCompletedRejected') {
-      //   this.type = NotificationType.RequestCompletedRejected;
-      // }
-      // if (typeString == 'TransactionCredit') {
-      //   this.type = NotificationType.TransactionCredit;
-      // }
-      // if (typeString == 'TransactionDebit') {
-      //   this.type = NotificationType.TransactionDebit;
-      // }
-      // if (typeString == 'OfferAccept') {
-      //   this.type = NotificationType.OfferAccept;
-      // }
-      // if (typeString == 'OfferReject') {
-      //   this.type = NotificationType.OfferReject;
-      // }
-
-      // if (typeString == 'AcceptedOffer') {
-      //   this.type = NotificationType.AcceptedOffer;
-      // }
-
-      // if (typeString == 'RequestInvite') {
-      //   this.type = NotificationType.RequestInvite;
-      // }
-    }
     if (map.containsKey('data')) {
       this.data = Map.castFrom(map['data']);
     }
     if (map.containsKey('userId')) {
       this.targetUserId = map['userId'];
     }
+
     if (map.containsKey('isRead')) {
       this.isRead = map['isRead'];
     }
@@ -181,6 +135,7 @@ enum NotificationType {
   TYPE_OFFER_FULFILMENT_ACHIEVED,
   TYPE_OFFER_SUBSCRIPTION_COMPLETED,
   TYPE_FEEDBACK_FROM_SIGNUP_MEMBER,
+  TYPE_DELETION_REQUEST_OUTPUT,
 }
 
 //Check the method
@@ -223,6 +178,7 @@ Map<String, NotificationType> typeMapper = {
       NotificationType.TYPE_OFFER_SUBSCRIPTION_COMPLETED,
   "TYPE_FEEDBACK_FROM_SIGNUP_MEMBER":
       NotificationType.TYPE_FEEDBACK_FROM_SIGNUP_MEMBER,
+  "TYPE_DELETION_REQUEST_OUTPUT": NotificationType.TYPE_DELETION_REQUEST_OUTPUT,
 };
 
 ClearNotificationModel clearNotificationModelFromJson(String str) =>

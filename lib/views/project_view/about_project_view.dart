@@ -6,7 +6,7 @@ import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/soft_delete.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
@@ -40,8 +40,6 @@ class _AboutProjectViewState extends State<AboutProjectView> {
     await FirestoreManager.getProjectFutureById(projectId: widget.project_id)
         .then((onValue) {
       projectModel = onValue;
-      print("projectttttt ${projectModel}");
-      //  isDataLoaded = true;
       setState(() {
         getUserData();
       });
