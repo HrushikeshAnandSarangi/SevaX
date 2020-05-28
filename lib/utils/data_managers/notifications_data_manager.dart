@@ -120,7 +120,8 @@ Future<QuerySnapshot> _getQueryForNotification({
           .collection('users')
           .document(requestModel.email)
           .collection('notifications')
-          .where('type', isEqualTo: '')
+          .where('isRead', isEqualTo: false)
+          .where('type', isEqualTo: 'RequestCompleted')
           .where('data.id', isEqualTo: requestModel.id)
           .getDocuments();
 
@@ -129,6 +130,8 @@ Future<QuerySnapshot> _getQueryForNotification({
           .collection('timebanknew')
           .document(requestModel.timebankId)
           .collection('notifications')
+          .where('isRead', isEqualTo: false)
+          .where('type', isEqualTo: 'RequestCompleted')
           .where('data.id', isEqualTo: requestModel.id)
           .getDocuments();
 
