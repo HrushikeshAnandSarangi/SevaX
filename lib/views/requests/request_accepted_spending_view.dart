@@ -767,18 +767,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       type: ChatType.TYPE_PERSONAL,
     );
 
-    createAndOpenChat(
-      context: context,
-      timebankId: model.timebankId,
-      communityId: loggedInUser.currentCommunity,
-      sender: sender,
-      reciever: reciever,
-      isFromRejectCompletion: true,
-      onChatCreate: () {
-        Navigator.pop(context);
-      },
-    );
-
     var claimedRequestStatus = ClaimedRequestStatusModel(
       isAccepted: false,
       adminEmail: SevaCore.of(context).loggedInUser.email,
@@ -787,11 +775,23 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       timestamp: DateTime.now().millisecondsSinceEpoch,
       credits: credits,
     );
-    await FirestoreManager.saveRequestFinalAction(
-      model: claimedRequestStatus,
+
+    createAndOpenChat(
+      context: context,
+      timebankId: model.timebankId,
+      communityId: loggedInUser.currentCommunity,
+      sender: sender,
+      reciever: reciever,
+      isFromRejectCompletion: true,
+      onChatCreate: () {
+        FirestoreManager.saveRequestFinalAction(
+          model: claimedRequestStatus,
+        );
+        FirestoreManager.readUserNotification(
+            notificationId, SevaCore.of(context).loggedInUser.email);
+        Navigator.pop(context);
+      },
     );
-    await FirestoreManager.readUserNotification(
-        notificationId, SevaCore.of(context).loggedInUser.email);
   }
 
   Widget getBio(UserModel userModel) {

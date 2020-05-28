@@ -281,7 +281,7 @@ Widget createAdminTabBar(
                 timebankModel: timebankModel,
               ),
               TimebankNotificationsView(
-                timebankId: timebankModel.id,
+                timebankModel: timebankModel,
               ),
             ],
           ),

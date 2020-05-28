@@ -308,7 +308,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                                 timebankModel: primaryTimebank,
                               ),
                               TimebankNotificationsView(
-                                timebankId: primaryTimebank.id,
+                                timebankModel: primaryTimebank,
                               ),
                             ]
                           : []
