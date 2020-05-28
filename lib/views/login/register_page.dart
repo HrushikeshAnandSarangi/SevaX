@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -207,7 +208,7 @@ class _RegisterPageState extends State<RegisterPage>
         children: <Widget>[
           getFormField(
             focusNode: FocusNode(),
-            onFieldSubmittedCB:(v){
+            onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(emailFocus);
             },
             shouldRestrictLength: true,
@@ -218,7 +219,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
           getFormField(
             focusNode: emailFocus,
-            onFieldSubmittedCB:(v){
+            onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(pwdFocus);
             },
             shouldRestrictLength: false,
@@ -234,7 +235,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
           getFormField(
             focusNode: pwdFocus,
-            onFieldSubmittedCB:(v){
+            onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(confirmPwdFocus);
             },
             shouldRestrictLength: false,
@@ -267,7 +268,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
           getFormField(
             focusNode: confirmPwdFocus,
-            onFieldSubmittedCB:(v){
+            onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(FocusNode());
             },
             shouldRestrictLength: false,
@@ -355,17 +356,18 @@ class _RegisterPageState extends State<RegisterPage>
             ? null
             : () async {
                 var connResult = await Connectivity().checkConnectivity();
-                if(connResult == ConnectivityResult.none){
+                if (connResult == ConnectivityResult.none) {
                   _scaffoldKey.currentState.showSnackBar(
                     SnackBar(
                       content: Text("Please check your internet connection."),
                       action: SnackBarAction(
                         label: 'Dismiss',
-                        onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                        onPressed: () =>
+                            _scaffoldKey.currentState.hideCurrentSnackBar(),
                       ),
                     ),
                   );
-                  return ;
+                  return;
                 }
 
                 isLoading = true;
@@ -508,7 +510,8 @@ class _RegisterPageState extends State<RegisterPage>
       } else {
         user.photoURL = defaultUserImageURL;
       }
-      user.timezone = new TimezoneListData().getTimeZoneByCodeData(DateTime.now().timeZoneName);
+      user.timezone = new TimezoneListData()
+          .getTimeZoneByCodeData(DateTime.now().timeZoneName);
       await FirestoreManager.updateUser(user: user);
 
       Navigator.pop(dialogContext);
@@ -651,14 +654,18 @@ class _RegisterPageState extends State<RegisterPage>
     if (Platform.isIOS) {
       return Container(
         width: double.infinity,
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            appleLogin,
+            googleLogin,
+            SizedBox(
+              height: 10,
+            ),
             Container(
               width: 16,
             ),
-            googleLogin,
+            appleLogin,
+
 //            Container(
 //              height: 10,
 //            ),
@@ -673,15 +680,24 @@ class _RegisterPageState extends State<RegisterPage>
 
   Widget get appleLogin {
     return Material(
-      color: Colors.white,
-      shape: CircleBorder(),
       child: InkWell(
-        customBorder: CircleBorder(),
         onTap: appleLogIn,
-        child:  SizedBox(
-          height: 44,
-          width: 44,
-          child: Image.asset('lib/assets/images/signin_apple.png'),
+        child: Card(
+          color: Colors.black,
+          child: ListTile(
+            leading: SizedBox(
+              height: 30,
+              width: 30,
+              child: Image.asset(
+                'lib/assets/images/apple-logo.png',
+                color: Colors.white,
+              ),
+            ),
+            title: Text(
+              'Sign up with Apple',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
         ),
       ),
     );
@@ -690,14 +706,17 @@ class _RegisterPageState extends State<RegisterPage>
   Widget get googleLogin {
     return Material(
       color: Colors.white,
-      shape: CircleBorder(),
       child: InkWell(
-        customBorder: CircleBorder(),
         onTap: useGoogleSignIn,
-        child: SizedBox(
-          height: 44,
-          width: 44,
-          child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
+        child: Card(
+          child: ListTile(
+            leading: SizedBox(
+              height: 30,
+              width: 30,
+              child: Image.asset('lib/assets/images/g.png'),
+            ),
+            title: Text('Sign up with Google'),
+          ),
         ),
       ),
     );
@@ -771,7 +790,7 @@ class _RegisterPageState extends State<RegisterPage>
 
   void appleLogIn() async {
     var connResult = await Connectivity().checkConnectivity();
-    if(connResult == ConnectivityResult.none){
+    if (connResult == ConnectivityResult.none) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
           content: Text("Please check your internet connection."),
@@ -781,7 +800,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
         ),
       );
-      return ;
+      return;
     }
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
@@ -807,7 +826,7 @@ class _RegisterPageState extends State<RegisterPage>
 
   void useGoogleSignIn() async {
     var connResult = await Connectivity().checkConnectivity();
-    if(connResult == ConnectivityResult.none){
+    if (connResult == ConnectivityResult.none) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
           content: Text("Please check your internet connection."),
@@ -817,7 +836,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
         ),
       );
-      return ;
+      return;
     }
 
     isLoading = true;

@@ -7,6 +7,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
 
@@ -126,6 +127,8 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
     if (donateAmount_Received != null) {
       setState(() {
         donateAmount = donateAmount_Received;
+        SevaCore.of(context).loggedInUser.currentBalance =
+            widget.loggedInUser.currentBalance - donateAmount_Received;
       });
       await TransactionBloc().createNewTransaction(
           this.widget.loggedInUser.sevaUserID,
@@ -199,10 +202,12 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
           SizedBox(
             height: 15,
           ),
-          donatezeroerror ? Text(
-            "You cannot donate 0 credits",
-            style: TextStyle(fontSize: 16, color: Colors.red),
-          ): Text("")
+          donatezeroerror
+              ? Text(
+                  "You cannot donate 0 credits",
+                  style: TextStyle(fontSize: 16, color: Colors.red),
+                )
+              : Text("")
         ],
       ),
       actions: <Widget>[
