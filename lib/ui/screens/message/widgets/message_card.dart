@@ -18,10 +18,17 @@ class MessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String senderId = isAdminMessage
+        ? model.timebankId
+        : SevaCore.of(context).loggedInUser.sevaUserID;
     ParticipantInfo info = getSenderInfo(
-      SevaCore.of(context).loggedInUser.sevaUserID,
+      senderId,
       model.participantInfo,
     );
+
+    int unreadCount = model.unreadStatus.containsKey(senderId)
+        ? model.unreadStatus[senderId]
+        : 0;
     return model.lastMessage == null
         ? Container()
         : Container(
@@ -74,7 +81,9 @@ class MessageCard extends StatelessWidget {
                                           ? "Timebank"
                                           : "Group",
                                       style: TextStyle(
-                                          fontSize: 10, color: Colors.white),
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                             Text(
@@ -93,7 +102,18 @@ class MessageCard extends StatelessWidget {
                             ),
                           ],
                         ),
-                      )
+                      ),
+                      unreadCount == 0
+                          ? Container()
+                          : CircleAvatar(
+                              radius: 10,
+                              backgroundColor: Theme.of(context).primaryColor,
+                              foregroundColor: Colors.white,
+                              child: Text(
+                                "$unreadCount",
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            ),
                     ],
                   ),
                 ),

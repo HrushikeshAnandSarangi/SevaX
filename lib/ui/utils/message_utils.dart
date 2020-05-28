@@ -5,8 +5,8 @@ import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 
 ParticipantInfo getSenderInfo(
-    String userId, List<ParticipantInfo> participantInfo) {
-  return participantInfo.firstWhere((element) => element.id != userId);
+    String senderId, List<ParticipantInfo> participantInfo) {
+  return participantInfo.firstWhere((element) => element.id == senderId);
 }
 
 Future<void> createAndOpenChat({

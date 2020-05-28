@@ -19,95 +19,74 @@ class MessagePageRouter extends StatefulWidget {
 }
 
 class _MessagePageRouterState extends State<MessagePageRouter> {
-  MessageBloc _bloc = MessageBloc();
-
-  @override
-  void initState() {
-    Future.delayed(Duration.zero, () {
-      _bloc.fetchAllMessage(
-        SevaCore.of(context).loggedInUser.currentCommunity,
-        SevaCore.of(context).loggedInUser.sevaUserID,
-      );
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _bloc.dispose();
-    super.dispose();
-  }
-
   int currentPage = 0;
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<MessageBloc>(
-      bloc: _bloc,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Messages",
-            style: TextStyle(fontSize: 18),
-          ),
-          centerTitle: true,
+    final _bloc = BlocProvider.of<MessageBloc>(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Messages",
+          style: TextStyle(fontSize: 18),
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  IconButton(
-                    color: Theme.of(context).primaryColor,
-                    icon: Image.asset(createMessageIcon, width: 20, height: 20),
-                    onPressed: () {
-                      if (SevaCore.of(context)
-                              .loggedInUser
-                              .associatedWithTimebanks >
-                          1) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SelectTimeBankForNewChat(),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                IconButton(
+                  color: Theme.of(context).primaryColor,
+                  icon: Image.asset(createMessageIcon, width: 20, height: 20),
+                  onPressed: () {
+                    if (SevaCore.of(context)
+                            .loggedInUser
+                            .associatedWithTimebanks >
+                        1) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SelectTimeBankForNewChat(),
+                        ),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SelectMembersFromTimebank(
+                            timebankId: SevaCore.of(context)
+                                .loggedInUser
+                                .currentTimebank,
+                            newsModel: NewsModel(),
+                            isFromShare: false,
+                            selectionMode: MEMBER_SELECTION_MODE.NEW_CHAT,
+                            userSelected: HashMap(),
                           ),
-                        );
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SelectMembersFromTimebank(
-                              timebankId: SevaCore.of(context)
-                                  .loggedInUser
-                                  .currentTimebank,
-                              newsModel: NewsModel(),
-                              isFromShare: false,
-                              selectionMode: MEMBER_SELECTION_MODE.NEW_CHAT,
-                              userSelected: HashMap(),
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
-              StreamBuilder<List<AdminMessageWrapperModel>>(
-                  stream: _bloc.adminMessage,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData && snapshot.data.length > 0) {
-                      return messageSwitch();
+                        ),
+                      );
                     }
-                    return Container();
-                  }),
-              Expanded(
-                child: [
-                  PersonalMessagePage(),
-                  AdminMessagePage(),
-                ][currentPage],
-              ),
-            ],
-          ),
+                  },
+                ),
+              ],
+            ),
+            StreamBuilder<List<AdminMessageWrapperModel>>(
+                stream: _bloc.adminMessage,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data.length > 0) {
+                    return messageSwitch();
+                  }
+                  return Container();
+                }),
+            Expanded(
+              child: [
+                PersonalMessagePage(),
+                AdminMessagePage(),
+              ][currentPage],
+            ),
+          ],
         ),
       ),
     );
