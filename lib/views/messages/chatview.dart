@@ -172,8 +172,8 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    ParticipantInfo senderInfo = getSenderInfo(
-      widget.senderId,
+    ParticipantInfo senderInfo = getUserInfo(
+      recieverId,
       widget.chatModel.participantInfo,
     );
 
@@ -264,7 +264,8 @@ class _ChatViewState extends State<ChatView> {
                       return Center(child: Text('No Messages'));
                     }
 
-                    if (!widget.chatModel.isTimebankMessage) {
+                    if (!widget.chatModel.isTimebankMessage ||
+                        widget.senderId == loggedInUser.sevaUserID) {
                       newChatManager.markMessageAsRead(
                         chat: widget.chatModel,
                         userId: SevaCore.of(context).loggedInUser.sevaUserID,

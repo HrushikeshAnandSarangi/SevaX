@@ -18,17 +18,17 @@ class MessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String senderId = model.isTimebankMessage
-        ? model.timebankId
-        : SevaCore.of(context).loggedInUser.sevaUserID;
-    ParticipantInfo info = getSenderInfo(
+    String userId = SevaCore.of(context).loggedInUser.sevaUserID;
+    String senderId = model.isTimebankMessage ? model.timebankId : userId;
+    ParticipantInfo info = getUserInfo(
       senderId,
       model.participantInfo,
     );
 
-    int unreadCount = model.unreadStatus.containsKey(senderId)
-        ? model.unreadStatus[senderId]
-        : 0;
+    int unreadCount =
+        model.unreadStatus.containsKey(isAdminMessage ? senderId : userId)
+            ? model.unreadStatus[isAdminMessage ? senderId : userId]
+            : 0;
     return model.lastMessage == null
         ? Container()
         : Container(
@@ -41,9 +41,7 @@ class MessageCard extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => ChatView(
                         chatModel: model,
-                        senderId: isAdminMessage
-                            ? model.timebankId
-                            : SevaCore.of(context).loggedInUser.sevaUserID,
+                        senderId: isAdminMessage ? model.timebankId : userId,
                       ),
                     ),
                   ),

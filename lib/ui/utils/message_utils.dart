@@ -4,9 +4,9 @@ import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 
-ParticipantInfo getSenderInfo(
-    String senderId, List<ParticipantInfo> participantInfo) {
-  return participantInfo.firstWhere((element) => element.id == senderId);
+ParticipantInfo getUserInfo(
+    String userId, List<ParticipantInfo> participantInfo) {
+  return participantInfo.firstWhere((element) => element.id == userId);
 }
 
 Future<void> createAndOpenChat({

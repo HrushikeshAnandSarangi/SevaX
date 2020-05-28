@@ -132,6 +132,15 @@ Future<void> createNewMessage({
       },
       merge: true,
     );
+    batch.setData(
+      Firestore.instance.collection("chatsnew").document(chatId),
+      {
+        "unreadStatus": {
+          timebankId: 0,
+        },
+      },
+      merge: true,
+    );
   }
 
   //if timebank message add it to timebankModel for count purpose
