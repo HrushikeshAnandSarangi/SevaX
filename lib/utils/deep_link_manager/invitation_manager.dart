@@ -68,17 +68,17 @@ class InvitationManager {
     cacheList.clear();
   }
 
+  String invitationTitle = "Awesome! You are invited to join a Timebank";
   Future<bool> resendInvitationToMember({
     InvitationViaLink invitation,
   }) async {
     var mailContent =
         "<p>You are invited to download the SevaX app and join the Timebank ${invitation.timebankTitle}. The SevaX App uses Timebanking, a reciprocity-based system where community members help each other out in exchange for Seva Credits. Please click on this <a href=\"${invitation.invitationLink};&nbsp;\">link</a> to join.</p>";
-
     return await mailCodeToInvitedMember(
       mailContent: mailContent,
       mailReciever: invitation.inviteeEmail,
       mailSender: invitation.senderEmail,
-      mailSubject: "Awesome!, You've recieved an invitation.",
+      mailSubject: invitationTitle,
     ).then((_) => true).catchError((_) => false);
   }
 
@@ -98,7 +98,7 @@ class InvitationManager {
             mailContent: mailContent,
             mailReciever: invitation.inviteeEmail,
             mailSender: invitation.senderEmail,
-            mailSubject: "Awesome!, You've recieved an invitation.",
+            mailSubject: invitationTitle,
           );
         })
         .then(
