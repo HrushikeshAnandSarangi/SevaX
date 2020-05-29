@@ -885,26 +885,16 @@ class DiscussionListState extends State<DiscussionList> {
                                     Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 6, vertical: 2),
-                                      child: FlavorConfig.appFlavor ==
-                                                  Flavor.HUMANITY_FIRST ||
-                                              FlavorConfig.appFlavor ==
-                                                  Flavor.APP ||
-                                              FlavorConfig.appFlavor ==
-                                                  Flavor.SEVA_DEV
-                                          ? Icon(
-                                              Icons.flag,
-                                              color: news.reports.contains(
-                                                      SevaCore.of(context)
-                                                          .loggedInUser
-                                                          .sevaUserID)
-                                                  ? Colors.red
-                                                  : Colors.black,
-                                              size: 20,
-                                            )
-                                          : Icon(
-                                              Icons.flag,
-                                              size: 20,
-                                            ),
+                                      child: Icon(
+                                        Icons.flag,
+                                        color: news.reports.contains(
+                                                SevaCore.of(context)
+                                                    .loggedInUser
+                                                    .sevaUserID)
+                                            ? Colors.red
+                                            : Colors.black,
+                                        size: 20,
+                                      ),
                                     ),
                                     () {
                                       if (news.reports.contains(
