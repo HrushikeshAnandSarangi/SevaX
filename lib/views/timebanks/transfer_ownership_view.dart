@@ -178,13 +178,21 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
           onPressed: () async {
             if (selectedNewOwner == null) {
               print("reporter timebank creator id is ${tbmodel.creatorId}");
-              ownerGroupsArr.forEach((group) => futures.add(Firestore.instance
+              ownerGroupsArr.forEach(
+                (group) => futures.add(
+                  Firestore.instance
                       .collection('users')
                       .document(group['id'])
-                      .updateData({
-                    "creator_id": tbmodel.creatorId,
-                    "email_id": tbmodel.emailId
-                  })));
+                      .updateData(
+                    {
+                      "creator_id": tbmodel.creatorId,
+                      "email_id": tbmodel.emailId,
+                      "admins": FieldValue.arrayUnion([tbmodel.creatorId]),
+                      "members": FieldValue.arrayUnion([tbmodel.creatorId]),
+                    },
+                  ),
+                ),
+              );
               await Future.wait(futures);
               Map<String, dynamic> responseObj = await removeMemberFromTimebank(
                   sevauserid: widget.memberSevaUserId, timebankId: tbmodel.id);
@@ -212,13 +220,21 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
               print("new owner creator id is ${selectedNewOwner.sevaUserID}");
               ownerGroupsArr.forEach((group) {
                 print("groupppppp=== ${group['id']}");
-                futures.add(Firestore.instance
-                    .collection('timebanknew')
-                    .document(group['id'])
-                    .updateData({
-                  "creator_id": selectedNewOwner.sevaUserID,
-                  "email_id": selectedNewOwner.email
-                }));
+                futures.add(
+                  Firestore.instance
+                      .collection('timebanknew')
+                      .document(group['id'])
+                      .updateData(
+                    {
+                      "creator_id": selectedNewOwner.sevaUserID,
+                      "email_id": selectedNewOwner.email,
+                      "admins":
+                          FieldValue.arrayUnion([selectedNewOwner.sevaUserID]),
+                      "members":
+                          FieldValue.arrayUnion([selectedNewOwner.sevaUserID]),
+                    },
+                  ),
+                );
               });
               await Future.wait(futures);
               Map<String, dynamic> responseObj = await removeMemberFromTimebank(
