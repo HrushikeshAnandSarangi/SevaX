@@ -271,10 +271,10 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   photoUrl: null,
                   title: requestData.requestAccepted
                       ? "${requestData.entityTitle} was deleted!"
-                      : "${requestData.entityTitle} couldn't be deleted!",
+                      : "${requestData.entityTitle} cannot be deleted!",
                   subTitle: requestData.requestAccepted
                       ? "${requestData.entityTitle} you requested to delete has been successfully deleted!"
-                      : "${requestData.entityTitle} couldn't be deleted because you are still some pending transactions!",
+                      : "Your request to delete ${requestData.entityTitle} cannot be completed at this time. There are pending transactions. Tap here to view the details:",
                   onPressed: () => !requestData.requestAccepted
                       ? showDialogForIncompleteTransactions(
                           context: context,
@@ -288,6 +288,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     );
                   },
                 );
+
 
               default:
                 log("Unhandled timebank notification type ${notification.type} ${notification.id}");
