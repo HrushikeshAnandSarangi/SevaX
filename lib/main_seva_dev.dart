@@ -11,6 +11,7 @@ import 'package:sevaexchange/views/splash_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/news_model.dart';
+
 Future<void> fetchRemoteConfig() async {
   AppConfig.remoteConfig = await RemoteConfig.instance;
   AppConfig.remoteConfig.fetch(expiration: Duration.zero);
@@ -70,6 +71,9 @@ class MainApplication extends StatelessWidget {
 
   const MainApplication({Key key, this.skipToHomePage = false})
       : super(key: key);
+
+  @override
+  void initState() {}
   @override
   Widget build(BuildContext context) {
     NewsModel news;

@@ -17,12 +17,16 @@ class TimebankModel extends DataModel {
   List<String> coordinators;
   List<String> members;
   bool protected;
+  bool private;
   String parentTimebankId;
   String communityId;
   String rootTimebankId;
   List<String> children;
   num balance;
   GeoFirePoint location;
+  bool softDelete;
+  bool preventAccedentalDelete;
+  bool requestedSoftDelete;
 
   // CompareToTimeBank joinStatus;
 
@@ -45,6 +49,7 @@ class TimebankModel extends DataModel {
     this.members =
         map.containsKey("members") ? List.castFrom(map['members']) : [];
     this.protected = map.containsKey("protected") ? map["protected"] : false;
+    this.private = map.containsKey("private") ? map["private"] : false;
     this.parentTimebankId =
         map.containsKey("parent_timebank_id") ? map["parent_timebank_id"] : '';
     this.communityId =
@@ -55,6 +60,14 @@ class TimebankModel extends DataModel {
         map.containsKey("children") ? List.castFrom(map['children']) : [];
     this.balance = map.containsKey("balance") ? map["balance"] : 0.0;
     this.location = getLocation(map);
+    this.softDelete = map.containsKey("softDelete") ? map["softDelete"] : false;
+    this.preventAccedentalDelete = map.containsKey("preventAccedentalDelete")
+        ? map["preventAccedentalDelete"]
+        : true;
+
+    this.requestedSoftDelete = map.containsKey("requestedSoftDelete")
+        ? map["requestedSoftDelete"]
+        : false;
 
     // joinStatus = CompareToTimeBank.JOIN;
   }
@@ -118,6 +131,11 @@ class TimebankModel extends DataModel {
     }
     if (key == 'protected') {
       this.protected = value;
+      print("its coming here-------------------------------------- protected ");
+    }
+
+    if (key == 'private') {
+      this.private = value;
     }
     if (key == 'parentTimebankId') {
       this.parentTimebankId = value;
@@ -133,6 +151,11 @@ class TimebankModel extends DataModel {
     }
     if (key == 'community_id') {
       this.communityId = value;
+    }
+    if (key == 'preventAccedentalDelete') {
+      print(
+          "its coming here-------------------------------------- preventAccedentalDelete ");
+      this.preventAccedentalDelete = value;
     }
   }
 
@@ -176,6 +199,7 @@ class TimebankModel extends DataModel {
           ? null
           : new List<dynamic>.from(members.map((x) => x)),
       "protected": protected == null ? null : protected,
+      "private": private == null ? null : private,
       "parent_timebank_id": parentTimebankId == null ? null : parentTimebankId,
       "community_id": communityId == null ? null : communityId,
       "root_timebank_id": rootTimebankId == null ? null : rootTimebankId,
@@ -184,15 +208,36 @@ class TimebankModel extends DataModel {
           : new List<dynamic>.from(children.map((x) => x)),
       "balance": balance == null ? null : balance,
     };
+
     if (this.location != null) {
       map['location'] = this.location.data;
     }
+
+    if (this.preventAccedentalDelete != null) {
+      map['preventAccedentalDelete'] = this.preventAccedentalDelete;
+    } else {
+      map['preventAccedentalDelete'] = false;
+    }
+
+    if (this.softDelete != null) {
+      map['softDelete'] = this.softDelete;
+    } else {
+      map['softDelete'] = false;
+    }
+
+    if (this.requestedSoftDelete != null) {
+      map['requestedSoftDelete'] = this.requestedSoftDelete;
+    } else {
+      map['requestedSoftDelete'] = false;
+    }
+
+    print("----------------Here  is the update part----------------");
     return map;
   }
 
   @override
   String toString() {
-    return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address, creatorId: $creatorId, photoUrl: $photoUrl, createdAt: $createdAt, admins: $admins, coordinators: $coordinators, members: $members, protected: $protected, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, location: $location}';
+    return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address, creatorId: $creatorId, photoUrl: $photoUrl, createdAt: $createdAt, admins: $admins, coordinators: $coordinators, members: $members, protected: $protected, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, location: $location, private: $private}';
   }
 }
 

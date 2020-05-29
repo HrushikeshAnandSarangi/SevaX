@@ -20,13 +20,16 @@ class AdminPersonalRequests extends StatefulWidget {
   final BuildContext parentContext;
   final UserModel userModel;
   final bool isTimebankRequest;
+  final bool showAppBar;
 
-  AdminPersonalRequests(
-      {Key key,
-      this.timebankId,
-      this.parentContext,
-      this.isTimebankRequest,
-      this.userModel});
+  AdminPersonalRequests({
+    Key key,
+    this.timebankId,
+    this.parentContext,
+    this.isTimebankRequest,
+    this.userModel,
+    this.showAppBar,
+  });
 
   @override
   _TimeBankExistingRequestsState createState() =>
@@ -38,20 +41,18 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     print("user data---------> ${widget.userModel.sevaUserID}");
     FirestoreManager.getTimeBankForId(timebankId: widget.timebankId)
         .then((onValue) {
       timebankModel = onValue;
     });
-    timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankId);
+    //   timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankId);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: !widget.isTimebankRequest
+      appBar: widget.showAppBar
           ? AppBar(
               title: Text(
                 "Existing Requests",
@@ -64,7 +65,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return new Text('Error: ${snapshot.error}');
+              return new Text('Somthing went wrong!');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -83,7 +84,8 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
-
+                    requestModelList = filterRequests(
+                        context: context, requestModelList: requestModelList);
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
 
@@ -121,6 +123,20 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                 .contains(request.sevaUserId)
         ? "Filtering blocked content"
         : filteredList.add(request));
+
+    return filteredList;
+  }
+
+  List<RequestModel> filterRequests({
+    List<RequestModel> requestModelList,
+    BuildContext context,
+  }) {
+    List<RequestModel> filteredList = [];
+
+    requestModelList.forEach((request) =>
+        request.requestEnd > DateTime.now().millisecondsSinceEpoch
+            ? filteredList.add(request)
+            : "Filtering past requests content");
 
     return filteredList;
   }
@@ -178,14 +194,6 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
 
   Widget getRequestListViewHolder(
       {RequestModel model, String loggedintimezone, String userEmail}) {
-//    bool isApplied =false;
-//    if(model.acceptors.contains(userEmail) ||
-//        model.approvedUsers.contains(userEmail) ||
-//        model.invitedUsers.contains(SevaCore.of(context)
-//            .loggedInUser
-//            .sevaUserID)){
-//      isApplied = true;
-//    }
     return Container(
       decoration: containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),

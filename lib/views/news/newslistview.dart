@@ -12,7 +12,6 @@ import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
-import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../../flavor_config.dart';
@@ -257,17 +256,6 @@ class NewsListState extends State<NewsList> {
                           )
                         : Offstage(),
       ],
-    );
-  }
-
-  void createSubTimebank(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TimebankCreate(
-          timebankId: FlavorConfig.values.timebankId,
-        ),
-      ),
     );
   }
 
@@ -662,7 +650,9 @@ class NewsListState extends State<NewsList> {
             child: FadeInImage(
               fit: BoxFit.fitWidth,
               placeholder: AssetImage('lib/assets/images/noimagefound.png'),
-              image: NetworkImage(urlToLoad),
+              image: NetworkImage(
+                urlToLoad ?? defaultUserImageURL,
+              ),
             ),
           ),
         ),

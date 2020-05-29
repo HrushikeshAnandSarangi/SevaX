@@ -3,22 +3,27 @@ import 'dart:collection';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/models/location_model.dart';
+import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
+import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 class TimebankCreate extends StatelessWidget {
   final String timebankId;
@@ -76,6 +81,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 
   void initState() {
     super.initState();
+    timebankModel.preventAccedentalDelete = true;
     var _searchText = "";
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
@@ -126,14 +132,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     List<String> members = [SevaCore.of(context).loggedInUser.sevaUserID];
-    globals.addedMembersId.forEach((m) {
-      members.add(m);
-    });
-
-    selectedUsers.forEach((key, user) {
-      print("Selected member with key $key");
-      members.add(user.sevaUserID);
-    });
 
     print("Final arrray $members");
 
@@ -145,11 +143,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.photoUrl = globals.timebankAvatarURL;
     timebankModel.createdAt = timestamp;
     timebankModel.admins = [SevaCore.of(context).loggedInUser.sevaUserID];
+    timebankModel.emailId = SevaCore.of(context).loggedInUser.email;
     timebankModel.coordinators = [];
     timebankModel.members = members;
     timebankModel.children = [];
     timebankModel.balance = 0;
-    timebankModel.protected = protectedVal;
+    timebankModel.protected = false;
     timebankModel.parentTimebankId = widget.timebankId;
     timebankModel.rootTimebankId = FlavorConfig.values.timebankId;
     timebankModel.address = selectedAddress;
@@ -166,7 +165,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         "timebanks": FieldValue.arrayUnion([id]),
       },
     );
-
+    sendInviteNotification();
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
   }
@@ -176,16 +175,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
-        key: _formKey,
-        child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-            child: SingleChildScrollView(
-              child: ((FlavorConfig.appFlavor == Flavor.APP ||
-                          FlavorConfig.appFlavor == Flavor.SEVA_DEV) ||
-                      FlavorConfig.appFlavor == Flavor.SEVA_DEV)
-                  ? createSevaX
-                  : createTimebankHumanityFirst,
-            )));
+      key: _formKey,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+        child: SingleChildScrollView(child: FadeAnimation(1.4, createSevaX)),
+      ),
+    );
   }
 
   Widget get createSevaX {
@@ -241,7 +236,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               if (value.isEmpty) {
                 return 'Please enter some text';
               }
-              timebankModel.name =  value.trim();
+              timebankModel.name = value.trim();
             },
           ),
           headingText('About', true),
@@ -265,56 +260,61 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               timebankModel.missionStatement = value;
             },
           ),
-          tappableInviteMembers,
           Row(
             children: <Widget>[
-              headingText('Protected group', false),
-              Column(
-                children: <Widget>[
-                  Divider(),
-                  Checkbox(
-                    checkColor: Colors.white,
-                    activeColor: Colors.green,
-                    value: protectedVal,
-                    onChanged: (bool value) {
-                      setState(() {
-                        protectedVal = value;
-                      });
-                    },
-                  ),
-                ],
+              headingText('Private Group', false),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                child: infoButton(
+                  context: context,
+                  key: GlobalKey(),
+                  type: InfoType.PRIVATE_GROUP,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                child: Checkbox(
+                  value: timebankModel.private,
+                  onChanged: (bool value) {
+                    print(value);
+                    setState(() {
+                      timebankModel.private = value;
+                    });
+                    print(timebankModel.private);
+                  },
+                ),
               ),
             ],
           ),
-          Text(
-            'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled.',
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
+          Row(
+            children: <Widget>[
+              headingText('Private accidental delete', false),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                child: Checkbox(
+                  value: timebankModel.preventAccedentalDelete,
+                  onChanged: (bool value) {
+                    print(value);
+                    setState(() {
+                      timebankModel.preventAccedentalDelete = value;
+                    });
+                    print(timebankModel.preventAccedentalDelete);
+                  },
+                ),
+              ),
+            ],
           ),
+          tappableInviteMembers,
           headingText('Is this pin at a right place?', false),
           Center(
-            child: FlatButton.icon(
-              icon: Icon(Icons.add_location),
-              label: Text(
-                selectedAddress == null || selectedAddress.isEmpty
-                    ? 'Add Location'
-                    : selectedAddress,
-              ),
-              color: Colors.grey[200],
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<GeoFirePoint>(
-                    builder: (context) => LocationPicker(
-                      selectedLocation: location,
-                    ),
-                  ),
-                ).then((point) {
-                  if (point != null) location = point;
-                  _getLocation();
-                  log('ReceivedLocation: $selectedAddress');
+            child: LocationPickerWidget(
+              selectedAddress: selectedAddress,
+              location: location,
+              onChanged: (LocationDataModel dataModel) {
+                log("received data model");
+                setState(() {
+                  location = dataModel.geoPoint;
+                  this.selectedAddress = dataModel.location;
                 });
               },
             ),
@@ -333,9 +333,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       return RaisedButton(
                         // color: Colors.blue,
                         onPressed: () {
-                          if(errTxt!=null || errTxt!=""){
-
-                          }
+                          if (errTxt != null || errTxt != "") {}
                           // Validate will return true if the form is valid, or false if
                           // the form is invalid.
                           //if (location != null) {
@@ -387,7 +385,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     );
   }
 
-  Widget get createTimebankHumanityFirst {
+/*  Widget get createTimebankHumanityFirst {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -480,6 +478,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
           keyboardType: TextInputType.emailAddress,
           maxLines: 1,
+          initialValue: SevaCore.of(context).loggedInUser.email,
           validator: (value) {
             if (value.isEmpty) {
               return 'Please enter email';
@@ -590,14 +589,17 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute<GeoFirePoint>(
+                  MaterialPageRoute<LocationDataModel>(
                     builder: (context) => LocationPicker(
                       selectedLocation: location,
                     ),
                   ),
-                ).then((point) {
-                  if (point != null) location = point;
-                  _getLocation();
+                ).then((dataModel) {
+                  if (dataModel != null) location = dataModel.geoPoint;
+                  // _getLocation();
+                  setState(() {
+                    this.selectedAddress = dataModel.location;
+                  });
                   log('ReceivedLocation: $selectedAddress');
                 });
               },
@@ -707,6 +709,41 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         ),
       ],
     );
+  }*/
+
+  void sendInviteNotification() {
+//    globals.addedMembersId.forEach((m) {
+//      members.add(m);
+//    });
+    if (selectedUsers.length > 0) {
+      selectedUsers.forEach((key, user) async {
+        print("Selected member with key $key");
+        GroupInviteUserModel groupInviteUserModel = GroupInviteUserModel(
+            timebankId: widget.timebankId,
+            timebankName: timebankModel.name,
+            timebankImage: timebankModel.photoUrl,
+            aboutTimebank: timebankModel.missionStatement,
+            adminName: SevaCore.of(context).loggedInUser.fullname,
+            groupId: timebankModel.id);
+
+        NotificationsModel notification = NotificationsModel(
+            id: utils.Utils.getUuid(),
+            timebankId: widget.timebankId,
+            data: groupInviteUserModel.toMap(),
+            isRead: false,
+            type: NotificationType.GroupJoinInvite,
+            communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+            senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+            targetUserId: user.sevaUserID);
+
+        await Firestore.instance
+            .collection('users')
+            .document(user.email)
+            .collection("notifications")
+            .document(notification.id)
+            .setData(notification.toMap());
+      });
+    }
   }
 
   void addVolunteers() async {

@@ -116,6 +116,7 @@ Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
   var query = Firestore.instance
       .collection('projects')
       .where('timebank_id', isEqualTo: timebankid)
+      .where('softDelete', isEqualTo: false)
       .orderBy("created_at", descending: true);
 
   var data = query.snapshots();
@@ -213,7 +214,6 @@ Stream<List<RequestModel>> getPersonalRequestListStream(
       .where('sevauserid', isEqualTo: sevauserid)
       .where('accepted', isEqualTo: false)
       .where('requestMode', isEqualTo: 'PERSONAL_REQUEST');
-
   var data = query.snapshots();
 
   yield* data.transform(
@@ -266,7 +266,7 @@ Stream<List<RequestModel>> getProjectRequestsStream(
 }
 
 Stream<List<RequestModel>> getNearRequestListStream(
-    {String timebankId, UserModel loggedInUser}) async* {
+    {String timebankId, UserModel loggedInUser, bool isFromSettings}) async* {
   // LocationData pos = await location.getLocation();
   // double lat = pos.latitude;
   // double lng = pos.longitude;
@@ -281,7 +281,15 @@ Stream<List<RequestModel>> getNearRequestListStream(
   print(
       "Location retrieved fom user ->  ${lat.toString()} + ${lng.toString()}");
   GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
-  var query = timebankId == null || timebankId == 'All'
+  var query;
+//  if (isFromSettings == true) {
+//    query = Firestore.instance
+//        .collection('requests')
+//        .where('timebankId', isEqualTo: timebankId)
+//        .where('accepted', isEqualTo: false)
+//        .where('requestMode', isEqualTo: 'TIMEBANK_REQUEST');
+//  } else {
+  query = timebankId == null || timebankId == 'All'
       ? Firestore.instance
           .collection('requests')
           .where('accepted', isEqualTo: false)
@@ -289,13 +297,14 @@ Stream<List<RequestModel>> getNearRequestListStream(
       : Firestore.instance
           .collection('requests')
           .where('timebankId', isEqualTo: timebankId);
+  // }
   // .orderBy('posttimestamp', descending: true);
 
   var radius = 20;
   try {
     radius = json.decode(AppConfig.remoteConfig.getString('radius'));
   } on Exception {
-    print("Exception raised while getting user minimum balance ");
+    print("Exception raised while getting user minimum radius ");
   }
   print(
       "radius is fetched from remote config near request item ${radius.toDouble()}");
@@ -950,8 +959,9 @@ Stream<List<TransactionModel>> getTimebankCreditsDebitsStream({
 }) async* {
   var data = Firestore.instance
       .collection('transactions')
-      .where('transactionbetween', arrayContains: timebankid)
       .where("isApproved", isEqualTo: true)
+      .where('transactionbetween', arrayContains: timebankid)
+      .orderBy("timestamp", descending: true)
       .snapshots();
 
   yield* data.transform(
@@ -975,8 +985,8 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
 }) async* {
   var data = Firestore.instance
       .collection('transactions')
-      .where('transactionbetween', arrayContains: userId)
       .where("isApproved", isEqualTo: true)
+      .where('transactionbetween', arrayContains: userId)
       .orderBy("timestamp", descending: true)
       .snapshots();
 

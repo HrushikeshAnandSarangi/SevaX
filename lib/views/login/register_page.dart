@@ -16,6 +16,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/profile/timezone.dart';
 import 'package:sevaexchange/views/splash_view.dart' as DefaultSplashView;
 
 class RegisterPage extends StatefulWidget {
@@ -481,6 +482,8 @@ class _RegisterPageState extends State<RegisterPage>
       } else {
         user.photoURL = defaultUserImageURL;
       }
+      user.timezone = new TimezoneListData()
+          .getTimeZoneByCodeData(DateTime.now().timeZoneName);
       await FirestoreManager.updateUser(user: user);
 
       Navigator.pop(dialogContext);
@@ -588,14 +591,17 @@ class _RegisterPageState extends State<RegisterPage>
     if (Platform.isIOS) {
       return Container(
         width: double.infinity,
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            appleLogin,
+            googleLogin,
+            SizedBox(
+              height: 10,
+            ),
             Container(
               width: 16,
             ),
-            googleLogin,
+            appleLogin,
           ],
         ),
       );
@@ -607,15 +613,24 @@ class _RegisterPageState extends State<RegisterPage>
 
   Widget get appleLogin {
     return Material(
-      color: Colors.white,
-      shape: CircleBorder(),
       child: InkWell(
-        customBorder: CircleBorder(),
         onTap: appleLogIn,
-        child: SizedBox(
-          height: 44,
-          width: 44,
-          child: Image.asset('lib/assets/images/signin_apple.png'),
+        child: Card(
+          color: Colors.black,
+          child: ListTile(
+            leading: SizedBox(
+              height: 30,
+              width: 30,
+              child: Image.asset(
+                'lib/assets/images/apple-logo.png',
+                color: Colors.white,
+              ),
+            ),
+            title: Text(
+              'Sign up with Apple',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
         ),
       ),
     );
@@ -624,14 +639,17 @@ class _RegisterPageState extends State<RegisterPage>
   Widget get googleLogin {
     return Material(
       color: Colors.white,
-      shape: CircleBorder(),
       child: InkWell(
-        customBorder: CircleBorder(),
         onTap: useGoogleSignIn,
-        child: SizedBox(
-          height: 44,
-          width: 44,
-          child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
+        child: Card(
+          child: ListTile(
+            leading: SizedBox(
+              height: 30,
+              width: 30,
+              child: Image.asset('lib/assets/images/g.png'),
+            ),
+            title: Text('Sign up with Google'),
+          ),
         ),
       ),
     );

@@ -6,7 +6,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
+import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
+import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
@@ -16,8 +23,9 @@ import 'package:share/share.dart';
 class InviteAddMembers extends StatefulWidget {
   final String communityId;
   final String timebankId;
+  final TimebankModel timebankModel;
 
-  InviteAddMembers(this.timebankId, this.communityId);
+  InviteAddMembers(this.timebankId, this.communityId, this.timebankModel);
 
   @override
   State<StatefulWidget> createState() => InviteAddMembersState();
@@ -25,13 +33,34 @@ class InviteAddMembers extends StatefulWidget {
 
 class InviteAddMembersState extends State<InviteAddMembers> {
   TimebankCodeModel codeModel = TimebankCodeModel();
-
+  final TextEditingController searchTextController =
+      new TextEditingController();
   Future<TimebankModel> getTimebankDetails;
   TimebankModel timebankModel;
+
+  var validItems = List<String>();
+  InvitationManager inivitationManager = InvitationManager();
+
   @override
   void initState() {
     super.initState();
     _setTimebankModel();
+    getMembersList();
+    searchTextController.addListener(() {
+      setState(() {});
+    });
+    initDynamicLinks(context);
+    // setState(() {});
+  }
+
+  void getMembersList() {
+    FirestoreManager.getAllTimebankIdStream(
+      timebankId: widget.timebankId,
+    ).then((onValue) {
+      setState(() {
+        validItems = onValue;
+      });
+    });
   }
 
   void _setTimebankModel() async {
@@ -69,33 +98,355 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
   Widget get inviteCodeWidget {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.all(5),
-          child: GestureDetector(
-            child: Container(
-              height: 25,
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    "Invite via code",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+          padding: const EdgeInsets.only(top: 8.0),
+          child: TextField(
+            style: TextStyle(color: Colors.black),
+            controller: searchTextController,
+            decoration: InputDecoration(
+                suffixIcon: Offstage(
+                  offstage: searchTextController.text.length == 0,
+                  child: IconButton(
+                    splashColor: Colors.transparent,
+                    icon: Icon(
+                      Icons.clear,
+                      color: Colors.black54,
                     ),
+                    onPressed: () {
+                      //searchTextController.clear();
+                      WidgetsBinding.instance.addPostFrameCallback(
+                          (_) => searchTextController.clear());
+                    },
                   ),
-                  Spacer(),
-                  Image.asset("lib/assets/images/add.png"),
-                ],
-              ),
-            ),
-            onTap: () async {
-              _asyncInputDialog(context);
-            },
+                ),
+                hasFloatingPlaceholder: false,
+                alignLabelWithHint: true,
+                isDense: true,
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                ),
+                contentPadding: EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 3.0),
+                filled: true,
+                fillColor: Colors.grey[300],
+                focusedBorder: OutlineInputBorder(
+                  borderSide: new BorderSide(color: Colors.white),
+                  borderRadius: new BorderRadius.circular(25.7),
+                ),
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: new BorderRadius.circular(25.7)),
+                hintText: 'Invite members via email',
+                hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
           ),
         ),
-        getTimebankCodesWidget,
+        Padding(
+          padding: EdgeInsets.fromLTRB(5, 15, 0, 0),
+          child: Container(
+            height: 25,
+            child: Text(
+              "Members",
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        buildList(),
+        !widget.timebankModel.private == true
+            ? Padding(
+                padding: EdgeInsets.all(5),
+                child: GestureDetector(
+                  child: Container(
+                    height: 25,
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          "Invite via code",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Spacer(),
+                        Image.asset("lib/assets/images/add.png"),
+                      ],
+                    ),
+                  ),
+                  onTap: () async {
+                    _asyncInputDialog(context);
+                  },
+                ),
+              )
+            : Offstage(),
+        !widget.timebankModel.private == true
+            ? getTimebankCodesWidget
+            : Offstage(),
       ],
+    );
+  }
+
+  Widget buildList() {
+    return StreamBuilder<List<UserModel>>(
+        stream: SearchManager.searchUserInSevaX(
+          queryString: searchTextController.text,
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Please try again later');
+          }
+          if (!snapshot.hasData) {
+            return Center(
+              child: SizedBox(
+                height: 48,
+                width: 48,
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+          List<UserModel> userlist = snapshot.data;
+          userlist.removeWhere((user) =>
+              user.sevaUserID == SevaCore.of(context).loggedInUser.sevaUserID);
+
+          print("user list ${snapshot.data}");
+          print("user  ${userlist}");
+          if (userlist.length == 0) {
+            if (searchTextController.text.length > 1 &&
+                isvalidEmailId(searchTextController.text)) {
+              return userInviteWidget(email: searchTextController.text);
+            }
+
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: searchTextController.text.length > 1
+                    ? Text("${searchTextController.text} not found")
+                    : Container(),
+              ),
+            );
+          }
+          return Expanded(
+            child: Padding(
+                padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: userlist.length,
+                    itemBuilder: (context, index) {
+                      return userWidget(
+                        user: userlist[index],
+                      );
+                    })),
+          );
+
+          return Text("");
+        });
+  }
+
+  bool isvalidEmailId(String value) {
+    RegExp emailPattern = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    if (emailPattern.hasMatch(value)) return true;
+    return false;
+  }
+
+  Widget userInviteWidget({
+    String email,
+  }) {
+    inivitationManager.initDialogForProgress(context: context);
+    return Card(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ListTile(
+                  leading: CircleAvatar(),
+                  title: Text(email,
+                      style: TextStyle(
+                          fontSize: 15.0, fontWeight: FontWeight.w700)),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Container(
+                      height: 40,
+                      padding: EdgeInsets.only(right: 8),
+                      child: FutureBuilder(
+                        future: inivitationManager.checkInvitationStatus(
+                            email, timebankModel.id),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<InvitationStatus> snapshot) {
+                          if (!snapshot.hasData) {
+                            return gettigStatus();
+                          }
+                          var invitationStatus = snapshot.data;
+                          if (invitationStatus.isInvited) {
+                            return resendInvitation(
+                              invitation: inivitationManager
+                                  .getInvitationForEmailFromCache(
+                                inviteeEmail: email,
+                              ),
+                            );
+                          }
+                          return inviteMember(
+                            inviteeEmail: email,
+                            timebankModel: timebankModel,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget inviteMember({
+    String inviteeEmail,
+    TimebankModel timebankModel,
+  }) {
+    return RaisedButton(
+      onPressed: () async {
+        inivitationManager.showProgress(title: "Sending invitation...");
+        await inivitationManager.inviteMemberToTimebankViaLink(
+          invitation: InvitationViaLink.createInvitation(
+            timebankTitle: timebankModel.name,
+            timebankId: timebankModel.id,
+            senderEmail: SevaCore.of(context).loggedInUser.email,
+            inviteeEmail: inviteeEmail,
+            communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+          ),
+        );
+        inivitationManager.hideProgress();
+        setState(() {});
+      },
+      child: Text('Invite'),
+      color: Colors.indigo,
+      textColor: Colors.white,
+      shape: StadiumBorder(),
+    );
+  }
+
+  void showProgressDialog() {}
+
+  Widget resendInvitation({InvitationViaLink invitation}) {
+    return RaisedButton(
+      onPressed: () async {
+        inivitationManager.showProgress(title: "Sending invitation...");
+        await inivitationManager.resendInvitationToMember(
+          invitation: invitation,
+        );
+        inivitationManager.hideProgress();
+
+        setState(() {});
+      },
+      child: Text(
+        'Resend Invitation',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 10,
+        ),
+      ),
+      color: Colors.indigo,
+      textColor: Colors.white,
+      shape: StadiumBorder(),
+    );
+  }
+
+  Widget gettigStatus() {
+    return RaisedButton(
+      onPressed: null,
+      child: Text('...'),
+      color: Colors.indigo,
+      textColor: Colors.white,
+      shape: StadiumBorder(),
+    );
+  }
+
+  Widget userWidget({
+    UserModel user,
+  }) {
+    bool isJoined = false;
+    if (validItems.contains(user.sevaUserID)) {
+      isJoined = true;
+    }
+
+    return Card(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ListTile(
+                  leading: user.photoURL != null
+                      ? ClipOval(
+                          child: FadeInImage.assetNetwork(
+                            fadeInCurve: Curves.easeIn,
+                            fadeInDuration: Duration(milliseconds: 400),
+                            fadeOutDuration: Duration(milliseconds: 200),
+                            width: 50,
+                            height: 50,
+                            placeholder: 'lib/assets/images/noimagefound.png',
+                            image: user.photoURL,
+                          ),
+                        )
+                      : CircleAvatar(),
+                  // onTap: goToNext(snapshot.data),
+                  title: Text(user.fullname,
+                      style: TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.w700)),
+                  subtitle: Text(user.email),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: RaisedButton(
+                        onPressed: !isJoined
+                            ? () async {
+                                await addMemberToTimebank(
+                                        sevaUserId: user.sevaUserID,
+                                        timebankId: timebankModel.id,
+                                        communityId: timebankModel.communityId,
+                                        userEmail: user.email)
+                                    .commit();
+                                setState(() {
+                                  getMembersList();
+                                });
+                              }
+                            : null,
+                        child: Text(isJoined ? "Joined" : "Add"),
+                        color: FlavorConfig.values.theme.primaryColor,
+                        textColor: Colors.white,
+                        shape: StadiumBorder(),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -106,11 +457,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
           }
-
-          print("timebank Code --> ${widget.timebankId}");
           List<TimebankCodeModel> codeList = snapshot.data.reversed.toList();
 
           if (codeList.length == 0) {
@@ -179,8 +528,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                 ),
                                 GestureDetector(
                                   child: IconButton(
-                                    icon: Image.asset(
-                                      'lib/assets/images/recycle-bin.png',
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: Colors.grey,
                                     ),
                                     iconSize: 30,
                                     onPressed: () {
@@ -199,18 +549,12 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                   );
                 }),
           );
-
-          // return SizedBox(
-          //     height: MediaQuery.of(context).size.height - 120,
-          //     child: );
         });
   }
 
   String shareText(TimebankCodeModel timebankCode) {
-    // var text =  "Please download the SevaX volunteer app and join my Timebank ${timebankModel.name} by using the code \"${timebankCode.timebankCode}\"";
     var text =
         "${SevaCore.of(context).loggedInUser.fullname} has invited you to join \"${timebankModel.name}\" Timebank. Timebanks are communities that allow you to volunteer and also receive time credits towards getting things done for you. Use the code \"${timebankCode.timebankCode}\" when prompted to join this Timebank. Please download the app from the links provided at https://sevaxapp.com";
-
     return text;
   }
 
@@ -316,17 +660,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         .collection('timebankCodes')
         .document(codeModel.timebankCodeId)
         .setData(codeModel.toMap());
-
-//    Firestore.instance.collection("timebankCodes").add({
-//      "timebankId": timebankId,
-//      "timebankCode": timebankCode,
-//      "timebankCodeId": utils.Utils.getUuid(),
-//      "validUpto": validUpto,
-//      "createdOn": DateTime.now().millisecondsSinceEpoch,
-//      "communityId": communityId,
-//    }).then((doc) {
-//      // task completed
-//    });
   }
 
   void deleteShareCode(String timebankCodeId) {
@@ -337,160 +670,75 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
     print('deleted');
   }
+
+  TextStyle get sectionTextStyle {
+    return TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 11,
+      color: Colors.grey,
+    );
+  }
+
+  WriteBatch addMemberToTimebank(
+      {String communityId,
+      String sevaUserId,
+      String timebankId,
+      String userEmail}) {
+    WriteBatch batch = Firestore.instance.batch();
+    var timebankRef =
+        Firestore.instance.collection('timebanknew').document(timebankId);
+    var addToCommunityRef =
+        Firestore.instance.collection('communities').document(communityId);
+
+    var newMemberDocumentReference =
+        Firestore.instance.collection('users').document(userEmail);
+
+    batch.updateData(timebankRef, {
+      'members': FieldValue.arrayUnion([sevaUserId]),
+    });
+
+    batch.updateData(newMemberDocumentReference, {
+      'communities': FieldValue.arrayUnion([communityId]),
+    });
+
+    batch.updateData(addToCommunityRef, {
+      'members': FieldValue.arrayUnion([sevaUserId]),
+    });
+
+    sendNotificationToMember(
+        communityId: communityId,
+        timebankId: timebankId,
+        sevaUserId: sevaUserId,
+        userEmail: userEmail);
+
+    return batch;
+  }
+
+  Future<void> sendNotificationToMember(
+      {String communityId,
+      String sevaUserId,
+      String timebankId,
+      String userEmail}) async {
+    UserAddedModel userAddedModel = UserAddedModel(
+        timebankImage: timebankModel.photoUrl,
+        timebankName: timebankModel.name,
+        adminName: SevaCore.of(context).loggedInUser.fullname);
+
+    NotificationsModel notification = NotificationsModel(
+        id: utils.Utils.getUuid(),
+        timebankId: FlavorConfig.values.timebankId,
+        data: userAddedModel.toMap(),
+        isRead: false,
+        type: NotificationType.TypeMemberAdded,
+        communityId: communityId,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        targetUserId: sevaUserId);
+
+    await Firestore.instance
+        .collection('users')
+        .document(userEmail)
+        .collection("notifications")
+        .document(notification.id)
+        .setData(notification.toMap());
+  }
 }
-
-// class InvitationListView extends StatelessWidget {
-//   final String timebankId;
-//   InvitationListView.forTimebank({this.timebankId});
-//   List<prefix0.TimebankModel> timebankList = [];
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: <Widget>[
-//         Row(
-//           children: <Widget>[
-//             Padding(
-//               padding: EdgeInsets.only(left: 10),
-//             ),
-//             Text(
-//               FlavorConfig.values.timebankTitle,
-//               style: (TextStyle(fontWeight: FontWeight.w500)),
-//             ),
-//             Padding(
-//               padding: EdgeInsets.only(left: 10),
-//             ),
-//             Expanded(
-//               child: StreamBuilder<Object>(
-//                 stream: FirestoreManager.getTimebanksForUserStream(
-//                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
-//                 ),
-//                 builder: (context, snapshot) {
-//                   if (snapshot.hasError)
-//                     return new Text('Error: ${snapshot.error}');
-//                   if (snapshot.connectionState == ConnectionState.waiting) {
-//                     return Center(child: CircularProgressIndicator());
-//                   }
-//                   timebankList = snapshot.data;
-//                   List<String> dropdownList = [];
-//                   timebankList.forEach((t) {
-//                     dropdownList.add(t.id);
-//                   });
-//                   SevaCore.of(context).loggedInUser.associatedWithTimebanks =
-//                       dropdownList.length;
-//                   return DropdownButton<String>(
-//                     value: timebankId,
-//                     onChanged: (String newValue) {},
-//                     items: dropdownList
-//                         .map<DropdownMenuItem<String>>((String value) {
-//                       if (value == 'All') {
-//                         return DropdownMenuItem<String>(
-//                           value: value,
-//                           child: Text(value),
-//                         );
-//                       } else
-//                         return DropdownMenuItem<String>(
-//                           value: value,
-//                           child: FutureBuilder<Object>(
-//                               future: FirestoreManager.getTimeBankForId(
-//                                   timebankId: value),
-//                               builder: (context, snapshot) {
-//                                 if (snapshot.hasError)
-//                                   return new Text('Error: ${snapshot.error}');
-//                                 if (snapshot.connectionState ==
-//                                     ConnectionState.waiting) {
-//                                   return Offstage();
-//                                 }
-//                                 prefix0.TimebankModel timebankModel =
-//                                     snapshot.data;
-//                                 return Text(timebankModel.name);
-//                               }),
-//                         );
-//                     }).toList(),
-//                   );
-//                 },
-//               ),
-//             ),
-//           ],
-//         ),
-//         Divider(
-//           color: Colors.grey,
-//           height: 0,
-//         ),
-//         StreamBuilder<List<TimebankCodeModel>>(
-//             stream: getTimebankCodes(timebankId: timebankId),
-//             builder: (context, snapshot) {
-//               if (snapshot.hasError) {
-//                 return Text(snapshot.error.toString());
-//               }
-
-//               if (snapshot.connectionState == ConnectionState.waiting) {
-//                 return Center(child: CircularProgressIndicator());
-//               }
-
-//               List<TimebankCodeModel> codeList =
-//                   snapshot.data.reversed.toList();
-
-//               if (codeList.length == 0) {
-//                 return Center(
-//                   child: Text('No codes genrated yet.'),
-//                 );
-//               }
-
-//               return ListView.builder(
-//                   itemCount: codeList.length,
-//                   itemBuilder: (context, index) {
-//                     TimebankCodeModel timebankCode = codeList.elementAt(index);
-//                     return GestureDetector(
-//                       child: Card(
-//                         margin: EdgeInsets.all(5),
-//                         child: Container(
-//                           margin: EdgeInsets.all(15),
-//                           child: Column(
-//                             mainAxisAlignment: MainAxisAlignment.start,
-//                             crossAxisAlignment: CrossAxisAlignment.start,
-//                             children: <Widget>[
-//                               Text(FlavorConfig.values.timebankName ==
-//                                       "Yang 2020"
-//                                   ? "Yang Gang Code : " +
-//                                       timebankCode.timebankCode
-//                                   : "Timebank code : " +
-//                                       timebankCode.timebankCode),
-//                               Text(
-//                                   "Redeemed by ${timebankCode.usersOnBoarded == null ? 0 : timebankCode.usersOnBoarded.length} users"),
-//                               Text(
-//                                 DateTime.now().millisecondsSinceEpoch >
-//                                         timebankCode.validUpto
-//                                     ? "Expired"
-//                                     : "Active",
-//                               ),
-//                               GestureDetector(
-//                                 onTap: () {
-//                                   Share.share(
-//                                       "Hello Fellow Yang Gang \nPlease join me on the Humanity First App by using the code \"${timebankCode.timebankCode}\" In case you don't have the app installed already, you can install it from the Google Play Store at  https://play.google.com/store/apps/details?id=com.sevaexchange.humanityfirst&hl=en  or in the App Store at https://apps.apple.com/us/app/humanity-first-app-official/id1466915003 Looking forward to growing the Yang Gang movement with you!");
-//                                 },
-//                                 child: Container(
-//                                   margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-//                                   child: Text(
-//                                     'Share code',
-//                                     style: TextStyle(color: Colors.blue),
-//                                   ),
-//                                 ),
-//                               )
-//                             ],
-//                           ),
-//                         ),
-//                       ),
-//                     );
-//                   });
-//             })
-//       ],
-//     );
-//   }
-
-//   prefix0.TimebankModel timebBank;
-//   Future setTimebankDetails() async {
-//     timebBank = await FirestoreManager.getTimeBankForId(timebankId: timebankId);
-//     print("Timebank name --> ${timebBank.name}");
-//   }
-// }

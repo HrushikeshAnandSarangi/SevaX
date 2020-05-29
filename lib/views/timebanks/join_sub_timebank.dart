@@ -127,11 +127,12 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
     return FutureBuilder<List<TimebankModel>>(
         future: getTimebanksForCommunity(
-            communityId: widget.loggedInUserModel.currentCommunity,
-            primaryTimebankId: widget.communityPrimaryTimebankId),
+          communityId: widget.loggedInUserModel.currentCommunity,
+          primaryTimebankId: widget.communityPrimaryTimebankId,
+        ),
         builder: (context, snapshot) {
           //    print('timee ${snapshot.data}');
-          if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+          if (snapshot.hasError) return new Text('Somthing went wrong!');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
@@ -400,17 +401,16 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
     String subtimebankId,
   }) {
     return new JoinRequestModel(
-      timebankTitle: subTimebankLabel,
-      accepted: false,
-      entityId: subtimebankId,
-      entityType: EntityType.Timebank,
-      operationTaken: false,
-      reason: "I want to volunteer.",
-      timestamp: DateTime.now().millisecondsSinceEpoch,
-      userId: userIdForNewMember,
-      isFromGroup: true,
-      notificationId: utils.Utils.getUuid()
-    );
+        timebankTitle: subTimebankLabel,
+        accepted: false,
+        entityId: subtimebankId,
+        entityType: EntityType.Timebank,
+        operationTaken: false,
+        reason: "I want to volunteer.",
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+        userId: userIdForNewMember,
+        isFromGroup: true,
+        notificationId: utils.Utils.getUuid());
   }
 
   NotificationsModel _assembleNotificationForJoinRequest({
@@ -507,7 +507,9 @@ Future<List<TimebankModel>> getTimebanksForCommunity(
       .then((QuerySnapshot timebankModel) {
     timebankModel.documents.forEach((timebank) {
       var model = TimebankModel.fromMap(timebank.data);
-      if (model.id != primaryTimebankId) {
+      if (model.id != primaryTimebankId &&
+          !model.softDelete &&
+          model.private == false) {
         timebankList.add(model);
       }
     });

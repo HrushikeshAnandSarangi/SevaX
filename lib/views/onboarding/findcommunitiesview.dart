@@ -255,7 +255,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 //      return nearByTimebanks();
 
     if (searchTextController.text.trim().length < 1) {
-      //  print('Search requires minimum 1 character');
       return Column(
         children: <Widget>[
           getEmptyWidget('Users', nearTimebankText),
@@ -275,6 +274,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             } else {
               if (snapshot.data.length != 0) {
                 List<CommunityModel> communityList = snapshot.data;
+                print("comm list ${communityList}");
+//                communityList
+//                    .removeWhere((community) => community.private == true);
+
                 return Padding(
                     padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
                     child: ListView.builder(
@@ -421,9 +424,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             return Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasData) {
-            //  print('near by comminities ${snapshot.data}');
+            print('near by comminities ${snapshot.data}');
             if (snapshot.data.length != 0) {
               List<CommunityModel> communityList = snapshot.data;
+
               return ListView.builder(
                   padding: EdgeInsets.only(
                     bottom: 180,
@@ -546,7 +550,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                 ),
                 onPressed: () async {
                   var timebankAdvisory =
-                      "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
+                      "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks. In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
                   Map<String, bool> onActivityResult =
                       await showTimebankAdvisory(dialogTitle: timebankAdvisory);
                   if (onActivityResult['PROCEED']) {

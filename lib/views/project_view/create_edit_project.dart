@@ -1,23 +1,25 @@
 //import 'dart:html';
 
+import 'dart:developer';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
-import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/projects_avtaar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
+import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 import '../../flavor_config.dart';
 
@@ -41,6 +43,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   ProjectModel projectModel = ProjectModel();
   GeoFirePoint location;
   String selectedAddress = '';
+
   TimebankModel timebankModel = TimebankModel({});
   BuildContext dialogContext;
   String dateTimeEroor = '';
@@ -77,6 +80,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       projectModel = onValue;
       print("projectttttt ${projectModel}");
       selectedAddress = projectModel.address;
+      location = projectModel.location;
       isDataLoaded = true;
       setState(() {});
     });
@@ -224,7 +228,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             headingText('Project Name'),
             TextFormField(
               onChanged: (value) {
-                //  enteredName = value;
                 print("name ------ $value");
                 projectModel.name = value;
               },
@@ -372,11 +375,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               ],
 
               validator: (value) {
-                if (value.isEmpty) {
-                  return 'Mobile Number cannot be empty.';
-                } else {
-                  projectModel.phoneNumber = '+' + value;
-                }
+                projectModel.phoneNumber = '+' + value;
                 return null;
               },
               maxLength: 15,
@@ -424,38 +423,54 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               padding: const EdgeInsets.symmetric(vertical: 10.0),
             ),
             Center(
-              child: FlatButton.icon(
-                icon: Icon(Icons.add_location),
-                label: Container(
-                  child: Text(
-                    selectedAddress == '' || selectedAddress == null
-                        ? 'Add Location'
-                        : selectedAddress ?? "",
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                color: Colors.grey[200],
-                onPressed: () async {
-                  print("Location opened : $location");
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute<GeoFirePoint>(
-                      builder: (context) => LocationPicker(
-                        selectedLocation: location,
-                      ),
-                    ),
-                  ).then((point) {
-                    if (point != null) {
-                      location = point;
-                      print(
-                          "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
-                    }
-                    _getLocation(location);
-                    //print('ReceivedLocation: $snapshot.data.timebank.address');
+              child: LocationPickerWidget(
+                selectedAddress: selectedAddress,
+                location: location,
+                onChanged: (LocationDataModel dataModel) {
+                  log("received data model");
+                  setState(() {
+                    location = dataModel.geoPoint;
+                    this.selectedAddress = dataModel.location;
                   });
                 },
               ),
             ),
+            // Center(
+            //   child: FlatButton.icon(
+            //     icon: Icon(Icons.add_location),
+            //     label: Container(
+            //       child: Text(
+            //         selectedAddress == '' || selectedAddress == null
+            //             ? 'Add Location'
+            //             : selectedAddress ?? "",
+            //         overflow: TextOverflow.ellipsis,
+            //       ),
+            //     ),
+            //     color: Colors.grey[200],
+            //     onPressed: () async {
+            //       print("Location opened : $location");
+            //       await Navigator.push(
+            //         context,
+            //         MaterialPageRoute<LocationDataModel>(
+            //           builder: (context) => LocationPicker(
+            //             selectedLocation: location,
+            //             selectedAddress: selectedAddress,
+            //           ),
+            //         ),
+            //       ).then((dataModel) {
+            //         if (dataModel != null) {
+            //           location = dataModel.geoPoint;
+            //           print(
+            //               "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
+            //           setState(() {
+            //             this.selectedAddress = dataModel.location;
+            //           });
+            //           log("Adderess   ${dataModel.location}");
+            //         }
+            //       });
+            //     },
+            //   ),
+            // ),
             Text(
               locationError,
               style: TextStyle(
@@ -528,12 +543,14 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         projectModel.photoUrl = globals.projectsAvtaarURL;
                         projectModel.emailId =
                             SevaCore.of(context).loggedInUser.email;
+                        projectModel.location = location;
                         int timestamp = DateTime.now().millisecondsSinceEpoch;
                         projectModel.createdAt = timestamp;
 
                         projectModel.creatorId =
                             SevaCore.of(context).loggedInUser.sevaUserID;
                         projectModel.members = [];
+                        projectModel.address = selectedAddress;
                         projectModel.id = Utils.getUuid();
                         // if (globals.projectsAvtaarURL == null) {
                         //   setState(() {
@@ -563,6 +580,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             OfferDurationWidgetState.starttimestamp;
                         projectModel.endTime =
                             OfferDurationWidgetState.endtimestamp;
+                        projectModel.address = selectedAddress;
+                        projectModel.location = location;
 
                         if (globals.projectsAvtaarURL != null) {
                           projectModel.photoUrl = globals.projectsAvtaarURL;
@@ -673,19 +692,19 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         });
   }
 
-  Future _getLocation(data) async {
-    print('Timebank value:$data');
-    String address = await LocationUtility().getFormattedAddress(
-      location.latitude,
-      location.longitude,
-    );
-    setState(() {
-      this.selectedAddress = address;
-    });
-//    timebank.updateValueByKey('locationAddress', address);
-    print('_getLocation: $address');
-    projectModel.address = this.selectedAddress;
-  }
+//   Future _getLocation(data) async {
+//     print('Timebank value:$data');
+//     String address = await LocationUtility().getFormattedAddress(
+//       location.latitude,
+//       location.longitude,
+//     );
+//     setState(() {
+//       this.selectedAddress = address;
+//     });
+// //    timebank.updateValueByKey('locationAddress', address);
+//     print('_getLocation: $address');
+//     projectModel.address = this.selectedAddress;
+//   }
 
   Widget headingText(String name) {
     return Padding(

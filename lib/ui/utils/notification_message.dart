@@ -20,14 +20,14 @@ class UserNotificationMessage {
   static const String OFFER_SUBSCRIPTION_COMPLETED =
       "You have successfully signed up for the *class";
   static const String OFFER_FULFILMENT_ACHIEVED =
-      "You have recieved *n Seva Credits for the *class that you recently hosted";
+      "You have received *n Seva Credits for the *class that you recently hosted";
   static const String FEEDBACK_FROM_SIGNUP_MEMBER =
       "Please provide feedback for the *class that you recently attended";
 }
 
 class TimebankNotificationMessage {
   static const String DEBIT_FULFILMENT_FROM_TIMEBANK =
-      "*n Seva Credits have been sent to *name from the credits recieved for *class ";
+      "*n Seva Credits have been sent to *name from the credits received for *class ";
   static const String CREDIT_FROM_OFFER_APPROVED =
-      "Recieved *n Seva Credits from the the offer *class";
+      "Received *n Seva Credits from the the offer *class";
 }

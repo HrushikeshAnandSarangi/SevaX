@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -63,7 +64,7 @@ class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
                 }
                 UserModel user = snapshot.data;
                 return CircleAvatar(
-                  backgroundImage: NetworkImage(user.photoURL),
+                  backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
                 );
               },
             ),

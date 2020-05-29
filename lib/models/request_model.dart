@@ -17,21 +17,19 @@ class TaskModel extends DataModel {
   String requestid;
   String timebankId;
 
-  TaskModel({
-    this.id,
-    this.sevaUserId,
-    this.title,
-    this.requestStart,
-    this.requestEnd,
-    this.color,
-    this.description,
-    this.fullName,
-    this.postTimestamp,
-    this.email,
-    this.requestid,
-    this.timebankId
-  });
-
+  TaskModel(
+      {this.id,
+      this.sevaUserId,
+      this.title,
+      this.requestStart,
+      this.requestEnd,
+      this.color,
+      this.description,
+      this.fullName,
+      this.postTimestamp,
+      this.email,
+      this.requestid,
+      this.timebankId});
 
   TaskModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
@@ -90,7 +88,7 @@ class TaskModel extends DataModel {
     if (this.requestEnd != null) {
       object['requestEnd'] = this.requestEnd;
     }
-    if (this.color != null ) {
+    if (this.color != null) {
       object['color'] = this.color;
     }
     if (this.description != null && this.description.isNotEmpty) {
@@ -112,8 +110,8 @@ class TaskModel extends DataModel {
       object['timebankId'] = this.timebankId;
     }
   }
-
 }
+
 class RequestModel extends DataModel {
   String id;
   String title;
@@ -140,34 +138,35 @@ class RequestModel extends DataModel {
   Color color;
   bool isNotified = false;
   String projectId = "";
+  String address;
 
   RequestMode requestMode;
 
-  RequestModel({
-    this.id,
-    this.title,
-    this.description,
-    this.durationOfRequest,
-    this.email,
-    this.fullName,
-    this.sevaUserId,
-    this.photoUrl,
-    this.accepted,
-    this.postTimestamp,
-    this.requestEnd,
-    this.requestStart,
-    this.acceptors,
-    this.color,
-    this.transactions,
-    this.rejectedReason,
-    this.timebankId,
-    this.approvedUsers = const [],
-    this.invitedUsers,
-    this.numberOfApprovals = 1,
-    this.location,
-    this.root_timebank_id,
-    this.projectId,
-  });
+  RequestModel(
+      {this.id,
+      this.title,
+      this.description,
+      this.durationOfRequest,
+      this.email,
+      this.fullName,
+      this.sevaUserId,
+      this.photoUrl,
+      this.accepted,
+      this.postTimestamp,
+      this.requestEnd,
+      this.requestStart,
+      this.acceptors,
+      this.color,
+      this.transactions,
+      this.rejectedReason,
+      this.timebankId,
+      this.approvedUsers = const [],
+      this.invitedUsers,
+      this.numberOfApprovals = 1,
+      this.location,
+      this.root_timebank_id,
+      this.projectId,
+      this.address});
 
   RequestModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
@@ -210,6 +209,9 @@ class RequestModel extends DataModel {
     if (map.containsKey('requestorphotourl')) {
       this.photoUrl = map['requestorphotourl'];
     }
+    if (map.containsKey('address')) {
+      this.address = map['address'];
+    }
     if (map.containsKey('acceptors')) {
       List<String> acceptorList = List.castFrom(map['acceptors']);
       this.acceptors = acceptorList;
@@ -220,7 +222,7 @@ class RequestModel extends DataModel {
       List<String> invitedUsersList = List.castFrom(map['invitedUsers']);
       this.invitedUsers = invitedUsersList;
     } else {
-      this.invitedUsers = [];
+      this.invitedUsers = new List();
     }
     if (map.containsKey('durationofrequest')) {
       this.durationOfRequest = map['durationofrequest'];
@@ -295,6 +297,11 @@ class RequestModel extends DataModel {
     if (map.containsKey('id')) {
       this.id = map['id'];
     }
+
+    if (map.containsKey('address')) {
+      this.address = map['address'];
+    }
+
     if (map.containsKey('projectId')) {
       this.projectId = map['projectId'];
     } else {
@@ -445,8 +452,13 @@ class RequestModel extends DataModel {
     if (this.requestStart != null) {
       object['request_start'] = this.requestStart;
     }
+
     if (this.accepted != null) {
       object['accepted'] = this.accepted;
+    }
+
+    if (this.address != null) {
+      object['address'] = this.address;
     }
 
     if (this.numberOfHours != null) {
@@ -491,11 +503,6 @@ class RequestModel extends DataModel {
   }
 }
 
-enum RequestMode {
-  PERSONAL_REQUEST,
-  TIMEBANK_REQUEST
-}
+enum RequestMode { PERSONAL_REQUEST, TIMEBANK_REQUEST }
 
-enum ContantsSeva {
-  USER_DONATE_TOTIMEBANK
-}
+enum ContantsSeva { USER_DONATE_TOTIMEBANK }

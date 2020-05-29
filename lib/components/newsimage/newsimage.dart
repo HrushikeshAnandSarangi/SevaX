@@ -1,18 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
-import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
-import './image_picker_handler.dart';
 import '../../globals.dart' as globals;
-import '../location_picker.dart';
+import 'news_image_picker_handler.dart';
 
 class NewsImage extends StatefulWidget {
   final String photoCredits;
@@ -20,28 +21,39 @@ class NewsImage extends StatefulWidget {
   final GeoFirePoint geoFirePointLocation;
 
   final ValueChanged<String> onCreditsEntered;
-  final Function(GeoFirePoint) geoFirePointLocationCallback;
+  final Function(LocationDataModel) onLocationDataModelUpdate;
 
   NewsImage({
     this.photoCredits,
     this.geoFirePointLocation,
-    this.geoFirePointLocationCallback,
+    this.onLocationDataModelUpdate,
     this.onCreditsEntered,
     this.selectedAddress,
   });
 
-  NewsImageState createState() => NewsImageState(geoFirePointLocationCallback);
+  NewsImageState createState() => NewsImageState(onLocationDataModelUpdate);
 }
 
 @override
 class NewsImageState extends State<NewsImage>
-    with TickerProviderStateMixin, ImagePickerListener {
+    with TickerProviderStateMixin, NewsImagePickerListener {
   bool _isImageBeingUploaded = false;
-  Function(GeoFirePoint) geoFirePointLocationCallback;
-  NewsImageState(this.geoFirePointLocationCallback);
+  Function(LocationDataModel) onLocationDataModelUpdate;
+  NewsImageState(this.onLocationDataModelUpdate);
   String selectedAddress;
 
-  ImagePickerHandler imagePicker;
+  NewsImagePickerHandler imagePicker;
+  //document related variables
+  bool _isDocumentBeingUploaded = false;
+  File _file;
+  List<File> _files;
+  String _fileName;
+  String _path;
+  Map<String, String> _paths;
+  String _extension;
+  bool _loadingPath = false;
+  bool _multiPick = false;
+  FileType _pickingType = FileType.custom;
 
   File _image;
   AnimationController _controller;
@@ -82,8 +94,51 @@ class NewsImageState extends State<NewsImage>
   }
 
   @override
+  userDoc(String _doc, String fileName) {
+    // TODO: implement userDoc
+    setState(() {
+      this._path = _doc;
+      this._fileName = fileName;
+      this._isDocumentBeingUploaded = true;
+    });
+
+    uploadDocument().then((_) {
+      setState(() => this._isDocumentBeingUploaded = false);
+    });
+    return null;
+  }
+
+  Future<String> uploadDocument() async {
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+    String timestampString = timestamp.toString();
+    StorageReference ref = FirebaseStorage.instance
+        .ref()
+        .child('news_documents')
+        .child(SevaCore.of(context).loggedInUser.email +
+            timestampString +
+            _fileName);
+    StorageUploadTask uploadTask = ref.putFile(
+      File(_path),
+      StorageMetadata(
+        contentLanguage: 'en',
+        customMetadata: <String, String>{'activity': 'News Document'},
+      ),
+    );
+    String documentURL =
+        await (await uploadTask.onComplete).ref.getDownloadURL();
+
+    // _newsImageURL = imageURL;
+    globals.newsDocumentURL = documentURL;
+    globals.newsDocumentName = _fileName;
+    print("url of document $documentURL");
+    // _setAvatarURL();
+    // _updateDB();
+    return documentURL;
+  }
+
+  @override
   void initState() {
-    _fetchCurrentlocation;
+    if (widget.geoFirePointLocation == null) _fetchCurrentlocation;
     super.initState();
     print("locaton on newsimage ${widget.geoFirePointLocation?.coords}");
     selectedAddress = widget.selectedAddress;
@@ -92,7 +147,7 @@ class NewsImageState extends State<NewsImage>
       duration: const Duration(milliseconds: 500),
     );
 
-    imagePicker = ImagePickerHandler(this, _controller);
+    imagePicker = NewsImagePickerHandler(this, _controller);
     imagePicker.init();
   }
 
@@ -163,44 +218,60 @@ class NewsImageState extends State<NewsImage>
                           ],
                         ),
                 ),
+          _isDocumentBeingUploaded
+              ? Container(
+                  margin: EdgeInsets.only(top: 20),
+                  child: Center(
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                )
+              : Container(
+                  child: globals.newsDocumentURL == null
+                      ? Offstage()
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Card(
+                            color: Colors.grey[100],
+                            child: ListTile(
+                              leading: Icon(Icons.attachment),
+                              title: Text(
+                                globals.newsDocumentName ?? "Document.pdf",
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              trailing: IconButton(
+                                icon: Icon(Icons.clear),
+                                onPressed: () => setState(() {
+                                  globals.newsDocumentURL = null;
+                                }),
+                              ),
+                            ),
+                          ),
+                        ),
+                ),
           FlatButton.icon(
-            icon: Icon(Icons.image),
+            icon: Icon(Icons.attachment),
             color: Colors.grey[200],
             label: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                _image != null ? "Change image" : "Add image",
+                "Add attachment",
               ),
             ),
             onPressed: () {
               imagePicker.showDialog(context);
             },
           ),
-          FlatButton.icon(
-            color: Colors.grey[200],
-            icon: Icon(Icons.add_location),
-            label: Text(
-              selectedAddress == null ? 'Add Location' : selectedAddress,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute<GeoFirePoint>(
-                  builder: (context) => LocationPicker(
-                    selectedLocation: widget.geoFirePointLocation,
-                  ),
-                ),
-              ).then(
-                (point) {
-                  if (point != null) {
-                    getLocation(point).then((address) {
-                      selectedAddress = address;
-                      geoFirePointLocationCallback(point);
-                      setState(() {});
-                    });
-                  }
-                },
-              );
+          LocationPickerWidget(
+            location: widget.geoFirePointLocation,
+            selectedAddress: selectedAddress,
+            onChanged: (LocationDataModel dataModel) {
+              selectedAddress = dataModel.location;
+              onLocationDataModelUpdate(dataModel);
+              setState(() {});
             },
           ),
         ],
@@ -233,13 +304,18 @@ class NewsImageState extends State<NewsImage>
         print("Location1:$onValue");
         GeoFirePoint location =
             GeoFirePoint(onValue.latitude, onValue.longitude);
-        geoFirePointLocationCallback(location);
+
         LocationUtility()
             .getFormattedAddress(
           location.latitude,
           location.longitude,
         )
             .then((address) {
+          onLocationDataModelUpdate(LocationDataModel(
+            address,
+            location.latitude,
+            location.longitude,
+          ));
           setState(() {
             this.selectedAddress = address;
           });

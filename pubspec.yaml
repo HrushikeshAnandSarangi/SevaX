@@ -89,8 +89,17 @@ dependencies:
   # flutter_secure_storage: ^3.3.3
   connectivity: ^0.4.8+2
   flurry: ^0.0.7
+  firebase_dynamic_links: ^0.5.0+11
+  progress_dialog: ^1.2.2
+  file_picker: ^1.9.0+1
+  flutter_full_pdf_viewer: ^1.0.6
+  path_provider: ^1.6.9
+  share_extend: ^1.1.5
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+
+  flutter_localizations:
     sdk: flutter
 
 flutter:
@@ -103,6 +112,7 @@ flutter:
     # - lib/assets/splash_images/4.jpg
     # - lib/assets/splash_images/5.jpg
     # - lib/assets/photo_camera.png
+    - lib/assets/lang/en.json
     - lib/assets/google-logo-png-open-2000.png
     - lib/assets/images/profile.png
     - lib/assets/images/seva-x-logo.png

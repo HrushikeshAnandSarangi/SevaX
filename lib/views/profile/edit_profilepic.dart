@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -193,7 +194,10 @@ class _EditProfilePicState extends State<EditProfilePic>
             image: DecorationImage(
               image: selectedImage != null
                   ? FileImage(selectedImage)
-                  : NetworkImage(SevaCore.of(context).loggedInUser.photoURL),
+                  : NetworkImage(
+                      SevaCore.of(context).loggedInUser.photoURL ??
+                          defaultUserImageURL,
+                    ),
             ),
           ),
         ),

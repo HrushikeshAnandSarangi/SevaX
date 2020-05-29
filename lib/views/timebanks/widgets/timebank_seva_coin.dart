@@ -7,6 +7,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
 
@@ -112,7 +113,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
     // <-- note the async keyword here
 
     // this will contain the result from Navigator.pop(context, result)
-    final donateAmount_Recieved = await showDialog<double>(
+    final donateAmount_Received = await showDialog<double>(
       context: context,
       builder: (context) => InputDonateDialog(
           donateAmount: donateAmount,
@@ -123,9 +124,11 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
 
     // note that the result can also be null, so check it
     // (back button or pressed outside of the dialog)
-    if (donateAmount_Recieved != null) {
+    if (donateAmount_Received != null) {
       setState(() {
-        donateAmount = donateAmount_Recieved;
+        donateAmount = donateAmount_Received;
+        SevaCore.of(context).loggedInUser.currentBalance =
+            widget.loggedInUser.currentBalance - donateAmount_Received;
       });
       await TransactionBloc().createNewTransaction(
           this.widget.loggedInUser.sevaUserID,
@@ -163,6 +166,7 @@ class InputDonateDialog extends StatefulWidget {
 class _InputDonateDialogState extends State<InputDonateDialog> {
   /// current selection of the slider
   double _donateAmount;
+  bool donatezeroerror = false;
 
   @override
   void initState() {
@@ -177,7 +181,8 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text('Your current seva coins is ' + widget.maxAmount.toStringAsFixed(2).toString()),
+          Text('Your current seva coins is ' +
+              widget.maxAmount.toStringAsFixed(2).toString()),
           Slider(
             label: "Donate " + _donateAmount.toStringAsFixed(2) + " Coins",
             value: _donateAmount,
@@ -186,11 +191,23 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
             divisions: 100,
             onChanged: (value) {
               setState(() {
+                if (value > 0) {
+                  donatezeroerror = false;
+                }
                 _donateAmount = value;
               });
             },
           ),
-          Text('On click of donate your balance will be adjusted')
+          Text('On click of donate your balance will be adjusted'),
+          SizedBox(
+            height: 15,
+          ),
+          donatezeroerror
+              ? Text(
+                  "You cannot donate 0 credits",
+                  style: TextStyle(fontSize: 16, color: Colors.red),
+                )
+              : Text("")
         ],
       ),
       actions: <Widget>[
@@ -205,6 +222,15 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
             ),
           ),
           onPressed: () {
+            if (_donateAmount == 0) {
+              setState(() {
+                donatezeroerror = true;
+              });
+              return;
+            }
+            setState(() {
+              donatezeroerror = false;
+            });
             Navigator.pop(context, _donateAmount);
           },
         ),

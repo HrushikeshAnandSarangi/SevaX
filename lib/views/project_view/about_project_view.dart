@@ -5,6 +5,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
@@ -28,7 +29,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
   bool isDataLoaded = false;
   @override
   void initState() {
-print("inside project initStateeee");
+    print("inside project initStateeee");
     getData();
     setState(() {});
     super.initState();
@@ -38,13 +39,12 @@ print("inside project initStateeee");
     await FirestoreManager.getProjectFutureById(projectId: widget.project_id)
         .then((onValue) {
       projectModel = onValue;
-      print("projectttttt ${projectModel}");
-      //  isDataLoaded = true;
       setState(() {
         getUserData();
       });
     });
   }
+
   void didChangeDependencies() {
     super.didChangeDependencies();
     getData();
@@ -183,12 +183,39 @@ print("inside project initStateeee");
                       )
                     ],
                   ),
+                  deleteProject,
                 ],
               ),
             )
           : Center(
               child: CircularProgressIndicator(),
             ),
+    );
+  }
+
+  Widget get deleteProject {
+    return GestureDetector(
+      onTap: () {
+        showAdvisoryBeforeDeletion(
+          context: context,
+          associatedId: widget.project_id,
+          softDeleteType: SoftDelete.REQUEST_DELETE_PROJECT,
+          associatedContentTitle: projectModel.name,
+          email: SevaCore.of(context).loggedInUser.email,
+          isAccedentalDeleteEnabled: false,
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 20),
+        child: Text(
+          "Delete Project",
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+          ),
+        ),
+      ),
     );
   }
 

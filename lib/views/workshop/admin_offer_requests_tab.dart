@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/timebanks/admin_personal_requests_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_existing_requests.dart';
@@ -32,7 +31,7 @@ class _AdminOfferRequestsTabState extends State<AdminOfferRequestsTab> {
       timebankModel = onValue;
     });
 
-    timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankid);
+    //   timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankid);
   }
 
   @override
@@ -73,11 +72,11 @@ class _AdminOfferRequestsTabState extends State<AdminOfferRequestsTab> {
                     userModel: widget.userModel,
                   ),
                   AdminPersonalRequests(
-                    timebankId: widget.timebankid,
-                    isTimebankRequest: true,
-                    parentContext: context,
-                    userModel: widget.userModel,
-                  ),
+                      timebankId: widget.timebankid,
+                      isTimebankRequest: true,
+                      parentContext: context,
+                      userModel: widget.userModel,
+                      showAppBar: false),
                 ],
               ),
             )

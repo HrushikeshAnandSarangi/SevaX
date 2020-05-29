@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
@@ -180,6 +181,30 @@ class _ManageGroupView extends State<ManageGroupView> {
     );
   }
 
+  Widget get deleteGroup {
+    return GestureDetector(
+      onTap: () {
+        showAdvisoryBeforeDeletion(
+          context: context,
+          associatedId: widget.timebankModel.id,
+          softDeleteType: SoftDelete.REQUEST_DELETE_GROUP,
+          associatedContentTitle: widget.timebankModel.name,
+          email: SevaCore.of(context).loggedInUser.email,
+          isAccedentalDeleteEnabled:
+              widget.timebankModel.preventAccedentalDelete,
+        );
+      },
+      child: Text(
+        "Delete Group",
+        textAlign: TextAlign.left,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.red,
+        ),
+      ),
+    );
+  }
+
   Widget get getTitle {
     return Text(
       "Manage ${widget.timebankModel.name}",
@@ -218,6 +243,10 @@ class _ManageGroupView extends State<ManageGroupView> {
             height: 30,
           ),
           viewRequests(context: context),
+          SizedBox(
+            height: 30,
+          ),
+          deleteGroup,
         ],
       ),
     );

@@ -47,7 +47,6 @@ class TabarView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     sevaUserId=SevaCore
         .of(context)
         .loggedInUser.sevaUserID;

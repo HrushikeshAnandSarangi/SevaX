@@ -12,8 +12,8 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
-import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -26,6 +26,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
+import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -237,8 +238,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     this.requestModel.email = loggedInUser.email;
-    this.requestModel.fullName = loggedInUser.fullname;
-    this.requestModel.photoUrl = loggedInUser.photoURL;
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
 
     return Form(
@@ -394,7 +393,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     FocusScope.of(context).unfocus();
                   },
                   decoration: InputDecoration(
-                    hintText: 'No. of approvals',
+                    hintText: 'No. of volunteers*',
                     hintStyle: hintTextStyle,
                     // labelText: 'No. of volunteers',
                   ),
@@ -414,26 +413,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 SizedBox(height: 40),
                 Center(
-                  child: FlatButton.icon(
-                    icon: Icon(Icons.add_location),
-                    label: Text(
-                      selectedAddress == null || selectedAddress.isEmpty
-                          ? 'Add Location'
-                          : selectedAddress,
-                    ),
-                    color: Colors.grey[200],
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<GeoFirePoint>(
-                          builder: (context) => LocationPicker(
-                            selectedLocation: location,
-                          ),
-                        ),
-                      ).then((point) {
-                        if (point != null) location = point;
-                        _getLocation();
-                        log('ReceivedLocation: $selectedAddress');
+                  child: LocationPickerWidget(
+                    selectedAddress: selectedAddress,
+                    location: location,
+                    onChanged: (LocationDataModel dataModel) {
+                      log("received data model");
+                      setState(() {
+                        location = dataModel.geoPoint;
+                        this.selectedAddress = dataModel.location;
                       });
                     },
                   ),
@@ -565,9 +552,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       //Form and date is valid
       switch (requestModel.requestMode) {
         case RequestMode.PERSONAL_REQUEST:
+          var myDetails = SevaCore.of(context).loggedInUser;
+          this.requestModel.fullName = myDetails.fullname;
+          this.requestModel.photoUrl = myDetails.photoURL;
+
           var onBalanceCheckResult = await hasSufficientCredits(
             credits: requestModel.numberOfHours.toDouble(),
-            userId: SevaCore.of(context).loggedInUser.sevaUserID,
+            userId: myDetails.sevaUserID,
           );
 
           if (!onBalanceCheckResult) {
@@ -748,6 +739,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.postTimestamp = timestamp;
     requestModel.accepted = false;
     requestModel.acceptors = [];
+    requestModel.address = selectedAddress;
     requestModel.location =
         location == null ? GeoFirePoint(40.754387, -73.984291) : location;
     requestModel.root_timebank_id = FlavorConfig.values.timebankId;
@@ -779,14 +771,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     }
   }
 
-  Future _getLocation() async {
-    String address = await LocationUtility().getFormattedAddress(
-      location.latitude,
-      location.longitude,
-    );
+  // Future _getLocation() async {
+  //   String address = await LocationUtility().getFormattedAddress(
+  //     location.latitude,
+  //     location.longitude,
+  //   );
 
-    setState(() {
-      this.selectedAddress = address;
-    });
-  }
+  //   setState(() {
+  //     this.selectedAddress = address;
+  //   });
+  // }
 }

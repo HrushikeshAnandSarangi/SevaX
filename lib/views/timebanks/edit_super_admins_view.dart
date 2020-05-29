@@ -654,9 +654,9 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => InviteAddMembers(
-                                  widget.timebankId,
-                                  widget.superAdminTimebankModel.communityId,
-                                ),
+                                    widget.timebankId,
+                                    widget.superAdminTimebankModel.communityId,
+                                    timebankModel),
                               ),
                             );
                           },

@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+
 import './image_picker_handler.dart';
 
 class ImagePickerDialog extends StatelessWidget {
@@ -82,7 +84,11 @@ class ImagePickerDialog extends StatelessWidget {
                       "Camera",
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0x0FF766FE0),
-                      const Color(0xFFFFFFFF)),
+                      const Color(0xFFFFFFFF),
+                      Icon(
+                        Icons.camera_alt,
+                        color: Colors.white,
+                      )),
                 ),
                 new GestureDetector(
                   onTap: () => _listener.openGallery(),
@@ -90,7 +96,11 @@ class ImagePickerDialog extends StatelessWidget {
                       "Gallery",
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0x0FF766FE0),
-                      const Color(0xFFFFFFFF)),
+                      const Color(0xFFFFFFFF),
+                      Icon(
+                        Icons.image,
+                        color: Colors.white,
+                      )),
                 ),
                 const SizedBox(height: 15.0),
                 new GestureDetector(
@@ -101,7 +111,8 @@ class ImagePickerDialog extends StatelessWidget {
                         "Cancel",
                         EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                         const Color(0x0FF766FE0),
-                        const Color(0xFFFFFFFF)),
+                        const Color(0xFFFFFFFF),
+                        Offstage()),
                   ),
                 ),
               ],
@@ -110,8 +121,8 @@ class ImagePickerDialog extends StatelessWidget {
         ));
   }
 
-  Widget roundedButton(
-      String buttonLabel, EdgeInsets margin, Color bgColor, Color textColor) {
+  Widget roundedButton(String buttonLabel, EdgeInsets margin, Color bgColor,
+      Color textColor, Widget widget) {
     var loginBtn = new Container(
       margin: margin,
       padding: EdgeInsets.all(15.0),
@@ -127,10 +138,19 @@ class ImagePickerDialog extends StatelessWidget {
         //   ),
         // ],
       ),
-      child: Text(
-        buttonLabel,
-        style: new TextStyle(
-            color: textColor, fontSize: 15.0, fontWeight: FontWeight.w500),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          widget,
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            buttonLabel,
+            style: new TextStyle(
+                color: textColor, fontSize: 15.0, fontWeight: FontWeight.w500),
+          ),
+        ],
       ),
     );
     return loginBtn;

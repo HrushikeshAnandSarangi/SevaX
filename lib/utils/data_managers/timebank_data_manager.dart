@@ -6,6 +6,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/invitation_model.dart';
 import 'package:sevaexchange/models/models.dart' as prefix0;
 import 'package:sevaexchange/models/reports_model.dart';
 import 'package:sevaexchange/new_baseline/models/card_model.dart';
@@ -19,6 +20,59 @@ Future<void> createTimebank({@required TimebankModel timebankModel}) async {
       .collection('timebanknew')
       .document(timebankModel.id)
       .setData(timebankModel.toMap());
+}
+
+Future<void> createJoinInvite(
+    {@required InvitationModel invitationModel}) async {
+  return await Firestore.instance
+      .collection('invitations')
+      .document(invitationModel.id)
+      .setData(invitationModel.toMap());
+}
+
+//////to get all the user invites --
+//Future<GroupInvitationStatus> getGroupInvitationStatus({
+//  @required String timebankId,
+//  @required String sevauserid,
+//}) async {
+//  var query = Firestore.instance
+//      .collection('invitations')
+//      .where('invitationType', isEqualTo: 'GroupInvite')
+//      .where('data.invitedUserId', isEqualTo: sevauserid)
+//      .where('timebankId', isEqualTo: timebankId);
+//
+//  QuerySnapshot snapshot = await query.getDocuments();
+//  print('ghghgh ${snapshot.documents}');
+//  if (snapshot.documents.length > 0) {
+//    return GroupInvitationStatus.isInvited();
+//  } else {
+//    return GroupInvitationStatus.notYetInvited();
+//  }
+//}
+
+////to get the user invites --
+Future<InvitationModel> getInvitationModel({
+  @required String timebankId,
+  @required String sevauserid,
+}) async {
+  var query = Firestore.instance
+      .collection('invitations')
+      .where('invitationType', isEqualTo: 'GroupInvite')
+      .where('data.invitedUserId', isEqualTo: sevauserid)
+      .where('timebankId', isEqualTo: timebankId);
+  QuerySnapshot snapshot = await query.getDocuments();
+  if (snapshot.documents.length == 0) {
+    return null;
+  }
+  InvitationModel invitationModel;
+
+  print("query ${snapshot.documents.length}");
+
+  snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+    invitationModel = InvitationModel.fromMap(documentSnapshot.data);
+  });
+
+  return invitationModel;
 }
 
 /// Get all timebanknew associated with a User
@@ -67,7 +121,9 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
           (documentSnapshot) {
             TimebankModel model = TimebankModel.fromMap(documentSnapshot.data);
             if (model.rootTimebankId == FlavorConfig.values.timebankId)
-              modelList.add(model);
+              model.softDelete
+                  ? print("Removed soft deleted timebank from list")
+                  : modelList.add(model);
           },
         );
         modelList.sort(
@@ -178,6 +234,8 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
 
   var radius = 20;
   try {
+    print('inside near');
+
     radius = json.decode(AppConfig.remoteConfig.getString('radius'));
   } on Exception {
     print("Exception raised while getting radius ");
@@ -201,12 +259,14 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
         List<CommunityModel> communityList = [];
         snapshot.forEach(
           (documentSnapshot) {
-            //   print('near data ${documentSnapsyhot.data}');
-
             CommunityModel model = CommunityModel(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
 
-            communityList.add(model);
+            model.softDelete == true || model.private == true
+                ? print("Removed soft deleted item")
+                : communityList.add(model);
+
+            // communityList.add(model);
           },
         );
         requestSink.add(communityList);
@@ -267,6 +327,8 @@ Future<void> updateTimebankDetails(
     'location': timebankModel.location.data,
     'protected': timebankModel.protected,
     'photo_url': timebankModel.photoUrl,
+    'preventAccedentalDelete': timebankModel.preventAccedentalDelete,
+    'private': timebankModel.private,
     'members': FieldValue.arrayUnion(members),
   });
 }
@@ -392,22 +454,21 @@ Stream<CardModel> getCardModelStream({@required String communityId}) async* {
 
 Future<List<String>> getAllTimebankIdStream(
     {@required String timebankId}) async {
-  return Firestore.instance
+  DocumentSnapshot onValue = await Firestore.instance
       .collection('timebanknew')
       .document(timebankId)
-      .get()
-      .then((onValue) {
-    prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data);
+      .get();
 
-    var admins = model.admins;
-    var coordinators = model.coordinators;
-    var members = model.members;
-    var allItems = List<String>();
-    allItems.addAll(admins);
-    allItems.addAll(coordinators);
-    allItems.addAll(members);
-    return allItems;
-  });
+  prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data);
+
+  var admins = model.admins;
+  var coordinators = model.coordinators;
+  var members = model.members;
+  var allItems = List<String>();
+  allItems.addAll(admins);
+  allItems.addAll(coordinators);
+  allItems.addAll(members);
+  return allItems;
 }
 
 Stream<List<TimebankModel>> getAllMyTimebanks(

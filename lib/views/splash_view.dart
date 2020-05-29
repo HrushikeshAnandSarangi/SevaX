@@ -12,6 +12,7 @@ import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/onboarding/email_verify_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/deep_link_manager/onboard_via_link.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -79,9 +80,10 @@ class _SplashViewState extends State<SplashView> {
 
   void initFlurry() async {
     await Flurry.initialize(
-        androidKey: "NZN3QTYM42M6ZQXV3GJ8",
-        iosKey: "H9RX59248T458TDZGX3Y",
-        enableLog: true);
+      androidKey: "NZN3QTYM42M6ZQXV3GJ8",
+      iosKey: "H9RX59248T458TDZGX3Y",
+      enableLog: true,
+    );
   }
 
   @override
@@ -170,6 +172,7 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
+    await fetchLinkData();
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
 

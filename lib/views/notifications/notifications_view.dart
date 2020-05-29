@@ -13,7 +13,10 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
+import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
+import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
+import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
@@ -27,6 +30,7 @@ import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
+import 'package:sevaexchange/views/timebanks/widgets/group_join_reject_dialog.dart';
 import 'package:shimmer/shimmer.dart';
 
 class NotificationViewHolder extends StatefulWidget {
@@ -79,6 +83,7 @@ class NotificationsView extends State<NotificationViewHolder> {
             child: Text('No Notifications'),
           );
         }
+
         ClearNotificationModel clearNotificationModel =
             clearNotificationModelFromJson(
                 AppConfig.remoteConfig.getString("clear_notification_type"));
@@ -108,10 +113,13 @@ class NotificationsView extends State<NotificationViewHolder> {
                 padding: EdgeInsets.only(bottom: 20),
                 itemCount: notifications.length,
                 itemBuilder: (context, index) {
+                  print(
+                      "----------------------------------------------------->>>");
                   NotificationsModel notification =
                       notifications.elementAt(index);
-                  void onDismissed() {
-                    _clearNotification(
+
+                  Future<void> onDismissed() async {
+                    await _clearNotification(
                       notificationId: notification.id,
                       email: user.email,
                     );
@@ -154,6 +162,18 @@ class NotificationsView extends State<NotificationViewHolder> {
                       );
                       break;
 
+                    case NotificationType.TypeMemberAdded:
+                      UserAddedModel userAddedModel =
+                          UserAddedModel.fromMap(notification.data);
+
+                      return getUserAddedNotificationWidget(
+                          userAddedModel: userAddedModel,
+                          timebankId: notification.timebankId,
+                          communityId: notification.communityId,
+                          buildContext: context,
+                          notificationId: notification.id);
+                      break;
+
                     case NotificationType.RequestReject:
                       RequestModel model =
                           RequestModel.fromMap(notification.data);
@@ -182,7 +202,11 @@ class NotificationsView extends State<NotificationViewHolder> {
                             UserModel user = snapshot.data;
                             return user != null && user.fullname != null
                                 ? getJoinReuqestsNotificationWidget(
-                                    user, notification.id, model, context)
+                                    user,
+                                    notification.id,
+                                    model,
+                                    context,
+                                  )
                                 : Offstage();
                           });
                       break;
@@ -319,6 +343,19 @@ class NotificationsView extends State<NotificationViewHolder> {
                         notification.id,
                         context,
                         notification.timebankId,
+                        notification.communityId,
+                      );
+                      break;
+                    case NotificationType.GroupJoinInvite:
+                      // TODO: Handle this case.
+
+                      print("notification data ${notification.data}");
+                      GroupInviteUserModel groupInviteUserModel =
+                          GroupInviteUserModel.fromMap(notification.data);
+                      return getGroupInvitationNotificationWidget(
+                        groupInviteUserModel,
+                        notification.id,
+                        context,
                         notification.communityId,
                       );
                       break;
@@ -473,6 +510,30 @@ class NotificationsView extends State<NotificationViewHolder> {
                       );
                       break;
 
+                    case NotificationType.TYPE_DELETION_REQUEST_OUTPUT:
+                      var requestData = SoftDeleteRequestDataHolder.fromMap(
+                          notification.data);
+                      print(
+                          "---------------> " + requestData.toMap().toString());
+
+                      return NotificationCard(
+                        entityName:
+                            requestData.entityTitle ?? "Deletion Request",
+                        photoUrl: null,
+                        title: requestData.requestAccepted
+                            ? "${requestData.entityTitle} was deleted!"
+                            : "${requestData.entityTitle} couldn't be deleted!",
+                        subTitle: requestData.requestAccepted
+                            ? "${requestData.entityTitle} you requested to delete has been successfully deleted!"
+                            : "${requestData.entityTitle} couldn't be deleted because you are still some pending transactions!",
+                        onPressed: () => !requestData.requestAccepted
+                            ? showDialogForIncompleteTransactions(
+                                requestData,
+                              )
+                            : null,
+                        onDismissed: onDismissed,
+                      );
+
                     default:
                       log("Unhandled user notification type ${notification.type} ${notification.id}");
                       Crashlytics().log(
@@ -491,6 +552,37 @@ class NotificationsView extends State<NotificationViewHolder> {
         );
       },
     );
+  }
+
+  Widget getUserAddedNotificationWidget(
+      {UserAddedModel userAddedModel,
+      String notificationId,
+      BuildContext buildContext,
+      String timebankId,
+      String communityId}) {
+    // assert(user != null);
+
+    return Dismissible(
+        background: dismissibleBackground,
+        key: Key(Utils.getUuid()),
+        onDismissed: (direction) {
+          String userEmail = SevaCore.of(buildContext).loggedInUser.email;
+          FirestoreManager.readUserNotification(notificationId, userEmail);
+        },
+        child: Container(
+          margin: notificationPadding,
+          decoration: notificationDecoration,
+          child: ListTile(
+            title: Text("Timebank Join"),
+            leading: userAddedModel.timebankImage != null
+                ? CircleAvatar(
+                    backgroundImage: NetworkImage(userAddedModel.timebankImage),
+                  )
+                : Offstage(),
+            subtitle: Text(
+                '${userAddedModel.adminName.toLowerCase()} has added you to ${userAddedModel.timebankName} Timebank'),
+          ),
+        ));
   }
 
   void _handleFeedBackNotificationAction(
@@ -521,8 +613,8 @@ class NotificationsView extends State<NotificationViewHolder> {
     }
   }
 
-  void _clearNotification({String email, String notificationId}) {
-    FirestoreManager.readUserNotification(
+  Future _clearNotification({String email, String notificationId}) {
+    return FirestoreManager.readUserNotification(
       notificationId,
       email,
     );
@@ -534,65 +626,31 @@ class NotificationsView extends State<NotificationViewHolder> {
     String notificationId,
   ) {
     return FutureBuilder<UserModel>(
-        future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) return Container();
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return notificationShimmer;
-          }
-          UserModel user = snapshot.data;
-          return Dismissible(
-              key: Key(Utils.getUuid()),
-              background: dismissibleBackground,
-              onDismissed: (direction) {
-                FirestoreManager.readUserNotification(
-                  notificationId,
-                  SevaCore.of(context).loggedInUser.email,
-                );
-              },
-              child: GestureDetector(
-                child: Container(
-                  margin: notificationPadding,
-                  decoration: notificationDecoration,
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL),
-                    ),
-                    title: Text('Credited'),
-                    subtitle: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            // text: 'Congrats, ${user.fullname} has credited ',
-                            text: 'Congrats,  ',
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                          TextSpan(
-                            text: () {
-                              return '${model.credits} Seva Credits';
-                            }(),
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                          TextSpan(
-                            text: () {
-                              return " have been credited to your account.";
-                            }(),
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                onTap: () {},
-              ));
-        });
+      future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return Container();
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return notificationShimmer;
+        }
+        UserModel user = snapshot.data;
+
+        return NotificationCard(
+          entityName: user.fullname,
+          isDissmissible: true,
+          onDismissed: () {
+            FirestoreManager.readUserNotification(
+              notificationId,
+              SevaCore.of(context).loggedInUser.email,
+            );
+          },
+          onPressed: null,
+          photoUrl: user.fullname,
+          title: "Credited",
+          subTitle:
+              'Congrats, ${model.credits} Seva credits have been credited to your account.',
+        );
+      },
+    );
   }
 
   Widget getNotificationDebit(
@@ -608,45 +666,20 @@ class NotificationsView extends State<NotificationViewHolder> {
             return notificationShimmer;
           }
           UserModel user = snapshot.data;
-          return Dismissible(
-            key: Key(Utils.getUuid()),
-            background: dismissibleBackground,
-            onDismissed: (direction) {
+
+          return NotificationCard(
+            entityName: user.fullname,
+            isDissmissible: true,
+            onDismissed: () {
               FirestoreManager.readUserNotification(
                 notificationId,
                 SevaCore.of(context).loggedInUser.email,
               );
             },
-            child: Container(
-              margin: notificationPadding,
-              decoration: notificationDecoration,
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(user.photoURL),
-                ),
-                title: Text('Debited'),
-                subtitle: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: () {
-                          return '${model.credits} Seva Credits ';
-                        }(),
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                      TextSpan(
-                        text: 'has been debited from your account',
-                        style: TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            onPressed: null,
+            photoUrl: user.photoURL,
+            title: "Debited",
+            subTitle: '${model.credits} has been debited from your account.',
           );
         });
   }
@@ -661,45 +694,20 @@ class NotificationsView extends State<NotificationViewHolder> {
       return transaction.to == SevaCore.of(context).loggedInUser.sevaUserID;
     });
 
-    return Dismissible(
-      key: Key(Utils.getUuid()),
-      background: dismissibleBackground,
-      onDismissed: (direction) {
+    return NotificationCard(
+      entityName: model.fullName,
+      isDissmissible: true,
+      onDismissed: () {
         FirestoreManager.readUserNotification(
           notificationId,
           SevaCore.of(context).loggedInUser.email,
         );
       },
-      child: Container(
-        margin: notificationPadding,
-        decoration: notificationDecoration,
-        child: ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(model.photoUrl),
-          ),
-          title: Text(model.title),
-          subtitle: RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: '${model.fullName} approved the task completion for ',
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-                TextSpan(
-                  text: () {
-                    return '${transactionModel.credits} hours';
-                  }(),
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
+      onPressed: null,
+      photoUrl: model.photoUrl,
+      subTitle:
+          '${model.fullName} approved the task completion for ${transactionModel.credits} hours',
+      title: model.title,
     );
   }
 
@@ -718,6 +726,7 @@ class NotificationsView extends State<NotificationViewHolder> {
           return notificationShimmer;
         }
         UserModel user = snapshot.data;
+        //bool fromOffer;
 
         return FutureBuilder<Object>(
             future: FirestoreManager.getUserForId(sevaUserId: loggedinUserID),
@@ -998,6 +1007,75 @@ class NotificationsView extends State<NotificationViewHolder> {
         });
   }
 
+  Widget getGroupInvitationNotificationWidget(
+      GroupInviteUserModel groupInviteUserModel,
+      String notificationId,
+      BuildContext buildContext,
+      String communityId) {
+    // assert(user != null);
+
+    return NotificationCard(
+      entityName: groupInviteUserModel.timebankName.toLowerCase(),
+      isDissmissible: true,
+      onDismissed: () {
+        String userEmail = SevaCore.of(buildContext).loggedInUser.email;
+        FirestoreManager.readUserNotification(notificationId, userEmail);
+      },
+      onPressed: () {
+        showDialog(
+            context: buildContext,
+            builder: (context) {
+              return GroupJoinRejectDialogView(
+                groupInviteUserModel: groupInviteUserModel,
+                timeBankId: groupInviteUserModel.groupId,
+                notificationId: notificationId,
+                userModel: SevaCore.of(buildContext).loggedInUser,
+              );
+            });
+      },
+      photoUrl: groupInviteUserModel.timebankImage,
+      subTitle:
+          '${groupInviteUserModel.adminName.toLowerCase()} has invited you to join ${groupInviteUserModel.timebankName}, Tap to view invitation',
+      title: "Group join invite",
+    );
+  }
+
+  void showDialogForIncompleteTransactions(
+      SoftDeleteRequestDataHolder deletionRequest) {
+    var reason =
+        "We couldn\'t process you request for deletion of ${deletionRequest.entityTitle}, as you are still having open transactions which are as : \n";
+    if (deletionRequest.noOfOpenOffers > 0) {
+      reason += '${deletionRequest.noOfOpenOffers} one to many offers\n';
+    }
+
+    if (deletionRequest.noOfOpenRequests > 0) {
+      reason += '${deletionRequest.noOfOpenOffers} open requests\n';
+    }
+
+    showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(deletionRequest.entityTitle.trim()),
+            content: Text(reason),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  "Dismiss",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.red,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   Widget getInvitedRequestsNotificationWidget(
       RequestInvitationModel requestInvitationModel,
       String notificationId,
@@ -1006,42 +1084,30 @@ class NotificationsView extends State<NotificationViewHolder> {
       String communityId) {
     // assert(user != null);
 
-    return Dismissible(
-        background: dismissibleBackground,
-        key: Key(Utils.getUuid()),
-        onDismissed: (direction) {
-          String userEmail = SevaCore.of(buildContext).loggedInUser.email;
-          FirestoreManager.readUserNotification(notificationId, userEmail);
-        },
-        child: GestureDetector(
-          child: Container(
-            margin: notificationPadding,
-            decoration: notificationDecoration,
-            child: ListTile(
-              title: Text("Join request"),
-              leading: requestInvitationModel.timebankImage != null
-                  ? CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(requestInvitationModel.timebankImage),
-                    )
-                  : Offstage(),
-              subtitle: Text(
-                  '${requestInvitationModel.timebankName.toLowerCase()} has requested you to join ${requestInvitationModel.requestTitle}, Tap to view join request'),
-            ),
-          ),
-          onTap: () {
-            showDialog(
-                context: buildContext,
-                builder: (context) {
-                  return JoinRejectDialogView(
-                    requestInvitationModel: requestInvitationModel,
-                    timeBankId: timebankId,
-                    notificationId: notificationId,
-                    userModel: SevaCore.of(buildContext).loggedInUser,
-                  );
-                });
-          },
-        ));
+    return NotificationCard(
+      entityName: requestInvitationModel.timebankName.toLowerCase(),
+      isDissmissible: true,
+      onDismissed: () {
+        String userEmail = SevaCore.of(buildContext).loggedInUser.email;
+        FirestoreManager.readUserNotification(notificationId, userEmail);
+      },
+      onPressed: () {
+        showDialog(
+            context: buildContext,
+            builder: (context) {
+              return JoinRejectDialogView(
+                requestInvitationModel: requestInvitationModel,
+                timeBankId: timebankId,
+                notificationId: notificationId,
+                userModel: SevaCore.of(buildContext).loggedInUser,
+              );
+            });
+      },
+      photoUrl: requestInvitationModel.timebankImage,
+      subTitle:
+          '${requestInvitationModel.timebankName.toLowerCase()} has invited you to join ${requestInvitationModel.requestTitle}, Tap to view invitation',
+      title: "Invitation request",
+    );
   }
 
   void showMemberClaimConfirmation(

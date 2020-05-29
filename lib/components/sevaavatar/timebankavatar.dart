@@ -153,9 +153,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: NetworkImage(
-                  widget.photoUrl != null
-                      ? widget.photoUrl
-                      : defaultCameraImageURL,
+                  widget.photoUrl ?? defaultCameraImageURL,
                 ),
                 fit: BoxFit.cover),
             borderRadius: BorderRadius.all(Radius.circular(75.0)),

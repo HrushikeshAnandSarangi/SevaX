@@ -11,6 +11,8 @@ class NewsModel extends DataModel {
   String fullName;
   String sevaUserId;
   String newsImageUrl;
+  String newsDocumentUrl;
+  String newsDocumentName;
   String photoCredits;
   int postTimestamp;
   GeoFirePoint location;
@@ -27,24 +29,26 @@ class NewsModel extends DataModel {
   String userPhotoURL;
   String imageScraped = "NoData";
 
-  NewsModel({
-    this.id,
-    this.title,
-    this.subheading,
-    this.description,
-    this.email,
-    this.fullName,
-    this.sevaUserId,
-    this.newsImageUrl,
-    this.photoCredits,
-    this.postTimestamp,
-    this.location,
-    this.entity,
-    this.likes,
-    this.reports,
-    this.root_timebank_id,
-    this.isPinned,
-  });
+  NewsModel(
+      {this.id,
+      this.title,
+      this.subheading,
+      this.description,
+      this.email,
+      this.fullName,
+      this.sevaUserId,
+      this.newsImageUrl,
+      this.photoCredits,
+      this.postTimestamp,
+      this.location,
+      this.entity,
+      this.likes,
+      this.reports,
+      this.root_timebank_id,
+      this.isPinned,
+      this.userPhotoURL,
+      this.newsDocumentName,
+      this.newsDocumentUrl});
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
@@ -71,6 +75,10 @@ class NewsModel extends DataModel {
 
     if (this.placeAddress != null) {
       map['placeAddress'] = placeAddress;
+    }
+
+    if (this.userPhotoURL != null) {
+      map['userPhotoURL'] = userPhotoURL;
     }
 
     if (this.imageScraped != null) {
@@ -121,6 +129,12 @@ class NewsModel extends DataModel {
     } else
       map['reports'] = [];
 
+    if (this.newsDocumentName != null && this.newsDocumentName.isNotEmpty) {
+      map['newsDocumentName'] = this.newsDocumentName;
+    }
+    if (this.newsDocumentUrl != null && this.newsDocumentUrl.isNotEmpty) {
+      map['newsDocumentUrl'] = this.newsDocumentUrl;
+    }
     return map;
   }
 
@@ -180,6 +194,18 @@ class NewsModel extends DataModel {
     if (map.containsKey('newsimageurl')) {
       this.newsImageUrl = map['newsimageurl'];
     }
+
+    if (map.containsKey('newsDocumentUrl')) {
+      this.newsDocumentUrl = map['newsDocumentUrl'];
+    }
+
+    if (map.containsKey('newsDocumentName')) {
+      this.newsDocumentName = map['newsDocumentName'];
+    }
+
+    if (map.containsKey('userPhotoURL')) {
+      this.userPhotoURL = map['userPhotoURL'];
+    }
     if (map.containsKey('photocredits')) {
       this.photoCredits = map['photocredits'];
     }
@@ -230,6 +256,9 @@ class NewsModel extends DataModel {
     if (map.containsKey('id')) {
       this.id = map['id'];
     }
+    if (map.containsKey('userPhotoURL')) {
+      this.userPhotoURL = map['userPhotoURL'];
+    }
     if (map.containsKey('title')) {
       this.title = map['title'];
     }
@@ -260,6 +289,14 @@ class NewsModel extends DataModel {
     }
     if (map.containsKey('newsimageurl')) {
       this.newsImageUrl = map['newsimageurl'];
+    }
+
+    if (map.containsKey('newsDocumentUrl')) {
+      this.newsDocumentUrl = map['newsDocumentUrl'];
+    }
+
+    if (map.containsKey('newsDocumentName')) {
+      this.newsDocumentName = map['newsDocumentName'];
     }
     if (map.containsKey('photocredits')) {
       this.photoCredits = map['photocredits'];

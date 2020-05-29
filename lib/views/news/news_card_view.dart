@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -12,15 +17,28 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../flavor_config.dart';
 
-class NewsCardView extends StatelessWidget {
+class NewsCardView extends StatefulWidget {
   final NewsModel newsModel;
   final String timebankId;
 
   NewsCardView({Key key, @required this.newsModel, @required this.timebankId})
       : super(key: key);
+
+  @override
+  NewsCardViewState createState() {
+    // TODO: implement createState
+    return NewsCardViewState(newsModel: newsModel, timebankId: timebankId);
+  }
+}
+
+class NewsCardViewState extends State<NewsCardView> {
   // assert(newsModel.title != null, 'News title cannot be null');
   // assert(newsModel.description != null, 'News description cannot be null');
   // assert(newsModel.fullName != null, 'Full name cannot be null');
+  final NewsModel newsModel;
+  final String timebankId;
+
+  NewsCardViewState({this.newsModel, this.timebankId});
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +89,7 @@ class NewsCardView extends StatelessWidget {
               newsImage,
               photoCredits,
               subHeadings,
+              document,
               tags,
               listOfHashTags,
               listOfLinks
@@ -287,11 +306,8 @@ class NewsCardView extends StatelessWidget {
             height: 40,
             width: 40,
             child: CircleAvatar(
-              backgroundImage: NetworkImage(
-                newsModel.userPhotoURL == null
-                    ? defaultUserImageURL
-                    : newsModel.userPhotoURL,
-              ),
+              backgroundImage:
+                  NetworkImage(newsModel.userPhotoURL ?? defaultUserImageURL),
               minRadius: 40.0,
             ),
           ),
@@ -387,6 +403,67 @@ class NewsCardView extends StatelessWidget {
               ],
             ),
           );
+  }
+
+  Widget get document {
+    return Container(
+      child: newsModel.newsDocumentUrl == null
+          ? Offstage()
+          : GestureDetector(
+              onTap: () => openPdfViewer(),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  color: Colors.grey[100],
+                  child: ListTile(
+                    leading: Icon(Icons.attachment),
+                    title: Text(
+                      newsModel.newsDocumentName ?? "Document.pdf",
+                      //overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+    );
+  }
+
+  Future<File> createFileOfPdfUrl(String documentUrl) async {
+    final url = documentUrl;
+    final filename = newsModel.newsDocumentName;
+    var request = await HttpClient().getUrl(Uri.parse(url));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    File file = new File('$dir/$filename');
+    await file.writeAsBytes(bytes);
+    return file;
+  }
+
+  void openPdfViewer() {
+    createFileOfPdfUrl(newsModel.newsDocumentUrl).then((f) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PDFScreen(
+                  docName: newsModel.newsDocumentName,
+                  pathPDF: f.path,
+                  pdf: f,
+                )),
+      );
+    });
+  }
+
+  _launchURL() async {
+    print("url ${newsModel.newsDocumentUrl}");
+    String url = newsModel.newsDocumentUrl;
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   Widget get subHeadings {

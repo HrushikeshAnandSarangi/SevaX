@@ -2,15 +2,19 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/news_card.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
+
+import '../../../../flavor_config.dart';
 
 class FeedsTabView extends StatefulWidget {
   @override
@@ -54,6 +58,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   final news = snapshot.data[index];
+                  print("address ${news.placeAddress}");
                   return InkWell(
                     onTap: () {
                       Navigator.push(
@@ -62,9 +67,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
                           builder: (context) {
                             return NewsCardView(
                               newsModel: news,
-                              timebankId: SevaCore.of(context)
-                                  .loggedInUser
-                                  .currentCommunity,
+                              timebankId: _bloc.timebank.id,
                             );
                           },
                         ),
@@ -76,7 +79,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
                       title: news.title != null && news.title != "NoData"
                           ? news.title.trim()
                           : news.subheading.trim(),
-                      userImageUrl: news.userPhotoURL,
+                      userImageUrl: news.userPhotoURL ?? defaultUserImageURL,
                       userName: news.fullName,
                       timestamp: news.postTimestamp,
                       onShare: () => _share(context, news),
@@ -84,6 +87,15 @@ class _FeedsTabViewState extends State<FeedsTabView>
                           .contains(SevaCore.of(context).loggedInUser.email),
                       onFavorite: () =>
                           _like(news, SevaCore.of(context).loggedInUser.email),
+                      isAdmin: _bloc.timebank.admins.contains(
+                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      address: getLocation(news.placeAddress) ??
+                          "location not updated",
+                      documentName: news.newsDocumentName,
+                      documentUrl: news.newsDocumentUrl,
+                      isBookMarked: news.reports.contains(
+                          SevaCore.of(context).loggedInUser.sevaUserID),
+                      onBookMark: () => _report(news: news, mContext: context),
                     ),
                   );
                 },
@@ -93,6 +105,24 @@ class _FeedsTabViewState extends State<FeedsTabView>
         },
       ),
     );
+  }
+
+  String getLocation(String location) {
+    if (location != null) {
+      List<String> l = location.split(',');
+      l = l.reversed.toList();
+      if (l.length >= 2) {
+        return "${l[1]},${l[0]}";
+      } else if (l.length >= 1) {
+        return "${l[0]}";
+      } else {
+        print("elasticsearch pjs location result is");
+        return "Unknown";
+      }
+    } else {
+      print("elasticsearch pjs location result isggggg");
+      return "Unknown";
+    }
   }
 
   void _share(BuildContext context, NewsModel news) {
@@ -120,17 +150,97 @@ class _FeedsTabViewState extends State<FeedsTabView>
     }
   }
 
-  void _like(NewsModel news, String email) {
+  void _like(NewsModel news, String email) async {
     print("===>> ${news.likes}");
     Set<String> likesList = Set.from(news.likes);
     news.likes != null && news.likes.contains(email)
         ? likesList.remove(email)
         : likesList.add(email);
     news.likes = likesList.toList();
-    print(news.likes);
-    Firestore.instance.collection('news').document(news.id).updateData({
-      "likes": likesList,
-    });
+    await FirestoreManager.updateNews(newsObject: news);
+//    await Firestore.instance.collection('news').document(news.id).updateData({
+//      "likes": likesList,
+//    });
+    setState(() {});
+  }
+
+  void _report({NewsModel news, BuildContext mContext}) {
+    if (news.reports.contains(SevaCore.of(mContext).loggedInUser.sevaUserID)) {
+      showDialog(
+        context: mContext,
+        builder: (BuildContext viewContextS) {
+          // return object of type Dialog
+          return AlertDialog(
+            title: Text('Already reported!'),
+            content: Text('You already reported this feed'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                    fontSize: dialogButtonSize,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContextS).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: mContext,
+        builder: (BuildContext viewContext) {
+          // return object of type Dialog
+          return AlertDialog(
+            title: Text('Report Feed?'),
+            content: Text('Do you want to report this feed?'),
+            actions: <Widget>[
+              FlatButton(
+                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                color: Theme.of(mContext).accentColor,
+                textColor: FlavorConfig.values.buttonTextColor,
+                child: Text(
+                  'Report Feed',
+                  style: TextStyle(
+                    fontSize: dialogButtonSize,
+                  ),
+                ),
+                onPressed: () {
+                  if (news.reports.contains(
+                      SevaCore.of(mContext).loggedInUser.sevaUserID)) {
+                    print('already in reports');
+                  } else {
+                    if (news.reports.isEmpty) {
+                      news.reports = List<String>();
+                    }
+                    news.reports
+                        .add(SevaCore.of(mContext).loggedInUser.sevaUserID);
+                    Firestore.instance
+                        .collection('news')
+                        .document(news.id)
+                        .updateData({'reports': news.reports});
+                  }
+                  Navigator.of(viewContext).pop();
+                  setState(() {});
+                },
+              ),
+              FlatButton(
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.red),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override

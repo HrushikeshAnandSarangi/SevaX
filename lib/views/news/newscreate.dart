@@ -6,10 +6,10 @@ import 'package:http/http.dart' as http;
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
 class NewsCreate extends StatelessWidget {
@@ -27,7 +27,7 @@ class NewsCreate extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(
-            "Create feed",
+            "Create post",
             style: TextStyle(fontSize: 18),
           ),
           centerTitle: false,
@@ -105,6 +105,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.location = location;
     newsObject.root_timebank_id = FlavorConfig.values.timebankId;
     newsObject.photoCredits = photoCredits == null ? "" : photoCredits;
+    newsObject.userPhotoURL = SevaCore.of(context).loggedInUser.photoURL;
+    newsObject.newsDocumentUrl = globals.newsDocumentURL ?? '';
+    newsObject.newsDocumentName = globals.newsDocumentName ?? '';
 
 //    EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(
@@ -118,6 +121,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     print("Model goes like this : $entityModel");
     await FirestoreManager.createNews(newsObject: newsObject);
     globals.newsImageURL = null;
+    globals.newsDocumentURL = null;
     if (dialogContext != null) {
       Navigator.pop(dialogContext);
     }
@@ -176,6 +180,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         Padding(
                           padding: EdgeInsets.only(bottom: 0.0),
                           child: TextFormField(
+                            textCapitalization: TextCapitalization.sentences,
                             controller: subheadingController,
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
@@ -243,13 +248,19 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         photoCredits: "",
                         geoFirePointLocation: location,
                         selectedAddress: selectedAddress,
-                        geoFirePointLocationCallback:
-                            (geoLocationPointSelected) async {
-                          print("location is $geoLocationPointSelected");
-                          location = geoLocationPointSelected;
-                          await _getLocation();
-                          print("Location is updated to ");
+                        onLocationDataModelUpdate:
+                            (LocationDataModel dataModel) {
+                          location = dataModel.geoPoint;
+                          setState(() {
+                            this.selectedAddress = dataModel.location;
+                          });
                         },
+                        //   (geoLocationPointSelected) async {
+                        // print("location is $geoLocationPointSelected");
+                        // location = geoLocationPointSelected;
+                        // await _getLocation();
+                        // print("Location is updated to ");
+                        // },
                         onCreditsEntered: (photoCreditsFromNews) {
                           print("Hello its me:" + photoCreditsFromNews);
                           photoCredits = photoCreditsFromNews;
@@ -260,59 +271,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                 ],
               ),
 
-              // Row(
-              //   children: <Widget>[
-              //     Container(
-              //       margin: EdgeInsets.only(left: 20),
-              //       child: FlatButton.icon(
-              //         icon: Icon(Icons.add_location),
-              //         label: Text(''),
-              //         // label: Text(
-              //         //   selectedAddress == null || selectedAddress.isEmpty
-              //         //       // adasdasd
-              //         //       ? 'Add Location'
-              //         //       : selectedAddress,
-              //         //   overflow: TextOverflow.ellipsis,
-              //         // ),
-              //         color: Colors.grey[200],
-              //         onPressed: () {
-              //           Navigator.push(
-              //             context,
-              //             MaterialPageRoute<GeoFirePoint>(
-              //               builder: (context) => LocationPicker(
-              //                 selectedLocation: location,
-              //               ),
-              //             ),
-              //           ).then((point) {
-              //             if (point != null) location = point;
-              //             _getLocation();
-              //           });
-              //         },
-              //       ),
-              //     ),
-              //     Container(
-              //       margin: EdgeInsets.only(left: 20),
-              //       child: FlatButton.icon(
-              //         icon: Icon(Icons.image),
-              //         label: Text(''),
-              //         // label: Text(
-              //         //   selectedAddress == null || selectedAddress.isEmpty
-              //         //       // adasdasd
-              //         //       ? 'Add Location'
-              //         //       : selectedAddress,
-              //         //   overflow: TextOverflow.ellipsis,
-              //         // ),
-              //         color: Colors.grey[200],
-              //         onPressed: () {
-              //           //call gallery
-
-              //           // newsImageInstance.imagePicker.showDialog(context);
-              //         },
-              //       ),
-              //     ),
-              //   ],
-              // ),
-
+              /*kghjksghjgjgb
+              * fjjkkkkmvnjnvnvk
+              * jfujfyj
+              * hfjy*/
               Container(
                 width: 150,
                 alignment: Alignment(0, 1),
@@ -472,15 +434,15 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     );
   }
 
-  Future _getLocation() async {
-    String address = await LocationUtility().getFormattedAddress(
-      location.latitude,
-      location.longitude,
-    );
-    setState(() {
-      this.selectedAddress = address;
-    });
-  }
+  // Future _getLocation() async {
+  //   String address = await LocationUtility().getFormattedAddress(
+  //     location.latitude,
+  //     location.longitude,
+  //   );
+  //   setState(() {
+  //     this.selectedAddress = address;
+  //   });
+  // }
 
   Future<void> fetchPosts(String url) async {
     print("started fetch");
