@@ -113,6 +113,9 @@ flutter:
     # card images
     - images/
     - images/card_provider/
+    # report members related images
+    - images/icons/message.png
+    - images/icons/remove_user.png
 
     #icons
     - images/icons/create_message.png

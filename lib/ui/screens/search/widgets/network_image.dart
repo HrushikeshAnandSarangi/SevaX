@@ -7,6 +7,7 @@ class CustomNetworkImage extends StatelessWidget {
   final Widget placeholder;
   final Widget error;
   final BoxFit fit;
+  final double size;
 
   const CustomNetworkImage(
     this.imageUrl, {
@@ -14,21 +15,24 @@ class CustomNetworkImage extends StatelessWidget {
     this.placeholder,
     this.error,
     this.fit,
+    this.size = 45,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      imageUrl: imageUrl ?? defaultUserImageURL,
-      fit: fit ?? BoxFit.fitWidth,
-      placeholder: (context, url) => Center(
-        child: placeholder ?? CircularProgressIndicator(),
-      ),
-      errorWidget: (context, url, error) => Center(
-        child: FadeInImage.assetNetwork(
-          height: 70,
-          width: 70,
-          image: defaultUserImageURL,
-          placeholder: defaultUserImageURL,
+    return ClipOval(
+      child: SizedBox(
+        height: size,
+        width: size,
+        child: CachedNetworkImage(
+          imageUrl: imageUrl ??
+              defaultUserImageURL,
+          fit: fit ?? BoxFit.fitWidth,
+          placeholder: (context, url) => Center(
+            child: placeholder ?? CircularProgressIndicator(),
+          ),
+          errorWidget: (context, url, error) => Center(
+            child: Icon(Icons.error),
+          ),
         ),
       ),
     );

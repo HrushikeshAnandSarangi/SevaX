@@ -12,6 +12,7 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
+import 'package:sevaexchange/models/reported_member_notification_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
@@ -239,6 +240,10 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       timebankId: notification.timebankId,
                     );
                   },
+//                  onDismissed: () async {
+//                    await _clearNotification(
+//                        notification.timebankId, notification.id);
+//                  },
                 );
                 break;
               case NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED:
@@ -290,6 +295,23 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   },
                 );
 
+
+              case NotificationType.TYPE_REPORT_MEMBER:
+                ReportedMemberNotificationModel data =
+                    ReportedMemberNotificationModel.fromMap(notification.data);
+                return NotificationCard(
+                  title: "Member Reported",
+                  subTitle: TimebankNotificationMessage.MEMBER_REPORT
+                      .replaceFirst('*name', data.reportedUserName),
+                  photoUrl: data.reportedUserImage,
+                  entityName: data.reportedUserName,
+                  onDismissed: () {
+                    _clearNotification(
+                      notification.timebankId,
+                      notification.id,
+                    );
+                  },
+                );
 
               default:
                 log("Unhandled timebank notification type ${notification.type} ${notification.id}");

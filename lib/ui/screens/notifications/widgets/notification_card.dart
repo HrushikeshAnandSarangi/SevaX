@@ -38,33 +38,34 @@ class NotificationCard extends StatelessWidget {
             icon: Icons.delete,
             onTap: () {
               showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext dialoContext) {
-                    return AlertDialog(
-                      title: Text("Delete notification"),
-                      content: Text(
-                        "Are you sure you want to remove this notificaition.",
+                context: context,
+                barrierDismissible: true,
+                builder: (BuildContext dialoContext) {
+                  return AlertDialog(
+                    title: Text("Delete notification"),
+                    content: Text(
+                      "Are you sure you want to remove this notificaition.",
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        onPressed: () => {Navigator.of(dialoContext).pop()},
+                        child: Text(
+                          "Cancel",
+                        ),
                       ),
-                      actions: <Widget>[
-                        FlatButton(
-                          onPressed: () => {Navigator.of(dialoContext).pop()},
-                          child: Text(
-                            "Cancel",
-                          ),
+                      FlatButton(
+                        onPressed: () async {
+                          onDismissed();
+                          Navigator.of(dialoContext).pop();
+                        },
+                        child: Text(
+                          "Delete",
                         ),
-                        FlatButton(
-                          onPressed: () async {
-                            Navigator.of(dialoContext).pop();
-                            onDismissed();
-                          },
-                          child: Text(
-                            "Delete",
-                          ),
-                        ),
-                      ],
-                    );
-                  });
+                      ),
+                    ],
+                  );
+                },
+              );
             },
           ),
         ],

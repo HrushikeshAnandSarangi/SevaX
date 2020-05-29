@@ -11,8 +11,10 @@ class ImagePickerHandler {
   ImagePickerDialog imagePicker;
   AnimationController _controller;
   ImagePickerListener _listener;
+  bool isAspectRatioFixed;
 
-  ImagePickerHandler(this._listener, this._controller);
+  ImagePickerHandler(this._listener, this._controller,
+      {this.isAspectRatioFixed = true});
 
   openCamera() async {
     imagePicker.dismissDialog();
@@ -34,10 +36,10 @@ class ImagePickerHandler {
   Future cropImage(File image) async {
     File croppedFile = await ImageCropper.cropImage(
       sourcePath: image.path,
-      ratioX: 1.0,
-      ratioY: 1.0,
-      maxWidth: 512,
-      maxHeight: 512,
+      ratioX: isAspectRatioFixed ? 1.0 : null,
+      ratioY: isAspectRatioFixed ? 1.0 : null,
+      maxWidth: isAspectRatioFixed ? 512 : null,
+      maxHeight: isAspectRatioFixed ? 512 : null,
     );
     _listener.userImage(croppedFile);
   }
