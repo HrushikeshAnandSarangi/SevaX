@@ -20,7 +20,6 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/deep_link_manager/onboard_via_link.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
-import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
@@ -33,26 +32,7 @@ import 'onboarding/interests_view.dart';
 import 'onboarding/skills_view.dart';
 
 import 'package:sevaexchange/internationalization/applanguage.dart';
-//class UserData {
-//  static UserModel user;
-//
-//  UserData({
-//   this.user;
-//  });
-//
-//  Future updateUserData(UserModel user) async {
-//    await fireStoreManager.updateUser(user: user);
-//  }
-//  Future<UserModel> _getSignedInUserDocs(String userId) async {
-//    UserModel userModel = await fireStoreManager.getUserForId(
-//      sevaUserId: userId,
-//    );
-//    user = userModel;
-//    return user;
-//  }
-//}
 class UserData {
-  // singleton
   static final UserData _singleton = UserData._internal();
 
   factory UserData() => _singleton;
@@ -63,12 +43,9 @@ class UserData {
 
   static UserData get shared => _singleton;
 
-  // variables
   UserModel user = new UserModel();
   String userId;
   String locationStr;
-
-  // UserModel user = await _getSignedInUserDocs(userId);
 
   Future updateUserData() async {
     await fireStoreManager.updateUser(user: user);
@@ -129,21 +106,7 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-    switch (FlavorConfig.appFlavor) {
-      case Flavor.SEVA_DEV:
-      case Flavor.APP:
-        return sevaAppSplash;
-        break;
-      case Flavor.HUMANITY_FIRST:
-        return humanitySplash;
-        break;
-      case Flavor.TULSI:
-        return tulsiSplash;
-        break;
-      case Flavor.TOM:
-        return tomSplash;
-        break;
-    }
+    return sevaAppSplash;
   }
 
   Widget get sevaAppSplash {
@@ -152,13 +115,10 @@ class _SplashViewState extends State<SplashView> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              // Color.fromARGB(255, 9, 46, 108),
-              // Color.fromARGB(255, 88, 138, 224),
               Theme.of(context).secondaryHeaderColor,
               Theme.of(context).secondaryHeaderColor,
               Theme.of(context).secondaryHeaderColor
             ],
-            //stops: [0, 0.6, 1],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -167,19 +127,6 @@ class _SplashViewState extends State<SplashView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Text(
-              //   'Seva\nExchange'.toUpperCase(),
-              //   textAlign: TextAlign.center,
-              //   style: TextStyle(
-              //     letterSpacing: 5,
-              //     fontSize: 24,
-              //     color: Colors.white,
-              //     fontWeight: FontWeight.w700,
-              //   ),
-              // ),
-              // SizedBox(
-              //   height: 16,
-              // ),
               Image.asset(
                 'lib/assets/images/seva-x-logo.png',
                 height: 140,
@@ -397,51 +344,6 @@ class _SplashViewState extends State<SplashView> {
     return userId;
   }
 
-//  Future checkVersion() async {
-//    await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-//      String appName = packageInfo.appName;
-//      String packageName = packageInfo.packageName;
-//      String version = packageInfo.version;
-//
-//      String buildNumber = packageInfo.buildNumber;
-//
-//      Firestore.instance
-//          .collection("vitals")
-//          .document(Platform.isAndroid ? "vital_android" : "vital_ios")
-//          .get()
-//          .then((onValue) {
-//        if (Platform.isAndroid) {
-//          // we are on android platform
-//          if (onValue.data.containsKey("latest_build_number")) {
-//            var latestBuildNumber = onValue.data['latest_build_number'];
-//            if (int.parse(buildNumber) < latestBuildNumber) {
-//              print("App is Out of date");
-//              _navigateToUpdatePage();
-//            } else {
-//              print("App is up to date");
-//            }
-//          }
-//        } else {
-//          //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number")
-//
-//          if (onValue.data.containsKey("latest_version_number")) {
-//            var latestBuildNumber = onValue.data['latest_version_number'];
-//            if (int.parse(buildNumber) < latestBuildNumber) {
-//              print("App is Out of date");
-//              _navigateToUpdatePage();
-//            } else {
-//              print("App is up to date");
-//            }
-//          }
-//
-////          _navigateToUpdatePage();
-////          onValue.data.containsKey("latest_build_number");
-////          print(onValue.data.containsKey("latest_build_number"));
-//        }
-//      });
-//    });
-//  }
-
   Future<void> handleLoggedInUserIdResponse(String userId) async {
     if (userId == null || userId.isEmpty) {
       loadingMessage = AppLocalizations.of(context).translate('splash','hang_on');
@@ -472,54 +374,40 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
+
     UserData.shared.user = loggedInUser;
 
     await AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 3));
     await AppConfig.remoteConfig.activateFetched();
-
-    //// ################################    TEST ################################# /////
-    // var sampleJson =
-    //     '{"android":{"build":70,"version_name":"7.0.0","forceUpdate":false},"ios":{"build":70,"version_name":"7.0.0","forceUpdate":false}}';
-    // Map<String, dynamic> versionInfo = json.decode(sampleJson);
 
     Map<String, dynamic> versionInfo =
         json.decode(AppConfig.remoteConfig.getString('app_version'));
 
     if (Platform.isAndroid) {
       await PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
-        // print("version details ${packageInfo.version}");
         globals.currentVersionNumber = packageInfo.version.toString();
         if (int.parse(packageInfo.buildNumber) <
             versionInfo['android']['build']) {
-          print("New version available");
-
           if (versionInfo['android']['forceUpdate']) {
-            print("User must update the app");
             await _navigateToUpdatePage(loggedInUser, true);
           } else {
             await _navigateToUpdatePage(loggedInUser, false);
           }
-        } else {
-          print("You are using the latest version of the application");
-        }
+        } else {}
       });
     } else if (Platform.isIOS) {
       await PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
         if (int.parse(packageInfo.buildNumber) < versionInfo['ios']['build']) {
-          print("New version available");
           if (versionInfo['ios']['forceUpdate']) {
             await _navigateToUpdatePage(loggedInUser, true);
           } else {
             await _navigateToUpdatePage(loggedInUser, false);
           }
-        } else {
-          print("You are using the latest version of the application");
-        }
+        } else {}
       });
     }
 
     if (widget.skipToHomePage) {
-      print('Navigating to home page');
       _navigateToCoreView(loggedInUser);
     }
 
@@ -588,15 +476,12 @@ class _SplashViewState extends State<SplashView> {
         onSkipped: () {
           Navigator.pop(context);
           updateUserData(loggedInUser);
-          //this.isLatestVersion = !this.isLatestVersion;
         },
       ),
     ));
   }
 
   Future _navigateToEULA(UserModel loggedInUser) async {
-    print("EULA -> ${loggedInUser.toString()}");
-
     Map results = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EulaAgreement(),
@@ -604,45 +489,12 @@ class _SplashViewState extends State<SplashView> {
     );
 
     if (results != null && results['response'] == "ACCEPTED") {
-      //UPDATE THE DB HERE
-      //print("${SevaCore.of(context).loggedInUser.email} User has agreed to EULA");
-
       await Firestore.instance
           .collection('users')
           .document(loggedInUser.email)
-          .updateData({'acceptedEULA': true}).then((onValue) {
-        print("Updating completed");
-      }).catchError((onError) {
-        print("Error Updating introduction");
-      });
-    }
-  }
-
-  Future _addMemberToCommunity(UserModel loggedInUser) async {
-    // await Firestore.instance.collection('users').document(loggedInUser.email);
-    print("Here we go we found the member from match");
-  }
-
-  Future _navogateToIntro(UserModel loggedInUser) async {
-    print("Intro -> ${loggedInUser.toString()}");
-
-    Map results = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => IntroScreenHukanityFirst(),
-      ),
-    );
-
-    if (results != null &&
-        (results['response'] == "ACCEPTED" ||
-            results['response'] == "SKIPPED")) {
-      await Firestore.instance
-          .collection('users')
-          .document(loggedInUser.email)
-          .updateData({'completedIntro': true}).then((onValue) {
-        print("Updating Introcuction part");
-      }).catchError((onError) {
-        print("Error in introdution part");
-      });
+          .updateData({'acceptedEULA': true})
+          .then((onValue) {})
+          .catchError((onError) {});
     }
   }
 
@@ -747,9 +599,8 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future _navigateToHome_DashBoardView(UserModel loggedInUser) async {
-    print('hai');
     userBloc.updateUserDetails(loggedInUser);
-    print('hey');
+
     await Navigator.of(context).push(
       MaterialPageRoute(
           builder: (context) =>

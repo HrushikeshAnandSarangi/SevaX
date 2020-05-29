@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/requests/request_accepted_spending_view.dart';
 import 'package:sevaexchange/views/requests/request_participants_view.dart';
 
 class RequestAcceptedTabsViewHolder extends StatelessWidget {
   final RequestModel requestItem;
+  final TimebankModel timebankModel;
 
   RequestAcceptedTabsViewHolder.of({
     @required this.requestItem,
+    this.timebankModel,
   });
   //TimebankTabsViewHolder.of(this.loggedInUser, {this.timebankId, this.timebankModel});
 
   @override
   Widget build(BuildContext context) {
     return TabarView(
-      // loggedInUser: loggedInUser,
+      timebankModel: timebankModel,
       requestItem: requestItem,
     );
   }
@@ -23,8 +26,9 @@ class RequestAcceptedTabsViewHolder extends StatelessWidget {
 
 class TabarView extends StatelessWidget {
   final RequestModel requestItem;
+  final TimebankModel timebankModel;
 
-  TabarView({this.requestItem});
+  TabarView({this.requestItem, this.timebankModel});
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +62,7 @@ class TabarView extends StatelessWidget {
               ),
               RequestAcceptedSpendingView(
                 requestModel: requestItem,
+                timebankModel: timebankModel,
               ),
             ],
           ),

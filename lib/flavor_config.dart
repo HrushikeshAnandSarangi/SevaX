@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-enum Flavor { APP, HUMANITY_FIRST, TULSI, TOM, SEVA_DEV }
+enum Flavor { APP, SEVA_DEV }
 
 class FlavorValues {
   final String appName;
@@ -16,8 +16,13 @@ class FlavorValues {
   final String elasticSearchBaseURL;
   final String stripePublishableKey;
   final String androidPayMode;
+  final String dynamicLinkUriPrefix;
+  final String bundleId;
+  final String packageName;
 
   FlavorValues({
+    this.bundleId,
+    this.packageName,
     @required this.appName,
     @required this.timebankName,
     @required this.timebankId,
@@ -30,6 +35,7 @@ class FlavorValues {
     @required this.elasticSearchBaseURL,
     @required this.stripePublishableKey,
     @required this.androidPayMode,
+    @required this.dynamicLinkUriPrefix,
   });
 }
 
@@ -40,6 +46,8 @@ class FlavorConfig {
     switch (appFlavor) {
       case Flavor.SEVA_DEV:
         return FlavorValues(
+          bundleId: 'com.sevaexchange.dev',
+          packageName: 'com.sevaexchange.dev',
           elasticSearchBaseURL: "http://35.227.68.255",
           stripePublishableKey: "pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832",
           androidPayMode: "test",
@@ -54,24 +62,18 @@ class FlavorConfig {
           theme: ThemeData(
             appBarTheme: AppBarTheme(
               brightness: Brightness.light,
-              // color: Color.fromARGB(255, 255, 166, 35),
               color: Color(0x0FF766FE0),
-              // color: Colors.black,
-
               textTheme: TextTheme(
                 title: TextStyle(color: Colors.white),
               ),
-
               iconTheme: IconThemeData(
                 color: Colors.white,
               ),
-              // iconTheme: IconThemeData(color: Colors.white),
               elevation: 0.7,
               actionsIconTheme: IconThemeData(color: Colors.white),
             ),
             brightness: Brightness.light,
             primarySwatch: Colors.green,
-            // primaryColor: Color.fromARGB(255, 255, 166, 35),
             primaryColor: Color(0x0FF766FE0),
             scaffoldBackgroundColor: Colors.white,
             accentColor: Color.fromARGB(255, 255, 166, 35),
@@ -108,7 +110,6 @@ class FlavorConfig {
               height: 39,
               shape: StadiumBorder(),
             ),
-
             primaryTextTheme: TextTheme(
               button: TextStyle(
                 color: Colors.white,
@@ -116,11 +117,14 @@ class FlavorConfig {
               ),
             ),
           ),
+          dynamicLinkUriPrefix: "https://sevadev.page.link",
         );
         break;
 
       case Flavor.APP:
         return FlavorValues(
+          bundleId: 'com.sevaexchange.app',
+          packageName: 'com.sevaexchange.sevax',
           elasticSearchBaseURL: "http://35.227.18.55",
           cloudFunctionBaseURL:
               "https://us-central1-sevaxproject4sevax.cloudfunctions.net",
@@ -135,24 +139,18 @@ class FlavorConfig {
           theme: ThemeData(
             appBarTheme: AppBarTheme(
               brightness: Brightness.light,
-              // color: Color.fromARGB(255, 255, 166, 35),
               color: Color(0x0FF766FE0),
-              // color: Colors.black,
-
               textTheme: TextTheme(
                 title: TextStyle(color: Colors.white),
               ),
-
               iconTheme: IconThemeData(
                 color: Colors.white,
               ),
-              // iconTheme: IconThemeData(color: Colors.white),
               elevation: 0.7,
               actionsIconTheme: IconThemeData(color: Colors.white),
             ),
             brightness: Brightness.light,
             primarySwatch: Colors.green,
-            // primaryColor: Color.fromARGB(255, 255, 166, 35),
             primaryColor: Color(0x0FF766FE0),
             scaffoldBackgroundColor: Colors.white,
             accentColor: Color.fromARGB(255, 255, 166, 35),
@@ -189,7 +187,6 @@ class FlavorConfig {
               height: 39,
               shape: StadiumBorder(),
             ),
-
             primaryTextTheme: TextTheme(
               button: TextStyle(
                 color: Colors.white,
@@ -197,138 +194,12 @@ class FlavorConfig {
               ),
             ),
           ),
+          dynamicLinkUriPrefix: "https://sevadev.page.link",
         );
         break;
-      case Flavor.HUMANITY_FIRST:
-        return FlavorValues(
-          elasticSearchBaseURL: "http://35.227.68.255",
-          stripePublishableKey: "pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832",
-          androidPayMode: "test",
-          cloudFunctionBaseURL:
-              "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net",
-          appName: 'Humanity First',
-          timebankTitle: 'Yang Gang',
-          timebankId: 'ab7c6033-8b82-42df-9f41-3c09bae6c3a2',
-          timebankName: 'Yang 2020',
-          offertitle: 'Volunteer Offer',
-          requestTitle: 'Yang Gang Request',
-          theme: ThemeData(
-            appBarTheme: AppBarTheme(
-                brightness: Brightness.light,
-                color: Color.fromARGB(255, 4, 47, 110),
-                elevation: 4,
-                actionsIconTheme: IconThemeData(color: Colors.white),
-                iconTheme: IconThemeData(color: Colors.white)),
-            brightness: Brightness.light,
-            primarySwatch: Colors.indigo,
-            primaryColor: Color.fromARGB(255, 4, 47, 110),
-            accentColor: Colors.red[900],
-            indicatorColor: Colors.red[900],
-            primaryColorBrightness: Brightness.light,
-            accentColorBrightness: Brightness.light,
-            fontFamily: 'Europa',
-            splashColor: Colors.grey,
-            bottomAppBarColor: Colors.white,
-          ),
-        );
-        break;
-      case Flavor.TULSI:
-        return FlavorValues(
-          elasticSearchBaseURL: "http://35.227.68.255",
-          stripePublishableKey: "pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832",
-          androidPayMode: "test",
-          cloudFunctionBaseURL:
-              "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net",
-          appName: 'Tulsi 2020',
-          timebankId: '6897fefc-9380-4ca6-8373-5e7760bb31be',
-          timebankName: 'Tulsi 2020',
-          offertitle: 'Offer',
-          requestTitle: 'Request',
-          theme: ThemeData(
-            appBarTheme: AppBarTheme(
-              brightness: Brightness.light,
-              color: Color.fromARGB(255, 26, 50, 102),
-              elevation: 4,
-              actionsIconTheme: IconThemeData(color: Colors.white),
-              iconTheme: IconThemeData(color: Colors.white),
-            ),
-            brightness: Brightness.light,
-            primarySwatch: Colors.red,
-            primaryColor: Color.fromARGB(255, 26, 50, 102),
-            accentColor: Colors.red[900],
-            indicatorColor: Colors.white,
-            primaryColorBrightness: Brightness.light,
-            accentColorBrightness: Brightness.light,
-            fontFamily: 'Montserrat',
-            splashColor: Colors.grey,
-            bottomAppBarColor: Colors.red[900],
-          ),
-        );
-        break;
-      case Flavor.TOM:
-        return FlavorValues(
-            elasticSearchBaseURL: "http://35.227.68.255",
-            stripePublishableKey: "pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832",
-            androidPayMode: "test",
-            cloudFunctionBaseURL:
-                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net",
-            appName: 'Tom 2020',
-            timebankId: 'f4b0b4c4-3d37-4514-b00b-ee424950c038',
-            timebankName: 'Tom 2020',
-            offertitle: 'Offer',
-            requestTitle: 'Request',
-            theme: ThemeData(
-              appBarTheme: AppBarTheme(
-                brightness: Brightness.light,
-                color: Color.fromARGB(255, 11, 40, 161),
-                elevation: 4,
-                actionsIconTheme: IconThemeData(color: Colors.white),
-                iconTheme: IconThemeData(color: Colors.white),
-              ),
-              brightness: Brightness.light,
-              primarySwatch: Colors.red,
-              primaryColor: Color.fromARGB(255, 11, 40, 161),
-              accentColor: Color.fromARGB(255, 224, 100, 70),
-              indicatorColor: Colors.white,
-              primaryColorBrightness: Brightness.light,
-              accentColorBrightness: Brightness.light,
-              fontFamily: 'Montserrat',
-              splashColor: Colors.grey,
-              bottomAppBarColor: Color.fromARGB(255, 11, 40, 161),
-            ));
-        break;
+
       default:
-        return FlavorValues(
-          elasticSearchBaseURL: "http://35.227.68.255",
-          stripePublishableKey: "pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832",
-          androidPayMode: "test",
-          cloudFunctionBaseURL:
-              "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net",
-          appName: 'Seva Exchange',
-          timebankId: '73d0de2c-198b-4788-be64-a804700a88a4',
-          timebankName: 'Seva Exchange',
-          offertitle: 'Offer',
-          requestTitle: 'Request',
-          theme: ThemeData(
-            appBarTheme: AppBarTheme(
-              brightness: Brightness.light,
-              color: Color.fromARGB(255, 109, 110, 172),
-              iconTheme: IconThemeData(color: Colors.white),
-              elevation: 4,
-              actionsIconTheme: IconThemeData(color: Colors.white),
-            ),
-            brightness: Brightness.light,
-            primarySwatch: Colors.purple,
-            primaryColor: Color.fromARGB(255, 109, 110, 172),
-            accentColor: Color(0xFF3f46c6),
-            indicatorColor: Colors.amberAccent,
-            primaryColorBrightness: Brightness.light,
-            accentColorBrightness: Brightness.light,
-            fontFamily: 'Montserrat',
-            splashColor: Colors.grey,
-            bottomAppBarColor: Colors.white,
-          ),
-        );
+        return null;
     }
   }
 }

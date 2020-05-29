@@ -60,9 +60,7 @@ class _CreateRequestState extends State<CreateRequest> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(
-            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                ? AppLocalizations.of(context).translate('create_request','humanity_first_create')
-                : _title,
+            _title,
             style: TextStyle(fontSize: 18),
           ),
           centerTitle: false,

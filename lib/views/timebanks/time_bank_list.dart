@@ -3,8 +3,6 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
-import 'package:sevaexchange/views/community/communitycreate.dart';
-import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
@@ -16,14 +14,13 @@ class TimeBankList extends StatelessWidget {
   TimeBankList(
       {@required this.timebankid,
       @required this.title,
-      @required this.superAdminTimebankModel});
+      this.superAdminTimebankModel});
 
   @override
   Widget build(BuildContext context) {
     print('timebankid asasasas:$timebankid');
     return Scaffold(
         appBar: AppBar(
-          //automaticallyImplyLeading: false,
           title: Text(
             FlavorConfig.values.timebankName == "Yang 2020"
                 ? "Yang Gang Chapters"
@@ -40,48 +37,20 @@ class TimeBankList extends StatelessWidget {
             )
           ],
         ),
-        floatingActionButton: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-            ? Visibility(
-                visible: !UserData.shared.isFromLogin,
-                child: FloatingActionButton.extended(
-                  label: Text(FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                      ? 'Create Yang Gang'
-                      : 'Create Timebank'),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CreateEditCommunityView(
-                          timebankId: timebankid,
-                          isCreateTimebank: true,
-                          isFromFind: false,
-                        ),
-                      ),
-                    );
-                  },
-                  foregroundColor: FlavorConfig.values.buttonTextColor,
-//                  icon: Icon(
-//                    Icons.add,
-//                  ),
+        floatingActionButton: FloatingActionButton.extended(
+          label: Text('Create Timebank'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TimebankCreate(
+                  timebankId: timebankid,
                 ),
-              )
-            : FloatingActionButton.extended(
-                label: Text('Create Timebank'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TimebankCreate(
-                        timebankId: timebankid,
-                      ),
-                    ),
-                  );
-                },
-                foregroundColor: FlavorConfig.values.buttonTextColor,
-//                  icon: Icon(
-//                    Icons.add,
-//                  ),
               ),
+            );
+          },
+          foregroundColor: FlavorConfig.values.buttonTextColor,
+        ),
         body: getSubTimebanks(timebankid));
   }
 
@@ -125,16 +94,13 @@ class TimeBankList extends StatelessWidget {
   }
 
   void _showDialog(BuildContext context, String name) {
-    // flutter defined function
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // return object of type Dialog
         return AlertDialog(
           title: new Text("Request to join"),
           content: new Text("Do you want to join $name timebank?"),
           actions: <Widget>[
-            // usually buttons at the bottom of the dialog
             new FlatButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
@@ -178,10 +144,6 @@ class TimeBankList extends StatelessWidget {
     return Column(
       children: <Widget>[
         ...timebankList.map((model) {
-          if (model.id == 'ab7c6033-8b82-42df-9f41-3c09bae6c3a2') {
-            return Offstage();
-          }
-
           return model.id != FlavorConfig.values.timebankId
               ? GestureDetector(
                   child: Card(
@@ -216,7 +178,6 @@ class TimeBankList extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    // _showDialog(context,model.name);
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         settings: RouteSettings(name: "123"),

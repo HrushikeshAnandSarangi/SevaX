@@ -6,12 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart'
+    as newChatManager;
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -26,22 +28,22 @@ class IsFromNewChat {
 }
 
 class ChatView extends StatefulWidget {
-  final String useremail;
   final ChatModel chatModel;
   bool isFromRejectCompletion;
   bool isFromShare;
   NewsModel news;
   IsFromNewChat isFromNewChat;
   GeoFirePoint candidateLocation;
+  final String senderId;
 
   ChatView({
     Key key,
-    this.useremail,
     this.chatModel,
     this.isFromRejectCompletion,
     this.isFromShare,
     this.news,
     this.isFromNewChat,
+    this.senderId,
   }) : super(key: key);
 
   @override
@@ -62,6 +64,10 @@ class _ChatViewState extends State<ChatView> {
   String messageContent;
   bool _isOnTop = true;
 
+  String recieverId;
+  String chatId;
+  // String timebankId;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -72,28 +78,35 @@ class _ChatViewState extends State<ChatView> {
         setState(() {
           this.loggedInUser = userModel;
         });
-      } else
-        return Center(child: CircularProgressIndicator());
+      }
     });
   }
 
   @override
   void initState() {
+    recieverId = widget.chatModel.participants[0] != widget.senderId
+        ? widget.chatModel.participants[0]
+        : widget.chatModel.participants[1];
+
+    // timebankId = widget.chatModel.timebankId;
+
+    chatId =
+        "${widget.chatModel.participants[0]}*${widget.chatModel.participants[1]}*${widget.chatModel.communityId}";
     sharedPosts = HashMap();
 
     _scrollController = ScrollController();
-    Future.delayed(Duration.zero, () {
-      updateMessagingReadStatus(
-        chat: widget.chatModel,
-        userEmail: widget.useremail,
-        email: SevaCore.of(context).loggedInUser.email,
-        once: true,
-      );
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   newChatManager.updateMessagingReadStatus(
+    //     chat: widget.chatModel,
+    //     userEmail: widget.useremail,
+    //     userId: SevaCore.of(context).loggedInUser.sevaUserID,
+    //     once: true,
+    //   );
+    // });
 
-    _fetchAppBarData = isValidEmail(widget.useremail)
-        ? FirestoreManager.getUserForEmail(emailAddress: widget.useremail)
-        : FirestoreManager.getTimeBankForId(timebankId: widget.useremail);
+    // _fetchAppBarData = isValidEmail(widget.useremail)
+    //     ? FirestoreManager.getUserForEmail(emailAddress: widget.useremail)
+    //     : FirestoreManager.getTimeBankForId(timebankId: widget.useremail);
     if (widget.isFromRejectCompletion == null)
       widget.isFromRejectCompletion = false;
     if (widget.isFromRejectCompletion)
@@ -104,30 +117,27 @@ class _ChatViewState extends State<ChatView> {
     if (widget.isFromShare) {
       textcontroller.text = widget.news.id;
       print("Priniting new message ");
-// widget.chatModel.user1 ==
 
       pushNewMessage(
         communityId: widget.chatModel.communityId,
-        loggedInEmailId: widget.useremail == widget.chatModel.user1
-            ? widget.chatModel.user2
-            : widget.chatModel.user1,
+        senderId: widget.senderId,
         messageContent: widget.news.id,
       );
     }
     //  _scrollToBottom();
     super.initState();
-    getCurrentLocation();
+    // getCurrentLocation();
   }
 
-  void getCurrentLocation() {
-    Location().getLocation().then((onValue) {
-      widget.chatModel.candidateLocation =
-          GeoFirePoint(onValue.latitude, onValue.longitude);
+  // void getCurrentLocation() {
+  //   Location().getLocation().then((onValue) {
+  //     widget.chatModel.candidateLocation =
+  //         GeoFirePoint(onValue.latitude, onValue.longitude);
 
-      print(
-          "-------------------------------------------->>> ${widget.chatModel.candidateLocation.latitude}");
-    });
-  }
+  //     print(
+  //         "-------------------------------------------->>> ${widget.chatModel.candidateLocation.latitude}");
+  //   });
+  // }
 
   Widget appBar({String imageUrl, String appbarTitle}) {
     return Expanded(
@@ -163,6 +173,11 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
+    ParticipantInfo senderInfo = getUserInfo(
+      recieverId,
+      widget.chatModel.participantInfo,
+    );
+
     return Scaffold(
       backgroundColor: Colors.indigo[50],
       appBar: AppBar(
@@ -190,33 +205,10 @@ class _ChatViewState extends State<ChatView> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            FutureBuilder<Object>(
-                future: _fetchAppBarData,
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return new Text(AppLocalizations.of(context).translate('chat','error2'));
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center();
-                  }
-
-                  if (!isValidEmail(widget.useremail)) {
-                    TimebankModel timebankModel = snapshot.data;
-                    return appBar(
-                        appbarTitle: timebankModel.name,
-                        imageUrl: timebankModel.photoUrl ?? '');
-                  }
-
-                  partnerUser = snapshot.data;
-                  print("Blah blah blah Blocked:${partnerUser.sevaUserID}");
-                  return appBar(
-                      appbarTitle: partnerUser.fullname,
-                      imageUrl: partnerUser.photoURL);
-                }),
+            appBar(appbarTitle: senderInfo.name, imageUrl: senderInfo.photoUrl),
             Divider(),
             Offstage(
-              offstage: !isValidEmail(widget.chatModel.user1) ||
-                  !isValidEmail(widget.chatModel.user2),
+              offstage: widget.chatModel.isTimebankMessage,
               child: RaisedButton(
                 color: Color(0xffb71c1c),
                 child: Container(
@@ -245,9 +237,9 @@ class _ChatViewState extends State<ChatView> {
         children: <Widget>[
           Expanded(
             child: StreamBuilder<List<MessageModel>>(
-              stream: getMessagesforChat(
-                  chatModel: widget.chatModel,
-                  email: SevaCore.of(context).loggedInUser.email,
+              stream: newChatManager.getMessagesforChat(
+                  chat: widget.chatModel,
+                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
                   isFromNewChat: widget.isFromNewChat == null
                       ? IsFromNewChat(
                           false,
@@ -273,20 +265,18 @@ class _ChatViewState extends State<ChatView> {
                       return Center(child: Text(AppLocalizations.of(context).translate('chat','no_messages')));
                     }
 
-                    var email = SevaCore.of(context).loggedInUser.email;
-                    widget.chatModel.communityId =
-                        SevaCore.of(context).loggedInUser.currentCommunity;
-
-                    updateMessagingReadStatusForMe(
-                      chat: widget.chatModel,
-                      email: email,
-                      userEmail: widget.useremail,
-                    );
+                    if (!widget.chatModel.isTimebankMessage ||
+                        widget.senderId == loggedInUser.sevaUserID) {
+                      newChatManager.markMessageAsRead(
+                        chat: widget.chatModel,
+                        userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                      );
+                    }
 
                     List<Widget> messages = chatModelList.map(
                       (MessageModel chatModel) {
                         return getChatListView(
-                            chatModel, loggedInEmail, widget.useremail);
+                            chatModel, loggedInEmail, widget.senderId);
                       },
                     ).toList();
                     _scrollToBottom();
@@ -317,13 +307,10 @@ class _ChatViewState extends State<ChatView> {
                       maxLines: null,
                       keyboardType: TextInputType.text,
                       textCapitalization: TextCapitalization.sentences,
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return AppLocalizations.of(context).translate('chat','type_empty');
-                        }
+                      validator: (value) =>
+                          value.isEmpty ? AppLocalizations.of(context).translate('chat','type_empty') : null,
+                      onSaved: (value) {
                         messageContent = value;
-
-                        setState(() {});
                       },
                     ),
                   ),
@@ -343,11 +330,11 @@ class _ChatViewState extends State<ChatView> {
                     if (_formKey.currentState.validate()) {
                       // This statment clears the soft delete parameter and message becomes visible to both the parties
                       // pushNewMessage(messageContent);
-
+                      _formKey.currentState.save();
                       pushNewMessage(
                         messageContent: messageContent,
                         communityId: loggedInUser.currentCommunity,
-                        loggedInEmailId: loggedInUser.email,
+                        senderId: widget.senderId,
                       );
 
                       //FocusScope.of(context).requestFocus(FocusNode());
@@ -387,43 +374,27 @@ class _ChatViewState extends State<ChatView> {
 
   void pushNewMessage({
     String messageContent,
-    String loggedInEmailId,
+    String senderId,
     String communityId,
   }) {
-    widget.chatModel.softDeletedBy = [];
-
-    // String loggedInEmailId = SevaCore.of(context).loggedInUser.email;
-    // widget.chatModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
-    // widget.chatModel.communityId = "162cefc3-e1eb-4d8a-b297-fdf4e8176686";
-    widget.chatModel.communityId = communityId;
-    messageModel.fromId = loggedInEmailId;
-    messageModel.toId = widget.useremail;
+    // widget.chatModel.softDeletedBy = [];
+    // widget.chatModel.communityId = communityId;
+    messageModel.fromId = senderId;
+    messageModel.toId = widget.senderId;
     messageModel.message = messageContent;
     messageModel.timestamp = DateTime.now().millisecondsSinceEpoch;
-    widget.chatModel.lastMessage = messageModel.message;
+    // widget.chatModel.lastMessage = messageModel.message;
 
-    // RegExp exp = RegExp(
-    //     r'[a-zA-Z][a-zA-Z0-9_.%$&]*[@][a-zA-Z0-9]*[.][a-zA-Z.]*[*][0-9]{13,}');
-    // if (exp.hasMatch(lastMessage)) {
-    //   this.lastMessage = "Shared a feed";
-    // }
+    if (widget.chatModel.isTimebankMessage) {}
 
-    createmessage(
-      messagemodel: messageModel,
-      chatmodel: widget.chatModel,
+    newChatManager.createNewMessage(
+      chatId: chatId,
+      recieverId: recieverId,
+      messageModel: messageModel,
+      timebankId: widget.chatModel.timebankId,
+      isTimebankMessage: widget.chatModel.isTimebankMessage,
+      isAdmin: widget.chatModel.timebankId == widget.senderId,
     );
-
-    updateChat(
-      chat: widget.chatModel,
-      email: loggedInEmailId,
-    ).then((onVlaue) {
-      //
-      updateMessagingReadStatus(
-        chat: widget.chatModel,
-        email: loggedInEmailId,
-        userEmail: widget.useremail,
-      );
-    });
     setState(() {
       textcontroller.clear();
       _scrollToBottom();
@@ -441,16 +412,17 @@ class _ChatViewState extends State<ChatView> {
             return Container();
           }
 
-          NewsModel news = snapshot.data;
-          sharedPosts[messageModel.message] = news;
+        NewsModel news = snapshot.data;
+        sharedPosts[messageModel.message] = news;
 
-          return getSharedNewsCard(
-            loggedinEmail: loggedInUser.email,
-            news: news,
-            loggedInUser: loggedInUser,
-            messageModel: messageModel,
-          );
-        });
+        return getSharedNewsCard(
+          loggedinEmail: loggedInUser.email,
+          news: news,
+          loggedInUser: loggedInUser,
+          messageModel: messageModel,
+        );
+      },
+    );
   }
 
   Widget getChatListView(
@@ -469,23 +441,23 @@ class _ChatViewState extends State<ChatView> {
           : _getSharedNewDetails(messageModel: messageModel);
     } else
       return Container(
-        padding: messageModel.fromId == loggedinEmail
+        padding: messageModel.fromId == widget.senderId
             ? EdgeInsets.fromLTRB(
                 MediaQuery.of(context).size.width / 10, 5, 0, 5)
             : EdgeInsets.fromLTRB(
                 0, 5, MediaQuery.of(context).size.width / 10, 5),
-        alignment: messageModel.fromId == loggedinEmail
+        alignment: messageModel.fromId == widget.senderId
             ? Alignment.topRight
             : Alignment.topLeft,
         child: Wrap(
           children: <Widget>[
             Container(
-              decoration: messageModel.fromId == loggedinEmail
+              decoration: messageModel.fromId == widget.senderId
                   ? myBoxDecorationsend()
                   : myBoxDecorationreceive(),
               padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
               child: Column(
-                crossAxisAlignment: messageModel.fromId != loggedinEmail
+                crossAxisAlignment: messageModel.fromId != widget.senderId
                     ? CrossAxisAlignment.start
                     : CrossAxisAlignment.end,
                 children: <Widget>[
@@ -517,22 +489,22 @@ class _ChatViewState extends State<ChatView> {
     MessageModel messageModel,
   }) {
     return Container(
-      padding: messageModel.fromId == loggedinEmail
+      padding: messageModel.fromId == widget.senderId
           ? EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 10, 5, 0, 5)
           : EdgeInsets.fromLTRB(
               0, 5, MediaQuery.of(context).size.width / 10, 5),
-      alignment: messageModel.fromId == loggedinEmail
+      alignment: messageModel.fromId == widget.senderId
           ? Alignment.topRight
           : Alignment.topLeft,
       child: Wrap(
         children: <Widget>[
           Container(
-            decoration: messageModel.fromId == loggedinEmail
+            decoration: messageModel.fromId == widget.senderId
                 ? myBoxDecorationsend()
                 : myBoxDecorationreceive(),
-            padding: messageModel.fromId == loggedinEmail && news != null
+            padding: messageModel.fromId == widget.senderId && news != null
                 ? EdgeInsets.fromLTRB(0, 0, 5, 2)
-                : messageModel.fromId != loggedinEmail && news != null
+                : messageModel.fromId != widget.senderId && news != null
                     ? EdgeInsets.fromLTRB(0, 0, 0, 2)
                     : EdgeInsets.fromLTRB(10, 5, 10, 5),
             child: Column(

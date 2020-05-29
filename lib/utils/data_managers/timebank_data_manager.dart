@@ -471,6 +471,18 @@ Future<List<String>> getAllTimebankIdStream(
   return allItems;
 }
 
+Future<TimebankModel> getTimebankIdStream(
+    {@required String timebankId}) async {
+  DocumentSnapshot onValue = await Firestore.instance
+      .collection('timebanknew')
+      .document(timebankId)
+      .get();
+
+  prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data);
+
+  return model;
+}
+
 Stream<List<TimebankModel>> getAllMyTimebanks(
     {@required String timebankId}) async* {
   var data = Firestore.instance

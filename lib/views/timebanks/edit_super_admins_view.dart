@@ -6,8 +6,6 @@ import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/admin_viewe_requests.dart';
-import 'package:sevaexchange/views/campaigns/campaigncreate.dart';
-import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/splash_view.dart';
@@ -994,16 +992,16 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
 //        );
         }
         break;
-      case 'campaigns':
-        return CampaignCreate(
-          timebankModel: timebankModel,
-        );
-        break;
-      case 'viewcampaigns':
-        return CampaignsView(
-          timebankModel: timebankModel,
-        );
-        break;
+      // case 'campaigns':
+      //   return CampaignCreate(
+      //     timebankModel: timebankModel,
+      //   );
+      //   break;
+      // case 'viewcampaigns':
+      //   return CampaignsView(
+      //     timebankModel: timebankModel,
+      //   );
+      //   break;
       case 'joinrequests':
         return TimebankJoinRequestView(
           timebankModel: timebankModel,

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -303,49 +302,12 @@ class _EditTimebankPicState extends State<EditTimebankPic>
     return Container(
       child: Column(
         children: <Widget>[
-          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-              ? Text(
-                  'Humanity\nFirst'.toUpperCase(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    letterSpacing: 5,
-                    fontSize: 24,
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                )
-              : Offstage(),
-          SizedBox(
-            height: 16,
-          ),
-          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-              ? Image.asset(
-                  'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
-                  height: 70,
-                  fit: BoxFit.fill,
-                  width: 80,
-                )
-              : FlavorConfig.appFlavor == Flavor.TULSI
-                  ? SvgPicture.asset(
-                      'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
-                      height: 100,
-                      fit: BoxFit.fill,
-                      width: 100,
-                      color: Colors.white,
-                    )
-                  : FlavorConfig.appFlavor == Flavor.TOM
-                      ? SvgPicture.asset(
-                          'lib/assets/ts2020-logo-w.svg',
-                          height: 90,
-                          fit: BoxFit.fill,
-                          width: 90,
-                        )
-                      : Image.asset(
-                          'lib/assets/images/seva-x-logo.png',
-                          height: 30,
-                          fit: BoxFit.fill,
-                          width: 100,
-                        )
+          Image.asset(
+            'lib/assets/images/seva-x-logo.png',
+            height: 30,
+            fit: BoxFit.fill,
+            width: 100,
+          )
         ],
       ),
     );

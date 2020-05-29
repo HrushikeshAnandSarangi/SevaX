@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/requests/request_accepted_content_holder.dart';
 import 'package:sevaexchange/views/requests/request_users_content_holder.dart';
@@ -19,7 +20,7 @@ class RequestTabHolder extends StatelessWidget {
             print("inside_if---" + snapshot.data.selectedrequest.toString());
 
             var requestModel = snapshot.data.selectedrequest;
-            var timebank = snapshot.data.selectedtimebank;
+            TimebankModel timebank = snapshot.data.selectedtimebank;
             return DefaultTabController(
               length: 3,
               child: Scaffold(
@@ -72,6 +73,7 @@ class RequestTabHolder extends StatelessWidget {
                             Container(
                               child: RequestAcceptedTabsViewHolder.of(
                                 requestItem: requestModel,
+                                timebankModel: timebank,
                               ),
                             ),
                           ],

@@ -7,7 +7,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
@@ -85,10 +84,7 @@ class _RegisterPageState extends State<RegisterPage>
         onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
         },
-//        child: SingleChildScrollView(
-//          child: Center(
         child: ListView(
-          //crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SingleChildScrollView(
                 child: FadeAnimation(
@@ -114,8 +110,6 @@ class _RegisterPageState extends State<RegisterPage>
                         ))))
           ],
         ),
-//          ),
-//        ),
       ),
     );
   }
@@ -135,31 +129,6 @@ class _RegisterPageState extends State<RegisterPage>
 
   set isLoading(bool isLoading) {
     setState(() => this._isLoading = isLoading);
-  }
-
-  Widget get _profileBtn {
-    return SizedBox(
-      height: 35,
-      width: 120,
-      child: Container(
-        padding: EdgeInsets.only(top: 5.0),
-        child: RaisedButton(
-          onPressed: isLoading
-              ? null
-              : () {
-                  imagePicker.showDialog(context);
-                },
-          color: Colors.grey,
-          child: Text(
-            this.isImageSelected,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12.0,
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
   Widget get _imagePicker {
@@ -198,7 +167,7 @@ class _RegisterPageState extends State<RegisterPage>
                           color: Colors.white,
                           borderRadius:
                               BorderRadius.all(Radius.circular(50.0))),
-                      child: IconButton(icon: Icon(Icons.add_a_photo)),
+                      child: Icon(Icons.add_a_photo),
                     ),
                   )),
         ),
@@ -384,7 +353,6 @@ class _RegisterPageState extends State<RegisterPage>
                     barrierDismissible: false,
                     context: context,
                     builder: (BuildContext viewContext) {
-                      // return object of type Dialog
                       return WillPopScope(
                         onWillPop: () {},
                         child: AlertDialog(
@@ -447,29 +415,8 @@ class _RegisterPageState extends State<RegisterPage>
           style: TextStyle(
             color: Colors.white,
             fontSize: 18,
-            // fontSize: 16,
           ),
         ),
-
-        // child: Row(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: <Widget>[
-        //     if (isLoading)
-        //       SizedBox(
-        //         height: 18,
-        //         width: 18,
-        //         child: Theme(
-        //           data: ThemeData(accentColor: Colors.white),
-        //           child: CircularProgressIndicator(strokeWidth: 2),
-        //         ),
-        //       ),
-        //     Padding(
-        //       padding: const EdgeInsets.all(8.0),
-        //       child: Text('Sign Up'),
-        //     ),
-        //   ],
-        // ),)
-
         color: Theme.of(context).primaryColor,
         shape: StadiumBorder(),
       ),
@@ -523,7 +470,6 @@ class _RegisterPageState extends State<RegisterPage>
 
       Navigator.pop(dialogContext);
       Navigator.pop(context, user);
-      // Navigator.popUntil(context, (r) => r.isFirst);
     } on PlatformException catch (error) {
       if (dialogContext != null) {
         Navigator.pop(dialogContext);
@@ -553,7 +499,6 @@ class _RegisterPageState extends State<RegisterPage>
     if (_image == null) return;
     setState(() {
       this.selectedImage = _image;
-      // File some = File.fromRawPath();
       isImageSelected = AppLocalizations.of(context).translate('signup','upload_photo');
     });
   }
@@ -570,7 +515,7 @@ class _RegisterPageState extends State<RegisterPage>
         customMetadata: <String, String>{'activity': 'News Image'},
       ),
     );
-    // StorageUploadTask uploadTask = ref.putFile(File.)
+
     String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
     return imageURL;
   }
@@ -588,55 +533,21 @@ class _RegisterPageState extends State<RegisterPage>
     return Container(
       child: Column(
         children: <Widget>[
-          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-              ? Text(
-            AppLocalizations.of(context).translate('splash','humanity_first').toUpperCase(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    letterSpacing: 5,
-                    fontSize: 24,
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w700,
-                  ),
-                )
-              : Offstage(),
+          Offstage(),
           SizedBox(
             height: 16,
           ),
-          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-              ? Image.asset(
-                  'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
-                  height: 70,
-                  fit: BoxFit.fill,
-                  width: 80,
-                )
-              : FlavorConfig.appFlavor == Flavor.TULSI
-                  ? SvgPicture.asset(
-                      'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
-                      height: 100,
-                      fit: BoxFit.fill,
-                      width: 100,
-                      color: Colors.white,
-                    )
-                  : FlavorConfig.appFlavor == Flavor.TOM
-                      ? SvgPicture.asset(
-                          'lib/assets/ts2020-logo-w.svg',
-                          height: 90,
-                          fit: BoxFit.fill,
-                          width: 90,
-                        )
-                      : Image.asset(
-                          'lib/assets/images/seva-x-logo.png',
-                          height: 30,
-                          fit: BoxFit.fill,
-                          width: 100,
-                        )
+          Image.asset(
+            'lib/assets/images/seva-x-logo.png',
+            height: 30,
+            fit: BoxFit.fill,
+            width: 100,
+          )
         ],
       ),
     );
   }
 
-  // signup with google flow
   Widget get signUpWithGoogle {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -672,10 +583,6 @@ class _RegisterPageState extends State<RegisterPage>
               width: 16,
             ),
             appleLogin,
-
-//            Container(
-//              height: 10,
-//            ),
           ],
         ),
       );
@@ -815,9 +722,11 @@ class _RegisterPageState extends State<RegisterPage>
     try {
       user = await auth.signInWithApple();
       print("User apple:$user");
-    } on PlatformException catch (erorr) {
-      handlePlatformException(erorr);
-    } on Exception catch (error) {}
+    } on PlatformException catch (error) {
+      handlePlatformException(error);
+    } on Exception catch (error) {
+      print(error);
+    }
     isLoading = false;
     _processLogin(user);
   }
@@ -865,7 +774,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
         );
 
-        print(" ${email} already registered");
+        print(" $email already registered");
       }
       print("Platform Exception --->  $erorr");
       handlePlatformException(erorr);

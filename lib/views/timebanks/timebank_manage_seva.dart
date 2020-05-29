@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_page.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
@@ -220,6 +221,28 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
     );
   }
 
+  Widget viewReportedMembers({BuildContext context}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          ReportedMembersPage.route(
+            timebankModel: widget.timebankModel,
+            communityId: widget.timebankModel.communityId,
+            isFromTimebank: true,
+          ),
+        );
+      },
+      child: Text(
+        'Reported Members',
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          color: Colors.red,
+        ),
+      ),
+    );
+  }
+
 //  Widget viewAcceptedOffers({BuildContext context}) {
 //    return GestureDetector(
 //      onTap: () {
@@ -429,6 +452,10 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
             height: 30,
           ),
           viewRequests(context: context),
+          SizedBox(
+            height: 20,
+          ),
+          viewReportedMembers(context: context),
           SizedBox(
             height: 20,
           ),

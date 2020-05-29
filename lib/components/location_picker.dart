@@ -129,7 +129,7 @@ class _LocationPickerState extends State<LocationPicker> {
             ),
             onPressed: () async {
               // LocationDataModel dataModel = LocationDataModel("", null, null);
-              locationDataFromSearch = await Navigator.push(
+              LocationDataModel model = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (BuildContext context) =>
@@ -137,12 +137,15 @@ class _LocationPickerState extends State<LocationPicker> {
                   fullscreenDialog: true,
                 ),
               );
-              target = LatLng(
-                  locationDataFromSearch.lat, locationDataFromSearch.lng);
-              animateToLocation(
-                _mapController,
-                location: target,
-              );
+              if (model?.lat != null && model?.lng != null) {
+                locationDataFromSearch = model;
+                target = LatLng(
+                    locationDataFromSearch.lat, locationDataFromSearch.lng);
+                animateToLocation(
+                  _mapController,
+                  location: target,
+                );
+              }
             },
           ),
         ],

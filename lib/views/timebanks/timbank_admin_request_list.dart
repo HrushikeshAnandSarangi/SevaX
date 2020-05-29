@@ -9,14 +9,15 @@ import 'package:flutter/services.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
+import 'package:sevaexchange/ui/screens/reported_members/widgets/reported_member_navigator_widget.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
@@ -25,6 +26,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/invite_members.dart';
 import 'package:sevaexchange/views/timebanks/invite_members_group.dart';
+import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../switch_timebank.dart';
@@ -42,7 +44,7 @@ class TimebankRequestAdminPage extends StatefulWidget {
     @required this.isUserAdmin,
     @required this.timebankId,
     @required this.userEmail,
-    @required this.isCommunity,
+    this.isCommunity,
     @required this.isFromGroup,
   });
 
@@ -608,6 +610,17 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         admins: timebankModel.admins);
     _adminsWidgets = [];
     _adminEmails = [];
+    // _adminsWidgets.add(reportedMemberBuilder(
+    //     SevaCore.of(context).loggedInUser.currentCommunity));
+    if (widget.isUserAdmin ||
+        SevaCore.of(context).loggedInUser.sevaUserID ==
+            timebankModel.creatorId) {
+      _adminsWidgets.add(ReportedMemberNavigatorWidget(
+        isTimebankReport: !widget.isFromGroup,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        timebankModel: timebankModel,
+      ));
+    }
     _adminsWidgets.add(getSectionTitle(context, AppLocalizations.of(context).translate('members','admin_organizers')));
     SplayTreeMap<String, dynamic>.from(adminUserModel, (a, b) => a.compareTo(b))
         .forEach((key, user) {
@@ -618,6 +631,21 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     });
   }
 
+  Widget reportedMemberBuilder(String communityId) {
+    return FutureBuilder(
+      future: Firestore.instance
+          .collection("reported_users_list")
+          .where("communityId", isEqualTo: communityId)
+          .getDocuments(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data != null) {
+          return Text(snapshot.data.documents.length.toString());
+        }
+        return Container();
+      },
+    );
+  }
+
   Widget getUserWidget(UserModel user, BuildContext context,
       TimebankModel model, bool isAdmin, bool isPromoteBottonVisible) {
     user.photoURL = user.photoURL == null ? defaultUserImageURL : user.photoURL;
@@ -626,10 +654,16 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         padding: EdgeInsets.all(10),
         child: InkWell(
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
+            Navigator.of(context).push(
+              MaterialPageRoute(
                 builder: (context) => ProfileViewer(
-                      userEmail: user.email,
-                    )));
+                  userEmail: user.email,
+                  timebankId: timebankModel.id,
+                  entityName: timebankModel.name,
+                  isFromTimebank: !widget.isFromGroup,
+                ),
+              ),
+            );
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -707,6 +741,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                       return AppLocalizations.of(context).translate('members','reason_1');
                     }
                     reason = value;
+                    globals.userExitReason = value;
                   },
                 ),
               ),
@@ -747,46 +782,56 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                       }
                       Navigator.pop(viewContext);
 
-                      setState(() {
-                        isProgressBarActive = true;
-                      });
-                      List<String> members =
-                          timebankModel.members.map((s) => s).toList();
-                      members.remove(user.sevaUserID);
+//                      setState(() {
+//                        isProgressBarActive = true;
+//                      });
 
+//                      List<String> members =
+//                          timebankModel.members.map((s) => s).toList();
+//                      members.remove(user.sevaUserID);
+//
                       if (widget.isCommunity != null && widget.isCommunity) {
-                        CommunityModel communityModel =
-                            await getCommunityDetailsByCommunityId(
-                                communityId: SevaCore.of(context)
-                                    .loggedInUser
-                                    .currentCommunity);
-
-                        await _exitFromTimebank(
-                                model: timebankModel,
-                                userId: user.sevaUserID,
-                                communityModel: communityModel)
-                            .commit();
+                        print("user ${user.sevaUserID}");
+                        removeMemberTimebankFn(
+                            context: parentContext,
+                            userModel: user,
+                            timebankModel: model);
+//                        CommunityModel communityModel =
+//                            await getCommunityDetailsByCommunityId(
+//                                communityId: SevaCore.of(context)
+//                                    .loggedInUser
+//                                    .currentCommunity);
+//
+//                        await _exitFromTimebank(
+//                                model: timebankModel,
+//                                userId: user.sevaUserID,
+//                                communityModel: communityModel)
+//                            .commit();
                       } else {
-                        model.members = members;
-
-                        print(" time id ${model.id}");
-                        print(" members  ${model.members}");
-                        print(" reason  ${reason}");
-
-                        sendNotificationToAdmin(
-                            user: user,
-                            timebank: model,
-                            communityId: SevaCore.of(context)
-                                .loggedInUser
-                                .currentCommunity);
-                        // TODO this is temporory fix a full fetched refreshing scienario is needed
-                        Navigator.of(parentContext).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (context) => HomePageRouter(),
-                            ),
-                            (Route<dynamic> route) => false);
-
-                        FirestoreManager.updateTimebank(timebankModel: model);
+                        removeMemberGroupFn(
+                            context: parentContext,
+                            userModel: user,
+                            timebankModel: model);
+//                        model.members = members;
+//
+//                        print(" time id ${model.id}");
+//                        print(" members  ${model.members}");
+//                        print(" reason  ${reason}");
+//
+//                        sendNotificationToAdmin(
+//                            user: user,
+//                            timebank: model,
+//                            communityId: SevaCore.of(context)
+//                                .loggedInUser
+//                                .currentCommunity);
+//                        // TODO this is temporory fix a full fetched refreshing scienario is needed
+//                        Navigator.of(parentContext).pushAndRemoveUntil(
+//                            MaterialPageRoute(
+//                              builder: (context) => HomePageRouter(),
+//                            ),
+//                            (Route<dynamic> route) => false);
+//
+//                        FirestoreManager.updateTimebank(timebankModel: model);
                       }
                     },
                   ),
@@ -965,57 +1010,57 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     resetAndLoad();
   }
 
-  WriteBatch _exitFromTimebank(
-      {TimebankModel model, String userId, CommunityModel communityModel}) {
-    WriteBatch batch = Firestore.instance.batch();
-
-    UserModel user = SevaCore.of(context).loggedInUser;
-    String currentCommunity =
-        SevaCore.of(context).loggedInUser.currentCommunity;
-
-    var timebankRef =
-        Firestore.instance.collection('timebanknew').document(model.id);
-    var communityRef =
-        Firestore.instance.collection('communities').document(currentCommunity);
-
-    var userRef = Firestore.instance.collection('users').document(user.email);
-
-    if (model.members.contains(user.sevaUserID)) {
-      batch.updateData(timebankRef, {
-        'members': FieldValue.arrayRemove([user.sevaUserID]),
-      });
-    }
-
-    var communities = List<String>();
-    if (user.communities != null &&
-        user.communities.contains(currentCommunity)) {
-      communities.addAll(user.communities);
-      communities.remove(currentCommunity);
-      batch.updateData(userRef, {
-        'communities': FieldValue.arrayRemove([currentCommunity]),
-        'currentCommunity': communities.length > 0 ? communities[0] : ''
-      });
-      if (communities.length > 0) {
-        SevaCore.of(context).loggedInUser.currentCommunity = communities[0];
-      }
-    }
-    if (communityModel.members.contains(user.sevaUserID)) {
-      batch.updateData(communityRef, {
-        'members': FieldValue.arrayRemove([user.sevaUserID]),
-      });
-    }
-
-    sendNotificationToAdmin(
-        user: user, timebank: model, communityId: currentCommunity);
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SwitchTimebank(),
-      ),
-    );
-
-    return batch;
-  }
+//  WriteBatch _exitFromTimebank(
+//      {TimebankModel model, String userId, CommunityModel communityModel}) {
+//    WriteBatch batch = Firestore.instance.batch();
+//
+//    UserModel user = SevaCore.of(context).loggedInUser;
+//    String currentCommunity =
+//        SevaCore.of(context).loggedInUser.currentCommunity;
+//
+//    var timebankRef =
+//        Firestore.instance.collection('timebanknew').document(model.id);
+//    var communityRef =
+//        Firestore.instance.collection('communities').document(currentCommunity);
+//
+//    var userRef = Firestore.instance.collection('users').document(user.email);
+//
+//    if (model.members.contains(user.sevaUserID)) {
+//      batch.updateData(timebankRef, {
+//        'members': FieldValue.arrayRemove([user.sevaUserID]),
+//      });
+//    }
+//
+//    var communities = List<String>();
+//    if (user.communities != null &&
+//        user.communities.contains(currentCommunity)) {
+//      communities.addAll(user.communities);
+//      communities.remove(currentCommunity);
+//      batch.updateData(userRef, {
+//        'communities': FieldValue.arrayRemove([currentCommunity]),
+//        'currentCommunity': communities.length > 0 ? communities[0] : ''
+//      });
+//      if (communities.length > 0) {
+//        SevaCore.of(context).loggedInUser.currentCommunity = communities[0];
+//      }
+//    }
+//    if (communityModel.members.contains(user.sevaUserID)) {
+//      batch.updateData(communityRef, {
+//        'members': FieldValue.arrayRemove([user.sevaUserID]),
+//      });
+//    }
+//
+//    sendNotificationToAdmin(
+//        user: user, timebank: model, communityId: currentCommunity);
+//    Navigator.pushReplacement(
+//      context,
+//      MaterialPageRoute(
+//        builder: (context) => SwitchTimebank(),
+//      ),
+//    );
+//
+//    return batch;
+//  }
 
   Future _removeUserFromCommunityAndUpdateUserCommunityList({
     TimebankModel model,
@@ -1059,7 +1104,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     resetAndLoad();
   }
 
-  void sendNotificationToAdmin({
+  Future sendNotificationToAdmin({
     UserModel user,
     TimebankModel timebank,
     String communityId,
@@ -1072,15 +1117,14 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
     NotificationsModel notification = NotificationsModel(
         id: utils.Utils.getUuid(),
-        timebankId: FlavorConfig.values.timebankId,
+        timebankId: timebank.id,
         data: userExitModel.toMap(),
         isRead: false,
         type: NotificationType.TypeMemberExitTimebank,
         communityId: communityId,
         senderUserId: user.sevaUserID,
         targetUserId: timebank.creatorId);
-    print("bhhfhff ${userExitModel} ");
-    print(" timebank id ${timebank.id + timebank.members.toString()}");
+    print("bhhfhff ${notification} ");
     await Firestore.instance
         .collection('timebanknew')
         .document(timebank.id)
@@ -1423,6 +1467,187 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     }
     await FirestoreManager.updateTimebank(timebankModel: model);
     resetAndLoad();
+  }
+
+  void removeMemberGroupFn(
+      {BuildContext context,
+      UserModel userModel,
+      TimebankModel timebankModel}) async {
+    print("remove member");
+    Map<String, dynamic> responseData = await removeMemberFromGroup(
+        sevauserid: userModel.sevaUserID, groupId: timebankModel.id);
+    if (responseData['deletable'] == true) {
+      print("removed member");
+
+      await sendNotificationToAdmin(
+          user: userModel,
+          timebank: timebankModel,
+          communityId: userModel.currentCommunity);
+      print("notification  sent");
+
+      Navigator.of(parentContext).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => HomePageRouter(),
+          ),
+          (Route<dynamic> route) => false);
+//      showDialog(
+//        context: context,
+//        builder: (BuildContext context) {
+//          // return object of type Dialog
+//          return AlertDialog(
+//            content: new Text("User is successfully removed from the group"),
+//            actions: <Widget>[
+//              // usually buttons at the bottom of the dialog
+//              new FlatButton(
+//                child: new Text("Close"),
+//                textColor: Colors.red,
+//                onPressed: () {
+//                  Navigator.of(context).pop();
+//                  // TODO this is temporory fix a full fetched refreshing scienario is needed
+//
+//                },
+//              ),
+//            ],
+//          );
+//        },
+//      );
+    } else {
+      if (responseData['softDeleteCheck'] == false &&
+          responseData['groupOwnershipCheck'] == false) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            // return object of type Dialog
+            return AlertDialog(
+              title: new Text("You cannot exit from this group"),
+              content: new Text("You have \n"
+                  "${responseData['pendingProjects']['unfinishedProjects']} pending projects,\n"
+                  "${responseData['pendingRequests']['unfinishedRequests']} pending requests,\n"
+                  "${responseData['pendingOffers']['unfinishedOffers']} pending offers.\n "
+                  "Please clear the transactions and try again. "),
+              actions: <Widget>[
+                // usually buttons at the bottom of the dialog
+                new FlatButton(
+                  child: new Text("Close"),
+                  textColor: Colors.red,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else if (responseData['softDeleteCheck'] == true &&
+          responseData['groupOwnershipCheck'] == false) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            // return object of type Dialog
+            return AlertDialog(
+              content: new Text(
+                  "Cannot remove yourself from the group. Instead, please try deleting the group."),
+              actions: <Widget>[
+                // usually buttons at the bottom of the dialog
+                new FlatButton(
+                  child: new Text("Close"),
+                  textColor: Colors.red,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
+  }
+
+  void removeMemberTimebankFn(
+      {BuildContext context,
+      UserModel userModel,
+      TimebankModel timebankModel}) async {
+    print("  user id ${userModel.sevaUserID}" +
+        " exiting member ongoing " +
+        timebankModel.id);
+    Map<String, dynamic> responseData = await removeMemberFromTimebank(
+        sevauserid: userModel.sevaUserID, timebankId: timebankModel.id);
+    print("reported members removal response is --- " +
+        responseData['ownerGroupsArr'].toString());
+    if (responseData['deletable'] == true) {
+      await sendNotificationToAdmin(
+          user: userModel,
+          timebank: timebankModel,
+          communityId: userModel.currentCommunity);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SwitchTimebank(),
+        ),
+      );
+//      showDialog(
+//        context: context,
+//        builder: (BuildContext context) {
+//          // return object of type Dialog
+//          return AlertDialog(
+//            content: new Text("User is successfully removed from the timebank"),
+//            actions: <Widget>[
+//              // usually buttons at the bottom of the dialog
+//              new FlatButton(
+//                child: new Text("Close"),
+//                onPressed: () {
+//                  Navigator.of(context).pop();
+//                },
+//              ),
+//            ],
+//          );
+//        },
+//      );
+    } else {
+      if (responseData['softDeleteCheck'] == false &&
+          responseData['groupOwnershipCheck'] == false) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            // return object of type Dialog
+            return AlertDialog(
+              title: new Text("You cannot exit from this timebank"),
+              content: new Text("You have \n"
+                  "${responseData['pendingProjects']['unfinishedProjects']} pending projects,\n"
+                  "${responseData['pendingRequests']['unfinishedRequests']} pending requests,\n"
+                  "${responseData['pendingOffers']['unfinishedOffers']} pending offers.\n "
+                  "Please clear the transactions and try again. "),
+              actions: <Widget>[
+                // usually buttons at the bottom of the dialog
+                new FlatButton(
+                  child: new Text("Close"),
+                  textColor: Colors.red,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else if (responseData['softDeleteCheck'] == true &&
+          responseData['groupOwnershipCheck'] == false) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TransferOwnerShipView(
+              timebankId: timebankModel.id,
+              responseData: responseData,
+              isComingFromExit: true,
+              memberSevaUserId: userModel.sevaUserID,
+              memberName: userModel.fullname,
+              memberPhotUrl: userModel.photoURL,
+            ),
+          ),
+        );
+      }
+    }
   }
 }
 

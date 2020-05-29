@@ -1,24 +1,37 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/ui/screens/reported_members/pages/report_member_page.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/messages/chatview.dart';
 
 //TODO update bio and remove un-necessary stuff
 
 class ProfileViewer extends StatefulWidget {
   final String userEmail;
   final String timebankId;
+  final String entityName;
+  final bool isFromTimebank;
   //UserModel userModel;
   //bool isBlocked = false;
 
-  ProfileViewer({this.userEmail, @required this.timebankId});
-
+  ProfileViewer({
+    this.userEmail,
+    @required this.timebankId,
+    this.isFromTimebank,
+    this.entityName,
+  })  : assert(userEmail != null),
+        assert(entityName != null),
+        assert(timebankId != null),
+        assert(isFromTimebank != null);
   @override
   State<StatefulWidget> createState() {
     return ProfileViewerState();
@@ -28,6 +41,12 @@ class ProfileViewer extends StatefulWidget {
 class ProfileViewerState extends State<ProfileViewer> {
   UserModel user;
   bool isBlocked;
+
+  @override
+  initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     print("**********************${widget.timebankId}");
@@ -92,21 +111,26 @@ class ProfileViewerState extends State<ProfileViewer> {
                             name: snapshot.data['fullname'],
                             email: snapshot.data['email'],
                             isBlocked: isBlocked,
-                            message:
-                                widget.userEmail == loggedInEmail || isBlocked
-                                    ? null
-                                    : () => onMessageClick(
-                                          loggedInEmail,
-                                        ),
+                            message: widget.userEmail == loggedInEmail ||
+                                    isBlocked
+                                ? null
+                                : () => onMessageClick(
+                                    user, SevaCore.of(context).loggedInUser),
                             block: widget.userEmail == loggedInEmail
                                 ? null
                                 : onBlockClick,
                             report: widget.userEmail == loggedInEmail
                                 ? null
                                 : () => onReportClick(
-                                      userData: userData,
-                                      userId: snapshot.data['sevauserid'],
+                                      reporterUserModel: userData,
+                                      reportedUserModel: user,
                                     ),
+                            reportStatus: getReportedStatus(
+                              timebankId: widget.timebankId,
+                              currentUserId:
+                                  SevaCore.of(context).loggedInUser.sevaUserID,
+                              profileUserId: user.sevaUserID,
+                            ),
                           ),
                         ],
                       ),
@@ -185,26 +209,27 @@ class ProfileViewerState extends State<ProfileViewer> {
     );
   }
 
-  void onMessageClick(loggedInEmail) {
-    List users = [widget.userEmail, loggedInEmail];
-    users.sort();
-    ChatModel model = ChatModel();
-    model.user1 = users[0];
-    model.user2 = users[1];
-    model.timebankId = widget.timebankId;
-    model.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
+  Future<void> onMessageClick(UserModel user, UserModel loggedInUser) async {
+    ParticipantInfo sender = ParticipantInfo(
+      id: loggedInUser.sevaUserID,
+      name: loggedInUser.fullname,
+      photoUrl: loggedInUser.photoURL,
+      type: ChatType.TYPE_PERSONAL,
+    );
 
-    print("_+_+_+_+_+++++++++++++${model.timebankId}");
-    // model.communityId =
-    createChat(chat: model);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChatView(
-          useremail: widget.userEmail,
-          chatModel: model,
-        ),
-      ),
+    ParticipantInfo reciever = ParticipantInfo(
+      id: user.sevaUserID,
+      name: user.fullname,
+      photoUrl: user.photoURL,
+      type: ChatType.TYPE_PERSONAL,
+    );
+    createAndOpenChat(
+      context: context,
+      timebankId: widget.timebankId,
+      communityId: loggedInUser.currentCommunity,
+      sender: sender,
+      reciever: reciever,
+      isFromRejectCompletion: false,
     );
   }
 
@@ -232,71 +257,81 @@ class ProfileViewerState extends State<ProfileViewer> {
     });
   }
 
-  void onReportClick({UserModel userData, String userId}) {
-    showDialog(
-      context: context,
-      builder: (BuildContext viewContext) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: Text('Report Member?'),
-          content: Text(
-            'Do you want to report this member to admin?',
-          ),
-          actions: <Widget>[
-            FlatButton(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              color: Theme.of(context).accentColor,
-              textColor: FlavorConfig.values.buttonTextColor,
-              child: Text(
-                'Report',
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
-              ),
-              onPressed: () {
-                print(userId);
-
-                Firestore.instance
-                    .collection('reported_users_list')
-                    .where('timebankId',
-                        isEqualTo: FlavorConfig.values.timebankId)
-                    .where('reporterId', isEqualTo: userData.sevaUserID)
-                    .where('reportedId', isEqualTo: userId)
-                    .getDocuments()
-                    .then((data) {
-                  if (data.documents.length == 0) {
-                    Firestore.instance
-                        .collection('reported_users_list')
-                        .add({
-                          "reporterId": userData.sevaUserID,
-                          "reportedId": userId,
-                          "timebankId": FlavorConfig.values.timebankId
-                        })
-                        .then((result) => {
-                              Navigator.pop(viewContext),
-                              Navigator.of(context).pop()
-                            })
-                        .catchError((err) => print(err));
-                  } else {
-                    Navigator.pop(viewContext);
-                    Navigator.of(context).pop();
-                  }
-                });
-              },
-            ),
-            FlatButton(
-              child: Text(
-                'Cancel',
-                style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
-              ),
-              onPressed: () {
-                Navigator.of(viewContext).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  void onReportClick(
+      {UserModel reportedUserModel, UserModel reporterUserModel}) {
+    Navigator.of(context)
+        .push(
+      ReportMemberPage.route(
+          reportedUserModel: reportedUserModel,
+          reportingUserModel: reporterUserModel,
+          timebankId: widget.timebankId,
+          isFromTimebank: widget.isFromTimebank,
+          entityName: widget.entityName),
+    )
+        .then((_) {
+      setState(() {});
+    });
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext viewContext) {
+    //     // return object of type Dialog
+    //     return AlertDialog(
+    //       title: Text('Report Member?'),
+    //       content: Text(
+    //         'Do you want to report this member to admin?',
+    //       ),
+    //       actions: <Widget>[
+    //         FlatButton(
+    //           padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+    //           color: Theme.of(context).accentColor,
+    //           textColor: FlavorConfig.values.buttonTextColor,
+    //           child: Text(
+    //             'Report',
+    //             style: TextStyle(
+    //               fontSize: dialogButtonSize,
+    //             ),
+    //           ),
+    //           onPressed: () {
+    //             print(reportedUserModel.sevaUserID);
+    //             Report report = Report(
+    //               reporterId: reporterUserModel.sevaUserID,
+    //               attachment: "some url",
+    //               message: "test message",
+    //               reporterImage: reporterUserModel.photoURL,
+    //               reporterName: reporterUserModel.fullname,
+    //             );
+    //             Firestore.instance
+    //                 .collection('reported_users_list')
+    //                 .document(
+    //                     "${reportedUserModel.sevaUserID}*${widget.timebankId}")
+    //                 .setData({
+    //               "reportedId": reportedUserModel.sevaUserID,
+    //               "timebankId": widget.timebankId,
+    //               "reportedUserName": reportedUserModel.fullname,
+    //               "reportedUserImage": reportedUserModel.photoURL,
+    //               "reporterId": FieldValue.arrayUnion(
+    //                 [reporterUserModel.sevaUserID],
+    //               ),
+    //               "reports": FieldValue.arrayUnion([report.toMap()])
+    //             }, merge: true).then((result) => {
+    //                       Navigator.pop(viewContext),
+    //                       Navigator.of(context).pop()
+    //                     });
+    //           },
+    //         ),
+    //         FlatButton(
+    //           child: Text(
+    //             'Cancel',
+    //             style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
+    //           ),
+    //           onPressed: () {
+    //             Navigator.of(viewContext).pop();
+    //           },
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
   }
 
   void blockMember(ACTION action) {
@@ -595,6 +630,7 @@ class ProfileHeader extends StatelessWidget {
   final Function block;
   final Function report;
   final bool isBlocked;
+  final Future<bool> reportStatus;
 
   const ProfileHeader({
     Key key,
@@ -605,6 +641,7 @@ class ProfileHeader extends StatelessWidget {
     this.block,
     this.report,
     this.isBlocked,
+    this.reportStatus,
   }) : super(key: key);
 
   @override
@@ -697,12 +734,19 @@ class ProfileHeader extends StatelessWidget {
                 tooltip: isBlocked ? 'Unblock' : 'Block',
                 color: isBlocked ? Colors.red : Theme.of(context).accentColor,
               ),
-              IconButton(
-                icon: Icon(Icons.flag),
-                onPressed: report,
-                tooltip: 'Report member',
-                color: Theme.of(context).accentColor,
-              ),
+              FutureBuilder<bool>(
+                  future: reportStatus,
+                  builder: (context, snapshot) {
+                    log(snapshot.data.toString());
+                    return IconButton(
+                      icon: Icon(Icons.flag),
+                      onPressed: !(snapshot.data ?? true) ? report : null,
+                      tooltip: 'Report member',
+                      color: !(snapshot.data ?? true)
+                          ? Theme.of(context).accentColor
+                          : Colors.grey,
+                    );
+                  }),
             ],
           ),
         )
@@ -718,9 +762,10 @@ class CompletedList extends StatelessWidget {
 
   final UserModel userModel;
 
-  CompletedList(
-      {this.requestList,
-      this.userModel}); //  requestStream = FirestoreManager.getCompletedRequestStream(
+  CompletedList({
+    this.requestList,
+    this.userModel,
+  }); //  requestStream = FirestoreManager.getCompletedRequestStream(
 
   @override
   Widget build(BuildContext context) {
@@ -904,4 +949,27 @@ class SkillAndInterestBuilder extends StatelessWidget {
       },
     );
   }
+}
+
+Future<bool> getReportedStatus({
+  String timebankId,
+  String currentUserId,
+  String profileUserId,
+}) async {
+  bool flag = false;
+  QuerySnapshot query = await Firestore.instance
+      .collection('reported_users_list')
+      .where("reportedId", isEqualTo: profileUserId)
+      .where("reporterIds", arrayContains: currentUserId)
+      // .where("timebankIds", arrayContains: timebankId)
+      .getDocuments();
+  query.documents.forEach((data) {
+    if (data.data['timebankIds'].contains(timebankId)) {
+      flag = true;
+    } else {
+      flag = false;
+    }
+  });
+
+  return flag;
 }

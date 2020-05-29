@@ -12,9 +12,6 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:sevaexchange/views/campaigns/campaigncreate.dart';
-import 'package:sevaexchange/views/campaigns/campaignjoin.dart';
-import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/splash_view.dart';
@@ -34,7 +31,7 @@ class TimebankView extends StatefulWidget {
 
   TimebankView({
     @required this.timebankId,
-    @required this.superAdminTimebankModel,
+    this.superAdminTimebankModel,
   });
 
   @override
@@ -43,7 +40,7 @@ class TimebankView extends StatefulWidget {
 
 class _TimebankViewState extends State<TimebankView> {
   TimebankModel timebankModel;
-  //TimebankModel superAdminModel;
+
   JoinRequestModel joinRequestModel = new JoinRequestModel();
   JoinRequestModel getRequestData = new JoinRequestModel();
   UserModel ownerModel;
@@ -53,9 +50,7 @@ class _TimebankViewState extends State<TimebankView> {
 
   @override
   void initState() {
-    //SevaCore.of(context).loggedInUser = UserData.shared.user;
     super.initState();
-    //this.getRequestData = new JoinRequestModel();
   }
 
   @override
@@ -103,36 +98,9 @@ class _TimebankViewState extends State<TimebankView> {
                   '${timebankModel.name}',
                   style: TextStyle(color: Colors.white),
                 ),
-                actions: <Widget>[
-//                  IconButton(
-//                    icon: Icon(Icons.home),
-//                    onPressed: () {
-//                      Navigator.popUntil(context,
-//                          ModalRoute.withName(Navigator.defaultRouteName));
-//                    },
-//                  ),
-//                  timebankModel.creatorId != SevaCore.of(context).loggedInUser.sevaUserID
-//                      ? Offstage()
-//                      : IconButton(
-//                    icon: Icon(
-//                      Icons.edit,
-//                      color: Colors.white,
-//                    ),
-//                    onPressed: () {
-//                      Navigator.push(
-//                        context,
-//                        MaterialPageRoute(
-//                          builder: (context) => EditTimebankView(
-//                            timebankModel: timebankModel,
-//                          ),
-//                        ),
-//                      );
-//                    },
-//                  ),
-                ],
+                actions: <Widget>[],
               ),
               floatingActionButton: Visibility(
-                // visible: FlavorConfig.appFlavor != Flavor.APP ? false : true,
                 visible: false,
                 child: FloatingActionButton.extended(
                   icon: Icon(
@@ -140,9 +108,7 @@ class _TimebankViewState extends State<TimebankView> {
                   ),
                   foregroundColor: FlavorConfig.values.buttonTextColor,
                   label: Text(
-                    FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                        ? 'Create Yang Gang'
-                        : 'Create Branch',
+                    'Create Branch',
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -197,21 +163,6 @@ class _TimebankViewState extends State<TimebankView> {
                           padding: EdgeInsets.only(left: 20.0),
                           child: Divider(color: Colors.deepPurple),
                         ),
-
-//                        timebankModel.admins.contains(loggedInUser)
-//                            ? FlatButton(
-//                                child: Text(
-//                                  FlavorConfig.values.timebankName == "Yang 2020" ? 'Delete yang gang' : 'Delete timebank',
-//                                  style: TextStyle(fontWeight: FontWeight.bold),
-//                                ),
-//                                textColor: Theme.of(context).accentColor,
-//                                disabledTextColor:
-//                                    Theme.of(context).accentColor,
-//                                onPressed: () {
-//
-//                                },
-//                              )
-//                            : Offstage(),
                         timebankModel.admins.contains(loggedInUser)
                             ? Offstage()
                             : timebankModel.members.contains(loggedInUser)
@@ -226,7 +177,6 @@ class _TimebankViewState extends State<TimebankView> {
                                       showDialog(
                                         context: context,
                                         builder: (BuildContext dialogContext) {
-                                          // return object of type Dialog
                                           return AlertDialog(
                                             title: new Text(
                                                 "Why do you want to join the ${FlavorConfig.values.timebankTitle}? "),
@@ -241,9 +191,6 @@ class _TimebankViewState extends State<TimebankView> {
                                                     decoration: InputDecoration(
                                                       hintText: 'Reason',
                                                       labelText: 'Reason',
-                                                      // labelStyle: textStyle,
-                                                      // labelStyle: textStyle,
-                                                      // labelText: 'Description',
                                                       border:
                                                           OutlineInputBorder(
                                                         borderRadius:
@@ -274,8 +221,6 @@ class _TimebankViewState extends State<TimebankView> {
                                                 SizedBox(
                                                   height: 15,
                                                 ),
-
-                                                // usually buttons at the bottom of the dialog
                                                 new FlatButton(
                                                   padding: EdgeInsets.fromLTRB(
                                                       10, 5, 5, 5),
@@ -371,7 +316,7 @@ class _TimebankViewState extends State<TimebankView> {
                                                               notification.id)
                                                           .setData(notification
                                                               .toMap());
-                                                      // return;
+
                                                       Navigator.of(
                                                               dialogContext)
                                                           .pop();
@@ -397,17 +342,6 @@ class _TimebankViewState extends State<TimebankView> {
                                       );
                                     },
                                   ),
-                        // FlatButton(
-                        //   onPressed: () {
-                        //     Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //         builder: (context) => _whichRoute('timebanks'),
-                        //       ),
-                        //     );
-                        //   },
-                        //   child: _whichButton('timebanks'),
-                        // ),
                         timebankModel.admins.contains(loggedInUser) ||
                                 widget.superAdminTimebankModel.admins
                                     .contains(loggedInUser)
@@ -430,8 +364,6 @@ class _TimebankViewState extends State<TimebankView> {
                                 },
                               )
                             : Offstage(),
-                        //_showCreateCampaignButton(context),
-                        //_showJoinRequests(context),
                         !timebankModel.members.contains(loggedInUser)
                             ? Offstage()
                             : FlatButton(
@@ -445,79 +377,6 @@ class _TimebankViewState extends State<TimebankView> {
                                 },
                                 child: _whichButton('viewcampaigns'),
                               ),
-//                        FlatButton(
-//                          child: Text(
-//                            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-//                                ? 'View Yang Gangs'
-//                                : 'View Branches',
-//                            style: TextStyle(
-//                                fontWeight: FontWeight.w700,
-//                                color: Theme.of(context).accentColor),
-//                          ),
-//                          onPressed: () {
-//                            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-//                                ? Navigator.pop(context)
-//                                : Navigator.push(
-//                                    context,
-//                                    MaterialPageRoute(
-//                                        builder: (context) => BranchList(
-//                                              timebankid: timebankModel.id,
-//                                            )),
-//                                  );
-//                          },
-//                        ),
-//                        FlatButton(
-//                          child: Text(
-//                            'Create feed',
-//                            style: TextStyle(
-//                                fontWeight: FontWeight.w700,
-//                                color: Theme.of(context).accentColor),
-//                          ),
-//                          onPressed: () {
-//                            Navigator.push(
-//                                context,
-//                                MaterialPageRoute(
-//                                  builder: (context) => NewsCreate(
-//                                    timebankId: timebankModel.id,
-//                                  ),
-//                                ));
-//                          },
-//                        ),
-//                        FlatButton(
-//                          child: Text(
-//                            'Create ${FlavorConfig.values.requestTitle}',
-//                            style: TextStyle(
-//                                fontWeight: FontWeight.w700,
-//                                color: Theme.of(context).accentColor),
-//                          ),
-//                          onPressed: () {
-//                            Navigator.push(
-//                              context,
-//                              MaterialPageRoute(
-//                                builder: (context) => CreateRequest(
-//                                  timebankId: timebankModel.id,
-//                                ),
-//                              ),
-//                            );
-//                          },
-//                        ),
-//                        FlatButton(
-//                          child: Text(
-//                            'Create ${FlavorConfig.values.offertitle}',
-//                            style: TextStyle(
-//                                fontWeight: FontWeight.w700,
-//                                color: Theme.of(context).accentColor),
-//                          ),
-//                          onPressed: () {
-//                            Navigator.push(
-//                              context,
-//                              MaterialPageRoute(
-//                                  builder: (context) => CreateOffer(
-//                                        timebankId: timebankModel.id,
-//                                      )),
-//                            );
-//                          },
-//                        ),
                         !timebankModel.members.contains(loggedInUser)
                             ? Offstage()
                             : FlatButton(
@@ -540,26 +399,6 @@ class _TimebankViewState extends State<TimebankView> {
                                   );
                                 },
                               ),
-//                        !timebankModel.members.contains(loggedInUser)
-//                            ? Offstage()
-//                            : FlatButton(
-//                                child: Text(
-//                                  'View Accepted Offers',
-//                                  style: TextStyle(
-//                                      fontWeight: FontWeight.w700,
-//                                      color: Theme.of(context).accentColor),
-//                                ),
-//                                onPressed: () {
-//                                  Navigator.push(
-//                                    context,
-//                                    MaterialPageRoute(
-//                                        builder: (context) => AcceptedOffers(
-//                                              timebankId: timebankModel.id,
-//                                            )),
-//                                  );
-//                                },
-//                              ),
-
                         timebankModel.parentTimebankId != null
                             ? FutureBuilder<Object>(
                                 future: FirestoreManager.getTimeBankForId(
@@ -600,7 +439,6 @@ class _TimebankViewState extends State<TimebankView> {
                                   );
                                 })
                             : Offstage(),
-
                         Padding(
                           padding: EdgeInsets.only(top: 10.0, left: 20.0),
                           child: Text(
@@ -689,109 +527,6 @@ class _TimebankViewState extends State<TimebankView> {
                             },
                           ),
                         ),
-                        // Padding(
-                        //   padding: EdgeInsets.only(top: 10.0, left: 20.0),
-                        //   child: Text(
-                        //     'Closed :',
-                        //     style: TextStyle(
-                        //       fontSize: 18.0,
-                        //       fontWeight: FontWeight.w700,
-                        //       decoration: TextDecoration.underline,
-                        //     ),
-                        //   ),
-                        // ),
-                        // Padding(
-                        //   padding: EdgeInsets.only(top: 10.0, left: 20.0),
-                        //   child: Text(
-                        //     '${timebankModel.protected}',
-                        //     style: TextStyle(fontSize: 18.0),
-                        //   ),
-                        // ),
-                        // Padding(
-                        //   padding: EdgeInsets.only(left: 20, bottom: 80),
-                        //   child: Row(
-                        //     children: <Widget>[
-                        //       Text(
-                        //         'Manage Members',
-                        //         style: TextStyle(
-                        //             fontSize: 18.0,
-                        //             fontWeight: FontWeight.w700),
-                        //       ),
-                        //       //Hiding as of now as now the admin can see the same from view members page
-                        //       //_showManageMembersButton(context)
-                        //     ],
-                        //   ),
-                        // ),
-                        // StreamBuilder<UserModel>(
-                        //
-                        //   stream: FirestoreManager.getUserForIdStream(
-                        //       sevaUserId: timebankModel.creatorId),
-                        //   builder: (context, snapshot) {
-                        //     if (snapshot.hasError)
-                        //       return Text('Error: ${snapshot.error}');
-                        //     switch (snapshot.connectionState) {
-                        //       case ConnectionState.waiting:
-                        //         return Center(
-                        //             child: CircularProgressIndicator());
-                        //         break;
-                        //       default:
-                        //         UserModel ownerModel = snapshot.data;
-                        //         this.ownerModel = ownerModel;
-                        //         return FlatButton(
-                        //           onPressed: ownerModel != null
-                        //               ? () {
-                        //                   Navigator.push(
-                        //                       context,
-                        //                       MaterialPageRoute(
-                        //                           builder: (context) =>
-                        //                               ProfileViewer(
-                        //                                 userEmail:
-                        //                                     ownerModel.email,
-                        //                               )));
-                        //                 }
-                        //               : null,
-                        //           child: Row(
-                        //             children: <Widget>[
-                        //               Padding(
-                        //                 padding: const EdgeInsets.only(
-                        //                     left: 28.0,
-                        //                     right: 8.0,
-                        //                     top: 8.0,
-                        //                     bottom: 8.0),
-                        //                 child: CircleAvatar(
-                        //                   // minRadius: 20.0,
-                        //                   backgroundImage: ownerModel == null ||
-                        //                           ownerModel.photoURL == null ||
-                        //                           ownerModel.photoURL.isEmpty
-                        //                       ? AssetImage(
-                        //                           'lib/assets/images/noimagefound.png')
-                        //                       : NetworkImage(
-                        //                           ownerModel.photoURL),
-                        //                 ),
-                        //               ),
-                        //               Flexible(
-                        //                 child: Container(
-                        //                   padding: EdgeInsets.only(right: 13.0),
-                        //                   child: ownerModel != null &&
-                        //                           ownerModel.fullname != null
-                        //                       ? Text(
-                        //                           ownerModel.fullname,
-                        //                           overflow:
-                        //                               TextOverflow.ellipsis,
-                        //                           style: TextStyle(
-                        //                             fontSize: 18.0,
-                        //                           ),
-                        //                         )
-                        //                       : Container(),
-                        //                 ),
-                        //               ),
-                        //             ],
-                        //           ),
-                        //         );
-                        //     }
-                        //   },
-                        // ),
-                        //getTextWidgets(context),
                       ],
                     ),
                   ),
@@ -857,33 +592,16 @@ class _TimebankViewState extends State<TimebankView> {
             timebankModel: timebankModel,
             owner: ownerModel,
           );
-//        return PinView(
-//            timebankModel:timebankModel,
-//             owner:ownerModel,
-//        );
         }
         break;
-      //edityanggang
+
       case 'edityanggang':
         return EditSuperTimebankView(
           timebankId: timebankModel.id,
           superAdminTimebankModel: widget.superAdminTimebankModel,
         );
         break;
-      case 'campaigns':
-        if (timebankModel.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-          return CampaignCreate(
-            timebankModel: timebankModel,
-          );
-        } else {
-          return CampaignJoin();
-        }
-        break;
-      case 'viewcampaigns':
-        return CampaignsView(
-          timebankModel: timebankModel,
-        );
+
         break;
       case 'joinrequests':
         return TimebankJoinRequestView(
@@ -1000,7 +718,6 @@ class _TimebankViewState extends State<TimebankView> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: CircleAvatar(
-                          // minRadius: 20.0,
                           backgroundImage: user.photoURL == null ||
                                   user.photoURL.isEmpty
                               ? AssetImage('lib/assets/images/noimagefound.png')

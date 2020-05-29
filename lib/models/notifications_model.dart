@@ -22,8 +22,8 @@ class NotificationsModel extends DataModel {
     this.targetUserId,
     this.isRead = false,
     this.senderUserId,
-    @required this.timebankId,
-    @required this.communityId,
+     this.timebankId,
+     this.communityId,
   });
 
   NotificationsModel.fromMap(Map<String, dynamic> map) {
@@ -136,6 +136,7 @@ enum NotificationType {
   TYPE_OFFER_SUBSCRIPTION_COMPLETED,
   TYPE_FEEDBACK_FROM_SIGNUP_MEMBER,
   TYPE_DELETION_REQUEST_OUTPUT,
+  TYPE_REPORT_MEMBER,
 }
 
 //Check the method
@@ -178,7 +179,9 @@ Map<String, NotificationType> typeMapper = {
       NotificationType.TYPE_OFFER_SUBSCRIPTION_COMPLETED,
   "TYPE_FEEDBACK_FROM_SIGNUP_MEMBER":
       NotificationType.TYPE_FEEDBACK_FROM_SIGNUP_MEMBER,
+  "TYPE_REPORT_MEMBER": NotificationType.TYPE_REPORT_MEMBER,
   "TYPE_DELETION_REQUEST_OUTPUT": NotificationType.TYPE_DELETION_REQUEST_OUTPUT,
+  "TYPE_REPORT_MEMBER": NotificationType.TYPE_REPORT_MEMBER,
 };
 
 ClearNotificationModel clearNotificationModelFromJson(String str) =>

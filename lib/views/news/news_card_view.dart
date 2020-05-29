@@ -11,7 +11,6 @@ import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/messages/new_chat.dart';
 import 'package:sevaexchange/views/news/update_feed.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
@@ -20,15 +19,13 @@ import '../../flavor_config.dart';
 
 class NewsCardView extends StatefulWidget {
   final NewsModel newsModel;
-  final String timebankId;
 
-  NewsCardView({Key key, @required this.newsModel, @required this.timebankId})
-      : super(key: key);
+  NewsCardView({Key key, @required this.newsModel}) : super(key: key);
 
   @override
   NewsCardViewState createState() {
     // TODO: implement createState
-    return NewsCardViewState(newsModel: newsModel, timebankId: timebankId);
+    return NewsCardViewState(newsModel: newsModel);
   }
 }
 
@@ -37,9 +34,8 @@ class NewsCardViewState extends State<NewsCardView> {
   // assert(newsModel.description != null, 'News description cannot be null');
   // assert(newsModel.fullName != null, 'Full name cannot be null');
   final NewsModel newsModel;
-  final String timebankId;
 
-  NewsCardViewState({this.newsModel, this.timebankId});
+  NewsCardViewState({this.newsModel});
 
   @override
   Widget build(BuildContext context) {
@@ -455,18 +451,6 @@ class NewsCardViewState extends State<NewsCardView> {
     });
   }
 
-  _launchURL() async {
-    print("url ${newsModel.newsDocumentUrl}");
-    String url = newsModel.newsDocumentUrl;
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-      );
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
   Widget get subHeadings {
     return newsModel.subheading == null
         ? Offstage()
@@ -557,16 +541,6 @@ class NewsCardViewState extends State<NewsCardView> {
   String _getFormattedTime(int timestamp) {
     return timeAgo.format(
       DateTime.fromMillisecondsSinceEpoch(timestamp),
-    );
-  }
-
-  void _shareNews(BuildContext context) {
-    bool isShare = true;
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => NewChat(isShare, newsModel, timebankId),
-      ),
     );
   }
 

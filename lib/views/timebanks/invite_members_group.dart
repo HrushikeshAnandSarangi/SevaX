@@ -137,7 +137,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
                         borderRadius: new BorderRadius.circular(25.7)),
-                    hintText: 'Invite members via email',
+                    hintText: 'Search members via email,name',
                     hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
               ),
             ),

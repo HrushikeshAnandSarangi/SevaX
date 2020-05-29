@@ -74,6 +74,7 @@ Future<void> showAdvisoryBeforeDeletion({
     if (isAccedentalDeleteEnabled) {
       _showAccedentalDeleteConfirmation(
         context: context,
+        softDeleteType: softDeleteType,
       );
       return;
     }
@@ -230,16 +231,19 @@ String _getType(SoftDelete softDeleteType) {
   }
 }
 
-void _showAccedentalDeleteConfirmation({BuildContext context}) {
+void _showAccedentalDeleteConfirmation({
+  BuildContext context,
+  SoftDelete softDeleteType,
+}) {
   showDialog(
     context: context,
     builder: (BuildContext accedentalDialogContext) {
       return AlertDialog(
         title: Text(
-          "Accendetal Deletion enabled!",
+          "Accendetal Deletion enabled",
         ),
         content: Text(
-            "You have enabled Prevent accedental delete, please uncheck it and try again!"),
+            "This timebank has \"Prevent Accidental Delete\" enabled. Please uncheck that box (in the \"Manage\" tab) before attempting to delete the ${_getType(softDeleteType)}."),
         actions: <Widget>[
           RaisedButton(
             onPressed: () {
@@ -259,10 +263,10 @@ void _showRequestProcessingWithStatus({BuildContext context}) {
     builder: (BuildContext _showRequestProcessingWithStatusContext) {
       return AlertDialog(
         title: Text(
-          "Request in process.",
+          "Your request for deletion is being processed.",
         ),
         content: Text(
-            "We have already received your request for deletion and we are processing the same, you would be notified once that is done."),
+            "Your request to delete has been received by us. We are processing the request. You will be notified once it is completed."),
         actions: <Widget>[
           RaisedButton(
             onPressed: () {

@@ -19,6 +19,7 @@ String campaignAvatarURL;
 String newsImageURL;
 String newsDocumentURL;
 String newsDocumentName;
+String userExitReason;
 
 //DYNAMIC LISTS
 List<dynamic> interests = [];

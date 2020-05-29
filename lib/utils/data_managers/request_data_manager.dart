@@ -648,7 +648,7 @@ Future<void> approveAcceptRequest({
   @required String approvedUserId,
   @required String notificationId,
   @required String communityId,
-  @required bool directToMember,
+  bool directToMember,
 }) async {
   var approvalCount = 0;
   if (requestModel.transactions != null) {

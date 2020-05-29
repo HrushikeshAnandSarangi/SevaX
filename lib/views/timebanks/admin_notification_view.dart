@@ -8,17 +8,19 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
+import 'package:sevaexchange/models/reported_member_notification_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart';
@@ -31,10 +33,10 @@ import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_user_exit_dialog.dart';
 import 'package:shimmer/shimmer.dart';
 
-class TimebankNotificationsView extends StatefulWidget {
-  final String timebankId;
+class AdminNotificationViewHolder extends StatefulWidget {
+  final TimebankModel timebankModel;
 
-  TimebankNotificationsView({this.timebankId});
+  AdminNotificationViewHolder({this.timebankModel});
 
   @override
   AdminNotificationsView createState() => AdminNotificationsView();
@@ -46,7 +48,7 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
   Widget build(BuildContext context) {
     return StreamBuilder<List<NotificationsModel>>(
       stream: FirestoreManager.getNotificationsForTimebank(
-        timebankId: widget.timebankId,
+        timebankId: widget.timebankModel.id,
         // communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       ),
       builder: (context_firestore, snapshot) {
@@ -271,10 +273,10 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
                   photoUrl: null,
                   title: requestData.requestAccepted
                       ? "${requestData.entityTitle} was deleted!"
-                      : "${requestData.entityTitle} couldn't be deleted!",
+                      : "${requestData.entityTitle} cannot be deleted!",
                   subTitle: requestData.requestAccepted
                       ? "${requestData.entityTitle} you requested to delete has been successfully deleted!"
-                      : "${requestData.entityTitle} couldn't be deleted because you are still some pending transactions!",
+                      : "Your request to delete ${requestData.entityTitle} cannot be completed at this time. There are pending transactions. Tap here to view the details:",
                   onPressed: () => !requestData.requestAccepted
                       ? showDialogForIncompleteTransactions(
                           context: context,
@@ -286,6 +288,22 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
                       notificationId: notification.id,
                       timebankId: notification.timebankId,
                     );
+                  },
+                );
+
+              case NotificationType.TYPE_REPORT_MEMBER:
+                ReportedMemberNotificationModel data =
+                    ReportedMemberNotificationModel.fromMap(notification.data);
+                return NotificationCard(
+                  title: "Member Reported",
+                  subTitle: TimebankNotificationMessage.MEMBER_REPORT
+                      .replaceFirst('*name', data.reportedUserName),
+                  photoUrl: data.reportedUserImage,
+                  entityName: data.reportedUserName,
+                  onDismissed: () {
+                    dismissTimebankNotification(
+                        timebankId: notification.timebankId,
+                        notificationId: notification.id);
                   },
                 );
 
@@ -348,12 +366,7 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
                           ),
                           TextSpan(
                             text: () {
-                              return FlavorConfig.appFlavor ==
-                                      Flavor.HUMANITY_FIRST
-                                  ? '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Yang_Bucks')}'
-                                  : FlavorConfig.appFlavor == Flavor.TULSI
-                                      ? '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Tulsi_Tokens')}'
-                                      : '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Seva_Credits')}';
+                              return '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Seva_Credits')}';
                             }(),
                             style: TextStyle(
                               color: Colors.black,
@@ -416,11 +429,7 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
                     children: [
                       TextSpan(
                         text: () {
-                          return FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                              ? '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Yang_Bucks')}'
-                              : FlavorConfig.appFlavor == Flavor.TULSI
-                                  ? '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Tulsi_Tokens')}'
-                                  : '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Seva_Credits')}';
+                          return '${model.credits} ${AppLocalizations.of(context).translate('notifications','bucks_Seva_Credits')}';
                         }(),
                         style: TextStyle(
                           color: Colors.black,
@@ -651,7 +660,7 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
         onDismissed: (direction) {
           FirestoreManager.readTimeBankNotification(
             notificationId: notificationId,
-            timebankId: widget.timebankId,
+            timebankId: widget.timebankModel.id,
           );
         },
         child: GestureDetector(
@@ -1056,12 +1065,12 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
     );
   }
 
-  void rejectMemberClaimForEvent(
+  Future<void> rejectMemberClaimForEvent(
       {RequestModel model,
       String userId,
       BuildContext context,
       UserModel user,
-      String notificationId}) {
+      String notificationId}) async {
     List<TransactionModel> transactions =
         model.transactions.map((t) => t).toList();
     transactions.removeWhere((t) => t.to == userId);
@@ -1074,32 +1083,39 @@ class AdminNotificationsView extends State<TimebankNotificationsView> {
       userId: userId,
       communityid: SevaCore.of(context).loggedInUser.currentCommunity,
     );
-    // creating chat with a timebank
-    String loggedInEmail = model.timebankId;
 
-    // String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-    List users = [user.email, loggedInEmail];
-    users.sort();
-    ChatModel chatModel = ChatModel();
-    chatModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
-    chatModel.user1 = users[0];
-    chatModel.user2 = users[1];
-    chatModel.timebankId = widget.timebankId;
-    createChat(chat: chatModel);
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => ChatView(
-                useremail: user.email,
-                chatModel: chatModel,
-                isFromRejectCompletion: true,
-              )),
+    UserModel loggedInUser = SevaCore.of(context).loggedInUser;
+    ParticipantInfo sender = ParticipantInfo(
+      id: model.timebankId,
+      name: widget.timebankModel.name,
+      photoUrl: widget.timebankModel.photoUrl,
+      type: widget.timebankModel.parentTimebankId ==
+              '73d0de2c-198b-4788-be64-a804700a88a4'
+          ? ChatType.TYPE_TIMEBANK
+          : ChatType.TYPE_GROUP,
     );
 
-    FirestoreManager.readTimeBankNotification(
-      notificationId: notificationId,
-      timebankId: widget.timebankId,
+    ParticipantInfo reciever = ParticipantInfo(
+      id: user.sevaUserID,
+      photoUrl: user.photoURL,
+      name: user.fullname,
+      type: ChatType.TYPE_PERSONAL,
+    );
+
+    await createAndOpenChat(
+      context: context,
+      timebankId: widget.timebankModel.id,
+      communityId: loggedInUser.currentCommunity,
+      sender: sender,
+      reciever: reciever,
+      isFromRejectCompletion: true,
+      isTimebankMessage: true,
+      onChatCreate: () {
+        FirestoreManager.readTimeBankNotification(
+          notificationId: notificationId,
+          timebankId: widget.timebankModel.id,
+        );
+      },
     );
   }
 

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/main_app.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/views/timebanks/EULAgreement.dart';
@@ -55,9 +54,7 @@ class EulaAgreementState extends State<EulaPage> {
                       padding: EdgeInsets.all(10.0),
                     ),
                     Text(
-                      FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                          ? EULAgreementScript.EULA_AGREEMENT
-                          : EULAgreementScript.SEVA_EULA_AGREEMENT,
+                      EULAgreementScript.SEVA_EULA_AGREEMENT,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 17.0,

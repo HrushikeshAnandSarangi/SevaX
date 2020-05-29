@@ -475,7 +475,10 @@ class RequestModel extends DataModel {
         return map.toMap();
       }).toList();
       object['transactions'] = transactionList;
+    } else {
+      object['transactions'] = [];
     }
+
     if (this.rejectedReason != null && this.rejectedReason.isNotEmpty) {
       object['rejectedReason'] = this.rejectedReason;
     }
