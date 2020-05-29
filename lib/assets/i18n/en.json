@@ -265,7 +265,7 @@
     "about": "About",
     "example": "Ex: A bit more about your group",
     "private_group": "Private Group",
-    "private_delete": "Private accedental delete",
+    "prevent_delete": "Prevent accidental delete",
     "is_pin_right": "Is this pin at a right place?",
     "assign_volunteer": "Assign to volunteers",
     "selected": "volunteers selected",
@@ -326,7 +326,7 @@
     "image_hint": "Photo Credits",
     "change": "Change image",
     "add": "Add image",
-    "camera" : "Camera",
+    "camera": "Camera",
     "gallery": "Gallery"
   },
   "projects": {
@@ -675,12 +675,13 @@
   "edit_group": {
     "add_members": "Add Members",
     "edit_group": "Group logo",
+    "group_logo": "Group logo",
     "name": "Name your group",
     "hint_text": "Ex: Pets-in-town, Citizen collab",
     "enter_text": "Please enter some text",
     "about": "About",
     "a_bit_more": "Ex: A bit more about your group",
-    "private_accidental": "Private accedental delete",
+    "prevent_delete": "Prevent accidental delete",
     "private": "Private Group",
     "is_pin_right": "Is this pin at a right place?",
     "update": "Update",
@@ -875,13 +876,13 @@
   },
   "info_window": {
     "mapper": "i_button_info",
-    "groups":  "A Timebank (or Community) is divided into Groups. For example, a School Community would have Groups for Technology Committee, Fund Raising, Classroom, etc.",
+    "groups": "A Timebank (or Community) is divided into Groups. For example, a School Community would have Groups for Technology Committee, Fund Raising, Classroom, etc.",
     "projects": "Projects are logical collections under a Group. For example, the Technology Committee Group can have the following Projects: School web page, Equipment, Apps, etc.",
-    "requests":  "Requests are either created by Time Admins - for community tasks that need to be performed (eg. Weed the school yard) , or by Users who need help from the community for things they need to be done (eg. seniors needing groceries delivered). Requests for a Timebank would be listed under a Project.",
+    "requests": "Requests are either created by Time Admins - for community tasks that need to be performed (eg. Weed the school yard) , or by Users who need help from the community for things they need to be done (eg. seniors needing groceries delivered). Requests for a Timebank would be listed under a Project.",
     "offers": "Users can either make Offers to the Timebank (eg. I can build HTML pages on Saturday mornings from 9 to 11 am) or to the other members in the Community (eg. I can teach a 4-week class on Making Quilts on Sunday afternoons from 2 to 4 pm). The offers to the Timebank needs to be accepted by an Admin. At this time the Offer gets converted to a Request.",
-    "protected_timebank":  "Check this box if you want to disable user-to-user transactions. That is, “Requests” can only be originated by the designated Admins of this Timebank. Typically, Protected Timebanks are used for Political Campaigns and certain Nonprofit Organizations",
+    "protected_timebank": "Check this box if you want to disable user-to-user transactions. That is, “Requests” can only be originated by the designated Admins of this Timebank. Typically, Protected Timebanks are used for Political Campaigns and certain Nonprofit Organizations",
     "private_timebank": "Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.",
-    "private_group":  "Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.",
+    "private_group": "Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.",
     "tax_configuration": "At the time that a user is credited Seva Credits for completing a request (for the Timebank), the Timebank Admin can specify a Tax - which is credited to the Timebank. Slide the ruler to specify the amount of the Tax."
   }
 }

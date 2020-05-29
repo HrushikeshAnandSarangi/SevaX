@@ -265,7 +265,7 @@
     "about": "Acerca de",
     "example": "Ej: un poco más sobre tu grupo",
     "private_group": "Grupo privado",
-    "private_delete": "Eliminar acceso privado",
+    "prevent_delete": "Eliminar acceso privado",
     "is_pin_right": "¿Está este pin en el lugar correcto?",
     "assign_volunteer": "Asignar a voluntarios",
     "selected": "voluntarios seleccionados",

@@ -5,13 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flurry/flurry.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/internationalization/applanguage.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/onboarding/email_verify_page.dart';
@@ -31,7 +30,6 @@ import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 import 'onboarding/interests_view.dart';
 import 'onboarding/skills_view.dart';
 
-import 'package:sevaexchange/internationalization/applanguage.dart';
 class UserData {
   static final UserData _singleton = UserData._internal();
 
@@ -96,7 +94,8 @@ class _SplashViewState extends State<SplashView> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_initialized) {
-      loadingMessage = AppLocalizations.of(context).translate('splash','hang_on');
+      loadingMessage =
+          AppLocalizations.of(context).translate('splash', 'hang_on');
       _precacheImage().then((_) {
         initiateLogin();
       });
@@ -178,7 +177,9 @@ class _SplashViewState extends State<SplashView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                AppLocalizations.of(context).translate('splash','humanityfirst').toUpperCase(),
+                AppLocalizations.of(context)
+                    .translate('splash', 'humanityfirst')
+                    .toUpperCase(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   letterSpacing: 5,
@@ -191,7 +192,7 @@ class _SplashViewState extends State<SplashView> {
                 height: 16,
               ),
               Image.asset(
-                'lib/assets/images/new_yang.png',
+                'lib/assets/images/seva-x-logo.png',
                 height: 140,
                 width: 140,
               ),
@@ -346,7 +347,8 @@ class _SplashViewState extends State<SplashView> {
 
   Future<void> handleLoggedInUserIdResponse(String userId) async {
     if (userId == null || userId.isEmpty) {
-      loadingMessage = AppLocalizations.of(context).translate('splash','hang_on');
+      loadingMessage =
+          AppLocalizations.of(context).translate('splash', 'hang_on');
       _navigateToLoginPage();
       return;
     }
@@ -370,7 +372,8 @@ class _SplashViewState extends State<SplashView> {
     }
 
     if (loggedInUser == null) {
-      loadingMessage = AppLocalizations.of(context).translate('splash','world');
+      loadingMessage =
+          AppLocalizations.of(context).translate('splash', 'world');
       _navigateToLoginPage();
       return;
     }
@@ -447,7 +450,7 @@ class _SplashViewState extends State<SplashView> {
         loggedInUser.bio == null) {
       await _navigateToBioView(loggedInUser);
     }
-    loadingMessage = AppLocalizations.of(context).translate('splash','we_met');
+    loadingMessage = AppLocalizations.of(context).translate('splash', 'we_met');
 
     if (loggedInUser.communities == null || loggedInUser.communities.isEmpty) {
       await _navigateToFindCommunitiesView(loggedInUser);
@@ -510,13 +513,15 @@ class _SplashViewState extends State<SplashView> {
             Navigator.pop(context);
             loggedInUser.skills = skills;
             updateUserData(loggedInUser);
-            loadingMessage = AppLocalizations.of(context).translate('skills','updating_loader');
+            loadingMessage = AppLocalizations.of(context)
+                .translate('skills', 'updating_loader');
           },
           onSkipped: () {
             Navigator.pop(context);
             AppConfig.prefs.setBool(AppConfig.skip_skill, true);
             loggedInUser.skills = [];
-            loadingMessage =  AppLocalizations.of(context).translate('skills','skipping_loader');
+            loadingMessage = AppLocalizations.of(context)
+                .translate('skills', 'skipping_loader');
           },
         ),
       ),
@@ -543,13 +548,15 @@ class _SplashViewState extends State<SplashView> {
             Navigator.pop(context);
             loggedInUser.interests = interests;
             updateUserData(loggedInUser);
-            loadingMessage =  AppLocalizations.of(context).translate('interests','updating_loader');
+            loadingMessage = AppLocalizations.of(context)
+                .translate('interests', 'updating_loader');
           },
           onSkipped: () {
             Navigator.pop(context);
             loggedInUser.interests = [];
             AppConfig.prefs.setBool(AppConfig.skip_interest, true);
-            loadingMessage =  AppLocalizations.of(context).translate('interests','skipping_loader');
+            loadingMessage = AppLocalizations.of(context)
+                .translate('interests', 'skipping_loader');
           },
           onBacked: () {
             AppConfig.prefs.setBool(AppConfig.skip_skill, null);
@@ -626,7 +633,7 @@ class _SplashViewState extends State<SplashView> {
 
   Future<void> _precacheImage() async {
     return await precacheImage(
-      AssetImage('lib/assets/images/new_yang.png'),
+      AssetImage('lib/assets/images/seva-x-logo.png'),
       context,
     );
   }

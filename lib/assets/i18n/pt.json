@@ -265,7 +265,7 @@
     "about": "Sobre",
     "example": "Ex: Um pouco mais sobre o seu grupo",
     "private_group": "Grupo Privado",
-    "private_delete": "Exclusão accedental privada",
+    "prevent_delete": "Exclusão accedental privada",
     "is_pin_right": "Este pino está no lugar certo?",
     "assign_volunteer": "Designar para voluntários",
     "selected": "voluntários selecionados",

@@ -38,7 +38,7 @@ class TimebankCreate extends StatelessWidget {
         // leading: BackButton(color: Colors.black54),
         title: Text(
           // 'Create a ${FlavorConfig.values.timebankTitle}',
-          AppLocalizations.of(context).translate('groups','create_group'),
+          AppLocalizations.of(context).translate('groups', 'create_group'),
           style: TextStyle(
             fontSize: 20,
           ),
@@ -111,7 +111,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             .then((groupFound) {
           if (groupFound) {
             setState(() {
-              errTxt = AppLocalizations.of(context).translate('groups','exists');
+              errTxt =
+                  AppLocalizations.of(context).translate('groups', 'exists');
             });
           } else {
             setState(() {
@@ -175,7 +176,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 
   @override
   Widget build(BuildContext context) {
-    memberAssignment = "+ ${AppLocalizations.of(context).translate('groups','add_members')}";
+    memberAssignment =
+        "+ ${AppLocalizations.of(context).translate('groups', 'add_members')}";
     return Form(
       key: _formKey,
       child: Container(
@@ -186,189 +188,204 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   }
 
   Widget get createSevaX {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Text(
-              AppLocalizations.of(context).translate('groups','group_subset'),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Center(
-              child: Padding(
-            padding: EdgeInsets.all(5.0),
-            child: Column(
-              children: <Widget>[
-                TimebankAvatar(),
-                SizedBox(height: 5),
-                Text(
-                  AppLocalizations.of(context).translate('groups','logo'),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                )
-              ],
-            ),
-          )),
-          headingText(AppLocalizations.of(context).translate('groups','name'), true),
-          TextFormField(
-            textCapitalization: TextCapitalization.sentences,
-            focusNode: nameNode,
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(aboutNode);
-            },
-            controller: searchTextController,
-            onChanged: (value) {
-              print("groupname ------ $value");
-            },
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              errorText: errTxt,
-              hintText: AppLocalizations.of(context).translate('groups','name_group'),
-            ),
-            // keyboardType: TextInputType.multiline,
-            // maxLines: 1,
-            inputFormatters: <TextInputFormatter>[
-              WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
-            ],
-            validator: (value) {
-              if (value.isEmpty) {
-                return AppLocalizations.of(context).translate('groups','please_enter');
-              }
-              timebankModel.name = value.trim();
-            },
-          ),
-          headingText(AppLocalizations.of(context).translate('groups','about'), true),
-          TextFormField(
-            textCapitalization: TextCapitalization.sentences,
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+        Widget>[
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Text(
+          AppLocalizations.of(context).translate('groups', 'group_subset'),
+          textAlign: TextAlign.center,
+        ),
+      ),
+      Center(
+          child: Padding(
+        padding: EdgeInsets.all(5.0),
+        child: Column(
+          children: <Widget>[
+            TimebankAvatar(),
+            SizedBox(height: 5),
+            Text(
+              AppLocalizations.of(context).translate('groups', 'logo'),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
+            )
+          ],
+        ),
+      )),
+      headingText(
+          AppLocalizations.of(context).translate('groups', 'name'), true),
+      TextFormField(
+        textCapitalization: TextCapitalization.sentences,
+        focusNode: nameNode,
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).requestFocus(aboutNode);
+        },
+        controller: searchTextController,
+        onChanged: (value) {
+          print("groupname ------ $value");
+        },
+        textInputAction: TextInputAction.next,
+        decoration: InputDecoration(
+          errorText: errTxt,
+          hintText:
+              AppLocalizations.of(context).translate('groups', 'name_group'),
+        ),
+        // keyboardType: TextInputType.multiline,
+        // maxLines: 1,
+        inputFormatters: <TextInputFormatter>[
+          WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
+        ],
+        validator: (value) {
+          if (value.isEmpty) {
+            return AppLocalizations.of(context)
+                .translate('groups', 'please_enter');
+          }
+          timebankModel.name = value.trim();
+        },
+      ),
+      headingText(
+          AppLocalizations.of(context).translate('groups', 'about'), true),
+      TextFormField(
+        textCapitalization: TextCapitalization.sentences,
 
-            focusNode: aboutNode,
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(FocusNode());
-            },
-            textInputAction: TextInputAction.done,
-            decoration: InputDecoration(
-              hintText: AppLocalizations.of(context).translate('groups','example'),
+        focusNode: aboutNode,
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        textInputAction: TextInputAction.done,
+        decoration: InputDecoration(
+          hintText: AppLocalizations.of(context).translate('groups', 'example'),
+        ),
+        // keyboardType: TextInputType.multiline,
+        maxLines: 1,
+        validator: (value) {
+          if (value.isEmpty) {
+            return AppLocalizations.of(context)
+                .translate('groups', 'please_enter');
+          }
+          timebankModel.missionStatement = value;
+        },
+      ),
+      Row(
+        children: <Widget>[
+          headingText(
+              AppLocalizations.of(context).translate('groups', 'private_group'),
+              false),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+            child: infoButton(
+              context: context,
+              key: GlobalKey(),
+              type: InfoType.PRIVATE_GROUP,
             ),
-            // keyboardType: TextInputType.multiline,
-            maxLines: 1,
-            validator: (value) {
-              if (value.isEmpty) {
-                return AppLocalizations.of(context).translate('groups','please_enter');
-              }
-              timebankModel.missionStatement = value;
-            },
           ),
-          Row(
-            children: <Widget>[
-              headingText(AppLocalizations.of(context).translate('groups','private_group'), false),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-                child: infoButton(
-                  context: context,
-                  key: GlobalKey(),
-                  type: InfoType.PRIVATE_GROUP,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-                child: Checkbox(
-                  value: timebankModel.private,
-                  onChanged: (bool value) {
-                    print(value);
-                    setState(() {
-                      timebankModel.private = value;
-                    });
-                    print(timebankModel.private);
-                  },
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: <Widget>[
-              headingText(AppLocalizations.of(context).translate('groups','private_delete'), false),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-                child: Checkbox(
-                  value: timebankModel.preventAccedentalDelete,
-                  onChanged: (bool value) {
-                    print(value);
-                    setState(() {
-                      timebankModel.preventAccedentalDelete = value;
-                    });
-                    print(timebankModel.preventAccedentalDelete);
-                  },
-                ),
-              ),
-            ],
-          ),
-          tappableInviteMembers,
-          headingText(AppLocalizations.of(context).translate('groups','is_pin_right'), false),
-          Center(
-            child: LocationPickerWidget(
-              selectedAddress: selectedAddress,
-              location: location,
-              onChanged: (LocationDataModel dataModel) {
-                log("received data model");
+          Padding(
+            padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+            child: Checkbox(
+              value: timebankModel.private,
+              onChanged: (bool value) {
+                print(value);
                 setState(() {
-                  location = dataModel.geoPoint;
-                  this.selectedAddress = dataModel.location;
+                  timebankModel.private = value;
                 });
+                print(timebankModel.private);
               },
             ),
           ),
+        ],
+      ),
+      Row(
+        children: <Widget>[
+          headingText(
+              AppLocalizations.of(context)
+                  .translate('groups', 'prevent_delete'),
+              false),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5.0),
-            child: Container(
-                alignment: Alignment.center,
-                child: FutureBuilder<Object>(
-                    future: getTimeBankForId(timebankId: widget.timebankId),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) return Text(AppLocalizations.of(context).translate('chat','error2'));
-                      if (snapshot.connectionState == ConnectionState.waiting)
-                        return Offstage();
-                      TimebankModel parentTimebank = snapshot.data;
-                      return RaisedButton(
-                        // color: Colors.blue,
-                        onPressed: () {
-                          if (errTxt != null || errTxt != "") {}
-                          // Validate will return true if the form is valid, or false if
-                          // the form is invalid.
-                          //if (location != null) {
-                          if (_formKey.currentState.validate() &&
-                              (errTxt == null || errTxt == "")) {
+            padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+            child: Checkbox(
+              value: timebankModel.preventAccedentalDelete,
+              onChanged: (bool value) {
+                print(value);
+                setState(() {
+                  timebankModel.preventAccedentalDelete = value;
+                });
+                print(timebankModel.preventAccedentalDelete);
+              },
+            ),
+          ),
+        ],
+      ),
+      tappableInviteMembers,
+      headingText(
+          AppLocalizations.of(context).translate('groups', 'is_pin_right'),
+          false),
+      Center(
+        child: LocationPickerWidget(
+          selectedAddress: selectedAddress,
+          location: location,
+          onChanged: (LocationDataModel dataModel) {
+            log("received data model");
+            setState(() {
+              location = dataModel.geoPoint;
+              this.selectedAddress = dataModel.location;
+            });
+          },
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        child: Container(
+            alignment: Alignment.center,
+            child: FutureBuilder<Object>(
+                future: getTimeBankForId(timebankId: widget.timebankId),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError)
+                    return Text(AppLocalizations.of(context)
+                        .translate('chat', 'error2'));
+                  if (snapshot.connectionState == ConnectionState.waiting)
+                    return Offstage();
+                  TimebankModel parentTimebank = snapshot.data;
+                  return RaisedButton(
+                    // color: Colors.blue,
+                    onPressed: () {
+                      if (errTxt != null || errTxt != "") {}
+                      // Validate will return true if the form is valid, or false if
+                      // the form is invalid.
+                      //if (location != null) {
+                      if (_formKey.currentState.validate() &&
+                          (errTxt == null || errTxt == "")) {
 //                            print("Hello");
 //                            // If the form is valid, we want to show a Snackbar
-                            _writeToDB();
+                        _writeToDB();
 //                            // return;
-                            try {
-                              parentTimebank.children.add(timebankModel.id);
-                            } catch (e) {
-                              print("${AppLocalizations.of(context).translate('chat','error')}$e");
-                            }
-                            updateTimebank(timebankModel: parentTimebank);
-                            Navigator.pop(context);
-                          } else {
-                            FocusScope.of(context).requestFocus(nameNode);
-                          }
-                        },
+                        try {
+                          parentTimebank.children.add(timebankModel.id);
+                        } catch (e) {
+                          print(
+                              "${AppLocalizations.of(context).translate('chat', 'error')}$e");
+                        }
+                        updateTimebank(timebankModel: parentTimebank);
+                        Navigator.pop(context);
+                      } else {
+                        FocusScope.of(context).requestFocus(nameNode);
+                      }
+                    },
 
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Text(
-                            AppLocalizations.of(context).translate('groups','create_group'),
-                            style: Theme.of(context).primaryTextTheme.button,
-                          ),
-                        ),
-                        textColor: Colors.blue,
-                      );
-                    })),
-          ),
-        ]);
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        AppLocalizations.of(context)
+                            .translate('groups', 'create_group'),
+                        style: Theme.of(context).primaryTextTheme.button,
+                      ),
+                    ),
+                    textColor: Colors.blue,
+                  );
+                })),
+      ),
+    ]);
   }
 
   Widget headingText(String name, bool isMandatory) {
@@ -769,9 +786,11 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
       selectedUsers = onActivityResult['membersSelected'];
       setState(() {
         if (selectedUsers.length == 0)
-          memberAssignment = AppLocalizations.of(context).translate('groups','assign_volunteer');
+          memberAssignment = AppLocalizations.of(context)
+              .translate('groups', 'assign_volunteer');
         else
-          memberAssignment = "${selectedUsers.length} ${AppLocalizations.of(context).translate('groups','selected')}";
+          memberAssignment =
+              "${selectedUsers.length} ${AppLocalizations.of(context).translate('groups', 'selected')}";
       });
       // print("Data is present Selected users ${selectedUsers.length}");
       print("Data is present Selected users ${selectedUsers.toString()}");
@@ -804,7 +823,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             child: Padding(
               padding: EdgeInsets.only(top: 15),
               child: Text(
-                '${AppLocalizations.of(context).translate('groups','invite')} +',
+                '${AppLocalizations.of(context).translate('groups', 'invite')} +',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.blue,

@@ -664,17 +664,11 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
 
                         timebankModel.id == FlavorConfig.values.timebankId
                             ? Offstage()
-                            : timebankModel.admins.contains(loggedInUser) ||
-                                    widget.superAdminTimebankModel.admins
-                                        .contains(SevaCore.of(context)
-                                            .loggedInUser
-                                            .sevaUserID)
+                            : timebankModel.creatorId ==
+                                    SevaCore.of(context).loggedInUser.sevaUserID
                                 ? FlatButton(
                                     child: Text(
-                                      FlavorConfig.values.timebankName ==
-                                              "Yang 2020"
-                                          ? 'Delete yang gang'
-                                          : 'Delete timebank',
+                                      'Delete timebank',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),

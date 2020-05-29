@@ -50,11 +50,12 @@ Future<void> showAdvisoryBeforeDeletion({
     context,
     type: ProgressDialogType.Normal,
     isDismissible: false,
-    customBody: Container(
-      child: Center(
-        child: Text("Please wait..."),
-      ),
-    ),
+
+    // customBody: Container(
+    //   child: Center(
+    //     child: Text("Please wait..."),
+    //   ),
+    // ),
   );
 
   progressDialog.show();
@@ -243,7 +244,7 @@ void _showAccedentalDeleteConfirmation({
           "Accendetal Deletion enabled",
         ),
         content: Text(
-            "This timebank has \"Prevent Accidental Delete\" enabled. Please uncheck that box (in the \"Manage\" tab) before attempting to delete the ${_getType(softDeleteType)}."),
+            "This timebank has \"Prevent Accidental Delete\" enabled. Please uncheck that box (in the \"Manage\" tab) before attempting to delete the ${_getModelType(softDeleteType)}."),
         actions: <Widget>[
           RaisedButton(
             onPressed: () {

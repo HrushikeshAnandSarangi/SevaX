@@ -64,17 +64,17 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
               labelColor: Colors.black,
               isScrollable: false,
               tabs: <Widget>[
-                Tab(text: AppLocalizations.of(context).translate('manage','edit_timebank')),
+                Tab(
+                    text: AppLocalizations.of(context)
+                        .translate('manage', 'edit_timebank')),
                 // Tab(text: "Upgrade"),
-                Tab(text: AppLocalizations.of(context).translate('manage','billing')),
-                Tab(text: AppLocalizations.of(context).translate('manage','settings')),
+                Tab(
+                    text: AppLocalizations.of(context)
+                        .translate('manage', 'billing')),
+                Tab(
+                    text: AppLocalizations.of(context)
+                        .translate('manage', 'settings')),
               ],
-//              onTap: (index) {
-//                if (_indextab != index) {
-//                  _indextab = index;
-//                  setState(() {});
-//                }
-//              },
             ),
             Expanded(
               child: TabBarView(
@@ -102,8 +102,12 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
               labelColor: Colors.black,
               isScrollable: false,
               tabs: <Widget>[
-                Tab(text: AppLocalizations.of(context).translate('manage','edit_timebank')),
-                Tab(text: AppLocalizations.of(context).translate('manage','settings')),
+                Tab(
+                    text: AppLocalizations.of(context)
+                        .translate('manage', 'edit_timebank')),
+                Tab(
+                    text: AppLocalizations.of(context)
+                        .translate('manage', 'settings')),
               ],
 //                onTap: (index) {
 //                  if (_indextab != index) {
@@ -186,7 +190,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         );
       },
       child: Text(
-        AppLocalizations.of(context).translate('manage','delete_timebank'),
+        AppLocalizations.of(context).translate('manage', 'delete_timebank'),
         textAlign: TextAlign.left,
         style: TextStyle(
           fontWeight: FontWeight.bold,
@@ -211,7 +215,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         );
       },
       child: Text(
-        AppLocalizations.of(context).translate('manage','view_requests'),
+        AppLocalizations.of(context).translate('manage', 'view_requests'),
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
@@ -326,7 +330,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 
   Widget get getTitle {
     return Text(
-      "${AppLocalizations.of(context).translate('manage','manage')} ${widget.timebankModel.name}",
+      "${AppLocalizations.of(context).translate('manage', 'manage')} ${widget.timebankModel.name}",
       style: TextStyle(
         fontSize: 20,
         color: Colors.black,
@@ -459,7 +463,11 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
           SizedBox(
             height: 20,
           ),
-          deleteTimebank,
+
+          widget.timebankModel.creatorId ==
+                  SevaCore.of(context).loggedInUser.sevaUserID
+              ? deleteTimebank
+              : Container(),
           // viewAcceptedOffers(context: context),
           // manageTimebankCodes(context: context),
 //          billingView(context: context),

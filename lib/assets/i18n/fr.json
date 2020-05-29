@@ -265,7 +265,7 @@
     "about": "À propos de",
     "example": "Ex: Un peu plus sur votre groupe",
     "private_group": "Groupe privé",
-    "private_delete": "Suppression d'accès privé",
+    "prevent_delete": "Suppression d'accès privé",
     "is_pin_right": "Cette broche est-elle au bon endroit?",
     "assign_volunteer": "Attribuer aux bénévoles",
     "selected": "bénévoles sélectionnés",
