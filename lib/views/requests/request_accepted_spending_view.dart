@@ -3,18 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/claimedRequestStatus.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart'
     as RequestNotificationManager;
+import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
     as RequestManager;
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -24,7 +25,9 @@ import '../core.dart';
 class RequestAcceptedSpendingView extends StatefulWidget {
   final RequestModel requestModel;
 
-  RequestAcceptedSpendingView({@required this.requestModel});
+  final TimebankModel timebankModel;
+  RequestAcceptedSpendingView(
+      {@required this.requestModel, this.timebankModel});
 
   @override
   _RequestAcceptedSpendingState createState() =>
@@ -48,6 +51,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   @override
   void initState() {
     super.initState();
+
     Future.delayed(Duration.zero, () {
       RequestManager.getRequestStreamById(requestId: requestModel.id)
           .listen((_requestModel) {
@@ -191,6 +195,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   }
 
   Future getUserModel() async {
+    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+
     var totalCredits = 0.0;
     _avtars = [];
     List<Widget> _localAvtars = [];
@@ -363,24 +369,28 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         actions: <Widget>[],
         secondaryActions: <Widget>[],
         child: GestureDetector(
-          onTap: () async {
-            setState(() {
-              isProgressBarActive = true;
-            });
-            var notificationId =
-                await RequestNotificationManager.getNotificationId(
-                    user, requestModel);
+          onTap: () {
+            // print(
+            //     "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            // setState(() {
+            //   isProgressBarActive = true;
+            // });
 
-            setState(() {
-              isProgressBarActive = false;
-            });
-            showMemberClaimConfirmation(
-                context: context,
-                notificationId: notificationId,
-                requestModel: requestModel,
-                userId: user.sevaUserID,
-                userModel: user,
-                credits: transactionModel.credits);
+            // var notificationId =
+            //     await RequestNotificationManager.getNotificationId(
+            //         user, requestModel);
+            // print("here is the notficiation id -> ----------------------" +
+            //     notificationId);
+            // setState(() {
+            //   isProgressBarActive = false;
+            // });
+            // showMemberClaimConfirmation(
+            //     context: context,
+            //     notificationId: notificationId,
+            //     requestModel: requestModel,
+            //     userId: user.sevaUserID,
+            //     userModel: user,
+            //     credits: transactionModel.credits);
           },
           child: Container(
             margin: notificationPadding,
@@ -414,9 +424,14 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                   textColor: Colors.white,
                   elevation: 5,
                   onPressed: () async {
+                    print("+++++++++++++++++++++++++++++++++++++++++++++++++");
                     var notificationId =
                         await RequestNotificationManager.getNotificationId(
-                            user, requestModel);
+                      user,
+                      requestModel,
+                    );
+
+                    print("==============$notificationId+++++++++++++");
 
                     if (requestModel.requestMode ==
                         RequestMode.PERSONAL_REQUEST) {
@@ -507,7 +522,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
             decoration: notificationDecoration,
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
+                backgroundImage:
+                    NetworkImage(user.photoURL ?? defaultUserImageURL),
               ),
               title: Text(model.title),
               subtitle: RichText(
@@ -566,13 +582,16 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         });
   }
 
-  Future<Widget> showMemberClaimConfirmation(
-      {BuildContext context,
-      UserModel userModel,
-      RequestModel requestModel,
-      String notificationId,
-      String userId,
-      num credits}) async {
+  Future<Widget> showMemberClaimConfirmation({
+    BuildContext context,
+    UserModel userModel,
+    RequestModel requestModel,
+    String notificationId,
+    String userId,
+    num credits,
+  }) async {
+    print(
+        "showMemberClaimConfirmation ===================================================$notificationId");
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
@@ -589,7 +608,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
+                      backgroundImage: NetworkImage(
+                          userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(
@@ -687,6 +707,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                               user: userModel,
                               userId: userId,
                               credits: credits,
+                              timebankModel: widget.timebankModel,
                             );
                           },
                         ),
@@ -700,13 +721,18 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         });
   }
 
-  Future rejectMemberClaimForEvent(
-      {RequestModel model,
-      String userId,
-      BuildContext context,
-      UserModel user,
-      String notificationId,
-      num credits}) async {
+  Future rejectMemberClaimForEvent({
+    RequestModel model,
+    String userId,
+    BuildContext context,
+    UserModel user,
+    String notificationId,
+    num credits,
+    TimebankModel timebankModel,
+  }) async {
+    print(
+        "rejectMemberClaimForEvent ===================================================$notificationId");
+
     List<TransactionModel> transactions =
         model.transactions.map((t) => t).toList();
     transactions.removeWhere((t) => t.to == userId);
@@ -719,14 +745,44 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       userId: userId,
       communityid: SevaCore.of(context).loggedInUser.currentCommunity,
     );
-    // creating chat
-    // String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-    List users = [user.email, model.timebankId];
-    users.sort();
-    ChatModel chatModel = ChatModel();
-    chatModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
-    chatModel.user1 = users[0];
-    chatModel.user2 = users[1];
+
+    var loggedInUser = SevaCore.of(context).loggedInUser;
+
+    setState(() {
+      isProgressBarActive = false;
+    });
+
+    ParticipantInfo sender, reciever;
+    switch (requestModel.requestMode) {
+      case RequestMode.PERSONAL_REQUEST:
+        sender = ParticipantInfo(
+          id: loggedInUser.sevaUserID,
+          name: loggedInUser.fullname,
+          photoUrl: loggedInUser.photoURL,
+          type: ChatType.TYPE_PERSONAL,
+        );
+        break;
+
+      case RequestMode.TIMEBANK_REQUEST:
+        sender = ParticipantInfo(
+          id: timebankModel.id,
+          type: timebankModel.parentTimebankId ==
+                  FlavorConfig
+                      .values.timebankId //check if timebank is primary timebank
+              ? ChatType.TYPE_TIMEBANK
+              : ChatType.TYPE_GROUP,
+          name: timebankModel.name,
+          photoUrl: timebankModel.photoUrl,
+        );
+        break;
+    }
+
+    reciever = ParticipantInfo(
+      id: user.sevaUserID,
+      name: user.fullname,
+      photoUrl: user.photoURL,
+      type: ChatType.TYPE_PERSONAL,
+    );
 
     var claimedRequestStatus = ClaimedRequestStatusModel(
       isAccepted: false,
@@ -736,30 +792,39 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       timestamp: DateTime.now().millisecondsSinceEpoch,
       credits: credits,
     );
-    await FirestoreManager.saveRequestFinalAction(
-      model: claimedRequestStatus,
-    );
-    await createChat(
-      chat: chatModel,
-    );
 
-    setState(() {
-      isProgressBarActive = false;
-    });
-    Navigator.pop(context);
+    createAndOpenChat(
+      isTimebankMessage:
+          requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+      context: context,
+      timebankId: model.timebankId,
+      communityId: loggedInUser.currentCommunity,
+      sender: sender,
+      reciever: reciever,
+      isFromRejectCompletion: true,
+      onChatCreate: () {
+        print("===============INSIDE ON CREATE OPEN CHAT======");
+        FirestoreManager.saveRequestFinalAction(
+          model: claimedRequestStatus,
+        );
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => ChatView(
-                useremail: user.email,
-                chatModel: chatModel,
-                isFromRejectCompletion: true,
-              )),
+        if (requestModel.requestMode == RequestMode.PERSONAL_REQUEST) {
+          print("===============INSIDE ON CREATE OPEN CHAT======");
+
+          FirestoreManager.readUserNotification(
+              notificationId, SevaCore.of(context).loggedInUser.email);
+        } else {
+          print("==========timrbank NOTIFICATION=========== ");
+
+          readTimeBankNotification(
+            notificationId: notificationId,
+            timebankId: requestModel.timebankId,
+          );
+        }
+
+        Navigator.pop(context);
+      },
     );
-
-    await FirestoreManager.readUserNotification(
-        notificationId, SevaCore.of(context).loggedInUser.email);
   }
 
   Widget getBio(UserModel userModel) {

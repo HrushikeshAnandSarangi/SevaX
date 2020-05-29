@@ -3,11 +3,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/messages/chatview.dart';
 
 //TODO update bio and remove un-necessary stuff
 
@@ -92,12 +92,11 @@ class ProfileViewerState extends State<ProfileViewer> {
                             name: snapshot.data['fullname'],
                             email: snapshot.data['email'],
                             isBlocked: isBlocked,
-                            message:
-                                widget.userEmail == loggedInEmail || isBlocked
-                                    ? null
-                                    : () => onMessageClick(
-                                          loggedInEmail,
-                                        ),
+                            message: widget.userEmail == loggedInEmail ||
+                                    isBlocked
+                                ? null
+                                : () => onMessageClick(
+                                    user, SevaCore.of(context).loggedInUser),
                             block: widget.userEmail == loggedInEmail
                                 ? null
                                 : onBlockClick,
@@ -185,26 +184,27 @@ class ProfileViewerState extends State<ProfileViewer> {
     );
   }
 
-  void onMessageClick(loggedInEmail) {
-    List users = [widget.userEmail, loggedInEmail];
-    users.sort();
-    ChatModel model = ChatModel();
-    model.user1 = users[0];
-    model.user2 = users[1];
-    model.timebankId = widget.timebankId;
-    model.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
+  Future<void> onMessageClick(UserModel user, UserModel loggedInUser) async {
+    ParticipantInfo sender = ParticipantInfo(
+      id: loggedInUser.sevaUserID,
+      name: loggedInUser.fullname,
+      photoUrl: loggedInUser.photoURL,
+      type: ChatType.TYPE_PERSONAL,
+    );
 
-    print("_+_+_+_+_+++++++++++++${model.timebankId}");
-    // model.communityId =
-    createChat(chat: model);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChatView(
-          useremail: widget.userEmail,
-          chatModel: model,
-        ),
-      ),
+    ParticipantInfo reciever = ParticipantInfo(
+      id: user.sevaUserID,
+      name: user.fullname,
+      photoUrl: user.photoURL,
+      type: ChatType.TYPE_PERSONAL,
+    );
+    createAndOpenChat(
+      context: context,
+      timebankId: widget.timebankId,
+      communityId: loggedInUser.currentCommunity,
+      sender: sender,
+      reciever: reciever,
+      isFromRejectCompletion: false,
     );
   }
 
@@ -718,9 +718,10 @@ class CompletedList extends StatelessWidget {
 
   final UserModel userModel;
 
-  CompletedList(
-      {this.requestList,
-      this.userModel}); //  requestStream = FirestoreManager.getCompletedRequestStream(
+  CompletedList({
+    this.requestList,
+    this.userModel,
+  }); //  requestStream = FirestoreManager.getCompletedRequestStream(
 
   @override
   Widget build(BuildContext context) {

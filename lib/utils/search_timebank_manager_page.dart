@@ -7,14 +7,13 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/search_view.dart';
-
-import 'data_managers/chat_data_manager.dart';
 
 class SearchTimebankMemberElastic extends StatefulWidget {
   String timebankId;
@@ -169,40 +168,34 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
             if (user.email == SevaCore.of(context).loggedInUser.email) {
               return null;
             } else {
-              List users = [
-                user.email,
-                SevaCore.of(context).loggedInUser.email
-              ];
-              print("Listing users");
-              users.sort();
-              ChatModel model = ChatModel();
-              model.user1 = users[0];
-              model.user2 = users[1];
-              model.timebankId = widget.timebankId;
-              model.communityId =
-                  SevaCore.of(context).loggedInUser.currentCommunity;
+              UserModel loggedInUser = SevaCore.of(context).loggedInUser;
+              ParticipantInfo sender = ParticipantInfo(
+                id: loggedInUser.sevaUserID,
+                photoUrl: loggedInUser.photoURL,
+                name: loggedInUser.fullname,
+                type: ChatType.TYPE_PERSONAL,
+              );
 
-              print("Model1" + model.user1);
-              print("Model2" + model.user2);
+              ParticipantInfo reciever = ParticipantInfo(
+                id: user.sevaUserID,
+                photoUrl: user.photoURL,
+                name: user.fullname,
+                type: ChatType.TYPE_PERSONAL,
+              );
 
-              await createChat(chat: model).then(
-                (_) {
+              createAndOpenChat(
+                onChatCreate: () {
                   Navigator.of(context).pop();
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatView(
-                        useremail: user.email,
-                        chatModel: model,
-                        isFromShare: false,
-                        news: NewsModel(),
-                        isFromNewChat: IsFromNewChat(
-                            true, DateTime.now().millisecondsSinceEpoch),
-                      ),
-                    ),
-                  );
                 },
+                context: context,
+                timebankId: widget.timebankId,
+                communityId: loggedInUser.currentCommunity,
+                sender: sender,
+                reciever: reciever,
+                isFromShare: false,
+                news: NewsModel(),
+                isFromNewChat:
+                    IsFromNewChat(true, DateTime.now().millisecondsSinceEpoch),
               );
             }
             return user.email == SevaCore.of(context).loggedInUser.email
@@ -215,41 +208,38 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
             if (user.email == SevaCore.of(context).loggedInUser.email) {
               return null;
             } else {
-              List users = [
-                user.email,
-                SevaCore.of(context).loggedInUser.email
-              ];
-              print("Listing users");
-              users.sort();
-              ChatModel model = ChatModel();
-              model.user1 = users[0];
-              model.user2 = users[1];
-              model.timebankId = widget.timebankId;
-              model.communityId =
-                  SevaCore.of(context).loggedInUser.currentCommunity;
-
-              print("Model1" + model.user1);
-              print("Model2" + model.user2);
-
-              await createChat(chat: model).then(
-                (_) {
-                  Navigator.of(context).pop();
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatView(
-                        useremail: user.email,
-                        chatModel: model,
-                        isFromShare: true,
-                        news: widget.newsModel,
-                        isFromNewChat: IsFromNewChat(
-                            false, DateTime.now().millisecondsSinceEpoch),
-                      ),
-                    ),
-                  );
-                },
+              UserModel loggedInUser = SevaCore.of(context).loggedInUser;
+              ParticipantInfo sender = ParticipantInfo(
+                id: loggedInUser.sevaUserID,
+                photoUrl: loggedInUser.photoURL,
+                name: loggedInUser.fullname,
+                type: ChatType.TYPE_PERSONAL,
               );
+
+              ParticipantInfo reciever = ParticipantInfo(
+                id: user.sevaUserID,
+                photoUrl: user.photoURL,
+                name: user.fullname,
+                type: ChatType.TYPE_PERSONAL,
+              );
+
+              await createAndOpenChat(
+                onChatCreate: () {
+                  Navigator.of(context).pop();
+                },
+                context: context,
+                timebankId: widget.timebankId,
+                communityId: loggedInUser.currentCommunity,
+                sender: sender,
+                reciever: reciever,
+                isFromShare: true,
+                news: widget.newsModel,
+                isFromNewChat: IsFromNewChat(
+                  false,
+                  DateTime.now().millisecondsSinceEpoch,
+                ),
+              );
+              // Navigator.of(context).pop();
             }
             return user.email == SevaCore.of(context).loggedInUser.email
                 ? null
@@ -261,43 +251,6 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
               print("");
             };
         }
-
-//        if (user.email != SevaCore.of(context).loggedInUser.email) {
-//
-//          List users = [
-//            user.email,
-//            SevaCore.of(context).loggedInUser.email
-//          ];
-//          print("Listing users");
-//          users.sort();
-//          ChatModel model = ChatModel();
-//          model.user1 = users[0];
-//          model.user2 = users[1];
-//          print("Model1" + model.user1);
-//          print("Model2" + model.user2);
-//
-//          await createChat(chat: model).then(
-//                (_) {
-//
-//              Navigator.of(context).pop();
-//              Navigator.push(
-//                context,
-//                MaterialPageRoute(
-//                  builder: (context) => ChatView(
-//                    useremail: user.email,
-//                    chatModel: model,
-//                    isFromShare: false,
-//                    news: NewsModel(),
-//                    isFromNewChat: IsFromNewChat(true, DateTime.now().millisecondsSinceEpoch),
-//                ),
-//                ),
-//              );
-//            },
-//          );
-//        }
-//        return user.email == SevaCore.of(context).loggedInUser.email
-//            ? null
-//            : () {};
       },
       child: Card(
         color: Colors.white,
@@ -307,12 +260,6 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
           ),
           title: Text(
             user.fullname,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-          subtitle: Text(
-            user.email,
             style: TextStyle(
               color: Colors.black,
             ),

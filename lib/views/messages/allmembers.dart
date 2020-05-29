@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart'
     as prefix0;
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../core.dart';
-import 'chatview.dart';
 
 class AllMembersChat extends StatefulWidget {
   bool isShare;
@@ -196,25 +196,30 @@ class _ResultViewState extends State<ResultView> {
                 onTap: user.email == loggedInEmail
                     ? null
                     : () {
-                        List users = [user.email, loggedInEmail];
-                        users.sort();
-                        ChatModel model = ChatModel();
-                        model.user1 = users[0];
-                        model.user2 = users[1];
-                        model.timebankId = widget.timebankId;
-                        createChat(chat: model).then(
-                          (_) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChatView(
-                                        useremail: user.email,
-                                        chatModel: model,
-                                        isFromShare: widget.isShare,
-                                        news: widget.news,
-                                      )),
-                            );
-                          },
+                        UserModel loggedInUser =
+                            SevaCore.of(context).loggedInUser;
+                        ParticipantInfo sender = ParticipantInfo(
+                          id: loggedInUser.sevaUserID,
+                          photoUrl: loggedInUser.photoURL,
+                          name: loggedInUser.fullname,
+                          type: ChatType.TYPE_PERSONAL,
+                        );
+
+                        ParticipantInfo reciever = ParticipantInfo(
+                          id: user.sevaUserID,
+                          photoUrl: user.photoURL,
+                          name: user.fullname,
+                          type: ChatType.TYPE_PERSONAL,
+                        );
+
+                        createAndOpenChat(
+                          context: context,
+                          timebankId: widget.timebankId,
+                          communityId: loggedInUser.currentCommunity,
+                          sender: sender,
+                          reciever: reciever,
+                          isFromShare: widget.isShare,
+                          news: widget.news,
                         );
                       },
                 leading: user.photoURL != null
@@ -269,53 +274,6 @@ class _ResultViewState extends State<ResultView> {
   Widget getMemberListView(String userId, BuildContext parentContext) {
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
 
-//    FirestoreManager.getUserForId(sevaUserId: userId).then((user) {
-//      return user.email == loggedInEmail
-//          ? Offstage()
-//          : Card(
-//        child: ListTile(
-//          onTap: () {
-//            List users = [user.email, loggedInEmail];
-//            users.sort();
-//            ChatModel model = ChatModel();
-//            model.user1 = users[0];
-//            model.user2 = users[1];
-//            createChat(chat: model).then(
-//                  (_) {
-//                Navigator.push(
-//                  context,
-//                  MaterialPageRoute(
-//                      builder: (context) => ChatView(
-//                        useremail: user.email,
-//                        chatModel: model,
-//                        isFromShare: widget.isShare,
-//                        news: widget.news,
-//                      )),
-//                );
-//              },
-//            );
-//          },
-//          leading: user.photoURL != null
-//              ? ClipOval(
-//            child: FadeInImage.assetNetwork(
-//              fadeInCurve: Curves.easeIn,
-//              fadeInDuration: Duration(milliseconds: 400),
-//              fadeOutDuration: Duration(milliseconds: 200),
-//              width: 50,
-//              height: 50,
-//              placeholder: 'lib/assets/images/noimagefound.png',
-//              image: user.photoURL,
-//            ),
-//          )
-//              : CircleAvatar(),
-//          title: Text(user.fullname),
-//          subtitle: Text(user.email),
-//        ),
-//      );
-//    }).catchError((error) {
-//      return Offstage();
-//    });
-
     return StreamBuilder<Object>(
         stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
         builder: (context, snapshot) {
@@ -331,25 +289,28 @@ class _ResultViewState extends State<ResultView> {
               : Card(
                   child: ListTile(
                     onTap: () {
-                      List users = [user.email, loggedInEmail];
-                      users.sort();
-                      ChatModel model = ChatModel();
-                      model.user1 = users[0];
-                      model.user2 = users[1];
-                      model.timebankId = widget.timebankId;
-                      createChat(chat: model).then(
-                        (_) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChatView(
-                                      useremail: user.email,
-                                      chatModel: model,
-                                      isFromShare: widget.isShare,
-                                      news: widget.news,
-                                    )),
-                          );
-                        },
+                      UserModel loggedInUser =
+                          SevaCore.of(context).loggedInUser;
+                      ParticipantInfo sender = ParticipantInfo(
+                        id: loggedInUser.sevaUserID,
+                        photoUrl: loggedInUser.photoURL,
+                        name: loggedInUser.fullname,
+                        type: ChatType.TYPE_PERSONAL,
+                      );
+
+                      ParticipantInfo reciever = ParticipantInfo(
+                        id: user.sevaUserID,
+                        photoUrl: user.photoURL,
+                        name: user.fullname,
+                        type: ChatType.TYPE_PERSONAL,
+                      );
+
+                      createAndOpenChat(
+                        context: context,
+                        timebankId: widget.timebankId,
+                        communityId: loggedInUser.currentCommunity,
+                        sender: sender,
+                        reciever: reciever,
                       );
                     },
                     leading: user.photoURL != null

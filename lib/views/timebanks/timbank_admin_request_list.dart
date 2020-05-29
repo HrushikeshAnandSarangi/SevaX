@@ -625,10 +625,14 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         padding: EdgeInsets.all(10),
         child: InkWell(
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
+            Navigator.of(context).push(
+              MaterialPageRoute(
                 builder: (context) => ProfileViewer(
-                      userEmail: user.email,
-                    )));
+                  userEmail: user.email,
+                  timebankId: widget.timebankId,
+                ),
+              ),
+            );
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

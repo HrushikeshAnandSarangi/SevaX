@@ -28,6 +28,8 @@ class TimebankModel extends DataModel {
   bool preventAccedentalDelete;
   bool requestedSoftDelete;
 
+  int unreadMessageCount;
+  DateTime lastMessageTimestamp;
   // CompareToTimeBank joinStatus;
 
   TimebankModel(map) {
@@ -69,6 +71,13 @@ class TimebankModel extends DataModel {
         ? map["requestedSoftDelete"]
         : false;
 
+    this.lastMessageTimestamp = map.containsKey("lastMessageTimestamp")
+        ? map["lastMessageTimestamp"] != null
+            ? (map["lastMessageTimestamp"].toDate())
+            : null
+        : null;
+    this.unreadMessageCount =
+        map.containsKey("unreadMessages") ? map["unreadMessages"].length : -1;
     // joinStatus = CompareToTimeBank.JOIN;
   }
   GeoFirePoint getLocation(map) {
@@ -207,11 +216,14 @@ class TimebankModel extends DataModel {
           ? null
           : new List<dynamic>.from(children.map((x) => x)),
       "balance": balance == null ? null : balance,
+      'softDelete': false,
+      "lastMessageTimestamp": null,
     };
 
     if (this.location != null) {
       map['location'] = this.location.data;
     }
+
 
     if (this.preventAccedentalDelete != null) {
       map['preventAccedentalDelete'] = this.preventAccedentalDelete;

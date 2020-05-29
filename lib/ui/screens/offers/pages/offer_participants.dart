@@ -3,10 +3,9 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/widgets/participant_card.dart';
 
 class OfferParticipants extends StatelessWidget {
@@ -44,8 +43,8 @@ class OfferParticipants extends StatelessWidget {
                 onMessageTapped: () {
                   onMessageClick(
                     context,
-                    SevaCore.of(context).loggedInUser.email,
-                    snapshot.data[index].participantDetails.email,
+                    SevaCore.of(context).loggedInUser,
+                    snapshot.data[index].participantDetails,
                     offerModel.timebankId,
                     offerModel.communityId,
                   );
@@ -55,44 +54,36 @@ class OfferParticipants extends StatelessWidget {
           );
         },
       ),
-      // child: Column(
-      //   children: <Widget>[
-      //     SizedBox(height: 10),
-      //     // Container(
-      //     //   width: MediaQuery.of(context).size.width,
-      //     //   padding: EdgeInsets.symmetric(vertical: 8),
-      //     //   color: Colors.grey[300],
-      //     //   child: Center(
-      //     //     child: Text(
-      //     //       "Ensure to recieve credits after the class is completed",
-      //     //       style: TextStyle(color: Colors.grey[700]),
-      //     //     ),
-      //     //   ),
-      //     // ),
-
-      //   ],
-      // ),
     );
   }
 
-  void onMessageClick(context, String senderEmail, String recieverEmail,
-      String timebankId, String communityId) {
-    List users = [senderEmail, recieverEmail];
-    users.sort();
-    ChatModel model = ChatModel();
-    model.user1 = users[0];
-    model.user2 = users[1];
-    model.timebankId = timebankId;
-    model.communityId = communityId;
-    createChat(chat: model);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChatView(
-          useremail: recieverEmail,
-          chatModel: model,
-        ),
-      ),
+  void onMessageClick(
+    context,
+    UserModel loggedInUser,
+    ParticipantDetails user,
+    String timebankId,
+    String communityId,
+  ) {
+    ParticipantInfo sender = ParticipantInfo(
+      id: loggedInUser.sevaUserID,
+      photoUrl: loggedInUser.photoURL,
+      name: loggedInUser.fullname,
+      type: ChatType.TYPE_PERSONAL,
+    );
+
+    ParticipantInfo reciever = ParticipantInfo(
+      id: user.sevauserid,
+      photoUrl: user.photourl,
+      name: user.fullname,
+      type: ChatType.TYPE_PERSONAL,
+    );
+
+    createAndOpenChat(
+      context: context,
+      timebankId: timebankId,
+      communityId: communityId,
+      sender: sender,
+      reciever: reciever,
     );
   }
 }

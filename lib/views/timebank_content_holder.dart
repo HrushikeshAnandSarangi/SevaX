@@ -13,7 +13,6 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
@@ -33,7 +32,6 @@ import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../flavor_config.dart';
 import 'core.dart';
-import 'messages/timebank_chats.dart';
 
 class TimebankTabsViewHolder extends StatelessWidget {
   final String timebankId;
@@ -117,7 +115,7 @@ Widget getUserRole(
 ) {
   switch (role) {
     case AboutUserRole.ADMIN:
-      TabController controller = TabController(vsync: vsync, length: 9);
+      TabController controller = TabController(vsync: vsync, length: 8);
       return createAdminTabBar(
         context,
         timebankModel,
@@ -209,11 +207,6 @@ Widget createAdminTabBar(
                   // height: 10,
                   // color: Colors.green,
                 ),
-                Container(
-                  width: 20,
-                  // height: 10,
-                  // color: Colors.green,
-                ),
               ],
             ),
             Align(
@@ -238,17 +231,8 @@ Widget createAdminTabBar(
                         timebankId: timebankId,
                       ),
                     ),
-                    SizedBox(width: 14),
-                    GestureDetector(
-                      onTap: () {
-                        controller.animateTo(8);
-                      },
-                      child: getMessagingTab(
-                        communityId:
-                            SevaCore.of(context).loggedInUser.currentCommunity,
-                        timebankId: timebankId,
-                      ),
-                    ),
+                    // SizedBox(width: 14),
+
                     SizedBox(width: 10),
                   ],
                 ),
@@ -297,10 +281,7 @@ Widget createAdminTabBar(
                 timebankModel: timebankModel,
               ),
               TimebankNotificationsView(
-                timebankId: timebankModel.id,
-              ),
-              TimebankChatListView(
-                timebankId: timebankId,
+                timebankModel: timebankModel,
               ),
             ],
           ),
@@ -346,32 +327,6 @@ Widget badge(int count) => Positioned(
         ),
       ),
     );
-
-Widget getMessagingTab({String timebankId, String communityId}) {
-  return StreamBuilder<List<ChatModel>>(
-    stream: getChatsForTimebank(
-      timebankId: timebankId,
-      communityId: communityId,
-    ),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Tab(
-          icon: gettingMessages,
-        );
-      }
-      var unreadCount = 0;
-      snapshot.data.forEach((model) {
-        model.unreadStatus.containsKey(timebankId)
-            ? unreadCount += model.unreadStatus[timebankId]
-            : print("not found");
-      });
-
-      return Tab(
-        icon: unreadMessages(unreadCount),
-      );
-    },
-  );
-}
 
 Widget createJoinedUserTabBar(
   BuildContext context,

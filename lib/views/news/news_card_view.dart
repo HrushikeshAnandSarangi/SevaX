@@ -10,7 +10,6 @@ import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/messages/new_chat.dart';
 import 'package:sevaexchange/views/news/update_feed.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
@@ -556,16 +555,6 @@ class NewsCardViewState extends State<NewsCardView> {
   String _getFormattedTime(int timestamp) {
     return timeAgo.format(
       DateTime.fromMillisecondsSinceEpoch(timestamp),
-    );
-  }
-
-  void _shareNews(BuildContext context) {
-    bool isShare = true;
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => NewChat(isShare, newsModel, timebankId),
-      ),
     );
   }
 

@@ -1,18 +1,6 @@
-import 'chat_model.dart';
-
 class NavBarBadgeModel {
   final int notificationCount;
-  final List<ChatModel> chats;
+  final int chatCount;
 
-  NavBarBadgeModel({this.notificationCount, this.chats});
-
-  int chatCount(String email) {
-    int count = 0;
-    chats.forEach((element) {
-      if (element.unreadStatus.containsKey(email) && !element.isBlocked) {
-        count += element.unreadStatus[email];
-      }
-    });
-    return count;
-  }
+  NavBarBadgeModel({this.notificationCount, this.chatCount});
 }
