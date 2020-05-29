@@ -4,14 +4,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_info.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
 
 class ReportedMemberCard extends StatelessWidget {
@@ -37,6 +35,7 @@ class ReportedMemberCard extends StatelessWidget {
               context: context,
               timebankModel: timebankModel,
               communityId: model.communityId,
+              model: model,
             ),
           ),
         );
@@ -113,6 +112,7 @@ class ReportedMemberCard extends StatelessWidget {
                   context: context,
                   timebankModel: timebankModel,
                   communityId: model.communityId,
+                  model: model,
                 ),
               ),
               SizedBox(width: 16),
@@ -151,16 +151,16 @@ class ReportedMemberCard extends StatelessWidget {
     @required BuildContext context,
     @required TimebankModel timebankModel,
     @required String communityId,
+    @required ReportedMembersModel model,
   }) {
-    UserModel loggedInUser = SevaCore.of(context).loggedInUser;
-    ParticipantInfo sender = ParticipantInfo(
-      id: loggedInUser.sevaUserID,
-      name: loggedInUser.fullname,
-      photoUrl: loggedInUser.photoURL,
+    ParticipantInfo reciever = ParticipantInfo(
+      id: model.reportedId,
+      name: model.reportedUserName,
+      photoUrl: model.reportedUserImage,
       type: ChatType.TYPE_PERSONAL,
     );
 
-    ParticipantInfo reciever = ParticipantInfo(
+    ParticipantInfo sender = ParticipantInfo(
       id: timebankModel.id,
       name: timebankModel.name,
       photoUrl: timebankModel.photoUrl,
@@ -171,7 +171,7 @@ class ReportedMemberCard extends StatelessWidget {
       timebankId: timebankModel.id,
       sender: sender,
       reciever: reciever,
-      communityId: loggedInUser.currentCommunity,
+      communityId: model.communityId,
       isTimebankMessage: true,
     );
   }
