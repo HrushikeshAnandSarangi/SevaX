@@ -5,9 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flurry/flurry.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
@@ -27,26 +25,7 @@ import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 import 'onboarding/interests_view.dart';
 import 'onboarding/skills_view.dart';
 
-//class UserData {
-//  static UserModel user;
-//
-//  UserData({
-//   this.user;
-//  });
-//
-//  Future updateUserData(UserModel user) async {
-//    await fireStoreManager.updateUser(user: user);
-//  }
-//  Future<UserModel> _getSignedInUserDocs(String userId) async {
-//    UserModel userModel = await fireStoreManager.getUserForId(
-//      sevaUserId: userId,
-//    );
-//    user = userModel;
-//    return user;
-//  }
-//}
 class UserData {
-  // singleton
   static final UserData _singleton = UserData._internal();
 
   factory UserData() => _singleton;
@@ -57,12 +36,9 @@ class UserData {
 
   static UserData get shared => _singleton;
 
-  // variables
   UserModel user = new UserModel();
   String userId;
   String locationStr;
-
-  // UserModel user = await _getSignedInUserDocs(userId);
 
   Future updateUserData() async {
     await fireStoreManager.updateUser(user: user);
@@ -122,21 +98,7 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-    switch (FlavorConfig.appFlavor) {
-      case Flavor.SEVA_DEV:
-      case Flavor.APP:
-        return sevaAppSplash;
-        break;
-      case Flavor.HUMANITY_FIRST:
-        return humanitySplash;
-        break;
-      case Flavor.TULSI:
-        return tulsiSplash;
-        break;
-      case Flavor.TOM:
-        return tomSplash;
-        break;
-    }
+    return sevaAppSplash;
   }
 
   Widget get sevaAppSplash {
@@ -145,13 +107,10 @@ class _SplashViewState extends State<SplashView> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              // Color.fromARGB(255, 9, 46, 108),
-              // Color.fromARGB(255, 88, 138, 224),
               Theme.of(context).secondaryHeaderColor,
               Theme.of(context).secondaryHeaderColor,
               Theme.of(context).secondaryHeaderColor
             ],
-            //stops: [0, 0.6, 1],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -160,19 +119,6 @@ class _SplashViewState extends State<SplashView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Text(
-              //   'Seva\nExchange'.toUpperCase(),
-              //   textAlign: TextAlign.center,
-              //   style: TextStyle(
-              //     letterSpacing: 5,
-              //     fontSize: 24,
-              //     color: Colors.white,
-              //     fontWeight: FontWeight.w700,
-              //   ),
-              // ),
-              // SizedBox(
-              //   height: 16,
-              // ),
               Image.asset(
                 'lib/assets/images/seva-x-logo.png',
                 height: 140,
@@ -203,200 +149,11 @@ class _SplashViewState extends State<SplashView> {
     );
   }
 
-  Widget get humanitySplash {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 4, 47, 110),
-              Color.fromARGB(255, 4, 47, 110),
-              Color.fromARGB(255, 4, 47, 110),
-              //Colors.white,
-            ],
-            stops: [0, 0.6, 1],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'Humanity\nFirst'.toUpperCase(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  letterSpacing: 5,
-                  fontSize: 24,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Image.asset(
-                'lib/assets/images/new_yang.png',
-                height: 140,
-                width: 140,
-              ),
-              if (loadingMessage != null && loadingMessage.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 32.0),
-                  child: Text(loadingMessage,
-                      style: TextStyle(color: Colors.white)),
-                ),
-              Container(
-                margin: EdgeInsets.only(top: 8),
-                child: SizedBox(
-                  height: 2,
-                  width: 150,
-                  child: LinearProgressIndicator(),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget get tulsiSplash {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Theme.of(context).primaryColor,
-              Theme.of(context).primaryColor,
-              // Colors.red,
-              // Colors.red[400],
-            ],
-            //stops: [0, 0.6, 1],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                height: 16,
-              ),
-              SvgPicture.asset(
-                'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
-                height: 140,
-                width: 140,
-                color: Colors.white,
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              if (loadingMessage != null && loadingMessage.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 32.0),
-                  child: Text(
-                    loadingMessage,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              Container(
-                margin: EdgeInsets.only(top: 8),
-                child: SizedBox(
-                  height: 2,
-                  width: 150,
-                  child: Theme(
-                      data: Theme.of(context)
-                          .copyWith(accentColor: Colors.red[900]),
-                      child: LinearProgressIndicator(
-                        backgroundColor: Theme.of(context).primaryColor,
-                      )),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget get tomSplash {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Theme.of(context).primaryColor,
-              Theme.of(context).primaryColor,
-              // Colors.red,
-              // Colors.red[400],
-            ],
-            //stops: [0, 0.6, 1],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              // Text(
-              //   'Humanity\nFirst'.toUpperCase(),
-              //   textAlign: TextAlign.center,
-              //   style: TextStyle(
-              //     letterSpacing: 5,
-              //     fontSize: 24,
-              //     color: Colors.white,
-              //     fontWeight: FontWeight.w700,
-              //   ),
-              // ),
-              SizedBox(
-                height: 16,
-              ),
-              SvgPicture.asset(
-                'lib/assets/ts2020-logo-w.svg',
-                height: 90,
-                width: 90,
-                //color: Colors.white,
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              if (loadingMessage != null && loadingMessage.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 32.0),
-                  child: Text(
-                    loadingMessage,
-                    style: TextStyle(color: Colors.white.withAlpha(120)),
-                  ),
-                ),
-              Container(
-                margin: EdgeInsets.only(top: 8),
-                child: SizedBox(
-                  height: 2,
-                  width: 150,
-                  child: Theme(
-                      data: Theme.of(context)
-                          .copyWith(accentColor: Colors.red[900]),
-                      child: LinearProgressIndicator(
-                        backgroundColor: Theme.of(context).primaryColor,
-                      )),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   void initiateLogin() {
     loadingMessage = 'Checking, if we met before';
-    _getLoggedInUserId().then(handleLoggedInUserIdResponse).catchError((error) {
-      print("Inside -> Error $error");
-    });
+    _getLoggedInUserId()
+        .then(handleLoggedInUserIdResponse)
+        .catchError((error) {});
   }
 
   Future<String> _getLoggedInUserId() async {
@@ -407,51 +164,6 @@ class _SplashViewState extends State<SplashView> {
     return userId;
   }
 
-//  Future checkVersion() async {
-//    await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-//      String appName = packageInfo.appName;
-//      String packageName = packageInfo.packageName;
-//      String version = packageInfo.version;
-//
-//      String buildNumber = packageInfo.buildNumber;
-//
-//      Firestore.instance
-//          .collection("vitals")
-//          .document(Platform.isAndroid ? "vital_android" : "vital_ios")
-//          .get()
-//          .then((onValue) {
-//        if (Platform.isAndroid) {
-//          // we are on android platform
-//          if (onValue.data.containsKey("latest_build_number")) {
-//            var latestBuildNumber = onValue.data['latest_build_number'];
-//            if (int.parse(buildNumber) < latestBuildNumber) {
-//              print("App is Out of date");
-//              _navigateToUpdatePage();
-//            } else {
-//              print("App is up to date");
-//            }
-//          }
-//        } else {
-//          //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number")
-//
-//          if (onValue.data.containsKey("latest_version_number")) {
-//            var latestBuildNumber = onValue.data['latest_version_number'];
-//            if (int.parse(buildNumber) < latestBuildNumber) {
-//              print("App is Out of date");
-//              _navigateToUpdatePage();
-//            } else {
-//              print("App is up to date");
-//            }
-//          }
-//
-////          _navigateToUpdatePage();
-////          onValue.data.containsKey("latest_build_number");
-////          print(onValue.data.containsKey("latest_build_number"));
-//        }
-//      });
-//    });
-//  }
-
   Future<void> handleLoggedInUserIdResponse(String userId) async {
     if (userId == null || userId.isEmpty) {
       loadingMessage = 'Hang on tight';
@@ -460,7 +172,7 @@ class _SplashViewState extends State<SplashView> {
     }
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
-    print("---> ${loggedInUser.currentCommunity}");
+
     if ((loggedInUser.currentCommunity == " " ||
             loggedInUser.currentCommunity == "" ||
             loggedInUser.currentCommunity == null) &&
@@ -480,131 +192,39 @@ class _SplashViewState extends State<SplashView> {
       return;
     }
 
-    // print('logger${loggedInUser}');
     UserData.shared.user = loggedInUser;
-
-    // AppConfig.remoteConfig = await RemoteConfig.instance;
 
     await AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 3));
     await AppConfig.remoteConfig.activateFetched();
-
-    //// ################################    TEST ################################# /////
-    // var sampleJson =
-    //     '{"android":{"build":70,"version_name":"7.0.0","forceUpdate":false},"ios":{"build":70,"version_name":"7.0.0","forceUpdate":false}}';
-    // Map<String, dynamic> versionInfo = json.decode(sampleJson);
 
     Map<String, dynamic> versionInfo =
         json.decode(AppConfig.remoteConfig.getString('app_version'));
 
     if (Platform.isAndroid) {
       await PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
-        // print("version details ${packageInfo.version}");
         globals.currentVersionNumber = packageInfo.version.toString();
         if (int.parse(packageInfo.buildNumber) <
             versionInfo['android']['build']) {
-          print("New version available");
-
           if (versionInfo['android']['forceUpdate']) {
-            print("User must update the app");
             await _navigateToUpdatePage(loggedInUser, true);
           } else {
             await _navigateToUpdatePage(loggedInUser, false);
           }
-        } else {
-          print("You are using the latest version of the application");
-        }
+        } else {}
       });
     } else if (Platform.isIOS) {
       await PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
         if (int.parse(packageInfo.buildNumber) < versionInfo['ios']['build']) {
-          print("New version available");
           if (versionInfo['ios']['forceUpdate']) {
             await _navigateToUpdatePage(loggedInUser, true);
           } else {
             await _navigateToUpdatePage(loggedInUser, false);
           }
-        } else {
-          print("You are using the latest version of the application");
-        }
+        } else {}
       });
     }
-
-    // return;
-
-    // json.decode(AppConfig.remoteConfig.getString('app_version'))
-
-    if (FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST) {
-      //check app version
-      bool isLatestVersion =
-          await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-        String appName = packageInfo.appName;
-        String packageName = packageInfo.packageName;
-        String version = packageInfo.version;
-
-        String buildNumber = packageInfo.buildNumber;
-        return Firestore.instance
-            .collection("vitals")
-            .document(Platform.isAndroid ? "vital_android" : "vital_ios")
-            .get()
-            .then((onValue) {
-          if (Platform.isAndroid) {
-            // we are on android platform
-            if (onValue.data.containsKey("latest_build_number")) {
-              var isForced = onValue.data['forced'];
-              var latestBuildNumber = onValue.data['latest_build_number'];
-              var latestVersionNumber = onValue.data['latest_version_number'];
-              int result = int.parse(version.replaceAll(".", ""));
-              int verionNumber =
-                  int.parse(latestVersionNumber.replaceAll(".", ""));
-              print(result);
-              print(verionNumber);
-
-              if (int.parse(buildNumber) < latestBuildNumber) {
-                this.mainForced = isForced;
-                print("App is Out of date");
-                return false;
-              } else {
-                print("App is up to date");
-                return true;
-              }
-            }
-          } else {
-            if (onValue.data.containsKey("latest_version_number")) {
-              var latestVersionNumber = onValue.data['latest_version_number'];
-              var isForced = onValue.data['forced'];
-              int result = int.parse(version.replaceAll(".", ""));
-              int verionNumber =
-                  int.parse(latestVersionNumber.replaceAll(".", ""));
-//            print(result);
-//            print(verionNumber);
-
-              if (result < verionNumber) {
-                print("App is Out of date");
-                this.mainForced = isForced;
-                return false;
-              } else {
-                return true;
-              }
-            }
-
-            return true;
-            //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number");
-          }
-          return true;
-        });
-      });
-
-      if (!isLatestVersion) {
-        await _navigateToUpdatePage(loggedInUser, mainForced);
-      }
-    }
-
-    // if (!loggedInUser.completedIntro) {
-    //   await _navogateToIntro(loggedInUser);
-    // }
 
     if (widget.skipToHomePage) {
-      print('Navigating to home page');
       _navigateToCoreView(loggedInUser);
     }
 
@@ -626,68 +246,32 @@ class _SplashViewState extends State<SplashView> {
       }
     });
 
-    print("reached here------->><><>");
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);
     }
 
-    print("===?${!(AppConfig.prefs.getBool(AppConfig.skip_skill) ?? false)}");
     if (!(AppConfig.prefs.getBool(AppConfig.skip_skill) ?? false) &&
         loggedInUser.skills == null) {
-      print("reached here------->><><> skill");
       await _navigateToSkillsView(loggedInUser);
     }
 
     if (!(AppConfig.prefs.getBool(AppConfig.skip_interest) ?? false) &&
         loggedInUser.interests == null) {
-      print("reached here------->><><> interest");
       await _navigateToInterestsView(loggedInUser);
     }
 
     if (!(AppConfig.prefs.getBool(AppConfig.skip_bio) ?? false) &&
         loggedInUser.bio == null) {
-      print("reached here------->><><> bio");
       await _navigateToBioView(loggedInUser);
     }
-    // if (loggedInUser.skills == null) {
-    //   await _navigateToSkillsView(loggedInUsesr);
-    // }
 
-    // if (loggedInUser.interests == null) {
-    //   await _navigateToInterestsView(loggedInUser);
-    // }
-
-    // if (loggedInUser.bio == null) {
-    //   await _navigateToBioView(loggedInUser);
-    // }
     loadingMessage = 'We met before';
 
-    // print(loggedInUser.communities);
     if (loggedInUser.communities == null || loggedInUser.communities.isEmpty) {
       await _navigateToFindCommunitiesView(loggedInUser);
     } else {
       _navigateToCoreView(loggedInUser);
-//      await _navigateToxxxview();
     }
-
-    // _navigateToCoreView(loggedInUser);
-
-    // if (loggedInUser.currentCommunity != null ||
-    //     loggedInUser.currentCommunity != "") {
-    //   await _navigateToHome_DashBoardView(loggedInUser);
-    // }
-
-    // if ()
-
-//    String location = loggedInUser.availability.location;
-//    print(location);
-//     if (loggedInUser.availability == null) {
-//       await _navigateToCalendarView(loggedInUser);
-//     }
-
-//     if (loggedInUser.requestStatus == "pending") {
-//       await _navigateToWaitingView(loggedInUser);
-//     }
   }
 
   Future<UserModel> _getSignedInUserDocs(String userId) async {
@@ -710,15 +294,12 @@ class _SplashViewState extends State<SplashView> {
         onSkipped: () {
           Navigator.pop(context);
           updateUserData(loggedInUser);
-          //this.isLatestVersion = !this.isLatestVersion;
         },
       ),
     ));
   }
 
   Future _navigateToEULA(UserModel loggedInUser) async {
-    print("EULA -> ${loggedInUser.toString()}");
-
     Map results = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EulaAgreement(),
@@ -726,42 +307,14 @@ class _SplashViewState extends State<SplashView> {
     );
 
     if (results != null && results['response'] == "ACCEPTED") {
-      //UPDATE THE DB HERE
-      //print("${SevaCore.of(context).loggedInUser.email} User has agreed to EULA");
-
       await Firestore.instance
           .collection('users')
           .document(loggedInUser.email)
-          .updateData({'acceptedEULA': true}).then((onValue) {
-        print("Updating completed");
-      }).catchError((onError) {
-        print("Error Updating introduction");
-      });
+          .updateData({'acceptedEULA': true})
+          .then((onValue) {})
+          .catchError((onError) {});
     }
   }
-
-  // Future _navogateToIntro(UserModel loggedInUser) async {
-  //   print("Intro -> ${loggedInUser.toString()}");
-
-  //   Map results = await Navigator.of(context).push(
-  //     MaterialPageRoute(
-  //       builder: (context) => IntroScreenHukanityFirst(),
-  //     ),
-  //   );
-
-  //   if (results != null &&
-  //       (results['response'] == "ACCEPTED" ||
-  //           results['response'] == "SKIPPED")) {
-  //     await Firestore.instance
-  //         .collection('users')
-  //         .document(loggedInUser.email)
-  //         .updateData({'completedIntro': true}).then((onValue) {
-  //       print("Updating Introcuction part");
-  //     }).catchError((onError) {
-  //       print("Error in introdution part");
-  //     });
-  //   }
-  // }
 
   Future _navigateToSkillsView(UserModel loggedInUser) async {
     AppConfig.prefs.setBool(AppConfig.skip_skill, null);
@@ -864,9 +417,8 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future _navigateToHome_DashBoardView(UserModel loggedInUser) async {
-    print('hai');
     userBloc.updateUserDetails(loggedInUser);
-    print('hey');
+
     await Navigator.of(context).push(
       MaterialPageRoute(
           builder: (context) =>
