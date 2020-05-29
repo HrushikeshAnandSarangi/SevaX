@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:package_info/package_info.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -24,7 +25,16 @@ Future<void> main() async {
     ),
   );
 
+  //Initialize app details
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  AppConfig.appVersion = packageInfo.version;
+  AppConfig.buildNumber = int.parse(packageInfo.buildNumber);
+  AppConfig.appName = packageInfo.appName;
+  AppConfig.packageName = packageInfo.packageName;
+
+  //SharedPreferences
   AppConfig.prefs = await SharedPreferences.getInstance();
+
   AppConfig.remoteConfig = await RemoteConfig.instance;
   AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
   AppConfig.remoteConfig.activateFetched();

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 
@@ -49,18 +48,28 @@ class AboutApp extends StatelessWidget {
       ),
       bottomSheet: Container(
         color: Colors.white,
+        width: double.infinity,
         padding: EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            FlavorConfig.appFlavor == Flavor.SEVA_DEV
+                ? Text(
+                    "${AppConfig.appName}",
+                    style: TextStyle(
+                      fontFamily: 'Europa',
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                : Container(),
             Text(
-              globals.currentVersionNumber != null
-                  ? 'Version ${globals.currentVersionNumber}' ?? 'Version'
-                  : 'Version 1.2.1',
+              "Version ${AppConfig.appVersion}",
               style: TextStyle(
-                  fontFamily: 'Europa',
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold),
+                fontFamily: 'Europa',
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
