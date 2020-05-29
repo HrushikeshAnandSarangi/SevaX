@@ -531,9 +531,9 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 _showDialog(
                     activityContext: context,
                     mode: TimeBankResponseModes.CODE_ALREADY_REDEEMED,
-                    dialogTitle: "CODE ALREADY REDEEMED!",
+                    dialogTitle: "Timebank code already redeemed",
                     dialogSubTitle:
-                        "This Timebank code has been already redeemed by you, please request the admin for a new one!")
+                        "The Timebank code that you have provided has already been redeemed earlier by you. Please request the Timebank admin for a new code.")
               }
             else
               {
