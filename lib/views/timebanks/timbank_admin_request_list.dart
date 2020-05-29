@@ -41,7 +41,7 @@ class TimebankRequestAdminPage extends StatefulWidget {
     @required this.isUserAdmin,
     @required this.timebankId,
     @required this.userEmail,
-    @required this.isCommunity,
+    this.isCommunity,
     @required this.isFromGroup,
   });
 

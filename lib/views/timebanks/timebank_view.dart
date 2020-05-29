@@ -31,7 +31,7 @@ class TimebankView extends StatefulWidget {
 
   TimebankView({
     @required this.timebankId,
-    @required this.superAdminTimebankModel,
+    this.superAdminTimebankModel,
   });
 
   @override

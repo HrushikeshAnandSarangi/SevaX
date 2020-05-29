@@ -14,7 +14,7 @@ class TimeBankList extends StatelessWidget {
   TimeBankList(
       {@required this.timebankid,
       @required this.title,
-      @required this.superAdminTimebankModel});
+      this.superAdminTimebankModel});
 
   @override
   Widget build(BuildContext context) {

@@ -22,8 +22,8 @@ class NotificationsModel extends DataModel {
     this.targetUserId,
     this.isRead = false,
     this.senderUserId,
-    @required this.timebankId,
-    @required this.communityId,
+     this.timebankId,
+     this.communityId,
   });
 
   NotificationsModel.fromMap(Map<String, dynamic> map) {

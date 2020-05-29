@@ -17,7 +17,7 @@ class ProfileViewer extends StatefulWidget {
   //UserModel userModel;
   //bool isBlocked = false;
 
-  ProfileViewer({this.userEmail, @required this.timebankId});
+  ProfileViewer({this.userEmail, this.timebankId});
 
   @override
   State<StatefulWidget> createState() {

@@ -27,6 +27,7 @@
 .packages
 .pub-cache/
 .pub/
+pubspec.lock
 /build/
 **/i18n.dart
 .flutter-plugins-dependencies

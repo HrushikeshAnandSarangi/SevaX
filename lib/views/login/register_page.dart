@@ -126,31 +126,6 @@ class _RegisterPageState extends State<RegisterPage>
     setState(() => this._isLoading = isLoading);
   }
 
-  Widget get _profileBtn {
-    return SizedBox(
-      height: 35,
-      width: 120,
-      child: Container(
-        padding: EdgeInsets.only(top: 5.0),
-        child: RaisedButton(
-          onPressed: isLoading
-              ? null
-              : () {
-                  imagePicker.showDialog(context);
-                },
-          color: Colors.grey,
-          child: Text(
-            this.isImageSelected,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12.0,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget get _imagePicker {
     return GestureDetector(
       onTap: () {
@@ -187,7 +162,7 @@ class _RegisterPageState extends State<RegisterPage>
                           color: Colors.white,
                           borderRadius:
                               BorderRadius.all(Radius.circular(50.0))),
-                      child: IconButton(icon: Icon(Icons.add_a_photo)),
+                      child: Icon(Icons.add_a_photo),
                     ),
                   )),
         ),
@@ -741,9 +716,11 @@ class _RegisterPageState extends State<RegisterPage>
     try {
       user = await auth.signInWithApple();
       print("User apple:$user");
-    } on PlatformException catch (erorr) {
-      handlePlatformException(erorr);
-    } on Exception catch (error) {}
+    } on PlatformException catch (error) {
+      handlePlatformException(error);
+    } on Exception catch (error) {
+      print(error);
+    }
     isLoading = false;
     _processLogin(user);
   }
@@ -791,7 +768,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
         );
 
-        print(" ${email} already registered");
+        print(" $email already registered");
       }
       print("Platform Exception --->  $erorr");
       handlePlatformException(erorr);

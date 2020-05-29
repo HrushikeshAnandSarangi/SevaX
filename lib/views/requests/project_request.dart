@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -359,7 +358,6 @@ class ProjectRequestList extends StatefulWidget {
 
 class ProjectRequestListState extends State<ProjectRequestList> {
   ProjectModel projectModel;
-  final _firestore = Firestore.instance;
   int completedCount = 0;
   int pendingCount = 0;
   int totalCount = 0;

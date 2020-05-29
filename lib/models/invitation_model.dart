@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/models/models.dart';
 
@@ -12,7 +11,7 @@ class InvitationModel extends DataModel {
     this.id,
     this.type,
     this.data,
-    @required this.timebankId,
+    this.timebankId,
   });
 
   InvitationModel.fromMap(Map<String, dynamic> map) {
