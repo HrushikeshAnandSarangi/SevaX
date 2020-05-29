@@ -288,7 +288,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
           Row(
             children: <Widget>[
-              headingText('Private accidental delete', false),
+              headingText('Prevent accidental delete', false),
               Padding(
                 padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
                 child: Checkbox(

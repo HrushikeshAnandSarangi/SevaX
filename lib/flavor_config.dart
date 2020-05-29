@@ -16,8 +16,13 @@ class FlavorValues {
   final String elasticSearchBaseURL;
   final String stripePublishableKey;
   final String androidPayMode;
+  final String dynamicLinkUriPrefix;
+  final String bundleId;
+  final String packageName;
 
   FlavorValues({
+    this.bundleId,
+    this.packageName,
     @required this.appName,
     @required this.timebankName,
     @required this.timebankId,
@@ -30,6 +35,7 @@ class FlavorValues {
     @required this.elasticSearchBaseURL,
     @required this.stripePublishableKey,
     @required this.androidPayMode,
+    @required this.dynamicLinkUriPrefix,
   });
 }
 
@@ -40,6 +46,8 @@ class FlavorConfig {
     switch (appFlavor) {
       case Flavor.SEVA_DEV:
         return FlavorValues(
+          bundleId: 'com.sevaexchange.dev',
+          packageName: 'com.sevaexchange.dev',
           elasticSearchBaseURL: "http://35.227.68.255",
           stripePublishableKey: "pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832",
           androidPayMode: "test",
@@ -109,11 +117,14 @@ class FlavorConfig {
               ),
             ),
           ),
+          dynamicLinkUriPrefix: "https://sevadev.page.link",
         );
         break;
 
       case Flavor.APP:
         return FlavorValues(
+          bundleId: 'com.sevaexchange.app',
+          packageName: 'com.sevaexchange.sevax',
           elasticSearchBaseURL: "http://35.227.18.55",
           cloudFunctionBaseURL:
               "https://us-central1-sevaxproject4sevax.cloudfunctions.net",
@@ -183,6 +194,7 @@ class FlavorConfig {
               ),
             ),
           ),
+          dynamicLinkUriPrefix: "https://sevadev.page.link",
         );
         break;
 

@@ -1,5 +1,6 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/flavor_config.dart';
 
 void initDynamicLinks(BuildContext context) async {
   final PendingDynamicLinkData data =
@@ -28,25 +29,22 @@ Future<String> createDynamicLinkFor({
   String primaryTimebankId,
 }) async {
   final DynamicLinkParameters parameters = DynamicLinkParameters(
-    uriPrefix: 'https://sevadev.page.link',
+    uriPrefix: FlavorConfig.values.dynamicLinkUriPrefix,
     link: Uri.parse(
         'https://www.sevaexchange.com?invitedMemberEmail=$inviteeEmail&communityId=$communityId&primaryTimebankId=$primaryTimebankId'),
     androidParameters: AndroidParameters(
-      packageName: 'com.sevaexchange.dev',
+      packageName: FlavorConfig.values.packageName,
       minimumVersion: 0,
     ),
     dynamicLinkParametersOptions: DynamicLinkParametersOptions(
       shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
     ),
     iosParameters: IosParameters(
-      bundleId: 'com.sevaexchange.dev',
+      bundleId: FlavorConfig.values.bundleId,
       minimumVersion: '0',
     ),
   );
 
   final ShortDynamicLink shortLink = await parameters.buildShortLink();
-  Uri url = shortLink.shortUrl;
-  print(
-      "________________________________________createDynamicLinkFor _ completed with link - > ${shortLink.shortUrl.toString()}");
   return shortLink.shortUrl.toString();
 }
