@@ -617,7 +617,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       _adminsWidgets.add(ReportedMemberNavigatorWidget(
         isTimebankReport: !widget.isFromGroup,
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-        timebankId: widget.timebankId,
+        timebankModel: timebankModel,
       ));
     }
     _adminsWidgets.add(getSectionTitle(context, 'Admins & Organizers'));

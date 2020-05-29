@@ -187,7 +187,7 @@ class _ManageGroupView extends State<ManageGroupView> {
       onTap: () {
         Navigator.of(context).push(
           ReportedMembersPage.route(
-            timebankId: widget.timebankModel.id,
+            timebankModel: widget.timebankModel,
             communityId: widget.timebankModel.communityId,
             isFromTimebank: false,
           ),

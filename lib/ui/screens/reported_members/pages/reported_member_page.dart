@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/bloc/reported_member_bloc.dart';
 import 'package:sevaexchange/ui/screens/reported_members/widgets/reported_member_card.dart';
 
 class ReportedMembersPage extends StatefulWidget {
-  final String timebankId;
+  final TimebankModel timebankModel;
   final String communityId;
   final bool isFromTimebank;
 
   const ReportedMembersPage(
-      {Key key, this.timebankId, this.communityId, this.isFromTimebank})
+      {Key key, this.timebankModel, this.communityId, this.isFromTimebank})
       : super(key: key);
 
   static Route<dynamic> route(
-      {String timebankId, String communityId, bool isFromTimebank}) {
+      {TimebankModel timebankModel, String communityId, bool isFromTimebank}) {
     return MaterialPageRoute(
       builder: (BuildContext context) => ReportedMembersPage(
-        timebankId: timebankId,
+        timebankModel: timebankModel,
         communityId: communityId,
         isFromTimebank: isFromTimebank,
       ),
@@ -33,7 +34,7 @@ class _ReportedMembersPageState extends State<ReportedMembersPage> {
   @override
   void initState() {
     _bloc.fetchReportedMembers(
-      widget.timebankId,
+      widget.timebankModel.id,
       widget.communityId,
       widget.isFromTimebank,
     );
@@ -74,7 +75,7 @@ class _ReportedMembersPageState extends State<ReportedMembersPage> {
                 return ReportedMemberCard(
                   model: snapshot.data[index],
                   isFromTimebank: widget.isFromTimebank,
-                  timebankId: widget.timebankId,
+                  timebankModel: widget.timebankModel,
                 );
               },
             );

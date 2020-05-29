@@ -4,18 +4,22 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_info.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
 
 class ReportedMemberCard extends StatelessWidget {
   final ReportedMembersModel model;
-  final String timebankId;
+  final TimebankModel timebankModel;
   final bool isFromTimebank;
   const ReportedMemberCard(
-      {Key key, this.model, this.isFromTimebank, this.timebankId})
+      {Key key, this.model, this.isFromTimebank, this.timebankModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -31,8 +35,7 @@ class ReportedMemberCard extends StatelessWidget {
                 : removeMemberGroupFn(context),
             messageMember: () => messageMember(
               context: context,
-              userEmail: model.reportedUserEmail,
-              timebankId: timebankId,
+              timebankModel: timebankModel,
               communityId: model.communityId,
             ),
           ),
@@ -108,8 +111,7 @@ class ReportedMemberCard extends StatelessWidget {
                 ),
                 onTap: () => messageMember(
                   context: context,
-                  userEmail: model.reportedUserEmail,
-                  timebankId: timebankId,
+                  timebankModel: timebankModel,
                   communityId: model.communityId,
                 ),
               ),
@@ -147,37 +149,37 @@ class ReportedMemberCard extends StatelessWidget {
 
   void messageMember({
     @required BuildContext context,
-    @required String userEmail,
-    @required String timebankId,
+    @required TimebankModel timebankModel,
     @required String communityId,
   }) {
-    log("message member");
-    List users = [userEmail, timebankId];
-    users.sort();
-    //Todo update the same
+    UserModel loggedInUser = SevaCore.of(context).loggedInUser;
+    ParticipantInfo sender = ParticipantInfo(
+      id: loggedInUser.sevaUserID,
+      name: loggedInUser.fullname,
+      photoUrl: loggedInUser.photoURL,
+      type: ChatType.TYPE_PERSONAL,
+    );
 
-    ChatModel chatModel = ChatModel();
-    chatModel.communityId = communityId;
-    // chatModel.user1 = users[0];
-    // chatModel.user2 = users[1];
-    chatModel.timebankId = timebankId;
-    // createChat(chat: chatModel);
-
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => ChatView(
-    //       useremail: userEmail,
-    //       chatModel: chatModel,
-    //     ),
-    //   ),
-    // );
+    ParticipantInfo reciever = ParticipantInfo(
+      id: timebankModel.id,
+      name: timebankModel.name,
+      photoUrl: timebankModel.photoUrl,
+      type: ChatType.TYPE_TIMEBANK,
+    );
+    createAndOpenChat(
+      context: context,
+      timebankId: timebankModel.id,
+      sender: sender,
+      reciever: reciever,
+      communityId: loggedInUser.currentCommunity,
+      isTimebankMessage: true,
+    );
   }
 
   void removeMemberGroupFn(BuildContext context) async {
     log("remove member");
     Map<String, dynamic> responseData = await removeMemberFromGroup(
-        sevauserid: model.reportedId, groupId: timebankId);
+        sevauserid: model.reportedId, groupId: timebankModel.id);
     if (responseData['deletable'] == true) {
       showDialog(
         context: context,
@@ -252,9 +254,9 @@ class ReportedMemberCard extends StatelessWidget {
   }
 
   void removeMemberTimebankFn(BuildContext context) async {
-    print(model.reportedId + " removing member ongoing " + timebankId);
+    print(model.reportedId + " removing member ongoing " + timebankModel.id);
     Map<String, dynamic> responseData = await removeMemberFromTimebank(
-        sevauserid: model.reportedId, timebankId: timebankId);
+        sevauserid: model.reportedId, timebankId: timebankModel.id);
     print("reported members removal response is --- " +
         responseData['ownerGroupsArr'].toString());
     if (responseData['deletable'] == true) {
@@ -309,7 +311,7 @@ class ReportedMemberCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => TransferOwnerShipView(
-              timebankId: timebankId,
+              timebankId: timebankModel.id,
               responseData: responseData,
               memberName: model.reportedUserName,
               memberSevaUserId: model.reportedId,

@@ -2,17 +2,18 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_page.dart';
 
 class ReportedMemberNavigatorWidget extends StatefulWidget {
   final bool isTimebankReport;
-  final String timebankId;
+  final TimebankModel timebankModel;
   final String communityId;
 
   const ReportedMemberNavigatorWidget({
     Key key,
     this.isTimebankReport,
-    this.timebankId,
+    this.timebankModel,
     this.communityId,
   }) : super(key: key);
 
@@ -42,7 +43,7 @@ class _ReportedMemberNavigatorWidgetState
                 Navigator.of(context)
                     .push(
                       ReportedMembersPage.route(
-                        timebankId: widget.timebankId,
+                        timebankModel: widget.timebankModel,
                         communityId: widget.communityId,
                         isFromTimebank: widget.isTimebankReport,
                       ),
@@ -63,7 +64,8 @@ class _ReportedMemberNavigatorWidgetState
         .where(
           widget.isTimebankReport ? "communityId" : "timebankIds",
           isEqualTo: widget.isTimebankReport ? widget.communityId : null,
-          arrayContains: widget.isTimebankReport ? null : widget.timebankId,
+          arrayContains:
+              widget.isTimebankReport ? null : widget.timebankModel.id,
         )
         .getDocuments();
     if (snapshot.documents.length > 0) {
