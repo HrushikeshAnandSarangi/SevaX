@@ -18,6 +18,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
+import 'package:sevaexchange/views/splash_view.dart';
 
 import '../core.dart';
 
@@ -608,7 +609,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => AuthRouter(),
+        builder: (BuildContext context) => SplashView(),
       ),
     );
   }

@@ -604,7 +604,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
               child: Text(
-                AppLocalizations.of(context).translate('members',AppLocalizations.of(context).translate('members','publish_code')),
+                AppLocalizations.of(context).translate('members','publish_code'),
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                 ),

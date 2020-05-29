@@ -12,6 +12,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
@@ -28,6 +29,7 @@ import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
+import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -139,6 +141,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   String _selectedTimebankId;
 
   Future<TimebankModel> getTimebankAdminStatus;
+  Future getProjectsByFuture;
   TimebankModel timebankModel;
 
   @override
@@ -152,6 +155,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
       timebankId: _selectedTimebankId,
     );
+    getProjectsByFuture = FirestoreManager.getAllProjectListFuture(timebankid: widget.timebankId);
 
     fetchRemoteConfig();
 
@@ -243,249 +247,246 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     this.requestModel.email = loggedInUser.email;
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
-
-    return Form(
-      key: _formKey,
-      child: Container(
-        padding: EdgeInsets.all(20.0),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                FutureBuilder<TimebankModel>(
-                  future: getTimebankAdminStatus,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError)
-                      return Text(snapshot.error.toString());
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Container();
-                    }
-                    timebankModel = snapshot.data;
-                    if (snapshot.data.admins.contains(
-                        SevaCore.of(context).loggedInUser.sevaUserID)) {
-                      return requestSwitch();
-                    } else {
-                      this.requestModel.requestMode =
-                          RequestMode.PERSONAL_REQUEST;
-                      return Container();
-                    }
-                  },
-                ),
-                Text(
-                  FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                      ? AppLocalizations.of(context).translate('create_request','yang_gang_request_title')
-                      : AppLocalizations.of(context).translate('create_request','request_title'),
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Europa',
-                    color: Colors.black,
-                  ),
-                ),
-                TextFormField(
-                  onFieldSubmitted: (v) {
-                    FocusScope.of(context).requestFocus(focusNodes[0]);
-                  },
-                  inputFormatters: <TextInputFormatter>[
-                    WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
-                  ],
-                  decoration: InputDecoration(
-                    hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                        ? AppLocalizations.of(context).translate('create_request','yang_gang_request_title')
-                        : AppLocalizations.of(context).translate('create_request','small_carpenty'),
-                    hintStyle: hintTextStyle,
-                  ),
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.text,
-                  initialValue: widget.offer != null && widget.isOfferRequest
-                      ? getOfferTitle(
-                          offerDataModel: widget.offer,
-                        )
-                      : "",
-                  textCapitalization: TextCapitalization.sentences,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return AppLocalizations.of(context).translate('create_request','subject');
-                    }
-                    requestModel.title = value;
-                  },
-                ),
-                SizedBox(height: 30),
-                OfferDurationWidget(
-                  title: AppLocalizations.of(context).translate('create_request','duration'),
-                ),
-                SizedBox(height: 12),
-                SizedBox(height: 20),
-                Text(
-                  FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                      ? AppLocalizations.of(context).translate('create_request','yang_desc')
-                      : AppLocalizations.of(context).translate('create_request','desc'),
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Europa',
-                    color: Colors.black,
-                  ),
-                ),
-                TextFormField(
-                  focusNode: focusNodes[0],
-                  onFieldSubmitted: (v) {
-                    FocusScope.of(context).requestFocus(focusNodes[1]);
-                  },
-                  textInputAction: TextInputAction.next,
-                  decoration: InputDecoration(
-                    hintText: AppLocalizations.of(context).translate('create_request','request_hash'),
-                    hintStyle: hintTextStyle,
-                  ),
-                  initialValue: widget.offer != null && widget.isOfferRequest
-                      ? getOfferDescription(
-                          offerDataModel: widget.offer,
-                        )
-                      : "",
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 1,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return AppLocalizations.of(context).translate('create_request','request_hash_empty');
-                    }
-                    requestModel.description = value;
-                  },
-                ),
-                SizedBox(height: 20),
-                Text(
-                  AppLocalizations.of(context).translate('create_request','add_to_project'),
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Europa',
-                    color: Colors.black,
-                  ),
-                ),
-                FlatButton.icon(
-                    icon: Icon(Icons.assignment),
-                    textColor: Colors.green,
-                    label: Container(
-                      constraints: BoxConstraints.loose(
-                        Size(MediaQuery
-                            .of(context)
-                            .size
-                            .width - 140, 50),
-                      ),
-                      child: Text(
-                        selectedAddress == '' || selectedAddress == null
-                            ? AppLocalizations.of(context).translate(
-                            'create_request', 'none_project')
-                            : selectedAddress,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ),
-                    color: Colors.grey[200],
-                    onPressed: () async {}),
-                SizedBox(height: 20),
-                Text(
-                  AppLocalizations.of(context).translate('create_request','total_hours'),
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Europa',
-                    color: Colors.black,
-                  ),
-                ),
-                TextFormField(
-                    focusNode: focusNodes[1],
-                    onFieldSubmitted: (v) {
-                      FocusScope.of(context).requestFocus(focusNodes[2]);
-                    },
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context).translate('create_request','hours_required'),
-                      hintStyle: hintTextStyle,
-                      // labelText: 'No. of volunteers',
-                    ),
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return AppLocalizations.of(context).translate('create_request','hours_required_err');
-                      } else if (int.parse(value) < 0) {
-                        return AppLocalizations.of(context).translate('create_request','hours_required_zero');
-                      } else if (int.parse(value) == 0) {
-                        return AppLocalizations.of(context).translate('create_request','hours_required_not_zero');
-                      } else {
-                        requestModel.numberOfHours = int.parse(value);
-                        return null;
-                      }
-                    }),
-                SizedBox(height: 20),
-                Text(
-                  AppLocalizations.of(context).translate('create_request','no_of_volunteers'),
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Europa',
-                    color: Colors.black,
-                  ),
-                ),
-                TextFormField(
-                  focusNode: focusNodes[2],
-                  onFieldSubmitted: (v) {
-                    FocusScope.of(context).unfocus();
-                  },
-                  decoration: InputDecoration(
-                    hintText: AppLocalizations.of(context).translate('create_request','no_of_volunteers'),
-                    hintStyle: hintTextStyle,
-                    // labelText: 'No. of volunteers',
-                  ),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return AppLocalizations.of(context).translate('create_request','no_of_volunteers_zero');
-                    } else if (int.parse(value) < 0) {
-                      return AppLocalizations.of(context).translate('create_request','no_of_volunteers_zero_err');
-                    } else if (int.parse(value) == 0) {
-                      return AppLocalizations.of(context).translate('create_request','no_of_volunteers_zero_err1');
-                    } else {
-                      requestModel.numberOfApprovals = int.parse(value);
-                      return null;
-                    }
-                  },
-                ),
-                SizedBox(height: 40),
-                Center(
-                  child: LocationPickerWidget(
-                    selectedAddress: selectedAddress,
-                    location: location,
-                    onChanged: (LocationDataModel dataModel) {
-                      log("received data model");
-                      setState(() {
-                        location = dataModel.geoPoint;
-                        this.selectedAddress = dataModel.location;
-                      });
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 30.0),
-                  child: Center(
-                    child: Container(
-                      // width: 150,
-                      child: RaisedButton(
-                        onPressed: createRequest,
-                        child: Text(
-                          AppLocalizations.of(context).translate('create_request','create_request_button').padLeft(10).padRight(10),
-                          style: Theme.of(context).primaryTextTheme.button,
+    headerContainer(snapshot) {
+      if (snapshot.hasError)
+        return Text(snapshot.error.toString());
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Container();
+      }
+      timebankModel = snapshot.data;
+      if (snapshot.data.admins.contains(
+          SevaCore.of(context).loggedInUser.sevaUserID)) {
+        return requestSwitch();
+      } else {
+        this.requestModel.requestMode =
+            RequestMode.PERSONAL_REQUEST;
+        return Container();
+      }
+    }
+    addToProjectContainer(snapshot, projectModelList, requestModel) {
+      if (snapshot.hasError)
+        return Text(snapshot.error.toString());
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Container();
+      }
+      timebankModel = snapshot.data;
+      if (snapshot.data.admins.contains(
+          SevaCore.of(context).loggedInUser.sevaUserID)) {
+        return ProjectSelection(requestModel: requestModel, projectModelList: projectModelList, selectedProject: null, admin: snapshot.data.admins.contains(
+            SevaCore.of(context).loggedInUser.sevaUserID));
+      } else {
+        this.requestModel.requestMode =
+            RequestMode.PERSONAL_REQUEST;
+        return ProjectSelection(requestModel: requestModel, projectModelList: projectModelList, selectedProject: null, admin: false);
+      }
+    }
+    return FutureBuilder<TimebankModel>(
+        future: getTimebankAdminStatus,
+        builder: (context, snapshot) {
+          return FutureBuilder<List<ProjectModel>>(
+              future: getProjectsByFuture,
+              builder: (projectscontext, projectListSnapshot) {
+                List<ProjectModel> projectModelList =
+                    projectListSnapshot.data;
+                return Form(
+                  key: _formKey,
+                  child: Container(
+                    padding: EdgeInsets.all(20.0),
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            headerContainer(snapshot),
+                            Text(
+                              FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                                  ? AppLocalizations.of(context).translate('create_request','yang_gang_request_title')
+                                  : AppLocalizations.of(context).translate('create_request','request_title'),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Europa',
+                                color: Colors.black,
+                              ),
+                            ),
+                            TextFormField(
+                              onFieldSubmitted: (v) {
+                                FocusScope.of(context).requestFocus(focusNodes[0]);
+                              },
+                              inputFormatters: <TextInputFormatter>[
+                                WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
+                              ],
+                              decoration: InputDecoration(
+                                hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                                    ? AppLocalizations.of(context).translate('create_request','yang_gang_request_title')
+                                    : AppLocalizations.of(context).translate('create_request','small_carpenty'),
+                                hintStyle: hintTextStyle,
+                              ),
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.text,
+                              initialValue: widget.offer != null && widget.isOfferRequest
+                                  ? getOfferTitle(
+                                offerDataModel: widget.offer,
+                              )
+                                  : "",
+                              textCapitalization: TextCapitalization.sentences,
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return AppLocalizations.of(context).translate('create_request','subject');
+                                }
+                                requestModel.title = value;
+                              },
+                            ),
+                            SizedBox(height: 30),
+                            OfferDurationWidget(
+                              title: AppLocalizations.of(context).translate('create_request','duration'),
+                            ),
+                            SizedBox(height: 12),
+                            SizedBox(height: 20),
+                            Text(
+                              FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                                  ? AppLocalizations.of(context).translate('create_request','yang_desc')
+                                  : AppLocalizations.of(context).translate('create_request','desc'),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Europa',
+                                color: Colors.black,
+                              ),
+                            ),
+                            TextFormField(
+                              focusNode: focusNodes[0],
+                              onFieldSubmitted: (v) {
+                                FocusScope.of(context).requestFocus(focusNodes[1]);
+                              },
+                              textInputAction: TextInputAction.next,
+                              decoration: InputDecoration(
+                                hintText: AppLocalizations.of(context).translate('create_request','request_hash'),
+                                hintStyle: hintTextStyle,
+                              ),
+                              initialValue: widget.offer != null && widget.isOfferRequest
+                                  ? getOfferDescription(
+                                offerDataModel: widget.offer,
+                              )
+                                  : "",
+                              keyboardType: TextInputType.multiline,
+                              maxLines: 1,
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return AppLocalizations.of(context).translate('create_request','request_hash_empty');
+                                }
+                                requestModel.description = value;
+                              },
+                            ),
+                            SizedBox(height: 20),
+                            addToProjectContainer(snapshot, projectModelList, requestModel),
+                            SizedBox(height: 20),
+                            Text(
+                              AppLocalizations.of(context).translate('create_request','total_hours'),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Europa',
+                                color: Colors.black,
+                              ),
+                            ),
+                            TextFormField(
+                                focusNode: focusNodes[1],
+                                onFieldSubmitted: (v) {
+                                  FocusScope.of(context).requestFocus(focusNodes[2]);
+                                },
+                                textInputAction: TextInputAction.next,
+                                decoration: InputDecoration(
+                                  hintText: AppLocalizations.of(context).translate('create_request','hours_required'),
+                                  hintStyle: hintTextStyle,
+                                  // labelText: 'No. of volunteers',
+                                ),
+                                keyboardType: TextInputType.number,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return AppLocalizations.of(context).translate('create_request','hours_required_err');
+                                  } else if (int.parse(value) < 0) {
+                                    return AppLocalizations.of(context).translate('create_request','hours_required_zero');
+                                  } else if (int.parse(value) == 0) {
+                                    return AppLocalizations.of(context).translate('create_request','hours_required_not_zero');
+                                  } else {
+                                    requestModel.numberOfHours = int.parse(value);
+                                    return null;
+                                  }
+                                }),
+                            SizedBox(height: 20),
+                            Text(
+                              AppLocalizations.of(context).translate('create_request','no_of_volunteers'),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Europa',
+                                color: Colors.black,
+                              ),
+                            ),
+                            TextFormField(
+                              focusNode: focusNodes[2],
+                              onFieldSubmitted: (v) {
+                                FocusScope.of(context).unfocus();
+                              },
+                              decoration: InputDecoration(
+                                hintText: AppLocalizations.of(context).translate('create_request','no_of_volunteers'),
+                                hintStyle: hintTextStyle,
+                                // labelText: 'No. of volunteers',
+                              ),
+                              keyboardType: TextInputType.number,
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return AppLocalizations.of(context).translate('create_request','no_of_volunteers_zero');
+                                } else if (int.parse(value) < 0) {
+                                  return AppLocalizations.of(context).translate('create_request','no_of_volunteers_zero_err');
+                                } else if (int.parse(value) == 0) {
+                                  return AppLocalizations.of(context).translate('create_request','no_of_volunteers_zero_err1');
+                                } else {
+                                  requestModel.numberOfApprovals = int.parse(value);
+                                  return null;
+                                }
+                              },
+                            ),
+                            SizedBox(height: 40),
+                            Center(
+                              child: LocationPickerWidget(
+                                selectedAddress: selectedAddress,
+                                location: location,
+                                onChanged: (LocationDataModel dataModel) {
+                                  log("received data model");
+                                  setState(() {
+                                    location = dataModel.geoPoint;
+                                    this.selectedAddress = dataModel.location;
+                                  });
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 30.0),
+                              child: Center(
+                                child: Container(
+                                  // width: 150,
+                                  child: RaisedButton(
+                                    onPressed: createRequest,
+                                    child: Text(
+                                      AppLocalizations.of(context).translate('create_request','create_request_button').padLeft(10).padRight(10),
+                                      style: Theme.of(context).primaryTextTheme.button,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+                );
+              }
+          );
+        }
     );
   }
 
@@ -810,14 +811,113 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     }
   }
 
-  // Future _getLocation() async {
-  //   String address = await LocationUtility().getFormattedAddress(
-  //     location.latitude,
-  //     location.longitude,
-  //   );
+  Future<Map> showTimebankAdvisory() {
+    return showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(
+              "Select Project",
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            content: Form(
+              child: Container(
+                height: 300,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Text(
+                    "Projects here",
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  AppLocalizations.of(context).translate('shared','capital_cancel'),
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop({'PROCEED': false});
+                },
+              ),
+              FlatButton(
+                child: Text(
+                  AppLocalizations.of(context).translate('shared','proceed'),
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+//                  return Navigator.of(viewContext).pop({'PROCEED': true});
+                },
+              ),
+            ],
+          );
+        });
+  }
+}
+class ProjectSelection extends StatefulWidget {
+  ProjectSelection({Key key,this.requestModel, this.admin, this.projectModelList, this.selectedProject}) : super(key: key);
+  final admin;
+  final List<ProjectModel> projectModelList;
+  final ProjectModel selectedProject;
+  RequestModel requestModel;
 
-  //   setState(() {
-  //     this.selectedAddress = address;
-  //   });
-  // }
+  @override
+  ProjectSelectionState createState() => ProjectSelectionState();
+}
+class ProjectSelectionState extends State<ProjectSelection> {
+  @override
+  Widget build(BuildContext context) {
+    List<dynamic> list = [{"name": "Un Assigned", "code": "None"}];
+    for (var i = 0; i < widget.projectModelList.length; i++) {
+      list.add({
+        "name" : widget.projectModelList[i].name,
+        "code" : widget.projectModelList[i].id,
+        "timebankproject" : widget.projectModelList[i].mode == 'Timebank'
+      });
+    }
+    return new MultiSelect(
+      autovalidate: true,
+      initialValue: ['None'],
+      titleText: 'Assign to project',
+      maxLength: 1, // optional
+      validator: (dynamic value) {
+        if (value == null) {
+          return 'Please assign to one project';
+        }
+        return null;
+      },
+      errorText: 'Please assign to one project',
+      dataSource: list,
+      admin: widget.admin,
+      textField: 'name',
+      valueField: 'code',
+      filterable: true,
+      required: true,
+      titleTextColor: Colors.black,
+      change: (value) {
+        if (value != null && value[0] != 'None') {
+          widget.requestModel.projectId = value[0];
+        }
+      },
+      selectIcon: Icons.arrow_drop_down_circle,
+      saveButtonColor: Theme.of(context).primaryColor,
+      checkBoxColor: Theme.of(context).primaryColorDark,
+      cancelButtonColor: Theme.of(context).primaryColorLight,
+    );
+  }
+
+//  void _onFormSaved() {
+//    final FormState form = _formKey.currentState;
+//    form.save();
+//  }
 }

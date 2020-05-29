@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flurry/flurry.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
@@ -383,7 +384,6 @@ class _SplashViewState extends State<SplashView> {
   }
 
   void initiateLogin() {
-    loadingMessage = AppLocalizations.of(context).translate('splash', 'check_met');
     _getLoggedInUserId().then(handleLoggedInUserIdResponse).catchError((error) {
       print("Inside -> Error $error");
     });

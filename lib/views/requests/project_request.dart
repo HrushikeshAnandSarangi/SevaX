@@ -473,7 +473,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text(AppLocalizations.of(context).translate('shared','close')),
+              child: new Text(AppLocalizations.of(context).translate('homepage','close')),
               onPressed: () {
                 Navigator.of(context).pop();
               },

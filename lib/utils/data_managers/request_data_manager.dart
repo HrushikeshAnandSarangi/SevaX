@@ -141,6 +141,29 @@ Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
   );
 }
 
+Future<List<ProjectModel>> getAllProjectListFuture({String timebankid}) async {
+  List<ProjectModel> projectsList = [];
+  await Firestore.instance
+      .collection('projects')
+      .where('timebank_id', isEqualTo: timebankid)
+      .where('softDelete', isEqualTo: false)
+      .orderBy("created_at", descending: true).getDocuments()
+      .then(
+        (data) {
+          data.documents.forEach(
+                (documentSnapshot) {
+              print("documentSnapshot.data.name --------" +
+                  documentSnapshot.data["name"]);
+              ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
+              model.id = documentSnapshot.documentID;
+              projectsList.add(model);
+            },
+          );
+        });
+  return projectsList;
+}
+
+
 Stream<List<RequestModel>> getTimebankRequestListStream(
     {String timebankId}) async* {
   var query = Firestore.instance
