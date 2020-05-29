@@ -102,78 +102,64 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                       SevaCore
                           .of(context)
                           .loggedInUser = _userBloc.user;
-
-                      // if (_userBloc.community.admins
-                      //         .contains(_userBloc.user.sevaUserID) &&
-                      //     (_userBloc.community.payment.isEmpty
-                      //     //     _userBloc.community.payment['payment_success'] ??
-                      //     // false
-                      //     )) {
-                      //   WidgetsBinding.instance.addPostFrameCallback((_) {
-                      //     Navigator.of(context).pushAndRemoveUntil(
-                      //         MaterialPageRoute(
-                      //           builder: (context) => BillingPlanDetails(
-                      //             user: _userBloc.user,
-                      //             isPlanActive: false,
-                      //           ),
-                      //         ),
-                      //         ((Route<dynamic> route) => false));
-                      //   });
-                      // }
-
-                if (_userBloc.user.communities == null ||
-                    _userBloc.user.communities.isEmpty) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => SplashView()),
-                        ((Route<dynamic> route) => false));
-                  });
-                }
-                return Stack(
-                  children: <Widget>[
-                    BlocProvider<MessageBloc>(
-                      bloc: _messageBloc,
-                      child: Container(
-                        height: MediaQuery.of(context).size.height - 65,
-                        child: pages[selected],
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        height: 55,
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey[300],
-                              blurRadius: 100.0,
+                      if (_userBloc.user.communities == null ||
+                          _userBloc.user.communities.isEmpty) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => SplashView()),
+                              ((Route<dynamic> route) => false));
+                        });
+                      }
+                      return Stack(
+                        children: <Widget>[
+                          BlocProvider<MessageBloc>(
+                            bloc: _messageBloc,
+                            child: Container(
+                              height: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .height - 65,
+                              child: pages[selected],
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: BlocProvider(
-                        bloc: _messageBloc,
-                        child: CustomBottomNavigationBar(
-                          selected: selected,
-                          onChanged: (index) {
-                            selected = index;
-                            setState(() {});
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
-        ),
-      ),
-    );
+                          ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              height: 55,
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey[300],
+                                    blurRadius: 100.0,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: BlocProvider(
+                              bloc: _messageBloc,
+                              child: CustomBottomNavigationBar(
+                                selected: selected,
+                                onChanged: (index) {
+                                  selected = index;
+                                  setState(() {});
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
+              ),
+            ),
+          );
+        }));
   }
 }

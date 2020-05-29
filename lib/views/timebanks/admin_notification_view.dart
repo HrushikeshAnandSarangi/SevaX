@@ -43,7 +43,7 @@ class AdminNotificationViewHolder extends StatefulWidget {
 }
 
 
-class AdminNotificationsView extends State<TimebankNotificationsView> {
+class AdminNotificationsView extends State<AdminNotificationViewHolder> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<NotificationsModel>>(

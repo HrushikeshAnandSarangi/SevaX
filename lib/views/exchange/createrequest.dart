@@ -298,9 +298,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                           children: <Widget>[
                             headerContainer(snapshot),
                             Text(
-                              FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                                  ? AppLocalizations.of(context).translate('create_request','yang_gang_request_title')
-                                  : AppLocalizations.of(context).translate('create_request','request_title'),
+                              AppLocalizations.of(context).translate('create_request','request_title'),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -316,9 +314,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                 WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
                               ],
                               decoration: InputDecoration(
-                                hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                                    ? AppLocalizations.of(context).translate('create_request','yang_gang_request_title')
-                                    : AppLocalizations.of(context).translate('create_request','small_carpenty'),
+                                hintText: AppLocalizations.of(context).translate('create_request','small_carpenty'),
                                 hintStyle: hintTextStyle,
                               ),
                               textInputAction: TextInputAction.next,
@@ -343,9 +339,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                             SizedBox(height: 12),
                             SizedBox(height: 20),
                             Text(
-                              FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                                  ? AppLocalizations.of(context).translate('create_request','yang_desc')
-                                  : AppLocalizations.of(context).translate('create_request','desc'),
+                              AppLocalizations.of(context).translate('create_request','desc'),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
