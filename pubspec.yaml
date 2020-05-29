@@ -63,6 +63,7 @@ dependencies:
   stripe_payment: ^1.0.6
   firebase_remote_config: ^0.3.0+3
   badges: ^1.1.1
+  async:
   smooth_star_rating: 1.0.4+2
   webview_flutter: ^0.3.20+2
   apple_sign_in: ^0.1.0
@@ -76,8 +77,8 @@ dependencies:
   share_extend: ^1.1.5
 
 dev_dependencies:
-#  flutter_test:
-#    sdk: flutter
+  #  flutter_test:
+  #    sdk: flutter
 
   flutter_localizations:
     sdk: flutter
