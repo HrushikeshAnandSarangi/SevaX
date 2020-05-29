@@ -11,7 +11,6 @@ import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ReportedMemberCard extends StatelessWidget {
   final ReportedMembersModel model;
@@ -29,7 +28,9 @@ class ReportedMemberCard extends StatelessWidget {
           ReportedMemberInfo.route(
             model: model,
             isFromTimebank: isFromTimebank,
-            removeMember: () => isFromTimebank ? removeMemberTimebankFn(context) : removeMemberGroupFn(context),
+            removeMember: () => isFromTimebank
+                ? removeMemberTimebankFn(context)
+                : removeMemberGroupFn(context),
             messageMember: () => messageMember(
               context: context,
               userEmail: model.reportedUserEmail,
@@ -98,7 +99,9 @@ class ReportedMemberCard extends StatelessWidget {
               ),
               GestureDetector(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 5.0,),
+                  padding: const EdgeInsets.only(
+                    top: 5.0,
+                  ),
                   child: Image.asset(
                     messageIcon,
                     width: 22,
@@ -119,7 +122,9 @@ class ReportedMemberCard extends StatelessWidget {
                   width: 22,
                   height: 22,
                 ),
-                onTap:()=> isFromTimebank? removeMemberTimebankFn(context) : removeMemberGroupFn(context),
+                onTap: () => isFromTimebank
+                    ? removeMemberTimebankFn(context)
+                    : removeMemberGroupFn(context),
               ),
             ],
           ),
@@ -171,8 +176,9 @@ class ReportedMemberCard extends StatelessWidget {
 
   void removeMemberGroupFn(BuildContext context) async {
     log("remove member");
-    Map<String, dynamic> responseData = await removeMemberFromGroup(sevauserid:model.reportedId, groupId: timebankId);
-    if(responseData['deletable']==true){
+    Map<String, dynamic> responseData = await removeMemberFromGroup(
+        sevauserid: model.reportedId, groupId: timebankId);
+    if (responseData['deletable'] == true) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -192,8 +198,9 @@ class ReportedMemberCard extends StatelessWidget {
           );
         },
       );
-    }else{
-      if(responseData['softDeleteCheck']==false && responseData['groupOwnershipCheck']==false){
+    } else {
+      if (responseData['softDeleteCheck'] == false &&
+          responseData['groupOwnershipCheck'] == false) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -218,14 +225,15 @@ class ReportedMemberCard extends StatelessWidget {
             );
           },
         );
-      }
-      else if(responseData['softDeleteCheck']==true && responseData['groupOwnershipCheck']==false){
+      } else if (responseData['softDeleteCheck'] == true &&
+          responseData['groupOwnershipCheck'] == false) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              content: new Text("Cannot remove yourself from the group. Instead, please try deleting the group."),
+              content: new Text(
+                  "Cannot remove yourself from the group. Instead, please try deleting the group."),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 new FlatButton(
@@ -244,10 +252,12 @@ class ReportedMemberCard extends StatelessWidget {
   }
 
   void removeMemberTimebankFn(BuildContext context) async {
-    print(model.reportedId+" removing member ongoing "+timebankId);
-    Map<String, dynamic> responseData = await removeMemberFromTimebank(sevauserid:model.reportedId, timebankId: timebankId);
-    print("reported members removal response is --- "+responseData['ownerGroupsArr'].toString());
-    if(responseData['deletable']==true){
+    print(model.reportedId + " removing member ongoing " + timebankId);
+    Map<String, dynamic> responseData = await removeMemberFromTimebank(
+        sevauserid: model.reportedId, timebankId: timebankId);
+    print("reported members removal response is --- " +
+        responseData['ownerGroupsArr'].toString());
+    if (responseData['deletable'] == true) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -266,8 +276,9 @@ class ReportedMemberCard extends StatelessWidget {
           );
         },
       );
-    }else{
-      if(responseData['softDeleteCheck']==false && responseData['groupOwnershipCheck']==false){
+    } else {
+      if (responseData['softDeleteCheck'] == false &&
+          responseData['groupOwnershipCheck'] == false) {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -292,16 +303,22 @@ class ReportedMemberCard extends StatelessWidget {
             );
           },
         );
-      }
-      else if(responseData['softDeleteCheck']==true && responseData['groupOwnershipCheck']==false){
+      } else if (responseData['softDeleteCheck'] == true &&
+          responseData['groupOwnershipCheck'] == false) {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TransferOwnerShipView(timebankId: timebankId, responseData: responseData,reportedMemberModel: model,),
+            builder: (context) => TransferOwnerShipView(
+              timebankId: timebankId,
+              responseData: responseData,
+              memberName: model.reportedUserName,
+              memberSevaUserId: model.reportedId,
+              memberPhotUrl: model.reportedUserImage,
+              isComingFromExit: false,
+            ),
           ),
         );
       }
     }
   }
-
 }

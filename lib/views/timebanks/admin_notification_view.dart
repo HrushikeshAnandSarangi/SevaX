@@ -240,10 +240,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       timebankId: notification.timebankId,
                     );
                   },
-//                  onDismissed: () async {
-//                    await _clearNotification(
-//                        notification.timebankId, notification.id);
-//                  },
                 );
                 break;
               case NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED:
@@ -295,7 +291,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   },
                 );
 
-
               case NotificationType.TYPE_REPORT_MEMBER:
                 ReportedMemberNotificationModel data =
                     ReportedMemberNotificationModel.fromMap(notification.data);
@@ -306,10 +301,9 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   photoUrl: data.reportedUserImage,
                   entityName: data.reportedUserName,
                   onDismissed: () {
-                    _clearNotification(
-                      notification.timebankId,
-                      notification.id,
-                    );
+                    dismissTimebankNotification(
+                        timebankId: notification.timebankId,
+                        notificationId: notification.id);
                   },
                 );
 

@@ -181,6 +181,7 @@ Map<String, NotificationType> typeMapper = {
       NotificationType.TYPE_FEEDBACK_FROM_SIGNUP_MEMBER,
   "TYPE_REPORT_MEMBER": NotificationType.TYPE_REPORT_MEMBER,
   "TYPE_DELETION_REQUEST_OUTPUT": NotificationType.TYPE_DELETION_REQUEST_OUTPUT,
+  "TYPE_REPORT_MEMBER": NotificationType.TYPE_REPORT_MEMBER,
 };
 
 ClearNotificationModel clearNotificationModelFromJson(String str) =>
