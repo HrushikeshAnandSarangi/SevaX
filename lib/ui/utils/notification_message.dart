@@ -30,4 +30,6 @@ class TimebankNotificationMessage {
       "*n Seva Credits have been sent to *name from the credits received for *class ";
   static const String CREDIT_FROM_OFFER_APPROVED =
       "Received *n Seva Credits from the the offer *class";
+
+  static const String MEMBER_REPORT = "*name has been reported";
 }

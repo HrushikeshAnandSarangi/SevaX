@@ -526,6 +526,15 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                     dialogSubTitle:
                         "This ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code has been expired, please request the admin for a new one!")
               }
+            else if (state == 'code_already_redeemed')
+              {
+                _showDialog(
+                    activityContext: context,
+                    mode: TimeBankResponseModes.CODE_ALREADY_REDEEMED,
+                    dialogTitle: "CODE ALREADY REDEEMED!",
+                    dialogSubTitle:
+                        "This Timebank code has been already redeemed by you, please request the admin for a new one!")
+              }
             else
               {
                 response = _showDialog(
@@ -655,6 +664,10 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   case TimeBankResponseModes.ONBOARDED:
                     Navigator.pop(context, TimeBankResponseModes.ONBOARDED);
                     break;
+                  case TimeBankResponseModes.CODE_ALREADY_REDEEMED:
+                    Navigator.pop(
+                        context, TimeBankResponseModes.CODE_ALREADY_REDEEMED);
+                    break;
                 }
               },
             ),
@@ -713,4 +726,9 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   }
 }
 
-enum TimeBankResponseModes { ONBOARDED, CODE_EXPIRED, NO_CODE }
+enum TimeBankResponseModes {
+  ONBOARDED,
+  CODE_EXPIRED,
+  NO_CODE,
+  CODE_ALREADY_REDEEMED
+}

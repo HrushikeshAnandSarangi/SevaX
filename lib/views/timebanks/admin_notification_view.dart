@@ -11,6 +11,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
+import 'package:sevaexchange/models/reported_member_notification_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
@@ -238,6 +239,10 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       timebankId: notification.timebankId,
                     );
                   },
+//                  onDismissed: () async {
+//                    await _clearNotification(
+//                        notification.timebankId, notification.id);
+//                  },
                 );
                 break;
               case NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED:
@@ -286,6 +291,22 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       notificationId: notification.id,
                       timebankId: notification.timebankId,
                     );
+                  },
+                );
+
+              case NotificationType.TYPE_REPORT_MEMBER:
+                ReportedMemberNotificationModel data =
+                    ReportedMemberNotificationModel.fromMap(notification.data);
+                return NotificationCard(
+                  title: "Member Reported",
+                  subTitle: TimebankNotificationMessage.MEMBER_REPORT
+                      .replaceFirst('*name', data.reportedUserName),
+                  photoUrl: data.reportedUserImage,
+                  entityName: data.reportedUserName,
+                  onDismissed: () {
+                    dismissTimebankNotification(
+                        timebankId: notification.timebankId,
+                        notificationId: notification.id);
                   },
                 );
 
@@ -1075,10 +1096,10 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       communityid: SevaCore.of(context).loggedInUser.currentCommunity,
     );
     // creating chat with a timebank
-    String loggedInEmail = model.timebankId;
+    String timebankId = model.timebankId;
 
     // String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-    List users = [user.email, loggedInEmail];
+    List users = [user.email, timebankId];
     users.sort();
     ChatModel chatModel = ChatModel();
     chatModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;

@@ -72,22 +72,6 @@ Future<UserModel> getUserForEmail({
     return null;
   }
   userModel = UserModel.fromMap(documentSnapshot.data);
-
-  // DocumentSnapshot walletSnapshot = await Firestore.instance
-  //     .collection('wallet')
-  //     .document(emailAddress)
-  //     .get();
-
-  // num currentBalance = 0;
-
-  // if (userModel == null) return null;
-  // if (walletSnapshot != null && walletSnapshot.data != null) {
-  //   currentBalance = walletSnapshot.data['currentBalance'];
-  // }
-
-// 73191597
-  // userModel.currentBalance = currentBalance;
-
   return userModel;
 }
 
@@ -210,18 +194,6 @@ Future<UserModel> getUserForIdFuture({@required String sevaUserId}) async {
   }).catchError((onError) {
     return UserModel();
   });
-
-  // yield* data.transform(
-  //   StreamTransformer<QuerySnapshot, UserModel>.fromHandlers(
-  //     handleData: (snapshot, userSink) async {
-  //       DocumentSnapshot documentSnapshot = snapshot.documents[0];
-  //       UserModel model = UserModel.fromMap(documentSnapshot.data);
-
-  //       model.sevaUserID = sevaUserId;
-  //       userSink.add(model);
-  //     },
-  //   ),
-  // );
 }
 
 Stream<UserModel> getUserForEmailStream(String userEmailAddress) async* {
@@ -242,4 +214,22 @@ Stream<UserModel> getUserForEmailStream(String userEmailAddress) async* {
       },
     ),
   );
+}
+
+Future<Map<String,dynamic>> removeMemberFromGroup({String sevauserid, String groupId, }) async {
+  String urlLink = FlavorConfig.values.cloudFunctionBaseURL + "/removeMemberFromGroup?sevauserid=$sevauserid&groupId=$groupId";
+
+  var res = await http
+      .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+  var data = json.decode(res.body);
+  return data;
+}
+
+Future<Map<String,dynamic>> removeMemberFromTimebank({String sevauserid, String timebankId, }) async {
+  String urlLink = FlavorConfig.values.cloudFunctionBaseURL + "/removeMemberFromTimebank?sevauserid=$sevauserid&timebankId=$timebankId";
+
+  var res = await http
+      .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+  var data = json.decode(res.body);
+  return data;
 }

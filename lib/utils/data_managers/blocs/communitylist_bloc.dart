@@ -591,30 +591,35 @@ class CommunityCreateEditBloc {
           } else {
             //code matche and is alive
             // add to usersOnBoarded
-            Firestore.instance
-                .collection("timebankCodes")
-                .document(f.documentID)
-                .updateData({
-              'usersOnboarded': FieldValue.arrayUnion(
-                  [this._createEditCommunity.value.loggedinuser.sevaUserID])
-            });
+            if ((f.data['usersOnboarded'] ?? []).contains(
+                this._createEditCommunity.value.loggedinuser.sevaUserID)) {
+              func("code_already_redeemed");
+            } else {
+              Firestore.instance
+                  .collection("timebankCodes")
+                  .document(f.documentID)
+                  .updateData({
+                'usersOnboarded': FieldValue.arrayUnion(
+                    [this._createEditCommunity.value.loggedinuser.sevaUserID])
+              });
 
-            Firestore.instance
-                .collection("timebanknew")
-                .document(f.data['timebankId'])
-                .updateData({
-              'members': FieldValue.arrayUnion(
-                  [this._createEditCommunity.value.loggedinuser.sevaUserID])
-            });
+              Firestore.instance
+                  .collection("timebanknew")
+                  .document(f.data['timebankId'])
+                  .updateData({
+                'members': FieldValue.arrayUnion(
+                    [this._createEditCommunity.value.loggedinuser.sevaUserID])
+              });
 
-            Firestore.instance
-                .collection("timebanknew")
-                .document(f.data['timebankId'])
-                .get()
-                .then((DocumentSnapshot timeBank) async {
-              updateUser(timeBank.data);
-              await func(timeBank.data['name'].toString());
-            });
+              Firestore.instance
+                  .collection("timebanknew")
+                  .document(f.data['timebankId'])
+                  .get()
+                  .then((DocumentSnapshot timeBank) async {
+                updateUser(timeBank.data);
+                await func(timeBank.data['name'].toString());
+              });
+            }
           }
         });
       } else {

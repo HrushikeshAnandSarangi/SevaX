@@ -1,14 +1,32 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/views/switch_timebank.dart';
 
 class TransferOwnerShipView extends StatefulWidget {
-  final TimebankModel timebankModel;
+  final String timebankId;
+  final Map<String, dynamic> responseData;
+  final String memberName;
+  final String memberSevaUserId;
+  final String memberPhotUrl;
+  final bool isComingFromExit;
 
-  TransferOwnerShipView({this.timebankModel});
+  TransferOwnerShipView(
+      {this.timebankId,
+      this.responseData,
+      this.isComingFromExit,
+      this.memberName,
+      this.memberSevaUserId,
+      this.memberPhotUrl});
 
   @override
   _TransferOwnerShipViewState createState() => _TransferOwnerShipViewState();
@@ -19,20 +37,33 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
   TextEditingController _textEditingController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   var groupMembersList = List<String>();
-
+  var ownerGroupsArr;
+  UserModel selectedNewOwner = null;
+  var allItems = List<String>();
+  var admins, coordinators, members;
+  TimebankModel tbmodel;
+  var futures = <Future>[];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getMembersList();
+    ownerGroupsArr = widget.responseData['ownerGroupsArr'];
   }
 
   void getMembersList() {
-    FirestoreManager.getAllTimebankIdStream(
-      timebankId: widget.timebankModel.id,
+    FirestoreManager.getTimebankIdStream(
+      timebankId: widget.timebankId,
     ).then((onValue) {
       setState(() {
-        groupMembersList = onValue;
+        tbmodel = onValue;
+        admins = onValue.admins;
+        coordinators = onValue.coordinators;
+        members = onValue.members;
+        allItems.addAll(admins);
+        allItems.addAll(coordinators);
+        allItems.addAll(members);
+        groupMembersList = allItems;
       });
     });
   }
@@ -47,7 +78,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
           icon: Icon(Icons.arrow_back_ios),
         ),
         title: Text(
-          'Delete User',
+          'Remove User',
           style: TextStyle(
               fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Europa'),
         ),
@@ -61,7 +92,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'User Name',
+                widget.memberName,
                 style: TextStyle(
                     fontSize: 18,
                     fontFamily: 'Europa',
@@ -78,18 +109,21 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                   fontFamily: 'Europa',
                 ),
               ),
+              SizedBox(
+                height: 15,
+              ),
+              getDataList(ownerGroupsArr),
+              SizedBox(
+                height: 15,
+              ),
               searchUser(),
               SizedBox(
                 height: 15,
               ),
-              getDataList(),
-              SizedBox(
-                height: 15,
-              ),
-              getInfoWidget(),
-              SizedBox(
-                height: 15,
-              ),
+//              getInfoWidget(),
+//              SizedBox(
+//                height: 15,
+//              ),
               Text(
                 'Transfer to',
                 style: TextStyle(
@@ -131,17 +165,87 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
             Navigator.pop(context);
           },
           child: Text(
-            "CANCEL",
+            "Cancel",
             style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa'),
           ),
           textColor: Colors.grey,
         ),
         FlatButton(
-          onPressed: () {},
-          child: Text("DELETE",
+          child: Text("Remove",
               style:
                   TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa')),
           textColor: FlavorConfig.values.theme.primaryColor,
+          onPressed: () async {
+            if (selectedNewOwner == null) {
+              print("reporter timebank creator id is ${tbmodel.creatorId}");
+              ownerGroupsArr.forEach((group) => futures.add(Firestore.instance
+                      .collection('users')
+                      .document(group['id'])
+                      .updateData({
+                    "creator_id": tbmodel.creatorId,
+                    "email_id": tbmodel.emailId
+                  })));
+              await Future.wait(futures);
+              Map<String, dynamic> responseObj = await removeMemberFromTimebank(
+                  sevauserid: widget.memberSevaUserId, timebankId: tbmodel.id);
+              if (responseObj['deletable'] == true) {
+                print(
+                    "else block---done transferring and removing the user from timebank");
+                if (widget.isComingFromExit) {
+                  sendNotificationToAdmin();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SwitchTimebank(),
+                    ),
+                  );
+                } else {
+                  getSuccessDialog(context);
+                  Navigator.of(context).pop();
+                }
+              } else {
+                print("else error block");
+                getErrorDialog(context);
+                Navigator.of(context).pop();
+              }
+            } else {
+              print("new owner creator id is ${selectedNewOwner.sevaUserID}");
+              ownerGroupsArr.forEach((group) {
+                print("groupppppp=== ${group['id']}");
+                futures.add(Firestore.instance
+                    .collection('timebanknew')
+                    .document(group['id'])
+                    .updateData({
+                  "creator_id": selectedNewOwner.sevaUserID,
+                  "email_id": selectedNewOwner.email
+                }));
+              });
+              await Future.wait(futures);
+              Map<String, dynamic> responseObj = await removeMemberFromTimebank(
+                  sevauserid: widget.memberSevaUserId, timebankId: tbmodel.id);
+              print(
+                  "===response data of removal is${responseObj.toString()}===");
+              if (responseObj['deletable'] == true) {
+                print(
+                    "else block---done transferring and removing the user from timebank");
+                if (widget.isComingFromExit) {
+                  sendNotificationToAdmin();
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => HomePageRouter(),
+                      ),
+                      (Route<dynamic> route) => false);
+                } else {
+                  getSuccessDialog(context);
+                  Navigator.of(context).pop();
+                }
+              } else {
+                print("else error block");
+                getErrorDialog(context);
+                Navigator.of(context).pop();
+              }
+            }
+          },
         )
       ],
     );
@@ -199,16 +303,18 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
             queryString: pattern, validItems: groupMembersList);
       },
       itemBuilder: (context, suggestion) {
-        print("suggest ${suggestion}");
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            suggestion.fullname,
-            style: TextStyle(
-              fontSize: 16,
-            ),
-          ),
-        );
+        // print("suggest ${suggestion}");
+        return suggestion.sevaUserID != widget.memberSevaUserId
+            ? Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  suggestion.fullname,
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              )
+            : Offstage();
       },
       noItemsFoundBuilder: (context) {
         return Padding(
@@ -220,6 +326,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
         );
       },
       onSuggestionSelected: (suggestion) {
+        selectedNewOwner = suggestion;
         _textEditingController.clear();
 //        if (!_selectedInterests.containsValue(suggestion)) {
 //          controller.close();
@@ -247,28 +354,94 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
     );
   }
 
-  Widget getDataList() {
-    //Stream builder should get implement to show groups or timebanks
-//    return StreamBuilder(
-//      stream: ,
-//      builder: ,
-//    );
-
+  Widget getDataList(ownerGroupsArr) {
     return ListView.builder(
         physics: NeverScrollableScrollPhysics(),
-        itemCount: 3,
+        itemCount: ownerGroupsArr.length,
         shrinkWrap: true,
         itemBuilder: (context, index) {
-          return timeBankOrGroupCard();
+          return timeBankOrGroupCard(ownerGroupsArr[index]);
         });
+  }
+
+  getSuccessDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          content: new Text("User is successfully removed from the timebank"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  getErrorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          content:
+              new Text("Error occured! Please come back later and try again. "),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              textColor: Colors.red,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void sendNotificationToAdmin({
+    String communityId,
+  }) async {
+    UserExitModel userExitModel = UserExitModel(
+        userPhotoUrl: widget.memberPhotUrl,
+        timebank: tbmodel.name,
+        reason: globals.userExitReason ?? "User Exited",
+        userName: widget.memberName);
+
+    NotificationsModel notification = NotificationsModel(
+        id: utils.Utils.getUuid(),
+        timebankId: tbmodel.id,
+        data: userExitModel.toMap(),
+        isRead: false,
+        type: NotificationType.TypeMemberExitTimebank,
+        communityId: tbmodel.communityId,
+        senderUserId: widget.memberSevaUserId,
+        targetUserId: tbmodel.creatorId);
+    print("bhhfhff ${userExitModel} ");
+    print(" timebank id ${tbmodel.id + tbmodel.members.toString()}");
+    await Firestore.instance
+        .collection('timebanknew')
+        .document(tbmodel.id)
+        .collection("notifications")
+        .document(notification.id)
+        .setData(notification.toMap());
   }
 }
 
-Widget timeBankOrGroupCard() {
+Widget timeBankOrGroupCard(ownerGroupData) {
   return Card(
     elevation: 1,
     child: ListTile(
-      title: Text("Group or Timebank Name"),
+      title: Text(ownerGroupData['name']),
     ),
   );
 }
