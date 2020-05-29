@@ -304,12 +304,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                           ),
                           TextSpan(
                             text: () {
-                              return FlavorConfig.appFlavor ==
-                                      Flavor.HUMANITY_FIRST
-                                  ? '${model.credits} Yang Bucks'
-                                  : FlavorConfig.appFlavor == Flavor.TULSI
-                                      ? '${model.credits} Tulsi Tokens'
-                                      : '${model.credits} Seva Credits';
+                              return '${model.credits} Seva Credits';
                             }(),
                             style: TextStyle(
                               color: Colors.black,
@@ -371,11 +366,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     children: [
                       TextSpan(
                         text: () {
-                          return FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                              ? '${model.credits} Yang Bucks '
-                              : FlavorConfig.appFlavor == Flavor.TULSI
-                                  ? '${model.credits} Tulsi TOkens '
-                                  : '${model.credits} Seva Credits ';
+                          return '${model.credits} Seva Credits ';
                         }(),
                         style: TextStyle(
                           color: Colors.black,

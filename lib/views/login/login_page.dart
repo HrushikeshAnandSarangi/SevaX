@@ -9,7 +9,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -42,7 +41,6 @@ class _LoginPageState extends State<LoginPage> {
   Color enabled = Colors.white.withAlpha(120);
 
   void initState() {
-//    checkLoggedInState();
     super.initState();
     if (Platform.isIOS) {
       AppleSignIn.onCredentialRevoked.listen((_) {
@@ -51,38 +49,6 @@ class _LoginPageState extends State<LoginPage> {
     }
     fetchRemoteConfig();
   }
-
-//  void checkLoggedInState() async {
-//    final userId = await FlutterSecureStorage().read(key: "userId");
-//    if (userId == null) {
-//      print("No stored user ID");
-//      return;
-//    }
-//
-//    final credentialState = await AppleSignIn.getCredentialState(userId);
-//    switch (credentialState.status) {
-//      case CredentialStatus.authorized:
-//        print("getCredentialState returned authorized");
-//        break;
-//
-//      case CredentialStatus.error:
-//        print(
-//            "getCredentialState returned an error: ${credentialState.error.localizedDescription}");
-//        break;
-//
-//      case CredentialStatus.revoked:
-//        print("getCredentialState returned revoked");
-//        break;
-//
-//      case CredentialStatus.notFound:
-//        print("getCredentialState returned not found");
-//        break;
-//
-//      case CredentialStatus.transferred:
-//        print("getCredentialState returned not transferred");
-//        break;
-//    }
-//  }
 
   Future<void> fetchRemoteConfig() async {
     AppConfig.remoteConfig = await RemoteConfig.instance;
@@ -101,10 +67,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    //   statusBarBrightness: Brightness.light,
-    //   // statusBarColor: Color(0x0FF766FE0),
-    // ));
     UserData.shared.isFromLogin = true;
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
     ScreenUtil.instance =
@@ -255,7 +217,6 @@ class _LoginPageState extends State<LoginPage> {
                                                       _textFieldControllerResetEmail =
                                                           value;
                                                     },
-                                                    // validator: validateEmail,
                                                     onChanged: (value) {
                                                       print("$value");
                                                     },
@@ -266,11 +227,6 @@ class _LoginPageState extends State<LoginPage> {
                                                     decoration: InputDecoration(
                                                       hintText:
                                                           "Your email address",
-                                                      // errorText: isEmailValidForReset
-                                                      //     ? null
-                                                      //     : validateEmail(
-                                                      //         _textFieldControllerResetEmail.text,
-                                                      //       ),
                                                     ),
                                                   ),
                                                 ),
@@ -385,64 +341,27 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: isLoading
                             ? null
                             : () async {
-                              var connResult = await Connectivity().checkConnectivity();
-                              if(connResult == ConnectivityResult.none){
-                                _scaffoldKey.currentState.showSnackBar(
-                                  SnackBar(
-                                    content: Text("Please check your internet connection."),
-                                    action: SnackBarAction(
-                                      label: 'Dismiss',
-                                      onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                                var connResult =
+                                    await Connectivity().checkConnectivity();
+                                if (connResult == ConnectivityResult.none) {
+                                  _scaffoldKey.currentState.showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          "Please check your internet connection."),
+                                      action: SnackBarAction(
+                                        label: 'Dismiss',
+                                        onPressed: () => _scaffoldKey
+                                            .currentState
+                                            .hideCurrentSnackBar(),
+                                      ),
                                     ),
-                                  ),
-                                );
-                                return ;
-                              }
-
-                              signInWithEmailAndPassword();
+                                  );
+                                  return;
+                                }
+                                signInWithEmailAndPassword();
                               },
                       ),
                     ),
-                    // InkWell(
-                    //   child: Container(
-                    //     width: ScreenUtil.getInstance().setWidth(250),
-                    //     height: ScreenUtil.getInstance().setHeight(70),
-                    //     decoration: BoxDecoration(
-                    //         gradient: LinearGradient(colors: [
-                    //           Theme.of(context).accentColor,
-                    //           Theme.of(context).accentColor
-                    //         ]),
-                    //         borderRadius: BorderRadius.circular(50.0),
-                    //         boxShadow: [
-                    //           BoxShadow(
-                    //               color: Theme.of(context)
-                    //                   .accentColor
-                    //                   .withOpacity(.3),
-                    //               offset: Offset(0.0, 8.0),
-                    //               blurRadius: 8.0)
-                    //         ]),
-                    //     child: Material(
-                    //       color: Colors.transparent,
-                    //       child: InkWell(
-                    //         onTap: isLoading
-                    //             ? null
-                    //             : () {
-                    //                 signInWithEmailAndPassword();
-                    //               },
-                    //         child: Center(
-                    //           child: Text(
-                    //             "Sign in",
-                    //             style: TextStyle(
-                    //               color: FlavorConfig.values.buttonTextColor,
-                    //               fontSize: 18,
-                    //               letterSpacing: 1.0,
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                     SizedBox(height: 8),
                     Text('or'),
                     SizedBox(height: 8),
@@ -451,8 +370,8 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: ScreenUtil.getInstance().setHeight(30),
                     ),
-//                    futureLoginBtn,
-                    (FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)
+                    (FlavorConfig.appFlavor == Flavor.APP ||
+                            FlavorConfig.appFlavor == Flavor.SEVA_DEV)
                         ? Offstage()
                         : poweredBySevaLogo,
                     SizedBox(height: 16),
@@ -472,7 +391,6 @@ class _LoginPageState extends State<LoginPage> {
                       children: <Widget>[
                         CircularProgressIndicator(),
                         SizedBox(width: 20),
-                        // Text('Loading ...',style: Text,)
                       ],
                     )),
                   )
@@ -482,76 +400,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-//  Widget get futureLoginBtn {
-//    return FutureBuilder<bool>(
-//      future: _isAvailableFuture,
-//      builder: (context, isAvailableSnapshot) {
-//        if (!isAvailableSnapshot.hasData) {
-//          return Container(child: Text('Loading...'));
-//        }
-//
-//        return isAvailableSnapshot.data
-//            ? Column(
-//                mainAxisAlignment: MainAxisAlignment.center,
-//                crossAxisAlignment: CrossAxisAlignment.center,
-//                children: [
-//                    SizedBox(
-//                      height: 10,
-//                    ),
-//                    AppleSignInButton(
-//                      onPressed: logIn,
-//                    ),
-////                    if (errorMessage != null) Text(errorMessage),
-//                    SizedBox(
-//                      height: 500,
-//                    ),
-//                    RaisedButton(
-//                      child: Text("Button Test Page"),
-//                      onPressed: () {
-////                        Navigator.push(
-////                            context,
-////                            MaterialPageRoute(
-////                                builder: (_) => ButtonTestPage()));
-//                      },
-//                    )
-//                  ])
-//            : Text('Sign in With Apple not available. Must be run on iOS 13+');
-//      },
-//    );
-//  }
-//
-//  void logIn() async {
-//    final AuthorizationResult result = await AppleSignIn.performRequests([
-//      AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
-//    ]);
-//
-//    switch (result.status) {
-//      case AuthorizationStatus.authorized:
-//
-//        // Store user ID
-//        await FlutterSecureStorage()
-//            .write(key: "userId", value: result.credential.user);
-//        print("Hello correct authorized");
-//        // Navigate to secret page (shhh!)
-////        Navigator.of(context).pushReplacement(MaterialPageRoute(
-////            builder: (_) =>
-////                SecretMembersOnlyPage(credential: result.credential)));
-//        break;
-//
-//      case AuthorizationStatus.error:
-//        print("Sign in failed: ${result.error.localizedDescription}");
-//        print("Hello correct authorized");
-////        setState(() {
-////          errorMessage = "Sign in failed 😿";
-////        });
-//        break;
-//
-//      case AuthorizationStatus.cancelled:
-//        print('User cancelled');
-//        break;
-//    }
-//  }
 
   bool get isLoading => this._isLoading;
 
@@ -563,50 +411,16 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       child: Column(
         children: <Widget>[
-          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-              ? Text(
-                  'Humanity\nFirst'.toUpperCase(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    height: 1,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.black45,
-                    fontSize: ScreenUtil.getInstance().setSp(45),
-                    letterSpacing: 5,
-                  ),
-                )
-              : Offstage(),
+          Offstage(),
           SizedBox(
             height: 16,
           ),
-          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-              ? Image.asset(
-                  'lib/assets/images/new_yang.png',
-                  height: 90,
-                  fit: BoxFit.fill,
-                  width: 180,
-                )
-              : FlavorConfig.appFlavor == Flavor.TULSI
-                  ? SvgPicture.asset(
-                      'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
-                      height: 100,
-                      fit: BoxFit.fill,
-                      width: 100,
-                      color: Colors.white,
-                    )
-                  : FlavorConfig.appFlavor == Flavor.TOM
-                      ? SvgPicture.asset(
-                          'lib/assets/ts2020-logo-w.svg',
-                          height: 90,
-                          fit: BoxFit.fill,
-                          width: 90,
-                        )
-                      : Image.asset(
-                          'lib/assets/images/seva-x-logo.png',
-                          height: 80,
-                          fit: BoxFit.fill,
-                          width: 280,
-                        )
+          Image.asset(
+            'lib/assets/images/seva-x-logo.png',
+            height: 80,
+            fit: BoxFit.fill,
+            width: 280,
+          )
         ],
       ),
     );
@@ -617,7 +431,6 @@ class _LoginPageState extends State<LoginPage> {
       1.5,
       new Container(
         width: double.infinity,
-        // height: ScreenUtil.getInstance().setHeight(250),
         decoration: BoxDecoration(color: Colors.white),
         child: Padding(
             padding: EdgeInsets.only(top: 8.0, bottom: 0.0),
@@ -632,7 +445,7 @@ class _LoginPageState extends State<LoginPage> {
                     cursorColor: Colors.black54,
                     validator: _validateEmailId,
                     onSaved: _saveEmail,
-                    onFieldSubmitted: (v){
+                    onFieldSubmitted: (v) {
                       FocusScope.of(context).requestFocus(pwdFocus);
                     },
                     decoration: InputDecoration(
@@ -674,138 +487,6 @@ class _LoginPageState extends State<LoginPage> {
                         )),
                   ),
                   SizedBox(height: 22),
-                  // SizedBox(height: 32),
-                  // Column(
-                  //   children: <Widget>[
-                  //     Container(
-                  //       margin: EdgeInsets.all(12),
-                  //       child: FlatButton(
-                  //         onPressed: () {
-                  //           showDialog(
-                  //               context: context,
-                  //               builder: (context) {
-                  //                 return AlertDialog(
-                  //                   title: Text(
-                  //                     'Enter email',
-                  //                   ),
-                  //                   content: Form(
-                  //                     key: _formKeyDialog,
-                  //                     child: TextFormField(
-                  //                       validator: (value) {
-                  //                         if (value.isEmpty) {
-                  //                           return 'Please enter email to update';
-                  //                         } else if (!validateEmail(
-                  //                             value.trim())) {
-                  //                           return 'Please enter a valid email';
-                  //                         }
-                  //                         _textFieldControllerResetEmail =
-                  //                             value;
-                  //                       },
-                  //                       // validator: validateEmail,
-                  //                       onChanged: (value) {
-                  //                         print("$value");
-                  //                       },
-                  //                       initialValue: "",
-                  //                       keyboardType:
-                  //                           TextInputType.emailAddress,
-                  //                       controller: null,
-                  //                       decoration: InputDecoration(
-                  //                         hintText: "Your email address",
-                  //                         // errorText: isEmailValidForReset
-                  //                         //     ? null
-                  //                         //     : validateEmail(
-                  //                         //         _textFieldControllerResetEmail.text,
-                  //                         //       ),
-                  //                       ),
-                  //                     ),
-                  //                   ),
-                  //                   actions: <Widget>[
-                  //                     new FlatButton(
-                  //                       child: new Text(
-                  //                         'Cancel',
-                  //                         style: TextStyle(
-                  //                           fontSize: dialogButtonSize,
-                  //                         ),
-                  //                       ),
-                  //                       onPressed: () {
-                  //                         Navigator.of(context).pop(
-                  //                           {
-                  //                             "sendResetLink": false,
-                  //                             "userEmail": null
-                  //                           },
-                  //                         );
-                  //                       },
-                  //                     ),
-                  //                     new FlatButton(
-                  //                       child: new Text(
-                  //                         'Reset Password',
-                  //                         style: TextStyle(
-                  //                           fontSize: dialogButtonSize,
-                  //                         ),
-                  //                       ),
-                  //                       onPressed: () {
-                  //                         if (!_formKeyDialog.currentState
-                  //                             .validate()) {
-                  //                           return;
-                  //                         }
-                  //                         Navigator.of(context).pop({
-                  //                           "sendResetLink": true,
-                  //                           "userEmail":
-                  //                               _textFieldControllerResetEmail
-                  //                                   .trim()
-                  //                         });
-                  //                       },
-                  //                     )
-                  //                   ],
-                  //                 );
-                  //               }).then((onActivityResult) {
-                  //             if (onActivityResult != null &&
-                  //                 onActivityResult['sendResetLink'] != null &&
-                  //                 onActivityResult['sendResetLink'] &&
-                  //                 onActivityResult['userEmail'] != null &&
-                  //                 onActivityResult['userEmail']
-                  //                     .toString()
-                  //                     .isNotEmpty) {
-                  //               print("send reset link");
-                  //               resetPassword(onActivityResult['userEmail']);
-                  //               _scaffoldKey.currentState.hideCurrentSnackBar();
-                  //             } else {
-                  //               print("Cancelled forgot passowrd");
-                  //             }
-                  //           });
-                  //         },
-                  //         child: Text(
-                  //           "Forgot password",
-                  //           style: TextStyle(
-                  //             color: Colors.white,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  // SizedBox(height: 8),
-                  // FlatButton(
-                  //   materialTapTargetSize: MaterialTapTargetSize.padded,
-                  //   padding: EdgeInsets.all(0),
-                  //   onPressed: () async {
-                  //     isLoading = true;
-                  //     UserModel user = await Navigator.of(context).push(
-                  //       MaterialPageRoute<UserModel>(
-                  //         builder: (context) => RegisterPage(),
-                  //       ),
-                  //     );
-                  //     isLoading = false;
-                  //     if (user != null) _processLogin(user);
-                  //   },
-                  //   child: Text(
-                  //     'Create an Account',
-                  //     style: TextStyle(
-                  //         color: Theme.of(context).accentColor,
-                  //         fontWeight: FontWeight.w700),
-                  //   ),
-                  // )
-                  // SizedBox(height: 30),
                 ],
               ),
             )),
@@ -814,8 +495,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   String _textFieldControllerResetEmail = "";
-  // TextEditingController _textFieldControllerResetEmail =
-  //     TextEditingController();
 
   bool isEmailValidForReset = false;
   bool validateEmail(String value) {
@@ -863,10 +542,6 @@ class _LoginPageState extends State<LoginPage> {
               width: 16,
             ),
             googleLogin,
-
-//            Container(
-//              height: 10,
-//            ),
           ],
         ),
       );
@@ -875,6 +550,7 @@ class _LoginPageState extends State<LoginPage> {
       child: googleLogin,
     );
   }
+
   Widget get appleLogin {
     return Material(
       color: Colors.white,
@@ -882,7 +558,7 @@ class _LoginPageState extends State<LoginPage> {
       child: InkWell(
         customBorder: CircleBorder(),
         onTap: appleLogIn,
-        child:  SizedBox(
+        child: SizedBox(
           height: 44,
           width: 44,
           child: Image.asset('lib/assets/images/signin_apple.png'),
@@ -975,7 +651,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void appleLogIn() async {
     var connResult = await Connectivity().checkConnectivity();
-    if(connResult == ConnectivityResult.none){
+    if (connResult == ConnectivityResult.none) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
           content: Text("Please check your internet connection."),
@@ -985,7 +661,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       );
-      return ;
+      return;
     }
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
@@ -1024,7 +700,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void useGoogleSignIn() async {
     var connResult = await Connectivity().checkConnectivity();
-    if(connResult == ConnectivityResult.none){
+    if (connResult == ConnectivityResult.none) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
           content: Text("Please check your internet connection."),
@@ -1034,7 +710,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       );
-      return ;
+      return;
     }
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
@@ -1049,7 +725,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void signInWithEmailAndPassword() async {
-
     if (!_formKey.currentState.validate()) return;
     FocusScope.of(context).requestFocus(FocusNode());
     _formKey.currentState.save();

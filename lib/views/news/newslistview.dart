@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -56,110 +55,6 @@ class NewsListState extends State<NewsList> {
             Expanded(
               child: Text(''),
             ),
-            // Expanded(
-            //   child: StreamBuilder<Object>(
-            //     stream: FirestoreManager.getTimebanksForUserStream(
-            //       userId: SevaCore.of(context).loggedInUser.sevaUserID,
-            //     ),
-            //     builder: (context, snapshot) {
-            //       if (snapshot.hasError)
-            //         return Text('Please make sure you have GPS turned on.');
-            //       if (snapshot.connectionState == ConnectionState.waiting) {
-            //         return Center(child: CircularProgressIndicator());
-            //       }
-            //       timebankList = snapshot.data;
-            //       List<String> dropdownList = [];
-
-            //       int adminOfCount = 0;
-            //       if (FlavorConfig.values.timebankName == "Yang 2020") {
-            //         dropdownList.add("Create Yang Gang");
-            //       }
-            //       timebankList.forEach((t) {
-            //         dropdownList.add(t.id);
-
-            //         if (t.admins.contains(
-            //             SevaCore.of(context).loggedInUser.sevaUserID)) {
-            //           adminOfCount++;
-
-            //           SevaCore.of(context)
-            //               .loggedInUser
-            //               .timebankIdForYangGangAdmin = t.id;
-            //         }
-            //       });
-
-            //       SevaCore.of(context).loggedInUser.associatedWithTimebanks =
-            //           dropdownList.length;
-            //       SevaCore.of(context).loggedInUser.adminOfYanagGangs =
-            //           adminOfCount;
-
-            //       return DropdownButtonHideUnderline(
-            //         child: DropdownButton<String>(
-
-            //               isExpanded: false,
-            //           value: timebankId,
-            //           onChanged: (String newValue) {
-            //             if (newValue == "Create Yang Gang") {
-            //               createSubTimebank(context);
-            //             } else {
-            //               setState(() {
-            //                 timebankId = newValue;
-            //                 SevaCore.of(context).loggedInUser.currentTimebank =
-            //                     newValue;
-            //                 SevaCore.of(context).loggedInUser.adminOfYanagGangs =
-            //                     adminOfCount;
-
-            //                 didChangeDependencies();
-            //               });
-            //             }
-            //           },
-            //           items: dropdownList
-            //               .map<DropdownMenuItem<String>>((String value) {
-            //             if (value == "Create Yang Gang") {
-            //               return DropdownMenuItem<String>(
-            //                 value: value,
-            //                 child: Text(
-            //                   value,
-            //                   style: TextStyle(color: Colors.red),
-            //                 ),
-            //               );
-            //             } else {
-            //               if (value == 'All') {
-            //                 return DropdownMenuItem<String>(
-            //                   value: value,
-            //                   child: Text(value),
-            //                 );
-            //               } else {
-            //                 return DropdownMenuItem<String>(
-
-            //                   value: value,
-            //                   child: FutureBuilder<Object>(
-            //                       future: FirestoreManager.getTimeBankForId(
-            //                           timebankId: value),
-            //                       builder: (context, snapshot) {
-            //                         if (snapshot.hasError)
-            //                           return Text(
-            //                               'Please make sure you have GPS turned on.');
-            //                         if (snapshot.connectionState ==
-            //                             ConnectionState.waiting) {
-            //                           return Offstage();
-            //                         }
-            //                         TimebankModel timebankModel = snapshot.data;
-            //                         return Text(
-            //                           timebankModel.name,
-            //                           maxLines: 1,
-            //                           overflow: TextOverflow.ellipsis,
-            //                           style: TextStyle(fontSize: 14.0),
-            //                         );
-            //                       }),
-            //                 );
-            //               }
-            //             }
-            //           }).toList(),
-            //         ),
-            //       );
-            //     },
-            //   ),
-            // ),
             Container(
               width: 105,
               child: CupertinoSegmentedControl<int>(
@@ -185,26 +80,8 @@ class NewsListState extends State<NewsList> {
                     });
                   }
                 },
-                //groupValue: sharedValue,
               ),
             ),
-
-//            RaisedButton(
-//              onPressed: () {
-//                setState(() {
-//                  if (isNearMe == true) {
-//                    isNearMe = false;
-//                    //globals.nearme = isNearMe;
-//                  } else {
-//                    isNearMe = true;
-//                    //globals.nearme = isNearMe;
-//                  }
-//                });
-//              },
-//              child: isNearMe == false ? Text('Near Me') : Text('All'),
-//              color: Theme.of(context).accentColor,
-//              textColor: Colors.white,
-//            ),
             Padding(
               padding: EdgeInsets.only(right: 5),
             ),
@@ -490,9 +367,6 @@ class NewsListState extends State<NewsList> {
                             news.placeAddress == null
                                 ? ""
                                 : news.placeAddress.trim(),
-                            // overflow: TextOverflow.ellipsis,
-                            // maxLines: 1,
-                            // style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
@@ -515,29 +389,6 @@ class NewsListState extends State<NewsList> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                // Text(news.title,
-                                //     overflow: TextOverflow.ellipsis,
-                                //     maxLines: 1,
-                                //     style: TextStyle(
-                                //       fontSize: 16,
-                                //       color: Colors.black,
-                                //       fontWeight: FontWeight.w600,
-                                //     )),
-                                // Linkify(
-                                //   text:
-                                //       'http://www.espncricinfo.com/story/_/id/25950138/daryl-mitchell-lbw-brings-drs-back-spotlight',
-                                //   onOpen: (url) async {
-                                //     if (await canLaunch(url)) {
-                                //       await launch(url);
-                                //     } else {
-                                //       throw 'Could not launch $url';
-                                //     }
-                                //   },
-                                //   style: TextStyle(
-                                //     fontWeight: FontWeight.bold,
-                                //     fontSize: 16.0,
-                                //   ),
-                                // ),
                                 Container(
                                   margin: EdgeInsets.only(top: 5),
                                   child: Text(
@@ -576,80 +427,18 @@ class NewsListState extends State<NewsList> {
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                // Expanded(
-                                //   child: getOptionButtons(
-                                //     Row(
-                                //       // mainAxisSize: MainAxisSize.min,
-                                //       mainAxisAlignment:
-                                //           MainAxisAlignment.start,
-                                //       children: <Widget>[
-                                //         // SizedBox(width: 16),
-                                //         // FlavorConfig.appFlavor ==
-                                //         //             Flavor.HUMANITY_FIRST ||
-                                //         //         FlavorConfig.appFlavor ==
-                                //         //             Flavor.APP
-                                //         //     ? Icon(
-                                //         //         Icons.perm_contact_calendar,
-                                //         //         color: Theme.of(context)
-                                //         //             .accentColor,
-                                //         //         size: 20,
-                                //         //       )
-                                //         //     : SvgPicture.asset(
-                                //         //         'lib/assets/tulsi_icons/tulsi2020_icons_author-profile-icon.svg',
-                                //         //         height: 16,
-                                //         //         width: 16,
-                                //         //       ),
-                                //         // Padding(
-                                //         //   padding:
-                                //         //       const EdgeInsets.only(left: 5),
-                                //         //   child: Text(
-                                //         //     news.fullName,
-                                //         //     overflow: TextOverflow.ellipsis,
-                                //         //     maxLines: 1,
-                                //         //     style: TextStyle(
-                                //         //       fontSize: 14,
-                                //         //     ),
-                                //         //   ),
-                                //         // ),
-                                //       ],
-                                //     ),
-                                //     () {
-                                //       String emailId = news.email;
-                                //       Navigator.push(
-                                //         context,
-                                //         MaterialPageRoute(
-                                //           builder: (context) => ProfileViewer(
-                                //             userEmail: emailId,
-                                //           ),
-                                //         ),
-                                //       );
-                                //     },
-                                //   ),
-                                // ),
                                 news.sevaUserId !=
                                         SevaCore.of(context)
                                             .loggedInUser
                                             .sevaUserID
                                     ? getOptionButtons(
                                         Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 6, vertical: 2),
-                                          child: FlavorConfig.appFlavor ==
-                                                      Flavor.HUMANITY_FIRST ||
-                                                  FlavorConfig.appFlavor ==
-                                                      Flavor.APP
-                                              ? Icon(
-                                                  Icons.flag,
-                                                  size: 20,
-                                                )
-                                              : SvgPicture.asset(
-                                                  'lib/assets/tulsi_icons/tulsi2020_icons_share-icon.svg',
-                                                  height: 20,
-                                                  width: 20,
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                ),
-                                        ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 6, vertical: 2),
+                                            child: Icon(
+                                              Icons.flag,
+                                              size: 20,
+                                            )),
                                         () {
                                           if (news.reports.contains(
                                               SevaCore.of(context)
@@ -659,7 +448,6 @@ class NewsListState extends State<NewsList> {
                                               context: context,
                                               builder:
                                                   (BuildContext viewContextS) {
-                                                // return object of type Dialog
                                                 return AlertDialog(
                                                   title:
                                                       Text('Already reported!'),
@@ -689,7 +477,6 @@ class NewsListState extends State<NewsList> {
                                               context: context,
                                               builder:
                                                   (BuildContext viewContext) {
-                                                // return object of type Dialog
                                                 return AlertDialog(
                                                   title: Text('Report Feed?'),
                                                   content: Text(
@@ -775,24 +562,6 @@ class NewsListState extends State<NewsList> {
                                     ),
                                   ),
                                   () {
-                                    // bool isShare = true;
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) =>
-                                    //         // NewChat(isShare, news),
-                                    //         SelectMember.shareFeed(
-                                    //       timebankId: SevaCore.of(context)
-                                    //           .loggedInUser
-                                    //           .currentTimebank,
-                                    //       newsModel: news,
-                                    //       isFromShare: isShare,
-                                    //     ),
-                                    //   ),
-                                    // );
-
-                                    // SHARE ICON ON TAP
-
                                     if (SevaCore.of(context)
                                             .loggedInUser
                                             .associatedWithTimebanks >
@@ -872,17 +641,6 @@ class NewsListState extends State<NewsList> {
                 ),
               ],
             ),
-            // !isFromMessage
-            //     ? Positioned(
-            //         bottom: 8,
-            //         right: 8,
-            //         child: Material(
-            //           color: Colors.white.withAlpha(100),
-            //           shape: CircleBorder(),
-            //           child:
-            //         ),
-            //       )
-            // : Center(),
           ],
         ),
       ),
@@ -920,20 +678,7 @@ class NewsListState extends State<NewsList> {
           padding: const EdgeInsets.all(8.0),
           child: child,
         ),
-        onTap: onPressed
-//        {
-//          Navigator.push(
-//            context,
-//            MaterialPageRoute(
-//              builder: (context) => UpdateApp(
-//                //userEmail: emailId,
-//              ),
-//            ),
-//          );
-//        }
-        ,
-        // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        // padding: EdgeInsets.all(0),
+        onTap: onPressed,
       ),
     );
   }
@@ -974,9 +719,7 @@ class NewsListState extends State<NewsList> {
                 case EntityType.timebank:
                   loadTimebankForId(context, entityModel.entityId);
                   break;
-                // case EntityType.campaign:
-                //   loadCampaignForId(context, entityModel.entityId);
-                //   break;
+
                 default:
                   break;
               }
@@ -1006,21 +749,6 @@ class NewsListState extends State<NewsList> {
       ),
     );
   }
-
-  // void loadCampaignForId(
-  //   BuildContext context,
-  //   String campaignId,
-  // ) {
-  //   Navigator.of(context).push(
-  //     MaterialPageRoute(
-  //       builder: (context) {
-  //         return CampaignView(
-  //           campaignId: campaignId,
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
 }
 
 Future _getLocation(

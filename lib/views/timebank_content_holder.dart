@@ -41,7 +41,6 @@ class TimebankTabsViewHolder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TabarView(
-      // loggedInUser: loggedInUser,
       timebankId: timebankId,
       timebankModel: timebankModel,
     );
@@ -54,8 +53,6 @@ class TabarView extends StatelessWidget {
   final String timebankId;
   TimebankModel timebankModel;
 
-  //final UserModel loggedInUser;
-  //TabarView({this.loggedInUser, this.timebankId, this.timebankModel});
   TabarView({this.timebankId, this.timebankModel});
 
   @override
@@ -169,9 +166,6 @@ Widget createAdminTabBar(
               Tab(
                 text: "About",
               ),
-              // Tab(
-              //   text: "Bookmarked Offers",
-              // ),
               Tab(
                 text: "Members",
               ),
@@ -186,7 +180,6 @@ Widget createAdminTabBar(
             ],
           ),
           Expanded(
-            // height: MediaQuery.of(context).size.height - 137,
             child: TabBarView(
               children: [
                 DiscussionList(
@@ -210,10 +203,6 @@ Widget createAdminTabBar(
                   timebankModel: timebankModel,
                   email: SevaCore.of(context).loggedInUser.email,
                 ),
-                // AcceptedOffers(
-                //   sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-                //   timebankId: timebankModel.id,
-                // ),
                 TimebankRequestAdminPage(
                   isUserAdmin: timebankModel.admins
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID),
@@ -312,38 +301,10 @@ Widget createJoinedUserTabBar(
     child: Scaffold(
       appBar: AppBar(
         elevation: 0.5,
-        // backgroundColor: Colors.white,
         title: Text(
           timebankModel.name,
           style: TextStyle(fontSize: 18),
         ),
-        // bottom: ColoredTabBar(
-        //   color: Colors.white,
-        //   tabBar: TabBar(
-        //     labelColor: Theme.of(context).primaryColor,
-        //     unselectedLabelColor: Colors.grey,
-        //     indicatorColor: Color(0xFFF766FE0),
-        //     indicatorSize: TabBarIndicatorSize.label,
-        //     isScrollable: true,
-        //     tabs: [
-        //       Tab(
-        //         text: "Feeds",
-        //       ),
-        //       Tab(
-        //         text: "Requests",
-        //       ),
-        //       Tab(
-        //         text: "Offers",
-        //       ),
-        //       Tab(
-        //         text: "About",
-        //       ),
-        //       Tab(
-        //         text: "Members",
-        //       ),
-        //     ],
-        //   ),
-        // ),
       ),
       body: Column(
         children: <Widget>[
@@ -369,9 +330,6 @@ Widget createJoinedUserTabBar(
               Tab(
                 text: "About",
               ),
-              // Tab(
-              //   text: "Bookmarked Offers",
-              // ),
               Tab(
                 text: "Members",
               ),
@@ -401,10 +359,6 @@ Widget createJoinedUserTabBar(
                   timebankModel: timebankModel,
                   email: SevaCore.of(context).loggedInUser.email,
                 ),
-                // AcceptedOffers(
-                //   sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-                //   timebankId: timebankModel.id,
-                // ),
                 TimebankRequestAdminPage(
                   isUserAdmin: timebankModel.admins.contains(
                     SevaCore.of(context).loggedInUser.sevaUserID,
@@ -683,31 +637,6 @@ class DiscussionListState extends State<DiscussionList> {
             child: FlatButton(
               color: Color.fromARGB(50, 149, 149, 149),
               onPressed: () {},
-              // onPressed: () {
-              //   if (SevaCore.of(context).loggedInUser.associatedWithTimebanks >
-              //       1) {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (context) {
-              //           var selectTimeBankForNewRequest = SelectTimeBankForNewRequest;
-              //           return selectTimeBankForNewRequest("Feed");
-              //         },
-              //       ),
-              //     );
-              //   } else {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (context) => NewsCeate(
-              //           timebankId:
-              //               SevaCore.of(context).loggedInUser.currentTimebank,
-              //         ),
-              //       ),
-              //     );
-              //   }
-              //these
-              // },
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -768,26 +697,21 @@ class DiscussionListState extends State<DiscussionList> {
       }
     });
 
-    // print('pinned news ${pinnedNewsModel}');
     if (filteredNewsList.length > 1) {
       filteredNewsList.removeWhere((news) => news.isPinned == true);
     }
-    // print('filtered news ${filteredNewsList}');
 
     return filteredNewsList;
   }
 
   void _showAdminAccessMessage() {
-    // flutter defined function
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // return object of type Dialog
         return AlertDialog(
           title: new Text("Access denied."),
           content: new Text("You are not authorized to pin a feed."),
           actions: <Widget>[
-            // usually buttons at the bottom of the dialog
             new FlatButton(
               child: new Text("Close"),
               onPressed: () {
@@ -859,29 +783,6 @@ class DiscussionListState extends State<DiscussionList> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                // Text(news.title,
-                                //     overflow: TextOverflow.ellipsis,
-                                //     maxLines: 1,
-                                //     style: TextStyle(
-                                //       fontSize: 16,
-                                //       color: Colors.black,
-                                //       fontWeight: FontWeight.w600,
-                                //     )),
-                                // Linkify(
-                                //   text:
-                                //       'http://www.espncricinfo.com/story/_/id/25950138/daryl-mitchell-lbw-brings-drs-back-spotlight',
-                                //   onOpen: (url) async {
-                                //     if (await canLaunch(url)) {
-                                //       await launch(url);
-                                //     } else {
-                                //       throw 'Could not launch $url';
-                                //     }
-                                //   },
-                                //   style: TextStyle(
-                                //     fontWeight: FontWeight.bold,
-                                //     fontSize: 16.0,
-                                //   ),
-                                // ),
                                 Container(
                                   margin: EdgeInsets.only(top: 5),
                                   child: Text(
@@ -896,7 +797,6 @@ class DiscussionListState extends State<DiscussionList> {
                               ],
                             ),
                           ),
-                          //  SizedBox(width: 8.0),
                           widget.timebankModel.admins.contains(
                                   SevaCore.of(context).loggedInUser.sevaUserID)
                               ? getOptionButtons(
@@ -904,9 +804,6 @@ class DiscussionListState extends State<DiscussionList> {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 6, vertical: 2),
                                     child: Container(
-//                                      color: news.isPinned
-//                                          ? Colors.green
-//                                          : Colors.black,
                                       height: 20,
                                       width: 20,
                                       child: Image.asset(
@@ -930,45 +827,13 @@ class DiscussionListState extends State<DiscussionList> {
                         ],
                       ),
                     ),
-
-                    //replacement area starts
                     Row(
                       children: <Widget>[
                         Expanded(
                           child: getOptionButtons(
                             Row(
-                              // mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                // SizedBox(width: 16),
-                                // FlavorConfig.appFlavor ==
-                                //             Flavor.HUMANITY_FIRST ||
-                                //         FlavorConfig.appFlavor ==
-                                //             Flavor.APP
-                                //     ? Icon(
-                                //         Icons.perm_contact_calendar,
-                                //         color: Theme.of(context)
-                                //             .accentColor,
-                                //         size: 20,
-                                //       )
-                                //     : SvgPicture.asset(
-                                //         'lib/assets/tulsi_icons/tulsi2020_icons_author-profile-icon.svg',
-                                //         height: 16,
-                                //         width: 16,
-                                //       ),
-                                // Padding(
-                                //   padding:
-                                //       const EdgeInsets.only(left: 5),
-                                //   child: Text(
-                                //     news.fullName,
-                                //     overflow: TextOverflow.ellipsis,
-                                //     maxLines: 1,
-                                //     style: TextStyle(
-                                //       fontSize: 14,
-                                //     ),
-                                //   ),
-                                // ),
-                              ],
+                              children: <Widget>[],
                             ),
                             () {
                               String emailId = news.email;
@@ -983,8 +848,6 @@ class DiscussionListState extends State<DiscussionList> {
                             },
                           ),
                         ),
-
-                        // Slot
                         Row(
                           children: <Widget>[
                             Container(
@@ -1047,16 +910,12 @@ class DiscussionListState extends State<DiscussionList> {
                         ),
                       ],
                     ),
-
-                    //replascement stops here
-
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8.0, top: 4),
                       child: !isFromMessage
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                //slot closed
                                 Container(
                                   child: news.sevaUserId !=
                                           SevaCore.of(context)
@@ -1066,27 +925,16 @@ class DiscussionListState extends State<DiscussionList> {
                                           Padding(
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: 6, vertical: 2),
-                                            child: FlavorConfig.appFlavor ==
-                                                        Flavor.HUMANITY_FIRST ||
-                                                    FlavorConfig.appFlavor ==
-                                                        Flavor.APP ||
-                                                    FlavorConfig.appFlavor ==
-                                                        Flavor.SEVA_DEV
-                                                ? Icon(
-                                                    Icons.flag,
-                                                    color: news.reports
-                                                            .contains(SevaCore
-                                                                    .of(context)
-                                                                .loggedInUser
-                                                                .sevaUserID)
-                                                        ? Colors.red
-                                                        : Colors.black,
-                                                    size: 20,
-                                                  )
-                                                : Icon(
-                                                    Icons.flag,
-                                                    size: 20,
-                                                  ),
+                                            child: Icon(
+                                              Icons.flag,
+                                              color: news.reports.contains(
+                                                      SevaCore.of(context)
+                                                          .loggedInUser
+                                                          .sevaUserID)
+                                                  ? Colors.red
+                                                  : Colors.black,
+                                              size: 20,
+                                            ),
                                           ),
                                           () {
                                             if (news.reports.contains(
@@ -1097,7 +945,6 @@ class DiscussionListState extends State<DiscussionList> {
                                                 context: context,
                                                 builder: (BuildContext
                                                     viewContextS) {
-                                                  // return object of type Dialog
                                                   return AlertDialog(
                                                     title: Text(
                                                         'Already reported!'),
@@ -1127,7 +974,6 @@ class DiscussionListState extends State<DiscussionList> {
                                                 context: context,
                                                 builder:
                                                     (BuildContext viewContext) {
-                                                  // return object of type Dialog
                                                   return AlertDialog(
                                                     title: Text('Report Feed?'),
                                                     content: Text(
@@ -1217,24 +1063,6 @@ class DiscussionListState extends State<DiscussionList> {
                                     ),
                                   ),
                                   () {
-                                    // bool isShare = true;
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) =>
-                                    //         // NewChat(isShare, news),
-                                    //         SelectMember.shareFeed(
-                                    //       timebankId: SevaCore.of(context)
-                                    //           .loggedInUser
-                                    //           .currentTimebank,
-                                    //       newsModel: news,
-                                    //       isFromShare: isShare,
-                                    //     ),
-                                    //   ),
-                                    // );
-
-                                    // SHARE ICON ON TAP
-
                                     if (SevaCore.of(context)
                                             .loggedInUser
                                             .associatedWithTimebanks >
@@ -1350,20 +1178,7 @@ class DiscussionListState extends State<DiscussionList> {
           padding: const EdgeInsets.all(8.0),
           child: child,
         ),
-        onTap: onPressed
-//        {
-//          Navigator.push(
-//            context,
-//            MaterialPageRoute(
-//              builder: (context) => UpdateApp(
-//                //userEmail: emailId,
-//              ),
-//            ),
-//          );
-//        }
-        ,
-        // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        // padding: EdgeInsets.all(0),
+        onTap: onPressed,
       ),
     );
   }
@@ -1404,9 +1219,7 @@ class DiscussionListState extends State<DiscussionList> {
                 case EntityType.timebank:
                   loadTimebankForId(context, entityModel.entityId);
                   break;
-                // case EntityType.campaign:
-                //   loadCampaignForId(context, entityModel.entityId);
-                //   break;
+
                 default:
                   break;
               }
@@ -1454,19 +1267,4 @@ class DiscussionListState extends State<DiscussionList> {
       ),
     );
   }
-
-  // void loadCampaignForId(
-  //   BuildContext context,
-  //   String campaignId,
-  // ) {
-  //   Navigator.of(context).push(
-  //     MaterialPageRoute(
-  //       builder: (context) {
-  //         return CampaignView(
-  //           campaignId: campaignId,
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
 }

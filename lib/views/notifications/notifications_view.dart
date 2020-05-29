@@ -571,12 +571,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                           ),
                           TextSpan(
                             text: () {
-                              return FlavorConfig.appFlavor ==
-                                      Flavor.HUMANITY_FIRST
-                                  ? '${model.credits} Yang Bucks'
-                                  : FlavorConfig.appFlavor == Flavor.TULSI
-                                      ? '${model.credits} Tulsi Tokens'
-                                      : '${model.credits} Seva Credits';
+                              return '${model.credits} Seva Credits';
                             }(),
                             style: TextStyle(
                               color: Colors.black,
@@ -635,19 +630,14 @@ class NotificationsView extends State<NotificationViewHolder> {
                     children: [
                       TextSpan(
                         text: () {
-                          return FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                              ? '${model.credits} Yang Bucks '
-                              : FlavorConfig.appFlavor == Flavor.TULSI
-                                  ? '${model.credits} Tulsi TOkens '
-                                  : '${model.credits} Seva Credits ';
+                          return '${model.credits} Seva Credits ';
                         }(),
                         style: TextStyle(
                           color: Colors.black,
                         ),
                       ),
                       TextSpan(
-                        text:
-                            'has been debited from your account', //credited to ${user.fullname}',
+                        text: 'has been debited from your account',
                         style: TextStyle(
                           color: Colors.grey,
                         ),
@@ -666,8 +656,6 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    // return
-
     TransactionModel transactionModel =
         model.transactions.firstWhere((transaction) {
       return transaction.to == SevaCore.of(context).loggedInUser.sevaUserID;
@@ -713,18 +701,6 @@ class NotificationsView extends State<NotificationViewHolder> {
         ),
       ),
     );
-
-    // return StreamBuilder<UserModel>(
-    //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
-    //   builder: (context, snapshot) {
-    //     if (snapshot.hasError) return Container();
-    //     if (snapshot.connectionState == ConnectionState.waiting) {
-    //       return notificationShimmer;
-    //     }
-    //     UserModel user = snapshot.data;
-
-    //   },
-    // );
   }
 
   Widget getOfferAcceptNotification(
@@ -742,7 +718,6 @@ class NotificationsView extends State<NotificationViewHolder> {
           return notificationShimmer;
         }
         UserModel user = snapshot.data;
-        //bool fromOffer;
 
         return FutureBuilder<Object>(
             future: FirestoreManager.getUserForId(sevaUserId: loggedinUserID),
@@ -756,8 +731,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                           requestId: requestid),
                       builder: (context, snapshot) {
                         RequestModel model = snapshot.data;
-                        if (snapshot.hasError)
-                          return Container();
+                        if (snapshot.hasError) return Container();
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return notificationShimmer;
@@ -807,8 +781,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                         requestId: requestid),
                     builder: (context, snapshot) {
                       RequestModel model = snapshot.data;
-                      if (snapshot.hasError)
-                        return Container();
+                      if (snapshot.hasError) return Container();
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return notificationShimmer;
                       }

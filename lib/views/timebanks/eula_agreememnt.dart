@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
-import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/main_app.dart';
 
 import 'EULAgreement.dart';
 
@@ -52,9 +50,7 @@ class EulaAgreementState extends State<EulaAgreement> {
                         padding: EdgeInsets.all(10.0),
                       ),
                       Text(
-                        FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                            ? EULAgreementScript.EULA_AGREEMENT
-                            : EULAgreementScript.SEVA_EULA_AGREEMENT,
+                        EULAgreementScript.SEVA_EULA_AGREEMENT,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 17.0,
@@ -138,13 +134,11 @@ class EulaAgreementState extends State<EulaAgreement> {
     await auth.signOut();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => AuthRouter(),
-
-        ),
-        (Route<dynamic> route)=>false
-      );
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => AuthRouter(),
+          ),
+          (Route<dynamic> route) => false);
     });
   }
 }

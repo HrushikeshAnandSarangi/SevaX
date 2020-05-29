@@ -56,9 +56,7 @@ class _CreateRequestState extends State<CreateRequest> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(
-            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                ? "Create Yang Gang Request"
-                : _title,
+            _title,
             style: TextStyle(fontSize: 18),
           ),
           centerTitle: false,
@@ -273,9 +271,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   },
                 ),
                 Text(
-                  FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                      ? "Yang gang request title"
-                      : "Request title*",
+                  "Request title*",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -291,9 +287,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
                   ],
                   decoration: InputDecoration(
-                    hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                        ? "Yang gang request title"
-                        : "Ex: Small carpentry work...",
+                    hintText: "Ex: Small carpentry work...",
                     hintStyle: hintTextStyle,
                   ),
                   textInputAction: TextInputAction.next,
@@ -318,9 +312,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 SizedBox(height: 12),
                 SizedBox(height: 20),
                 Text(
-                  FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                      ? "Yang Gang Request description"
-                      : "Request description*",
+                  "Request description*",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
