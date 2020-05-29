@@ -308,6 +308,48 @@ class SearchManager {
     yield userList;
   }
 
+  static Future<List<UserModel>> searchForUserWithTimebankIdFuture({
+    @required queryString,
+    @required List<String> validItems,
+  }) async {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxusers/sevaxuser/_search';
+    dynamic body = json.encode(
+      {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match": {
+                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
+                }
+              },
+              {
+                "multi_match": {
+                  "query": "$queryString",
+                  "fields": ["email", "fullname", "bio"],
+                  "type": "phrase_prefix"
+                }
+              },
+            ]
+          }
+        }
+      },
+    );
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<UserModel> userList = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+
+      UserModel user = UserModel.fromMap(sourceMap);
+      if (validItems.contains(user.sevaUserID)) {
+        userList.add(user);
+      }
+    });
+    return userList;
+  }
+
   static Stream<List<NewsModel>> searchForNews({
     @required queryString,
   }) async* {

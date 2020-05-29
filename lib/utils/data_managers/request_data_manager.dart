@@ -266,7 +266,7 @@ Stream<List<RequestModel>> getProjectRequestsStream(
 }
 
 Stream<List<RequestModel>> getNearRequestListStream(
-    {String timebankId, UserModel loggedInUser}) async* {
+    {String timebankId, UserModel loggedInUser, bool isFromSettings}) async* {
   // LocationData pos = await location.getLocation();
   // double lat = pos.latitude;
   // double lng = pos.longitude;
@@ -281,7 +281,15 @@ Stream<List<RequestModel>> getNearRequestListStream(
   print(
       "Location retrieved fom user ->  ${lat.toString()} + ${lng.toString()}");
   GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
-  var query = timebankId == null || timebankId == 'All'
+  var query;
+//  if (isFromSettings == true) {
+//    query = Firestore.instance
+//        .collection('requests')
+//        .where('timebankId', isEqualTo: timebankId)
+//        .where('accepted', isEqualTo: false)
+//        .where('requestMode', isEqualTo: 'TIMEBANK_REQUEST');
+//  } else {
+  query = timebankId == null || timebankId == 'All'
       ? Firestore.instance
           .collection('requests')
           .where('accepted', isEqualTo: false)
@@ -289,6 +297,7 @@ Stream<List<RequestModel>> getNearRequestListStream(
       : Firestore.instance
           .collection('requests')
           .where('timebankId', isEqualTo: timebankId);
+  // }
   // .orderBy('posttimestamp', descending: true);
 
   var radius = 20;
