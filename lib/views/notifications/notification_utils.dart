@@ -6,8 +6,8 @@ void showDialogForIncompleteTransactions({
   SoftDeleteRequestDataHolder deletionRequest,
   BuildContext context,
 }) {
-  var reason =
-      "We couldn\'t process you request for deletion of ${deletionRequest.entityTitle}, as you are still having open transactions which are as : \n";
+  var reason = " ";
+  // "We couldn\'t process you request for deletion of ${deletionRequest.entityTitle}, as you are still having open transactions which are as : \n";
   if (deletionRequest.noOfOpenOffers > 0) {
     reason += '${deletionRequest.noOfOpenOffers} one to many offers\n';
   }
@@ -19,7 +19,7 @@ void showDialogForIncompleteTransactions({
     context: context,
     builder: (BuildContext viewContext) {
       return AlertDialog(
-        title: Text(deletionRequest.entityTitle.trim()),
+        // title: Text(deletionRequest.entityTitle.trim()),
         content: Text(reason),
         actions: <Widget>[
           FlatButton(
