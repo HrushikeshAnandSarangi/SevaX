@@ -396,7 +396,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
           timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
     );
     return Text(
-      "Invitation " + statusText + " on " + date,
+      statusText + " on " + date,
       style: TextStyle(
           color: groupInviteUserModel.declined ? Colors.red : Colors.blue,
           fontFamily: 'Europa'),
@@ -425,7 +425,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
             });
           }
         },
-        child: Text("Resend Invitate", style: TextStyle(fontFamily: 'Europa')),
+        child:
+            Text("Resend Invitation", style: TextStyle(fontFamily: 'Europa')),
         color: FlavorConfig.values.theme.primaryColor,
         textColor: Colors.white,
         shape: StadiumBorder(),

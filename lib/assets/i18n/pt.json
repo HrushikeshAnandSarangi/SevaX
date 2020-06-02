@@ -326,6 +326,8 @@
     "image_hint": "Créditos fotográficos",
     "change": "Alterar imagem",
     "add": "Adicionar imagem",
+    "change_attachment": "alterar anexo",
+    "add_attachment": "juntar anexo",
     "camera" : "Camera",
     "gallery": "Galeria"
   },
