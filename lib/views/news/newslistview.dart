@@ -12,7 +12,6 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
-import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../../flavor_config.dart';
@@ -36,6 +35,7 @@ class NewsListState extends State<NewsList> {
   List<TimebankModel> timebankList = [];
   bool isNearMe = false;
   int sharedValue = 0;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -60,11 +60,11 @@ class NewsListState extends State<NewsList> {
               child: CupertinoSegmentedControl<int>(
                 children: {
                   0: Text(
-                    AppLocalizations.of(context).translate('shared','all'),
+                    AppLocalizations.of(context).translate('shared', 'all'),
                     style: TextStyle(fontSize: 10.0),
                   ),
                   1: Text(
-                    AppLocalizations.of(context).translate('shared','near_me'),
+                    AppLocalizations.of(context).translate('shared', 'near_me'),
                     style: TextStyle(fontSize: 10.0),
                   ),
                 },
@@ -672,72 +672,73 @@ class NewsListState extends State<NewsList> {
     );
   }
 
-  Widget chipForNews(BuildContext context, NewsModel newsModel) {
-    assert(newsModel != null, 'News model cannot be null');
-
-    Color chipColor;
-    Color chipTextColor;
-
-    if (newsModel.entity == null) {
-      chipColor = null;
-    } else if (newsModel.entity.entityType == EntityType.timebank) {
-      chipColor = Colors.indigoAccent;
-      chipTextColor = Colors.white;
-    } else if (newsModel.entity.entityType == EntityType.campaign) {
-      chipColor = Colors.deepOrangeAccent;
-      chipTextColor = Colors.white;
-    } else {
-      chipColor = Colors.amberAccent;
-    }
-
-    String chipText;
-    if (newsModel.entity == null) {
-      chipText = null;
-    } else {
-      chipText = newsModel.entity.entityName ?? 'General';
-    }
-
-    return chipText == null
-        ? Container()
-        : GestureDetector(
-            onTap: () async {
-              if (newsModel.entity == null) return;
-              if (newsModel.entity.entityType == EntityType.general) return;
-              EntityModel entityModel = newsModel.entity;
-              switch (entityModel.entityType) {
-                case EntityType.timebank:
-                  loadTimebankForId(context, entityModel.entityId);
-                  break;
-
-                default:
-                  break;
-              }
-            },
-            child: Chip(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              label: Text(
-                chipText,
-                style: TextStyle(color: chipTextColor),
-              ),
-              backgroundColor: chipColor,
-            ),
-          );
-  }
-
-  void loadTimebankForId(
-    BuildContext context,
-    String timebankId,
-  ) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (BuildContext routeContext) {
-          return TimebankView(
-            timebankId: timebankId,
-          );
-        },
-      ),
-    );
-  }
+//  Widget chipForNews(BuildContext context, NewsModel newsModel) {
+//    assert(newsModel != null, 'News model cannot be null');
+//
+//    Color chipColor;
+//    Color chipTextColor;
+//
+//    if (newsModel.entity == null) {
+//      chipColor = null;
+//    } else if (newsModel.entity.entityType == EntityType.timebank) {
+//      chipColor = Colors.indigoAccent;
+//      chipTextColor = Colors.white;
+//    } else if (newsModel.entity.entityType == EntityType.campaign) {
+//      chipColor = Colors.deepOrangeAccent;
+//      chipTextColor = Colors.white;
+//    } else {
+//      chipColor = Colors.amberAccent;
+//    }
+//
+//    String chipText;
+//    if (newsModel.entity == null) {
+//      chipText = null;
+//    } else {
+//      chipText = newsModel.entity.entityName ?? 'General';
+//    }
+//
+//    return chipText == null
+//        ? Container()
+//        : GestureDetector(
+//            onTap: () async {
+//              if (newsModel.entity == null) return;
+//              if (newsModel.entity.entityType == EntityType.general) return;
+//              EntityModel entityModel = newsModel.entity;
+//              switch (entityModel.entityType) {
+//                case EntityType.timebank:
+//                  loadTimebankForId(context, entityModel.entityId);
+//                  break;
+//
+//                default:
+//                  break;
+//              }
+//            },
+//            child: Chip(
+//              padding: EdgeInsets.symmetric(horizontal: 8.0),
+//              label: Text(
+//                chipText,
+//                style: TextStyle(color: chipTextColor),
+//              ),
+//              backgroundColor: chipColor,
+//            ),
+//          );
+//  }
+//
+//  void loadTimebankForId(
+//    BuildContext context,
+//    String timebankId,
+//  ) {
+//    Navigator.of(context).push(
+//      MaterialPageRoute(
+//        builder: (BuildContext routeContext) {
+//          return TimebankView(
+//            timebankId: timebankId,
+//          );
+//        },
+//      ),
+//    );
+//  }
+//}
 }
 
 Future _getLocation(

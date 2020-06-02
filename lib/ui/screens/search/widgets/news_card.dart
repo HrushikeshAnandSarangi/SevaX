@@ -153,24 +153,18 @@ class NewsCard extends StatelessWidget {
             //feed image
             Offstage(
               offstage: imageUrl == null || imageUrl == "NoData",
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(radius),
-                  topRight: Radius.circular(radius),
-                ),
-                child: AspectRatio(
-                  aspectRatio: 3 / 2,
-                  child: id != null
-                      ? Hero(
-                          tag: id + "*",
-                          child: CustomNetworkImage(
-                            imageUrl ?? defaultUserImageURL,
-                          ),
-                        )
-                      : CustomNetworkImage(
+              child: AspectRatio(
+                aspectRatio: 3 / 2,
+                child: id != null
+                    ? Hero(
+                        tag: id + "*",
+                        child: CustomNetworkImage(
                           imageUrl ?? defaultUserImageURL,
                         ),
-                ),
+                      )
+                    : CustomNetworkImage(
+                        imageUrl ?? defaultUserImageURL,
+                      ),
               ),
             ),
             SizedBox(

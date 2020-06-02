@@ -44,7 +44,7 @@
     "check_internet": "Please check your internet connection.",
     "dismiss": "Dismiss",
     "or": "or",
-    "cancel": "cancel",
+    "cancel": "Cancel",
     "next": "Next",
     "skip": "Skip",
     "capital_cancel": "Cancel",
@@ -325,7 +325,9 @@
     "select_category": "Please select a category",
     "image_hint": "Photo Credits",
     "change": "Change image",
+    "change_attachment": "Change Attachment",
     "add": "Add image",
+    "add_attachment": "Add Attachment",
     "camera": "Camera",
     "gallery": "Gallery"
   },
