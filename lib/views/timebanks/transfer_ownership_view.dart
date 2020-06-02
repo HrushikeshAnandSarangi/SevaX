@@ -49,6 +49,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
     super.initState();
     getMembersList();
     ownerGroupsArr = widget.responseData['ownerGroupsArr'];
+    print("ownerGroupsArr=============="+ownerGroupsArr.toString());
   }
 
   void getMembersList() {
@@ -179,9 +180,10 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
             if (selectedNewOwner == null) {
               print("reporter timebank creator id is ${tbmodel.creatorId}");
               ownerGroupsArr.forEach(
-                (group) => futures.add(
+                (group){
+                  futures.add(
                   Firestore.instance
-                      .collection('users')
+                      .collection('timebanknew')
                       .document(group['id'])
                       .updateData(
                     {
@@ -191,14 +193,13 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                       "members": FieldValue.arrayUnion([tbmodel.creatorId]),
                     },
                   ),
-                ),
+                );
+                },
               );
               await Future.wait(futures);
               Map<String, dynamic> responseObj = await removeMemberFromTimebank(
                   sevauserid: widget.memberSevaUserId, timebankId: tbmodel.id);
               if (responseObj['deletable'] == true) {
-                print(
-                    "else block---done transferring and removing the user from timebank");
                 if (widget.isComingFromExit) {
                   sendNotificationToAdmin();
                   Navigator.pushReplacement(
