@@ -67,13 +67,12 @@ class NewsImagePickerHandler {
       print("Unsupported operation" + e.toString());
     }
     //   if (!mounted) return;
+    if (_path != null) {
+      _fileName = _path.split('/').last;
+      print("FIle  name $_fileName");
 
-    _fileName = _path != null
-        ? _path.split('/').last
-        : _paths != null ? _paths.keys.toString() : 'PDF document';
-    print("FIle  name $_fileName");
-
-    _listener.userDoc(_path, _fileName);
+      _listener.userDoc(_path, _fileName);
+    }
   }
 
   void init() {

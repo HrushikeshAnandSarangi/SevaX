@@ -7,10 +7,7 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:sevaexchange/models/availability.dart';
 import 'package:sevaexchange/views/popup.dart';
-import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
-
-import '../flavor_config.dart';
 
 const kGoogleApiKey = "AIzaSyAsFTtNd5UvFnzDk9sTD0EyesFkWVKQoZY";
 // to get places detail (lat/lng)
@@ -764,19 +761,6 @@ class _locationScreenState extends State<LocationView> {
       context,
       MaterialPageRoute(
         builder: (BuildContext context) => PinView(),
-      ),
-    );
-  }
-
-  void _navigateToTimebanks() {
-    FlavorConfig.values.timebankId = '73d0de2c-198b-4788-be64-a804700a88a4';
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => TimeBankList(
-          timebankid: FlavorConfig.values.timebankId,
-          title: 'Timebanks List',
-        ),
       ),
     );
   }
