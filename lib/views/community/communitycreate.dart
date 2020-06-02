@@ -439,7 +439,7 @@ class CreateEditCommunityViewFormState
                             children: <Widget>[
                               headingText(AppLocalizations.of(context)
                                   .translate(
-                                      'createtimebank', 'name_err_empty')),
+                                      'createtimebank', 'timebank_members')),
                               Padding(
                                 padding: EdgeInsets.only(left: 10, top: 15),
                                 child: IconButton(
