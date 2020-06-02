@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
@@ -10,6 +11,7 @@ import 'package:timeago/timeago.dart' as timeago;
 class MessageCard extends StatelessWidget {
   final ChatModel model;
   final bool isAdminMessage;
+
   const MessageCard({
     Key key,
     this.model,
@@ -18,6 +20,8 @@ class MessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    RegExp exp = RegExp(
+        r'[a-zA-Z][a-zA-Z0-9_.%$&]*[@][a-zA-Z0-9]*[.][a-zA-Z.]*[*][0-9]{13,}');
     String userId = SevaCore.of(context).loggedInUser.sevaUserID;
     String senderId = model.isTimebankMessage ? model.timebankId : userId;
     ParticipantInfo info = getUserInfo(
@@ -94,7 +98,10 @@ class MessageCard extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              model.lastMessage ?? '',
+                              exp.hasMatch(model.lastMessage)
+                                  ? AppLocalizations.of(context)
+                                      .translate('chat', 'shared_post')
+                                  : model.lastMessage ?? '',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -142,4 +149,6 @@ class MessageCard extends StatelessWidget {
             ),
           );
   }
+
+  Widget lastMessageText() {}
 }

@@ -24,8 +24,6 @@ Future<void> fetchRemoteConfig() async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlavorConfig.appFlavor = Flavor.SEVA_DEV;
-  AppLanguage appLanguage = AppLanguage();
-  await appLanguage.fetchLocale();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   _firebaseMessaging.requestNotificationPermissions(
     IosNotificationSettings(
@@ -73,7 +71,9 @@ Future<void> main() async {
     (_) {
       // Crashlytics.instance.enableInDevMode = true;
       // FlutterError.onError = Crashlytics.instance.recordFlutterError;
-      runApp(MainApplication(appLanguage: appLanguage));
+      runApp(
+        MainApplication(),
+      );
       // runZoned(() {
 
       // }, onError: Crashlytics.instance.recordError);
@@ -83,14 +83,10 @@ Future<void> main() async {
 
 class MainApplication extends StatelessWidget {
   final bool skipToHomePage;
-  final AppLanguage appLanguage;
+  final AppLanguage appLanguage = AppLanguage()..fetchLocale();
 
-  const MainApplication(
-      {Key key, this.skipToHomePage = false, this.appLanguage})
-      : super(key: key);
+  MainApplication({Key key, this.skipToHomePage = false}) : super(key: key);
 
-  @override
-  void initState() {}
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppLanguage>(
@@ -135,5 +131,3 @@ class MainApplication extends StatelessWidget {
         }));
   }
 }
-
-class News {}
