@@ -12,6 +12,7 @@ import 'package:sevaexchange/widgets/credit_card/utils/card_background.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
 import '../../../main_app.dart';
+import '../../../main_seva_dev.dart' as dev;
 import '../../../widgets/credit_card/credit_card.dart';
 
 class BillingView extends StatefulWidget {
@@ -75,7 +76,8 @@ class BillingViewState extends State<BillingView> {
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            AppLocalizations.of(context).translate('billing_admin','subscriptions'),
+            AppLocalizations.of(context)
+                .translate('billing_admin', 'subscriptions'),
             style: TextStyle(
               fontSize: 20,
             ),
@@ -94,8 +96,9 @@ class BillingViewState extends State<BillingView> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                     Text(
-                      AppLocalizations.of(context).translate('billing_admin','card_details'),
+                    Text(
+                      AppLocalizations.of(context)
+                          .translate('billing_admin', 'card_details'),
                       style: TextStyle(
                         fontSize: 14.0,
                         color: Colors.black,
@@ -106,7 +109,7 @@ class BillingViewState extends State<BillingView> {
                         connectToStripe(null);
                       },
                       child: Text(
-                        '+ ${AppLocalizations.of(context).translate('billing_admin','add_new')}',
+                        '+ ${AppLocalizations.of(context).translate('billing_admin', 'add_new')}',
                         style: TextStyle(
                           fontSize: 14.0,
                           color: Colors.blue,
@@ -125,7 +128,8 @@ class BillingViewState extends State<BillingView> {
                   }
                   if (snapshot.hasError) {
                     return Center(
-                      child: Text(AppLocalizations.of(context).translate('billing_admin','no_cards')),
+                      child: Text(AppLocalizations.of(context)
+                          .translate('billing_admin', 'no_cards')),
                     );
                   }
                   if (snapshot.data != null && snapshot.hasData) {
@@ -135,7 +139,8 @@ class BillingViewState extends State<BillingView> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 22, vertical: 10),
                           child: Text(
-                            AppLocalizations.of(context).translate('billing_admin','note'),
+                            AppLocalizations.of(context)
+                                .translate('billing_admin', 'note'),
                             style: TextStyle(color: Colors.grey, fontSize: 12),
                           ),
                         ),
@@ -171,7 +176,9 @@ class BillingViewState extends State<BillingView> {
                                 children: <Widget>[
                                   CustomCreditCard(
                                     isDefaultCard: isDefault,
-                                    bankName: AppLocalizations.of(context).translate('billing_admin','bank_name'),
+                                    bankName: AppLocalizations.of(context)
+                                        .translate(
+                                            'billing_admin', 'bank_name'),
                                     cardNumber:
                                         snapshot.data.data[index].card.last4,
                                     frontBackground: CardBackgrounds.black,
@@ -196,7 +203,9 @@ class BillingViewState extends State<BillingView> {
                                               bottomRight: Radius.circular(4),
                                             )),
                                         child: Text(
-                                          AppLocalizations.of(context).translate('billing_admin','default'),
+                                          AppLocalizations.of(context)
+                                              .translate(
+                                                  'billing_admin', 'default'),
                                           style: TextStyle(color: Colors.white),
                                         ),
                                       ),
@@ -229,12 +238,15 @@ class BillingViewState extends State<BillingView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context).translate('billing_admin','default')),
-          content: new Text(AppLocalizations.of(context).translate('billing_admin','default_card_desc')),
+          title: new Text(AppLocalizations.of(context)
+              .translate('billing_admin', 'default')),
+          content: new Text(AppLocalizations.of(context)
+              .translate('billing_admin', 'default_card_desc')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text(AppLocalizations.of(context).translate('shared','close')),
+              child: new Text(
+                  AppLocalizations.of(context).translate('shared', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -254,13 +266,15 @@ class BillingViewState extends State<BillingView> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(AppLocalizations.of(context).translate('billing_admin','make_default')),
+              Text(AppLocalizations.of(context)
+                  .translate('billing_admin', 'make_default')),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   RaisedButton(
-                    child: Text(AppLocalizations.of(context).translate('billing_admin','confirm')),
+                    child: Text(AppLocalizations.of(context)
+                        .translate('billing_admin', 'confirm')),
                     onPressed: () {
                       //showProgressDialog('Adding default card');
                       setDefaultCard(token: token, communityId: communityId)
@@ -275,7 +289,8 @@ class BillingViewState extends State<BillingView> {
                   SizedBox(width: 10),
                   FlatButton(
                     color: Colors.white,
-                    child: Text(AppLocalizations.of(context).translate('billing_admin','cancel')),
+                    child: Text(AppLocalizations.of(context)
+                        .translate('billing_admin', 'cancel')),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -297,9 +312,13 @@ class BillingViewState extends State<BillingView> {
         Future.delayed(Duration(milliseconds: 600), () {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
-                builder: (context1) => MainApplication(
-                  skipToHomePage: true,
-                ),
+                builder: (context1) => FlavorConfig.appFlavor == Flavor.APP
+                    ? MainApplication(
+                        skipToHomePage: true,
+                      )
+                    : dev.MainApplication(
+                        skipToHomePage: true,
+                      ),
               ),
               (Route<dynamic> route) => false);
         });
@@ -308,8 +327,10 @@ class BillingViewState extends State<BillingView> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(AppLocalizations.of(context).translate('billing_admin','card_added')),
-              Text(AppLocalizations.of(context).translate('billing_admin','synced')),
+              Text(AppLocalizations.of(context)
+                  .translate('billing_admin', 'card_added')),
+              Text(AppLocalizations.of(context)
+                  .translate('billing_admin', 'synced')),
             ],
           ),
         );

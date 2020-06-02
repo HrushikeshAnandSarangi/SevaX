@@ -56,7 +56,8 @@ class CreateEditCommunityView extends StatelessWidget {
               elevation: 0.5,
               automaticallyImplyLeading: true,
               title: Text(
-                AppLocalizations.of(context).translate('createtimebank', 'title'),
+                AppLocalizations.of(context)
+                    .translate('createtimebank', 'title'),
                 style: TextStyle(
                   fontSize: 18,
                 ),
@@ -290,334 +291,371 @@ class CreateEditCommunityViewFormState
             }
             // print("  snapshots data   ${snapshot.data.timebanks}");
 
-            return new Builder(builder: (BuildContext context){
+            return new Builder(builder: (BuildContext context) {
               return SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              controller: _controller,
-              child: FadeAnimation(
-              1.4,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    child: widget.isCreateTimebank
-                        ? Text(
-                      AppLocalizations.of(context).translate('createtimebank','desc'),
-                            textAlign: TextAlign.center,
-                          )
-                        : Container(),
-                  ),
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: Column(
-                        children: <Widget>[
-                          widget.isCreateTimebank
-                              ? TimebankAvatar()
-                              : TimebankAvatar(
-                                  photoUrl: communityModel.logo_url ?? "",
-                                ),
-                          Text(''),
-                          Text(
-                            AppLocalizations.of(this.parentContext).translate('createtimebank','logo'),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Text(communityImageError,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                                fontSize: 12,
-                              ))
-                        ],
-                      ),
-                    ),
-                  ),
-                  headingText(AppLocalizations.of(context).translate('createtimebank','name')),
-                  TextFormField(
-                    focusNode: nameFocus,
-                    textCapitalization: TextCapitalization.sentences,
-                    onFieldSubmitted: (v) {
-                      FocusScope.of(context).requestFocus(aboutFocus);
-                    },
-                    controller: searchTextController,
-                    onChanged: (value) {
-                      enteredName = value.replaceAll("[^a-zA-Z0-9_ ]*", "");
-
-                        print(
-                            "name ------ ${enteredName.replaceAll("[^a-zA-Z0-9_ ]*", "")}");
-                        communityModel.name =
-                            value.replaceAll("[^a-zA-Z0-9_ ]*", "");
-
-                      timebankModel.name =
-                          value.replaceAll("[^a-zA-Z0-9_ ]*", "");
-                    },
-                    decoration: InputDecoration(
-                      errorText: errTxt,
-                      hintText: AppLocalizations.of(context).translate('createtimebank','name_hinttext'),
-                    ),
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.text,
-                    autocorrect: true,
-                    maxLines: 1,
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
-                    ],
-                    onSaved: (value) {
-                      enteredName = value.replaceAll("[^a-zA-Z0-9_ ]*", "");
-                    },
-                    // onSaved: (value) => enteredName = value,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return AppLocalizations.of(context).translate('createtimebank','name_err_empty');
-                      } else if (communityFound) {
-                        return AppLocalizations.of(context).translate('createtimebank','name_err_exists');
-                      } else {
-                        enteredName = value.replaceAll("[^a-zA-Z0-9]", "");
-                        snapshot.data.community.updateValueByKey(
-                            'name', value.replaceAll("[^a-zA-Z0-9]", ""));
-                        createEditCommunityBloc.onChange(snapshot.data);
-                      }
-
-                      return null;
-                    },
-                  ),
-                  headingText(AppLocalizations.of(context).translate('createtimebank','about')),
-                  TextFormField(
-                    focusNode: aboutFocus,
-                    decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context).translate('createtimebank','about_hint_text'),
-                    ),
-                    keyboardType: TextInputType.multiline,
-                    textInputAction: TextInputAction.done,
-                    maxLines: 3,
-                    textCapitalization: TextCapitalization.sentences,
-                    initialValue: timebankModel.missionStatement ?? "",
-                    onChanged: (value) {
-                      timebankModel.missionStatement = value;
-                      communityModel.about = value;
-                    },
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return AppLocalizations.of(context).translate('createtimebank','tell_more');;
-                      }
-                      snapshot.data.community.updateValueByKey('about', value);
-
-                        snapshot.data.timebank
-                            .updateValueByKey('missionStatement', value);
-                        createEditCommunityBloc.onChange(snapshot.data);
-                        return null;
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                    ),
-
-                  Offstage(
-                    offstage: widget.isCreateTimebank,
-                    child: Row(
+                physics: BouncingScrollPhysics(),
+                controller: _controller,
+                child: FadeAnimation(
+                    1.4,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        headingText(AppLocalizations.of(context).translate('createtimebank','name_err_empty')),
                         Padding(
-                          padding: EdgeInsets.only(left: 10, top: 15),
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.add_circle_outline,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: widget.isCreateTimebank
+                              ? Text(
+                                  AppLocalizations.of(context)
+                                      .translate('createtimebank', 'desc'),
+                                  textAlign: TextAlign.center,
+                                )
+                              : Container(),
+                        ),
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(5.0),
+                            child: Column(
+                              children: <Widget>[
+                                widget.isCreateTimebank
+                                    ? TimebankAvatar()
+                                    : TimebankAvatar(
+                                        photoUrl: communityModel.logo_url ?? "",
+                                      ),
+                                Text(''),
+                                Text(
+                                  AppLocalizations.of(this.parentContext)
+                                      .translate('createtimebank', 'logo'),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(communityImageError,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ))
+                              ],
                             ),
-                            onPressed: () {
-                              addVolunteers();
-                              print("clicked");
-                            },
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Offstage(
-                    offstage: widget.isCreateTimebank,
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          totalMembersCount.toString() ?? "0",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa'),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      headingText('Private Timebank'),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-                        child: infoButton(
-                          context: context,
-                          key: GlobalKey(),
-                          type: InfoType.PRIVATE_TIMEBANK,
-                        ),
-                      ),
-                      Column(
-                        children: <Widget>[
-                          Divider(),
-                          Checkbox(
-                            value: widget.isCreateTimebank
-                                ? snapshot.data.timebank.private
-                                : timebankModel.private,
-                            onChanged: (bool value) {
-                              print(value);
-                              timebankModel.private = value;
-                              snapshot.data.community
-                                  .updateValueByKey('private', value);
-                              communityModel.private = value;
-                              snapshot.data.timebank
-                                  .updateValueByKey('private', value);
+                        headingText(AppLocalizations.of(context)
+                            .translate('createtimebank', 'name')),
+                        TextFormField(
+                          focusNode: nameFocus,
+                          textCapitalization: TextCapitalization.sentences,
+                          onFieldSubmitted: (v) {
+                            FocusScope.of(context).requestFocus(aboutFocus);
+                          },
+                          controller: searchTextController,
+                          onChanged: (value) {
+                            enteredName =
+                                value.replaceAll("[^a-zA-Z0-9_ ]*", "");
+
+                            print(
+                                "name ------ ${enteredName.replaceAll("[^a-zA-Z0-9_ ]*", "")}");
+                            communityModel.name =
+                                value.replaceAll("[^a-zA-Z0-9_ ]*", "");
+
+                            timebankModel.name =
+                                value.replaceAll("[^a-zA-Z0-9_ ]*", "");
+                          },
+                          decoration: InputDecoration(
+                            errorText: errTxt,
+                            hintText: AppLocalizations.of(context)
+                                .translate('createtimebank', 'name_hinttext'),
+                          ),
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.text,
+                          autocorrect: true,
+                          maxLines: 1,
+                          inputFormatters: <TextInputFormatter>[
+                            WhitelistingTextInputFormatter(
+                                RegExp("[a-zA-Z0-9_ ]*"))
+                          ],
+                          onSaved: (value) {
+                            enteredName =
+                                value.replaceAll("[^a-zA-Z0-9_ ]*", "");
+                          },
+                          // onSaved: (value) => enteredName = value,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return AppLocalizations.of(context).translate(
+                                  'createtimebank', 'name_err_empty');
+                            } else if (communityFound) {
+                              return AppLocalizations.of(context).translate(
+                                  'createtimebank', 'name_err_exists');
+                            } else {
+                              enteredName =
+                                  value.replaceAll("[^a-zA-Z0-9]", "");
+                              snapshot.data.community.updateValueByKey(
+                                  'name', value.replaceAll("[^a-zA-Z0-9]", ""));
                               createEditCommunityBloc.onChange(snapshot.data);
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      headingText(AppLocalizations.of(context).translate('createtimebank','protected')),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
-                        child: infoButton(
-                          context: context,
-                          key: GlobalKey(),
-                          type: InfoType.PROTECTED_TIMEBANK,
+                            }
+
+                            return null;
+                          },
                         ),
-                      ),
-                      Column(
-                        children: <Widget>[
-                          Divider(),
-                          Checkbox(
-                            value: widget.isCreateTimebank
-                                ? snapshot.data.timebank.protected
-                                : timebankModel.protected,
-                            onChanged: (bool value) {
-                              print(value);
-                              timebankModel.protected = value;
-                              snapshot.data.timebank
-                                  .updateValueByKey('protected', value);
-                              createEditCommunityBloc.onChange(snapshot.data);
-                            },
+                        headingText(AppLocalizations.of(context)
+                            .translate('createtimebank', 'about')),
+                        TextFormField(
+                          focusNode: aboutFocus,
+                          decoration: InputDecoration(
+                            hintText: AppLocalizations.of(context)
+                                .translate('createtimebank', 'about_hint_text'),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      headingText('Prevent accedental delete'),
-                      Column(
-                        children: <Widget>[
-                          Divider(),
-                          Checkbox(
-                            value: widget.isCreateTimebank
-                                ? snapshot.data.timebank.preventAccedentalDelete
-                                : timebankModel.preventAccedentalDelete,
-                            onChanged: (bool value) {
-                              print(
-                                  "$value --->>>> ${timebankModel.preventAccedentalDelete} -- ${snapshot.data.timebank.preventAccedentalDelete}");
-                              timebankModel.preventAccedentalDelete = value;
-                              snapshot.data.timebank.updateValueByKey(
-                                'preventAccedentalDelete',
-                                value,
-                              );
-                              createEditCommunityBloc.onChange(snapshot.data);
-                            },
+                          keyboardType: TextInputType.multiline,
+                          textInputAction: TextInputAction.done,
+                          maxLines: 3,
+                          textCapitalization: TextCapitalization.sentences,
+                          initialValue: timebankModel.missionStatement ?? "",
+                          onChanged: (value) {
+                            timebankModel.missionStatement = value;
+                            communityModel.about = value;
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return AppLocalizations.of(context)
+                                  .translate('createtimebank', 'tell_more');
+                              ;
+                            }
+                            snapshot.data.community
+                                .updateValueByKey('about', value);
+
+                            snapshot.data.timebank
+                                .updateValueByKey('missionStatement', value);
+                            createEditCommunityBloc.onChange(snapshot.data);
+                            return null;
+                          },
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8),
+                        ),
+
+                        Offstage(
+                          offstage: widget.isCreateTimebank,
+                          child: Row(
+                            children: <Widget>[
+                              headingText(AppLocalizations.of(context)
+                                  .translate(
+                                      'createtimebank', 'name_err_empty')),
+                              Padding(
+                                padding: EdgeInsets.only(left: 10, top: 15),
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.add_circle_outline,
+                                  ),
+                                  onPressed: () {
+                                    addVolunteers();
+                                    print("clicked");
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  widget.isCreateTimebank ? Container() : SizedBox(height: 10),
-                  widget.isCreateTimebank
-                      ? Container()
-                      : Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                        ),
+                        Offstage(
+                          offstage: widget.isCreateTimebank,
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                totalMembersCount.toString() ?? "0",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Europa'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
                           children: <Widget>[
-                            headingText(AppLocalizations.of(context).translate('createtimebank','tax_percentage')),
+                            headingText('Private Timebank'),
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(2, 15, 0, 0),
+                              padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
                               child: infoButton(
                                 context: context,
                                 key: GlobalKey(),
-                                type: InfoType.TAX_CONFIGURATION,
+                                type: InfoType.PRIVATE_TIMEBANK,
                               ),
+                            ),
+                            Column(
+                              children: <Widget>[
+                                Divider(),
+                                Checkbox(
+                                  value: widget.isCreateTimebank
+                                      ? snapshot.data.timebank.private
+                                      : timebankModel.private,
+                                  onChanged: (bool value) {
+                                    print(value);
+                                    timebankModel.private = value;
+                                    snapshot.data.community
+                                        .updateValueByKey('private', value);
+                                    communityModel.private = value;
+                                    snapshot.data.timebank
+                                        .updateValueByKey('private', value);
+                                    createEditCommunityBloc
+                                        .onChange(snapshot.data);
+                                  },
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                  widget.isCreateTimebank
-                      ? Container()
-                      : Slider(
-                          label: "${taxPercentage.toInt()}%",
-                          value: taxPercentage,
-                          min: 0,
-                          max: 15,
-                          divisions: 15,
-                          onChanged: (value) {
-                            snapshot.data.community
-                                .updateValueByKey('taxPercentage', value / 100);
-                            setState(() {
-                              taxPercentage = value;
-                              communityModel.taxPercentage = value / 100;
-                            });
-                            print(snapshot.data.community);
-                          },
+                        Row(
+                          children: <Widget>[
+                            headingText(AppLocalizations.of(context)
+                                .translate('createtimebank', 'protected')),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(2, 5, 0, 0),
+                              child: infoButton(
+                                context: context,
+                                key: GlobalKey(),
+                                type: InfoType.PROTECTED_TIMEBANK,
+                              ),
+                            ),
+                            Column(
+                              children: <Widget>[
+                                Divider(),
+                                Checkbox(
+                                  value: widget.isCreateTimebank
+                                      ? snapshot.data.timebank.protected
+                                      : timebankModel.protected,
+                                  onChanged: (bool value) {
+                                    print(value);
+                                    timebankModel.protected = value;
+                                    snapshot.data.timebank
+                                        .updateValueByKey('protected', value);
+                                    createEditCommunityBloc
+                                        .onChange(snapshot.data);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                  Offstage(
-                    offstage: widget.isCreateTimebank,
-                    child: Row(
-                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            headingText('Prevent accedental delete'),
+                            Column(
+                              children: <Widget>[
+                                Divider(),
+                                Checkbox(
+                                  value: widget.isCreateTimebank
+                                      ? snapshot
+                                          .data.timebank.preventAccedentalDelete
+                                      : timebankModel.preventAccedentalDelete,
+                                  onChanged: (bool value) {
+                                    print(
+                                        "$value --->>>> ${timebankModel.preventAccedentalDelete} -- ${snapshot.data.timebank.preventAccedentalDelete}");
+                                    timebankModel.preventAccedentalDelete =
+                                        value;
+                                    snapshot.data.timebank.updateValueByKey(
+                                      'preventAccedentalDelete',
+                                      value,
+                                    );
+                                    createEditCommunityBloc
+                                        .onChange(snapshot.data);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        widget.isCreateTimebank
+                            ? Container()
+                            : SizedBox(height: 10),
+                        widget.isCreateTimebank
+                            ? Container()
+                            : Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  headingText(AppLocalizations.of(context)
+                                      .translate(
+                                          'createtimebank', 'tax_percentage')),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(2, 15, 0, 0),
+                                    child: infoButton(
+                                      context: context,
+                                      key: GlobalKey(),
+                                      type: InfoType.TAX_CONFIGURATION,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                        widget.isCreateTimebank
+                            ? Container()
+                            : Slider(
+                                label: "${taxPercentage.toInt()}%",
+                                value: taxPercentage,
+                                min: 0,
+                                max: 15,
+                                divisions: 15,
+                                onChanged: (value) {
+                                  snapshot.data.community.updateValueByKey(
+                                      'taxPercentage', value / 100);
+                                  setState(() {
+                                    taxPercentage = value;
+                                    communityModel.taxPercentage = value / 100;
+                                  });
+                                  print(snapshot.data.community);
+                                },
+                              ),
+                        Offstage(
+                          offstage: widget.isCreateTimebank,
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                AppLocalizations.of(context).translate(
+                                        'createtimebank',
+                                        'current_tax_percentage') +
+                                    ' : ${taxPercentage.toInt()}%',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        widget.isCreateTimebank
+                            ? Container()
+                            : SizedBox(height: 20),
+                        headingText(AppLocalizations.of(context)
+                            .translate('createtimebank', 'timebank_location')),
                         Text(
-                          AppLocalizations.of(context).translate('createtimebank','current_tax_percentage') +' : ${taxPercentage.toInt()}%',
+                          AppLocalizations.of(context).translate(
+                              'createtimebank', 'timebank_location_hinttext'),
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  widget.isCreateTimebank ? Container() : SizedBox(height: 20),
-                  headingText(AppLocalizations.of(context).translate('createtimebank','timebank_location')),
-                  Text(
-                    AppLocalizations.of(context).translate('createtimebank','timebank_location_hinttext'),
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Center(
-                    child: LocationPickerWidget(
-                      selectedAddress: selectedAddress,
-                      location: location,
-                      onChanged: (LocationDataModel dataModel) {
-                        log("received data model ");
+                        SizedBox(height: 20),
+                        Center(
+                          child: LocationPickerWidget(
+                            selectedAddress: selectedAddress,
+                            location: location,
+                            onChanged: (LocationDataModel dataModel) {
+                              log("received data model ");
 
-                          setState(() {
-                            location = dataModel.geoPoint;
-                            this.selectedAddress = dataModel.location;
-                          });
-                        },
-                      ),
-                    ),
+                              setState(() {
+                                location = dataModel.geoPoint;
+                                this.selectedAddress = dataModel.location;
+                              });
+                            },
+                          ),
+                        ),
 
-                    SizedBox(height: 10),
-                    widget.isCreateTimebank
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 0),
-                            child: tappableAddBillingDetails,
-                          )
-                        : Container(),
+                        SizedBox(height: 10),
+                        widget.isCreateTimebank
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 0),
+                                child: tappableAddBillingDetails,
+                              )
+                            : Container(),
 //                  Offstage(
 //                    offstage: !widget.isCreateTimebank,
 //                    child: Padding(
@@ -625,264 +663,284 @@ class CreateEditCommunityViewFormState
 //                      child: tappableAddBillingDetails,
 //                    ),
 //                  ),
-                  SizedBox(height: 10),
-                  widget.isCreateTimebank
-                      ? Container(
-                          width: double.infinity,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 0.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                // Text(
-                                //   'Looking for existing timebank',
-                                //   style: TextStyle(
-                                //     color: Colors.grey,
-                                //   ),
-                                // ),
-                                // tappableFindYourTeam,
-                              ],
-                            ),
-                          ),
-                        )
-                      : Container(),
-                  SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: RaisedButton(
-                        onPressed: () async {
-                          var connResult =
-                              await Connectivity().checkConnectivity();
-                          if (connResult == ConnectivityResult.none) {
-                            Scaffold.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    AppLocalizations.of(context).translate('shared','check_internet')),
-                                action: SnackBarAction(
-                                  label: AppLocalizations.of(context).translate('shared','dismiss'),
-                                  onPressed: () => Scaffold.of(context)
-                                      .hideCurrentSnackBar(),
+                        SizedBox(height: 10),
+                        widget.isCreateTimebank
+                            ? Container(
+                                width: double.infinity,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 0.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      // Text(
+                                      //   'Looking for existing timebank',
+                                      //   style: TextStyle(
+                                      //     color: Colors.grey,
+                                      //   ),
+                                      // ),
+                                      // tappableFindYourTeam,
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                            return;
-                          }
-                          if (errTxt != null) {
-                            showDialogForSuccess(
-                                dialogTitle: AppLocalizations.of(context).translate('createtimebank','timebank_exists_dialog'),
-                                err: true);
-                            return;
-                          }
-                          // show a dialog
-                          if (widget.isCreateTimebank) {
-                            if (!hasRegisteredLocation()) {
-                              showDialogForSuccess(
-                                  dialogTitle:
-                                  AppLocalizations.of(context).translate('createtimebank','location_err_empty'),
-                                  err: true);
-                              return;
-                            }
-
-                            if (_formKey.currentState.validate()) {
-                              if (isBillingDetailsProvided) {
-                                setState(() {
-                                  this._billingDetailsError = '';
-                                });
-                                print(globals.timebankAvatarURL);
-                                if (globals.timebankAvatarURL == null) {
-                                  setState(() {
-                                    this.communityImageError =
-                                        AppLocalizations.of(context).translate('createtimebank','logo_mandatory');
-                                    moveToTop();
-                                  });
-                                } else {
-                                  showProgressDialog(AppLocalizations.of(context).translate('createtimebank','progress'));
-
-                                    setState(() {
-                                      this.communityImageError = '';
-                                    });
-
-                                    // creation of community;
-                                    snapshot.data.UpdateCommunityDetails(
-                                      SevaCore.of(context).loggedInUser,
-                                      globals.timebankAvatarURL,
-                                      location,
-                                    );
-                                    // creation of default timebank;
-                                    snapshot.data.UpdateTimebankDetails(
-                                      SevaCore.of(context).loggedInUser,
-                                      globals.timebankAvatarURL,
-                                      widget,
-                                    );
-                                    // updating the community with default timebank id
-                                    snapshot.data.community.timebanks = [
-                                      snapshot.data.timebank.id
-                                    ].cast<String>();
-
-                                    snapshot.data.community.primary_timebank =
-                                        snapshot.data.timebank.id;
-                                    snapshot.data.community.location = location;
-
-                                  await createEditCommunityBloc.createCommunity(
-                                    snapshot.data,
-                                    SevaCore.of(context).loggedInUser,
-                                  );
-
-                                    await Firestore.instance
-                                        .collection("users")
-                                        .document(SevaCore.of(context)
-                                            .loggedInUser
-                                            .email)
-                                        .updateData({
-                                      'communities': FieldValue.arrayUnion(
-                                          [snapshot.data.community.id]),
-                                      'currentCommunity':
-                                          snapshot.data.community.id
-                                    });
-
-                                    setState(() {
-                                      SevaCore.of(context)
-                                              .loggedInUser
-                                              .currentCommunity =
-                                          snapshot.data.community.id;
-                                    });
-
-                                  Navigator.pop(dialogContext);
-                                  //   _formKey.currentState.reset();
-                                  // _billingInformationKey.currentState.reset();
-                                  UserModel user =
-                                      SevaCore.of(context).loggedInUser;
-                                  _formKey.currentState.reset();
-                                  // _billingInformationKey.currentState.reset();
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => BillingPlanDetails(
-                                        user: user,
-                                        isPlanActive: false,
-                                        planName: "",
+                              )
+                            : Container(),
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5.0),
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: RaisedButton(
+                              onPressed: () async {
+                                var connResult =
+                                    await Connectivity().checkConnectivity();
+                                if (connResult == ConnectivityResult.none) {
+                                  Scaffold.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(AppLocalizations.of(context)
+                                          .translate(
+                                              'shared', 'check_internet')),
+                                      action: SnackBarAction(
+                                        label: AppLocalizations.of(context)
+                                            .translate('shared', 'dismiss'),
+                                        onPressed: () => Scaffold.of(context)
+                                            .hideCurrentSnackBar(),
                                       ),
                                     ),
                                   );
-                                  // Navigator.of(context).pushAndRemoveUntil(
-                                  //    MaterialPageRoute(
-                                  //      builder: (context1) => MainApplication(
-                                  //        skipToHomePage: true,
-                                  //      ),
-                                  //    ),
-                                  //    (Route<dynamic> route) => false);
+                                  return;
                                 }
-                              } else {
-                                setState(() {
-                                  this._billingDetailsError =
-                                      AppLocalizations.of(context).translate('createtimebank','billing_err');
-                                });
-                              }
-                            } else {}
-                          } else {
-                            if (!hasRegisteredLocation()) {
-                              showDialogForSuccess(
-                                  dialogTitle:
-                                  AppLocalizations.of(context).translate('createtimebank','location_err_empty'),
-                                  err: true);
-                              return;
-                            }
-
-                            showProgressDialog(AppLocalizations.of(context).translate('createtimebank','progress_updating'));
-                            if (globals.timebankAvatarURL != null) {
-                              communityModel.logo_url =
-                                  globals.timebankAvatarURL;
-                              timebankModel.photoUrl =
-                                  globals.timebankAvatarURL;
-                            }
-
-                              timebankModel.location = location;
-                              ;
-                              timebankModel.address = selectedAddress;
-
-                              if (selectedUsers != null) {
-                                selectedUsers.forEach((key, user) {
-                                  print("Selected member with key $key");
-                                  if (timebankModel.members
-                                      .contains(user.sevaUserID)) {
-                                    selectedUsers.remove(user);
+                                if (errTxt != null) {
+                                  showDialogForSuccess(
+                                      dialogTitle: AppLocalizations.of(context)
+                                          .translate('createtimebank',
+                                              'timebank_exists_dialog'),
+                                      err: true);
+                                  return;
+                                }
+                                // show a dialog
+                                if (widget.isCreateTimebank) {
+                                  if (!hasRegisteredLocation()) {
+                                    showDialogForSuccess(
+                                        dialogTitle:
+                                            AppLocalizations.of(context)
+                                                .translate('createtimebank',
+                                                    'location_err_empty'),
+                                        err: true);
+                                    return;
                                   }
-                                });
-                                selectedUsers.forEach((key, user) {
-                                  print("Selected member with key $key");
-                                  members.add(user.sevaUserID);
-                                });
-                              }
-                              if (widget.isCreateTimebank) {
-                                var taxDefaultVal = (json.decode(AppConfig
-                                        .remoteConfig
-                                        .getString('defaultTaxPercentValue')))
-                                    .toDouble();
-                                snapshot.data.community.updateValueByKey(
-                                    'taxPercentage', taxDefaultVal / 100);
-                                communityModel.taxPercentage =
-                                    taxDefaultVal / 100;
-                              }
 
-                              // creation of community;
+                                  if (_formKey.currentState.validate()) {
+                                    if (isBillingDetailsProvided) {
+                                      setState(() {
+                                        this._billingDetailsError = '';
+                                      });
+                                      print(globals.timebankAvatarURL);
+                                      if (globals.timebankAvatarURL == null) {
+                                        setState(() {
+                                          this.communityImageError =
+                                              AppLocalizations.of(context)
+                                                  .translate('createtimebank',
+                                                      'logo_mandatory');
+                                          moveToTop();
+                                        });
+                                      } else {
+                                        showProgressDialog(
+                                            AppLocalizations.of(context)
+                                                .translate('createtimebank',
+                                                    'progress'));
 
-                              // updating timebank with latest values
-                              await FirestoreManager.updateTimebankDetails(
-                                      timebankModel: timebankModel,
-                                      members: members)
-                                  .then((onValue) {
-                                print("timebank updated");
-                              });
-                              communityModel.taxPercentage =
-                                  taxPercentage / 100;
+                                        setState(() {
+                                          this.communityImageError = '';
+                                        });
+
+                                        // creation of community;
+                                        snapshot.data.UpdateCommunityDetails(
+                                          SevaCore.of(context).loggedInUser,
+                                          globals.timebankAvatarURL,
+                                          location,
+                                        );
+                                        // creation of default timebank;
+                                        snapshot.data.UpdateTimebankDetails(
+                                          SevaCore.of(context).loggedInUser,
+                                          globals.timebankAvatarURL,
+                                          widget,
+                                        );
+                                        // updating the community with default timebank id
+                                        snapshot.data.community.timebanks = [
+                                          snapshot.data.timebank.id
+                                        ].cast<String>();
+
+                                        snapshot.data.community
+                                                .primary_timebank =
+                                            snapshot.data.timebank.id;
+                                        snapshot.data.community.location =
+                                            location;
+
+                                        await createEditCommunityBloc
+                                            .createCommunity(
+                                          snapshot.data,
+                                          SevaCore.of(context).loggedInUser,
+                                        );
+
+                                        await Firestore.instance
+                                            .collection("users")
+                                            .document(SevaCore.of(context)
+                                                .loggedInUser
+                                                .email)
+                                            .updateData({
+                                          'communities': FieldValue.arrayUnion(
+                                              [snapshot.data.community.id]),
+                                          'currentCommunity':
+                                              snapshot.data.community.id
+                                        });
+
+                                        setState(() {
+                                          SevaCore.of(context)
+                                                  .loggedInUser
+                                                  .currentCommunity =
+                                              snapshot.data.community.id;
+                                        });
+
+                                        Navigator.pop(dialogContext);
+                                        //   _formKey.currentState.reset();
+                                        // _billingInformationKey.currentState.reset();
+                                        UserModel user =
+                                            SevaCore.of(context).loggedInUser;
+                                        _formKey.currentState.reset();
+                                        // _billingInformationKey.currentState.reset();
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                BillingPlanDetails(
+                                              user: user,
+                                              isPlanActive: false,
+                                              planName: "",
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      setState(() {
+                                        this._billingDetailsError =
+                                            AppLocalizations.of(context)
+                                                .translate('createtimebank',
+                                                    'billing_err');
+                                      });
+                                    }
+                                  } else {}
+                                } else {
+                                  if (!hasRegisteredLocation()) {
+                                    showDialogForSuccess(
+                                        dialogTitle:
+                                            AppLocalizations.of(context)
+                                                .translate('createtimebank',
+                                                    'location_err_empty'),
+                                        err: true);
+                                    return;
+                                  }
+
+                                  showProgressDialog(
+                                      AppLocalizations.of(context).translate(
+                                          'createtimebank',
+                                          'progress_updating'));
+                                  if (globals.timebankAvatarURL != null) {
+                                    communityModel.logo_url =
+                                        globals.timebankAvatarURL;
+                                    timebankModel.photoUrl =
+                                        globals.timebankAvatarURL;
+                                  }
+
+                                  timebankModel.location = location;
+                                  ;
+                                  timebankModel.address = selectedAddress;
+
+                                  if (selectedUsers != null) {
+                                    selectedUsers.forEach((key, user) {
+                                      print("Selected member with key $key");
+                                      if (timebankModel.members
+                                          .contains(user.sevaUserID)) {
+                                        selectedUsers.remove(user);
+                                      }
+                                    });
+                                    selectedUsers.forEach((key, user) {
+                                      print("Selected member with key $key");
+                                      members.add(user.sevaUserID);
+                                    });
+                                  }
+                                  if (widget.isCreateTimebank) {
+                                    var taxDefaultVal = (json.decode(
+                                            AppConfig.remoteConfig.getString(
+                                                'defaultTaxPercentValue')))
+                                        .toDouble();
+                                    snapshot.data.community.updateValueByKey(
+                                        'taxPercentage', taxDefaultVal / 100);
+                                    communityModel.taxPercentage =
+                                        taxDefaultVal / 100;
+                                  }
+
+                                  // creation of community;
+
+                                  // updating timebank with latest values
+                                  await FirestoreManager.updateTimebankDetails(
+                                          timebankModel: timebankModel,
+                                          members: members)
+                                      .then((onValue) {
+                                    print("timebank updated");
+                                  });
+                                  communityModel.taxPercentage =
+                                      taxPercentage / 100;
 //                            //updating community with latest values
-                            await FirestoreManager.updateCommunityDetails(
-                                    communityModel: communityModel)
-                                .then((onValue) {
-                              print("community updated");
-                            });
-                            if (dialogContext != null) {
-                              Navigator.pop(dialogContext);
-                            }
-                            _formKey.currentState.reset();
-                            if (widget.isFromFind) {
-                              Navigator.of(context).pop();
-                            } else {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      SwitchTimebank(content: 'Updating'),
-                                ),
-                              );
-                            }
-                          }
-                        },
-                        shape: StadiumBorder(),
-                        child: Text(
-                          widget.isCreateTimebank
-                              ? AppLocalizations.of(context).translate('createtimebank','title')
-                              : AppLocalizations.of(context).translate('createtimebank','save'),
-                          style: TextStyle(fontSize: 16.0, color: Colors.white),
+                                  await FirestoreManager.updateCommunityDetails(
+                                          communityModel: communityModel)
+                                      .then((onValue) {
+                                    print("community updated");
+                                  });
+                                  if (dialogContext != null) {
+                                    Navigator.pop(dialogContext);
+                                  }
+                                  _formKey.currentState.reset();
+                                  if (widget.isFromFind) {
+                                    Navigator.of(context).pop();
+                                  } else {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            SwitchTimebank(content: 'Updating'),
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                              shape: StadiumBorder(),
+                              child: Text(
+                                widget.isCreateTimebank
+                                    ? AppLocalizations.of(context)
+                                        .translate('createtimebank', 'title')
+                                    : AppLocalizations.of(context)
+                                        .translate('createtimebank', 'save'),
+                                style: TextStyle(
+                                    fontSize: 16.0, color: Colors.white),
+                              ),
+                              textColor: FlavorConfig.values.buttonTextColor,
+                            ),
+                          ),
                         ),
-                        textColor: FlavorConfig.values.buttonTextColor,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 100),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 50),
-                    child: Text(
-                      '',
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-                ],
-              )),
-            );
+                        SizedBox(height: 100),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 50),
+                          child: Text(
+                            '',
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      ],
+                    )),
+              );
             });
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
@@ -922,8 +980,10 @@ class CreateEditCommunityViewFormState
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text(AppLocalizations.of(context).translate('shared','signing_out')),
-          content: Text(AppLocalizations.of(context).translate('createtimebank','ack_dialog')),
+          title: Text(
+              AppLocalizations.of(context).translate('shared', 'signing_out')),
+          content: Text(AppLocalizations.of(context)
+              .translate('createtimebank', 'ack_dialog')),
           actions: <Widget>[
             RaisedButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
@@ -931,7 +991,8 @@ class CreateEditCommunityViewFormState
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
               child: Text(
-                AppLocalizations.of(context).translate('createtimebank','ok_signout'),
+                AppLocalizations.of(context)
+                    .translate('createtimebank', 'ok_signout'),
                 style: TextStyle(
                   fontSize: 16,
                 ),
@@ -946,7 +1007,8 @@ class CreateEditCommunityViewFormState
             FlatButton(
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                 child: Text(
-                  AppLocalizations.of(context).translate('createtimebank','illdolater'),
+                  AppLocalizations.of(context)
+                      .translate('createtimebank', 'illdolater'),
                   style: TextStyle(fontSize: 16, color: Colors.red),
                 ),
                 onPressed: () => Navigator.of(context).pop()),
@@ -1005,7 +1067,8 @@ class CreateEditCommunityViewFormState
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              AppLocalizations.of(context).translate('createtimebank','configure_profile'),
+              AppLocalizations.of(context)
+                  .translate('createtimebank', 'configure_profile'),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.blue,
@@ -1138,7 +1201,8 @@ class CreateEditCommunityViewFormState
             Column(
               children: <Widget>[
                 Text(
-                  AppLocalizations.of(context).translate('createtimebank','profile_info_title'),
+                  AppLocalizations.of(context)
+                      .translate('createtimebank', 'profile_info_title'),
                   style: TextStyle(
                       color: FlavorConfig.values.theme.primaryColor,
                       fontSize: 20,
@@ -1209,12 +1273,16 @@ class CreateEditCommunityViewFormState
               ? controller.community.billing_address.state
               : '',
           validator: (value) {
-            return value.isEmpty ? AppLocalizations.of(context).translate('createtimebank','err_empty') : null;
+            return value.isEmpty
+                ? AppLocalizations.of(context)
+                    .translate('createtimebank', 'err_empty')
+                : null;
           },
           focusNode: focusNodes[1],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
-            fieldTitle: AppLocalizations.of(context).translate('createtimebank','state'),
+            fieldTitle: AppLocalizations.of(context)
+                .translate('createtimebank', 'state'),
           ),
         ),
       );
@@ -1238,12 +1306,16 @@ class CreateEditCommunityViewFormState
               ? controller.community.billing_address.city
               : '',
           validator: (value) {
-            return value.isEmpty ? AppLocalizations.of(context).translate('createtimebank','err_empty') : null;
+            return value.isEmpty
+                ? AppLocalizations.of(context)
+                    .translate('createtimebank', 'err_empty')
+                : null;
           },
           focusNode: focusNodes[0],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
-            fieldTitle: AppLocalizations.of(context).translate('createtimebank','city'),
+            fieldTitle: AppLocalizations.of(context)
+                .translate('createtimebank', 'city'),
           ),
         ),
       );
@@ -1266,14 +1338,18 @@ class CreateEditCommunityViewFormState
               ? controller.community.billing_address.pincode.toString()
               : '',
           validator: (value) {
-            return value.isEmpty ? AppLocalizations.of(context).translate('createtimebank','err_empty') : null;
+            return value.isEmpty
+                ? AppLocalizations.of(context)
+                    .translate('createtimebank', 'err_empty')
+                : null;
           },
           focusNode: focusNodes[3],
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
           maxLength: 15,
           decoration: getInputDecoration(
-            fieldTitle: AppLocalizations.of(context).translate('createtimebank','zip'),
+            fieldTitle:
+                AppLocalizations.of(context).translate('createtimebank', 'zip'),
           ),
         ),
       );
@@ -1306,7 +1382,8 @@ class CreateEditCommunityViewFormState
           focusNode: focusNodes[7],
           textInputAction: TextInputAction.done,
           decoration: getInputDecoration(
-            fieldTitle: AppLocalizations.of(context).translate('createtimebank','additional_notes'),
+            fieldTitle: AppLocalizations.of(context)
+                .translate('createtimebank', 'additional_notes'),
           ),
         ),
       );
@@ -1327,7 +1404,10 @@ class CreateEditCommunityViewFormState
             createEditCommunityBloc.onChange(controller);
           },
           validator: (value) {
-            return value.isEmpty ? AppLocalizations.of(context).translate('createtimebank','err_empty') : null;
+            return value.isEmpty
+                ? AppLocalizations.of(context)
+                    .translate('createtimebank', 'err_empty')
+                : null;
           },
           focusNode: focusNodes[4],
           textInputAction: TextInputAction.done,
@@ -1336,7 +1416,8 @@ class CreateEditCommunityViewFormState
                   ? controller.community.billing_address.street_address1
                   : '',
           decoration: getInputDecoration(
-            fieldTitle: AppLocalizations.of(context).translate('createtimebank','street_add1'),
+            fieldTitle: AppLocalizations.of(context)
+                .translate('createtimebank', 'street_add1'),
           ),
         ),
       );
@@ -1363,7 +1444,8 @@ class CreateEditCommunityViewFormState
                     ? controller.community.billing_address.street_address2
                     : '',
             decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(context).translate('createtimebank','street_add2'),
+              fieldTitle: AppLocalizations.of(context)
+                  .translate('createtimebank', 'street_add2'),
             )),
       );
     }
@@ -1391,7 +1473,8 @@ class CreateEditCommunityViewFormState
           focusNode: focusNodes[6],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
-            fieldTitle: AppLocalizations.of(context).translate('createtimebank','company_name'),
+            fieldTitle: AppLocalizations.of(context)
+                .translate('createtimebank', 'company_name'),
           ),
         ),
       );
@@ -1414,12 +1497,16 @@ class CreateEditCommunityViewFormState
               ? controller.community.billing_address.country
               : '',
           validator: (value) {
-            return value.isEmpty ? AppLocalizations.of(context).translate('createtimebank','err_empty') : null;
+            return value.isEmpty
+                ? AppLocalizations.of(context)
+                    .translate('createtimebank', 'err_empty')
+                : null;
           },
           focusNode: focusNodes[2],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
-            fieldTitle: AppLocalizations.of(context).translate('createtimebank','country_name'),
+            fieldTitle: AppLocalizations.of(context)
+                .translate('createtimebank', 'country_name'),
           ),
         ),
       );
@@ -1430,7 +1517,8 @@ class CreateEditCommunityViewFormState
         padding: const EdgeInsets.fromLTRB(100, 10, 100, 20),
         child: RaisedButton(
           child: Text(
-            AppLocalizations.of(context).translate('createtimebank','continue'),
+            AppLocalizations.of(context)
+                .translate('createtimebank', 'continue'),
             style: Theme.of(context).primaryTextTheme.button,
           ),
           onPressed: () {
@@ -1504,8 +1592,12 @@ class CreateEditCommunityViewFormState
   }
 
   void addVolunteers() async {
-    print(
-        AppLocalizations.of(context).translate('createtimebank','selected_users') +" ${selectedUsers.length} " + AppLocalizations.of(context).translate('createtimebank','with_timebank_id') + "${SevaCore.of(context).loggedInUser.currentTimebank}");
+    print(AppLocalizations.of(context)
+            .translate('createtimebank', 'selected_users') +
+        " ${selectedUsers.length} " +
+        AppLocalizations.of(context)
+            .translate('createtimebank', 'with_timebank_id') +
+        "${SevaCore.of(context).loggedInUser.currentTimebank}");
 
     onActivityResult = await Navigator.of(context).push(
       MaterialPageRoute(
