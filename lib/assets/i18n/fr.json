@@ -329,7 +329,10 @@
     "change_attachment": "changer la pièce jointe",
     "add_attachment": "ajouter une pièce jointe",
     "camera" : "Camera",
-    "gallery": "Galerie"
+    "gallery": "Galerie",
+    "size_alert": "Les fichiers de plus de 10 Mo ne sont pas autorisés",
+    "size_alert_title": "Alerte fichier volumineux"
+
   },
   "projects": {
     "title": "Projets",

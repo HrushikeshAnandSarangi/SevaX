@@ -329,7 +329,9 @@
     "change_attachment": "alterar anexo",
     "add_attachment": "juntar anexo",
     "camera" : "Camera",
-    "gallery": "Galeria"
+    "gallery": "Galeria",
+    "size_alert": "Arquivos com mais de 10 MB não são permitidos",
+    "size_alert_titile": "Alerta de arquivo grande"
   },
   "projects": {
     "title": "Projetos",

@@ -119,7 +119,9 @@ class TimezoneListData {
         timezoneName: 'Eastern European Time'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
-        offsetFromUtc: 3, timezoneAbb: 'MSK', timezoneName: 'Moscow Time'),
+        offsetFromUtc: 3,
+        timezoneAbb: 'MSK',
+        timezoneName: 'Moscow Time'),
 
     //Australia
 
@@ -667,15 +669,19 @@ class TimezoneListData {
 
   TimezoneListData();
 
-  getTimezoneData (timezoneName) {
+  getTimezoneData(timezoneName) {
     for (var i = 0; i < timezonelist.length; i++) {
       if (timezonelist[i].timezoneName == timezoneName) {
-        return [timezonelist[i].offsetFromUtc, timezonelist[i].offsetFromUtcMin];
+        return [
+          timezonelist[i].offsetFromUtc,
+          timezonelist[i].offsetFromUtcMin
+        ];
       }
     }
     return [-5, 0];
   }
-  getTimeZoneByCodeData (timezoneCode) {
+
+  getTimeZoneByCodeData(timezoneCode) {
     for (var i = 0; i < timezonelist.length; i++) {
       if (timezonelist[i].timezoneAbb == timezoneCode) {
         return timezonelist[i].timezoneName;
@@ -683,10 +689,12 @@ class TimezoneListData {
     }
     return "Pacific Standard Time";
   }
+
   getData() {
     return timezonelist;
   }
 }
+
 class TimezoneView extends StatefulWidget {
   @override
   _TimezoneViewState createState() => _TimezoneViewState();
@@ -698,7 +706,7 @@ class _TimezoneViewState extends State<TimezoneView> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context).translate('settings','my_timezone'),
+            AppLocalizations.of(context).translate('profile', 'timezone'),
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -749,8 +757,8 @@ class TimezoneListState extends State<TimezoneList> {
               DateFormat format = DateFormat('dd/MMM/yyyy HH:mm');
               DateTime timeInUtc = new DateTime.now().toUtc();
 
-              DateTime localtime =
-                  timeInUtc.add(Duration(hours: model.offsetFromUtc, minutes: model.offsetFromUtcMin));
+              DateTime localtime = timeInUtc.add(Duration(
+                  hours: model.offsetFromUtc, minutes: model.offsetFromUtcMin));
               return Card(
                 child: ListTile(
                   leading: getIcon(isSelected, model.timezoneName),
@@ -799,5 +807,9 @@ class TimeZoneModel {
   int offsetFromUtcMin;
   String timezoneAbb;
 
-  TimeZoneModel({this.timezoneName, this.offsetFromUtc, this.timezoneAbb, this.offsetFromUtcMin});
+  TimeZoneModel(
+      {this.timezoneName,
+      this.offsetFromUtc,
+      this.timezoneAbb,
+      this.offsetFromUtcMin});
 }
