@@ -655,7 +655,7 @@
     "start_date_err": "Please mention the start and end date of the request",
     "add_location": "Please add location to your request",
     "progress": "Creating Request..",
-    "not_enough_seva": "Creating Request..",
+    "not_enough_seva": "Your seva credits are not sufficient to create the request.",
     "ok": "OK",
     "assign_members": "Assign to volunteers",
     "selected": "members selected",
