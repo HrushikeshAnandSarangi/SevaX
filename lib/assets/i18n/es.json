@@ -874,7 +874,7 @@
     "enter_start_end": "Por favor, introduzca la fecha de inicio y finalización"
   },
   "info_window": {
-    "mapper": "i_button_info_er",
+    "mapper": "i_button_info_es",
     "groupsInfo": "Un banco de tiempo (o comunidad) se divide en grupos. Por ejemplo, una comunidad escolar tendría grupos para el comité de tecnología, recaudación de fondos, aula, etc.",
     "offersInfo": "Los proyectos son colecciones lógicas bajo un grupo. Por ejemplo, el Grupo del Comité de Tecnología puede tener los siguientes proyectos: página web de la escuela, equipos, aplicaciones, etc.",
     "requestsInfo": "Las solicitudes son creadas por Time Admins, para tareas de la comunidad que deben realizarse (por ejemplo, desmalezar el patio de la escuela), o por usuarios que necesitan ayuda de la comunidad para las cosas que deben hacerse (por ejemplo, personas mayores que necesitan alimentos). Las solicitudes de un Banco de tiempo se enumerarían en un Proyecto.",
