@@ -206,7 +206,8 @@ class NewsImageState extends State<NewsImage>
                                     ? widget.photoCredits
                                     : '',
                                 decoration: InputDecoration(
-                                  hintText: '+ ${AppLocalizations.of(context).translate('create_feed','imagehint')}',
+                                  hintText:
+                                      '+ ${AppLocalizations.of(context).translate('create_feed', 'imagehint')}',
                                 ),
                                 keyboardType: TextInputType.text,
                                 textAlign: TextAlign.center,
@@ -259,7 +260,11 @@ class NewsImageState extends State<NewsImage>
             label: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                _image != null ? AppLocalizations.of(context).translate('create_feed','change') : AppLocalizations.of(context).translate('create_feed','add'),
+                _image != null
+                    ? AppLocalizations.of(context)
+                        .translate('create_feed', 'change_attachment')
+                    : AppLocalizations.of(context)
+                        .translate('create_feed', 'add_attachment'),
               ),
             ),
             onPressed: () {

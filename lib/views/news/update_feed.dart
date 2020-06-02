@@ -89,15 +89,12 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.email = SevaCore.of(context).loggedInUser.email;
     newsObject.fullName = SevaCore.of(context).loggedInUser.fullname;
     newsObject.sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
-    newsObject.newsImageUrl = globals.newsImageURL == null
-        ? newsObject.newsImageUrl ?? ''
-        : globals.newsImageURL ?? '';
+    newsObject.newsImageUrl = globals.newsImageURL ?? '';
     newsObject.location = location;
     newsObject.root_timebank_id = FlavorConfig.values.timebankId;
     newsObject.photoCredits = photoCredits != null ? photoCredits : '';
-    newsObject.newsDocumentUrl = globals.newsDocumentURL == null
-        ? newsObject.newsDocumentUrl ?? ''
-        : globals.newsDocumentURL;
+    newsObject.newsDocumentUrl =
+        globals.newsDocumentURL ?? newsObject.newsDocumentUrl ?? '';
     newsObject.newsDocumentName =
         globals.newsDocumentName ?? newsObject.newsDocumentName ?? '';
     //EntityModel entityModel = _getSelectedEntityModel;
@@ -118,6 +115,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     if (dialogContext != null) {
       Navigator.pop(dialogContext);
     }
+    Navigator.pop(context);
     Navigator.pop(context);
   }
 

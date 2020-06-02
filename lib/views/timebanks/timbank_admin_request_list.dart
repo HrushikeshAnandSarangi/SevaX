@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
@@ -30,7 +30,6 @@ import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../switch_timebank.dart';
-import 'edit_super_admins_view.dart';
 
 class TimebankRequestAdminPage extends StatefulWidget {
   final String timebankId;
@@ -141,7 +140,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   Widget getTimebackList(BuildContext context, String timebankId) {
     if (isProgressBarActive) {
       return AlertDialog(
-        title: Text(AppLocalizations.of(context).translate('members','updating_users')),
+        title: Text(AppLocalizations.of(context)
+            .translate('members', 'updating_users')),
         content: LinearProgressIndicator(),
       );
     }
@@ -191,85 +191,85 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     );
   }
 
-  Widget getAppBar(BuildContext context, TimebankModel timebankModel) {
-    return SliverAppBar(
-      iconTheme: IconThemeData(color: Colors.white),
-      backgroundColor: Theme.of(context).primaryColor,
-      centerTitle: true,
-      expandedHeight: 0,
-      floating: false,
-      snap: false,
-      pinned: true,
-      elevation: 0,
-      actions: <Widget>[
-        !(timebankModel.admins
-                .contains(SevaCore.of(context).loggedInUser.sevaUserID))
-            ? Offstage()
-            : IconButton(
-                icon: Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditSuperTimebankView(
-                        timebankId: timebankModel.id,
-                        superAdminTimebankModel: timebankModel,
-                      ),
-                    ),
-                  );
-                },
-              ),
-      ],
-      flexibleSpace: FlexibleSpaceBar(
-        centerTitle: true,
-        title: Text(
-          timebankModel.name,
-          style: TextStyle(color: Colors.white),
-        ),
-        collapseMode: CollapseMode.pin,
-        background: Stack(
-          children: <Widget>[
-            Positioned(
-              right: 0,
-              left: 0,
-              top: 0,
-              bottom: 0,
-              child: Center(
-                child: Container(
-                  height: 130,
-                  width: 130,
-                  margin: EdgeInsets.all(16),
-                  decoration: ShapeDecoration(
-                    shadows: [
-                      BoxShadow(
-                        color: Colors.black.withAlpha(30),
-                        spreadRadius: 0,
-                        offset: Offset(0, 4),
-                        blurRadius: 17,
-                      )
-                    ],
-                    shape: CircleBorder(),
-                  ),
-                  child: ClipOval(
-                    child: FadeInImage.assetNetwork(
-                      placeholder: 'lib/assets/images/profile.png',
-                      image: timebankModel.photoUrl == null
-                          ? 'lib/assets/images/profile.png'
-                          : timebankModel.photoUrl,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+//  Widget getAppBar(BuildContext context, TimebankModel timebankModel) {
+//    return SliverAppBar(
+//      iconTheme: IconThemeData(color: Colors.white),
+//      backgroundColor: Theme.of(context).primaryColor,
+//      centerTitle: true,
+//      expandedHeight: 0,
+//      floating: false,
+//      snap: false,
+//      pinned: true,
+//      elevation: 0,
+//      actions: <Widget>[
+//        !(timebankModel.admins
+//                .contains(SevaCore.of(context).loggedInUser.sevaUserID))
+//            ? Offstage()
+//            : IconButton(
+//                icon: Icon(
+//                  Icons.edit,
+//                  color: Colors.white,
+//                ),
+//                onPressed: () {
+//                  Navigator.pop(context);
+//                  Navigator.push(
+//                    context,
+//                    MaterialPageRoute(
+//                      builder: (context) => EditSuperTimebankView(
+//                        timebankId: timebankModel.id,
+//                        superAdminTimebankModel: timebankModel,
+//                      ),
+//                    ),
+//                  );
+//                },
+//              ),
+//      ],
+//      flexibleSpace: FlexibleSpaceBar(
+//        centerTitle: true,
+//        title: Text(
+//          timebankModel.name,
+//          style: TextStyle(color: Colors.white),
+//        ),
+//        collapseMode: CollapseMode.pin,
+//        background: Stack(
+//          children: <Widget>[
+//            Positioned(
+//              right: 0,
+//              left: 0,
+//              top: 0,
+//              bottom: 0,
+//              child: Center(
+//                child: Container(
+//                  height: 130,
+//                  width: 130,
+//                  margin: EdgeInsets.all(16),
+//                  decoration: ShapeDecoration(
+//                    shadows: [
+//                      BoxShadow(
+//                        color: Colors.black.withAlpha(30),
+//                        spreadRadius: 0,
+//                        offset: Offset(0, 4),
+//                        blurRadius: 17,
+//                      )
+//                    ],
+//                    shape: CircleBorder(),
+//                  ),
+//                  child: ClipOval(
+//                    child: FadeInImage.assetNetwork(
+//                      placeholder: 'lib/assets/images/profile.png',
+//                      image: timebankModel.photoUrl == null
+//                          ? 'lib/assets/images/profile.png'
+//                          : timebankModel.photoUrl,
+//                    ),
+//                  ),
+//                ),
+//              ),
+//            ),
+//          ],
+//        ),
+//      ),
+//    );
+//  }
 
   Future loadItems() async {
     if (adminsNotLoaded) {
@@ -293,7 +293,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
   Future loadAllRequest(List<JoinRequestModel> modelItemList) async {
     _requestsWidgets = [];
-    _requestsWidgets.add(getSectionTitle(context, AppLocalizations.of(context).translate('members','requests')));
+    _requestsWidgets.add(getSectionTitle(context,
+        AppLocalizations.of(context).translate('members', 'requests')));
     for (var i = 0; i < modelItemList.length; i++) {
       if (modelItemList[i] == null ||
           modelItemList[i].operationTaken ||
@@ -568,7 +569,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       child: Padding(
         padding: EdgeInsets.all(10),
         child: Center(
-          child: Text(AppLocalizations.of(context).translate('members','no_users')),
+          child: Text(
+              AppLocalizations.of(context).translate('members', 'no_users')),
         ),
       ),
     );
@@ -621,7 +623,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         timebankModel: timebankModel,
       ));
     }
-    _adminsWidgets.add(getSectionTitle(context, AppLocalizations.of(context).translate('members','admin_organizers')));
+    _adminsWidgets.add(getSectionTitle(context,
+        AppLocalizations.of(context).translate('members', 'admin_organizers')));
     SplayTreeMap<String, dynamic>.from(adminUserModel, (a, b) => a.compareTo(b))
         .forEach((key, user) {
       String email = user.email.toString().trim();
@@ -721,7 +724,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         return AlertDialog(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text('${AppLocalizations.of(context).translate('members','exit')} ${widget.isFromGroup ? AppLocalizations.of(context).translate('members','group') : AppLocalizations.of(context).translate('members','timebank')}',
+          title: Text(
+              '${AppLocalizations.of(context).translate('members', 'exit')} ${widget.isFromGroup ? AppLocalizations.of(context).translate('members', 'group') : AppLocalizations.of(context).translate('members', 'timebank')}',
               style: TextStyle(fontSize: 15.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -729,7 +733,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
               Form(
                 key: _formKey,
                 child: TextFormField(
-                  decoration: InputDecoration(hintText: AppLocalizations.of(context).translate('members','enter_reason')),
+                  decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)
+                          .translate('members', 'enter_reason')),
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,
                   style: TextStyle(fontSize: 17.0),
@@ -738,7 +744,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                   ],
                   validator: (value) {
                     if (value.isEmpty) {
-                      return AppLocalizations.of(context).translate('members','reason_1');
+                      return AppLocalizations.of(context)
+                          .translate('members', 'reason_1');
                     }
                     reason = value;
                     globals.userExitReason = value;
@@ -756,7 +763,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      AppLocalizations.of(context).translate('members','exit'),
+                      AppLocalizations.of(context).translate('members', 'exit'),
                       style: TextStyle(
                         fontSize: dialogButtonSize,
                       ),
@@ -766,10 +773,11 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                       if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content:
-                                Text(AppLocalizations.of(context).translate('shared','check_internet')),
+                            content: Text(AppLocalizations.of(context)
+                                .translate('shared', 'check_internet')),
                             action: SnackBarAction(
-                              label: AppLocalizations.of(context).translate('shared','dismiss'),
+                              label: AppLocalizations.of(context)
+                                  .translate('shared', 'dismiss'),
                               onPressed: () => _scaffoldKey.currentState
                                   .hideCurrentSnackBar(),
                             ),
@@ -795,6 +803,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                         removeMemberTimebankFn(
                             context: parentContext,
                             userModel: user,
+                            isFromExit: true,
                             timebankModel: model);
 //                        CommunityModel communityModel =
 //                            await getCommunityDetailsByCommunityId(
@@ -811,6 +820,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                         removeMemberGroupFn(
                             context: parentContext,
                             userModel: user,
+                            isFromExit: true,
                             timebankModel: model);
 //                        model.members = members;
 //
@@ -837,7 +847,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                   ),
                   FlatButton(
                     child: Text(
-                      AppLocalizations.of(context).translate('shared','cancel'),
+                      AppLocalizations.of(context)
+                          .translate('shared', 'cancel'),
                       style: TextStyle(
                           fontSize: dialogButtonSize, color: Colors.red),
                     ),
@@ -921,31 +932,48 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
                       Map<String, bool> onActivityResult = await showAdvisory(
                           dialogTitle:
-                              "${AppLocalizations.of(context).translate('members','are_you_sure')} ${user.fullname}?");
+                              "${AppLocalizations.of(context).translate('members', 'are_you_sure')} ${user.fullname}?");
                       if (onActivityResult['PROCEED']) {
                         setState(() {
                           isProgressBarActive = true;
                         });
-                        if (isAdmin) {
-                          List<String> admins =
-                              timebankModel.admins.map((s) => s).toList();
-                          admins.remove(user.sevaUserID);
-                          _updateTimebank(timebankModel, admins: admins);
+
+                        if (widget.isCommunity != null && widget.isCommunity) {
+                          print("user ${user.sevaUserID}");
+                          removeMemberTimebankFn(
+                              context: parentContext,
+                              userModel: user,
+                              isFromExit: false,
+                              timebankModel: model);
                         } else {
-                          List<String> members =
-                              timebankModel.members.map((s) => s).toList();
-                          members.remove(user.sevaUserID);
-                          if (widget.isCommunity != null &&
-                              widget.isCommunity) {
-                            _removeUserFromCommunityAndUpdateUserCommunityList(
-                              model: timebankModel,
-                              members: members,
-                              userId: user.sevaUserID,
-                            );
-                          } else {
-                            _updateTimebank(timebankModel, members: members);
-                          }
+                          removeMemberGroupFn(
+                              context: parentContext,
+                              userModel: user,
+                              isFromExit: false,
+                              timebankModel: model);
                         }
+
+//                        if (isAdmin) {
+//                          List<String> admins =
+//                              timebankModel.admins.map((s) => s).toList();
+//                          admins.remove(user.sevaUserID);
+//                          _updateTimebank(timebankModel, admins: admins);
+//                        } else {
+//                          List<String> members =
+//                              timebankModel.members.map((s) => s).toList();
+//                          members.remove(user.sevaUserID);
+//                          if (widget.isCommunity != null &&
+//                              widget.isCommunity) {
+//                            _removeUserFromCommunityAndUpdateUserCommunityList(
+//                              model: timebankModel,
+//                              members: members,
+//                              userId: user.sevaUserID,
+//                            );
+//                          } else {
+//                            _updateTimebank(timebankModel, members: members);
+//                          }
+//                        }
+
                       } else {
                         return;
                       }
@@ -1146,7 +1174,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           admins: timebankModel.admins);
       _adminsWidgets = [];
       _adminEmails = [];
-      _adminsWidgets.add(getSectionTitle(context, AppLocalizations.of(context).translate('members','co_ordinators')));
+      _adminsWidgets.add(getSectionTitle(context,
+          AppLocalizations.of(context).translate('members', 'co_ordinators')));
       SplayTreeMap<String, dynamic>.from(onValue, (a, b) => a.compareTo(b))
           .forEach((key, user) {
         _adminEmails.add(user.email);
@@ -1214,7 +1243,10 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           child: GestureDetector(
             child: Row(
               children: <Widget>[
-                getSectionTitle(context, AppLocalizations.of(context).translate('members','members')),
+                getSectionTitle(
+                    context,
+                    AppLocalizations.of(context)
+                        .translate('members', 'members')),
                 CircleAvatar(
                   backgroundColor: Colors.white,
                   radius: 10,
@@ -1240,7 +1272,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         _membersWidgets.add(gesture);
       } else {
         _membersWidgets.add(
-          getSectionTitle(context, AppLocalizations.of(context).translate('members','members')),
+          getSectionTitle(context,
+              AppLocalizations.of(context).translate('members', 'members')),
         );
       }
     }
@@ -1330,7 +1363,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        getSectionTitle(context, AppLocalizations.of(context).translate('members','co_ordinators')),
+        getSectionTitle(context,
+            AppLocalizations.of(context).translate('members', 'co_ordinators')),
         ...model.coordinators.map((coordinator) {
           return FutureBuilder<UserModel>(
             future: FirestoreManager.getUserForId(sevaUserId: coordinator),
@@ -1472,24 +1506,28 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   void removeMemberGroupFn(
       {BuildContext context,
       UserModel userModel,
-      TimebankModel timebankModel}) async {
+      TimebankModel timebankModel,
+      bool isFromExit}) async {
     print("remove member");
     Map<String, dynamic> responseData = await removeMemberFromGroup(
         sevauserid: userModel.sevaUserID, groupId: timebankModel.id);
     if (responseData['deletable'] == true) {
       print("removed member");
+      if (isFromExit) {
+        await sendNotificationToAdmin(
+            user: userModel,
+            timebank: timebankModel,
+            communityId: userModel.currentCommunity);
+        print("notification  sent");
 
-      await sendNotificationToAdmin(
-          user: userModel,
-          timebank: timebankModel,
-          communityId: userModel.currentCommunity);
-      print("notification  sent");
-
-      Navigator.of(parentContext).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => HomePageRouter(),
-          ),
-          (Route<dynamic> route) => false);
+        Navigator.of(parentContext).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => HomePageRouter(),
+            ),
+            (Route<dynamic> route) => false);
+      } else {
+        resetAndLoad();
+      }
 //      showDialog(
 //        context: context,
 //        builder: (BuildContext context) {
@@ -1567,7 +1605,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   void removeMemberTimebankFn(
       {BuildContext context,
       UserModel userModel,
-      TimebankModel timebankModel}) async {
+      TimebankModel timebankModel,
+      bool isFromExit}) async {
     print("  user id ${userModel.sevaUserID}" +
         " exiting member ongoing " +
         timebankModel.id);
@@ -1576,16 +1615,20 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     print("reported members removal response is --- " +
         responseData['ownerGroupsArr'].toString());
     if (responseData['deletable'] == true) {
-      await sendNotificationToAdmin(
-          user: userModel,
-          timebank: timebankModel,
-          communityId: userModel.currentCommunity);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SwitchTimebank(),
-        ),
-      );
+      if (isFromExit) {
+        await sendNotificationToAdmin(
+            user: userModel,
+            timebank: timebankModel,
+            communityId: userModel.currentCommunity);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SwitchTimebank(),
+          ),
+        );
+      } else {
+        resetAndLoad();
+      }
 //      showDialog(
 //        context: context,
 //        builder: (BuildContext context) {
@@ -1612,8 +1655,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              title: new Text("You cannot exit from this timebank"),
-              content: new Text("You have \n"
+              title: new Text(
+                  " ${isFromExit ? "You" : "User"} cannot exit from this timebank"),
+              content: new Text("${isFromExit ? "You" : "User"} have \n"
                   "${responseData['pendingProjects']['unfinishedProjects']} pending projects,\n"
                   "${responseData['pendingRequests']['unfinishedRequests']} pending requests,\n"
                   "${responseData['pendingOffers']['unfinishedOffers']} pending offers.\n "
@@ -1639,7 +1683,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
             builder: (context) => TransferOwnerShipView(
               timebankId: timebankModel.id,
               responseData: responseData,
-              isComingFromExit: true,
+              isComingFromExit: isFromExit ? true : false,
               memberSevaUserId: userModel.sevaUserID,
               memberName: userModel.fullname,
               memberPhotUrl: userModel.photoURL,

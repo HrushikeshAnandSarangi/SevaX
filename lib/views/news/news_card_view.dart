@@ -404,24 +404,25 @@ class NewsCardViewState extends State<NewsCardView> {
 
   Widget get document {
     return Container(
-      child: newsModel.newsDocumentUrl == null
-          ? Offstage()
-          : GestureDetector(
-              onTap: () => openPdfViewer(),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  color: Colors.grey[100],
-                  child: ListTile(
-                    leading: Icon(Icons.attachment),
-                    title: Text(
-                      newsModel.newsDocumentName ?? "Document.pdf",
-                      //overflow: TextOverflow.ellipsis,
+      child:
+          newsModel.newsDocumentUrl == null || newsModel.newsDocumentUrl == ''
+              ? Offstage()
+              : GestureDetector(
+                  onTap: () => openPdfViewer(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      color: Colors.grey[100],
+                      child: ListTile(
+                        leading: Icon(Icons.attachment),
+                        title: Text(
+                          newsModel.newsDocumentName ?? "Document.pdf",
+                          //overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
     );
   }
 
@@ -491,11 +492,13 @@ class NewsCardViewState extends State<NewsCardView> {
       barrierDismissible: true,
       builder: (context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context).translate('chat','delete_feed')),
+          title: Text(
+              AppLocalizations.of(context).translate('chat', 'delete_feed')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(AppLocalizations.of(context).translate('chat','are_you_sure_feed')),
+              Text(AppLocalizations.of(context)
+                  .translate('chat', 'are_you_sure_feed')),
               SizedBox(
                 height: 15,
               ),
@@ -507,7 +510,8 @@ class NewsCardViewState extends State<NewsCardView> {
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      AppLocalizations.of(context).translate('chat','delete_button'),
+                      AppLocalizations.of(context)
+                          .translate('chat', 'delete_button'),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: dialogButtonSize,
@@ -515,13 +519,17 @@ class NewsCardViewState extends State<NewsCardView> {
                     ),
                     onPressed: () {
                       Navigator.pop(context);
-                      showProgressDialog(AppLocalizations.of(context).translate('chat','delete_feed_progress'), parentContext);
+                      showProgressDialog(
+                          AppLocalizations.of(context)
+                              .translate('chat', 'delete_feed_progress'),
+                          parentContext);
                       _deleteNews(parentContext);
                     },
                   ),
                   FlatButton(
                     child: Text(
-                      AppLocalizations.of(context).translate('shared','cancel'),
+                      AppLocalizations.of(context)
+                          .translate('shared', 'cancel'),
                       style: TextStyle(
                         color: Colors.red,
                         fontSize: dialogButtonSize,

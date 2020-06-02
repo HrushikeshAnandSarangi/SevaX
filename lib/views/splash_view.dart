@@ -94,8 +94,9 @@ class _SplashViewState extends State<SplashView> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_initialized) {
-      loadingMessage =
-          AppLocalizations.of(context).translate('splash', 'hang_on');
+      Future.delayed(Duration.zero, () {
+        loadingMessage = AppLocalizations.of(context).translate('splash', 'hang_on');
+      });
       _precacheImage().then((_) {
         initiateLogin();
       });
