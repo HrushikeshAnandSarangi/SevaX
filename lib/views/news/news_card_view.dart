@@ -3,12 +3,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/news_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/news/update_feed.dart';
@@ -48,7 +46,14 @@ class NewsCardViewState extends State<NewsCardView> {
           style: TextStyle(fontSize: 16.0, color: Colors.white),
         ),
         actions: <Widget>[
-          _getDeleteButton(context),
+          newsModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+              ? IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    _showDeleteConfirmationDialog(context);
+                  },
+                )
+              : Offstage(),
           // IconButton(
           //   icon: Icon(Icons.share),
           //   onPressed: () => _shareNews(context),
@@ -94,26 +99,6 @@ class NewsCardViewState extends State<NewsCardView> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _getDeleteButton(BuildContext context) {
-    return FutureBuilder<UserModel>(
-      future: AuthProvider.of(context).auth.getLoggedInUser(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting)
-          return Offstage();
-        if (snapshot.hasError || !snapshot.hasData) return Offstage();
-        UserModel user = snapshot.data;
-        if (user.sevaUserID != newsModel.sevaUserId) return Offstage();
-        return IconButton(
-          icon: Icon(Icons.delete),
-          onPressed: () {
-            //_deleteNews(context);
-            _showDeleteConfirmationDialog(context);
-          },
-        );
-      },
     );
   }
 
@@ -373,16 +358,16 @@ class NewsCardViewState extends State<NewsCardView> {
   }
 
   Widget get photoCredits {
-    return Center(
-      child: Container(
-        child: Text(
-          newsModel.photoCredits != null
-              ? 'Credits: ${newsModel.photoCredits}'
-              : '',
-          style: TextStyle(fontSize: 15.0, fontStyle: FontStyle.italic),
-        ),
-      ),
-    );
+    return newsModel.photoCredits != null && newsModel.photoCredits.isNotEmpty
+        ? Center(
+            child: Container(
+              child: Text(
+                'Credits: ${newsModel.photoCredits}' ?? '',
+                style: TextStyle(fontSize: 15.0, fontStyle: FontStyle.italic),
+              ),
+            ),
+          )
+        : Offstage();
   }
 
   Widget get tags {

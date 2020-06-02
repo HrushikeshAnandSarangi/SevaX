@@ -406,7 +406,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                           debouncer: debounceValue,
                           onTap: () async {
                             setState(() {
-                              isProgressBarActive = true;
+//                              isProgressBarActive = true;
                             });
 
                             rejectMemberJoinRequest(
