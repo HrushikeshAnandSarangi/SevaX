@@ -657,7 +657,7 @@
     "start_date_err": "Mencione a data de início e término da solicitação",
     "add_location": "Por favor, adicione o local ao seu pedido",
     "progress": "Criando solicitação ..",
-    "not_enough_seva": "Criando solicitação ..",
+    "not_enough_seva": "Seus créditos seva não são suficientes para criar a solicitação.",
     "ok": "Está bem",
     "assign_members": "Designar para voluntários",
     "selected": "membros selecionados",
