@@ -332,7 +332,6 @@
     "gallery": "Gallery",
     "size_alert": "Files more than 10MB are not allowed",
     "size_alert_title": "Large file alert"
-
   },
   "projects": {
     "title": "Projects",
@@ -810,6 +809,10 @@
   "settings": {
     "my_timezone": "My Timezone",
     "language": "My Language"
+  },
+  "invitations": {
+    "invitation_email_title": "Awesome! You are invited to join a Timebank",
+    "email_body": "<p>You are invited to download the SevaX app and join the Timebank ***. The SevaX App uses Timebanking, a reciprocity-based system where community members help each other out in exchange for Seva Credits. Please click on this <a href=\"###;&nbsp;\">link</a> to join.</p>"
   },
   "members": {
     "updating_users": "Updating Users",

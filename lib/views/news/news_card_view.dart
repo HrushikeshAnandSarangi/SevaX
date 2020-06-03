@@ -362,8 +362,11 @@ class NewsCardViewState extends State<NewsCardView> {
         ? Center(
             child: Container(
               child: Text(
-                'Credits: ${newsModel.photoCredits}' ?? '',
-                style: TextStyle(fontSize: 15.0, fontStyle: FontStyle.italic),
+                newsModel.photoCredits != null ? 'Credits: ${newsModel.photoCredits}' : '',
+                style: TextStyle(
+                  fontSize: 15.0,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ),
           )

@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
@@ -49,6 +50,7 @@ class InvitationManager {
     if (cacheList.containsKey(email)) {
       return InvitationStatus.isInvited(invitation: cacheList[email]);
     }
+
     var invitationStatus = await Firestore.instance
         .collection('invitations')
         .where('data.inviteeEmail', isEqualTo: email)
@@ -68,12 +70,16 @@ class InvitationManager {
     cacheList.clear();
   }
 
-  String invitationTitle = "Awesome! You are invited to join a Timebank";
   Future<bool> resendInvitationToMember({
     InvitationViaLink invitation,
   }) async {
-    var mailContent =
-        "<p>You are invited to download the SevaX app and join the Timebank ${invitation.timebankTitle}. The SevaX App uses Timebanking, a reciprocity-based system where community members help each other out in exchange for Seva Credits. Please click on this <a href=\"${invitation.invitationLink};&nbsp;\">link</a> to join.</p>";
+    String invitationTitle = AppLocalizations.of(_context)
+        .translate("invitations", "invitation_email_title");
+
+    var mailContent = AppLocalizations.of(_context)
+        .translate("invitations", "email_body")
+        .replaceAll('***', invitation.timebankTitle);
+    mailContent = mailContent.replaceAll('###', invitation.invitationLink);
     return await mailCodeToInvitedMember(
       mailContent: mailContent,
       mailReciever: invitation.inviteeEmail,
@@ -84,6 +90,7 @@ class InvitationManager {
 
   Future<bool> inviteMemberToTimebankViaLink({
     InvitationViaLink invitation,
+    BuildContext context,
   }) async {
     return await createDynamicLinkFor(
       communityId: invitation.communityId,
@@ -91,8 +98,15 @@ class InvitationManager {
       primaryTimebankId: invitation.timebankId,
     )
         .then((String invitationLink) async {
-          var mailContent =
-              "<p>You are invited to download the SevaX app and join the Timebank ${invitation.timebankTitle}. The SevaX App uses Timebanking, a reciprocity-based system where community members help each other out in exchange for Seva Credits. Please click on this <a href=\"$invitationLink;&nbsp;\">link</a> to join.</p>";
+          String invitationTitle = AppLocalizations.of(context)
+              .translate("invitations", "invitation_email_title");
+
+          var mailContent = AppLocalizations.of(context)
+              .translate("invitations", "email_body")
+              .replaceAll('***', invitation.timebankTitle);
+
+          mailContent = mailContent.replaceAll('###', invitationLink);
+
           invitation.setInvitationLink(invitationLink);
           await mailCodeToInvitedMember(
             mailContent: mailContent,

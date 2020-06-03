@@ -328,11 +328,14 @@
     "add": "Ajouter une image",
     "change_attachment": "changer la pièce jointe",
     "add_attachment": "Ajouter une image / un document",
-    "camera" : "Camera",
+    "camera": "Camera",
     "gallery": "Galerie",
     "size_alert": "Les fichiers de plus de 10 Mo ne sont pas autorisés",
     "size_alert_title": "Alerte fichier volumineux"
-
+  },
+  "invitations": {
+    "invitation_email_title": "Impressionnant! Vous êtes invité à rejoindre une Timebank",
+    "email_body": "<p>Vous êtes invité à télécharger l'application SevaX et à rejoindre la Timebank ***. L'application SevaX utilise Timebanking, un système basé sur la réciprocité où les membres de la communauté s'entraident en échange de crédits Seva. Veuillez cliquer sur ce <a href=\"###;&nbsp;\"> lien </a> pour vous inscrire.</p>"
   },
   "projects": {
     "title": "Projets",
