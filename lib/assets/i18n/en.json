@@ -311,7 +311,8 @@
     "actions_not_allowed": "Actions not allowed, Please contact admin",
     "failed": "Billing Failed, Click below to configure billing",
     "contact_admin": "Action not allowed, please contact the admin",
-    "configure": "Configure Billing"
+    "configure": "Configure Billing",
+    "cancel": "Cancel"
   },
   "create_feed": {
     "title": "Create Post",
@@ -909,5 +910,16 @@
     "projects": "Projects",
     "groups": "Groups",
     "members": "Members"
+  },
+  "validation_errors": {
+    "title_error": "Please enter the subject of your offer",
+    "generic_error": "Please enter some text",
+    "class_hours": "Please enter the hours required for the class",
+    "hours_not_int": "Entered number of hours is not valid",
+    "prepration_time_error": "Please enter your preperation time",
+    "location_error": "Please select location",
+    "size_of_class_not_int": "Size of class can't be in decimal",
+    "size_of_class_error": "Please enter valid size of class",
+    "offer_credit_error": "We cannot publish this Class. There are insufficient credits from the class. Please revise the Prep time or the number of students and submit the offer again"
   }
 }

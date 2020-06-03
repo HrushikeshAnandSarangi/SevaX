@@ -311,7 +311,8 @@
     "actions_not_allowed": "Actions non autorisées, veuillez contacter l'administrateur",
     "failed": "Échec de la facturation, cliquez ci-dessous pour configurer la facturation",
     "contact_admin": "Action non autorisée, veuillez contacter l'administrateur",
-    "configure": "Configurer la facturation"
+    "configure": "Configurer la facturation",
+    "cancel": "Annuler"
   },
   "create_feed": {
     "title": "Créer une publication",
@@ -898,5 +899,16 @@
     "projects": "Projets",
     "groups": "Groupes",
     "members": "Membres"
+  },
+  "validation_errors": {
+    "title_error": "S'il vous plaît entrer dans le sujet de votre offre",
+    "generic_error": "S'il vous plaît entrer un texte",
+    "class_hours": "S'il vous plaît entrer les heures requises pour la classe",
+    "hours_not_int": "Entré nombre d'heures n'est pas valide",
+    "prepration_time_error": "S'il vous plaît entrer votre temps preperation",
+    "location_error": "S'il vous plaît sélectionner l'emplacement",
+    "size_of_class_not_int": "Taille de la classe ne peut pas être en décimal",
+    "size_of_class_error": "S'il vous plaît entrer taille valide de classe",
+    "offer_credit_error": "Nous ne pouvons pas publier cette classe. Il n'y a pas suffisamment de crédits de la classe. S'il vous plaît réviser le temps de préparation ou le nombre d'étudiants et de soumettre l'offre à nouveau"
   }
 }
