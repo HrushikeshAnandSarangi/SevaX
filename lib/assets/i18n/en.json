@@ -892,5 +892,10 @@
   "switching_timebank": {
     "switch_timebank": "Switching Timebank",
     "updating_timebank": "Updating Timebank"
+  },
+  "image_picker": {
+    "camera": "Camera",
+    "gallery": "Gallery",
+    "pdf_document": "PDF Document"
   }
 }
