@@ -816,16 +816,13 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         ),
       );
     } else {
-//      return SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID ||
-//              !widget.isUserAdmin ||
-//              user.sevaUserID == timebankModel.creatorId
-      return SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID &&
-          (widget.isUserAdmin ||
-          user.sevaUserID == timebankModel.creatorId)
+      return widget.isUserAdmin &&
+              ( SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID ||
+              user.sevaUserID == timebankModel.creatorId)
           ? Offstage()
           : Row(
               children: <Widget>[
-                if (isPromoteBottonVisible)
+                isPromoteBottonVisible==true ?
                   Padding(
                     padding: EdgeInsets.only(left: 2, right: 2),
                     child: CustomRaisedButton(
@@ -841,6 +838,22 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                         _updateTimebank(timebankModel, admins: admins);
                       },
                     ),
+                  ) :
+                  Padding(
+                    padding: EdgeInsets.only(left: 2, right: 2),
+                    child: CustomRaisedButton(
+                      debouncer: debounceValue,
+                      action: Actions.Demote,
+                      onTap: () async {
+                        setState(() {
+                          isProgressBarActive = true;
+                        });
+                        List<String> admins =
+                        timebankModel.admins.map((s) => s).toList();
+                        admins.remove(user.sevaUserID);
+                        _updateTimebank(timebankModel, admins: admins);
+                      },
+                    ),
                   ),
                 Padding(
                   padding: EdgeInsets.only(left: 2, right: 2),
@@ -849,7 +862,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                     action: Actions.Remove,
                     onTap: () async {
                       //Here we need to put dialog
-
                       Map<String, bool> onActivityResult = await showAdvisory(
                           dialogTitle:
                               "${AppLocalizations.of(context).translate('members', 'are_you_sure')} ${user.fullname}?");
@@ -857,43 +869,25 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                         setState(() {
                           isProgressBarActive = true;
                         });
-
                         if (widget.isCommunity != null && widget.isCommunity) {
-                          print("user ${user.sevaUserID}");
-                          removeMemberTimebankFn(
+                          await removeMemberTimebankFn(
                               context: parentContext,
                               userModel: user,
                               isFromExit: false,
                               timebankModel: model);
+                          setState(() {
+                            isProgressBarActive = false;
+                          });
                         } else {
-                          removeMemberGroupFn(
+                          await removeMemberGroupFn(
                               context: parentContext,
                               userModel: user,
                               isFromExit: false,
                               timebankModel: model);
+                          setState(() {
+                            isProgressBarActive = false;
+                          });
                         }
-
-//                        if (isAdmin) {
-//                          List<String> admins =
-//                              timebankModel.admins.map((s) => s).toList();
-//                          admins.remove(user.sevaUserID);
-//                          _updateTimebank(timebankModel, admins: admins);
-//                        } else {
-//                          List<String> members =
-//                              timebankModel.members.map((s) => s).toList();
-//                          members.remove(user.sevaUserID);
-//                          if (widget.isCommunity != null &&
-//                              widget.isCommunity) {
-//                            _removeUserFromCommunityAndUpdateUserCommunityList(
-//                              model: timebankModel,
-//                              members: members,
-//                              userId: user.sevaUserID,
-//                            );
-//                          } else {
-//                            _updateTimebank(timebankModel, members: members);
-//                          }
-//                        }
-
                       } else {
                         return;
                       }
@@ -1580,6 +1574,7 @@ enum Actions {
   Reject,
   Remove,
   Promote,
+  Demote,
   Exit,
 }
 
