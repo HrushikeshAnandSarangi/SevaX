@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -151,22 +150,9 @@ class NewsCard extends StatelessWidget {
               height: 10,
             ),
             //feed image
-            Offstage(
-              offstage: imageUrl == null || imageUrl == "NoData",
-              child: AspectRatio(
-                aspectRatio: 3 / 2,
-                child: id != null
-                    ? Hero(
-                        tag: id + "*",
-                        child: CustomNetworkImage(
-                          imageUrl ?? defaultUserImageURL,
-                        ),
-                      )
-                    : CustomNetworkImage(
-                        imageUrl ?? defaultUserImageURL,
-                      ),
-              ),
-            ),
+            imageUrl == null || imageUrl == "NoData"
+                ? Offstage()
+                : getImageView(id, imageUrl),
             SizedBox(
               height: 8,
             ),
@@ -301,6 +287,28 @@ class NewsCard extends StatelessWidget {
         // ),
         // SizedBox(width: 10),
       ],
+    );
+  }
+
+  Widget getImageView(String newsId, String urlToLoad) {
+    return Container(
+      height: 200,
+      child: SizedBox.expand(
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(0),
+            topRight: Radius.circular(0),
+          ),
+          child: Hero(
+            tag: newsId,
+            child: FadeInImage(
+              fit: BoxFit.fitWidth,
+              placeholder: AssetImage('lib/assets/images/noimagefound.png'),
+              image: NetworkImage(urlToLoad),
+            ),
+          ),
+        ),
+      ),
     );
   }
 

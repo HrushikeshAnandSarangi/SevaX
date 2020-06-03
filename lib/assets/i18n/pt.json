@@ -327,9 +327,11 @@
     "change": "Alterar imagem",
     "add": "Adicionar imagem",
     "change_attachment": "alterar anexo",
-    "add_attachment": "juntar anexo",
-    "camera" : "Camera",
-    "gallery": "Galeria"
+    "add_attachment": "Adicionar imagem / documento",
+    "camera": "Camera",
+    "gallery": "Galeria",
+    "size_alert": "Arquivos com mais de 10 MB não são permitidos",
+    "size_alert_titile": "Alerta de arquivo grande"
   },
   "projects": {
     "title": "Projetos",
@@ -875,5 +877,9 @@
   },
   "info_window": {
     "mapper": "i_button_info_pt"
+  },
+  "switching_timebank": {
+    "switch_timebank": "Mudando o Timebank",
+    "updating_timebank": "Atualizando o Timebank"
   }
 }

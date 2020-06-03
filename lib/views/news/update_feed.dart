@@ -110,7 +110,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     // await FirestoreManager.createNews(newsObject: newsObject);
     await FirestoreManager.updateNews(newsObject: newsObject);
     globals.newsImageURL = null;
-    globals.newsImageURL = null;
+    globals.newsDocumentName = null;
     globals.newsDocumentURL = null;
     if (dialogContext != null) {
       Navigator.pop(dialogContext);
