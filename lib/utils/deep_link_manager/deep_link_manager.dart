@@ -28,6 +28,7 @@ Future<String> createDynamicLinkFor({
   String communityId,
   String primaryTimebankId,
 }) async {
+  print("______________ creating dynamic link started");
   final DynamicLinkParameters parameters = DynamicLinkParameters(
     uriPrefix: FlavorConfig.values.dynamicLinkUriPrefix,
     link: Uri.parse(
@@ -46,5 +47,7 @@ Future<String> createDynamicLinkFor({
   );
 
   final ShortDynamicLink shortLink = await parameters.buildShortLink();
+  print("______________ creating dynamic link completed" + shortLink.shortUrl.toString());
+
   return shortLink.shortUrl.toString();
 }

@@ -68,7 +68,9 @@
     "individual_offer": "Oferta individual",
     "one_to_many": "Uno a muchos",
     "timebank_projects": "Proyectos de banco de tempo",
-    "personal_projects": "Proyectos personales"
+    "personal_projects": "Proyectos personales",
+    "clear": "Claro"
+
   },
   "signup": {
     "add_photo": "Adicionar foto",
@@ -332,6 +334,11 @@
     "camera": "Cámara",
     "gallery": "Galería",
     "size_alert": "No se permiten archivos de más de 10 MB.",
+    "size_alert_title": "Alerta de archivo grande"
+  },
+  "invitations": {
+    "invitation_email_title" : "¡Increíble! Estás invitado a unirte a un banco de tiempo",
+    "email_body": "<p>Está invitado a descargar la aplicación SevaX y unirse al Timebank ***. La aplicación SevaX utiliza Timebanking, un sistema basado en la reciprocidad donde los miembros de la comunidad se ayudan mutuamente a cambio de créditos Seva. Haga clic en este <a href=\"###;&nbsp;\"> enlace </a> para unirse.</p>",
     "size_alert_title": "Alerta de archivo grande",
     "update_post": "Actualizar publicación",
     "update_progress": "Actualizando publicación",
@@ -676,7 +683,15 @@
     "end_date_start_date": "La fecha de finalización no puede ser anterior a la fecha de inicio",
     "close": "Cerca",
     "done": "Hecho",
-    "start_end": "fecha y hora"
+    "start_end": "fecha y hora",
+    "add_to_project": "Asignar a proyecto",
+    "none_project": "No asignado",
+    "selected_hint": "Actualmente seleccionado",
+    "tap_to_remove": "artículos (toque para eliminar)",
+    "tap_to_delete": "Toca para eliminar este elemento.",
+    "assign_err_hint": "Por favor asigne a un proyecto",
+    "tap_to_select": "Toque para seleccionar una o más..."
+
   },
   "edit_group": {
     "add_members": "Añadir miembros",
@@ -902,7 +917,7 @@
   "search_page": {
     "search": "Buscar",
     "feeds": "Publicação",
-    "requests": "solicitações de",
+    "requests": "Solicitações de",
     "offers": "Ofertas",
     "projects": "Projetos",
     "groups": "Grupos",

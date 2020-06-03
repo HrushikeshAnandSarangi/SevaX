@@ -736,7 +736,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  'OK',
+                  AppLocalizations.of(context)
+                      .translate('create_request', 'ok'),
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -949,7 +950,11 @@ class ProjectSelectionState extends State<ProjectSelection> {
   @override
   Widget build(BuildContext context) {
     List<dynamic> list = [
-      {"name": "Un Assigned", "code": "None"}
+      {
+        "name": AppLocalizations.of(context)
+            .translate('create_request', 'none_project'),
+        "code": "None"
+      }
     ];
     for (var i = 0; i < widget.projectModelList.length; i++) {
       list.add({
@@ -961,17 +966,22 @@ class ProjectSelectionState extends State<ProjectSelection> {
     return new MultiSelect(
       autovalidate: true,
       initialValue: ['None'],
-      titleText: 'Assign to project',
+      titleText: AppLocalizations.of(context)
+          .translate('create_request', 'add_to_project'),
       maxLength: 1, // optional
       validator: (dynamic value) {
         if (value == null) {
-          return 'Please assign to one project';
+          return AppLocalizations.of(context)
+              .translate('create_request', 'assign_err_hint');
         }
         return null;
       },
-      errorText: 'Please assign to one project',
+      errorText: AppLocalizations.of(context)
+          .translate('create_request', 'assign_err_hint'),
       dataSource: list,
       admin: widget.admin,
+      hintText: AppLocalizations.of(context)
+          .translate('create_request', 'tap_to_select'),
       textField: 'name',
       valueField: 'code',
       filterable: true,

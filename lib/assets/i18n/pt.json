@@ -38,7 +38,8 @@
     "reset_link_message": "Enviamos o link de redefinição para o seu endereço de e-mail",
     "terms_of_service_link": "Termos de serviço",
     "privacy_policy_link": "Política de Privacidade",
-    "payment_policy_link": "Política de pagamento"
+    "payment_policy_link": "Política de pagamento",
+
   },
   "shared": {
     "check_internet": "Por favor, verifique sua conexão à internet.",
@@ -68,7 +69,9 @@
     "individual_offer": "Oferta individual",
     "one_to_many": "Um para muitos",
     "timebank_projects": "Projetos do Timebank",
-    "personal_projects": "Projetos pessoais"
+    "personal_projects": "Projetos pessoais",
+    "clear": "Claro"
+
   },
   "signup": {
     "add_photo": "Adicionar foto",
@@ -336,6 +339,10 @@
     "update_post": "Atualizar postagem",
     "update_progress": "Atualizando postagem",
     "imagehint": "Crédito da foto"
+  },
+  "invitations": {
+    "invitation_email_title" : "Impressionante! Você está convidado a participar de um Timebank",
+    "email_body": "<p>Você está convidado a baixar o aplicativo SevaX e ingressar no Timebank ***. O aplicativo SevaX usa o Timebanking, um sistema baseado em reciprocidade, em que os membros da comunidade se ajudam em troca de créditos Seva. Por favor, clique neste <a href=\"###;&nbsp;\"> link </a> para participar.</p>"
   },
   "projects": {
     "title": "Projetos",
@@ -676,7 +683,15 @@
     "end_date_start_date": "A Data de término não pode ser anterior à Data de início",
     "close": "Fechar",
     "done": "Feito",
-    "start_end": "data e hora"
+    "start_end": "data e hora",
+    "add_to_project": "Atribuir ao projeto",
+    "none_project": "Não atribuído",
+    "selected_hint": "Atualmente selecionado",
+    "tap_to_remove": "Itens (toque para remover)",
+    "tap_to_delete": "Toque para excluir este item",
+    "assign_err_hint": "Atribua a um projeto",
+    "tap_to_select": "Toque para selecionar um ou mais..."
+
   },
   "edit_group": {
     "add_members": "Adicionar membros",
