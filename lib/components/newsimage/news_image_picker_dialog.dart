@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 
 import 'news_image_picker_handler.dart';
 
@@ -81,7 +82,8 @@ class NewsImagePickerDialog extends StatelessWidget {
                 new GestureDetector(
                   onTap: () => _listener.openCamera(),
                   child: roundedButton(
-                      "Camera",
+                      AppLocalizations.of(context)
+                          .translate('image_picker', "camera"),
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0x0FF766FE0),
                       const Color(0xFFFFFFFF),
@@ -93,7 +95,8 @@ class NewsImagePickerDialog extends StatelessWidget {
                 new GestureDetector(
                   onTap: () => _listener.openGallery(),
                   child: roundedButton(
-                      "Gallery",
+                      AppLocalizations.of(context)
+                          .translate('image_picker', "gallery"),
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0x0FF766FE0),
                       const Color(0xFFFFFFFF),
@@ -105,7 +108,8 @@ class NewsImagePickerDialog extends StatelessWidget {
                 new GestureDetector(
                   onTap: () => _listener.openDocument(),
                   child: roundedButton(
-                      "PDF Document",
+                      AppLocalizations.of(context)
+                          .translate('image_picker', "pdf_document"),
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0x0FF766FE0),
                       const Color(0xFFFFFFFF),

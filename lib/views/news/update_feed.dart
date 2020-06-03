@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -34,7 +35,8 @@ class UpdateNewsFeed extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(
-            "Update feed",
+            AppLocalizations.of(context)
+                .translate('create_feed', 'update_post'),
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -409,7 +411,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             builder: (createDialogContext) {
                               dialogContext = createDialogContext;
                               return AlertDialog(
-                                title: Text('Updating Feed'),
+                                title: Text(AppLocalizations.of(context)
+                                    .translate(
+                                        'create_feed', 'update_progress')),
                                 content: LinearProgressIndicator(),
                               );
                             });
@@ -431,7 +435,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     }
                   },
                   child: Text(
-                    'Update feed',
+                    AppLocalizations.of(context)
+                        .translate('create_feed', 'update_post'),
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -479,63 +484,63 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     // print("Final Project $newsObject");
   }
 
-  Widget get entityDropdown {
-    return Container(
-      padding: EdgeInsets.only(bottom: 20.0),
-      child: DropdownButtonFormField<DataModel>(
-        decoration: InputDecoration.collapsed(
-          hintText: '+ Category',
-          hintStyle: Theme.of(context).textTheme.title.copyWith(
-                color: Theme.of(context).hintColor,
-              ),
-        ),
-        validator: (value) {
-          if (value == null) {
-            return 'Please select a category';
-          }
-        },
-        items: dataList.map((dataModel) {
-          if (dataModel.runtimeType == EntityModel) {
-            return DropdownMenuItem<DataModel>(
-              child: Text('General', style: textStyle),
-              value: dataModel,
-            );
-          } else if (dataModel.runtimeType == TimebankModel) {
-            TimebankModel model = dataModel;
-            return DropdownMenuItem<DataModel>(
-              child: Text(
-                '${model.name}',
-                style: textStyle,
-              ),
-              value: model,
-            );
-          } else if (dataModel.runtimeType == CampaignModel) {
-            CampaignModel model = dataModel;
-            return DropdownMenuItem<DataModel>(
-              child: Text(
-                '${model.name}',
-                style: textStyle,
-              ),
-              value: model,
-            );
-          }
-          return DropdownMenuItem<DataModel>(
-            child: Text(
-              'Undefined',
-              style: textStyle,
-            ),
-            value: null,
-          );
-        }).toList(),
-        value: selectedEntity,
-        onChanged: (dataModel) {
-          setState(() {
-            this.selectedEntity = dataModel;
-          });
-        },
-      ),
-    );
-  }
+//  Widget get entityDropdown {
+//    return Container(
+//      padding: EdgeInsets.only(bottom: 20.0),
+//      child: DropdownButtonFormField<DataModel>(
+//        decoration: InputDecoration.collapsed(
+//          hintText: '+ Category',
+//          hintStyle: Theme.of(context).textTheme.title.copyWith(
+//                color: Theme.of(context).hintColor,
+//              ),
+//        ),
+//        validator: (value) {
+//          if (value == null) {
+//            return 'Please select a category';
+//          }
+//        },
+//        items: dataList.map((dataModel) {
+//          if (dataModel.runtimeType == EntityModel) {
+//            return DropdownMenuItem<DataModel>(
+//              child: Text('General', style: textStyle),
+//              value: dataModel,
+//            );
+//          } else if (dataModel.runtimeType == TimebankModel) {
+//            TimebankModel model = dataModel;
+//            return DropdownMenuItem<DataModel>(
+//              child: Text(
+//                '${model.name}',
+//                style: textStyle,
+//              ),
+//              value: model,
+//            );
+//          } else if (dataModel.runtimeType == CampaignModel) {
+//            CampaignModel model = dataModel;
+//            return DropdownMenuItem<DataModel>(
+//              child: Text(
+//                '${model.name}',
+//                style: textStyle,
+//              ),
+//              value: model,
+//            );
+//          }
+//          return DropdownMenuItem<DataModel>(
+//            child: Text(
+//              'Undefined',
+//              style: textStyle,
+//            ),
+//            value: null,
+//          );
+//        }).toList(),
+//        value: selectedEntity,
+//        onChanged: (dataModel) {
+//          setState(() {
+//            this.selectedEntity = dataModel;
+//          });
+//        },
+//      ),
+//    );
+//  }
 
   Future _getLocation() async {
     String address = await LocationUtility().getFormattedAddress(

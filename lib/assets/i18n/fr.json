@@ -318,7 +318,7 @@
     "hint": "Texte, URL et hashtags",
     "placeholder": "Que voudriez-vous partager?",
     "empty_err": "Veuillez saisir du texte",
-    "progress": "Votre publication est en cours",
+    "progress": "Création d'un article",
     "location_notadded": "Lieu non ajouté",
     "create_button": "Créer une publication",
     "category": "Catégorie",
@@ -332,6 +332,8 @@
     "gallery": "Galerie",
     "size_alert": "Les fichiers de plus de 10 Mo ne sont pas autorisés",
     "size_alert_title": "Alerte fichier volumineux",
+    "update_post": "Mettre à jour le message",
+    "update_progress": "Mise à jour du message",
     "imagehint": "Crédit photo"
   },
   "projects": {
@@ -882,5 +884,19 @@
   "switching_timebank": {
     "switch_timebank": "Changement de banque de temps",
     "updating_timebank": "Mise à jour de Timebank"
+  },
+  "image_picker": {
+    "camera": "Caméra",
+    "gallery": "Galerie",
+    "pdf_document": "Document PDF"
+  },
+  "search_page": {
+    "search": "Chercher",
+    "feeds": "Fil d'actualité",
+    "requests": "Demandes",
+    "offers": "Des offres",
+    "projects": "Projets",
+    "groups": "Groupes",
+    "members": "Membres"
   }
 }

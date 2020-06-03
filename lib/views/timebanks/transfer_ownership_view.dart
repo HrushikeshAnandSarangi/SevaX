@@ -49,7 +49,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
     super.initState();
     getMembersList();
     ownerGroupsArr = widget.responseData['ownerGroupsArr'];
-    print("ownerGroupsArr=============="+ownerGroupsArr.toString());
+    print("ownerGroupsArr==============" + ownerGroupsArr.toString());
   }
 
   void getMembersList() {
@@ -80,7 +80,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
         ),
 //      automaticallyImplyLeading: true,
         title: Text(
-          'Remove User',
+          widget.isComingFromExit ? 'Exit User' : 'Remove User',
           style: TextStyle(
               fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Europa'),
         ),
@@ -147,9 +147,9 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
               SizedBox(
                 height: 15,
               ),
-              selectedNewOwner==null? Container(): ListTile(
-                title:Text(selectedNewOwner.fullname)
-              ),
+              selectedNewOwner == null
+                  ? Container()
+                  : ListTile(title: Text(selectedNewOwner.fullname)),
               SizedBox(
                 height: 15,
               ),
@@ -176,7 +176,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
           textColor: Colors.grey,
         ),
         FlatButton(
-          child: Text("Remove",
+          child: Text(widget.isComingFromExit ? 'Exit ' : "Remove",
               style:
                   TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa')),
           textColor: FlavorConfig.values.theme.primaryColor,
@@ -184,20 +184,20 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
             if (selectedNewOwner == null) {
               print("reporter timebank creator id is ${tbmodel.creatorId}");
               ownerGroupsArr.forEach(
-                (group){
+                (group) {
                   futures.add(
-                  Firestore.instance
-                      .collection('timebanknew')
-                      .document(group['id'])
-                      .updateData(
-                    {
-                      "creator_id": tbmodel.creatorId,
-                      "email_id": tbmodel.emailId,
-                      "admins": FieldValue.arrayUnion([tbmodel.creatorId]),
-                      "members": FieldValue.arrayUnion([tbmodel.creatorId]),
-                    },
-                  ),
-                );
+                    Firestore.instance
+                        .collection('timebanknew')
+                        .document(group['id'])
+                        .updateData(
+                      {
+                        "creator_id": tbmodel.creatorId,
+                        "email_id": tbmodel.emailId,
+                        "admins": FieldValue.arrayUnion([tbmodel.creatorId]),
+                        "members": FieldValue.arrayUnion([tbmodel.creatorId]),
+                      },
+                    ),
+                  );
                 },
               );
               await Future.wait(futures);
