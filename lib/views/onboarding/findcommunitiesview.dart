@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
@@ -408,14 +409,32 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   }
 
   void gpsCheck() async {
-    Location templocation = new Location();
-    bool _serviceEnabled;
+    try {
+      Location templocation = new Location();
+      bool _serviceEnabled;
+      PermissionStatus _permissionGranted;
 
-    _serviceEnabled = await templocation.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await templocation.requestService();
+      _serviceEnabled = await templocation.serviceEnabled();
       if (!_serviceEnabled) {
-        return;
+        _serviceEnabled = await templocation.requestService();
+        if (!_serviceEnabled) {
+          return;
+        }
+      }
+
+      _permissionGranted = await templocation.hasPermission();
+      if (_permissionGranted == PermissionStatus.denied) {
+        _permissionGranted = await templocation.requestPermission();
+        if (_permissionGranted != PermissionStatus.granted) {
+          return;
+        }
+      }
+    } on PlatformException catch (e) {
+      print(e);
+      if (e.code == 'PERMISSION_DENIED') {
+        //error = e.message;
+      } else if (e.code == 'SERVICE_STATUS_ERROR') {
+        //error = e.message;
       }
     }
   }
