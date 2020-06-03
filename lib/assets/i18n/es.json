@@ -318,7 +318,7 @@
     "hint": "Texto, URL e Hashtags",
     "placeholder": "O que você gostaria de compartilhar*",
     "empty_err": "Digite algum texto",
-    "progress": "Criando publicação ",
+    "progress": "Creando publicación",
     "location_notadded": "Local não adicionado",
     "create_button": "Criar publicação",
     "category": "Categoria",
@@ -331,7 +331,9 @@
     "camera": "Cámara",
     "gallery": "Galería",
     "size_alert": "No se permiten archivos de más de 10 MB.",
-    "size_alert_title": "Alerta de archivo grande"
+    "size_alert_title": "Alerta de archivo grande",
+    "update_post": "Actualizar publicación",
+    "update_progress": "Actualizando publicación"
   },
   "projects": {
     "title": "Projetos",
