@@ -536,7 +536,7 @@ class CreateEditCommunityViewFormState
                         ),
                         Row(
                           children: <Widget>[
-                            headingText('Prevent accedental delete'),
+                            headingText('Prevent accidental delete'),
                             Column(
                               children: <Widget>[
                                 Divider(),
