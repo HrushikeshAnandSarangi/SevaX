@@ -674,7 +674,15 @@
     "end_date_start_date": "La fecha de finalización no puede ser anterior a la fecha de inicio",
     "close": "Cerca",
     "done": "Hecho",
-    "start_end": "fdate et heure"
+    "start_end": "fdate et heure",
+    "add_to_project": "Attribuer au projet",
+    "none_project": "Non attribué",
+    "selected_hint": "Actuellement sélectionné",
+    "tap_to_remove": "articles (appuyez pour supprimer)",
+    "tap_to_delete": "Appuyez pour supprimer cet élément",
+    "assign_err_hint": "Veuillez attribuer à un projet",
+    "tap_to_select": "Appuyez pour sélectionner un ou plusieurs..."
+
   },
   "edit_group": {
     "add_members": "Añadir miembros",

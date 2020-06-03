@@ -674,7 +674,15 @@
     "end_date_start_date": "La fecha de finalización no puede ser anterior a la fecha de inicio",
     "close": "Cerca",
     "done": "Hecho",
-    "start_end": "fecha y hora"
+    "start_end": "fecha y hora",
+    "add_to_project": "Asignar a proyecto",
+    "none_project": "No asignado",
+    "selected_hint": "Actualmente seleccionado",
+    "tap_to_remove": "artículos (toque para eliminar)",
+    "tap_to_delete": "Toca para eliminar este elemento.",
+    "assign_err_hint": "Por favor asigne a un proyecto",
+    "tap_to_select": "Toque para seleccionar una o más..."
+
   },
   "edit_group": {
     "add_members": "Añadir miembros",
@@ -900,7 +908,7 @@
   "search_page": {
     "search": "Buscar",
     "feeds": "Publicação",
-    "requests": "solicitações de",
+    "requests": "Solicitações de",
     "offers": "Ofertas",
     "projects": "Projetos",
     "groups": "Grupos",

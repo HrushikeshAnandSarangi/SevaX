@@ -69,6 +69,7 @@
     "one_to_many": "One to many",
     "timebank_projects": "Timebank Projects",
     "personal_projects": "Personal Projects"
+    "clear": "Clear"
   },
   "signup": {
     "add_photo": "Add Photo",
@@ -675,8 +676,14 @@
     "close": "Close",
     "done": "Done",
     "start_end": "date & time",
-    "add_to_project": "Add to Project",
-    "none_project": "Un Assigned"
+    "add_to_project": "Assign to project",
+    "none_project": "Unassigned",
+    "selected_hint": "Currently selected",
+    "tap_to_remove": "items (tap to remove)",
+    "tap_to_delete": "Tap to delete this item",
+    "assign_err_hint": "Please assign to one project",
+    "tap_to_select": "Tap to select one or more..."
+
   },
   "edit_group": {
     "add_members": "Add Members",

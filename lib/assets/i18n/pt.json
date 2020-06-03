@@ -674,7 +674,15 @@
     "end_date_start_date": "A Data de término não pode ser anterior à Data de início",
     "close": "Fechar",
     "done": "Feito",
-    "start_end": "data e hora"
+    "start_end": "data e hora",
+    "add_to_project": "Atribuir ao projeto",
+    "none_project": "Não atribuído",
+    "selected_hint": "Atualmente selecionado",
+    "tap_to_remove": "Itens (toque para remover)",
+    "tap_to_delete": "Toque para excluir este item",
+    "assign_err_hint": "Atribua a um projeto",
+    "tap_to_select": "Toque para selecionar um ou mais..."
+
   },
   "edit_group": {
     "add_members": "Adicionar membros",
