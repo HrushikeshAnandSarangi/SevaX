@@ -897,5 +897,16 @@
     "projects": "Projetos",
     "groups": "Grupos",
     "members": "Membros"
+  },
+  "validation_errors": {
+    "title_error": "Por favor, indique o assunto da sua oferta",
+    "generic_error": "Por favor, indique algum texto",
+    "class_hours": "Por favor, indique as horas necessárias para a classe",
+    "hours_not_int": "Número introduzido de horas não é válido",
+    "prepration_time_error": "Por favor, indique o seu tempo preperation",
+    "location_error": "Por favor selecionar o local",
+    "size_of_class_not_int": "Tamanho da classe não pode estar em decimal",
+    "size_of_class_error": "Por favor, indique tamanho válido de classe",
+    "offer_credit_error": "Nós não podemos publicar esta classe. Há créditos insuficientes da classe. Por favor, revise o tempo Prep ou o número de alunos e submeter a oferta novamente"
   }
 }
