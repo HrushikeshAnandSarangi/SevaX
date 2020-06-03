@@ -124,7 +124,8 @@ class NewsImagePickerDialog extends StatelessWidget {
                   child: new Padding(
                     padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
                     child: roundedButton(
-                        "Cancel",
+                        AppLocalizations.of(context)
+                            .translate('shared', "cancel"),
                         EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                         const Color(0x0FF766FE0),
                         const Color(0xFFFFFFFF),
