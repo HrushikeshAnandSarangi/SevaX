@@ -1,10 +1,10 @@
-class ExplorePageLabels {
+class SearchPageLabels {
   static const List<String> tabContent = [
-    "Feeds",
-    "Requests",
-    "Offers",
-    "Projects",
-    "Groups",
-    "Members"
+    "feeds",
+    "requests",
+    "offers",
+    "projects",
+    "groups",
+    "members"
   ];
 }

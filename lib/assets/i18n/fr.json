@@ -883,5 +883,19 @@
   "switching_timebank": {
     "switch_timebank": "Changement de banque de temps",
     "updating_timebank": "Mise à jour de Timebank"
+  },
+  "image_picker": {
+    "camera": "Caméra",
+    "gallery": "Galerie",
+    "pdf_document": "Document PDF"
+  },
+  "search_page": {
+    "search": "Chercher",
+    "feeds": "Fil d'actualité",
+    "requests": "Demandes",
+    "offers": "Des offres",
+    "projects": "Projets",
+    "groups": "Groupes",
+    "members": "Membres"
   }
 }
