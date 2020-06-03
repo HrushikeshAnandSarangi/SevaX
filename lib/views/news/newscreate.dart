@@ -174,7 +174,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(""),
                   Container(
                     margin: EdgeInsets.all(20),
                     child: Column(
@@ -275,15 +274,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   ),
                 ],
               ),
+              SizedBox(height: 40),
 
-              /*kghjksghjgjgb
-              * fjjkkkkmvnjnvnvk
-              * jfujfyj
-              * hfjy*/
               Container(
-                width: 150,
-                alignment: Alignment(0, 1),
-                padding: const EdgeInsets.only(top: 40.0),
                 child: RaisedButton(
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();

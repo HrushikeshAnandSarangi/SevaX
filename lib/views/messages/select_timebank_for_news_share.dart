@@ -2,12 +2,10 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-
-import '../../flavor_config.dart';
 
 class SelectTimeBankNewsShare extends StatefulWidget {
   final NewsModel newsModel;
@@ -28,13 +26,9 @@ class SelectTimeBankForNewsShareState extends State<SelectTimeBankNewsShare> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
         title: Text(
-          FlavorConfig.values.timebankName == "Yang 2020"
-              ? "Select Yang Gang Chapter"
-              : "Select Timebank",
-          style: TextStyle(color: Colors.black),
+          "Select Timebank",
+          style: TextStyle(fontSize: 18),
         ),
       ),
       body: getTimebanks(context, newsModel),

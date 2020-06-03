@@ -537,7 +537,8 @@ class CreateEditCommunityViewFormState
                         ),
                         Row(
                           children: <Widget>[
-                            headingText('Prevent accedental delete'),
+                            headingText(AppLocalizations.of(context)
+                                .translate('groups', 'prevent_delete')),
                             Column(
                               children: <Widget>[
                                 Divider(),

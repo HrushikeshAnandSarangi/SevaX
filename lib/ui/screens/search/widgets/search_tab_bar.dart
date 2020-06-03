@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/ui/utils/strings.dart';
 
 class SearchTabBar extends StatelessWidget {
@@ -30,10 +31,11 @@ class SearchTabBar extends StatelessWidget {
       indicatorColor: Theme.of(context).primaryColor,
       labelPadding: EdgeInsets.symmetric(horizontal: 10),
       tabs: List.generate(
-        ExplorePageLabels.tabContent.length,
+        SearchPageLabels.tabContent.length,
         (index) => Tab(
           child: Text(
-            ExplorePageLabels.tabContent[index],
+            AppLocalizations.of(context)
+                .translate('search_page', SearchPageLabels.tabContent[index]),
           ),
         ),
       ),

@@ -318,7 +318,7 @@
     "hint": "Text, URL and Hashtags ",
     "placeholder": "What would you like to share*",
     "empty_err": "Please enter some text",
-    "progress": "Creating feed",
+    "progress": "Creating post",
     "location_notadded": "Location not added",
     "create_button": "Create Post",
     "category": "Category",
@@ -331,7 +331,10 @@
     "camera": "Camera",
     "gallery": "Gallery",
     "size_alert": "Files more than 10MB are not allowed",
-    "size_alert_title": "Large file alert"
+    "size_alert_title": "Large file alert",
+    "update_post": "Update post",
+    "update_progress": "Updating post",
+    "imagehint": "Photo credit"
   },
   "projects": {
     "title": "Projects",
@@ -892,5 +895,19 @@
   "switching_timebank": {
     "switch_timebank": "Switching Timebank",
     "updating_timebank": "Updating Timebank"
+  },
+  "image_picker": {
+    "camera": "Camera",
+    "gallery": "Gallery",
+    "pdf_document": "PDF Document"
+  },
+  "search_page": {
+    "search": "Search",
+    "feeds": "Feeds",
+    "requests": "Request",
+    "offers": "Offers",
+    "projects": "Projects",
+    "groups": "Groups",
+    "members": "Members"
   }
 }

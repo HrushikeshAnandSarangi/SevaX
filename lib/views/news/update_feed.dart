@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -34,7 +35,8 @@ class UpdateNewsFeed extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(
-            "Update feed",
+            AppLocalizations.of(context)
+                .translate('create_feed', 'update_post'),
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -201,65 +203,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // Container(
-                  //   alignment: Alignment(1.0, 0),
-                  //   padding: const EdgeInsets.only(right: 10.0, bottom: 10),
-                  //   child:
-                  //   RaisedButton(
-                  //     shape: StadiumBorder(),
-                  //     color: Colors.indigoAccent,
-                  //     onPressed: () {
-                  //       // Validate will return true if the form is valid, or false if
-                  //       // the form is invalid.
-
-                  //       if (formKey.currentState.validate()) {
-                  //         // If the form is valid, we want to show a Snackbar
-                  //         Scaffold.of(context).showSnackBar(
-                  //             SnackBar(content: Text('Creating Post')));
-                  //         writeToDB();
-                  //       }
-                  //     },
-                  //     child: Text(
-                  //       'Save News Post',
-                  //       style: TextStyle(color: Colors.white),
-                  //     ),
-                  //   ),
-                  // ),
-
-//              entityDropdown,
-
-                  Text(""),
                   Container(
                     margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                     child: Column(
                       children: <Widget>[
-                        // Padding(
-                        //   padding: EdgeInsets.only(bottom: 20.0),
-                        //   child: TextFormField(
-                        //     decoration: InputDecoration(
-                        //       hintText: 'Your feed title',
-                        //       labelText: '+ Feed Title',
-                        //       border: OutlineInputBorder(
-                        //         borderRadius: const BorderRadius.all(
-                        //           const Radius.circular(10.0),
-                        //         ),
-                        //         borderSide: new BorderSide(
-                        //           color: Colors.black,
-                        //           width: 0.5,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //     keyboardType: TextInputType.text,
-                        //     //style: textStyle,
-                        //     validator: (value) {
-                        //       if (value.isEmpty) {
-                        //         return 'Please enter the Post Title';
-                        //       }
-                        //       newsObject.title = value;
-                        //     },
-                        //   ),
-                        // ),
-
                         Padding(
                           padding: EdgeInsets.only(bottom: 0.0),
                           child: TextFormField(
@@ -269,8 +216,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
                               alignLabelWithHint: false,
-                              hintText: 'Text, URL and Hashtags ',
-                              labelText: 'What would you like to share',
+                              hintText: AppLocalizations.of(context)
+                                  .translate('create_feed', 'hint'),
+                              labelText: AppLocalizations.of(context)
+                                  .translate('create_feed', 'placeholder'),
                               border: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(0.0),
@@ -290,7 +239,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             validator: (value) {
                               print("validator");
                               if (value.isEmpty) {
-                                return 'Please enter some text';
+                                return AppLocalizations.of(context)
+                                    .translate('create_feed', 'empty_err');
                               }
                               newsObject.subheading = value;
                               // print("object");
@@ -388,10 +338,11 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     if (connResult == ConnectivityResult.none) {
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
-                          content:
-                              Text("Please check your internet connection."),
+                          content: Text(AppLocalizations.of(context)
+                              .translate('shared', 'check_internet')),
                           action: SnackBarAction(
-                            label: 'Dismiss',
+                            label: AppLocalizations.of(context)
+                                .translate('shared', 'dismiss'),
                             onPressed: () =>
                                 Scaffold.of(context).hideCurrentSnackBar(),
                           ),
@@ -409,7 +360,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             builder: (createDialogContext) {
                               dialogContext = createDialogContext;
                               return AlertDialog(
-                                title: Text('Updating Feed'),
+                                title: Text(AppLocalizations.of(context)
+                                    .translate(
+                                        'create_feed', 'update_progress')),
                                 content: LinearProgressIndicator(),
                               );
                             });
@@ -425,13 +378,15 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     } else {
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Location not added'),
+                          content: Text(AppLocalizations.of(context)
+                              .translate('create_feed', 'location_notadded')),
                         ),
                       );
                     }
                   },
                   child: Text(
-                    'Update feed',
+                    AppLocalizations.of(context)
+                        .translate('create_feed', 'update_post'),
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -479,63 +434,63 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     // print("Final Project $newsObject");
   }
 
-  Widget get entityDropdown {
-    return Container(
-      padding: EdgeInsets.only(bottom: 20.0),
-      child: DropdownButtonFormField<DataModel>(
-        decoration: InputDecoration.collapsed(
-          hintText: '+ Category',
-          hintStyle: Theme.of(context).textTheme.title.copyWith(
-                color: Theme.of(context).hintColor,
-              ),
-        ),
-        validator: (value) {
-          if (value == null) {
-            return 'Please select a category';
-          }
-        },
-        items: dataList.map((dataModel) {
-          if (dataModel.runtimeType == EntityModel) {
-            return DropdownMenuItem<DataModel>(
-              child: Text('General', style: textStyle),
-              value: dataModel,
-            );
-          } else if (dataModel.runtimeType == TimebankModel) {
-            TimebankModel model = dataModel;
-            return DropdownMenuItem<DataModel>(
-              child: Text(
-                '${model.name}',
-                style: textStyle,
-              ),
-              value: model,
-            );
-          } else if (dataModel.runtimeType == CampaignModel) {
-            CampaignModel model = dataModel;
-            return DropdownMenuItem<DataModel>(
-              child: Text(
-                '${model.name}',
-                style: textStyle,
-              ),
-              value: model,
-            );
-          }
-          return DropdownMenuItem<DataModel>(
-            child: Text(
-              'Undefined',
-              style: textStyle,
-            ),
-            value: null,
-          );
-        }).toList(),
-        value: selectedEntity,
-        onChanged: (dataModel) {
-          setState(() {
-            this.selectedEntity = dataModel;
-          });
-        },
-      ),
-    );
-  }
+//  Widget get entityDropdown {
+//    return Container(
+//      padding: EdgeInsets.only(bottom: 20.0),
+//      child: DropdownButtonFormField<DataModel>(
+//        decoration: InputDecoration.collapsed(
+//          hintText: '+ Category',
+//          hintStyle: Theme.of(context).textTheme.title.copyWith(
+//                color: Theme.of(context).hintColor,
+//              ),
+//        ),
+//        validator: (value) {
+//          if (value == null) {
+//            return 'Please select a category';
+//          }
+//        },
+//        items: dataList.map((dataModel) {
+//          if (dataModel.runtimeType == EntityModel) {
+//            return DropdownMenuItem<DataModel>(
+//              child: Text('General', style: textStyle),
+//              value: dataModel,
+//            );
+//          } else if (dataModel.runtimeType == TimebankModel) {
+//            TimebankModel model = dataModel;
+//            return DropdownMenuItem<DataModel>(
+//              child: Text(
+//                '${model.name}',
+//                style: textStyle,
+//              ),
+//              value: model,
+//            );
+//          } else if (dataModel.runtimeType == CampaignModel) {
+//            CampaignModel model = dataModel;
+//            return DropdownMenuItem<DataModel>(
+//              child: Text(
+//                '${model.name}',
+//                style: textStyle,
+//              ),
+//              value: model,
+//            );
+//          }
+//          return DropdownMenuItem<DataModel>(
+//            child: Text(
+//              'Undefined',
+//              style: textStyle,
+//            ),
+//            value: null,
+//          );
+//        }).toList(),
+//        value: selectedEntity,
+//        onChanged: (dataModel) {
+//          setState(() {
+//            this.selectedEntity = dataModel;
+//          });
+//        },
+//      ),
+//    );
+//  }
 
   Future _getLocation() async {
     String address = await LocationUtility().getFormattedAddress(

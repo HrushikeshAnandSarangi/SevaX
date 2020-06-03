@@ -790,9 +790,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                       }
                       Navigator.pop(viewContext);
 
-//                      setState(() {
-//                        isProgressBarActive = true;
-//                      });
+                      setState(() {
+                        isProgressBarActive = true;
+                      });
 
 //                      List<String> members =
 //                          timebankModel.members.map((s) => s).toList();
@@ -1552,6 +1552,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     } else {
       if (responseData['softDeleteCheck'] == false &&
           responseData['groupOwnershipCheck'] == false) {
+        setState(() {
+          isProgressBarActive = false;
+        });
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -1578,6 +1581,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         );
       } else if (responseData['softDeleteCheck'] == true &&
           responseData['groupOwnershipCheck'] == false) {
+        setState(() {
+          isProgressBarActive = false;
+        });
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -1650,6 +1656,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     } else {
       if (responseData['softDeleteCheck'] == false &&
           responseData['groupOwnershipCheck'] == false) {
+        setState(() {
+          isProgressBarActive = false;
+        });
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -1677,6 +1686,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         );
       } else if (responseData['softDeleteCheck'] == true &&
           responseData['groupOwnershipCheck'] == false) {
+        setState(() {
+          isProgressBarActive = false;
+        });
         Navigator.push(
           context,
           MaterialPageRoute(

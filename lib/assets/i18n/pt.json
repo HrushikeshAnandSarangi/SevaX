@@ -318,7 +318,7 @@
     "hint": "Texto, URL e Hashtags",
     "placeholder": "O que você gostaria de compartilhar*",
     "empty_err": "Digite algum texto",
-    "progress": "Criando publicação ",
+    "progress": "Criando postagem",
     "location_notadded": "Local não adicionado",
     "create_button": "Criar publicação",
     "category": "Categoria",
@@ -331,7 +331,10 @@
     "camera": "Camera",
     "gallery": "Galeria",
     "size_alert": "Arquivos com mais de 10 MB não são permitidos",
-    "size_alert_titile": "Alerta de arquivo grande"
+    "size_alert_titile": "Alerta de arquivo grande",
+    "update_post": "Atualizar postagem",
+    "update_progress": "Atualizando postagem",
+    "imagehint": "Crédito da foto"
   },
   "projects": {
     "title": "Projetos",
@@ -881,5 +884,19 @@
   "switching_timebank": {
     "switch_timebank": "Mudando o Timebank",
     "updating_timebank": "Atualizando o Timebank"
+  },
+  "image_picker": {
+    "camera": "Câmera",
+    "gallery": "Galeria",
+    "pdf_document": "Documento PDF"
+  },
+  "search_page": {
+    "search": "Procurar",
+    "feeds": "Publicações",
+    "requests": "solicitações de",
+    "offers": "Ofertas",
+    "projects": "Projetos",
+    "groups": "Grupos",
+    "members": "Membros"
   }
 }
