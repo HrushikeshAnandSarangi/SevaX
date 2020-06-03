@@ -685,13 +685,13 @@
   },
   "edit_group": {
     "add_members": "Añadir miembros",
-    "edit_group": "Logotipo del grupo",
+    "group_logo": "Logotipo del grupo",
     "name": "Nombra tu grupo",
     "hint_text": "Ej: mascotas en la ciudad, colaboración ciudadana",
     "enter_text": "Por favor ingrese un texto",
     "about": "Acerca de",
     "a_bit_more": "Ej: un poco más sobre tu grupo",
-    "private_accidental": "Eliminar acceso privado",
+    "prevent_delete": "Eliminar acceso privado",
     "private": "Grupo privado",
     "is_pin_right": "¿Está este pin en el lugar correcto?",
     "update": "Actualizar",
@@ -915,5 +915,21 @@
     "size_of_class_not_int": "Taille de la classe ne peut pas être en décimal",
     "size_of_class_error": "S'il vous plaît entrer taille valide de classe",
     "offer_credit_error": "Nous ne pouvons pas publier cette classe. Il n'y a pas suffisamment de crédits de la classe. S'il vous plaît réviser le temps de préparation ou le nombre d'étudiants et de soumettre l'offre à nouveau"
+  },
+  "soft_delete": {
+    "request_in_progress_tittle": "Votre demande de suppression est en cours de traitement.",
+    "dismiss": "Rejeter",
+    "request_in_progress_body": "Nous avons reçu votre demande de suppression. Nous traitons la demande. Vous serez averti une fois terminé."
+  },
+  "accidental_delete": {
+    "accidental_delete_enabled_title": "Suppression accidentelle activée",
+    "accidental_delete_enabled_body": "Ce ** a \"Empêcher la suppression accidentelle \" activé. Veuillez décocher cette case (dans l'onglet \"Gérer \") avant d'essayer de supprimer le **.",
+    "submitting_request": "Envoi de la demande ...",
+    "deletion_check": "Êtes-vous sûr de vouloir supprimer",
+    "advisory_for_timebank": "Toutes les informations pertinentes, y compris les projets, demandes et offres du groupe, seront supprimées!",
+    "advisory_for_projects": "Toutes les demandes associées à cette demande seraient supprimées",
+    "see_you_go": "Nous avons reçu votre demande de suppression de ce ***. Nous sommes navrés de vous voir partir. Nous examinerons votre demande et (dans certains cas) vous contacterons hors ligne avant de traiter la suppression du ***",
+    "delete": "Supprimer",
+    "cancel": "Annuler"
   }
 }

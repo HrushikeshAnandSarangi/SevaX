@@ -335,7 +335,7 @@
     "size_alert_title": "Alerta de archivo grande"
   },
   "invitations": {
-    "invitation_email_title" : "¡Increíble! Estás invitado a unirte a un banco de tiempo",
+    "invitation_email_title": "¡Increíble! Estás invitado a unirte a un banco de tiempo",
     "email_body": "<p>Está invitado a descargar la aplicación SevaX y unirse al Timebank ***. La aplicación SevaX utiliza Timebanking, un sistema basado en la reciprocidad donde los miembros de la comunidad se ayudan mutuamente a cambio de créditos Seva. Haga clic en este <a href=\"###;&nbsp;\"> enlace </a> para unirse.</p>",
     "size_alert_title": "Alerta de archivo grande",
     "update_post": "Actualizar publicación",
@@ -685,13 +685,13 @@
   },
   "edit_group": {
     "add_members": "Añadir miembros",
-    "edit_group": "Logotipo del grupo",
+    "group_logo": "Logotipo del grupo",
     "name": "Nombra tu grupo",
     "hint_text": "Ej: mascotas en la ciudad, colaboración ciudadana",
     "enter_text": "Por favor ingrese un texto",
     "about": "Acerca de",
     "a_bit_more": "Ej: un poco más sobre tu grupo",
-    "private_accidental": "Eliminar acceso privado",
+    "prevent_delete": "Eliminar acceso privado",
     "private": "Grupo privado",
     "is_pin_right": "¿Está este pin en el lugar correcto?",
     "update": "Actualizar",
@@ -923,5 +923,21 @@
     "size_of_class_not_int": "Tamaño de la clase no puede ser en decimal",
     "size_of_class_error": "Por favor, introduzca el tamaño de la clase válida",
     "offer_credit_error": "No podemos publicar esta clase. Hay créditos suficientes a partir de la clase. Por favor revisar el tiempo de preparación o el número de estudiantes y presentar la oferta de nuevo"
+  },
+  "soft_delete": {
+    "request_in_progress_tittle": "Su solicitud de eliminación se está procesando.",
+    "dismiss": "Descartar",
+    "request_in_progress_body": "Su solicitud de eliminación ha sido recibida por nosotros. Estamos procesando la solicitud. Se le notificará una vez que se haya completado."
+  },
+  "accidental_delete": {
+    "accidental_delete_enabled_title": "Eliminación accidental habilitada",
+    "accidental_delete_enabled_body": "Esto ** tiene \"Prevenir eliminación accidental \" habilitado. Desmarca esa casilla (en la pestaña \"Administrar\") antes de intentar eliminar el **.",
+    "submitting_request": "Enviando solicitud ...",
+    "deletion_check": "¿Estás segura de que quieres eliminar?",
+    "advisory_for_timebank": "¡Se eliminará toda la información relevante, incluidos proyectos, solicitudes y ofertas del grupo!",
+    "advisory_for_projects": "Todas las solicitudes asociadas a esta solicitud serían eliminadas",
+    "see_you_go": "Hemos recibido su solicitud para eliminar este ***. Lamentamos verte marchar. Examinaremos su solicitud y (en algunos casos) nos pondremos en contacto con usted sin conexión antes de procesar la eliminación de ***",
+    "delete": "Eliminar",
+    "cancel": "Cancelar"
   }
 }
