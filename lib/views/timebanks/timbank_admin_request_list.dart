@@ -823,38 +823,38 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           : Row(
               children: <Widget>[
                 isPromoteBottonVisible==true ?
-                  Padding(
-                    padding: EdgeInsets.only(left: 2, right: 2),
-                    child: CustomRaisedButton(
-                      debouncer: debounceValue,
-                      action: Actions.Promote,
-                      onTap: () async {
-                        setState(() {
-                          isProgressBarActive = true;
-                        });
-                        List<String> admins =
-                            timebankModel.admins.map((s) => s).toList();
-                        admins.add(user.sevaUserID);
-                        _updateTimebank(timebankModel, admins: admins);
-                      },
+                    Padding(
+                      padding: EdgeInsets.only(left: 2, right: 2),
+                      child: CustomRaisedButton(
+                        debouncer: debounceValue,
+                        action: Actions.Promote,
+                        onTap: () async {
+                          setState(() {
+                            isProgressBarActive = true;
+                          });
+                          List<String> admins =
+                              timebankModel.admins.map((s) => s).toList();
+                          admins.add(user.sevaUserID);
+                          _updateTimebank(timebankModel, admins: admins);
+                        },
+                      ),
+                    ) :
+                    Padding(
+                      padding: EdgeInsets.only(left: 2, right: 2),
+                      child: CustomRaisedButton(
+                        debouncer: debounceValue,
+                        action: Actions.Demote,
+                        onTap: () async {
+                          setState(() {
+                            isProgressBarActive = true;
+                          });
+                          List<String> admins =
+                          timebankModel.admins.map((s) => s).toList();
+                          admins.remove(user.sevaUserID);
+                          _updateTimebank(timebankModel, admins: admins);
+                        },
+                      ),
                     ),
-                  ) :
-                  Padding(
-                    padding: EdgeInsets.only(left: 2, right: 2),
-                    child: CustomRaisedButton(
-                      debouncer: debounceValue,
-                      action: Actions.Demote,
-                      onTap: () async {
-                        setState(() {
-                          isProgressBarActive = true;
-                        });
-                        List<String> admins =
-                        timebankModel.admins.map((s) => s).toList();
-                        admins.remove(user.sevaUserID);
-                        _updateTimebank(timebankModel, admins: admins);
-                      },
-                    ),
-                  ),
                 Padding(
                   padding: EdgeInsets.only(left: 2, right: 2),
                   child: CustomRaisedButton(
