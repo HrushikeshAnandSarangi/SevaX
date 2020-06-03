@@ -331,7 +331,8 @@
     "camera": "Cámara",
     "gallery": "Galería",
     "size_alert": "No se permiten archivos de más de 10 MB.",
-    "size_alert_title": "Alerta de archivo grande"
+    "size_alert_title": "Alerta de archivo grande",
+    "imagehint": "Autor de la foto"
   },
   "projects": {
     "title": "Projetos",

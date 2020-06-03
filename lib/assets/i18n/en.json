@@ -331,7 +331,8 @@
     "camera": "Camera",
     "gallery": "Gallery",
     "size_alert": "Files more than 10MB are not allowed",
-    "size_alert_title": "Large file alert"
+    "size_alert_title": "Large file alert",
+    "imagehint": "Photo credit"
   },
   "projects": {
     "title": "Projects",

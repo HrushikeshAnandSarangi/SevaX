@@ -250,7 +250,7 @@ class NewsImageState extends State<NewsImage>
                                     : '',
                                 decoration: InputDecoration(
                                   hintText:
-                                      '+ ${AppLocalizations.of(context).translate('create_feed', 'imagehint')}',
+                                      ' ${AppLocalizations.of(context).translate('create_feed', 'imagehint')}',
                                 ),
                                 keyboardType: TextInputType.text,
                                 textAlign: TextAlign.center,
