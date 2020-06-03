@@ -311,7 +311,8 @@
     "actions_not_allowed": "Actions not allowed, Please contact admin",
     "failed": "Billing Failed, Click below to configure billing",
     "contact_admin": "Action not allowed, please contact the admin",
-    "configure": "Configure Billing"
+    "configure": "Configure Billing",
+    "cancel": "Cancel"
   },
   "create_feed": {
     "title": "Create Post",

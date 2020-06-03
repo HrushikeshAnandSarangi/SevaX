@@ -989,9 +989,20 @@ class DiscussionListState extends State<DiscussionList> {
                                           builder: (BuildContext viewContext) {
                                             // return object of type Dialog
                                             return AlertDialog(
-                                              title: Text('Report Feed?'),
+                                              title: Text(
+                                                AppLocalizations.of(context)
+                                                    .translate(
+                                                  'homepage',
+                                                  'report_feed',
+                                                ),
+                                              ),
                                               content: Text(
-                                                  'Do you want to report this feed?'),
+                                                AppLocalizations.of(context)
+                                                    .translate(
+                                                  'homepage',
+                                                  'want_report',
+                                                ),
+                                              ),
                                               actions: <Widget>[
                                                 FlatButton(
                                                   padding: EdgeInsets.fromLTRB(
@@ -1001,7 +1012,11 @@ class DiscussionListState extends State<DiscussionList> {
                                                   textColor: FlavorConfig
                                                       .values.buttonTextColor,
                                                   child: Text(
-                                                    'Report Feed',
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                      'homepage',
+                                                      'report_feed',
+                                                    ),
                                                     style: TextStyle(
                                                       fontSize:
                                                           dialogButtonSize,
@@ -1037,7 +1052,11 @@ class DiscussionListState extends State<DiscussionList> {
                                                 ),
                                                 FlatButton(
                                                   child: Text(
-                                                    'Cancel',
+                                                    AppLocalizations.of(context)
+                                                        .translate(
+                                                      'homepage',
+                                                      'cancel',
+                                                    ),
                                                     style: TextStyle(
                                                         color: Colors.red),
                                                   ),

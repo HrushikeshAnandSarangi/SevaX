@@ -311,7 +311,8 @@
     "actions_not_allowed": "Ações não permitidas. Entre em contato com o administrador",
     "failed": "Falha na cobrança, clique abaixo para configurar a cobrança",
     "contact_admin": "Ação não permitida, entre em contato com o administrador",
-    "configure": "Configurar cobrança "
+    "configure": "Configurar cobrança ",
+    "cancel": "Cancelar"
   },
   "create_feed": {
     "title": "Criar publicação ",

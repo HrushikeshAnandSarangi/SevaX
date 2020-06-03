@@ -311,7 +311,8 @@
     "actions_not_allowed": "Actions non autorisées, veuillez contacter l'administrateur",
     "failed": "Échec de la facturation, cliquez ci-dessous pour configurer la facturation",
     "contact_admin": "Action non autorisée, veuillez contacter l'administrateur",
-    "configure": "Configurer la facturation"
+    "configure": "Configurer la facturation",
+    "cancel": "Annuler"
   },
   "create_feed": {
     "title": "Créer une publication",
