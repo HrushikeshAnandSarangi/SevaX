@@ -334,7 +334,6 @@
     "size_alert_title": "Large file alert",
     "update_post": "Update post",
     "update_progress": "Updating post"
-
   },
   "projects": {
     "title": "Projects",
@@ -900,5 +899,14 @@
     "camera": "Camera",
     "gallery": "Gallery",
     "pdf_document": "PDF Document"
+  },
+  "search_page": {
+    "search": "Search",
+    "feeds": "Feeds",
+    "requests": "Request",
+    "offers": "Offers",
+    "projects": "Projects",
+    "groups": "Groups",
+    "members": "Members"
   }
 }

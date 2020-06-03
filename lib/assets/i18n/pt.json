@@ -888,5 +888,14 @@
     "camera": "Câmera",
     "gallery": "Galeria",
     "pdf_document": "Documento PDF"
+  },
+  "search_page": {
+    "search": "Procurar",
+    "feeds": "Publicações",
+    "requests": "solicitações de",
+    "offers": "Ofertas",
+    "projects": "Projetos",
+    "groups": "Grupos",
+    "members": "Membros"
   }
 }

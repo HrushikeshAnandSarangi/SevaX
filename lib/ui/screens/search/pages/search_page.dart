@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -11,7 +10,6 @@ import 'package:sevaexchange/ui/screens/search/widgets/search_field.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/search_tab_bar.dart';
 import 'package:sevaexchange/ui/utils/strings.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/views/core.dart';
 
 import 'feeds_tab_view.dart';
 import 'group_tab_view.dart';
@@ -33,10 +31,10 @@ class SearchPage extends StatefulWidget {
     this.user,
   }) : super(key: key);
   @override
-  _ExplorePageState createState() => _ExplorePageState();
+  _SearchPageState createState() => _SearchPageState();
 }
 
-class _ExplorePageState extends State<SearchPage>
+class _SearchPageState extends State<SearchPage>
     with SingleTickerProviderStateMixin {
   SearchBloc _bloc;
   TextEditingController _controller = TextEditingController();
@@ -52,7 +50,7 @@ class _ExplorePageState extends State<SearchPage>
     );
     _bloc.searchAfterDelay();
     _tabController = TabController(
-      length: ExplorePageLabels.tabContent.length,
+      length: SearchPageLabels.tabContent.length,
       initialIndex: 0,
       vsync: this,
     );
