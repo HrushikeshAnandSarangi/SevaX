@@ -55,6 +55,9 @@ class NewsImageState extends State<NewsImage>
   bool _loadingPath = false;
   bool _multiPick = false;
   FileType _pickingType = FileType.custom;
+  final int tenMegaBytes = 10485760;
+  final int hundreKb = 14857;
+  BuildContext parentContext;
 
   File _image;
   AnimationController _controller;
@@ -102,11 +105,49 @@ class NewsImageState extends State<NewsImage>
       this._fileName = fileName;
       this._isDocumentBeingUploaded = true;
     });
+    checkPdfSize();
 
-    uploadDocument().then((_) {
-      setState(() => this._isDocumentBeingUploaded = false);
-    });
     return null;
+  }
+
+  void checkPdfSize() async {
+    var file = File(_path);
+    final bytes = await file.lengthSync();
+    print("bytes ${bytes}");
+    if (bytes > tenMegaBytes) {
+      print(" true file is big");
+      this._isDocumentBeingUploaded = false;
+      getAlertDialog(parentContext);
+    } else {
+      uploadDocument().then((_) {
+        setState(() => this._isDocumentBeingUploaded = false);
+      });
+    }
+  }
+
+  getAlertDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)
+              .translate('create_feed', 'size_alert_title')),
+          content: new Text(AppLocalizations.of(context)
+              .translate('create_feed', 'size_alert')),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text(
+                  AppLocalizations.of(context).translate('help', 'close')),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<String> uploadDocument() async {
@@ -140,6 +181,7 @@ class NewsImageState extends State<NewsImage>
   @override
   void initState() {
     if (widget.geoFirePointLocation == null) _fetchCurrentlocation;
+
     super.initState();
     print("locaton on newsimage ${widget.geoFirePointLocation?.coords}");
     selectedAddress = widget.selectedAddress;
@@ -160,6 +202,7 @@ class NewsImageState extends State<NewsImage>
 
   @override
   Widget build(BuildContext context) {
+    parentContext = context;
     return GestureDetector(
       onTap: () => imagePicker.showDialog(context),
       child: Column(

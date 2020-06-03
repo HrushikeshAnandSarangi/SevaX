@@ -329,7 +329,10 @@
     "add": "Add image",
     "add_attachment": "Add Image / Document",
     "camera": "Camera",
-    "gallery": "Gallery"
+    "gallery": "Gallery",
+    "size_alert": "Files more than 10MB are not allowed",
+    "size_alert_title": "Large file alert"
+
   },
   "projects": {
     "title": "Projects",

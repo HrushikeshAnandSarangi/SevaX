@@ -329,7 +329,10 @@
     "add_attachment": "Añadir imagen / documento",
     "add": "Adicionar imagem",
     "camera" : "Cámara",
-    "gallery": "Galería"
+    "gallery": "Galería",
+    "size_alert": "No se permiten archivos de más de 10 MB.",
+    "size_alert_title": "Alerta de archivo grande"
+
   },
   "projects": {
     "title": "Projetos",
@@ -803,7 +806,7 @@
   },
   "settings": {
     "my_timezone": "My Timezone",
-    "language": "My Language"
+    "language": "Mi idioma"
   },
   "members": {
     "updating_users": "Actualización de usuarios",
