@@ -171,8 +171,11 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
   return timeBankModelList;
 }
 
+
+
 /// Get all timebanknew associated with a User as a Stream_
-Future<int> getMembersCount({@required String communityId}) async {
+Future<int> getMembersCountOfAllMembers({@required String communityId}) async {
+  int totalCount = 0;
   DocumentSnapshot documentSnaphot = await Firestore.instance
       .collection('communities')
       .document(communityId)
@@ -182,15 +185,8 @@ Future<int> getMembersCount({@required String communityId}) async {
       .collection('timebanknew')
       .document(primaryTimebankId)
       .get();
-  int totalCount = timebankDoc.data['members'].length;
+  totalCount = timebankDoc.data['members'].length;
   print("full counttttttttt " + totalCount.toString());
-  return totalCount;
-}
-
-/// Get all timebanknew associated with a User as a Stream_
-Future<int> getMembersCountOfAllMembers({@required String communityId}) async {
-  int totalCount = 0;
-  totalCount = await getMembersCount(communityId: communityId);
   return totalCount;
 }
 
