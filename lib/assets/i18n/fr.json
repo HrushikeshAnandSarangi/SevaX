@@ -318,7 +318,7 @@
     "hint": "Texte, URL et hashtags",
     "placeholder": "Que voudriez-vous partager?",
     "empty_err": "Veuillez saisir du texte",
-    "progress": "Votre publication est en cours",
+    "progress": "Création d'un article",
     "location_notadded": "Lieu non ajouté",
     "create_button": "Créer une publication",
     "category": "Catégorie",
@@ -331,8 +331,9 @@
     "camera" : "Camera",
     "gallery": "Galerie",
     "size_alert": "Les fichiers de plus de 10 Mo ne sont pas autorisés",
-    "size_alert_title": "Alerte fichier volumineux"
-
+    "size_alert_title": "Alerte fichier volumineux",
+    "update_post": "Mettre à jour le message",
+    "update_progress": "Mise à jour du message"
   },
   "projects": {
     "title": "Projets",

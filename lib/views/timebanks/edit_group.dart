@@ -203,7 +203,7 @@ class EditGroupFormState extends State<EditGroupForm> {
           headingText(
             AppLocalizations.of(context)
                 .translate('edit_group', 'prevent_delete'),
-            true ?? '',
+            false,
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
@@ -224,7 +224,7 @@ class EditGroupFormState extends State<EditGroupForm> {
         children: <Widget>[
           headingText(
               AppLocalizations.of(context).translate('edit_group', 'private'),
-              true),
+              false),
           Padding(
             padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
             child: infoButton(
