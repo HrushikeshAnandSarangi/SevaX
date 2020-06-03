@@ -49,6 +49,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
     super.initState();
     getMembersList();
     ownerGroupsArr = widget.responseData['ownerGroupsArr'];
+    print("ownerGroupsArr=============="+ownerGroupsArr.toString());
   }
 
   void getMembersList() {
@@ -77,6 +78,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(Icons.arrow_back_ios),
         ),
+//      automaticallyImplyLeading: true,
         title: Text(
           'Remove User',
           style: TextStyle(
@@ -103,7 +105,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                 height: 15,
               ),
               Text(
-                "Transfer ownership of this user's data to another user, like manager.",
+                "Transfer ownership of this user's data to another user, like group ownership.",
                 style: TextStyle(
                   fontSize: 18,
                   fontFamily: 'Europa',
@@ -113,10 +115,6 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                 height: 15,
               ),
               getDataList(ownerGroupsArr),
-              SizedBox(
-                height: 15,
-              ),
-              searchUser(),
               SizedBox(
                 height: 15,
               ),
@@ -144,6 +142,13 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
               ),
               SizedBox(
                 height: 10,
+              ),
+              searchUser(),
+              SizedBox(
+                height: 15,
+              ),
+              selectedNewOwner==null? Container(): ListTile(
+                title:Text(selectedNewOwner.fullname)
               ),
               SizedBox(
                 height: 15,
@@ -179,9 +184,10 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
             if (selectedNewOwner == null) {
               print("reporter timebank creator id is ${tbmodel.creatorId}");
               ownerGroupsArr.forEach(
-                (group) => futures.add(
+                (group){
+                  futures.add(
                   Firestore.instance
-                      .collection('users')
+                      .collection('timebanknew')
                       .document(group['id'])
                       .updateData(
                     {
@@ -191,14 +197,13 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                       "members": FieldValue.arrayUnion([tbmodel.creatorId]),
                     },
                   ),
-                ),
+                );
+                },
               );
               await Future.wait(futures);
               Map<String, dynamic> responseObj = await removeMemberFromTimebank(
                   sevauserid: widget.memberSevaUserId, timebankId: tbmodel.id);
               if (responseObj['deletable'] == true) {
-                print(
-                    "else block---done transferring and removing the user from timebank");
                 if (widget.isComingFromExit) {
                   sendNotificationToAdmin();
                   Navigator.pushReplacement(
@@ -342,8 +347,11 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
         );
       },
       onSuggestionSelected: (suggestion) {
-        selectedNewOwner = suggestion;
+        setState(() {
+          selectedNewOwner = suggestion;
+        });
         _textEditingController.clear();
+
 //        if (!_selectedInterests.containsValue(suggestion)) {
 //          controller.close();
 //          String id = interests.keys

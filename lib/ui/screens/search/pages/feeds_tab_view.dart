@@ -33,7 +33,9 @@ class _FeedsTabViewState extends State<FeedsTabView>
         stream: _bloc.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
-            return Center(child: Text(AppLocalizations.of(context).translate('search','search_something')));
+            return Center(
+                child: Text(AppLocalizations.of(context)
+                    .translate('search', 'search_something')));
           }
           return StreamBuilder<List<NewsModel>>(
             stream: Searches.searchFeeds(
@@ -50,7 +52,8 @@ class _FeedsTabViewState extends State<FeedsTabView>
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 print("===>> ${snapshot.data}");
                 return Center(
-                  child: Text(AppLocalizations.of(context).translate('search','search_something')),
+                  child: Text(AppLocalizations.of(context)
+                      .translate('search', 'search_something')),
                 );
               }
               return ListView.builder(
@@ -59,7 +62,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   final news = snapshot.data[index];
-                  print("address ${news.placeAddress}");
+                  print("address ${news.newsImageUrl}");
                   return InkWell(
                     onTap: () {
                       Navigator.push(

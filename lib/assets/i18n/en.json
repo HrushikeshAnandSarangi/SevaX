@@ -44,7 +44,7 @@
     "check_internet": "Please check your internet connection.",
     "dismiss": "Dismiss",
     "or": "or",
-    "cancel": "cancel",
+    "cancel": "Cancel",
     "next": "Next",
     "skip": "Skip",
     "capital_cancel": "Cancel",
@@ -325,9 +325,13 @@
     "select_category": "Please select a category",
     "image_hint": "Photo Credits",
     "change": "Change image",
+    "change_attachment": "Change Attachment",
     "add": "Add image",
+    "add_attachment": "Add Image / Document",
     "camera": "Camera",
-    "gallery": "Gallery"
+    "gallery": "Gallery",
+    "size_alert": "Files more than 10MB are not allowed",
+    "size_alert_title": "Large file alert"
   },
   "projects": {
     "title": "Projects",
@@ -732,7 +736,7 @@
     "global_banks": "SevaX Global Network of Timebanks",
     "getting_volunteers": "Getting volunteers...",
     "no_volunteers": "No Volunteers joined yet.",
-    "volunteers": "Volunteers",
+    "volunteers": "Volunteer/s",
     "zero_volunteers": "0 Volunteers",
     "about": "About us",
     "read_less": "Read Less",
@@ -884,5 +888,9 @@
     "private_timebank": "Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.",
     "private_group": "Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.",
     "tax_configuration": "At the time that a user is credited Seva Credits for completing a request (for the Timebank), the Timebank Admin can specify a Tax - which is credited to the Timebank. Slide the ruler to specify the amount of the Tax."
+  },
+  "switching_timebank": {
+    "switch_timebank": "Switching Timebank",
+    "updating_timebank": "Updating Timebank"
   }
 }

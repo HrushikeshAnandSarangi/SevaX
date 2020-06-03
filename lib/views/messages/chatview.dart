@@ -89,7 +89,13 @@ class _ChatViewState extends State<ChatView> {
         : widget.chatModel.participants[1];
 
     // timebankId = widget.chatModel.timebankId;
-
+    FirestoreManager.getUserForId(sevaUserId: recieverId).then((userModel) {
+      if (mounted) {
+        setState(() {
+          this.partnerUser = userModel;
+        });
+      }
+    });
     chatId =
         "${widget.chatModel.participants[0]}*${widget.chatModel.participants[1]}*${widget.chatModel.communityId}";
     sharedPosts = HashMap();
@@ -111,7 +117,7 @@ class _ChatViewState extends State<ChatView> {
       widget.isFromRejectCompletion = false;
     if (widget.isFromRejectCompletion)
       textcontroller.text =
-          '${AppLocalizations.of(context).translate('chat','rejecting_becz')} ';
+          '${AppLocalizations.of(context).translate('chat', 'rejecting_becz')} ';
     if (widget.isFromShare == null) widget.isFromShare = false;
     //here is we keep id
     if (widget.isFromShare) {
@@ -213,14 +219,12 @@ class _ChatViewState extends State<ChatView> {
                 color: Color(0xffb71c1c),
                 child: Container(
                   child: Text(
-                    AppLocalizations.of(context).translate('chat','block'),
+                    AppLocalizations.of(context).translate('chat', 'block'),
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
                 onPressed: () {
-                  blockMemberDialogView(
-                    context,
-                  ).then((result) {
+                  blockMemberDialogView(context).then((result) {
                     print("result " + result);
                     if (result == 'BLOCK') {
                       blockMember();
@@ -250,7 +254,8 @@ class _ChatViewState extends State<ChatView> {
                   AsyncSnapshot<List<MessageModel>> chatListSnapshot) {
                 if (chatListSnapshot.hasError) {
                   _scrollToBottom();
-                  return new Text('${AppLocalizations.of(context).translate('chat','error')} ${chatListSnapshot.error}');
+                  return new Text(
+                      '${AppLocalizations.of(context).translate('chat', 'error')} ${chatListSnapshot.error}');
                 }
 
                 if (!chatListSnapshot.hasData) {
@@ -262,7 +267,9 @@ class _ChatViewState extends State<ChatView> {
                     print("Inside chat view");
                     List<MessageModel> chatModelList = chatListSnapshot.data;
                     if (chatModelList.length == 0) {
-                      return Center(child: Text(AppLocalizations.of(context).translate('chat','no_messages')));
+                      return Center(
+                          child: Text(AppLocalizations.of(context)
+                              .translate('chat', 'no_messages')));
                     }
 
                     if (!widget.chatModel.isTimebankMessage ||
@@ -303,12 +310,16 @@ class _ChatViewState extends State<ChatView> {
                     key: _formKey,
                     child: TextFormField(
                       controller: textcontroller,
-                      decoration: InputDecoration(hintText: AppLocalizations.of(context).translate('chat','type')),
+                      decoration: InputDecoration(
+                          hintText: AppLocalizations.of(context)
+                              .translate('chat', 'type')),
                       maxLines: null,
                       keyboardType: TextInputType.text,
                       textCapitalization: TextCapitalization.sentences,
-                      validator: (value) =>
-                          value.isEmpty ? AppLocalizations.of(context).translate('chat','type_empty') : null,
+                      validator: (value) => value.isEmpty
+                          ? AppLocalizations.of(context)
+                              .translate('chat', 'type_empty')
+                          : null,
                       onSaved: (value) {
                         messageContent = value;
                       },
@@ -403,14 +414,15 @@ class _ChatViewState extends State<ChatView> {
 
   Widget _getSharedNewDetails({MessageModel messageModel}) {
     return FutureBuilder<Object>(
-        future: FirestoreManager.getNewsForId(messageModel.message),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return new Text(AppLocalizations.of(context).translate('chat','couldnt_post'));
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container();
-          }
+      future: FirestoreManager.getNewsForId(messageModel.message),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return new Text(
+              AppLocalizations.of(context).translate('chat', 'couldnt_post'));
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container();
+        }
 
         NewsModel news = snapshot.data;
         sharedPosts[messageModel.message] = news;
@@ -538,16 +550,18 @@ class _ChatViewState extends State<ChatView> {
       context: viewContext,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context).translate('chat','block') + " ${partnerUser.fullname.split(' ')[0]}."),
+          title: new Text(
+              AppLocalizations.of(context).translate('chat', 'block') +
+                  " ${partnerUser.fullname.split(' ')[0]}."),
           content: new Text(
-              "${partnerUser.fullname.split(' ')[0]} ${AppLocalizations.of(context).translate('chat','block_warn')}"),
+              "${partnerUser.fullname.split(' ')[0]} ${AppLocalizations.of(context).translate('chat', 'block_warn')}"),
           actions: <Widget>[
             new FlatButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
               child: new Text(
-                AppLocalizations.of(context).translate('chat','block'),
+                AppLocalizations.of(context).translate('chat', 'block'),
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                 ),
@@ -558,7 +572,7 @@ class _ChatViewState extends State<ChatView> {
             ),
             new FlatButton(
               child: new Text(
-                AppLocalizations.of(context).translate('shared','cancel'),
+                AppLocalizations.of(context).translate('shared', 'cancel'),
                 style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
               ),
               onPressed: () {

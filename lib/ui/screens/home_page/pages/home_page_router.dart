@@ -1,9 +1,10 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/bottom_nav_bar.dart';
@@ -69,7 +70,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppLanguage>(
-        builder: (_) => appLanguage,
+        create: (_) => appLanguage,
         child: Consumer<AppLanguage>(builder: (context, model, child) {
           return MaterialApp(
             locale: model.appLocal,
@@ -94,14 +95,11 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                 resizeToAvoidBottomInset: false,
                 body: StreamBuilder(
                   // stream: _userBloc.getUser(SevaCore.of(context).loggedInUser.email),
-                  stream: CombineLatestStream.combine2(
-                      _userBloc.userStream, _userBloc.comunityStream, (u,
-                      c) => true),
+                  stream: CombineLatestStream.combine2(_userBloc.userStream,
+                      _userBloc.comunityStream, (u, c) => true),
                   builder: (context, AsyncSnapshot<bool> snapshot) {
                     if (snapshot.hasData && snapshot.data != null) {
-                      SevaCore
-                          .of(context)
-                          .loggedInUser = _userBloc.user;
+                      SevaCore.of(context).loggedInUser = _userBloc.user;
                       if (_userBloc.user.communities == null ||
                           _userBloc.user.communities.isEmpty) {
                         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -116,10 +114,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                           BlocProvider<MessageBloc>(
                             bloc: _messageBloc,
                             child: Container(
-                              height: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .height - 65,
+                              height: MediaQuery.of(context).size.height - 65,
                               child: pages[selected],
                             ),
                           ),
