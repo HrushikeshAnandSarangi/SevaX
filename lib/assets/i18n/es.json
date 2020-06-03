@@ -70,7 +70,6 @@
     "timebank_projects": "Proyectos de banco de tempo",
     "personal_projects": "Proyectos personales",
     "clear": "Claro"
-
   },
   "signup": {
     "add_photo": "Adicionar foto",
@@ -337,7 +336,7 @@
     "size_alert_title": "Alerta de archivo grande"
   },
   "invitations": {
-    "invitation_email_title" : "¡Increíble! Estás invitado a unirte a un banco de tiempo",
+    "invitation_email_title": "¡Increíble! Estás invitado a unirte a un banco de tiempo",
     "email_body": "<p>Está invitado a descargar la aplicación SevaX y unirse al Timebank ***. La aplicación SevaX utiliza Timebanking, un sistema basado en la reciprocidad donde los miembros de la comunidad se ayudan mutuamente a cambio de créditos Seva. Haga clic en este <a href=\"###;&nbsp;\"> enlace </a> para unirse.</p>",
     "size_alert_title": "Alerta de archivo grande",
     "update_post": "Actualizar publicación",
@@ -691,7 +690,6 @@
     "tap_to_delete": "Toca para eliminar este elemento.",
     "assign_err_hint": "Por favor asigne a un proyecto",
     "tap_to_select": "Toque para seleccionar una o más..."
-
   },
   "edit_group": {
     "add_members": "Añadir miembros",
@@ -933,5 +931,9 @@
     "size_of_class_not_int": "Tamaño de la clase no puede ser en decimal",
     "size_of_class_error": "Por favor, introduzca el tamaño de la clase válida",
     "offer_credit_error": "No podemos publicar esta clase. Hay créditos suficientes a partir de la clase. Por favor revisar el tiempo de preparación o el número de estudiantes y presentar la oferta de nuevo"
+  },
+  "select_member": {
+    "select_timebank": "Seleccionar banco de tiempo",
+    "select_volunteer": "Seleccionar voluntaria"
   }
 }

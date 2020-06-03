@@ -70,7 +70,6 @@
     "timebank_projects": "Timebank Projects",
     "personal_projects": "Projets personnels",
     "clear": "Clair"
-
   },
   "signup": {
     "add_photo": "Ajouter une photo",
@@ -691,7 +690,6 @@
     "tap_to_delete": "Appuyez pour supprimer cet élément",
     "assign_err_hint": "Veuillez attribuer à un projet",
     "tap_to_select": "Appuyez pour sélectionner un ou plusieurs..."
-
   },
   "edit_group": {
     "add_members": "Añadir miembros",
@@ -925,5 +923,9 @@
     "size_of_class_not_int": "Taille de la classe ne peut pas être en décimal",
     "size_of_class_error": "S'il vous plaît entrer taille valide de classe",
     "offer_credit_error": "Nous ne pouvons pas publier cette classe. Il n'y a pas suffisamment de crédits de la classe. S'il vous plaît réviser le temps de préparation ou le nombre d'étudiants et de soumettre l'offre à nouveau"
+  },
+  "select_member": {
+    "select_timebank": "Sélectionnez Timebank",
+    "select_volunteer": "Sélectionnez un volontaire"
   }
 }

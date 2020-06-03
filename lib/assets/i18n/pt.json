@@ -38,8 +38,7 @@
     "reset_link_message": "Enviamos o link de redefinição para o seu endereço de e-mail",
     "terms_of_service_link": "Termos de serviço",
     "privacy_policy_link": "Política de Privacidade",
-    "payment_policy_link": "Política de pagamento",
-
+    "payment_policy_link": "Política de pagamento"
   },
   "shared": {
     "check_internet": "Por favor, verifique sua conexão à internet.",
@@ -71,7 +70,6 @@
     "timebank_projects": "Projetos do Timebank",
     "personal_projects": "Projetos pessoais",
     "clear": "Claro"
-
   },
   "signup": {
     "add_photo": "Adicionar foto",
@@ -341,7 +339,7 @@
     "imagehint": "Crédito da foto"
   },
   "invitations": {
-    "invitation_email_title" : "Impressionante! Você está convidado a participar de um Timebank",
+    "invitation_email_title": "Impressionante! Você está convidado a participar de um Timebank",
     "email_body": "<p>Você está convidado a baixar o aplicativo SevaX e ingressar no Timebank ***. O aplicativo SevaX usa o Timebanking, um sistema baseado em reciprocidade, em que os membros da comunidade se ajudam em troca de créditos Seva. Por favor, clique neste <a href=\"###;&nbsp;\"> link </a> para participar.</p>"
   },
   "projects": {
@@ -691,7 +689,6 @@
     "tap_to_delete": "Toque para excluir este item",
     "assign_err_hint": "Atribua a um projeto",
     "tap_to_select": "Toque para selecionar um ou mais..."
-
   },
   "edit_group": {
     "add_members": "Adicionar membros",
@@ -925,5 +922,9 @@
     "size_of_class_not_int": "Tamanho da classe não pode estar em decimal",
     "size_of_class_error": "Por favor, indique tamanho válido de classe",
     "offer_credit_error": "Nós não podemos publicar esta classe. Há créditos insuficientes da classe. Por favor, revise o tempo Prep ou o número de alunos e submeter a oferta novamente"
+  },
+  "select_member": {
+    "select_timebank": "Selecione Timebank",
+    "select_volunteer": "Selecionar voluntário"
   }
 }
