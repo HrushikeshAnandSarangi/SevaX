@@ -910,8 +910,11 @@ class CreateEditCommunityViewFormState
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            SwitchTimebank(content: 'Updating'),
+                                        builder: (context) => SwitchTimebank(
+                                          content: AppLocalizations.of(context)
+                                              .translate('switching_timebank',
+                                                  'updating_timebank'),
+                                        ),
                                       ),
                                     );
                                   }

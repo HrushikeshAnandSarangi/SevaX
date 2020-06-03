@@ -328,7 +328,7 @@
     "change_attachment": "cambiar archivo adjunto",
     "add_attachment": "Añadir imagen / documento",
     "add": "Adicionar imagem",
-    "camera" : "Cámara",
+    "camera": "Cámara",
     "gallery": "Galería",
     "size_alert": "No se permiten archivos de más de 10 MB.",
     "size_alert_title": "Alerta de archivo grande",
@@ -887,5 +887,9 @@
     "protectedTimebankInfo": "Marque esta casilla si desea que su banco de tiempo no sea descubierto por nadie que esté navegando, ya sea por el nombre del banco de tiempo o la ubicación del banco de tiempo. Tenga en cuenta que todos siempre necesitan un código para unirse a su Banco de tiempo. Un \"Banco de tiempo privado\" proporciona un nivel adicional de privacidad.",
     "privateTimebankInfo": "Marque esta casilla si desea que su banco de tiempo no sea descubierto por nadie que esté navegando, ya sea por el nombre del banco de tiempo o la ubicación del banco de tiempo. Tenga en cuenta que todos siempre necesitan un código para unirse a su Banco de tiempo. Un \"Banco de tiempo privado\" proporciona un nivel adicional de privacidad.",
     "privateGroupInfo": "En el momento en que se acredita a un usuario Créditos Seva por completar una solicitud (para el Banco de tiempo), el Administrador del Banco de tiempo puede especificar un Impuesto, que se acredita al Banco de tiempo. Deslice la regla para especificar el monto del Impuesto."
+  },
+  "switching_timebank": {
+    "switch_timebank": "Cambio de banco de tiempo",
+    "updating_timebank": "Actualización del banco de tiempo"
   }
 }
