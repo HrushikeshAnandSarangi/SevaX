@@ -311,14 +311,15 @@
     "actions_not_allowed": "Actions not allowed, Please contact admin",
     "failed": "Billing Failed, Click below to configure billing",
     "contact_admin": "Action not allowed, please contact the admin",
-    "configure": "Configure Billing"
+    "configure": "Configure Billing",
+    "cancel": "Cancel"
   },
   "create_feed": {
     "title": "Create Post",
     "hint": "Text, URL and Hashtags ",
     "placeholder": "What would you like to share*",
     "empty_err": "Please enter some text",
-    "progress": "Creating feed",
+    "progress": "Creating post",
     "location_notadded": "Location not added",
     "create_button": "Create Post",
     "category": "Category",
@@ -331,7 +332,10 @@
     "camera": "Camera",
     "gallery": "Gallery",
     "size_alert": "Files more than 10MB are not allowed",
-    "size_alert_title": "Large file alert"
+    "size_alert_title": "Large file alert",
+    "update_post": "Update post",
+    "update_progress": "Updating post",
+    "imagehint": "Photo credit"
   },
   "projects": {
     "title": "Projects",
@@ -892,5 +896,34 @@
     "private_timebank": "Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.",
     "private_group": "Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.",
     "tax_configuration": "At the time that a user is credited Seva Credits for completing a request (for the Timebank), the Timebank Admin can specify a Tax - which is credited to the Timebank. Slide the ruler to specify the amount of the Tax."
+  },
+  "switching_timebank": {
+    "switch_timebank": "Switching Timebank",
+    "updating_timebank": "Updating Timebank"
+  },
+  "image_picker": {
+    "camera": "Camera",
+    "gallery": "Gallery",
+    "pdf_document": "PDF Document"
+  },
+  "search_page": {
+    "search": "Search",
+    "feeds": "Feeds",
+    "requests": "Request",
+    "offers": "Offers",
+    "projects": "Projects",
+    "groups": "Groups",
+    "members": "Members"
+  },
+  "validation_errors": {
+    "title_error": "Please enter the subject of your offer",
+    "generic_error": "Please enter some text",
+    "class_hours": "Please enter the hours required for the class",
+    "hours_not_int": "Entered number of hours is not valid",
+    "prepration_time_error": "Please enter your preperation time",
+    "location_error": "Please select location",
+    "size_of_class_not_int": "Size of class can't be in decimal",
+    "size_of_class_error": "Please enter valid size of class",
+    "offer_credit_error": "We cannot publish this Class. There are insufficient credits from the class. Please revise the Prep time or the number of students and submit the offer again"
   }
 }

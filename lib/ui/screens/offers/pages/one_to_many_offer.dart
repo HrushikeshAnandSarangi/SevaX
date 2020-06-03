@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -44,9 +46,11 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
     super.initState();
     _bloc.classSizeError.listen((error) {
       if (error != null) {
+        log(error);
         errorDialog(
           context: context,
-          error: error,
+          error: AppLocalizations.of(context)
+              .translate('validation_errors', error),
         );
       }
     });
@@ -66,7 +70,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
       appBar: widget.offerModel != null
           ? AppBar(
               title: Text(
-                  AppLocalizations.of(context).translate('create_offer','edit'),
+                AppLocalizations.of(context).translate('create_offer', 'edit'),
                 style: TextStyle(fontSize: 18),
               ),
             )
@@ -92,8 +96,10 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                       SnackBar(
                         content: Text(
                           widget.offerModel == null
-                              ? AppLocalizations.of(context).translate('create_offer','creating')
-                              : AppLocalizations.of(context).translate('create_offer','updating'),
+                              ? AppLocalizations.of(context)
+                                  .translate('create_offer', 'creating')
+                              : AppLocalizations.of(context)
+                                  .translate('create_offer', 'updating'),
                         ),
                       ),
                     );
@@ -107,8 +113,10 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                       SnackBar(
                         content: Text(
                           widget.offerModel == null
-                              ? AppLocalizations.of(context).translate('create_offer','error_creating')
-                              : AppLocalizations.of(context).translate('create_offer','error_updating'),
+                              ? AppLocalizations.of(context)
+                                  .translate('create_offer', 'error_creating')
+                              : AppLocalizations.of(context)
+                                  .translate('create_offer', 'error_updating'),
                         ),
                       ),
                     );
@@ -139,17 +147,21 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: "${AppLocalizations.of(context).translate('create_offer','title_title')}*",
+                                heading:
+                                    "${AppLocalizations.of(context).translate('create_offer', 'title_title')}*",
                                 onChanged: _bloc.onTitleChanged,
-                                hint: AppLocalizations.of(context).translate('create_offer','tutor'),
+                                hint: AppLocalizations.of(context)
+                                    .translate('create_offer', 'tutor'),
                                 maxLength: null,
-                                error: snapshot.error,
+                                error: AppLocalizations.of(context).translate(
+                                    'validation_errors', snapshot.error),
                               );
                             },
                           ),
                           SizedBox(height: 20),
                           OfferDurationWidget(
-                            title: AppLocalizations.of(context).translate('create_offer','offer_duration'),
+                            title: AppLocalizations.of(context)
+                                .translate('create_offer', 'offer_duration'),
                             startTime: widget.offerModel != null
                                 ? DateTime.fromMillisecondsSinceEpoch(
                                     widget.offerModel.groupOfferDataModel
@@ -175,10 +187,13 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: "${AppLocalizations.of(context).translate('create_offer','prep_hours')} *",
+                                heading:
+                                    "${AppLocalizations.of(context).translate('create_offer', 'prep_hours')} *",
                                 onChanged: _bloc.onPreparationHoursChanged,
-                                hint: AppLocalizations.of(context).translate('create_offer','prep_hours_required'),
-                                error: snapshot.error,
+                                hint: AppLocalizations.of(context).translate(
+                                    'create_offer', 'prep_hours_required'),
+                                error: AppLocalizations.of(context).translate(
+                                    'validation_errors', snapshot.error),
                                 textInputType: TextInputType.number,
                               );
                             },
@@ -195,10 +210,13 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: "${AppLocalizations.of(context).translate('create_offer','no_of_class')} *",
+                                heading:
+                                    "${AppLocalizations.of(context).translate('create_offer', 'no_of_class')} *",
                                 onChanged: _bloc.onClassHoursChanged,
-                                hint: AppLocalizations.of(context).translate('create_offer','no_of_class_hours'),
-                                error: snapshot.error,
+                                hint: AppLocalizations.of(context).translate(
+                                    'create_offer', 'no_of_class_hours'),
+                                error: AppLocalizations.of(context).translate(
+                                    'validation_errors', snapshot.error),
                                 textInputType: TextInputType.number,
                               );
                             },
@@ -215,10 +233,13 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: "${AppLocalizations.of(context).translate('create_offer','size_class')} *",
+                                heading:
+                                    "${AppLocalizations.of(context).translate('create_offer', 'size_class')} *",
                                 onChanged: _bloc.onClassSizeChanged,
-                                hint: AppLocalizations.of(context).translate('create_offer','enter_participants'),
-                                error: snapshot.error,
+                                hint: AppLocalizations.of(context).translate(
+                                    'create_offer', 'enter_participants'),
+                                error: AppLocalizations.of(context).translate(
+                                    'validation_errors', snapshot.error),
                                 textInputType: TextInputType.number,
                               );
                             },
@@ -234,11 +255,14 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: AppLocalizations.of(context).translate('create_offer','class_desc'),
+                                heading: AppLocalizations.of(context)
+                                    .translate('create_offer', 'class_desc'),
                                 onChanged: _bloc.onclassDescriptionChanged,
-                                hint: AppLocalizations.of(context).translate('create_offer','class_desc_err'),
+                                hint: AppLocalizations.of(context).translate(
+                                    'create_offer', 'class_desc_err'),
                                 maxLength: 500,
-                                error: snapshot.error,
+                                error: AppLocalizations.of(context).translate(
+                                    'validation_errors', snapshot.error),
                                 textInputType: TextInputType.multiline,
                               );
                             },
@@ -274,9 +298,12 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                       _scaffoldKey.currentState.showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            AppLocalizations.of(context).translate('shared','check_internet')),
+                                              AppLocalizations.of(context)
+                                                  .translate('shared',
+                                                      'check_internet')),
                                           action: SnackBarAction(
-                                            label: AppLocalizations.of(context).translate('shared','dismiss'),
+                                            label: AppLocalizations.of(context)
+                                                .translate('shared', 'dismiss'),
                                             onPressed: () => _scaffoldKey
                                                 .currentState
                                                 .hideCurrentSnackBar(),
@@ -306,7 +333,9 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                     } else {
                                       errorDialog(
                                         context: context,
-                                        error:AppLocalizations.of(context).translate('create_offer','enter_start_end'),
+                                        error: AppLocalizations.of(context)
+                                            .translate('create_offer',
+                                                'enter_start_end'),
                                       );
                                     }
                                   },
@@ -316,8 +345,12 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                     children: <Widget>[
                                       Text(
                                         widget.offerModel == null
-                                            ? AppLocalizations.of(context).translate('create_offer','creating')
-                                            : AppLocalizations.of(context).translate('create_offer','updating'),
+                                            ? AppLocalizations.of(context)
+                                                .translate(
+                                                    'create_offer', 'creating')
+                                            : AppLocalizations.of(context)
+                                                .translate(
+                                                    'create_offer', 'updating'),
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       SizedBox(width: 8),
@@ -336,8 +369,11 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                   )
                                 : Text(
                                     widget.offerModel == null
-                                        ? AppLocalizations.of(context).translate('create_offer','title')
-                                        : AppLocalizations.of(context).translate('create_offer','title_update'),
+                                        ? AppLocalizations.of(context)
+                                            .translate('create_offer', 'title')
+                                        : AppLocalizations.of(context)
+                                            .translate(
+                                                'create_offer', 'title_update'),
                                     style: TextStyle(fontSize: 16),
                                   ),
                           ),

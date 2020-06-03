@@ -311,14 +311,15 @@
     "actions_not_allowed": "Ações não permitidas. Entre em contato com o administrador",
     "failed": "Falha na cobrança, clique abaixo para configurar a cobrança",
     "contact_admin": "Ação não permitida, entre em contato com o administrador",
-    "configure": "Configurar cobrança "
+    "configure": "Configurar cobrança ",
+    "cancel": "Cancelar"
   },
   "create_feed": {
     "title": "Criar publicação ",
     "hint": "Texto, URL e Hashtags",
     "placeholder": "O que você gostaria de compartilhar*",
     "empty_err": "Digite algum texto",
-    "progress": "Criando publicação ",
+    "progress": "Creando publicación",
     "location_notadded": "Local não adicionado",
     "create_button": "Criar publicação",
     "category": "Categoria",
@@ -335,7 +336,11 @@
   },
   "invitations": {
     "invitation_email_title" : "¡Increíble! Estás invitado a unirte a un banco de tiempo",
-    "email_body": "<p>Está invitado a descargar la aplicación SevaX y unirse al Timebank ***. La aplicación SevaX utiliza Timebanking, un sistema basado en la reciprocidad donde los miembros de la comunidad se ayudan mutuamente a cambio de créditos Seva. Haga clic en este <a href=\"###;&nbsp;\"> enlace </a> para unirse.</p>"
+    "email_body": "<p>Está invitado a descargar la aplicación SevaX y unirse al Timebank ***. La aplicación SevaX utiliza Timebanking, un sistema basado en la reciprocidad donde los miembros de la comunidad se ayudan mutuamente a cambio de créditos Seva. Haga clic en este <a href=\"###;&nbsp;\"> enlace </a> para unirse.</p>",
+    "size_alert_title": "Alerta de archivo grande",
+    "update_post": "Actualizar publicación",
+    "update_progress": "Actualizando publicación",
+    "imagehint": "Autor de la foto"
   },
   "projects": {
     "title": "Projetos",
@@ -889,5 +894,34 @@
     "protectedTimebankInfo": "Marque esta casilla si desea que su banco de tiempo no sea descubierto por nadie que esté navegando, ya sea por el nombre del banco de tiempo o la ubicación del banco de tiempo. Tenga en cuenta que todos siempre necesitan un código para unirse a su Banco de tiempo. Un \"Banco de tiempo privado\" proporciona un nivel adicional de privacidad.",
     "privateTimebankInfo": "Marque esta casilla si desea que su banco de tiempo no sea descubierto por nadie que esté navegando, ya sea por el nombre del banco de tiempo o la ubicación del banco de tiempo. Tenga en cuenta que todos siempre necesitan un código para unirse a su Banco de tiempo. Un \"Banco de tiempo privado\" proporciona un nivel adicional de privacidad.",
     "privateGroupInfo": "En el momento en que se acredita a un usuario Créditos Seva por completar una solicitud (para el Banco de tiempo), el Administrador del Banco de tiempo puede especificar un Impuesto, que se acredita al Banco de tiempo. Deslice la regla para especificar el monto del Impuesto."
+  },
+  "switching_timebank": {
+    "switch_timebank": "Cambio de banco de tiempo",
+    "updating_timebank": "Actualización del banco de tiempo"
+  },
+  "image_picker": {
+    "camera": "Cámara",
+    "gallery": "Galería",
+    "pdf_document": "Documento PDF"
+  },
+  "search_page": {
+    "search": "Buscar",
+    "feeds": "Publicação",
+    "requests": "solicitações de",
+    "offers": "Ofertas",
+    "projects": "Projetos",
+    "groups": "Grupos",
+    "members": "Miembros"
+  },
+  "validation_errors": {
+    "title_error": "Por favor, introduzca el asunto de su oferta",
+    "generic_error": "Por favor, introduzca algún texto",
+    "class_hours": "Por favor, introduzca las horas requeridas para la clase",
+    "hours_not_int": "Número introducido de horas no es válido",
+    "prepration_time_error": "Por favor, introduzca su tiempo de preparacion",
+    "location_error": "Por favor seleccione la ubicación",
+    "size_of_class_not_int": "Tamaño de la clase no puede ser en decimal",
+    "size_of_class_error": "Por favor, introduzca el tamaño de la clase válida",
+    "offer_credit_error": "No podemos publicar esta clase. Hay créditos suficientes a partir de la clase. Por favor revisar el tiempo de preparación o el número de estudiantes y presentar la oferta de nuevo"
   }
 }

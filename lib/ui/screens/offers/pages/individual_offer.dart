@@ -53,7 +53,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
       appBar: widget.offerModel != null
           ? AppBar(
               title: Text(
-                  AppLocalizations.of(context).translate('create_offer','edit'),
+                AppLocalizations.of(context).translate('create_offer', 'edit'),
                 style: TextStyle(fontSize: 18),
               ),
             )
@@ -75,8 +75,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       SnackBar(
                         content: Text(
                           widget.offerModel == null
-                              ? AppLocalizations.of(context).translate('create_offer','creating')
-                              : AppLocalizations.of(context).translate('create_offer','updating'),
+                              ? AppLocalizations.of(context)
+                                  .translate('create_offer', 'creating')
+                              : AppLocalizations.of(context)
+                                  .translate('create_offer', 'updating'),
                         ),
                       ),
                     );
@@ -90,8 +92,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       SnackBar(
                         content: Text(
                           widget.offerModel == null
-                              ? AppLocalizations.of(context).translate('create_offer','error_creating')
-                              : AppLocalizations.of(context).translate('create_offer','error_updating'),
+                              ? AppLocalizations.of(context)
+                                  .translate('create_offer', 'error_creating')
+                              : AppLocalizations.of(context)
+                                  .translate('create_offer', 'error_updating'),
                         ),
                       ),
                     );
@@ -118,11 +122,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: "${AppLocalizations.of(context).translate('create_offer','title_title')}*",
+                                heading:
+                                    "${AppLocalizations.of(context).translate('create_offer', 'title_title')}*",
                                 onChanged: _bloc.onTitleChanged,
-                                hint: "${AppLocalizations.of(context).translate('create_offer','baby_sitting')}..",
+                                hint:
+                                    "${AppLocalizations.of(context).translate('create_offer', 'baby_sitting')}..",
                                 maxLength: null,
-                                error: snapshot.error,
+                                error: AppLocalizations.of(context).translate(
+                                    'validation_errors', snapshot.error),
                               );
                             },
                           ),
@@ -138,11 +145,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: "${AppLocalizations.of(context).translate('create_offer','offer_desc')}*",
+                                heading:
+                                    "${AppLocalizations.of(context).translate('create_offer', 'offer_desc')}*",
                                 onChanged: _bloc.onOfferDescriptionChanged,
-                                hint: AppLocalizations.of(context).translate('create_offer','offer_desc_hash'),
+                                hint: AppLocalizations.of(context).translate(
+                                    'create_offer', 'offer_desc_hash'),
                                 maxLength: 500,
-                                error: snapshot.error,
+                                error: AppLocalizations.of(context).translate(
+                                    'validation_errors', snapshot.error),
                               );
                             },
                           ),
@@ -157,11 +167,14 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: AppLocalizations.of(context).translate('create_offer','availablity'),
+                                heading: AppLocalizations.of(context)
+                                    .translate('create_offer', 'availablity'),
                                 onChanged: _bloc.onAvailabilityChanged,
-                                hint: AppLocalizations.of(context).translate('create_offer','availablity_desc'),
+                                hint: AppLocalizations.of(context).translate(
+                                    'create_offer', 'availablity_desc'),
                                 maxLength: 100,
-                                error: snapshot.error,
+                                error: AppLocalizations.of(context).translate(
+                                    'validation_errors', snapshot.error),
                               );
                             },
                           ),
@@ -196,9 +209,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                       _scaffoldKey.currentState.showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            AppLocalizations.of(context).translate('shared','check_internet')),
+                                              AppLocalizations.of(context)
+                                                  .translate('shared',
+                                                      'check_internet')),
                                           action: SnackBarAction(
-                                            label: AppLocalizations.of(context).translate('shared','dismiss'),
+                                            label: AppLocalizations.of(context)
+                                                .translate('shared', 'dismiss'),
                                             onPressed: () => _scaffoldKey
                                                 .currentState
                                                 .hideCurrentSnackBar(),
@@ -224,8 +240,12 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                     children: <Widget>[
                                       Text(
                                         widget.offerModel == null
-                                            ? AppLocalizations.of(context).translate('create_offer','creating')
-                                            : AppLocalizations.of(context).translate('create_offer','updating'),
+                                            ? AppLocalizations.of(context)
+                                                .translate(
+                                                    'create_offer', 'creating')
+                                            : AppLocalizations.of(context)
+                                                .translate(
+                                                    'create_offer', 'updating'),
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       SizedBox(width: 8),
@@ -244,8 +264,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                   )
                                 : Text(
                                     widget.offerModel == null
-                                        ? AppLocalizations.of(context).translate('create_offer','title')
-                                        : AppLocalizations.of(context).translate('create_offer','title_update'),
+                                        ? AppLocalizations.of(context)
+                                            .translate('create_offer', 'title')
+                                        : AppLocalizations.of(context)
+                                            .translate(
+                                                'create_offer', 'title_update'),
                                     style: TextStyle(fontSize: 16),
                                   ),
                           ),

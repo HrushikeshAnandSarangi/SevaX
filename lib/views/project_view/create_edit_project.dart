@@ -106,7 +106,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         automaticallyImplyLeading: true,
         centerTitle: true,
         title: Text(
-          widget.isCreateProject ? AppLocalizations.of(context).translate('projects','create_project') : AppLocalizations.of(context).translate('projects','edit_project'),
+          widget.isCreateProject
+              ? AppLocalizations.of(context)
+                  .translate('projects', 'create_project')
+              : AppLocalizations.of(context)
+                  .translate('projects', 'edit_project'),
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
@@ -147,11 +151,13 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               selectedColor: Theme.of(context).primaryColor,
               children: {
                 0: Text(
-                  AppLocalizations.of(context).translate('shared','timebank_project'),
+                  AppLocalizations.of(context)
+                      .translate('shared', 'timebank_project'),
                   style: TextStyle(fontSize: 10.0),
                 ),
                 1: Text(
-                  AppLocalizations.of(context).translate('shared','personal_project'),
+                  AppLocalizations.of(context)
+                      .translate('shared', 'personal_project'),
                   style: TextStyle(fontSize: 10.0),
                 ),
               },
@@ -207,7 +213,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           ),
                     Text(''),
                     Text(
-                      AppLocalizations.of(context).translate('projects','logo'),
+                      AppLocalizations.of(context)
+                          .translate('projects', 'logo'),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.grey,
@@ -225,7 +232,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 ),
               ),
             ),
-            headingText(AppLocalizations.of(context).translate('projects','name')),
+            headingText(
+                AppLocalizations.of(context).translate('projects', 'name')),
             TextFormField(
               onChanged: (value) {
                 print("name ------ $value");
@@ -239,7 +247,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   widget.isCreateProject ? "" : projectModel.name ?? "",
               decoration: InputDecoration(
                 errorText: errTxt,
-                hintText: AppLocalizations.of(context).translate('projects','name_hint'),
+                hintText: AppLocalizations.of(context)
+                    .translate('projects', 'name_hint'),
               ),
               keyboardType: TextInputType.multiline,
               maxLines: 1,
@@ -254,7 +263,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               // onSaved: (value) => enteredName = value,
               validator: (value) {
                 if (value.isEmpty) {
-                  return AppLocalizations.of(context).translate('projects','name_empty_err');
+                  return AppLocalizations.of(context)
+                      .translate('projects', 'name_empty_err');
                 } else {
                   projectModel.name = value;
                 }
@@ -264,12 +274,14 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             ),
             widget.isCreateProject
                 ? OfferDurationWidget(
-                    title: ' ${AppLocalizations.of(context).translate('projects','duration')}',
+                    title:
+                        ' ${AppLocalizations.of(context).translate('projects', 'duration')}',
                     //startTime: CalendarWidgetState.startDate,
                     //endTime: CalendarWidgetState.endDate
                   )
                 : OfferDurationWidget(
-                    title: ' ${AppLocalizations.of(context).translate('projects','duration')}',
+                    title:
+                        ' ${AppLocalizations.of(context).translate('projects', 'duration')}',
                     startTime: startDate,
                     endTime: endDate,
                   ),
@@ -281,11 +293,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 fontSize: 12,
               ),
             ),
-            headingText(AppLocalizations.of(context).translate('projects','statement')),
+            headingText(AppLocalizations.of(context)
+                .translate('projects', 'statement')),
             TextFormField(
               decoration: InputDecoration(
-                hintText:
-                AppLocalizations.of(context).translate('projects','statement_hint'),
+                hintText: AppLocalizations.of(context)
+                    .translate('projects', 'statement_hint'),
               ),
               onFieldSubmitted: (_) {
                 FocusScope.of(context).requestFocus(focusNodes[2]);
@@ -304,7 +317,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               },
               validator: (value) {
                 if (value.isEmpty) {
-                  return "AppLocalizations.of(context).translate('projects','statement_empty_err')";
+                  return AppLocalizations.of(context)
+                      .translate('projects', 'statement_empty_err');
                 } else {
                   projectModel.description = value;
                 }
@@ -319,7 +333,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             Padding(
               padding: EdgeInsets.all(8),
             ),
-            headingText(AppLocalizations.of(context).translate('projects','email')),
+            headingText(
+                AppLocalizations.of(context).translate('projects', 'email')),
             TextFormField(
               onFieldSubmitted: (_) {
                 FocusScope.of(context).requestFocus(focusNodes[3]);
@@ -345,14 +360,16 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.black54),
                 ),
-                hintText: AppLocalizations.of(context).translate('projects','hint_email'),
+                hintText: AppLocalizations.of(context)
+                    .translate('projects', 'hint_email'),
                 hintStyle: textStyle,
               ),
             ),
             Padding(
               padding: EdgeInsets.all(8),
             ),
-            headingText(AppLocalizations.of(context).translate('projects','phone')),
+            headingText(
+                AppLocalizations.of(context).translate('projects', 'phone')),
             TextFormField(
               onFieldSubmitted: (_) {
                 FocusScope.of(context).unfocus();
@@ -408,16 +425,19 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.black54),
                 ),
-                hintText: AppLocalizations.of(context).translate('projects','phone_hint_text'),
+                hintText: AppLocalizations.of(context)
+                    .translate('projects', 'phone_hint_text'),
                 hintStyle: textStyle,
               ),
             ),
             Padding(
               padding: EdgeInsets.all(8),
             ),
-            headingText(AppLocalizations.of(context).translate('projects','location')),
+            headingText(
+                AppLocalizations.of(context).translate('projects', 'location')),
             Text(
-              AppLocalizations.of(context).translate('projects','location_hint'),
+              AppLocalizations.of(context)
+                  .translate('projects', 'location_hint'),
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.grey,
@@ -495,10 +515,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     if (connResult == ConnectivityResult.none) {
                       _scaffoldKey.currentState.showSnackBar(
                         SnackBar(
-                          content:
-                              Text(AppLocalizations.of(context).translate('shared','check_internet')),
+                          content: Text(AppLocalizations.of(context)
+                              .translate('shared', 'check_internet')),
                           action: SnackBarAction(
-                            label: AppLocalizations.of(context).translate('shared','dismiss'),
+                            label: AppLocalizations.of(context)
+                                .translate('shared', 'dismiss'),
                             onPressed: () =>
                                 _scaffoldKey.currentState.hideCurrentSnackBar(),
                           ),
@@ -529,14 +550,14 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         if (projectModel.startTime == 0 ||
                             projectModel.endTime == 0) {
                           showDialogForTitle(
-                              dialogTitle:
-                              AppLocalizations.of(context).translate('projects','start_end_date_err'));
+                              dialogTitle: AppLocalizations.of(context)
+                                  .translate('projects', 'start_end_date_err'));
                           return;
                         }
                         if (!hasRegisteredLocation()) {
                           showDialogForTitle(
-                              dialogTitle:
-                              AppLocalizations.of(context).translate('projects','add_location_err'));
+                              dialogTitle: AppLocalizations.of(context)
+                                  .translate('projects', 'add_location_err'));
                           return;
                         }
                         projectModel.communityId =
@@ -564,7 +585,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         //   });
 
                         // }
-                        showProgressDialog(AppLocalizations.of(context).translate('projects','progress'));
+                        showProgressDialog(AppLocalizations.of(context)
+                            .translate('projects', 'progress'));
 //                          setState(() {
 //                            this.communityImageError = '';
 //                          });
@@ -594,20 +616,22 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         if (projectModel.startTime == 0 ||
                             projectModel.endTime == 0) {
                           showDialogForTitle(
-                              dialogTitle:
-                              AppLocalizations.of(context).translate('projects','start_end_date_err'));
+                              dialogTitle: AppLocalizations.of(context)
+                                  .translate('projects', 'start_end_date_err'));
                           return;
                         }
 
                         if (projectModel.address == null ||
                             this.selectedAddress == null) {
-                          this.locationError = AppLocalizations.of(context).translate('projects','location_mandatory_err');
+                          this.locationError = AppLocalizations.of(context)
+                              .translate('projects', 'location_mandatory_err');
                           showDialogForTitle(
-                              dialogTitle:
-                              AppLocalizations.of(context).translate('projects','add_location_err'));
+                              dialogTitle: AppLocalizations.of(context)
+                                  .translate('projects', 'add_location_err'));
                           return;
                         }
-                        showProgressDialog(AppLocalizations.of(context).translate('projects','progress_update'));
+                        showProgressDialog(AppLocalizations.of(context)
+                            .translate('projects', 'progress_update'));
                         print("final value of modeeeee is " +
                             this.projectModel.mode);
                         await FirestoreManager.updateProject(
@@ -624,7 +648,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   },
                   shape: StadiumBorder(),
                   child: Text(
-                    widget.isCreateProject ? AppLocalizations.of(context).translate('projects','create') : 'Save',
+                    widget.isCreateProject
+                        ? AppLocalizations.of(context)
+                            .translate('projects', 'create')
+                        : 'Save',
                     style: TextStyle(fontSize: 16.0, color: Colors.white),
                   ),
                   textColor: FlavorConfig.values.buttonTextColor,
@@ -669,7 +696,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('projects','ok'),
+                  AppLocalizations.of(context).translate('projects', 'ok'),
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -726,8 +753,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   String _validateEmailId(String value) {
     RegExp emailPattern = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-    if (value.isEmpty) return AppLocalizations.of(context).translate('projects','enter_email_err');
-    if (!emailPattern.hasMatch(value)) return AppLocalizations.of(context).translate('projects','enter_email_err');
+    if (value.isEmpty)
+      return AppLocalizations.of(context)
+          .translate('projects', 'enter_email_err');
+    if (!emailPattern.hasMatch(value))
+      return AppLocalizations.of(context)
+          .translate('projects', 'enter_email_err');
     return null;
   }
 

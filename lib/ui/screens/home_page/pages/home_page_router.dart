@@ -70,8 +70,9 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppLanguage>(
-        create: (_) => appLanguage,
-        child: Consumer<AppLanguage>(builder: (context, model, child) {
+      create: (_) => appLanguage,
+      child: Consumer<AppLanguage>(
+        builder: (context, model, child) {
           return MaterialApp(
             locale: model.appLocal,
             supportedLocales: [
@@ -155,6 +156,8 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
               ),
             ),
           );
-        }));
+        },
+      ),
+    );
   }
 }

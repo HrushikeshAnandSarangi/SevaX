@@ -27,7 +27,9 @@ class _GroupTabViewState extends State<GroupTabView> {
         stream: _bloc.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
-            return Center(child: Text(AppLocalizations.of(context).translate('search','search_something')));
+            return Center(
+                child: Text(AppLocalizations.of(context)
+                    .translate('search', 'search_something')));
           }
           return StreamBuilder<GroupData>(
             stream: CombineLatestStream.combine2(
@@ -55,7 +57,8 @@ class _GroupTabViewState extends State<GroupTabView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    Text(AppLocalizations.of(context).translate('search','no_data')),
+                    Text(AppLocalizations.of(context)
+                        .translate('search', 'no_data')),
                   ],
                 );
               }
@@ -64,7 +67,7 @@ class _GroupTabViewState extends State<GroupTabView> {
 
               return ListView.separated(
                 padding: EdgeInsets.symmetric(vertical: 10),
-                physics: NeverScrollableScrollPhysics(),
+                // physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: snapshot.data.timebanks.length,
                 itemBuilder: (context, index) {
@@ -74,7 +77,6 @@ class _GroupTabViewState extends State<GroupTabView> {
                     _bloc.user.sevaUserID,
                     snapshot.data.requests,
                   );
-
                   return GroupCard(
                     image: group.photoUrl ?? "",
                     title: group.name,
@@ -206,7 +208,8 @@ class _GroupTabViewState extends State<GroupTabView> {
       entityId: subtimebankId,
       entityType: prefix0.EntityType.Timebank,
       operationTaken: false,
-      reason: AppLocalizations.of(context).translate('notifications','want_volunteer'),
+      reason: AppLocalizations.of(context)
+          .translate('notifications', 'want_volunteer'),
       timestamp: DateTime.now().millisecondsSinceEpoch,
       userId: userIdForNewMember,
       isFromGroup: true,
