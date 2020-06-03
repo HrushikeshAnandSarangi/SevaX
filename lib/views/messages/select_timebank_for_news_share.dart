@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -27,7 +28,8 @@ class SelectTimeBankForNewsShareState extends State<SelectTimeBankNewsShare> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Select Timebank",
+          AppLocalizations.of(context)
+              .translate('create_request', 'select_timebank'),
           style: TextStyle(fontSize: 18),
         ),
       ),

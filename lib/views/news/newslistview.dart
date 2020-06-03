@@ -465,9 +465,8 @@ class NewsListState extends State<NewsList> {
                                               builder:
                                                   (BuildContext viewContext) {
                                                 return AlertDialog(
-                                                  title: Text('Report Feed?'),
-                                                  content: Text(
-                                                      'Do you want to report this feed?'),
+                                                  title: Text(AppLocalizations.of(context).translate('homepage', 'report')),
+                                                  content: Text(AppLocalizations.of(context).translate('homepage', 'want_report')),
                                                   actions: <Widget>[
                                                     FlatButton(
                                                       padding:
@@ -479,7 +478,7 @@ class NewsListState extends State<NewsList> {
                                                           .values
                                                           .buttonTextColor,
                                                       child: Text(
-                                                        'Report Feed',
+                                                        AppLocalizations.of(context).translate('homepage', 'report_feed'),
                                                         style: TextStyle(
                                                           fontSize:
                                                               dialogButtonSize,
@@ -520,7 +519,7 @@ class NewsListState extends State<NewsList> {
                                                     ),
                                                     FlatButton(
                                                       child: Text(
-                                                        'Cancel',
+                                                        AppLocalizations.of(context).translate('shared', 'cancel'),
                                                         style: TextStyle(
                                                             color: Colors.red),
                                                       ),

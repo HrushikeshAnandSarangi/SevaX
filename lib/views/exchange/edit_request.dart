@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -57,9 +58,10 @@ class _EditRequestState extends State<EditRequest> {
     if (widget.requestModel.projectId == null ||
         widget.requestModel.projectId == "" ||
         widget.requestModel.projectId.isEmpty) {
-      return "Edit Request";
+      return AppLocalizations.of(context).translate('create_request', 'edit');
     }
-    return "Edit Project Request";
+    return AppLocalizations.of(context)
+        .translate('create_request', 'edit_project');
   }
 }
 
@@ -87,8 +89,6 @@ class RequestEditFormState extends State<RequestEditForm> {
   RequestModel requestModel = RequestModel();
   GeoFirePoint location;
 
-  String _dateMessageStart = ' START date and time ';
-  String _dateMessageEnd = '  END date and time ';
   String hoursMessage = ' Click to Set Duration';
   String selectedAddress;
 
@@ -151,7 +151,8 @@ class RequestEditFormState extends State<RequestEditForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Request title',
+                AppLocalizations.of(context)
+                    .translate('create_request', 'request_title'),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -160,7 +161,12 @@ class RequestEditFormState extends State<RequestEditForm> {
                 ),
               ),
               TextFormField(
-                // decoration: InputDecoration(hintText: 'Campign request title'),
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context)
+                      .translate(
+                      'create_request', 'small_carpenty'),
+                  hintStyle: hintTextStyle,
+                ),
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.sentences,
                 initialValue: widget.requestModel.title,
@@ -169,126 +175,25 @@ class RequestEditFormState extends State<RequestEditForm> {
                 },
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Please enter the subject of your Request';
+                    return AppLocalizations.of(context)
+                        .translate('create_request', 'subject');
                   }
                   widget.requestModel.title = value;
                 },
               ),
               Text(' '),
               OfferDurationWidget(
-                  title: ' Request duration*',
+                  title: AppLocalizations.of(context)
+                      .translate('create_request', 'duration'),
                   startTime: startDate,
                   endTime: endDate),
               SizedBox(height: 8),
-
-              // FlatButton(
-              //   //Request Date and Time
-              //   color: Color.fromRGBO(112, 196, 147, 1.0),
-              //   onPressed: () {
-              //     DateTime selectedDate;
-              //     if (requestModel.requestStart == null) {
-              //       selectedDate = DateTime.now();
-              //     } else {
-              //       selectedDate = DateTime.fromMillisecondsSinceEpoch(
-              //         requestModel.requestStart,
-              //       );
-              //     }
-
-              //     DatePicker.showDateTimePicker(
-              //       context,
-              //       showTitleActions: true,
-              //       onChanged: (date) {
-              //         requestModel.requestStart = date.millisecondsSinceEpoch;
-              //         setState(() {
-              //           _dateMessageStart = ' ' +
-              //               DateTime.fromMillisecondsSinceEpoch(
-              //                 requestModel.requestStart,
-              //               ).toString();
-              //         });
-              //       },
-              //       onConfirm: (date) {
-              //         requestModel.requestStart = date.millisecondsSinceEpoch;
-              //         setState(() {
-              //           _dateMessageStart = ' ' +
-              //               DateTime.fromMillisecondsSinceEpoch(
-              //                 requestModel.requestStart,
-              //               ).toString();
-              //         });
-              //       },
-              //       currentTime: DateTime(
-              //         selectedDate.year,
-              //         selectedDate.month,
-              //         selectedDate.day,
-              //         selectedDate.hour,
-              //         selectedDate.minute,
-              //         00,
-              //       ),
-              //     );
-              //   },
-              //   child: Row(
-              //     children: [
-              //       Icon(Icons.calendar_today, size: 24.0),
-              //       Text(_dateMessageStart),
-              //     ],
-              //   ),
-              // ),
-              // Text(' '),
-              // FlatButton(
-              //   color: Color.fromRGBO(112, 196, 0, 1.0),
-              //   onPressed: () {
-              //     DateTime selectedDate;
-
-              //     if (requestModel.requestEnd == null) {
-              //       selectedDate = DateTime.now();
-              //     } else {
-              //       selectedDate = DateTime.fromMillisecondsSinceEpoch(
-              //         requestModel.requestEnd,
-              //       );
-              //     }
-
-              //     DatePicker.showDateTimePicker(
-              //       context,
-              //       showTitleActions: true,
-              //       onChanged: (date) {
-              //         requestModel.requestEnd = date.millisecondsSinceEpoch;
-              //         setState(() {
-              //           _dateMessageEnd = ' ' +
-              //               DateTime.fromMillisecondsSinceEpoch(
-              //                       requestModel.requestEnd)
-              //                   .toString();
-              //         });
-              //       },
-              //       onConfirm: (date) {
-              //         requestModel.requestEnd = date.millisecondsSinceEpoch;
-              //         setState(() {
-              //           _dateMessageEnd = ' ' +
-              //               DateTime.fromMillisecondsSinceEpoch(
-              //                       requestModel.requestEnd)
-              //                   .toString();
-              //         });
-              //       },
-              //       currentTime: DateTime(
-              //         selectedDate.year,
-              //         selectedDate.month,
-              //         selectedDate.day,
-              //         selectedDate.hour,
-              //         selectedDate.minute,
-              //         00,
-              //       ),
-              //     );
-              //   },
-              //   child: Row(
-              //     children: [
-              //       Icon(Icons.calendar_today, size: 24.0),
-              //       Text(_dateMessageEnd),
-              //     ],
-              //   ),
-              // ),
               Padding(
                 padding: EdgeInsets.all(10.0),
               ),
               Text(
-                'Request description',
+                AppLocalizations.of(context)
+                    .translate('create_request', 'desc'),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -300,7 +205,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                 textCapitalization: TextCapitalization.sentences,
                 initialValue: widget.requestModel.description,
                 decoration: InputDecoration(
-                  hintText: 'Your Request \nand any #hashtags',
+                  hintText: AppLocalizations.of(context)
+                      .translate(
+                      'create_request', 'request_hash'),
                   hintStyle: hintTextStyle,
                 ),
                 keyboardType: TextInputType.multiline,
@@ -311,7 +218,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                 },
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Please enter some text';
+                    return AppLocalizations.of(context).translate(
+                        'create_request', 'request_hash_empty');
                   }
                   widget.requestModel.description = value;
                 },
@@ -322,7 +230,8 @@ class RequestEditFormState extends State<RequestEditForm> {
 
               // SizedBox(height: 40),
               Text(
-                'No. of hours *',
+                AppLocalizations.of(context)
+                    .translate('create_request', 'total_hours'),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -333,8 +242,10 @@ class RequestEditFormState extends State<RequestEditForm> {
               TextFormField(
                   initialValue: "${widget.requestModel.numberOfHours ?? 0}",
                   decoration: InputDecoration(
-                    hintText: 'No. of hours required',
-                    hintStyle: textStyle,
+                    hintText: AppLocalizations.of(context)
+                        .translate(
+                        'create_request', 'hours_required'),
+                    hintStyle: hintTextStyle,
                     // labelText: 'No. of volunteers',
                   ),
                   onChanged: (value) {
@@ -343,16 +254,28 @@ class RequestEditFormState extends State<RequestEditForm> {
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please enter the number of hours required';
+                      return AppLocalizations.of(context)
+                          .translate('create_request',
+                          'hours_required_err');
+                    } else if (int.parse(value) < 0) {
+                      return AppLocalizations.of(context)
+                          .translate('create_request',
+                          'hours_required_zero');
+                    } else if (int.parse(value) == 0) {
+                      return AppLocalizations.of(context)
+                          .translate('create_request',
+                          'hours_required_not_zero');
                     } else {
-                      requestModel.numberOfHours = int.parse(value);
+                      requestModel.numberOfHours =
+                          int.parse(value);
                       return null;
                     }
                   }),
               SizedBox(height: 20),
 
               Text(
-                'No. of volunteers',
+                AppLocalizations.of(context).translate(
+                    'create_request', 'no_of_volunteers'),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -363,7 +286,9 @@ class RequestEditFormState extends State<RequestEditForm> {
               TextFormField(
                 initialValue: "${widget.requestModel.numberOfApprovals}",
                 decoration: InputDecoration(
-                  hintText: 'No. of volunteers*',
+                  hintText: AppLocalizations.of(context)
+                      .translate(
+                      'create_request', 'no_of_volunteers'),
                   hintStyle: hintTextStyle,
 
                   // border: OutlineInputBorder(
@@ -382,9 +307,22 @@ class RequestEditFormState extends State<RequestEditForm> {
                 },
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Please enter the number of volunteers needed';
+                    return AppLocalizations.of(context).translate(
+                        'create_request',
+                        'no_of_volunteers_zero');
+                  } else if (int.parse(value) < 0) {
+                    return AppLocalizations.of(context).translate(
+                        'create_request',
+                        'no_of_volunteers_zero_err');
+                  } else if (int.parse(value) == 0) {
+                    return AppLocalizations.of(context).translate(
+                        'create_request',
+                        'no_of_volunteers_zero_err1');
+                  } else {
+                    requestModel.numberOfApprovals =
+                        int.parse(value);
+                    return null;
                   }
-                  widget.requestModel.numberOfApprovals = int.parse(value);
                 },
               ),
 //              if (FlavorConfig.appFlavor != Flavor.APP)
@@ -461,7 +399,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                         }
                       },
                       child: Text(
-                        "Update Request".padLeft(10).padRight(10),
+                        AppLocalizations.of(context)
+                            .translate('create_request',
+                            'update_request_button').padLeft(10).padRight(10),
                         style: Theme.of(context).primaryTextTheme.button,
                       ),
                     ),
@@ -554,7 +494,8 @@ class RequestEditFormState extends State<RequestEditForm> {
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text('Updating Request..'),
+            title: Text(AppLocalizations.of(context).translate(
+                'create_request', 'progress')),
             content: LinearProgressIndicator(),
           );
         });
@@ -563,13 +504,14 @@ class RequestEditFormState extends State<RequestEditForm> {
   Map<String, UserModel> selectedUsers;
   Map onActivityResult;
 
-  String memberAssignment = "Assign to volunteers";
+  String memberAssignment;
 
   Widget addVolunteersForAdmin() {
     if (selectedUsers == null) {
       selectedUsers = HashMap();
     }
-
+    memberAssignment = AppLocalizations.of(context)
+        .translate('create_request', 'assign_members');
     return Container(
       margin: EdgeInsets.all(10),
       width: double.infinity,
@@ -580,7 +522,8 @@ class RequestEditFormState extends State<RequestEditForm> {
 
           print(" Selected users before ${selectedUsers.length}");
 
-          onActivityResult = await Navigator.of(context).push(MaterialPageRoute(
+          onActivityResult = await Navigator.of(context).push(
+            MaterialPageRoute(
               builder: (context) => SelectMembersInGroup(
                     timebankId:
                         SevaCore.of(context).loggedInUser.currentTimebank,
@@ -594,26 +537,22 @@ class RequestEditFormState extends State<RequestEditForm> {
             selectedUsers = onActivityResult['membersSelected'];
             setState(() {
               if (selectedUsers.length == 0)
-                memberAssignment = "Assign to volunteers";
+                memberAssignment = AppLocalizations.of(context)
+                    .translate('create_request', 'assign_to_vol');
               else
                 memberAssignment =
-                    "${selectedUsers.length} volunteers selected";
+                "${selectedUsers.length} ${AppLocalizations.of(context).translate('create_request', 'vol_selected')}";
             });
             print("Data is present Selected users ${selectedUsers.length}");
           } else {
             print("No users where selected");
             //no users where selected
           }
-
           // SelectMembersInGroup
         },
       ),
     );
   }
-//  Future _updaterequestModel() async {
-//
-//  }
-
   Future<void> updateRequest({
     @required RequestModel requestModel,
   }) async {

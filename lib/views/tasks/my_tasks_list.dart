@@ -10,6 +10,7 @@ import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -146,7 +147,7 @@ class MyTasksList extends StatelessWidget {
 
           UserModel user = snapshot.data;
 
-          DateFormat format = DateFormat('dd/MM/yy hh:mm a');
+          DateFormat format = DateFormat('dd/MM/yy hh:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -284,7 +285,7 @@ class MyTasksList extends StatelessWidget {
   }
 
   String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
-    DateFormat dateFormat = DateFormat('d MMM hh:mm a ');
+    DateFormat dateFormat = DateFormat('d MMM hh:mm a ', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
     DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
     DateTime localtime = getDateTimeAccToUserTimezone(
         dateTime: datetime, timezoneAbb: timezoneAbb);
@@ -436,7 +437,7 @@ class TaskCardViewState extends State<TaskCardView> {
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
                         '${AppLocalizations.of(context).translate('tasks','from')}  ' +
-                            DateFormat('MMMM dd, yyyy @ h:mm a').format(
+                            DateFormat('MMMM dd, yyyy @ h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
                               getDateTimeAccToUserTimezone(
                                   dateTime: DateTime.fromMillisecondsSinceEpoch(
                                       requestModel.requestStart),
@@ -449,7 +450,7 @@ class TaskCardViewState extends State<TaskCardView> {
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
                         '${AppLocalizations.of(context).translate('tasks','untill')}  ' +
-                            DateFormat('MMMM dd, yyyy @ h:mm a').format(
+                            DateFormat('MMMM dd, yyyy @ h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
                               getDateTimeAccToUserTimezone(
                                   dateTime: DateTime.fromMillisecondsSinceEpoch(
                                       requestModel.requestEnd),
@@ -467,7 +468,7 @@ class TaskCardViewState extends State<TaskCardView> {
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
                         '${AppLocalizations.of(context).translate('tasks','posted_date')}  ' +
-                            DateFormat('MMMM dd, yyyy @ h:mm a').format(
+                            DateFormat('MMMM dd, yyyy @ h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
                               getDateTimeAccToUserTimezone(
                                   dateTime: DateTime.fromMillisecondsSinceEpoch(
                                       requestModel.postTimestamp),

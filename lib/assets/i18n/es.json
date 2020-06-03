@@ -253,7 +253,7 @@
     "create_join_request": "Crie solicitação para juntar-se "
   },
   "groups": {
-    "no_groups_helptext": "Os grupos ajudam você a organizar suas atividades \\\\ específicas, você não tem nenhuma. Tente",
+    "no_groups_helptext": "Os grupos ajudam você a organizar suas atividades, \n específicas, você não tem nenhuma. Tente",
     "create_one": "criando um(a)",
     "create_group": "Crea un grupo",
     "exists": "El nombre del grupo ya existe",
@@ -328,7 +328,7 @@
     "image_hint": "Créditos fotográficos",
     "change": "Alterar imagem",
     "change_attachment": "cambiar archivo adjunto",
-    "add_attachment": "Añadir imagen / documento",
+    "add_attachment": "Añadir imagen \/ documento",
     "add": "Adicionar imagem",
     "camera": "Cámara",
     "gallery": "Galería",
@@ -645,6 +645,8 @@
   "create_request": {
     "humanity_first_create": "Crear solicitud de pandilla Yang",
     "create": "crear",
+    "edit": "Editar solicitud",
+    "edit_project": "Editar solicitud de proyecto",
     "create_project": "Crear solicitud de proyecto",
     "set_duration": "Haga clic para establecer la duración",
     "yang_gang_request_title": "El título de la solicitud del callejón",
@@ -666,9 +668,11 @@
     "no_of_volunteers_zero_err": "El número de voluntarios no puede ser menor que 0",
     "no_of_volunteers_zero_err1": "No de voluntarios no puede ser 0",
     "create_request_button": "Crear solicitud",
+    "update_request_button": "Solicitud de actualización",
     "start_date_err": "Mencione la fecha de inicio y finalización de la solicitud.",
     "add_location": "Agregue ubicación a su solicitud",
     "progress": "Creando solicitud ..",
+    "progress_update": "Solicitud de actualización ..",
     "not_enough_seva": "Sus créditos de seva no son suficientes para crear la solicitud.",
     "ok": "Okay",
     "assign_members": "Asignar a voluntarios",
@@ -693,7 +697,7 @@
     "select_timebank": "Seleccionar banco de tiempo",
     "search_member": "Buscar miembros",
     "atleast_3": "La búsqueda requiere un mínimo de 3 caracteres",
-    "no_user": "No se encontró usuario"
+    "no_user": "No se encontró usuario",
     "add_to_project": "Asignar a proyecto",
     "selected_hint": "Actualmente seleccionado",
     "tap_to_remove": "artículos (toque para eliminar)",
@@ -877,7 +881,13 @@
     "publish_code": "Publicar código",
     "select_volunteer": "Select volunteer",
     "select_volunteers": "Select volunteers",
-    "no_volunteers": "No volunteers present"
+    "no_volunteers": "No volunteers present",
+    "Approve":  "Aprobar",
+    "Reject": "Rechazar",
+    "Remove":  "Eliminar",
+    "Promote": "Promover",
+    "Demote":  "Degradar",
+    "Exit": "Salida"
   },
   "create_offer": {
     "title": "Crear oferta",

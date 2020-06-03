@@ -198,15 +198,15 @@ class _FeedsTabViewState extends State<FeedsTabView>
         builder: (BuildContext viewContext) {
           // return object of type Dialog
           return AlertDialog(
-            title: Text('Report Feed?'),
-            content: Text('Do you want to report this feed?'),
+            title: Text(AppLocalizations.of(context).translate('homepage', 'report')),
+            content: Text(AppLocalizations.of(context).translate('homepage', 'want_report')),
             actions: <Widget>[
               FlatButton(
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                 color: Theme.of(mContext).accentColor,
                 textColor: FlavorConfig.values.buttonTextColor,
                 child: Text(
-                  'Report Feed',
+                  AppLocalizations.of(context).translate('homepage', 'report_feed'),
                   style: TextStyle(
                     fontSize: dialogButtonSize,
                   ),
@@ -232,7 +232,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
               ),
               FlatButton(
                 child: Text(
-                  'Cancel',
+                  AppLocalizations.of(context).translate('shared', 'cancel'),
                   style: TextStyle(color: Colors.red),
                 ),
                 onPressed: () {

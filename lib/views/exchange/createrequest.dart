@@ -814,7 +814,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   String getTimeInFormat(int timeStamp) {
-    return DateFormat('EEEEEEE, MMMM dd yyyy').format(
+    return DateFormat('EEEEEEE, MMMM dd yyyy', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
       getDateTimeAccToUserTimezone(
           dateTime: DateTime.fromMillisecondsSinceEpoch(timeStamp),
           timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
@@ -972,8 +972,6 @@ class ProjectSelectionState extends State<ProjectSelection> {
       errorText: AppLocalizations.of(context).translate('create_request','assign_to_one'),
       dataSource: list,
       admin: widget.admin,
-      hintText: AppLocalizations.of(context)
-          .translate('create_request', 'tap_to_select'),
       textField: 'name',
       valueField: 'code',
       filterable: true,
