@@ -1,6 +1,7 @@
 library flutter_multiselect;
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/widgets/multi_select/selection_model.dart';
 
 class MultiSelect extends FormField<dynamic> {
@@ -60,10 +61,10 @@ class MultiSelect extends FormField<dynamic> {
         bool autovalidate = false,
         this.titleText = 'Title',
         this.titleTextColor,
-        this.hintText = 'Tap to select one or more...',
+        this.hintText,
         this.hintTextColor = Colors.grey,
         this.required = false,
-        this.errorText = 'Please select one or more option(s)',
+        this.errorText,
         this.value,
         this.leading,
         this.filterable = true,
@@ -128,7 +129,6 @@ class MultiSelect extends FormField<dynamic> {
               }
             });
           }
-
           return selectedOptions;
         }
         return InkWell(

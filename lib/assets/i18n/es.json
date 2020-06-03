@@ -668,7 +668,18 @@
     "end_date_start_date": "La fecha de finalización no puede ser anterior a la fecha de inicio",
     "close": "Cerca",
     "done": "Hecho",
-    "start_end": "fecha y hora"
+    "start_end": "fecha y hora",
+    "none_project": "Sin asignar",
+    "assign_to_project": "Asignar al proyecto",
+    "assign_to_one": "Asignar a un proyecto",
+    "tap_select": "Toque para seleccionar uno o más ...",
+    "tap_error_select": "Seleccione una o más opciones",
+    "save": "Guardar",
+    "no_members_toadd": "No hay miembros disponibles para agregar",
+    "select_timebank": "Seleccionar banco de tiempo",
+    "search_member": "Buscar miembros",
+    "atleast_3": "La búsqueda requiere un mínimo de 3 caracteres",
+    "no_user": "No se encontró usuario"
   },
   "edit_group": {
     "add_members": "Añadir miembros",
@@ -843,7 +854,10 @@
     "prompt_text": "cuando se le solicite unirse a este banco de tiempo. Descargue la aplicación desde los enlaces proporcionados en https://sevaxapp.com",
     "code_generated": "Código generado",
     "is_code": "es tu código",
-    "publish_code": "Publicar código"
+    "publish_code": "Publicar código",
+    "select_volunteer": "Select volunteer",
+    "select_volunteers": "Select volunteers",
+    "no_volunteers": "No volunteers present"
   },
   "create_offer": {
     "title": "Crear oferta",

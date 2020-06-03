@@ -668,7 +668,18 @@
     "end_date_start_date": "A Data de término não pode ser anterior à Data de início",
     "close": "Fechar",
     "done": "Feito",
-    "start_end": "data e hora"
+    "start_end": "data e hora",
+    "none_project": "Não atribuído",
+    "assign_to_project": "Atribuir ao projeto",
+    "assign_to_one": "Atribua a um projeto",
+    "tap_select": "Toque para selecionar um ou mais ...",
+    "tap_error_select": "Selecione uma ou mais opções",
+    "save": "Salvar",
+    "no_members_toadd": "Nenhum membro disponível para adicionar",
+    "select_timebank": "Selecione Timebank",
+    "search_member": "Pesquisar membros",
+    "atleast_3": "A pesquisa requer no mínimo 3 caracteres",
+    "no_user": "Nenhum usuário encontrado"
   },
   "edit_group": {
     "add_members": "Adicionar membros",
@@ -843,7 +854,10 @@
     "prompt_text": "quando solicitado a ingressar neste Timebank. Faça o download do aplicativo a partir dos links fornecidos em https://sevaxapp.com",
     "code_generated": "Código gerado",
     "is_code": "é o seu código.",
-    "publish_code": "Código de publicação"
+    "publish_code": "Código de publicação",
+    "select_volunteer": "Selecionar voluntário",
+    "select_volunteers": "Selecionar voluntários",
+    "no_volunteers": "Nenhum voluntário presente"
   },
   "create_offer": {
     "title": "Criar Oferta",

@@ -869,7 +869,7 @@ class ProjectSelection extends StatefulWidget {
 class ProjectSelectionState extends State<ProjectSelection> {
   @override
   Widget build(BuildContext context) {
-    List<dynamic> list = [{"name": "Un Assigned", "code": "None"}];
+    List<dynamic> list = [{"name": AppLocalizations.of(context).translate('create_request','none_project'), "code": "None"}];
     for (var i = 0; i < widget.projectModelList.length; i++) {
       list.add({
         "name" : widget.projectModelList[i].name,
@@ -880,15 +880,16 @@ class ProjectSelectionState extends State<ProjectSelection> {
     return new MultiSelect(
       autovalidate: true,
       initialValue: ['None'],
-      titleText: 'Assign to project',
+      titleText: AppLocalizations.of(context).translate('create_request','assign_to_project'),
       maxLength: 1, // optional
+      hintText: AppLocalizations.of(context).translate('create_request','tap_select'),
       validator: (dynamic value) {
         if (value == null) {
-          return 'Please assign to one project';
+          return AppLocalizations.of(context).translate('create_request','assign_to_one');
         }
         return null;
       },
-      errorText: 'Please assign to one project',
+      errorText: AppLocalizations.of(context).translate('create_request','assign_to_one'),
       dataSource: list,
       admin: widget.admin,
       textField: 'name',

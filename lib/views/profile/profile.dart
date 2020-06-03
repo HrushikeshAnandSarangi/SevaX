@@ -322,44 +322,6 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                           ],
                         ),
-                        // InkWell(
-                        //   onTap: () {
-                        //     Navigator.of(context).push(
-                        //       MaterialPageRoute(
-                        //         builder: (context) => CreateEditCommunityView(
-                        //           timebankId: timebankModel.id,
-                        //         ),
-                        //       ),
-                        //     );
-                        //   },
-                        //   child: Card(
-                        //     elevation: 2,
-                        //     child: Container(
-                        //       height: 60,
-                        //       child: Row(
-                        //         children: <Widget>[
-                        //           Padding(
-                        //             padding: const EdgeInsets.only(left: 15),
-                        //             child: Text(
-                        //               'Create Timebank',
-                        //               style: TextStyle(
-                        //                 fontWeight: FontWeight.w500,
-                        //                 color: Colors.black,
-                        //                 fontSize: 16,
-                        //               ),
-                        //             ),
-                        //           ),
-                        //           Spacer(),
-                        //           Icon(Icons.navigate_next),
-                        //           SizedBox(
-                        //             width: 10,
-                        //           ),
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-
                         Card(
                           elevation: 2,
                           shape: RoundedRectangleBorder(
@@ -401,86 +363,7 @@ class _ProfilePageState extends State<ProfilePage>
                             },
                           ),
                         ),
-
                         SizedBox(height: 10),
-                        // InkWell(
-                        //   onTap: () {
-                        //     Navigator.of(context).push(
-                        //       MaterialPageRoute(
-                        //         builder: (context) {
-                        //           return FindCommunitiesView(
-                        //             keepOnBackPress: true,
-                        //             loggedInUser: user,
-                        //           );
-                        //         },
-                        //       ),
-                        //     );
-                        //   },
-                        //   child: Card(
-                        //     elevation: 2,
-                        //     child: Container(
-                        //       height: 60,
-                        //       child: Row(
-                        //         children: <Widget>[
-                        //           Padding(
-                        //             padding: const EdgeInsets.only(left: 15),
-                        //             child: Text(
-                        //               'Discover Timebanks',
-                        //               style: TextStyle(
-                        //                 fontWeight: FontWeight.w500,
-                        //                 color: Colors.black,
-                        //                 fontSize: 16,
-                        //               ),
-                        //             ),
-                        //           ),
-                        //           Spacer(),
-                        //           Icon(Icons.navigate_next),
-                        //           SizedBox(
-                        //             width: 10,
-                        //           ),
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                        // SizedBox(height: 10),
-                        // RichText(
-                        //   textAlign: TextAlign.center,
-                        //   text: TextSpan(
-                        //     children: [
-                        //       // TextSpan(
-                        //       //   text: 'or \n\n',
-                        //       //   style: TextStyle(
-                        //       //     color: Colors.black,
-                        //       //   ),
-                        //       // ),
-                        //       // TextSpan(
-                        //       //   text: 'Discover more Timebanks',
-                        //       //   style: TextStyle(
-                        //       //     color: Colors.grey,
-                        //       //     fontWeight: FontWeight.bold,
-                        //       //     decoration: TextDecoration.underline,
-                        //       //   ),
-                        //       //   recognizer: TapGestureRecognizer()
-                        //       //     ..onTap = () {
-                        //       //       //Navigate to discover teams
-                        //       //       Navigator.of(context).push(
-                        //       //         MaterialPageRoute(
-                        //       //           builder: (context) {
-                        //       //             return FindCommunitiesView(
-                        //       //               keepOnBackPress: true,
-                        //       //               loggedInUser: SevaCore.of(context)
-                        //       //                   .loggedInUser,
-                        //       //               showBackBtn: true,
-                        //       //             );
-                        //       //           },
-                        //       //         ),
-                        //       //       );
-                        //       //     },
-                        //       // ),
-                        //     ],
-                        //   ),
-                        // ),
                         getHelpSection,
                         SizedBox(height: 10),
                         InkWell(
@@ -520,6 +403,7 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                           ),
                         ),
+                        SizedBox(height: 10),
                         InkWell(
                           onTap: () {
                             Navigator.of(context).push(

@@ -670,7 +670,17 @@
     "done": "Done",
     "start_end": "date & time",
     "add_to_project": "Add to Project",
-    "none_project": "Un Assigned"
+    "none_project": "Un Assigned",
+    "assign_to_project": "Assign to project",
+    "assign_to_one": "Please assign to one project",
+    "tap_select": "Tap to select one or more...",
+    "tap_error_select": "Please select one or more option(s)",
+    "save": "Save",
+    "no_members_toadd": "No members available to add",
+    "select_timebank": "Select Timebank",
+    "search_member": "Search members",
+    "atleast_3": "Search requires minimum 3 characters",
+    "no_user": "No user found"
   },
   "edit_group": {
     "add_members": "Add Members",
@@ -846,7 +856,10 @@
     "prompt_text": "when prompted to join this Timebank. Please download the app from the links provided at https://sevaxapp.com",
     "code_generated": "Code generated",
     "is_code": "is your code.",
-    "publish_code": "Publish code"
+    "publish_code": "Publish code",
+    "select_volunteer": "Select volunteer",
+    "select_volunteers": "Select volunteers",
+    "no_volunteers": "No volunteers present"
   },
   "create_offer": {
     "title": "Create Offer",
