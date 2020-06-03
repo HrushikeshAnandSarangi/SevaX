@@ -181,6 +181,7 @@ class NewsImageState extends State<NewsImage>
   @override
   void initState() {
     if (widget.geoFirePointLocation == null) _fetchCurrentlocation;
+
     super.initState();
     print("locaton on newsimage ${widget.geoFirePointLocation?.coords}");
     selectedAddress = widget.selectedAddress;

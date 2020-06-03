@@ -41,7 +41,7 @@ enum CompareUserStatus { JOINED, REQUESTED, REJECTED, JOIN }
 class FindCommunitiesViewState extends State<FindCommunitiesView> {
   final TextEditingController searchTextController =
       new TextEditingController();
-  static  String JOIN;
+  static String JOIN;
   static String JOINED;
   bool showAppbar = false;
   String nearTimebankText;
@@ -49,7 +49,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   @override
   void initState() {
-    gpsCheck;
+    gpsCheck();
 
     super.initState();
     String _searchText = "";
@@ -81,9 +81,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   @override
   Widget build(BuildContext context) {
-    JOIN = AppLocalizations.of(context).translate('findtimebank',"join");
-    JOINED = AppLocalizations.of(context).translate('findtimebank',"joined");
-    nearTimebankText = AppLocalizations.of(context).translate('findtimebank','timebanks_near_you');
+    JOIN = AppLocalizations.of(context).translate('findtimebank', "join");
+    JOINED = AppLocalizations.of(context).translate('findtimebank', "joined");
+    nearTimebankText = AppLocalizations.of(context)
+        .translate('findtimebank', 'timebanks_near_you');
     bool showBachBtn = widget.showBackBtn;
     showAppbar = widget.isFromHome;
     print("isdash trueee ---${widget.isFromHome}");
@@ -112,7 +113,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     )
                   : Offstage(),
               title: Text(
-                AppLocalizations.of(context).translate('findtimebank','find_your_timebank'),
+                AppLocalizations.of(context)
+                    .translate('findtimebank', 'find_your_timebank'),
                 style: TextStyle(
                   fontSize: 18,
                 ),
@@ -130,11 +132,13 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context).translate('shared','logout')),
+          title: new Text(
+              AppLocalizations.of(context).translate('shared', 'logout')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(AppLocalizations.of(context).translate('shared','sure_logout')),
+              Text(AppLocalizations.of(context)
+                  .translate('shared', 'sure_logout')),
               SizedBox(height: 10),
               Row(
                 children: <Widget>[
@@ -144,7 +148,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: new Text(
-                      AppLocalizations.of(context).translate('shared','logout'),
+                      AppLocalizations.of(context)
+                          .translate('shared', 'logout'),
                       style: TextStyle(fontFamily: 'Europa'),
                     ),
                     onPressed: () {
@@ -158,7 +163,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   ),
                   new FlatButton(
                     child: new Text(
-                      AppLocalizations.of(context).translate('shared','cancel'),
+                      AppLocalizations.of(context)
+                          .translate('shared', 'cancel'),
                       style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
                     ),
                     onPressed: () {
@@ -194,7 +200,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
         ),
         Text(
-          AppLocalizations.of(context).translate('findtimebank','looking_existing'),
+          AppLocalizations.of(context)
+              .translate('findtimebank', 'looking_existing'),
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
@@ -238,7 +245,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                   borderRadius: new BorderRadius.circular(25.7)),
-              hintText: AppLocalizations.of(context).translate('findtimebank','help_text'),
+              hintText: AppLocalizations.of(context)
+                  .translate('findtimebank', 'help_text'),
               hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
         ),
         SizedBox(height: 20),
@@ -304,14 +312,17 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
                   child: Center(
-                    child: Text(AppLocalizations.of(context).translate('findtimebank','no_timebanks_found'),
+                    child: Text(
+                        AppLocalizations.of(context)
+                            .translate('findtimebank', 'no_timebanks_found'),
                         style: TextStyle(fontFamily: "Europa", fontSize: 14)),
                   ),
                 );
               }
             }
           } else if (snapshot.hasError) {
-            return Text(AppLocalizations.of(context).translate('shared','try_later'));
+            return Text(
+                AppLocalizations.of(context).translate('shared', 'try_later'));
           }
           /*else if(snapshot.data==null){
             return Expanded(
@@ -337,17 +348,21 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
           if (snapshot.hasError) {
             return Text(
-              AppLocalizations.of(context).translate('findtimebank','timebank'),
+              AppLocalizations.of(context)
+                  .translate('findtimebank', 'timebank'),
             );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Text("...");
           } else if (snapshot.hasData) {
             return Text(
-              AppLocalizations.of(context).translate('findtimebank','created_by') + snapshot.data.fullname,
+              AppLocalizations.of(context)
+                      .translate('findtimebank', 'created_by') +
+                  snapshot.data.fullname,
             );
           } else {
             return Text(
-              AppLocalizations.of(context).translate('findtimebank','community'),
+              AppLocalizations.of(context)
+                  .translate('findtimebank', 'community'),
             );
           }
         },
@@ -392,7 +407,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     );
   }
 
-  void get gpsCheck async {
+  void gpsCheck() async {
     Location templocation = new Location();
     bool _serviceEnabled;
 
@@ -403,21 +418,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         return;
       }
     }
-//  } on PlatformException catch (e) {
-//  print(e);
-//  if (e.code == 'PERMISSION_DENIED') {
-//  //error = e.message;
-//  } else if (e.code == 'SERVICE_STATUS_ERROR') {
-//  //error = e.message;
-//  }
-//  }
-
-//    bool isLocationEnabled = await Geolocator().isLocationServiceEnabled();
-//    if (isLocationEnabled) {
-//      print(' gps enabled');
-//    } else {
-//      print('gps disabled');
-//    }
   }
 
   Widget nearByTimebanks() {
@@ -457,7 +457,9 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
                 child: Center(
-                  child: Text(AppLocalizations.of(context).translate('findtimebank','no_timebanks_found'),
+                  child: Text(
+                      AppLocalizations.of(context)
+                          .translate('findtimebank', 'no_timebanks_found'),
                       style: TextStyle(fontFamily: "Europa", fontSize: 14)),
                 ),
               );
@@ -465,8 +467,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           } else if (snapshot.hasError) {
             return Padding(
                 padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 16.0),
-                child: Text(
-                    AppLocalizations.of(context).translate('findtimebank','timebanks_around_you')));
+                child: Text(AppLocalizations.of(context)
+                    .translate('findtimebank', 'timebanks_around_you')));
             // return Text("Couldn't load results");
           }
           /*else if(snapshot.data==null){
@@ -549,12 +551,13 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             children: <Widget>[
               RaisedButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('findtimebank','create_timebank'),
+                  AppLocalizations.of(context)
+                      .translate('findtimebank', 'create_timebank'),
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
                 onPressed: () async {
-                  var timebankAdvisory =
-                  AppLocalizations.of(context).translate('findtimebank','create_timebank_warn');
+                  var timebankAdvisory = AppLocalizations.of(context)
+                      .translate('findtimebank', 'create_timebank_warn');
                   Map<String, bool> onActivityResult =
                       await showTimebankAdvisory(dialogTitle: timebankAdvisory);
                   if (onActivityResult['PROCEED']) {
@@ -615,7 +618,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('shared','capital_cancel'),
+                  AppLocalizations.of(context)
+                      .translate('shared', 'capital_cancel'),
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -626,7 +630,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               ),
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('shared','proceed'),
+                  AppLocalizations.of(context).translate('shared', 'proceed'),
                   style: TextStyle(
                     fontSize: 16,
                   ),
