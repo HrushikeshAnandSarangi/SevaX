@@ -333,7 +333,8 @@
     "size_alert": "Les fichiers de plus de 10 Mo ne sont pas autorisés",
     "size_alert_title": "Alerte fichier volumineux",
     "update_post": "Mettre à jour le message",
-    "update_progress": "Mise à jour du message"
+    "update_progress": "Mise à jour du message",
+    "imagehint": "Crédit photo"
   },
   "projects": {
     "title": "Projets",

@@ -203,65 +203,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // Container(
-                  //   alignment: Alignment(1.0, 0),
-                  //   padding: const EdgeInsets.only(right: 10.0, bottom: 10),
-                  //   child:
-                  //   RaisedButton(
-                  //     shape: StadiumBorder(),
-                  //     color: Colors.indigoAccent,
-                  //     onPressed: () {
-                  //       // Validate will return true if the form is valid, or false if
-                  //       // the form is invalid.
-
-                  //       if (formKey.currentState.validate()) {
-                  //         // If the form is valid, we want to show a Snackbar
-                  //         Scaffold.of(context).showSnackBar(
-                  //             SnackBar(content: Text('Creating Post')));
-                  //         writeToDB();
-                  //       }
-                  //     },
-                  //     child: Text(
-                  //       'Save News Post',
-                  //       style: TextStyle(color: Colors.white),
-                  //     ),
-                  //   ),
-                  // ),
-
-//              entityDropdown,
-
-                  Text(""),
                   Container(
                     margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                     child: Column(
                       children: <Widget>[
-                        // Padding(
-                        //   padding: EdgeInsets.only(bottom: 20.0),
-                        //   child: TextFormField(
-                        //     decoration: InputDecoration(
-                        //       hintText: 'Your feed title',
-                        //       labelText: '+ Feed Title',
-                        //       border: OutlineInputBorder(
-                        //         borderRadius: const BorderRadius.all(
-                        //           const Radius.circular(10.0),
-                        //         ),
-                        //         borderSide: new BorderSide(
-                        //           color: Colors.black,
-                        //           width: 0.5,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //     keyboardType: TextInputType.text,
-                        //     //style: textStyle,
-                        //     validator: (value) {
-                        //       if (value.isEmpty) {
-                        //         return 'Please enter the Post Title';
-                        //       }
-                        //       newsObject.title = value;
-                        //     },
-                        //   ),
-                        // ),
-
                         Padding(
                           padding: EdgeInsets.only(bottom: 0.0),
                           child: TextFormField(
@@ -271,8 +216,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
                               alignLabelWithHint: false,
-                              hintText: 'Text, URL and Hashtags ',
-                              labelText: 'What would you like to share',
+                              hintText: AppLocalizations.of(context)
+                                  .translate('create_feed', 'hint'),
+                              labelText: AppLocalizations.of(context)
+                                  .translate('create_feed', 'placeholder'),
                               border: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(0.0),
@@ -292,7 +239,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             validator: (value) {
                               print("validator");
                               if (value.isEmpty) {
-                                return 'Please enter some text';
+                                return AppLocalizations.of(context)
+                                    .translate('create_feed', 'empty_err');
                               }
                               newsObject.subheading = value;
                               // print("object");
@@ -390,10 +338,11 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     if (connResult == ConnectivityResult.none) {
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
-                          content:
-                              Text("Please check your internet connection."),
+                          content: Text(AppLocalizations.of(context)
+                              .translate('shared', 'check_internet')),
                           action: SnackBarAction(
-                            label: 'Dismiss',
+                            label: AppLocalizations.of(context)
+                                .translate('shared', 'dismiss'),
                             onPressed: () =>
                                 Scaffold.of(context).hideCurrentSnackBar(),
                           ),
@@ -429,7 +378,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     } else {
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Location not added'),
+                          content: Text(AppLocalizations.of(context)
+                              .translate('create_feed', 'location_notadded')),
                         ),
                       );
                     }

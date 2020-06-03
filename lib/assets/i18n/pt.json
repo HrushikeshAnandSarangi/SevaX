@@ -333,7 +333,8 @@
     "size_alert": "Arquivos com mais de 10 MB não são permitidos",
     "size_alert_titile": "Alerta de arquivo grande",
     "update_post": "Atualizar postagem",
-    "update_progress": "Atualizando postagem"
+    "update_progress": "Atualizando postagem",
+    "imagehint": "Crédito da foto"
   },
   "projects": {
     "title": "Projetos",

@@ -333,7 +333,8 @@
     "size_alert": "Files more than 10MB are not allowed",
     "size_alert_title": "Large file alert",
     "update_post": "Update post",
-    "update_progress": "Updating post"
+    "update_progress": "Updating post",
+    "imagehint": "Photo credit"
   },
   "projects": {
     "title": "Projects",
