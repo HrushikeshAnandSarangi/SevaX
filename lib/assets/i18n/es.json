@@ -68,7 +68,9 @@
     "individual_offer": "Oferta individual",
     "one_to_many": "Uno a muchos",
     "timebank_projects": "Proyectos de banco de tempo",
-    "personal_projects": "Proyectos personales"
+    "personal_projects": "Proyectos personales",
+    "clear": "Claro"
+
   },
   "signup": {
     "add_photo": "Adicionar foto",

@@ -38,7 +38,8 @@
     "reset_link_message": "Enviamos o link de redefinição para o seu endereço de e-mail",
     "terms_of_service_link": "Termos de serviço",
     "privacy_policy_link": "Política de Privacidade",
-    "payment_policy_link": "Política de pagamento"
+    "payment_policy_link": "Política de pagamento",
+
   },
   "shared": {
     "check_internet": "Por favor, verifique sua conexão à internet.",
@@ -68,7 +69,9 @@
     "individual_offer": "Oferta individual",
     "one_to_many": "Um para muitos",
     "timebank_projects": "Projetos do Timebank",
-    "personal_projects": "Projetos pessoais"
+    "personal_projects": "Projetos pessoais",
+    "clear": "Claro"
+
   },
   "signup": {
     "add_photo": "Adicionar foto",
