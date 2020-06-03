@@ -332,7 +332,6 @@
     "gallery": "Gallery",
     "size_alert": "Files more than 10MB are not allowed",
     "size_alert_title": "Large file alert"
-
   },
   "projects": {
     "title": "Projects",
@@ -889,5 +888,9 @@
     "private_timebank": "Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.",
     "private_group": "Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.",
     "tax_configuration": "At the time that a user is credited Seva Credits for completing a request (for the Timebank), the Timebank Admin can specify a Tax - which is credited to the Timebank. Slide the ruler to specify the amount of the Tax."
+  },
+  "switching_timebank": {
+    "switch_timebank": "Switching Timebank",
+    "updating_timebank": "Updating Timebank"
   }
 }
