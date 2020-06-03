@@ -174,7 +174,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(""),
                   Container(
                     margin: EdgeInsets.all(20),
                     child: Column(
