@@ -341,6 +341,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             inviteeEmail: inviteeEmail,
             communityId: SevaCore.of(context).loggedInUser.currentCommunity,
           ),
+          context: context,
         );
         inivitationManager.hideProgress();
         setState(() {});
