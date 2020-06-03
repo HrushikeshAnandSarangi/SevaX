@@ -1,13 +1,12 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/core.dart';
-
-import '../../flavor_config.dart';
 
 class SelectTimeBankForNewChat extends StatefulWidget {
   @override
@@ -21,9 +20,8 @@ class SelectTimeBankForNewChatState extends State<SelectTimeBankForNewChat> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          FlavorConfig.values.timebankName == "Yang 2020"
-              ? "Select Yang Gang Chapter"
-              : "Select Timebank",
+          AppLocalizations.of(context)
+              .translate('select_member', 'select_timebank'),
           style: TextStyle(fontSize: 18),
         ),
       ),

@@ -68,7 +68,8 @@
     "individual_offer": "Individual offer",
     "one_to_many": "One to many",
     "timebank_projects": "Timebank Projects",
-    "personal_projects": "Personal Projects"
+    "personal_projects": "Personal Projects",
+    "clear": "Clear"
   },
   "signup": {
     "add_photo": "Add Photo",
@@ -328,7 +329,7 @@
     "change": "Change image",
     "change_attachment": "Change Attachment",
     "add": "Add image",
-    "add_attachment": "Add Image / Document",
+    "add_attachment": "Add Image \/ Document",
     "camera": "Camera",
     "gallery": "Gallery",
     "size_alert": "Files more than 10MB are not allowed",
@@ -639,6 +640,8 @@
   "create_request": {
     "humanity_first_create": "Create Yang Gang Request",
     "create": "Create Request",
+    "edit": "Edit Request",
+    "edit_project": "Edit Project Request",
     "create_project": "Create Project Request",
     "set_duration": " Click to Set Duration",
     "yang_gang_request_title": "Yang gang request title",
@@ -660,9 +663,11 @@
     "no_of_volunteers_zero_err": "No. of volunteers cannot be lesser than 0",
     "no_of_volunteers_zero_err1": "No. of volunteers cannot be 0",
     "create_request_button": "Create Request",
+    "update_request_button": "Update Request",
     "start_date_err": "Please mention the start and end date of the request",
     "add_location": "Please add location to your request",
     "progress": "Creating Request..",
+    "progress_update": "Updating Request..",
     "not_enough_seva": "Your seva credits are not sufficient to create the request.",
     "ok": "OK",
     "assign_members": "Assign to volunteers",
@@ -678,7 +683,22 @@
     "done": "Done",
     "start_end": "date & time",
     "add_to_project": "Add to Project",
-    "none_project": "Un Assigned"
+    "none_project": "Un Assigned",
+    "assign_to_project": "Assign to project",
+    "assign_to_one": "Please assign to one project",
+    "tap_select": "Tap to select one or more...",
+    "tap_error_select": "Please select one or more option(s)",
+    "save": "Save",
+    "no_members_toadd": "No members available to add",
+    "select_timebank": "Select Timebank",
+    "search_member": "Search members",
+    "atleast_3": "Search requires minimum 3 characters",
+    "no_user": "No user found",
+    "selected_hint": "Currently selected",
+    "tap_to_remove": "items (tap to remove)",
+    "tap_to_delete": "Tap to delete this item",
+    "assign_err_hint": "Please assign to one project",
+    "tap_to_select": "Tap to select one or more..."
   },
   "edit_group": {
     "add_members": "Add Members",
@@ -857,7 +877,16 @@
     "prompt_text": "when prompted to join this Timebank. Please download the app from the links provided at https://sevaxapp.com",
     "code_generated": "Code generated",
     "is_code": "is your code.",
-    "publish_code": "Publish code"
+    "publish_code": "Publish code",
+    "select_volunteer": "Select volunteer",
+    "select_volunteers": "Select volunteers",
+    "no_volunteers": "No volunteers present",
+    "Approve": "Approve",
+    "Reject": "Reject",
+    "Remove": "Remove",
+    "Promote": "Promote",
+    "Demote": "Demote",
+    "Exit": "Exit"
   },
   "create_offer": {
     "title": "Create Offer",
@@ -940,5 +969,9 @@
     "see_you_go": "We have received your request to delete this ***. We are sorry to see you go. We will examine your request and (in some cases) get in touch with you offline before we process the deletion of the ***",
     "delete": "Delete",
     "cancel": "Cancel"
+  },
+  "select_member": {
+    "select_timebank": "Select Timebank",
+    "select_volunteer": "Select volunteer"
   }
 }

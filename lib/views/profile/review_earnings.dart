@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -200,7 +201,7 @@ class EarningItem extends StatelessWidget {
         ),
         Text(
           '${AppLocalizations.of(context).translate('earnings','date')}  ' +
-              DateFormat('MMMM dd, yyyy @ h:mm a').format(
+              DateFormat('MMMM dd, yyyy @ h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
                 getDateTimeAccToUserTimezone(
                     dateTime: DateTime.fromMillisecondsSinceEpoch(timestamp),
                     timezoneAbb: usertimezone),
@@ -250,7 +251,7 @@ class EarningImageItem extends StatelessWidget {
 }
 
 String getTimeFormattedString(int timeInMilliseconds) {
-  DateFormat dateFormat = DateFormat('d MMM h:m a ');
+  DateFormat dateFormat = DateFormat('d MMM h:m a ', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
   String dateOfTransaction = dateFormat.format(
     DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds),
   );

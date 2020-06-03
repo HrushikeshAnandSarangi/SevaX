@@ -28,7 +28,7 @@ class AboutApp extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Help",
+          AppLocalizations.of(context).translate('profile', 'help'),
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -37,13 +37,14 @@ class AboutApp extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           getHelpButton(context, getOnTap(context, AppLocalizations.of(context).translate('help','about_sevax'), 'aboutSeva'),
-              "About SevaX"),
+              AppLocalizations.of(context)
+                  .translate('help', 'about_sevax')),
           getHelpButton(context, getOnTap(context, AppLocalizations.of(context).translate('help','about_us'), 'aboutUsLink'),
-              "About Us"),
+              AppLocalizations.of(context).translate('help','about_us')),
           getHelpButton(
               context,
               getOnTap(context, AppLocalizations.of(context).translate('help','training_video'), 'trainingVideo'),
-              "Training Video"),
+              AppLocalizations.of(context).translate('help','training_video')),
           getHelpButton(context, contactUsOnTap(context), AppLocalizations.of(context).translate('help','contact_us')),
         ],
       ),

@@ -7,6 +7,7 @@ import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
@@ -128,7 +129,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         color: Colors.grey,
                       ),
                       title: Text(
-                        DateFormat('EEEEEEE, MMMM dd').format(
+                        DateFormat('EEEEEEE, MMMM dd', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
                           getDateTimeAccToUserTimezone(
                               dateTime: DateTime.fromMillisecondsSinceEpoch(
                                   widget.requestItem.requestStart),
@@ -140,7 +141,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       subtitle: Text(
-                        DateFormat('h:mm a').format(
+                        DateFormat('h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
                               getDateTimeAccToUserTimezone(
                                   dateTime: DateTime.fromMillisecondsSinceEpoch(
                                       widget.requestItem.requestStart),
@@ -149,7 +150,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                       .timezone),
                             ) +
                             ' - ' +
-                            DateFormat('h:mm a').format(
+                            DateFormat('h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
                               getDateTimeAccToUserTimezone(
                                 dateTime: DateTime.fromMillisecondsSinceEpoch(
                                     widget.requestItem.requestEnd),
@@ -163,7 +164,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       ),
                       trailing: Container(
                         height: 25,
-                        width: 75,
+                        width: 90,
                         child: widget.requestItem.sevaUserId ==
                                 SevaCore.of(context).loggedInUser.sevaUserID
                             ? FlatButton(

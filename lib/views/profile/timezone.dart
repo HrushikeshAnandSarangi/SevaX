@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -754,7 +755,7 @@ class TimezoneListState extends State<TimezoneList> {
 //            controller: _scrollController,
             itemBuilder: (context, index) {
               TimeZoneModel model = timezonelist.elementAt(index);
-              DateFormat format = DateFormat('dd/MMM/yyyy HH:mm');
+              DateFormat format = DateFormat('dd/MMM/yyyy HH:mm', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
               DateTime timeInUtc = new DateTime.now().toUtc();
 
               DateTime localtime = timeInUtc.add(Duration(

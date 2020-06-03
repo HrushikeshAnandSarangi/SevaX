@@ -43,6 +43,7 @@ Future<String> createDynamicLinkFor({
     iosParameters: IosParameters(
       bundleId: FlavorConfig.values.bundleId,
       minimumVersion: '0',
+      appStoreId: '1510195449'
     ),
   );
 
