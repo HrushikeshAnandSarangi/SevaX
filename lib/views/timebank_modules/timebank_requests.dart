@@ -80,7 +80,8 @@ class RequestsState extends State<RequestsModule> {
                           FlatButton(
                             onPressed: () {},
                             child: Text(
-                                AppLocalizations.of(context).translate('requests','my_requests'),
+                              AppLocalizations.of(context)
+                                  .translate('requests', 'my_requests'),
                               style: (TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 18)),
                             ),
@@ -112,9 +113,10 @@ class RequestsState extends State<RequestsModule> {
                               onTap: () {
                                 if (widget.timebankModel.protected) {
                                   if (widget.timebankModel.admins.contains(
-                                      SevaCore.of(context)
-                                          .loggedInUser
-                                          .sevaUserID)) {
+                                    SevaCore.of(context)
+                                        .loggedInUser
+                                        .sevaUserID,
+                                  )) {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -163,11 +165,12 @@ class RequestsState extends State<RequestsModule> {
                   selectedColor: Theme.of(context).primaryColor,
                   children: {
                     0: Text(
-                      AppLocalizations.of(context).translate('shared','all'),
+                      AppLocalizations.of(context).translate('shared', 'all'),
                       style: TextStyle(fontSize: 10.0),
                     ),
                     1: Text(
-                      AppLocalizations.of(context).translate('shared','near_me'),
+                      AppLocalizations.of(context)
+                          .translate('shared', 'near_me'),
                       style: TextStyle(fontSize: 10.0),
                     ),
                   },
@@ -219,7 +222,8 @@ class RequestsState extends State<RequestsModule> {
       return Scaffold(
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context).translate('requests','select_request'),
+            AppLocalizations.of(context)
+                .translate('requests', 'select_request'),
             style: TextStyle(
               fontSize: 18,
             ),
@@ -238,12 +242,15 @@ class RequestsState extends State<RequestsModule> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context).translate('requests','protected_timebank')),
-          content: new Text(AppLocalizations.of(context).translate('requests','cannot_post')),
+          title: new Text(AppLocalizations.of(context)
+              .translate('requests', 'protected_timebank')),
+          content: new Text(AppLocalizations.of(context)
+              .translate('requests', 'cannot_post')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text(AppLocalizations.of(context).translate('shared','close')),
+              child: new Text(
+                  AppLocalizations.of(context).translate('shared', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -258,7 +265,9 @@ class RequestsState extends State<RequestsModule> {
     var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
     navigateToWebView(
       aboutMode: AboutMode(
-          title: AppLocalizations.of(context).translate('requests','requests_help'), urlToHit: dynamicLinks['requestsInfoLink']),
+          title: AppLocalizations.of(context)
+              .translate('requests', 'requests_help'),
+          urlToHit: dynamicLinks['requestsInfoLink']),
       context: context,
     );
   }
@@ -348,12 +357,13 @@ class _RequestCardViewState extends State<RequestCardView> {
                         context: context,
                         builder: (BuildContext viewcontext) {
                           return AlertDialog(
-                            title: Text(
-                                AppLocalizations.of(context).translate('requests','delete_request_confirm')),
+                            title: Text(AppLocalizations.of(context).translate(
+                                'requests', 'delete_request_confirm')),
                             actions: <Widget>[
                               FlatButton(
                                 child: Text(
-                                  AppLocalizations.of(context).translate('requests','dont_delete'),
+                                  AppLocalizations.of(context)
+                                      .translate('requests', 'dont_delete'),
                                   style: TextStyle(
                                     fontSize: dialogButtonSize,
                                   ),
@@ -364,7 +374,8 @@ class _RequestCardViewState extends State<RequestCardView> {
                               ),
                               FlatButton(
                                 child: Text(
-                                  AppLocalizations.of(context).translate('requests','delete_request'),
+                                  AppLocalizations.of(context)
+                                      .translate('requests', 'delete_request'),
                                   style: TextStyle(
                                     fontSize: dialogButtonSize,
                                   ),
@@ -396,7 +407,8 @@ class _RequestCardViewState extends State<RequestCardView> {
           ),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return new Text('${AppLocalizations.of(context).translate('requests','error')} ${snapshot.error}');
+              return new Text(
+                  '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -432,7 +444,7 @@ class _RequestCardViewState extends State<RequestCardView> {
                           padding: EdgeInsets.all(8.0),
                           alignment: Alignment(-1.0, 0.0),
                           child: Text(
-                            '${AppLocalizations.of(context).translate('requests','from')}  ' +
+                            '${AppLocalizations.of(context).translate('requests', 'from')}  ' +
                                 DateFormat('MMMM dd, yyyy @ h:mm a').format(
                                   getDateTimeAccToUserTimezone(
                                       dateTime:
@@ -446,7 +458,7 @@ class _RequestCardViewState extends State<RequestCardView> {
                           padding: EdgeInsets.all(8.0),
                           alignment: Alignment(-1.0, 0.0),
                           child: Text(
-                            '${AppLocalizations.of(context).translate('requests','untill')}  ' +
+                            '${AppLocalizations.of(context).translate('requests', 'untill')}  ' +
                                 DateFormat('MMMM dd, yyyy @ h:mm a').format(
                                   getDateTimeAccToUserTimezone(
                                       dateTime:
@@ -459,14 +471,15 @@ class _RequestCardViewState extends State<RequestCardView> {
                         Container(
                           padding: EdgeInsets.all(8.0),
                           alignment: Alignment(-1.0, 0.0),
-                          child:
-                              Text('${AppLocalizations.of(context).translate('requests','posted_by')} ' + widget.requestItem.fullName),
+                          child: Text(
+                              '${AppLocalizations.of(context).translate('requests', 'posted_by')} ' +
+                                  widget.requestItem.fullName),
                         ),
                         Container(
                           padding: EdgeInsets.all(8.0),
                           alignment: Alignment(-1.0, 0.0),
                           child: Text(
-                            '${AppLocalizations.of(context).translate('requests','post_date')}  ' +
+                            '${AppLocalizations.of(context).translate('requests', 'post_date')}  ' +
                                 DateFormat('MMMM dd, yyyy @ h:mm a').format(
                                   getDateTimeAccToUserTimezone(
                                       dateTime:
@@ -479,8 +492,9 @@ class _RequestCardViewState extends State<RequestCardView> {
                         Container(
                           padding: EdgeInsets.all(8.0),
                           alignment: Alignment(-1.0, 0.0),
-                          child: Text('${AppLocalizations.of(context).translate('requests','required')} ' +
-                              '${widget.requestItem.numberOfApprovals}'),
+                          child: Text(
+                              '${AppLocalizations.of(context).translate('requests', 'required')} ' +
+                                  '${widget.requestItem.numberOfApprovals}'),
                         ),
                         Container(
                           padding: EdgeInsets.all(8.0),
@@ -505,8 +519,10 @@ class _RequestCardViewState extends State<RequestCardView> {
                             child: Text(
                               widget.requestItem.acceptors.contains(
                                       SevaCore.of(context).loggedInUser.email)
-                                  ? AppLocalizations.of(context).translate('requests','withdraw')
-                                  : AppLocalizations.of(context).translate('requests','accept'),
+                                  ? AppLocalizations.of(context)
+                                      .translate('requests', 'withdraw')
+                                  : AppLocalizations.of(context)
+                                      .translate('requests', 'accept'),
                               style: TextStyle(
                                 color: FlavorConfig.values.buttonTextColor,
                               ),
@@ -539,8 +555,12 @@ class _RequestCardViewState extends State<RequestCardView> {
                                         },
                                   child: Text(
                                     widget.requestItem.approvedUsers.length < 1
-                                        ? AppLocalizations.of(context).translate('requests','not_approved_yet')
-                                        : AppLocalizations.of(context).translate('requests','view_approved_members'),
+                                        ? AppLocalizations.of(context)
+                                            .translate(
+                                                'requests', 'not_approved_yet')
+                                        : AppLocalizations.of(context)
+                                            .translate('requests',
+                                                'view_approved_members'),
                                     style: TextStyle(
                                       color:
                                           FlavorConfig.values.buttonTextColor,
@@ -591,7 +611,8 @@ class NearRequestListItems extends StatelessWidget {
         ),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return new Text(AppLocalizations.of(context).translate('requests','something_wrong'));
+            return new Text(AppLocalizations.of(context)
+                .translate('requests', 'something_wrong'));
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -609,7 +630,8 @@ class NearRequestListItems extends StatelessWidget {
             builder: (BuildContext context,
                 AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
               if (requestListSnapshot.hasError) {
-                return new Text('${AppLocalizations.of(context).translate('requests','error')} ${requestListSnapshot.error}');
+                return new Text(
+                    '${AppLocalizations.of(context).translate('requests', 'error')} ${requestListSnapshot.error}');
               }
               switch (requestListSnapshot.connectionState) {
                 case ConnectionState.waiting:
@@ -624,7 +646,9 @@ class NearRequestListItems extends StatelessWidget {
                   if (requestModelList.length == 0) {
                     return Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Center(child: Text(AppLocalizations.of(context).translate('requests','no_requests'))),
+                      child: Center(
+                          child: Text(AppLocalizations.of(context)
+                              .translate('requests', 'no_requests'))),
                     );
                   }
 
@@ -665,7 +689,7 @@ class NearRequestListItems extends StatelessWidget {
                 .loggedInUser
                 .blockedBy
                 .contains(request.sevaUserId)
-        ? AppLocalizations.of(context).translate('requests','filtering')
+        ? AppLocalizations.of(context).translate('requests', 'filtering')
         : filteredList.add(request));
 
     return filteredList;
@@ -770,7 +794,8 @@ class NearRequestListItems extends StatelessWidget {
                                     padding: EdgeInsets.all(0),
                                     color: Colors.green,
                                     child: Text(
-                                      AppLocalizations.of(context).translate('requests','applied'),
+                                      AppLocalizations.of(context)
+                                          .translate('requests', 'applied'),
                                       style: TextStyle(
                                         color: Colors.white,
                                       ),
@@ -862,7 +887,8 @@ class RequestListItemsState extends State<RequestListItems> {
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return new Text('${AppLocalizations.of(context).translate('requests','error')} ${snapshot.error}');
+              return new Text(
+                  '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -878,7 +904,8 @@ class RequestListItemsState extends State<RequestListItems> {
                     builder:
                         (context, AsyncSnapshot<TimebankController> snapshot) {
                       if (snapshot.hasError) {
-                        return new Text('${AppLocalizations.of(context).translate('requests','error')} ${snapshot.error}');
+                        return new Text(
+                            '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
                       }
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
@@ -893,7 +920,9 @@ class RequestListItemsState extends State<RequestListItems> {
                         if (requestModelList.length == 0) {
                           return Padding(
                             padding: const EdgeInsets.all(16.0),
-                            child: Center(child: Text(AppLocalizations.of(context).translate('requests','no_requests'))),
+                            child: Center(
+                                child: Text(AppLocalizations.of(context)
+                                    .translate('requests', 'no_requests'))),
                           );
                         }
                         var consolidatedList =
@@ -918,7 +947,8 @@ class RequestListItemsState extends State<RequestListItems> {
                     builder: (BuildContext context,
                         AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
                       if (requestListSnapshot.hasError) {
-                        return new Text('${AppLocalizations.of(context).translate('requests','error')} ${requestListSnapshot.error}');
+                        return new Text(
+                            '${AppLocalizations.of(context).translate('requests', 'error')} ${requestListSnapshot.error}');
                       }
                       switch (requestListSnapshot.connectionState) {
                         case ConnectionState.waiting:
@@ -933,7 +963,9 @@ class RequestListItemsState extends State<RequestListItems> {
                           if (requestModelList.length == 0) {
                             return Padding(
                               padding: const EdgeInsets.all(16.0),
-                              child: Center(child: Text(AppLocalizations.of(context).translate('requests','no_requests'))),
+                              child: Center(
+                                  child: Text(AppLocalizations.of(context)
+                                      .translate('requests', 'no_requests'))),
                             );
                           }
                           var consolidatedList =
@@ -952,7 +984,8 @@ class RequestListItemsState extends State<RequestListItems> {
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return new Text('${AppLocalizations.of(context).translate('requests','error')} ${snapshot.error}');
+              return new Text(
+                  '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -962,7 +995,8 @@ class RequestListItemsState extends State<RequestListItems> {
               builder: (BuildContext context,
                   AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
                 if (requestListSnapshot.hasError) {
-                  return new Text('${AppLocalizations.of(context).translate('requests','error')} ${requestListSnapshot.error}');
+                  return new Text(
+                      '${AppLocalizations.of(context).translate('requests', 'error')} ${requestListSnapshot.error}');
                 }
                 switch (requestListSnapshot.connectionState) {
                   case ConnectionState.waiting:
@@ -976,7 +1010,9 @@ class RequestListItemsState extends State<RequestListItems> {
                     if (requestModelList.length == 0) {
                       return Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Center(child: Text(AppLocalizations.of(context).translate('requests','no_requests'))),
+                        child: Center(
+                            child: Text(AppLocalizations.of(context)
+                                .translate('requests', 'no_requests'))),
                       );
                     }
                     var consolidatedList =
@@ -1008,7 +1044,7 @@ class RequestListItemsState extends State<RequestListItems> {
                 .loggedInUser
                 .blockedBy
                 .contains(request.sevaUserId)
-        ? AppLocalizations.of(context).translate('requests','filtering')
+        ? AppLocalizations.of(context).translate('requests', 'filtering')
         : filteredList.add(request));
 
     return filteredList;
@@ -1066,7 +1102,8 @@ class RequestListItemsState extends State<RequestListItems> {
         );
 
       default:
-        return Text(AppLocalizations.of(context).translate('requests','default'));
+        return Text(
+            AppLocalizations.of(context).translate('requests', 'default'));
     }
   }
 
@@ -1156,7 +1193,8 @@ class RequestListItemsState extends State<RequestListItems> {
                                     padding: EdgeInsets.all(0),
                                     color: Colors.green,
                                     child: Text(
-                                      AppLocalizations.of(context).translate('requests','applied'),
+                                      AppLocalizations.of(context)
+                                          .translate('requests', 'applied'),
                                       style: TextStyle(
                                         color: Colors.white,
                                       ),

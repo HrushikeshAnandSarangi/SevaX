@@ -44,7 +44,7 @@
     "check_internet": "Please check your internet connection.",
     "dismiss": "Dismiss",
     "or": "or",
-    "cancel": "cancel",
+    "cancel": "Cancel",
     "next": "Next",
     "skip": "Skip",
     "capital_cancel": "Cancel",
@@ -68,7 +68,8 @@
     "individual_offer": "Individual offer",
     "one_to_many": "One to many",
     "timebank_projects": "Timebank Projects",
-    "personal_projects": "Personal Projects"
+    "personal_projects": "Personal Projects",
+    "clear": "Clear"
   },
   "signup": {
     "add_photo": "Add Photo",
@@ -311,23 +312,31 @@
     "actions_not_allowed": "Actions not allowed, Please contact admin",
     "failed": "Billing Failed, Click below to configure billing",
     "contact_admin": "Action not allowed, please contact the admin",
-    "configure": "Configure Billing"
+    "configure": "Configure Billing",
+    "cancel": "Cancel"
   },
   "create_feed": {
     "title": "Create Post",
     "hint": "Text, URL and Hashtags ",
     "placeholder": "What would you like to share*",
     "empty_err": "Please enter some text",
-    "progress": "Creating feed",
+    "progress": "Creating post",
     "location_notadded": "Location not added",
     "create_button": "Create Post",
     "category": "Category",
     "select_category": "Please select a category",
     "image_hint": "Photo Credits",
     "change": "Change image",
+    "change_attachment": "Change Attachment",
     "add": "Add image",
+    "add_attachment": "Add Image / Document",
     "camera": "Camera",
-    "gallery": "Gallery"
+    "gallery": "Gallery",
+    "size_alert": "Files more than 10MB are not allowed",
+    "size_alert_title": "Large file alert",
+    "update_post": "Update post",
+    "update_progress": "Updating post",
+    "imagehint": "Photo credit"
   },
   "projects": {
     "title": "Projects",
@@ -655,7 +664,7 @@
     "start_date_err": "Please mention the start and end date of the request",
     "add_location": "Please add location to your request",
     "progress": "Creating Request..",
-    "not_enough_seva": "Creating Request..",
+    "not_enough_seva": "Your seva credits are not sufficient to create the request.",
     "ok": "OK",
     "assign_members": "Assign to volunteers",
     "selected": "members selected",
@@ -680,7 +689,12 @@
     "select_timebank": "Select Timebank",
     "search_member": "Search members",
     "atleast_3": "Search requires minimum 3 characters",
-    "no_user": "No user found"
+    "no_user": "No user found",
+    "selected_hint": "Currently selected",
+    "tap_to_remove": "items (tap to remove)",
+    "tap_to_delete": "Tap to delete this item",
+    "assign_err_hint": "Please assign to one project",
+    "tap_to_select": "Tap to select one or more..."
   },
   "edit_group": {
     "add_members": "Add Members",
@@ -742,7 +756,7 @@
     "global_banks": "SevaX Global Network of Timebanks",
     "getting_volunteers": "Getting volunteers...",
     "no_volunteers": "No Volunteers joined yet.",
-    "volunteers": "Volunteers",
+    "volunteers": "Volunteer/s",
     "zero_volunteers": "0 Volunteers",
     "about": "About us",
     "read_less": "Read Less",
@@ -815,6 +829,10 @@
   "settings": {
     "my_timezone": "My Timezone",
     "language": "My Language"
+  },
+  "invitations": {
+    "invitation_email_title": "Awesome! You are invited to join a Timebank",
+    "email_body": "<p>You are invited to download the SevaX app and join the Timebank ***. The SevaX App uses Timebanking, a reciprocity-based system where community members help each other out in exchange for Seva Credits. Please click on this <a href=\"###;&nbsp;\">link</a> to join.</p>"
   },
   "members": {
     "updating_users": "Updating Users",
@@ -897,5 +915,38 @@
     "private_timebank": "Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.",
     "private_group": "Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.",
     "tax_configuration": "At the time that a user is credited Seva Credits for completing a request (for the Timebank), the Timebank Admin can specify a Tax - which is credited to the Timebank. Slide the ruler to specify the amount of the Tax."
+  },
+  "switching_timebank": {
+    "switch_timebank": "Switching Timebank",
+    "updating_timebank": "Updating Timebank"
+  },
+  "image_picker": {
+    "camera": "Camera",
+    "gallery": "Gallery",
+    "pdf_document": "PDF Document"
+  },
+  "search_page": {
+    "search": "Search",
+    "feeds": "Feeds",
+    "requests": "Request",
+    "offers": "Offers",
+    "projects": "Projects",
+    "groups": "Groups",
+    "members": "Members"
+  },
+  "validation_errors": {
+    "title_error": "Please enter the subject of your offer",
+    "generic_error": "Please enter some text",
+    "class_hours": "Please enter the hours required for the class",
+    "hours_not_int": "Entered number of hours is not valid",
+    "prepration_time_error": "Please enter your preperation time",
+    "location_error": "Please select location",
+    "size_of_class_not_int": "Size of class can't be in decimal",
+    "size_of_class_error": "Please enter valid size of class",
+    "offer_credit_error": "We cannot publish this Class. There are insufficient credits from the class. Please revise the Prep time or the number of students and submit the offer again"
+  },
+  "select_member": {
+    "select_timebank": "Select Timebank",
+    "select_volunteer": "Select volunteer"
   }
 }

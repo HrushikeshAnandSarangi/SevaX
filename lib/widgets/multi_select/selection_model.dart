@@ -39,37 +39,36 @@ class SelectionModal extends StatefulWidget {
   final String searchBoxToolTipText;
   SelectionModal(
       {this.filterable,
-        this.dataSource,
-        this.admin,
-        this.title = 'Please select one or more option(s)',
-        this.values,
-        this.textField,
-        this.valueField,
-        this.maxLength,
-        this.buttonBarColor,
-        this.cancelButtonText,
-        this.cancelButtonIcon,
-        this.cancelButtonColor,
-        this.cancelButtonTextColor,
-        this.saveButtonText,
-        this.saveButtonIcon,
-        this.saveButtonColor,
-        this.saveButtonTextColor,
-        this.deleteButtonTooltipText,
-        this.deleteIcon,
-        this.deleteIconColor,
-        this.selectedOptionsBoxColor,
-        this.selectedOptionsInfoText,
-        this.selectedOptionsInfoTextColor,
-        this.checkedIcon,
-        this.uncheckedIcon,
-        this.checkBoxColor,
-        this.searchBoxColor,
-        this.searchBoxHintText,
-        this.searchBoxFillColor,
-        this.searchBoxIcon,
-        this.searchBoxToolTipText
-      })
+      this.dataSource,
+      this.admin,
+      this.title = 'Please select one or more option(s)',
+      this.values,
+      this.textField,
+      this.valueField,
+      this.maxLength,
+      this.buttonBarColor,
+      this.cancelButtonText,
+      this.cancelButtonIcon,
+      this.cancelButtonColor,
+      this.cancelButtonTextColor,
+      this.saveButtonText,
+      this.saveButtonIcon,
+      this.saveButtonColor,
+      this.saveButtonTextColor,
+      this.deleteButtonTooltipText,
+      this.deleteIcon,
+      this.deleteIconColor,
+      this.selectedOptionsBoxColor,
+      this.selectedOptionsInfoText,
+      this.selectedOptionsInfoTextColor,
+      this.checkedIcon,
+      this.uncheckedIcon,
+      this.checkBoxColor,
+      this.searchBoxColor,
+      this.searchBoxHintText,
+      this.searchBoxFillColor,
+      this.searchBoxIcon,
+      this.searchBoxToolTipText})
       : super();
 }
 
@@ -100,7 +99,9 @@ class _SelectionModalState extends State<SelectionModal> {
   @override
   void initState() {
     super.initState();
-    requestModel.requestMode = widget.admin ? RequestMode.TIMEBANK_REQUEST: RequestMode.PERSONAL_REQUEST;
+    requestModel.requestMode = widget.admin
+        ? RequestMode.TIMEBANK_REQUEST
+        : RequestMode.PERSONAL_REQUEST;
     widget.dataSource.forEach((item) {
       var newItem = {
         'value': item[widget.valueField],
@@ -115,7 +116,7 @@ class _SelectionModalState extends State<SelectionModal> {
     filterProjects();
   }
 
-  void filterProjects()  {
+  void filterProjects() {
     _localDataSourceWithState = [];
     widget.dataSource.forEach((item) {
       var newItem = {
@@ -189,11 +190,9 @@ class _SelectionModalState extends State<SelectionModal> {
                       Navigator.pop(context, null);
                     },
                     child: Text(
-                      "Cancel",
-                      style: Theme
-                          .of(context)
-                          .primaryTextTheme
-                          .button,
+                      AppLocalizations.of(context)
+                          .translate('shared', 'cancel'),
+                      style: Theme.of(context).primaryTextTheme.button,
                     ),
                   ),
                   RaisedButton.icon(
@@ -201,25 +200,30 @@ class _SelectionModalState extends State<SelectionModal> {
                       widget.saveButtonIcon ?? Icons.save,
                       size: 20.0,
                     ),
-                    onPressed: _localDataSourceWithState.where((item) => item['checked']).length > widget.maxLength ? null :
-                        (){
-                      var selectedValuesObjectList = _localDataSourceWithState
-                          .where((item) => item['checked'])
-                          .toList();
-                      var selectedValues = [];
-                      selectedValuesObjectList.forEach((item) {
-                        selectedValues.add(item['value']);
-                      });
-                      Navigator.pop(context, selectedValues);
-                    },
-                    color: widget.saveButtonColor ?? Theme.of(context).primaryColor,
+                    onPressed: _localDataSourceWithState
+                                .where((item) => item['checked'])
+                                .length >
+                            widget.maxLength
+                        ? null
+                        : () {
+                            var selectedValuesObjectList =
+                                _localDataSourceWithState
+                                    .where((item) => item['checked'])
+                                    .toList();
+                            var selectedValues = [];
+                            selectedValuesObjectList.forEach((item) {
+                              selectedValues.add(item['value']);
+                            });
+                            Navigator.pop(context, selectedValues);
+                          },
+                    color: widget.saveButtonColor ??
+                        Theme.of(context).primaryColor,
                     textColor: widget.saveButtonTextColor ?? Colors.white,
                     label: Text(
-                      widget.saveButtonText ?? 'Done',
-                      style: Theme
-                          .of(context)
-                          .primaryTextTheme
-                          .button,
+                      widget.saveButtonText ??
+                          AppLocalizations.of(context)
+                              .translate('create_request', 'done'),
+                      style: Theme.of(context).primaryTextTheme.button,
                     ),
                   )
                 ]),
@@ -233,7 +237,7 @@ class _SelectionModalState extends State<SelectionModal> {
     List<Widget> selectedOptions = [];
 
     var selectedValuesObjectList =
-    _localDataSourceWithState.where((item) => item['checked']).toList();
+        _localDataSourceWithState.where((item) => item['checked']).toList();
     var selectedValues = [];
     selectedValuesObjectList.forEach((item) {
       selectedValues.add(item['value']);
@@ -247,7 +251,9 @@ class _SelectionModalState extends State<SelectionModal> {
               maxWidth: MediaQuery.of(context).size.width - 80.0),
           child: Text(existingItem['text'], overflow: TextOverflow.ellipsis),
         ),
-        deleteButtonTooltipMessage: widget.deleteButtonTooltipText ?? 'Tap to delete this item',
+        deleteButtonTooltipMessage: widget.deleteButtonTooltipText ??
+            AppLocalizations.of(context)
+                .translate('create_request', 'tap_to_delete'),
         deleteIcon: widget.deleteIcon ?? Icon(Icons.cancel),
         deleteIconColor: widget.deleteIconColor ?? Colors.grey,
         onDeleted: () {
@@ -258,34 +264,36 @@ class _SelectionModalState extends State<SelectionModal> {
     });
     return selectedOptions.length > 0
         ? Container(
-      padding: EdgeInsets.all(10.0),
-      color: widget.selectedOptionsBoxColor ?? Colors.grey.shade400,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          new Text(
-            widget.selectedOptionsInfoText ?? 'Currently selected ${selectedOptions.length} items (tap to remove)', // use languageService here
-            style: TextStyle(
-                color: widget.selectedOptionsInfoTextColor ?? Colors.black87,
-                fontWeight: FontWeight.bold),
-          ),
-          ConstrainedBox(
-              constraints: new BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height / 8,
-              ),
-              child: Scrollbar(
-                child: SingleChildScrollView(
-                    child: Wrap(
-                      spacing: 8.0, // gap between adjacent chips
-                      runSpacing: 0.4, // gap between lines
-                      alignment: WrapAlignment.start,
-                      children: selectedOptions,
+            padding: EdgeInsets.all(10.0),
+            color: widget.selectedOptionsBoxColor ?? Colors.grey.shade400,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                new Text(
+                  widget.selectedOptionsInfoText ??
+                      '${AppLocalizations.of(context).translate('create_request', 'selected_hint')} ${selectedOptions.length}  ${AppLocalizations.of(context).translate('create_request', 'tap_to_remove')}', // use languageService here
+                  style: TextStyle(
+                      color:
+                          widget.selectedOptionsInfoTextColor ?? Colors.black87,
+                      fontWeight: FontWeight.bold),
+                ),
+                ConstrainedBox(
+                    constraints: new BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height / 8,
+                    ),
+                    child: Scrollbar(
+                      child: SingleChildScrollView(
+                          child: Wrap(
+                        spacing: 8.0, // gap between adjacent chips
+                        runSpacing: 0.4, // gap between lines
+                        alignment: WrapAlignment.start,
+                        children: selectedOptions,
+                      )),
                     )),
-              )),
-        ],
-      ),
-    )
+              ],
+            ),
+          )
         : new Container();
   }
 
@@ -299,7 +307,7 @@ class _SelectionModalState extends State<SelectionModal> {
                 item['checked']
                     ? widget.checkedIcon ?? Icons.check_box
                     : widget.uncheckedIcon ?? Icons.check_box_outline_blank,
-                color:  widget.checkBoxColor ?? Theme.of(context).primaryColor),
+                color: widget.checkBoxColor ?? Theme.of(context).primaryColor),
             scale: 1.5,
           ),
           onTap: () {
@@ -311,24 +319,23 @@ class _SelectionModalState extends State<SelectionModal> {
     });
     return ListView(children: options);
   }
+
   Widget requestSwitch() {
     if (widget.admin) {
       return Container(
           margin: EdgeInsets.only(top: 10, bottom: 10),
           width: double.infinity,
           child: CupertinoSegmentedControl<int>(
-            selectedColor: Theme
-                .of(context)
-                .primaryColor,
+            selectedColor: Theme.of(context).primaryColor,
             children: {
               0: Text(
-                AppLocalizations.of(context).translate(
-                    'shared', 'timebank_projects'),
+                AppLocalizations.of(context)
+                    .translate('shared', 'timebank_projects'),
                 style: TextStyle(fontSize: 12.0),
               ),
               1: Text(
-                AppLocalizations.of(context).translate(
-                    'shared', 'personal_projects'),
+                AppLocalizations.of(context)
+                    .translate('shared', 'personal_projects'),
                 style: TextStyle(fontSize: 12.0),
               ),
             },
@@ -342,12 +349,10 @@ class _SelectionModalState extends State<SelectionModal> {
                   print("$sharedValue -- $val");
                   if (val == 0) {
                     print("TIMEBANK___REQUEST");
-                    requestModel.requestMode =
-                        RequestMode.TIMEBANK_REQUEST;
+                    requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
                   } else {
                     print("PERSONAL___REQUEST");
-                    requestModel.requestMode =
-                        RequestMode.PERSONAL_REQUEST;
+                    requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
                   }
                   filterProjects();
                   sharedValue = val;
@@ -360,6 +365,7 @@ class _SelectionModalState extends State<SelectionModal> {
       return Container();
     }
   }
+
   Widget _buildSearchText() {
     return Container(
 //      color: widget.searchBoxColor ?? Theme.of(context).primaryColor,
@@ -369,38 +375,41 @@ class _SelectionModalState extends State<SelectionModal> {
         children: <Widget>[
           Container(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  requestSwitch(),
-                  TextField(
-                    controller: _controller,
-                    keyboardAppearance: Brightness.light,
-                    onChanged: searchOperation,
-                    decoration: new InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: 8.0, right: 8.0, bottom: 10.0),
-                        border: new OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(
-                            const Radius.circular(6.0),
-                          ),
-                        ),
-                        filled: true,
-                        hintText: widget.searchBoxHintText ?? "Search...",
-                        fillColor: widget.searchBoxFillColor ?? Colors.white,
-                        suffix: SizedBox(
-                            height: 15.0,
-                            child: IconButton(
-                              padding: EdgeInsets.only(top: 8),
-                              icon: widget.searchBoxIcon ?? Icon(Icons.clear),
-                              onPressed: () {
-                                _controller.clear();
-                                searchOperation('');
-                              },
-                              tooltip: widget.searchBoxToolTipText ?? 'Clear',
-                            ))),
-                  )
-                ],
-              )),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              requestSwitch(),
+              TextField(
+                controller: _controller,
+                keyboardAppearance: Brightness.light,
+                onChanged: searchOperation,
+                decoration: new InputDecoration(
+                    contentPadding:
+                        EdgeInsets.only(left: 8.0, right: 8.0, bottom: 10.0),
+                    border: new OutlineInputBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(6.0),
+                      ),
+                    ),
+                    filled: true,
+                    hintText: widget.searchBoxHintText ??
+                        "${AppLocalizations.of(context).translate('requests', 'search')}...",
+                    fillColor: widget.searchBoxFillColor ?? Colors.white,
+                    suffix: SizedBox(
+                        height: 15.0,
+                        child: IconButton(
+                          padding: EdgeInsets.only(top: 8),
+                          icon: widget.searchBoxIcon ?? Icon(Icons.clear),
+                          onPressed: () {
+                            _controller.clear();
+                            searchOperation('');
+                          },
+                          tooltip: widget.searchBoxToolTipText ??
+                              AppLocalizations.of(context)
+                                  .translate('shared', 'clear'),
+                        ))),
+              )
+            ],
+          )),
         ],
       ),
     );

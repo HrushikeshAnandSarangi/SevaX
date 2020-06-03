@@ -8,8 +8,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/core.dart';
 
-import '../../flavor_config.dart';
-
 class SelectTimeBankForNewChat extends StatefulWidget {
   @override
   SelectTimeBankForNewChatState createState() =>
@@ -22,9 +20,8 @@ class SelectTimeBankForNewChatState extends State<SelectTimeBankForNewChat> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          FlavorConfig.values.timebankName == "Yang 2020"
-              ? "Select Yang Gang Chapter"
-              : AppLocalizations.of(context).translate('members','select_timebank'),
+          AppLocalizations.of(context)
+              .translate('select_member', 'select_timebank'),
           style: TextStyle(fontSize: 18),
         ),
       ),

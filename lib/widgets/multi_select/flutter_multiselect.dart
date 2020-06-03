@@ -215,44 +215,44 @@ class MultiSelect extends FormField<dynamic> {
 //                                        color: maxLengthIndicatorColor,
 //                                        fontSize: 13.0),
 //                                  )
-                              ]
-                          ),
+                                    ]),
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                Icon(
+                                  selectIcon,
+                                  color: selectIconColor ??
+                                      Theme.of(state.context).primaryColor,
+                                  size: 30.0,
+                                )
+                              ],
+                            )
+                          ],
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          Icon(
-                            selectIcon,
-                            color: selectIconColor ?? Theme.of(state.context).primaryColor,
-                            size: 30.0,
-                          )
-                        ],
-                      )
+                      (state.value == null ||
+                              state.value == '' ||
+                              (state.value != null && state.value.length == 0))
+                          ? new Container(
+                              margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 6.0),
+                              child: Text(
+                                hintText,
+                                style: TextStyle(
+                                  color: hintTextColor,
+                                ),
+                              ),
+                            )
+                          : Wrap(
+                              spacing: 8.0, // gap between adjacent chips
+                              runSpacing: 1.0, // gap between lines
+                              children:
+                                  _buildSelectedOptions(state.value, state),
+                            )
                     ],
-                  ),
-                ),
-                (state.value == null || state.value == '' || (state.value != null &&  state.value.length == 0))
-                    ? new Container(
-                  margin:
-                  EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 6.0),
-                  child: Text(
-                    hintText,
-                    style: TextStyle(
-                      color: hintTextColor,
-                    ),
-                  ),
-                ):
-                Wrap(
-                  spacing: 8.0, // gap between adjacent chips
-                  runSpacing: 1.0, // gap between lines
-                  children:
-                  _buildSelectedOptions(state.value, state),
-                )
-
-              ],
-            ));
-      });
+                  ));
+            });
 }

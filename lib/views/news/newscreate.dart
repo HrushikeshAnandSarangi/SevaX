@@ -28,7 +28,7 @@ class NewsCreate extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context).translate('create_feed','title'),
+            AppLocalizations.of(context).translate('create_feed', 'title'),
             style: TextStyle(fontSize: 18),
           ),
           centerTitle: false,
@@ -123,6 +123,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     await FirestoreManager.createNews(newsObject: newsObject);
     globals.newsImageURL = null;
     globals.newsDocumentURL = null;
+    globals.newsDocumentName = null;
     if (dialogContext != null) {
       Navigator.pop(dialogContext);
     }
@@ -173,7 +174,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(""),
                   Container(
                     margin: EdgeInsets.all(20),
                     child: Column(
@@ -187,8 +187,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             decoration: InputDecoration(
                               labelStyle: TextStyle(color: Colors.grey),
                               alignLabelWithHint: false,
-                              hintText: AppLocalizations.of(context).translate('create_feed','hint'),
-                              labelText: AppLocalizations.of(context).translate('create_feed','placeholder'),
+                              hintText: AppLocalizations.of(context)
+                                  .translate('create_feed', 'hint'),
+                              labelText: AppLocalizations.of(context)
+                                  .translate('create_feed', 'placeholder'),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(12.0),
@@ -230,7 +232,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             maxLines: 5,
                             validator: (value) {
                               if (value.isEmpty) {
-                                return AppLocalizations.of(context).translate('create_feed','empty_err');
+                                return AppLocalizations.of(context)
+                                    .translate('create_feed', 'empty_err');
                               }
                               newsObject.subheading = value;
                               // print("object");
@@ -271,25 +274,20 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   ),
                 ],
               ),
+              SizedBox(height: 40),
 
-              /*kghjksghjgjgb
-              * fjjkkkkmvnjnvnvk
-              * jfujfyj
-              * hfjy*/
               Container(
-                width: 150,
-                alignment: Alignment(0, 1),
-                padding: const EdgeInsets.only(top: 40.0),
                 child: RaisedButton(
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
-                          content:
-                              Text(AppLocalizations.of(context).translate('shared','check_internet')),
+                          content: Text(AppLocalizations.of(context)
+                              .translate('shared', 'check_internet')),
                           action: SnackBarAction(
-                            label: AppLocalizations.of(context).translate('shared','dismiss'),
+                            label: AppLocalizations.of(context)
+                                .translate('shared', 'dismiss'),
                             onPressed: () =>
                                 Scaffold.of(context).hideCurrentSnackBar(),
                           ),
@@ -306,7 +304,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             builder: (createDialogContext) {
                               dialogContext = createDialogContext;
                               return AlertDialog(
-                                title: Text(AppLocalizations.of(context).translate('create_feed','progress')),
+                                title: Text(AppLocalizations.of(context)
+                                    .translate('create_feed', 'progress')),
                                 content: LinearProgressIndicator(),
                               );
                             });
@@ -323,13 +322,15 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     } else {
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(AppLocalizations.of(context).translate('create_feed','location_notadded')),
+                          content: Text(AppLocalizations.of(context)
+                              .translate('create_feed', 'location_notadded')),
                         ),
                       );
                     }
                   },
                   child: Text(
-                    AppLocalizations.of(context).translate('create_feed','create_button'),
+                    AppLocalizations.of(context)
+                        .translate('create_feed', 'create_button'),
                     style: Theme.of(context).primaryTextTheme.button,
                   ),
                 ),
@@ -382,20 +383,24 @@ class NewsCreateFormState extends State<NewsCreateForm> {
       padding: EdgeInsets.only(bottom: 20.0),
       child: DropdownButtonFormField<DataModel>(
         decoration: InputDecoration.collapsed(
-          hintText: '+ ${AppLocalizations.of(context).translate('create_feed','category')}',
+          hintText:
+              '+ ${AppLocalizations.of(context).translate('create_feed', 'category')}',
           hintStyle: Theme.of(context).textTheme.title.copyWith(
                 color: Theme.of(context).hintColor,
               ),
         ),
         validator: (value) {
           if (value == null) {
-            return AppLocalizations.of(context).translate('create_feed','select_category');
+            return AppLocalizations.of(context)
+                .translate('create_feed', 'select_category');
           }
         },
         items: dataList.map((dataModel) {
           if (dataModel.runtimeType == EntityModel) {
             return DropdownMenuItem<DataModel>(
-              child: Text(AppLocalizations.of(context).translate('homepage','general'), style: textStyle),
+              child: Text(
+                  AppLocalizations.of(context).translate('homepage', 'general'),
+                  style: textStyle),
               value: dataModel,
             );
           } else if (dataModel.runtimeType == TimebankModel) {
@@ -419,7 +424,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
           }
           return DropdownMenuItem<DataModel>(
             child: Text(
-              AppLocalizations.of(context).translate('homepage','undefined'),
+              AppLocalizations.of(context).translate('homepage', 'undefined'),
               style: textStyle,
             ),
             value: null,

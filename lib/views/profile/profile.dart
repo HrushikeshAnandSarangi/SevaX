@@ -182,7 +182,8 @@ class _ProfilePageState extends State<ProfilePage>
                           splashColor: Colors.transparent,
                           onTap: navigateToSettings,
                           child: Hero(
-                            tag: AppLocalizations.of(context).translate('profile','image_hint'),
+                            tag: AppLocalizations.of(context)
+                                .translate('profile', 'image_hint'),
                             child: Container(
                               padding: EdgeInsets.all(1),
                               decoration: BoxDecoration(
@@ -220,7 +221,8 @@ class _ProfilePageState extends State<ProfilePage>
                             children: [
                               !firebaseUser.isEmailVerified
                                   ? TextSpan(
-                                      text: '\n${AppLocalizations.of(context).translate('profile','verify_email')}',
+                                      text:
+                                          '\n${AppLocalizations.of(context).translate('profile', 'verify_email')}',
                                       style: TextStyle(
                                         color: firebaseUser.isEmailVerified
                                             ? Colors.black
@@ -245,10 +247,11 @@ class _ProfilePageState extends State<ProfilePage>
                             if (connResult == ConnectivityResult.none) {
                               Scaffold.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(
-                                      AppLocalizations.of(context).translate('shared','check_internet')),
+                                  content: Text(AppLocalizations.of(context)
+                                      .translate('shared', 'check_internet')),
                                   action: SnackBarAction(
-                                    label: AppLocalizations.of(context).translate('shared','dismiss'),
+                                    label: AppLocalizations.of(context)
+                                        .translate('shared', 'dismiss'),
                                     onPressed: () => Scaffold.of(context)
                                         .hideCurrentSnackBar(),
                                   ),
@@ -283,7 +286,8 @@ class _ProfilePageState extends State<ProfilePage>
                             Padding(
                               padding: EdgeInsets.only(left: 10),
                               child: Text(
-                                AppLocalizations.of(context).translate('profile','select_timebank'),
+                                AppLocalizations.of(context)
+                                    .translate('profile', 'select_timebank'),
                                 style: TextStyle(fontSize: 18),
                               ),
                             ),
@@ -291,7 +295,8 @@ class _ProfilePageState extends State<ProfilePage>
                               icon: Icon(Icons.add_circle_outline),
                               onPressed: () async {
                                 var timebankAdvisory =
-                                AppLocalizations.of(context).translate('profile','dialog_text');
+                                    AppLocalizations.of(context)
+                                        .translate('profile', 'dialog_text');
                                 Map<String, bool> onActivityResult =
                                     await showTimebankAdvisory(
                                         dialogTitle: timebankAdvisory);
@@ -326,21 +331,6 @@ class _ProfilePageState extends State<ProfilePage>
                           elevation: 2,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
-                            // child: ListView.separated(
-                            //   padding: EdgeInsets.all(0),
-                            //   shrinkWrap: true,
-                            //   itemCount: communities.length,
-                            //   physics: NeverScrollableScrollPhysics(),
-                            //   itemBuilder: (context, index) {
-                            //     return CommunityCard(
-                            //       community: communities[index],
-                            //       selected: communities[index].id ==
-                            //           user.currentCommunity,
-                            //     );
-                            //   },
-                            //   separatorBuilder: (context, index) {
-                            //     return Divider();
-                            //   },
                           ),
                           child: StreamBuilder<List<Widget>>(
                             stream: _profileBloc.communities,
@@ -351,7 +341,8 @@ class _ProfilePageState extends State<ProfilePage>
                               if (snapshot.hasError)
                                 return Center(
                                     child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
+                                  padding: const EdgeInsets.fromLTRB(
+                                      12.0, 12.0, 12.0, 0),
                                   child: Text(snapshot.error),
                                 ));
                               return Container(
@@ -365,7 +356,6 @@ class _ProfilePageState extends State<ProfilePage>
                         ),
                         SizedBox(height: 10),
                         getHelpSection,
-                        SizedBox(height: 10),
                         InkWell(
                           onTap: () {
                             Navigator.of(context).push(
@@ -385,7 +375,8 @@ class _ProfilePageState extends State<ProfilePage>
                                   Padding(
                                     padding: const EdgeInsets.only(left: 15),
                                     child: Text(
-                                      AppLocalizations.of(context).translate('profile','timezone'),
+                                      AppLocalizations.of(context)
+                                          .translate('profile', 'timezone'),
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black,
@@ -423,7 +414,8 @@ class _ProfilePageState extends State<ProfilePage>
                                   Padding(
                                     padding: const EdgeInsets.only(left: 15),
                                     child: Text(
-                                      AppLocalizations.of(context).translate('settings','language'),
+                                      AppLocalizations.of(context)
+                                          .translate('settings', 'language'),
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black,
@@ -444,7 +436,7 @@ class _ProfilePageState extends State<ProfilePage>
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                 ],
               ),
             )
@@ -454,7 +446,8 @@ class _ProfilePageState extends State<ProfilePage>
                 children: <Widget>[
                   CircularProgressIndicator(),
                   SizedBox(height: 5),
-                  Text(AppLocalizations.of(context).translate('profile','loading')),
+                  Text(AppLocalizations.of(context)
+                      .translate('profile', 'loading')),
                 ],
               ),
             ),
@@ -489,7 +482,7 @@ class _ProfilePageState extends State<ProfilePage>
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('shared','cancel'),
+                  AppLocalizations.of(context).translate('shared', 'cancel'),
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -500,7 +493,7 @@ class _ProfilePageState extends State<ProfilePage>
               ),
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('profile','proceed'),
+                  AppLocalizations.of(context).translate('profile', 'proceed'),
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -517,7 +510,6 @@ class _ProfilePageState extends State<ProfilePage>
   Widget get getHelpSection {
     return Column(
       children: <Widget>[
-        SizedBox(height: 10),
         InkWell(
           onTap: () {
             Navigator.of(context).push(
@@ -537,7 +529,7 @@ class _ProfilePageState extends State<ProfilePage>
                   Padding(
                     padding: const EdgeInsets.only(left: 15),
                     child: Text(
-                      AppLocalizations.of(context).translate('profile','help'),
+                      AppLocalizations.of(context).translate('profile', 'help'),
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
@@ -865,8 +857,10 @@ class _ProfilePageState extends State<ProfilePage>
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text(AppLocalizations.of(context).translate('profile','sign_out')),
-          content: Text(AppLocalizations.of(context).translate('profile','acknowledge')),
+          title: Text(
+              AppLocalizations.of(context).translate('profile', 'sign_out')),
+          content: Text(
+              AppLocalizations.of(context).translate('profile', 'acknowledge')),
           actions: <Widget>[
             RaisedButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
@@ -889,7 +883,8 @@ class _ProfilePageState extends State<ProfilePage>
             FlatButton(
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                 child: Text(
-                  AppLocalizations.of(context).translate('profile','will_do_later'),
+                  AppLocalizations.of(context)
+                      .translate('profile', 'will_do_later'),
                   style: TextStyle(fontSize: 16, color: Colors.red),
                 ),
                 onPressed: () => Navigator.of(context).pop()),

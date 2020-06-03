@@ -68,7 +68,8 @@
     "individual_offer": "Oferta individual",
     "one_to_many": "Um para muitos",
     "timebank_projects": "Projetos do Timebank",
-    "personal_projects": "Projetos pessoais"
+    "personal_projects": "Projetos pessoais",
+    "clear": "Claro"
   },
   "signup": {
     "add_photo": "Adicionar foto",
@@ -311,14 +312,15 @@
     "actions_not_allowed": "Ações não permitidas. Entre em contato com o administrador",
     "failed": "Falha na cobrança, clique abaixo para configurar a cobrança",
     "contact_admin": "Ação não permitida, entre em contato com o administrador",
-    "configure": "Configurar cobrança "
+    "configure": "Configurar cobrança ",
+    "cancel": "cancelar"
   },
   "create_feed": {
     "title": "Criar publicação ",
     "hint": "Texto, URL e Hashtags",
     "placeholder": "O que você gostaria de compartilhar*",
     "empty_err": "Digite algum texto",
-    "progress": "Criando publicação ",
+    "progress": "Criando postagem",
     "location_notadded": "Local não adicionado",
     "create_button": "Criar publicação",
     "category": "Categoria",
@@ -326,8 +328,19 @@
     "image_hint": "Créditos fotográficos",
     "change": "Alterar imagem",
     "add": "Adicionar imagem",
-    "camera" : "Camera",
-    "gallery": "Galeria"
+    "change_attachment": "alterar anexo",
+    "add_attachment": "Adicionar imagem / documento",
+    "camera": "Camera",
+    "gallery": "Galeria",
+    "size_alert": "Arquivos com mais de 10 MB não são permitidos",
+    "size_alert_titile": "Alerta de arquivo grande",
+    "update_post": "Atualizar postagem",
+    "update_progress": "Atualizando postagem",
+    "imagehint": "Crédito da foto"
+  },
+  "invitations": {
+    "invitation_email_title": "Impressionante! Você está convidado a participar de um Timebank",
+    "email_body": "<p>Você está convidado a baixar o aplicativo SevaX e ingressar no Timebank ***. O aplicativo SevaX usa o Timebanking, um sistema baseado em reciprocidade, em que os membros da comunidade se ajudam em troca de créditos Seva. Por favor, clique neste <a href=\"###;&nbsp;\"> link </a> para participar.</p>"
   },
   "projects": {
     "title": "Projetos",
@@ -655,7 +668,7 @@
     "start_date_err": "Mencione a data de início e término da solicitação",
     "add_location": "Por favor, adicione o local ao seu pedido",
     "progress": "Criando solicitação ..",
-    "not_enough_seva": "Criando solicitação ..",
+    "not_enough_seva": "Seus créditos seva não são suficientes para criar a solicitação.",
     "ok": "Está bem",
     "assign_members": "Designar para voluntários",
     "selected": "membros selecionados",
@@ -679,7 +692,13 @@
     "select_timebank": "Selecione Timebank",
     "search_member": "Pesquisar membros",
     "atleast_3": "A pesquisa requer no mínimo 3 caracteres",
-    "no_user": "Nenhum usuário encontrado"
+    "no_user": "Nenhum usuário encontrado",
+    "add_to_project": "Atribuir ao projeto",
+    "selected_hint": "Atualmente selecionado",
+    "tap_to_remove": "Itens (toque para remover)",
+    "tap_to_delete": "Toque para excluir este item",
+    "assign_err_hint": "Atribua a um projeto",
+    "tap_to_select": "Toque para selecionar um ou mais..."
   },
   "edit_group": {
     "add_members": "Adicionar membros",
@@ -887,5 +906,38 @@
   },
   "info_window": {
     "mapper": "i_button_info_pt"
+  },
+  "switching_timebank": {
+    "switch_timebank": "Mudando o Timebank",
+    "updating_timebank": "Atualizando o Timebank"
+  },
+  "image_picker": {
+    "camera": "Câmera",
+    "gallery": "Galeria",
+    "pdf_document": "Documento PDF"
+  },
+  "search_page": {
+    "search": "Procurar",
+    "feeds": "Publicações",
+    "requests": "solicitações de",
+    "offers": "Ofertas",
+    "projects": "Projetos",
+    "groups": "Grupos",
+    "members": "Membros"
+  },
+  "validation_errors": {
+    "title_error": "Por favor, indique o assunto da sua oferta",
+    "generic_error": "Por favor, indique algum texto",
+    "class_hours": "Por favor, indique as horas necessárias para a classe",
+    "hours_not_int": "Número introduzido de horas não é válido",
+    "prepration_time_error": "Por favor, indique o seu tempo preperation",
+    "location_error": "Por favor selecionar o local",
+    "size_of_class_not_int": "Tamanho da classe não pode estar em decimal",
+    "size_of_class_error": "Por favor, indique tamanho válido de classe",
+    "offer_credit_error": "Nós não podemos publicar esta classe. Há créditos insuficientes da classe. Por favor, revise o tempo Prep ou o número de alunos e submeter a oferta novamente"
+  },
+  "select_member": {
+    "select_timebank": "Selecione Timebank",
+    "select_volunteer": "Selecionar voluntário"
   }
 }

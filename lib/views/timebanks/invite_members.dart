@@ -76,8 +76,10 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       appBar: AppBar(
         title: Text(
           FlavorConfig.values.timebankName == "Yang 2020"
-              ? AppLocalizations.of(context).translate('members','yang_yang_codes')
-              : AppLocalizations.of(context).translate('members','invite_members'),
+              ? AppLocalizations.of(context)
+                  .translate('members', 'yang_yang_codes')
+              : AppLocalizations.of(context)
+                  .translate('members', 'invite_members'),
           style: TextStyle(
             fontSize: 18,
           ),
@@ -140,7 +142,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                     borderRadius: new BorderRadius.circular(25.7)),
-                hintText: AppLocalizations.of(context).translate('members','invite_via_email'),
+                hintText: AppLocalizations.of(context)
+                    .translate('members', 'invite_via_email'),
                 hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
           ),
         ),
@@ -149,7 +152,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           child: Container(
             height: 25,
             child: Text(
-              AppLocalizations.of(context).translate('members','members'),
+              AppLocalizations.of(context).translate('members', 'members'),
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
@@ -167,7 +170,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     child: Row(
                       children: <Widget>[
                         Text(
-                          AppLocalizations.of(context).translate('members','invite_via_code'),
+                          AppLocalizations.of(context)
+                              .translate('members', 'invite_via_code'),
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -198,7 +202,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         ),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text(AppLocalizations.of(context).translate('members','please_try_later'));
+            return Text(AppLocalizations.of(context)
+                .translate('members', 'please_try_later'));
           }
           if (!snapshot.hasData) {
             return Center(
@@ -210,8 +215,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             );
           }
           List<UserModel> userlist = snapshot.data;
-          userlist.removeWhere((user) =>
-              user.sevaUserID == SevaCore.of(context).loggedInUser.sevaUserID);
+          if (userlist.length > 1) {
+            userlist.removeWhere((user) =>
+                user.sevaUserID ==
+                SevaCore.of(context).loggedInUser.sevaUserID);
+          }
 
           print("user list ${snapshot.data}");
           print("user  ${userlist}");
@@ -225,7 +233,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               padding: const EdgeInsets.all(16.0),
               child: Center(
                 child: searchTextController.text.length > 1
-                    ? Text("${searchTextController.text} ${AppLocalizations.of(context).translate('members','not_found')}")
+                    ? Text(
+                        "${searchTextController.text} ${AppLocalizations.of(context).translate('members', 'not_found')}")
                     : Container(),
               ),
             );
@@ -321,7 +330,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }) {
     return RaisedButton(
       onPressed: () async {
-        inivitationManager.showProgress(title: AppLocalizations.of(context).translate('members','sending_invitation'));
+        inivitationManager.showProgress(
+            title: AppLocalizations.of(context)
+                .translate('members', 'sending_invitation'));
         await inivitationManager.inviteMemberToTimebankViaLink(
           invitation: InvitationViaLink.createInvitation(
             timebankTitle: timebankModel.name,
@@ -330,11 +341,12 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             inviteeEmail: inviteeEmail,
             communityId: SevaCore.of(context).loggedInUser.currentCommunity,
           ),
+          context: context,
         );
         inivitationManager.hideProgress();
         setState(() {});
       },
-      child: Text(AppLocalizations.of(context).translate('members','invite')),
+      child: Text(AppLocalizations.of(context).translate('members', 'invite')),
       color: Colors.indigo,
       textColor: Colors.white,
       shape: StadiumBorder(),
@@ -346,7 +358,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Widget resendInvitation({InvitationViaLink invitation}) {
     return RaisedButton(
       onPressed: () async {
-        inivitationManager.showProgress(title: AppLocalizations.of(context).translate('members','sending_invitation'));
+        inivitationManager.showProgress(
+            title: AppLocalizations.of(context)
+                .translate('members', 'sending_invitation'));
         await inivitationManager.resendInvitationToMember(
           invitation: invitation,
         );
@@ -355,7 +369,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         setState(() {});
       },
       child: Text(
-        AppLocalizations.of(context).translate('members','resend_invite'),
+        AppLocalizations.of(context).translate('members', 'resend_invite'),
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 10,
@@ -370,7 +384,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Widget gettigStatus() {
     return RaisedButton(
       onPressed: null,
-      child: Text(AppLocalizations.of(context).translate('members','dots')),
+      child: Text(AppLocalizations.of(context).translate('members', 'dots')),
       color: Colors.indigo,
       textColor: Colors.white,
       shape: StadiumBorder(),
@@ -411,7 +425,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                   title: Text(user.fullname,
                       style: TextStyle(
                           fontSize: 16.0, fontWeight: FontWeight.w700)),
-                  subtitle: Text(user.email),
+                  // subtitle: Text(user.email),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -432,7 +446,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                 });
                               }
                             : null,
-                        child: Text(isJoined ? AppLocalizations.of(context).translate('members','joined') : AppLocalizations.of(context).translate('members','add')),
+                        child: Text(isJoined
+                            ? AppLocalizations.of(context)
+                                .translate('members', 'joined')
+                            : AppLocalizations.of(context)
+                                .translate('members', 'add')),
                         color: FlavorConfig.values.theme.primaryColor,
                         textColor: Colors.white,
                         shape: StadiumBorder(),
@@ -467,7 +485,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Text(AppLocalizations.of(context).translate('members','no_codes')),
+                child: Text(AppLocalizations.of(context)
+                    .translate('members', 'no_codes')),
               ),
             );
           }
@@ -480,15 +499,18 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
                   TimebankCodeModel timebankCode = codeList.elementAt(index);
                   if (timebankCode.usersOnBoarded == null) {
-                    length = AppLocalizations.of(context).translate('members','no_yet_redeemed');
+                    length = AppLocalizations.of(context)
+                        .translate('members', 'no_yet_redeemed');
                   } else {
                     if (timebankCode.usersOnBoarded.length == 1) {
-                      length = AppLocalizations.of(context).translate('members','by_1');
+                      length = AppLocalizations.of(context)
+                          .translate('members', 'by_1');
                     } else if (timebankCode.usersOnBoarded.length > 1) {
                       length =
-                          "${AppLocalizations.of(context).translate('members','by_n')} ${timebankCode.usersOnBoarded.length} ${AppLocalizations.of(context).translate('members','users')}";
+                          "${AppLocalizations.of(context).translate('members', 'by_n')} ${timebankCode.usersOnBoarded.length} ${AppLocalizations.of(context).translate('members', 'users')}";
                     } else {
-                      length = AppLocalizations.of(context).translate('members','no_yet_redeemed');
+                      length = AppLocalizations.of(context)
+                          .translate('members', 'no_yet_redeemed');
                     }
                   }
                   return GestureDetector(
@@ -501,16 +523,20 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(FlavorConfig.values.timebankName == "Yang 2020"
-                                ? AppLocalizations.of(context).translate('members','yang_code') +
+                                ? AppLocalizations.of(context)
+                                        .translate('members', 'yang_code') +
                                     timebankCode.timebankCode
-                                : AppLocalizations.of(context).translate('members','timebank_code') +
+                                : AppLocalizations.of(context)
+                                        .translate('members', 'timebank_code') +
                                     timebankCode.timebankCode),
                             Text(length),
                             Text(
                               DateTime.now().millisecondsSinceEpoch >
                                       timebankCode.validUpto
-                                  ? AppLocalizations.of(context).translate('members','expired')
-                                  : AppLocalizations.of(context).translate('members','active'),
+                                  ? AppLocalizations.of(context)
+                                      .translate('members', 'expired')
+                                  : AppLocalizations.of(context)
+                                      .translate('members', 'active'),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -522,7 +548,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                   child: Container(
                                     margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
                                     child: Text(
-                                      AppLocalizations.of(context).translate('members','share_code'),
+                                      AppLocalizations.of(context)
+                                          .translate('members', 'share_code'),
                                       style: TextStyle(color: Colors.blue),
                                     ),
                                   ),
@@ -555,7 +582,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
   String shareText(TimebankCodeModel timebankCode) {
     var text =
-        "${SevaCore.of(context).loggedInUser.fullname} ${AppLocalizations.of(context).translate('members','invited_you')} \"${timebankModel.name}\" ${AppLocalizations.of(context).translate('members','invite_text')} \"${timebankCode.timebankCode}\" ${AppLocalizations.of(context).translate('members','prompt_text')}";
+        "${SevaCore.of(context).loggedInUser.fullname} ${AppLocalizations.of(context).translate('members', 'invited_you')} \"${timebankModel.name}\" ${AppLocalizations.of(context).translate('members', 'invite_text')} \"${timebankCode.timebankCode}\" ${AppLocalizations.of(context).translate('members', 'prompt_text')}";
     return text;
   }
 
@@ -592,10 +619,12 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           false, // dialog is dismissible with a tap on the barrier
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context).translate('members','code_generated')),
+          title: Text(AppLocalizations.of(context)
+              .translate('members', 'code_generated')),
           content: new Row(
             children: <Widget>[
-              Text(timebankCode + AppLocalizations.of(context).translate('members','is_code')),
+              Text(timebankCode +
+                  AppLocalizations.of(context).translate('members', 'is_code')),
             ],
           ),
           actions: <Widget>[
@@ -604,7 +633,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
               child: Text(
-                AppLocalizations.of(context).translate('members','publish_code'),
+                AppLocalizations.of(context)
+                    .translate('members', 'publish_code'),
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                 ),
@@ -624,7 +654,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             ),
             FlatButton(
               child: Text(
-                AppLocalizations.of(context).translate('shared','cancel'),
+                AppLocalizations.of(context).translate('shared', 'cancel'),
                 style: TextStyle(color: Colors.red, fontSize: dialogButtonSize),
               ),
               onPressed: () {

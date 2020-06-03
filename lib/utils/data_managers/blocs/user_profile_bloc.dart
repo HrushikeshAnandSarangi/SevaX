@@ -24,44 +24,45 @@ class UserProfileBloc {
 
   void getAllCommunities(context, UserModel userModel) async {
     if (userModel?.sevaUserID != null)
-    FirestoreManager.getUserForIdStream(
-      sevaUserId: userModel.sevaUserID,
-    ).listen((userModel) {
-      if (userModel.communities != null) {
-        List<Widget> community = [];
-        userModel.communities.forEach((id) async {
-          var value = await Firestore.instance
-              .collection("communities")
-              .document(id)
-              .get();
-          print('--->${value.documentID}   ${userModel.currentCommunity}');
-          community.add(
-            CommunityCard(
-              selected: userModel.currentCommunity == value.documentID,
-              community: CommunityModel(value.data),
-              onTap: () {
-                setDefaultCommunity(userModel.email, value.documentID, context);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SwitchTimebank(content : 'Switching Timebank' ),
-                  ),
-                );
-              },
-            ),
-          );
-          if (!_communities.isClosed) _communities.add(community);
-        });
-      } else {
-        if (!_communities.isClosed) _communities.addError('No Communities');
-      }
-      Future.delayed(
-        Duration(milliseconds: 300),
-        () {
-          if (!_communityLoaded.isClosed) _communityLoaded.add(true);
-        },
-      );
-    });
+      FirestoreManager.getUserForIdStream(
+        sevaUserId: userModel.sevaUserID,
+      ).listen((userModel) {
+        if (userModel.communities != null) {
+          List<Widget> community = [];
+          userModel.communities.forEach((id) async {
+            var value = await Firestore.instance
+                .collection("communities")
+                .document(id)
+                .get();
+            print('--->${value.documentID}   ${userModel.currentCommunity}');
+            community.add(
+              CommunityCard(
+                selected: userModel.currentCommunity == value.documentID,
+                community: CommunityModel(value.data),
+                onTap: () {
+                  setDefaultCommunity(
+                      userModel.email, value.documentID, context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SwitchTimebank(),
+                    ),
+                  );
+                },
+              ),
+            );
+            if (!_communities.isClosed) _communities.add(community);
+          });
+        } else {
+          if (!_communities.isClosed) _communities.addError('No Communities');
+        }
+        Future.delayed(
+          Duration(milliseconds: 300),
+          () {
+            if (!_communityLoaded.isClosed) _communityLoaded.add(true);
+          },
+        );
+      });
   }
 
   void setDefaultCommunity(

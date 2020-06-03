@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
-import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
@@ -19,7 +18,6 @@ import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
-import 'package:sevaexchange/views/timebanks/admin_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
@@ -78,15 +76,15 @@ class _HomeDashBoardState extends State<HomeDashBoard>
   @override
   Widget build(BuildContext context) {
     tabs = [
-      Tab(
-          text:
-          "${selectedCommunity != null ? selectedCommunity.name : ''} ${AppLocalizations.of(context).translate('main','timebank')}"),
-      Center(child: Tab(text: AppLocalizations.of(context).translate('main','feeds'))),
-      Tab(text: AppLocalizations.of(context).translate('main','projects')),
-      Tab(text: AppLocalizations.of(context).translate('main','requests')),
-      Tab(text: AppLocalizations.of(context).translate('main','offers')),
-      Tab(text: AppLocalizations.of(context).translate('main','about')),
-      Tab(text: AppLocalizations.of(context).translate('main','members'))
+      Tab(text: AppLocalizations.of(context).translate('main', 'timebank')),
+      Center(
+          child: Tab(
+              text: AppLocalizations.of(context).translate('main', 'feeds'))),
+      Tab(text: AppLocalizations.of(context).translate('main', 'projects')),
+      Tab(text: AppLocalizations.of(context).translate('main', 'requests')),
+      Tab(text: AppLocalizations.of(context).translate('main', 'offers')),
+      Tab(text: AppLocalizations.of(context).translate('main', 'about')),
+      Tab(text: AppLocalizations.of(context).translate('main', 'members'))
     ];
     log("home dashboard page build");
     final _user = BlocProvider.of<UserDataBloc>(context);
@@ -151,7 +149,8 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                         ),
                       ),
                     )
-                  : Text(AppLocalizations.of(context).translate('main','loading'));
+                  : Text(AppLocalizations.of(context)
+                      .translate('main', 'loading'));
             },
           ),
           actions: <Widget>[
@@ -205,7 +204,9 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                 isAdmin = true;
                 _timebankController = TabController(length: 9, vsync: this);
 
-                tabs.add(Tab(text: AppLocalizations.of(context).translate('main','manage')));
+                tabs.add(Tab(
+                    text: AppLocalizations.of(context)
+                        .translate('main', 'manage')));
                 tabs.add(
                   Container(
                     width: 35,

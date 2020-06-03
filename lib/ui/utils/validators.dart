@@ -44,18 +44,17 @@ class Validators {
   );
 }
 
+//keys for localisation
 class ValidationErrors {
-  static const String titleError = 'Please enter the subject of your offer';
-  static const String genericError = 'Please enter some text';
-  static const String classHours =
-      'Please enter the hours required for the class';
-  static const String hoursNotInt = 'Entered number of hours is not valid';
-  static const String preprationTimeError =
-      'Please enter your preperation time';
-  static const String locationError = 'Please select location';
-  static const String sizeOfClassIsNotInt = "Size of class can't be in decimal";
-  static const String sizeOfClassError = "Please enter valid size of class";
-  static const String offerCreditError = "We cannot publish this Class. There are insufficient credits from the class. Please revise the Prep time or the number of students and submit the offer again";
+  static const String titleError = 'title_error';
+  static const String genericError = 'generic_error';
+  static const String classHours = 'class_hours';
+  static const String hoursNotInt = 'hours_not_int';
+  static const String preprationTimeError = 'prepration_time_error';
+  static const String locationError = 'location_error';
+  static const String sizeOfClassIsNotInt = "size_of_class_not_int";
+  static const String sizeOfClassError = "size_of_class_error";
+  static const String offerCreditError = "offer_credit_error";
 
   // static const String titleError = 'Please enter the subject of your offer';
 }

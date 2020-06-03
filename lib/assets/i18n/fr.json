@@ -68,7 +68,8 @@
     "individual_offer": "Offre individuelle",
     "one_to_many": "Un à plusieurs",
     "timebank_projects": "Timebank Projects",
-    "personal_projects": "Projets personnels"
+    "personal_projects": "Projets personnels",
+    "clear": "Clair"
   },
   "signup": {
     "add_photo": "Ajouter une photo",
@@ -311,14 +312,15 @@
     "actions_not_allowed": "Actions non autorisées, veuillez contacter l'administrateur",
     "failed": "Échec de la facturation, cliquez ci-dessous pour configurer la facturation",
     "contact_admin": "Action non autorisée, veuillez contacter l'administrateur",
-    "configure": "Configurer la facturation"
+    "configure": "Configurer la facturation",
+    "cancel": "Annuler"
   },
   "create_feed": {
     "title": "Créer une publication",
     "hint": "Texte, URL et hashtags",
     "placeholder": "Que voudriez-vous partager?",
     "empty_err": "Veuillez saisir du texte",
-    "progress": "Votre publication est en cours",
+    "progress": "Création d'un article",
     "location_notadded": "Lieu non ajouté",
     "create_button": "Créer une publication",
     "category": "Catégorie",
@@ -326,8 +328,20 @@
     "image_hint": "Crédits photo",
     "change": "Changer l'image",
     "add": "Ajouter une image",
-    "camera" : "Camera",
-    "gallery": "Galerie"
+    "change_attachment": "changer la pièce jointe",
+    "add_attachment": "Ajouter une image / un document",
+    "camera": "Camera",
+    "gallery": "Galerie",
+    "size_alert": "Les fichiers de plus de 10 Mo ne sont pas autorisés",
+    "size_alert_title": "Alerte fichier volumineux"
+  },
+  "invitations": {
+    "invitation_email_title": "Impressionnant! Vous êtes invité à rejoindre une Timebank",
+    "size_alert_title": "Alerte fichier volumineux",
+    "update_post": "Mettre à jour le message",
+    "update_progress": "Mise à jour du message",
+    "imagehint": "Crédit photo",
+    "email_body": "<p>Vous êtes invité à télécharger l'application SevaX et à rejoindre la Timebank ***. L'application SevaX utilise Timebanking, un système basé sur la réciprocité où les membres de la communauté s'entraident en échange de crédits Seva. Veuillez cliquer sur ce <a href=\"###;&nbsp;\"> lien </a> pour vous inscrire.</p>"
   },
   "projects": {
     "title": "Projets",
@@ -655,7 +669,7 @@
     "start_date_err": "Mencione la fecha de inicio y finalización de la solicitud.",
     "add_location": "Agregue ubicación a su solicitud",
     "progress": "Creando solicitud ..",
-    "not_enough_seva": "Creando solicitud ..",
+    "not_enough_seva": "Vos crédits seva ne sont pas suffisants pour créer la demande.",
     "ok": "Okay",
     "assign_members": "Asignar a voluntarios",
     "selected": "miembros seleccionados",
@@ -679,7 +693,13 @@
     "select_timebank": "Select Timebank",
     "search_member": "Rechercher des membres",
     "atleast_3": "La recherche nécessite au moins 3 caractères",
-    "no_user": "Aucun utilisateur trouvé"
+    "no_user": "Aucun utilisateur trouvé",
+    "add_to_project": "Attribuer au projet",
+    "selected_hint": "Actuellement sélectionné",
+    "tap_to_remove": "articles (appuyez pour supprimer)",
+    "tap_to_delete": "Appuyez pour supprimer cet élément",
+    "assign_err_hint": "Veuillez attribuer à un projet",
+    "tap_to_select": "Appuyez pour sélectionner un ou plusieurs..."
   },
   "edit_group": {
     "add_members": "Añadir miembros",
@@ -887,5 +907,38 @@
   },
   "info_window": {
     "mapper": "i_button_info_fr"
+  },
+  "switching_timebank": {
+    "switch_timebank": "Changement de banque de temps",
+    "updating_timebank": "Mise à jour de Timebank"
+  },
+  "image_picker": {
+    "camera": "Caméra",
+    "gallery": "Galerie",
+    "pdf_document": "Document PDF"
+  },
+  "search_page": {
+    "search": "Chercher",
+    "feeds": "Fil d'actualité",
+    "requests": "Demandes",
+    "offers": "Des offres",
+    "projects": "Projets",
+    "groups": "Groupes",
+    "members": "Membres"
+  },
+  "validation_errors": {
+    "title_error": "S'il vous plaît entrer dans le sujet de votre offre",
+    "generic_error": "S'il vous plaît entrer un texte",
+    "class_hours": "S'il vous plaît entrer les heures requises pour la classe",
+    "hours_not_int": "Entré nombre d'heures n'est pas valide",
+    "prepration_time_error": "S'il vous plaît entrer votre temps preperation",
+    "location_error": "S'il vous plaît sélectionner l'emplacement",
+    "size_of_class_not_int": "Taille de la classe ne peut pas être en décimal",
+    "size_of_class_error": "S'il vous plaît entrer taille valide de classe",
+    "offer_credit_error": "Nous ne pouvons pas publier cette classe. Il n'y a pas suffisamment de crédits de la classe. S'il vous plaît réviser le temps de préparation ou le nombre d'étudiants et de soumettre l'offre à nouveau"
+  },
+  "select_member": {
+    "select_timebank": "Sélectionnez Timebank",
+    "select_volunteer": "Sélectionnez un volontaire"
   }
 }
