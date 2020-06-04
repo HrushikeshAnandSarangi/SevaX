@@ -451,10 +451,7 @@ class _RegisterPageState extends State<RegisterPage>
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text(
-              AppLocalizations.of(context)
-                  .translate('signup', 'create_account'),
-            ),
+            title: Text(AppLocalizations.of(context).translate('signup','create_account')),
             content: LinearProgressIndicator(),
           );
         });

@@ -5,6 +5,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/views/splash_view.dart';
 
 class VerifyEmail extends StatefulWidget {
   final FirebaseUser firebaseUser;
@@ -152,7 +153,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
           (_) => Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => AuthRouter(),
+              builder: (BuildContext context) => SplashView(),
             ),
           ),
         );

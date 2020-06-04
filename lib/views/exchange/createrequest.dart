@@ -814,7 +814,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   String getTimeInFormat(int timeStamp) {
-    return DateFormat('EEEEEEE, MMMM dd yyyy').format(
+    return DateFormat('EEEEEEE, MMMM dd yyyy', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
       getDateTimeAccToUserTimezone(
           dateTime: DateTime.fromMillisecondsSinceEpoch(timeStamp),
           timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
@@ -949,13 +949,7 @@ class ProjectSelection extends StatefulWidget {
 class ProjectSelectionState extends State<ProjectSelection> {
   @override
   Widget build(BuildContext context) {
-    List<dynamic> list = [
-      {
-        "name": AppLocalizations.of(context)
-            .translate('create_request', 'none_project'),
-        "code": "None"
-      }
-    ];
+    List<dynamic> list = [{"name": AppLocalizations.of(context).translate('create_request','none_project'), "code": "None"}];
     for (var i = 0; i < widget.projectModelList.length; i++) {
       list.add({
         "name": widget.projectModelList[i].name,
@@ -966,22 +960,18 @@ class ProjectSelectionState extends State<ProjectSelection> {
     return new MultiSelect(
       autovalidate: true,
       initialValue: ['None'],
-      titleText: AppLocalizations.of(context)
-          .translate('create_request', 'add_to_project'),
+      titleText: AppLocalizations.of(context).translate('create_request','assign_to_project'),
       maxLength: 1, // optional
+      hintText: AppLocalizations.of(context).translate('create_request','tap_select'),
       validator: (dynamic value) {
         if (value == null) {
-          return AppLocalizations.of(context)
-              .translate('create_request', 'assign_err_hint');
+          return AppLocalizations.of(context).translate('create_request','assign_to_one');
         }
         return null;
       },
-      errorText: AppLocalizations.of(context)
-          .translate('create_request', 'assign_err_hint'),
+      errorText: AppLocalizations.of(context).translate('create_request','assign_to_one'),
       dataSource: list,
       admin: widget.admin,
-      hintText: AppLocalizations.of(context)
-          .translate('create_request', 'tap_to_select'),
       textField: 'name',
       valueField: 'code',
       filterable: true,

@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/add_members/bloc/add_members_bloc.dart';
 import 'package:sevaexchange/ui/screens/add_members/widgets/add_member_card.dart';
@@ -56,14 +57,14 @@ class _AddMembersState extends State<AddMembers> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Select volunteers",
+          AppLocalizations.of(context).translate('members','select_volunteers'),
           style: TextStyle(fontSize: 18),
         ),
         elevation: 0,
         actions: <Widget>[
           FlatButton(
             child: Text(
-              "save",
+              AppLocalizations.of(context).translate('members','save'),
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
             onPressed: () {
@@ -87,7 +88,7 @@ class _AddMembersState extends State<AddMembers> {
           }
           if (snapshot.data == null || snapshot.data.isEmpty) {
             return Center(
-              child: Text("No members available to add"),
+              child: Text(AppLocalizations.of(context).translate('members','no_members_toadd')),
             );
           }
           return ListView.builder(

@@ -1614,7 +1614,7 @@ class CustomRaisedButton extends StatelessWidget {
           ? null
           : Colors.red,
       child: Text(
-        action.toString().split('.')[1],
+        AppLocalizations.of(context).translate('members',action.toString().split('.')[1]),
         style: TextStyle(fontSize: 12),
       ),
       onPressed: () {

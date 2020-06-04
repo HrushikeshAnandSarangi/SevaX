@@ -15,6 +15,7 @@ import 'package:sevaexchange/ui/screens/offers/pages/individual_offer.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/one_to_many_offer.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
@@ -190,7 +191,7 @@ class OfferCardViewState extends State<OfferCardView> {
                                             ),
                                             subtitle: Text(
                                               DateFormat(
-                                                      'EEEEEEE, MMMM dd h:mm a')
+                                                      'EEEEEEE, MMMM dd h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
                                                   .format(
                                                 getDateTimeAccToUserTimezone(
                                                     dateTime: DateTime

@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
@@ -387,7 +388,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
       GroupInviteUserModel groupInviteUserModel,
       GroupInviteStatus groupInviteStatus) {
     String statusText = getGroupUserStatusTitle(groupInviteStatus);
-    String date = DateFormat('dd MMM yyyy').format(
+    String date = DateFormat('dd MMM yyyy', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
       getDateTimeAccToUserTimezone(
           dateTime: DateTime.fromMillisecondsSinceEpoch(
               groupInviteUserModel.declined

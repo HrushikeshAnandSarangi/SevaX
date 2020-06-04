@@ -12,6 +12,7 @@ import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart'
     as newChatManager;
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -478,7 +479,7 @@ class _ChatViewState extends State<ChatView> {
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    DateFormat('hh:mm a MMMM dd').format(
+                    DateFormat('hh:mm a MMMM dd', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
                       getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
                               messageModel.timestamp),
@@ -529,7 +530,7 @@ class _ChatViewState extends State<ChatView> {
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                 Text(
-                  DateFormat('h:mm a').format(
+                  DateFormat('h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
                     getDateTimeAccToUserTimezone(
                         dateTime: DateTime.fromMillisecondsSinceEpoch(
                             messageModel.timestamp),

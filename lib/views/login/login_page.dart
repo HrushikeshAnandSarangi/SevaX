@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'dart:ui' as ui;
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -71,8 +71,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     var appLanguage = Provider.of<AppLanguage>(context);
-    Locale myLocale = Localizations.localeOf(context);
-    var language = new LanguageListData().getLanguageSupported(myLocale.toString());
+    var _sysLng = ui.window.locale.languageCode;
+    var language = new LanguageListData().getLanguageSupported(_sysLng.toString());
     appLanguage.changeLanguage(Locale(language.code));
     UserData.shared.isFromLogin = true;
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);

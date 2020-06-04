@@ -70,7 +70,6 @@
     "timebank_projects": "Proyectos de banco de tempo",
     "personal_projects": "Proyectos personales",
     "clear": "Claro"
-
   },
   "signup": {
     "add_photo": "Adicionar foto",
@@ -251,10 +250,12 @@
     "hint_text_joined": "Você foi aceito no",
     "successfull": "com sucesso.",
     "err_reenter": "Digite o PIN para verificar",
-    "create_join_request": "Crie solicitação para juntar-se "
+    "create_join_request": "Crie solicitação para juntar-se ",
+    "code_redeemed_already_title": "Código de banco de tiempo ya canjeado",
+    "code_redeemed_already_body": "El código del banco de tiempo que ha proporcionado ya ha sido canjeado anteriormente. Solicite al administrador de Timebank un nuevo código."
   },
   "groups": {
-    "no_groups_helptext": "Os grupos ajudam você a organizar suas atividades \\\\ específicas, você não tem nenhuma. Tente",
+    "no_groups_helptext": "Os grupos ajudam você a organizar suas atividades, \n específicas, você não tem nenhuma. Tente",
     "create_one": "criando um(a)",
     "create_group": "Crea un grupo",
     "exists": "El nombre del grupo ya existe",
@@ -329,7 +330,7 @@
     "image_hint": "Créditos fotográficos",
     "change": "Alterar imagem",
     "change_attachment": "cambiar archivo adjunto",
-    "add_attachment": "Añadir imagen / documento",
+    "add_attachment": "Añadir imagen \/ documento",
     "add": "Adicionar imagem",
     "camera": "Cámara",
     "gallery": "Galería",
@@ -337,7 +338,7 @@
     "size_alert_title": "Alerta de archivo grande"
   },
   "invitations": {
-    "invitation_email_title" : "¡Increíble! Estás invitado a unirte a un banco de tiempo",
+    "invitation_email_title": "¡Increíble! Estás invitado a unirte a un banco de tiempo",
     "email_body": "<p>Está invitado a descargar la aplicación SevaX y unirse al Timebank ***. La aplicación SevaX utiliza Timebanking, un sistema basado en la reciprocidad donde los miembros de la comunidad se ayudan mutuamente a cambio de créditos Seva. Haga clic en este <a href=\"###;&nbsp;\"> enlace </a> para unirse.</p>",
     "size_alert_title": "Alerta de archivo grande",
     "update_post": "Actualizar publicación",
@@ -646,6 +647,8 @@
   "create_request": {
     "humanity_first_create": "Crear solicitud de pandilla Yang",
     "create": "crear",
+    "edit": "Editar solicitud",
+    "edit_project": "Editar solicitud de proyecto",
     "create_project": "Crear solicitud de proyecto",
     "set_duration": "Haga clic para establecer la duración",
     "yang_gang_request_title": "El título de la solicitud del callejón",
@@ -667,9 +670,11 @@
     "no_of_volunteers_zero_err": "El número de voluntarios no puede ser menor que 0",
     "no_of_volunteers_zero_err1": "No de voluntarios no puede ser 0",
     "create_request_button": "Crear solicitud",
+    "update_request_button": "Solicitud de actualización",
     "start_date_err": "Mencione la fecha de inicio y finalización de la solicitud.",
     "add_location": "Agregue ubicación a su solicitud",
     "progress": "Creando solicitud ..",
+    "progress_update": "Solicitud de actualización ..",
     "not_enough_seva": "Sus créditos de seva no son suficientes para crear la solicitud.",
     "ok": "Okay",
     "assign_members": "Asignar a voluntarios",
@@ -684,24 +689,33 @@
     "close": "Cerca",
     "done": "Hecho",
     "start_end": "fecha y hora",
+    "none_project": "Sin asignar",
+    "assign_to_project": "Asignar al proyecto",
+    "assign_to_one": "Asignar a un proyecto",
+    "tap_select": "Toque para seleccionar uno o más ...",
+    "tap_error_select": "Seleccione una o más opciones",
+    "save": "Guardar",
+    "no_members_toadd": "No hay miembros disponibles para agregar",
+    "select_timebank": "Seleccionar banco de tiempo",
+    "search_member": "Buscar miembros",
+    "atleast_3": "La búsqueda requiere un mínimo de 3 caracteres",
+    "no_user": "No se encontró usuario",
     "add_to_project": "Asignar a proyecto",
-    "none_project": "No asignado",
     "selected_hint": "Actualmente seleccionado",
     "tap_to_remove": "artículos (toque para eliminar)",
     "tap_to_delete": "Toca para eliminar este elemento.",
     "assign_err_hint": "Por favor asigne a un proyecto",
     "tap_to_select": "Toque para seleccionar una o más..."
-
   },
   "edit_group": {
     "add_members": "Añadir miembros",
-    "edit_group": "Logotipo del grupo",
+    "group_logo": "Logotipo del grupo",
     "name": "Nombra tu grupo",
     "hint_text": "Ej: mascotas en la ciudad, colaboración ciudadana",
     "enter_text": "Por favor ingrese un texto",
     "about": "Acerca de",
     "a_bit_more": "Ej: un poco más sobre tu grupo",
-    "private_accidental": "Eliminar acceso privado",
+    "prevent_delete": "Eliminar acceso privado",
     "private": "Grupo privado",
     "is_pin_right": "¿Está este pin en el lugar correcto?",
     "update": "Actualizar",
@@ -772,7 +786,10 @@
     "coins": "Moedas",
     "hint": "Ao clicar em doar, seu saldo será ajustado",
     "zero_err": "Você não pode doar 0 créditos",
-    "donate_success": "Você doou créditos com sucesso"
+    "donate_success": "Você doou créditos com sucesso",
+    "less_zero_err": "No puedes donar menos de 0 créditos",
+    "empty_error": "Done algunos créditos",
+    "coins_hint": "No de seva monedas"
   },
   "earnings": {
     "title": "Revisar ganhos",
@@ -866,7 +883,16 @@
     "prompt_text": "cuando se le solicite unirse a este banco de tiempo. Descargue la aplicación desde los enlaces proporcionados en https://sevaxapp.com",
     "code_generated": "Código generado",
     "is_code": "es tu código",
-    "publish_code": "Publicar código"
+    "publish_code": "Publicar código",
+    "select_volunteer": "Select volunteer",
+    "select_volunteers": "Select volunteers",
+    "no_volunteers": "No volunteers present",
+    "Approve": "Aprobar",
+    "Reject": "Rechazar",
+    "Remove": "Eliminar",
+    "Promote": "Promover",
+    "Demote": "Degradar",
+    "Exit": "Salida"
   },
   "create_offer": {
     "title": "Crear oferta",
@@ -933,5 +959,25 @@
     "size_of_class_not_int": "Tamaño de la clase no puede ser en decimal",
     "size_of_class_error": "Por favor, introduzca el tamaño de la clase válida",
     "offer_credit_error": "No podemos publicar esta clase. Hay créditos suficientes a partir de la clase. Por favor revisar el tiempo de preparación o el número de estudiantes y presentar la oferta de nuevo"
+  },
+  "soft_delete": {
+    "request_in_progress_tittle": "Su solicitud de eliminación se está procesando.",
+    "dismiss": "Descartar",
+    "request_in_progress_body": "Su solicitud de eliminación ha sido recibida por nosotros. Estamos procesando la solicitud. Se le notificará una vez que se haya completado."
+  },
+  "accidental_delete": {
+    "accidental_delete_enabled_title": "Eliminación accidental habilitada",
+    "accidental_delete_enabled_body": "Esto ** tiene \"Prevenir eliminación accidental \" habilitado. Desmarca esa casilla (en la pestaña \"Administrar\") antes de intentar eliminar el **.",
+    "submitting_request": "Enviando solicitud ...",
+    "deletion_check": "¿Estás segura de que quieres eliminar?",
+    "advisory_for_timebank": "¡Se eliminará toda la información relevante, incluidos proyectos, solicitudes y ofertas del grupo!",
+    "advisory_for_projects": "Todas las solicitudes asociadas a esta solicitud serían eliminadas",
+    "see_you_go": "Hemos recibido su solicitud para eliminar este ***. Lamentamos verte marchar. Examinaremos su solicitud y (en algunos casos) nos pondremos en contacto con usted sin conexión antes de procesar la eliminación de ***",
+    "delete": "Eliminar",
+    "cancel": "Cancelar"
+  },
+  "select_member": {
+    "select_timebank": "Seleccionar banco de tiempo",
+    "select_volunteer": "Seleccionar voluntaria"
   }
 }

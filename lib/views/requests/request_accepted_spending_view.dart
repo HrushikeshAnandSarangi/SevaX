@@ -9,6 +9,7 @@ import 'package:sevaexchange/models/claimedRequestStatus.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart'
     as RequestNotificationManager;
 import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart';
@@ -285,7 +286,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   }
 
   String formattedDate(UserModel user) {
-    return DateFormat('MMMM dd, yyyy @ h:mm a').format(
+    return DateFormat('MMMM dd, yyyy @ h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
       getDateTimeAccToUserTimezone(
           dateTime: DateTime.fromMillisecondsSinceEpoch(
               widget.requestModel.postTimestamp),

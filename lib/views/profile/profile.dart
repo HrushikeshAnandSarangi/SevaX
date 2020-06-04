@@ -354,6 +354,7 @@ class _ProfilePageState extends State<ProfilePage>
                             },
                           ),
                         ),
+                        SizedBox(height: 10),
                         getHelpSection,
                         InkWell(
                           onTap: () {
@@ -393,6 +394,7 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                           ),
                         ),
+                        SizedBox(height: 10),
                         InkWell(
                           onTap: () {
                             Navigator.of(context).push(
