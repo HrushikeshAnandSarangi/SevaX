@@ -236,7 +236,6 @@ class Searches {
       if (loggedInUser.blockedBy.length == 0) {
         try {
           OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
-          print("**---->> ${model.offerType}");
           if (model.associatedRequest == null ||
               model.associatedRequest.isEmpty) {
             offersList.add(model);
