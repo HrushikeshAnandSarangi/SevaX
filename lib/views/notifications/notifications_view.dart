@@ -10,8 +10,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
@@ -86,7 +86,8 @@ class NotificationsView extends State<NotificationViewHolder> {
 
         if (notifications.length == 0) {
           return Center(
-            child: Text(AppLocalizations.of(context).translate('notifications','no_notifications')),
+            child: Text(AppLocalizations.of(context)
+                .translate('notifications', 'no_notifications')),
           );
         }
 
@@ -104,7 +105,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Icon(Icons.clear_all),
-                    Text(AppLocalizations.of(context).translate('notifications','clear_all')),
+                    Text(AppLocalizations.of(context)
+                        .translate('notifications', 'clear_all')),
                   ],
                 ),
                 onPressed: () {
@@ -396,7 +398,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                       return NotificationCard(
                         photoUrl:
                             '', //get timebank photourl// data.participantDetails.photourl,
-                        title: AppLocalizations.of(context).translate('notifications','credited'),
+                        title: AppLocalizations.of(context)
+                            .translate('notifications', 'credited'),
                         subTitle: UserNotificationMessage.CREDIT_FROM_OFFER
                             .replaceFirst(
                               '*n',
@@ -417,7 +420,8 @@ class NotificationsView extends State<NotificationViewHolder> {
 
                       return NotificationCard(
                         photoUrl: data.participantDetails.photourl,
-                        title: AppLocalizations.of(context).translate('notifications','new_member_signup'),
+                        title: AppLocalizations.of(context)
+                            .translate('notifications', 'new_member_signup'),
                         subTitle: UserNotificationMessage
                             .NEW_MEMBER_SIGNUP_OFFER
                             .replaceFirst(
@@ -437,7 +441,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                       return NotificationCard(
                         photoUrl:
                             '', //get timebank photourl// data.participantDetails.photourl,
-                        title: "${AppLocalizations.of(context).translate('notifications','creditsfor')} ${data.classDetails.classTitle}",
+                        title:
+                            "${AppLocalizations.of(context).translate('notifications', 'creditsfor')} ${data.classDetails.classTitle}",
                         subTitle: UserNotificationMessage
                             .OFFER_FULFILMENT_ACHIEVED
                             .replaceFirst(
@@ -462,7 +467,8 @@ class NotificationsView extends State<NotificationViewHolder> {
 
                       return NotificationCard(
                         photoUrl: data.participantDetails.photourl,
-                        title: AppLocalizations.of(context).translate('notifications','debited'),
+                        title: AppLocalizations.of(context)
+                            .translate('notifications', 'debited'),
                         subTitle: UserNotificationMessage.DEBIT_FROM_OFFER
                             .replaceFirst(
                               '*n',
@@ -481,7 +487,8 @@ class NotificationsView extends State<NotificationViewHolder> {
 
                       return NotificationCard(
                         photoUrl: data.participantDetails.photourl,
-                        title: AppLocalizations.of(context).translate('notifications','signup_for_class'),
+                        title: AppLocalizations.of(context)
+                            .translate('notifications', 'signup_for_class'),
                         subTitle: UserNotificationMessage
                             .OFFER_SUBSCRIPTION_COMPLETED
                             .replaceFirst(
@@ -500,7 +507,8 @@ class NotificationsView extends State<NotificationViewHolder> {
 
                       return NotificationCard(
                         photoUrl: data.participantDetails.photourl,
-                        title: AppLocalizations.of(context).translate('notifications','feedback_request'),
+                        title: AppLocalizations.of(context)
+                            .translate('notifications', 'feedback_request'),
                         subTitle: UserNotificationMessage
                             .FEEDBACK_FROM_SIGNUP_MEMBER
                             .replaceFirst(
@@ -567,28 +575,23 @@ class NotificationsView extends State<NotificationViewHolder> {
       String timebankId,
       String communityId}) {
     // assert(user != null);
-
-    return Dismissible(
-        background: dismissibleBackground,
-        key: Key(Utils.getUuid()),
-        onDismissed: (direction) {
-          String userEmail = SevaCore.of(buildContext).loggedInUser.email;
-          FirestoreManager.readUserNotification(notificationId, userEmail);
-        },
-        child: Container(
-          margin: notificationPadding,
-          decoration: notificationDecoration,
-          child: ListTile(
-            title: Text("Timebank Join"),
-            leading: userAddedModel.timebankImage != null
-                ? CircleAvatar(
-                    backgroundImage: NetworkImage(userAddedModel.timebankImage),
-                  )
-                : Offstage(),
-            subtitle: Text(
-                '${userAddedModel.adminName.toLowerCase()} has added you to ${userAddedModel.timebankName} Timebank'),
-          ),
-        ));
+    return NotificationCard(
+      entityName: userAddedModel.adminName,
+      isDissmissible: true,
+      onDismissed: () {
+        FirestoreManager.readUserNotification(
+          notificationId,
+          SevaCore.of(context).loggedInUser.email,
+        );
+      },
+      onPressed: null,
+      photoUrl: userAddedModel.timebankImage,
+      title: AppLocalizations.of(context)
+          .translate('notifications', 'timebank_join'),
+      subTitle:
+          '${userAddedModel.adminName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'added_you')} ${userAddedModel.timebankName} ${AppLocalizations.of(context).translate('members', 'timebank')}'
+          '${AppLocalizations.of(context).translate('notifications', 'added_you')}  ',
+    );
   }
 
   void _handleFeedBackNotificationAction(
@@ -650,10 +653,11 @@ class NotificationsView extends State<NotificationViewHolder> {
             );
           },
           onPressed: null,
-          photoUrl: user.fullname,
-          title: AppLocalizations.of(context).translate('notifications','credited'),
+          photoUrl: user.photoURL,
+          title: AppLocalizations.of(context)
+              .translate('notifications', 'credited'),
           subTitle:
-          '${AppLocalizations.of(context).translate('notifications','congrats')}  ',
+              '${AppLocalizations.of(context).translate('notifications', 'congrats')}  ',
         );
       },
     );
@@ -684,8 +688,10 @@ class NotificationsView extends State<NotificationViewHolder> {
             },
             onPressed: null,
             photoUrl: user.photoURL,
-            title: AppLocalizations.of(context).translate('notifications','debited'),
-            subTitle: AppLocalizations.of(context).translate('notifications','debited_to'),
+            title: AppLocalizations.of(context)
+                .translate('notifications', 'debited'),
+            subTitle: AppLocalizations.of(context)
+                .translate('notifications', 'debited_to'),
           );
         });
   }
@@ -712,7 +718,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       onPressed: null,
       photoUrl: model.photoUrl,
       subTitle:
-          '${model.fullName} ${AppLocalizations.of(context).translate('notifications','approved_for')}  ${transactionModel.credits} ${AppLocalizations.of(context).translate('notifications','hours')}',
+          '${model.fullName} ${AppLocalizations.of(context).translate('notifications', 'approved_for')}  ${transactionModel.credits} ${AppLocalizations.of(context).translate('notifications', 'hours')}',
       title: model.title,
     );
   }
@@ -813,7 +819,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                               children: [
                                 TextSpan(
                                   text:
-                                      '${user.fullname} ${AppLocalizations.of(context).translate('notifications','send_request_for')} ',
+                                      '${user.fullname} ${AppLocalizations.of(context).translate('notifications', 'send_request_for')} ',
                                   style: TextStyle(
                                     color: Colors.grey,
                                   ),
@@ -896,7 +902,10 @@ class NotificationsView extends State<NotificationViewHolder> {
       "reviewed": reviewed,
       "ratings": results['selection'],
       "requestId": requestId,
-      "comments": (results['didComment'] ? results['comment'] : AppLocalizations.of(context).translate('notifications','no_comments'))
+      "comments": (results['didComment']
+          ? results['comment']
+          : AppLocalizations.of(context)
+              .translate('notifications', 'no_comments'))
     });
     approveTransaction(requestModel, userId, notificationId, sevaCore);
   }
@@ -932,8 +941,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                 );
 
                 if (!canApproveTransaction) {
-                  showDiologForMessage(
-                      AppLocalizations.of(context).translate('notifications','no_sufficient'));
+                  showDiologForMessage(AppLocalizations.of(context)
+                      .translate('notifications', 'no_sufficient'));
                   return;
                 }
 
@@ -959,14 +968,15 @@ class NotificationsView extends State<NotificationViewHolder> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: '${user.fullname} ${AppLocalizations.of(context).translate('notifications','completed_in')} ',
+                          text:
+                              '${user.fullname} ${AppLocalizations.of(context).translate('notifications', 'completed_in')} ',
                           style: TextStyle(
                             color: Colors.grey,
                           ),
                         ),
                         TextSpan(
                           text: () {
-                            return '${transactionModel.credits} ${AppLocalizations.of(context).translate('notifications','hours')}';
+                            return '${transactionModel.credits} ${AppLocalizations.of(context).translate('notifications', 'hours')}';
                           }(),
                           style: TextStyle(
                             color: Colors.black,
@@ -974,7 +984,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                         ),
                         TextSpan(
                           text: () {
-                            return ', ${AppLocalizations.of(context).translate('notifications','waiting_for')}';
+                            return ', ${AppLocalizations.of(context).translate('notifications', 'waiting_for')}';
                           }(),
                           style: TextStyle(
                             color: Colors.grey,
@@ -999,7 +1009,7 @@ class NotificationsView extends State<NotificationViewHolder> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('notifications','ok'),
+                  AppLocalizations.of(context).translate('notifications', 'ok'),
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -1111,8 +1121,9 @@ class NotificationsView extends State<NotificationViewHolder> {
       },
       photoUrl: requestInvitationModel.timebankImage,
       subTitle:
-      '${requestInvitationModel.timebankName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications','requested_join')} ${requestInvitationModel.requestTitle}, ${AppLocalizations.of(context).translate('notifications','tap_toview')}',
-      title: AppLocalizations.of(context).translate('notifications','join_request'),
+          '${requestInvitationModel.timebankName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'requested_join')} ${requestInvitationModel.requestTitle}, ${AppLocalizations.of(context).translate('notifications', 'tap_toview')}',
+      title: AppLocalizations.of(context)
+          .translate('notifications', 'join_request'),
     );
   }
 
@@ -1159,7 +1170,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                     Padding(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                        "${AppLocalizations.of(context).translate('notifications','about')} ${userModel.fullname}",
+                        "${AppLocalizations.of(context).translate('notifications', 'about')} ${userModel.fullname}",
                         style: TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
@@ -1179,7 +1190,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                       padding: EdgeInsets.all(8.0),
                       child: Center(
                         child: Text(
-                          "${AppLocalizations.of(context).translate('notifications','by_approving')} ${userModel.fullname} has worked for $credits hours",
+                          "${AppLocalizations.of(context).translate('notifications', 'by_approving')} ${userModel.fullname} has worked for $credits hours",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
@@ -1198,7 +1209,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                         width: double.infinity,
                         child: RaisedButton(
                           child: Text(
-                            AppLocalizations.of(context).translate('notifications','appove'),
+                            AppLocalizations.of(context)
+                                .translate('notifications', 'appove'),
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
@@ -1220,7 +1232,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                         child: RaisedButton(
                           color: Theme.of(context).accentColor,
                           child: Text(
-                            AppLocalizations.of(context).translate('notifications','reject'),
+                            AppLocalizations.of(context)
+                                .translate('notifications', 'reject'),
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
@@ -1267,7 +1280,8 @@ class NotificationsView extends State<NotificationViewHolder> {
     }
     return Padding(
       padding: EdgeInsets.all(8.0),
-      child: Text(AppLocalizations.of(context).translate('notifications','bio_notupdated')),
+      child: Text(AppLocalizations.of(context)
+          .translate('notifications', 'bio_notupdated')),
     );
   }
 
@@ -1377,14 +1391,15 @@ class NotificationsView extends State<NotificationViewHolder> {
             margin: notificationPadding,
             decoration: notificationDecoration,
             child: ListTile(
-              title: Text(AppLocalizations.of(context).translate('notifications','join_request')),
+              title: Text(AppLocalizations.of(context)
+                  .translate('notifications', 'join_request')),
               leading: user.photoURL != null
                   ? CircleAvatar(
                       backgroundImage: NetworkImage(user.photoURL),
                     )
                   : Offstage(),
               subtitle: Text(
-                  '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications','requested_join')} ${model.timebankTitle}, ${AppLocalizations.of(context).translate('notifications','tap_toview')}'),
+                  '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'requested_join')} ${model.timebankTitle}, ${AppLocalizations.of(context).translate('notifications', 'tap_toview')}'),
             ),
           ),
           onTap: () {
@@ -1413,12 +1428,13 @@ class NotificationsView extends State<NotificationViewHolder> {
             margin: notificationPadding,
             decoration: notificationDecoration,
             child: ListTile(
-              title: Text(AppLocalizations.of(context).translate('notifications','offer_accepted')),
+              title: Text(AppLocalizations.of(context)
+                  .translate('notifications', 'offer_accepted')),
               leading: CircleAvatar(
                 backgroundImage: NetworkImage(user.photoURL),
               ),
               subtitle: Text(
-                  '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications','show_interest')}'),
+                  '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'show_interest')}'),
             ),
           ),
           onTap: () {},
@@ -1446,7 +1462,8 @@ class NotificationsView extends State<NotificationViewHolder> {
               backgroundImage: model.photoUrl != null
                   ? NetworkImage(model.photoUrl)
                   : AssetImage("lib/assets/images/approved.png")),
-          subtitle: Text('${AppLocalizations.of(context).translate('notifications','approved_by')} ${model.fullName}'),
+          subtitle: Text(
+              '${AppLocalizations.of(context).translate('notifications', 'approved_by')} ${model.fullName}'),
         ),
       ),
     );
@@ -1490,7 +1507,8 @@ class NotificationsView extends State<NotificationViewHolder> {
               backgroundImage: model.photoUrl != null
                   ? NetworkImage(model.photoUrl)
                   : AssetImage("lib/assets/images/profile.png")),
-          subtitle: Text('${AppLocalizations.of(context).translate('notifications','rejected_by')} ${model.fullName}'),
+          subtitle: Text(
+              '${AppLocalizations.of(context).translate('notifications', 'rejected_by')} ${model.fullName}'),
         ),
       ),
     );
@@ -1532,7 +1550,8 @@ class NotificationsView extends State<NotificationViewHolder> {
           leading: CircleAvatar(
             backgroundImage: NetworkImage(model.photoUrl),
           ),
-          subtitle: Text('${AppLocalizations.of(context).translate('notifications','task_rejected_by')} ${model.fullName}'),
+          subtitle: Text(
+              '${AppLocalizations.of(context).translate('notifications', 'task_rejected_by')} ${model.fullName}'),
           onTap: () {
             // hibernated for release, check timebank protection status
             // String loggedInEmail = SevaCore.of(context).loggedInUser.email;
@@ -1585,11 +1604,16 @@ class NotificationsView extends State<NotificationViewHolder> {
     var body = jsonEncode({
       "request_start": model.requestStart,
       "notification": {
-        "title": "${model.title} ${AppLocalizations.of(context).translate('notifications','event_about_to')}",
-        "body": "${model.title} ${AppLocalizations.of(context).translate('notifications','would_be_starting')}",
+        "title":
+            "${model.title} ${AppLocalizations.of(context).translate('notifications', 'event_about_to')}",
+        "body":
+            "${model.title} ${AppLocalizations.of(context).translate('notifications', 'would_be_starting')}",
         "icon": "firebase-icon.png"
       },
-      "data": {"message": AppLocalizations.of(context).translate('notifications','enter_message')},
+      "data": {
+        "message": AppLocalizations.of(context)
+            .translate('notifications', 'enter_message')
+      },
       "to": userModel.tokens
     });
 
@@ -1642,7 +1666,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                     subtitle: Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                       child: Text(
-                          '${AppLocalizations.of(context).translate('notifications','request_accepted_by')} ${user.fullname}, ${AppLocalizations.of(context).translate('notifications','waiting_for')}'),
+                          '${AppLocalizations.of(context).translate('notifications', 'request_accepted_by')} ${user.fullname}, ${AppLocalizations.of(context).translate('notifications', 'waiting_for')}'),
                     ),
                   )),
             ));
@@ -1734,7 +1758,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                     Padding(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                        "${AppLocalizations.of(context).translate('notifications','about')} ${userModel.fullname}",
+                        "${AppLocalizations.of(context).translate('notifications', 'about')} ${userModel.fullname}",
                         style: TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
@@ -1752,7 +1776,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 //                  ),
                   Center(
                     child: Text(
-                        "${AppLocalizations.of(context).translate('notifications','by_approving_short')}, ${userModel.fullname} ${AppLocalizations.of(context).translate('notifications','add_to')}.",
+                        "${AppLocalizations.of(context).translate('notifications', 'by_approving_short')}, ${userModel.fullname} ${AppLocalizations.of(context).translate('notifications', 'add_to')}.",
                         style: TextStyle(
                           fontStyle: FontStyle.italic,
                         ),
@@ -1769,7 +1793,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                         child: RaisedButton(
                           color: FlavorConfig.values.theme.primaryColor,
                           child: Text(
-                            AppLocalizations.of(context).translate('notifications','approve'),
+                            AppLocalizations.of(context)
+                                .translate('notifications', 'approve'),
                             style: TextStyle(
                                 color: Colors.white, fontFamily: 'Europa'),
                           ),
@@ -1791,7 +1816,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                         child: RaisedButton(
                           color: Theme.of(context).accentColor,
                           child: Text(
-                            AppLocalizations.of(context).translate('notifications','decline'),
+                            AppLocalizations.of(context)
+                                .translate('notifications', 'decline'),
                             style: TextStyle(
                               color: Colors.white,
                             ),
