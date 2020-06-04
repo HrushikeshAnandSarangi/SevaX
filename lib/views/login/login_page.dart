@@ -328,7 +328,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 15),
                     Container(
                       width: 145,
                       height: 39,
@@ -363,11 +363,9 @@ class _LoginPageState extends State<LoginPage> {
                             },
                       ),
                     ),
-                    SizedBox(height: 8),
-                    Text(AppLocalizations.of(context).translate('shared','or')),
-                    SizedBox(height: 8),
+                    SizedBox(height: 10),
                     signInWithSocialMedia,
-                    SizedBox(height: 8),
+                    SizedBox(height: 10),
                     SizedBox(
                       height: ScreenUtil.getInstance().setHeight(30),
                     ),
@@ -515,7 +513,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             horizontalLine(),
-            Text(AppLocalizations.of(context).translate('login','signin_with')),
+            Text(AppLocalizations.of(context).translate('shared','or')),
             horizontalLine()
           ],
         ),
