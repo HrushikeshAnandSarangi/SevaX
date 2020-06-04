@@ -38,7 +38,9 @@ class MessageBloc extends BlocBase {
             chat.participants.firstWhere((id) => id != userModel.sevaUserID);
         log("===> sender id :$senderId");
         if (userModel.blockedBy.contains(senderId) ||
-            userModel.blockedMembers.contains(senderId)) {
+            userModel.blockedMembers.contains(senderId) ||
+            (chat.deletedBy.containsKey(userModel.sevaUserID) &&
+                chat.deletedBy[userModel.sevaUserID] > (chat.timestamp ?? 0))) {
           log("Blocked");
         } else {
           if (chat.unreadStatus.containsKey(userModel.sevaUserID) &&
