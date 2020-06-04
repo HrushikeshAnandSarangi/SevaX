@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -22,6 +21,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 import 'package:sevaexchange/views/splash_view.dart' as DefaultSplashView;
+import 'dart:ui' as ui;
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -479,9 +479,8 @@ class _RegisterPageState extends State<RegisterPage>
       }
       user.timezone = new TimezoneListData()
           .getTimeZoneByCodeData(DateTime.now().timeZoneName);
-      Locale myLocale = Localizations.localeOf(context);
-      var language =
-          new LanguageListData().getLanguageSupported(myLocale.toString());
+      var _sysLng = ui.window.locale.languageCode;
+      var language = new LanguageListData().getLanguageSupported(_sysLng.toString());
       appLanguage.changeLanguage(Locale(language.code));
       user.language = language.code;
       await FirestoreManager.updateUser(user: user);
