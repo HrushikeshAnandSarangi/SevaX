@@ -1,0 +1,221 @@
+{
+  "splash": {
+    "hang_on": "挂紧",
+    "humanity_first": "人类 \n第一",
+    "we_met": "我们见过",
+    "welcome": "欢迎来到社区世界",
+    "check_met": "检查，如果我们以前见"
+  },
+  "login": {
+    "email_label": "电子邮件",
+    "password_label": "密码",
+    "by_continuing": "继续，您同意SevaX",
+    "terms": " 服务条款",
+    "will_manage": "我们将按照我们的说明管理信息",
+    "privacy_policy": "隐私政策 ",
+    "and": "和",
+    "payment_policy": "付款政策”",
+    "new_user": "新用户？ ",
+    "signup": "注册",
+    "forgot_password": "忘记密码？ ",
+    "enter_email": "输入电子邮件",
+    "enter_email_to_reset": "请输入电子邮件以重置",
+    "enter_valid_email": "请输入有效电子邮件",
+    "your_email_address": "您的电子邮件地址",
+    "reset_password": "重设密码",
+    "cancel": "取消",
+    "reset": "重启",
+    "signin": "登入",
+    "signin_with": "登陆使用",
+    "signin_with_google": "使用Google登录",
+    "signin_with_apple": "使用Apple登录",
+    "powered_by": "供电",
+    "change_password": "更改密码",
+    "enter_email_warn": "输入电子邮件",
+    "email_not_valid": "电子邮件无效",
+    "enter_password_warn": "输入密码",
+    "password_warn_6char": "密码必须为6个字符长",
+    "reset_link_message": "我们已将重置链接发送到您的电子邮件地址",
+    "terms_of_service_link": "服务条款",
+    "privacy_policy_link": "隐私政策",
+    "payment_policy_link": "付款政策"
+  },
+  "shared": {
+    "check_internet": "请检查您的互联网连接。",
+    "dismiss": "解雇",
+    "or": "要么",
+    "cancel": "取消",
+    "next": "下一个",
+    "skip": "跳跃",
+    "capital_cancel": "取消",
+    "logout": "登出",
+    "sure_logout": "您确定要注销吗？",
+    "shared": "请稍后再试",
+    "proceed": "继续",
+    "signing_out": "退出",
+    "seva_credits": " Seva积分",
+    "add_location": "添加位置",
+    "fetching_location": "获取位置... *",
+    "missing_permission": "缺少权限",
+    "open_settings": "打开设置",
+    "fetching_location_failed": "无法获取位置*",
+    "all": "所有",
+    "near_me": "靠近我",
+    "timebank_request": "时间银行请求",
+    "personal_request": "个人要求",
+    "timebank_project": "时间银行项目",
+    "personal_project": "个人项目",
+    "individual_offer": "个人报价",
+    "one_to_many": "一对多",
+    "timebank_projects": "时间银行项目",
+    "personal_projects": "个人项目",
+    "clear": "明确"
+  },
+  "signup": {
+    "add_photo": "添加照片",
+    "your_details": "你的资料",
+    "or": "要么",
+    "full_name": "全名",
+    "full_name_err": "名称不能为空",
+    "email_address": "电子邮件地址",
+    "email_address_err": "输入一个有效的电子邮件地址",
+    "password": "密码",
+    "password_err": "密码应至少包含6个字符",
+    "confirm_password": "确认密码",
+    "confirm_password_err": "密码应至少包含6个字符",
+    "confirm_password_err2": "密码不匹配",
+    "add_photo_ques": "添加照片？",
+    "add_photo_des": "您要添加个人资料照片吗？",
+    "skip_register": "跳过并注册",
+    "signup": "注册",
+    "create_account": "创建帐户",
+    "upload_photo": "更新照片",
+    "signup_with": "注册",
+    "already_registered": "此电子邮件已注册",
+    "change_password": "更改密码",
+    "sent_reset_link": "我们已将重置链接发送到您的电子邮件地址"
+  },
+  "verify_email": {
+    "check_email": "谢谢！\n现在查看您的电子邮件。",
+    "email_sent": " \n \n我们发送了一封电子邮件到\n",
+    "verify_account": "验证\n您的帐户",
+    "resend_email": "重新发送邮件",
+    "please_login": "请在验证电子邮件后登录。",
+    "login": "登录",
+    "verification_sent": "验证邮件已发送",
+    "verification_sent_desc": "验证电子邮件已发送到您的注册电子邮"
+  },
+  "eula": {
+    "eula_title": " EULA协议",
+    "i_agree": "我同意我将受这些条款和条件的约束。",
+    "proceed": "继续"
+  },
+  "skills": {
+    "title": "技能",
+    "title_desc": "您想与自己的社区分享什么技能？",
+    "no_match": "找不到匹配的技能",
+    "search": "搜索",
+    "update": "更新",
+    "updating_loader": "更新技能",
+    "skipping_loader": "跳过技"
+  },
+  "interests": {
+    "title": "兴趣",
+    "title_desc": "您愿意与社区分享什么您的兴趣和爱好？",
+    "no_match": "未找到匹配的兴趣",
+    "search": "搜索",
+    "update": "更新",
+    "updating_loader": "更新兴趣",
+    "skipping_loader": "跳过利"
+  },
+  "bio": {
+    "title": "生物",
+    "description": "请用几句话向我们介绍一下自己。例如，是什么让您与众不同。",
+    "hint_biotext": "告诉我们一些关于你自己的事情。",
+    "motivation_text": "很简单，请说几句话。",
+    "min_char_limit": " *最少50个字符"
+  },
+  "findtimebank": {
+    "join": "加入",
+    "joined": "加入",
+    "timebanks_near_you": "您附近的时间银行",
+    "find_your_timebank": "找到您的时间银行",
+    "looking_existing": "正在寻找现有的时间表",
+    "help_text": "输入您的时间银行名称。例如：阿拉斯加（最少1个字符）",
+    "no_timebanks_found": "未找到时间银行",
+    "timebank": "时间银行",
+    "created_by": "由...制作 ",
+    "community": "社区",
+    "timebanks_around_you": "请确保您已打开GPS。请查看您周围的时间清单",
+    "create_timebank": "创建时间表",
+    "create_timebank_warn": "您确定要创建新的时区-而不是加入现有的时区？创建新的时区意味着您将负责管理时区-包括添加成员和管理成员的需求，及时回答成员的问题，为了解决冲突，并每月安排麻烦。要成为现有Timebank的成员，您需要知道Timebank的名称，并具有邀请代码或提交加入Timebank的请求。."
+  },
+  "createtimebank": {
+    "title": "创建一个时间表",
+    "desc": "时光银行是一个由志愿者组成的社区，彼此之间以及与更大社区之间都有互惠互利的时间",
+    "logo": "时光徽标",
+    "name": "命名您的时间银行",
+    "name_hinttext": "例如：市民可与城市居民合作",
+    "name_err_empty": "时区名称不能为空",
+    "name_err_exits": "时区名称已存在",
+    "about": "关于",
+    "about_hint_text": "例如：更多关于您的时间安排",
+    "tell_more": "告诉我们更多有关您的时间的信息。",
+    "timebank_members": "时光会员",
+    "protected": "受保护的时间银行",
+    "tax_percentage": "选择税率",
+    "current_tax_percentage": "当前税率",
+    "timebank_location": "您的时间位置。",
+    "timebank_location_hinttext": "列出您的社区相遇的地点或地址（例如咖啡馆，图书馆或教堂）。",
+    "timebank_exists_dialog": "时间银行名称已经存在！",
+    "location_err_empty": "请添加您的时间银行位置",
+    "logo_mandatory": "必须使用Timebank徽标",
+    "progress": "创建时间表",
+    "billing_err": "请配置您的个人信息详细信息",
+    "progress_updating": "更新时间表",
+    "save": "救",
+    "ack_dialog": "确认验证邮件并重新登录",
+    "oksignout": "好，登出",
+    "illdolater": "不，我待会再做",
+    "configure_profile": "配置配置文件信息",
+    "profile_info_title": "档案信息",
+    "err_empty": "字段不能为空*",
+    "state": "州",
+    "city": "市",
+    "zip": "邮政编码",
+    "additional_notes": "补充笔记",
+    "street_add1": "街道地址1",
+    "street_add2": "街道地址2",
+    "country_name": "国家的名字",
+    "company_name": "公司名",
+    "continue": "继续",
+    "selected_users": " 之前选择的用户",
+    "with_timebank_id": " 时区编号为",
+    "edit_profile_info": "编辑个人资料信息",
+    "profile_information": "档案信息",
+    "updating_details": "更新细节"
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
