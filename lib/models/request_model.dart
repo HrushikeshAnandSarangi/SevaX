@@ -139,6 +139,7 @@ class RequestModel extends DataModel {
   bool isNotified = false;
   String projectId = "";
   String address;
+  bool softDelete;
 
   RequestMode requestMode;
 
@@ -166,7 +167,8 @@ class RequestModel extends DataModel {
       this.location,
       this.root_timebank_id,
       this.projectId,
-      this.address});
+      this.address,
+      this.softDelete});
 
   RequestModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
