@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
@@ -19,11 +20,11 @@ class MessageBloc extends BlocBase {
   Stream<int> get messageCount => CombineLatestStream.combine2(
       _personalMessageCount, _adminMessageCount, (int p, int a) => p + a);
 
-  Future<void> fetchAllMessage(String communityId, String userId) async {
+  Future<void> fetchAllMessage(String communityId, UserModel userModel) async {
     log("$communityId");
     Firestore.instance
         .collection("chatsnew")
-        .where("participants", arrayContains: userId)
+        .where("participants", arrayContains: userModel.sevaUserID)
         .where("communityId", isEqualTo: communityId)
         .snapshots()
         .listen((QuerySnapshot querySnapshot) {
@@ -32,11 +33,20 @@ class MessageBloc extends BlocBase {
       log(querySnapshot.documents.length.toString());
       querySnapshot.documents.forEach((DocumentSnapshot snapshot) {
         ChatModel chat = ChatModel.fromMap(snapshot.data);
-        if (chat.unreadStatus.containsKey(userId) &&
-            chat.unreadStatus[userId] > 0) {
-          unreadCount++;
+
+        String senderId =
+            chat.participants.firstWhere((id) => id != userModel.sevaUserID);
+        log("===> sender id :$senderId");
+        if (userModel.blockedBy.contains(senderId) ||
+            userModel.blockedMembers.contains(senderId)) {
+          log("Blocked");
+        } else {
+          if (chat.unreadStatus.containsKey(userModel.sevaUserID) &&
+              chat.unreadStatus[userModel.sevaUserID] > 0) {
+            unreadCount++;
+          }
+          chats.add(chat);
         }
-        chats.add(chat);
       });
       if (!_personalMessage.isClosed) _personalMessage.add(chats);
       if (!_personalMessageCount.isClosed)
@@ -46,7 +56,7 @@ class MessageBloc extends BlocBase {
     Firestore.instance
         .collection("timebanknew")
         .where("community_id", isEqualTo: communityId)
-        .where("admins", arrayContains: userId)
+        .where("admins", arrayContains: userModel.sevaUserID)
         .orderBy("lastMessageTimestamp", descending: true)
         .snapshots()
         .listen((QuerySnapshot query) {

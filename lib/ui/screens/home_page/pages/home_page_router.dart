@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/bottom_nav_bar.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
@@ -52,9 +53,11 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
           email: SevaCore.of(context).loggedInUser.email,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         );
-        _messageBloc.fetchAllMessage(
-          SevaCore.of(context).loggedInUser.currentCommunity,
-          SevaCore.of(context).loggedInUser.sevaUserID,
+        _userBloc.userStream.listen(
+          (UserModel user) => _messageBloc.fetchAllMessage(
+            user.currentCommunity,
+            user,
+          ),
         );
       },
     );
