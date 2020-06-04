@@ -9,6 +9,11 @@ ParticipantInfo getUserInfo(
   return participantInfo.firstWhere((element) => element.id == userId);
 }
 
+ParticipantInfo getSenderInfo(
+    String userId, List<ParticipantInfo> participantInfo) {
+  return participantInfo.firstWhere((element) => element.id != userId);
+}
+
 Future<void> createAndOpenChat({
   BuildContext context,
   ParticipantInfo sender,

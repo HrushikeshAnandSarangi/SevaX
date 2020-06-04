@@ -24,11 +24,10 @@ class MessageCard extends StatelessWidget {
         r'[a-zA-Z][a-zA-Z0-9_.%$&]*[@][a-zA-Z0-9]*[.][a-zA-Z.]*[*][0-9]{13,}');
     String userId = SevaCore.of(context).loggedInUser.sevaUserID;
     String senderId = model.isTimebankMessage ? model.timebankId : userId;
-    ParticipantInfo info = getUserInfo(
+    ParticipantInfo info = getSenderInfo(
       senderId,
       model.participantInfo,
     );
-
     int unreadCount =
         model.unreadStatus.containsKey(isAdminMessage ? senderId : userId)
             ? model.unreadStatus[isAdminMessage ? senderId : userId]
