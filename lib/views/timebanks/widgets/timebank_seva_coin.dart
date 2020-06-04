@@ -66,11 +66,12 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                               ),
                             ))),
                 Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
+                    padding: const EdgeInsets.only(left: 15.0),
                     child: RaisedButton(
                       onPressed: _showFontSizePickerDialog,
                       child: Text(
-                        AppLocalizations.of(context).translate('coins','donate'),
+                        AppLocalizations.of(context)
+                            .translate('coins', 'donate'),
                         style: Theme.of(context).primaryTextTheme.button,
                       ),
                     ))
@@ -86,9 +87,10 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
     if (connResult == ConnectivityResult.none) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context).translate('shared','check_internet')),
+          content: Text(AppLocalizations.of(context)
+              .translate('shared', 'check_internet')),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared','dismiss'),
+            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
             onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
           ),
         ),
@@ -101,9 +103,10 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
     if (this.widget.loggedInUser.currentBalance <= 0) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context).translate('coins','not_enough')),
+          content: Text(
+              AppLocalizations.of(context).translate('coins', 'not_enough')),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared','dismiss'),
+            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
             onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
           ),
         ),
@@ -168,6 +171,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
   /// current selection of the slider
   double _donateAmount;
   bool donatezeroerror = false;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -178,36 +182,64 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(AppLocalizations.of(context).translate('coins','donate_coins')),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text('${AppLocalizations.of(context).translate('coins','current_coins')} ' +
-              widget.maxAmount.toStringAsFixed(2).toString()),
-          Slider(
-            label: "${AppLocalizations.of(context).translate('coins','donate')} " + _donateAmount.toStringAsFixed(2) + " ${AppLocalizations.of(context).translate('coins','coins')}",
-            value: _donateAmount,
-            min: 0,
-            max: widget.maxAmount,
-            divisions: 100,
-            onChanged: (value) {
-              setState(() {
-                if (value > 0) {
-                  donatezeroerror = false;
+      title:
+          Text(AppLocalizations.of(context).translate('coins', 'donate_coins')),
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+                '${AppLocalizations.of(context).translate('coins', 'current_coins')} ' +
+                    widget.maxAmount.toStringAsFixed(2).toString()),
+            TextFormField(
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)
+                    .translate('coins', 'coins_hint'),
+              ),
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value.isEmpty) {
+                  return AppLocalizations.of(context)
+                      .translate('coins', 'empty_error');
+                } else if (int.parse(value) > widget.maxAmount) {
+                  return AppLocalizations.of(context)
+                      .translate('coins', 'not_enough');
+                } else if (int.parse(value) == 0) {
+                  return AppLocalizations.of(context)
+                      .translate('coins', 'zero_err');
+                } else if (int.parse(value) <= 0) {
+                  return AppLocalizations.of(context)
+                      .translate('coins', 'less_zero_err');
+                } else {
+                  _donateAmount = double.parse(value);
+                  return null;
                 }
-                _donateAmount = value;
-              });
-            },
-          ),
-          Text(AppLocalizations.of(context).translate('coins','hint')),
-          SizedBox(
-            height: 15,
-          ),
-          donatezeroerror ? Text(
-            AppLocalizations.of(context).translate('coins','donate'),
-            style: TextStyle(fontSize: 16, color: Colors.red),
-          ): Text("")
-        ],
+              },
+            ),
+//          Slider(
+//            label: "${AppLocalizations.of(context).translate('coins', 'donate')} " +
+//                _donateAmount.toStringAsFixed(2) +
+//                " ${AppLocalizations.of(context).translate('coins', 'coins')}",
+//            value: _donateAmount,
+//            min: 0,
+//            max: widget.maxAmount,
+//            divisions: 100,
+//            onChanged: (value) {
+//              setState(() {
+//                if (value > 0) {
+//                  donatezeroerror = false;
+//                }
+//                _donateAmount = value;
+//              });
+//            },
+//          ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(AppLocalizations.of(context).translate('coins', 'hint')),
+          ],
+        ),
       ),
       actions: <Widget>[
         RaisedButton(
@@ -215,27 +247,29 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
           color: Theme.of(context).accentColor,
           textColor: FlavorConfig.values.buttonTextColor,
           child: Text(
-            AppLocalizations.of(context).translate('coins','donate'),
+            AppLocalizations.of(context).translate('coins', 'donate'),
             style: TextStyle(
               fontSize: dialogButtonSize,
             ),
           ),
           onPressed: () {
-            if (_donateAmount == 0) {
+            if (_formKey.currentState.validate()) {
+//              if (_donateAmount == 0) {
+//                setState(() {
+//                  donatezeroerror = true;
+//                });
+//                return;
+//              }
               setState(() {
-                donatezeroerror = true;
+                donatezeroerror = false;
               });
-              return;
+              Navigator.pop(context, _donateAmount);
             }
-            setState(() {
-              donatezeroerror = false;
-            });
-            Navigator.pop(context, _donateAmount);
           },
         ),
         FlatButton(
           child: Text(
-            AppLocalizations.of(context).translate('shared','cancel'),
+            AppLocalizations.of(context).translate('shared', 'cancel'),
             style: TextStyle(color: Colors.red, fontSize: dialogButtonSize),
           ),
           onPressed: () {
@@ -274,11 +308,13 @@ class _InputDonateSuccessDialogState extends State<InputDonateSuccessDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(AppLocalizations.of(context).translate('coins','donate_totimebank')),
+      title: Text(
+          AppLocalizations.of(context).translate('coins', 'donate_totimebank')),
       content: Container(
           height: MediaQuery.of(context).size.height / 10,
           width: MediaQuery.of(context).size.width / 12,
-          child: Text(AppLocalizations.of(context).translate('coins','donate_success'))),
+          child: Text(AppLocalizations.of(context)
+              .translate('coins', 'donate_success'))),
     );
   }
 }
