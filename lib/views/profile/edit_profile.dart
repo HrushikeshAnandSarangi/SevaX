@@ -540,7 +540,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   void logOut() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext _context) {
         // return object of type Dialog
         return AlertDialog(
           title: new Text(AppLocalizations.of(context).translate('profile','logout')),
@@ -580,7 +580,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                       //   statusBarBrightness: Brightness.light,
                       //   statusBarColor: Colors.white,
                       // ));
-                      Navigator.of(context).pop();
+                      Navigator.of(_context).pop();
                       _signOut(context);
                     },
                   ),
@@ -590,7 +590,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                       style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
                     ),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.of(_context).pop();
                     },
                   ),
                 ],

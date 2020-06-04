@@ -262,7 +262,11 @@ class RequestsState extends State<RequestsModule> {
   }
 
   void showRequestsWebPage() {
-    var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
+    var dynamicLinks = json.decode(
+      AppConfig.remoteConfig.getString(
+        AppLocalizations.of(context).translate('links', 'linkToWeb'),
+      ),
+    );
     navigateToWebView(
       aboutMode: AboutMode(
           title: AppLocalizations.of(context)
@@ -445,7 +449,12 @@ class _RequestCardViewState extends State<RequestCardView> {
                           alignment: Alignment(-1.0, 0.0),
                           child: Text(
                             '${AppLocalizations.of(context).translate('requests', 'from')}  ' +
-                                DateFormat('MMMM dd, yyyy @ h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+                                DateFormat(
+                                        'MMMM dd, yyyy @ h:mm a',
+                                        Locale(AppConfig.prefs
+                                                .getString('language_code'))
+                                            .toLanguageTag())
+                                    .format(
                                   getDateTimeAccToUserTimezone(
                                       dateTime:
                                           DateTime.fromMillisecondsSinceEpoch(
@@ -459,7 +468,12 @@ class _RequestCardViewState extends State<RequestCardView> {
                           alignment: Alignment(-1.0, 0.0),
                           child: Text(
                             '${AppLocalizations.of(context).translate('requests', 'untill')}  ' +
-                                DateFormat('MMMM dd, yyyy @ h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+                                DateFormat(
+                                        'MMMM dd, yyyy @ h:mm a',
+                                        Locale(AppConfig.prefs
+                                                .getString('language_code'))
+                                            .toLanguageTag())
+                                    .format(
                                   getDateTimeAccToUserTimezone(
                                       dateTime:
                                           DateTime.fromMillisecondsSinceEpoch(
@@ -480,7 +494,12 @@ class _RequestCardViewState extends State<RequestCardView> {
                           alignment: Alignment(-1.0, 0.0),
                           child: Text(
                             '${AppLocalizations.of(context).translate('requests', 'post_date')}  ' +
-                                DateFormat('MMMM dd, yyyy @ h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+                                DateFormat(
+                                        'MMMM dd, yyyy @ h:mm a',
+                                        Locale(AppConfig.prefs
+                                                .getString('language_code'))
+                                            .toLanguageTag())
+                                    .format(
                                   getDateTimeAccToUserTimezone(
                                       dateTime:
                                           DateTime.fromMillisecondsSinceEpoch(
@@ -818,7 +837,8 @@ class NearRequestListItems extends StatelessWidget {
   }
 
   String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
-    DateFormat dateFormat = DateFormat('d MMM hh:mm a ', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
+    DateFormat dateFormat = DateFormat('d MMM hh:mm a ',
+        Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
     DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
     DateTime localtime = getDateTimeAccToUserTimezone(
         dateTime: datetime, timezoneAbb: timezoneAbb);
@@ -1263,7 +1283,8 @@ class RequestListItemsState extends State<RequestListItems> {
   }
 
   String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
-    DateFormat dateFormat = DateFormat('d MMM hh:mm a ', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
+    DateFormat dateFormat = DateFormat('d MMM hh:mm a ',
+        Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
     DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
     DateTime localtime = getDateTimeAccToUserTimezone(
         dateTime: datetime, timezoneAbb: timezoneAbb);

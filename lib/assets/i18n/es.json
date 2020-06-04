@@ -979,5 +979,8 @@
   "select_member": {
     "select_timebank": "Seleccionar banco de tiempo",
     "select_volunteer": "Seleccionar voluntaria"
+  },
+  "links": {
+    "linkToWeb": "links_es"
   }
 }

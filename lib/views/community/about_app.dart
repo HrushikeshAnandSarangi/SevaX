@@ -36,16 +36,30 @@ class AboutApp extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          getHelpButton(context, getOnTap(context, AppLocalizations.of(context).translate('help','about_sevax'), 'aboutSeva'),
-              AppLocalizations.of(context)
-                  .translate('help', 'about_sevax')),
-          getHelpButton(context, getOnTap(context, AppLocalizations.of(context).translate('help','about_us'), 'aboutUsLink'),
-              AppLocalizations.of(context).translate('help','about_us')),
           getHelpButton(
               context,
-              getOnTap(context, AppLocalizations.of(context).translate('help','training_video'), 'trainingVideo'),
-              AppLocalizations.of(context).translate('help','training_video')),
-          getHelpButton(context, contactUsOnTap(context), AppLocalizations.of(context).translate('help','contact_us')),
+              getOnTap(
+                  context,
+                  AppLocalizations.of(context).translate('help', 'about_sevax'),
+                  'aboutSeva'),
+              AppLocalizations.of(context).translate('help', 'about_sevax')),
+          getHelpButton(
+              context,
+              getOnTap(
+                  context,
+                  AppLocalizations.of(context).translate('help', 'about_us'),
+                  'aboutUsLink'),
+              AppLocalizations.of(context).translate('help', 'about_us')),
+          getHelpButton(
+              context,
+              getOnTap(
+                  context,
+                  AppLocalizations.of(context)
+                      .translate('help', 'training_video'),
+                  'trainingVideo'),
+              AppLocalizations.of(context).translate('help', 'training_video')),
+          getHelpButton(context, contactUsOnTap(context),
+              AppLocalizations.of(context).translate('help', 'contact_us')),
         ],
       ),
       bottomSheet: Container(
@@ -66,7 +80,7 @@ class AboutApp extends StatelessWidget {
                   )
                 : Container(),
             Text(
-              '${AppLocalizations.of(context).translate('help','version')} ${AppConfig.appVersion}',
+              '${AppLocalizations.of(context).translate('help', 'version')} ${AppConfig.appVersion}',
               style: TextStyle(
                 fontFamily: 'Europa',
                 fontSize: 14,
@@ -81,7 +95,11 @@ class AboutApp extends StatelessWidget {
 
   Function getOnTap(BuildContext context, String title, String dynamicKey) {
     return () {
-      dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
+      dynamicLinks = json.decode(
+        AppConfig.remoteConfig.getString(
+          AppLocalizations.of(context).translate('links', 'linkToWeb'),
+        ),
+      );
 
       navigateToWebView(
         aboutMode: AboutMode(title: title, urlToHit: dynamicLinks[dynamicKey]),
@@ -97,18 +115,23 @@ class AboutApp extends StatelessWidget {
         padding: EdgeInsets.all(20),
         child: GestureDetector(
           onTap: () async {
-            dynamicLinks =
-                json.decode(AppConfig.remoteConfig.getString('links'));
+            dynamicLinks = json.decode(
+              AppConfig.remoteConfig.getString(
+                AppLocalizations.of(context).translate('links', 'linkToWeb'),
+              ),
+            );
 
             navigateToWebView(
               aboutMode: AboutMode(
-                  title: AppLocalizations.of(context).translate('help','about_sevax'), urlToHit: dynamicLinks['aboutSeva']),
+                  title: AppLocalizations.of(context)
+                      .translate('help', 'about_sevax'),
+                  urlToHit: dynamicLinks['aboutSeva']),
               context: context,
             );
           },
           child: Container(
             child: Text(
-              AppLocalizations.of(context).translate('help','about_sevax'),
+              AppLocalizations.of(context).translate('help', 'about_sevax'),
               style: TextStyle(
                 color: Colors.blue,
                 fontSize: 16,
@@ -170,18 +193,23 @@ class AboutApp extends StatelessWidget {
         padding: EdgeInsets.all(20),
         child: GestureDetector(
           onTap: () {
-            dynamicLinks =
-                json.decode(AppConfig.remoteConfig.getString('links'));
+            dynamicLinks = json.decode(
+              AppConfig.remoteConfig.getString(
+                AppLocalizations.of(context).translate('links', 'linkToWeb'),
+              ),
+            );
 
             navigateToWebView(
               aboutMode: AboutMode(
-                  title: AppLocalizations.of(context).translate('help','about_us'), urlToHit: dynamicLinks['aboutUsLink']),
+                  title: AppLocalizations.of(context)
+                      .translate('help', 'about_us'),
+                  urlToHit: dynamicLinks['aboutUsLink']),
               context: context,
             );
           },
           child: Container(
             child: Text(
-              AppLocalizations.of(context).translate('help','about_us'),
+              AppLocalizations.of(context).translate('help', 'about_us'),
               style: TextStyle(
                 color: Colors.blue,
                 fontSize: 16,
@@ -199,12 +227,15 @@ class AboutApp extends StatelessWidget {
         padding: EdgeInsets.all(20),
         child: GestureDetector(
           onTap: () {
-            dynamicLinks =
-                json.decode(AppConfig.remoteConfig.getString('links'));
-
+            dynamicLinks = json.decode(
+              AppConfig.remoteConfig.getString(
+                AppLocalizations.of(context).translate('links', 'linkToWeb'),
+              ),
+            );
             navigateToWebView(
               aboutMode: AboutMode(
-                title: AppLocalizations.of(context).translate('help','training_video'),
+                title: AppLocalizations.of(context)
+                    .translate('help', 'training_video'),
                 urlToHit: dynamicLinks['trainingVideo'],
               ),
               context: context,
@@ -212,7 +243,7 @@ class AboutApp extends StatelessWidget {
           },
           child: Container(
             child: Text(
-              AppLocalizations.of(context).translate('help','training_video'),
+              AppLocalizations.of(context).translate('help', 'training_video'),
               style: TextStyle(
                 color: Colors.blue,
                 fontSize: 16,
@@ -233,13 +264,16 @@ class AboutApp extends StatelessWidget {
         builder: (BuildContext dialogContext) {
           // return object of type Dialog
           return AlertDialog(
-            title: new Text(AppLocalizations.of(context).translate('help','alert_text')),
+            title: new Text(
+                AppLocalizations.of(context).translate('help', 'alert_text')),
             content: Form(
               key: formkey,
               child: TextFormField(
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context).translate('help','feedback'),
-                  labelText: AppLocalizations.of(context).translate('help','feedback'),
+                  hintText: AppLocalizations.of(context)
+                      .translate('help', 'feedback'),
+                  labelText: AppLocalizations.of(context)
+                      .translate('help', 'feedback'),
                   border: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(20.0),
@@ -254,7 +288,8 @@ class AboutApp extends StatelessWidget {
                 maxLines: 1,
                 validator: (value) {
                   if (value.isEmpty) {
-                    return AppLocalizations.of(context).translate('help','enter_feedback');
+                    return AppLocalizations.of(context)
+                        .translate('help', 'enter_feedback');
                   }
                   feedbackText = value;
                 },
@@ -267,7 +302,8 @@ class AboutApp extends StatelessWidget {
                 color: Theme.of(context).accentColor,
                 textColor: FlavorConfig.values.buttonTextColor,
                 child: new Text(
-                  AppLocalizations.of(context).translate('help','send_feedback'),
+                  AppLocalizations.of(context)
+                      .translate('help', 'send_feedback'),
                   style: TextStyle(
                       fontSize: dialogButtonSize, fontFamily: 'Europa'),
                 ),
@@ -277,7 +313,10 @@ class AboutApp extends StatelessWidget {
                     print("------------------------------------");
                     Navigator.of(dialogContext).pop();
 
-                    showProgressDialog(context, AppLocalizations.of(context).translate('help','send_feedback'));
+                    showProgressDialog(
+                        context,
+                        AppLocalizations.of(context)
+                            .translate('help', 'send_feedback'));
 
                     await http.post(
                         "${FlavorConfig.values.cloudFunctionBaseURL}/sendFeedbackToTimebank",
@@ -292,7 +331,7 @@ class AboutApp extends StatelessWidget {
               ),
               new FlatButton(
                 child: new Text(
-                  AppLocalizations.of(context).translate('help','close'),
+                  AppLocalizations.of(context).translate('help', 'close'),
                   style: TextStyle(
                       fontSize: dialogButtonSize,
                       color: Colors.red,

@@ -103,7 +103,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
             handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
             child: SliverAppBar(
               title: Text(
-                AppLocalizations.of(context).translate('tasks','your_tasks'),
+                AppLocalizations.of(context).translate('tasks', 'your_tasks'),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -149,7 +149,8 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                                       children: <Widget>[
                                         Expanded(
                                           child: Text(
-                                            AppLocalizations.of(context).translate('covid','title'),
+                                            AppLocalizations.of(context)
+                                                .translate('covid', 'title'),
                                             maxLines: 2,
                                             overflow: TextOverflow.clip,
                                             style: Theme.of(context)
@@ -175,7 +176,8 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                                       children: <Widget>[
                                         Expanded(
                                           child: Text(
-                                            AppLocalizations.of(context).translate('covid','desc'),
+                                            AppLocalizations.of(context)
+                                                .translate('covid', 'desc'),
                                             textAlign: TextAlign.left,
                                             maxLines: 2,
                                             style: Theme.of(context)
@@ -202,7 +204,8 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                               FlatButton(
                                 onPressed: () {},
                                 child: Text(
-                                  AppLocalizations.of(context).translate('homepage','your_groups'),
+                                  AppLocalizations.of(context)
+                                      .translate('homepage', 'your_groups'),
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -280,7 +283,8 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
-                        AppLocalizations.of(context).translate('homepage','your_tasks'),
+                        AppLocalizations.of(context)
+                            .translate('homepage', 'your_tasks'),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -298,13 +302,16 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                 indicatorColor: Theme.of(context).primaryColor,
                 tabs: [
                   Tab(
-                    child: Text(AppLocalizations.of(context).translate('homepage','pending')),
+                    child: Text(AppLocalizations.of(context)
+                        .translate('homepage', 'pending')),
                   ),
                   Tab(
-                    child: Text(AppLocalizations.of(context).translate('homepage','not_accepted')),
+                    child: Text(AppLocalizations.of(context)
+                        .translate('homepage', 'not_accepted')),
                   ),
                   Tab(
-                    child: Text(AppLocalizations.of(context).translate('homepage','completed')),
+                    child: Text(AppLocalizations.of(context)
+                        .translate('homepage', 'completed')),
                   ),
                 ],
                 controller: controller,
@@ -385,10 +392,16 @@ class _TimebankHomePageState extends State<TimebankHomePage>
   }
 
   void showGroupsWebPage() {
-    var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
+    var dynamicLinks = json.decode(
+      AppConfig.remoteConfig.getString(
+        AppLocalizations.of(context).translate('links', 'linkToWeb'),
+      ),
+    );
     navigateToWebView(
       aboutMode: AboutMode(
-          title: AppLocalizations.of(context).translate('homepage','groups_help'), urlToHit: dynamicLinks['groupsInfoLink']),
+          title:
+              AppLocalizations.of(context).translate('homepage', 'groups_help'),
+          urlToHit: dynamicLinks['groupsInfoLink']),
       context: context,
     );
   }

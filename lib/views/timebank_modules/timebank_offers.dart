@@ -59,7 +59,8 @@ class OffersState extends State<OffersModule> {
                         FlatButton(
                           onPressed: () {},
                           child: Text(
-                            AppLocalizations.of(context).translate('offers','my_offers'),
+                            AppLocalizations.of(context)
+                                .translate('offers', 'my_offers'),
                             style: (TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 18)),
                           ),
@@ -121,11 +122,11 @@ class OffersState extends State<OffersModule> {
                 selectedColor: Theme.of(context).primaryColor,
                 children: {
                   0: Text(
-                    AppLocalizations.of(context).translate('shared','all'),
+                    AppLocalizations.of(context).translate('shared', 'all'),
                     style: TextStyle(fontSize: 10.0),
                   ),
                   1: Text(
-                    AppLocalizations.of(context).translate('shared','near_me'),
+                    AppLocalizations.of(context).translate('shared', 'near_me'),
                     style: TextStyle(fontSize: 10.0),
                   ),
                 },
@@ -169,10 +170,16 @@ class OffersState extends State<OffersModule> {
   }
 
   void showOffersWebPage() {
-    var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
+    var dynamicLinks = json.decode(
+      AppConfig.remoteConfig.getString(
+        AppLocalizations.of(context).translate('links', 'linkToWeb'),
+      ),
+    );
     navigateToWebView(
       aboutMode: AboutMode(
-          title: AppLocalizations.of(context).translate('offers','my_offers_help'), urlToHit: dynamicLinks['offersInfoLink']),
+          title: AppLocalizations.of(context)
+              .translate('offers', 'my_offers_help'),
+          urlToHit: dynamicLinks['offersInfoLink']),
       context: context,
     );
   }
