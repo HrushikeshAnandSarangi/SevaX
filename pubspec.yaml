@@ -120,12 +120,23 @@ flutter:
     # card images
     - images/
     - images/card_provider/
-    # report members related images
-    - images/icons/message.png
-    - images/icons/remove_user.png
+
+    #navigation bar Icons
+    - images/icons/navigation_bar_icons/home_filled.png
+    - images/icons/navigation_bar_icons/home_unfilled.png
+    - images/icons/navigation_bar_icons/message_filled.png
+    - images/icons/navigation_bar_icons/message_unfilled.png
+    - images/icons/navigation_bar_icons/notifications_filled.png
+    - images/icons/navigation_bar_icons/notifications_unfilled.png
+    - images/icons/navigation_bar_icons/explore_filled.png
+    - images/icons/navigation_bar_icons/explore_unfilled.png
+    - images/icons/navigation_bar_icons/settings_filled.png
+    - images/icons/navigation_bar_icons/settings_unfilled.png
 
     #icons
     - images/icons/create_message.png
+    - images/icons/message.png
+    - images/icons/remove_user.png
 
   fonts:
     # - family: Montserrat

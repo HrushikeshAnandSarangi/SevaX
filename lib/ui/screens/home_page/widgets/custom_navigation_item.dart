@@ -2,8 +2,8 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 
 class CustomNavigationItem extends StatelessWidget {
-  final IconData primaryIcon;
-  final IconData secondaryIcon;
+  final String primaryIcon;
+  final String secondaryIcon;
   final bool isSelected;
   final String title;
   final bool showBadge;
@@ -38,12 +38,14 @@ class CustomNavigationItem extends StatelessWidget {
               fontSize: 8,
             ),
           ),
-          child: Icon(
+          child: Image.asset(
             isSelected || showBadge
                 ? primaryIcon
                 : secondaryIcon ?? primaryIcon,
-            size: isSelected ? 28 : 24,
-            color: isSelected ? Colors.white : Theme.of(context).primaryColor,
+            width: isSelected ? 28 : 24,
+            height: isSelected ? 28 : 24,
+            fit: BoxFit.scaleDown,
+            color: isSelected ? null : Theme.of(context).primaryColor,
           ),
         ),
         Offstage(
