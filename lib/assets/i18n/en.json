@@ -978,5 +978,8 @@
   "select_member": {
     "select_timebank": "Select Timebank",
     "select_volunteer": "Select volunteer"
+  },
+  "links": {
+    "linkToWeb": "links_en"
   }
 }

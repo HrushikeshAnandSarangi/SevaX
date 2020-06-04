@@ -51,7 +51,8 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                       FlatButton(
                         onPressed: () {},
                         child: Text(
-                          AppLocalizations.of(context).translate('projects','title'),
+                          AppLocalizations.of(context)
+                              .translate('projects', 'title'),
                           style: (TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18)),
                         ),
@@ -130,7 +131,8 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
               builder: (BuildContext context,
                   AsyncSnapshot<List<ProjectModel>> projectListSnapshot) {
                 if (projectListSnapshot.hasError) {
-                  return new Text('${AppLocalizations.of(context).translate('tasks','error')} ${projectListSnapshot.error}');
+                  return new Text(
+                      '${AppLocalizations.of(context).translate('tasks', 'error')} ${projectListSnapshot.error}');
                 }
                 switch (projectListSnapshot.connectionState) {
                   case ConnectionState.waiting:
@@ -150,10 +152,12 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                                 TextSpan(
                                   style: TextStyle(
                                       color: Colors.grey, fontSize: 14),
-                                  text: '${AppLocalizations.of(context).translate('projects','no_available')} ',
+                                  text:
+                                      '${AppLocalizations.of(context).translate('projects', 'no_available')} ',
                                 ),
                                 TextSpan(
-                                    text: AppLocalizations.of(context).translate('projects','create_one'),
+                                    text: AppLocalizations.of(context)
+                                        .translate('projects', 'create_one'),
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
                                     ),
@@ -212,11 +216,14 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context).translate('projects','alert')),
-          content: new Text(AppLocalizations.of(context).translate('projects','admin_can')),
+          title: new Text(
+              AppLocalizations.of(context).translate('projects', 'alert')),
+          content: new Text(
+              AppLocalizations.of(context).translate('projects', 'admin_can')),
           actions: <Widget>[
             new FlatButton(
-              child: new Text(AppLocalizations.of(context).translate('shared','close')),
+              child: new Text(
+                  AppLocalizations.of(context).translate('shared', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -241,10 +248,15 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
   }
 
   void showProjectsWebPage() {
-    var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
+    var dynamicLinks = json.decode(
+      AppConfig.remoteConfig.getString(
+        AppLocalizations.of(context).translate('links', 'linkToWeb'),
+      ),
+    );
     navigateToWebView(
       aboutMode: AboutMode(
-          title: AppLocalizations.of(context).translate('projects','help'), urlToHit: dynamicLinks['projectsInfoLink']),
+          title: AppLocalizations.of(context).translate('projects', 'help'),
+          urlToHit: dynamicLinks['projectsInfoLink']),
       context: context,
     );
   }
@@ -290,7 +302,7 @@ void showInfoOfConcept({String dialogTitle, BuildContext mContext}) {
           actions: <Widget>[
             FlatButton(
               child: Text(
-                AppLocalizations.of(mContext).translate('projects','ok'),
+                AppLocalizations.of(mContext).translate('projects', 'ok'),
                 style: TextStyle(
                   fontSize: 16,
                 ),

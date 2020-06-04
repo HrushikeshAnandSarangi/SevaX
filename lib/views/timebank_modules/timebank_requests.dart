@@ -263,7 +263,11 @@ class RequestsState extends State<RequestsModule> {
   }
 
   void showRequestsWebPage() {
-    var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
+    var dynamicLinks = json.decode(
+      AppConfig.remoteConfig.getString(
+        AppLocalizations.of(context).translate('links', 'linkToWeb'),
+      ),
+    );
     navigateToWebView(
       aboutMode: AboutMode(
           title: AppLocalizations.of(context)

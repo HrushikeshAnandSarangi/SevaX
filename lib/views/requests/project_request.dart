@@ -96,8 +96,12 @@ class RequestsState extends State<ProjectRequests>
                   labelColor: Colors.white,
                   isScrollable: false,
                   tabs: <Widget>[
-                    Tab(text: AppLocalizations.of(context).translate('projects','requests')),
-                    Tab(text: AppLocalizations.of(context).translate('projects','about')),
+                    Tab(
+                        text: AppLocalizations.of(context)
+                            .translate('projects', 'requests')),
+                    Tab(
+                        text: AppLocalizations.of(context)
+                            .translate('projects', 'about')),
                   ],
                 ),
               ),
@@ -466,12 +470,15 @@ class ProjectRequestListState extends State<ProjectRequestList> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context).translate('projects','access_denied')),
-          content: new Text(AppLocalizations.of(context).translate('projects','not_auth')),
+          title: new Text(AppLocalizations.of(context)
+              .translate('projects', 'access_denied')),
+          content: new Text(
+              AppLocalizations.of(context).translate('projects', 'not_auth')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text(AppLocalizations.of(context).translate('homepage','close')),
+              child: new Text(
+                  AppLocalizations.of(context).translate('homepage', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -517,7 +524,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                 FlatButton(
                   onPressed: () {},
                   child: Text(
-                    AppLocalizations.of(context).translate('projects','add_requests'),
+                    AppLocalizations.of(context)
+                        .translate('projects', 'add_requests'),
                     style:
                         (TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                   ),
@@ -570,10 +578,16 @@ class ProjectRequestListState extends State<ProjectRequestList> {
   }
 
   void showRequestsWebPage() {
-    var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
+    var dynamicLinks = json.decode(
+      AppConfig.remoteConfig.getString(
+        AppLocalizations.of(context).translate('links', 'linkToWeb'),
+      ),
+    );
     navigateToWebView(
       aboutMode: AboutMode(
-          title: AppLocalizations.of(context).translate('projects','requests_help'), urlToHit: dynamicLinks['requestsInfoLink']),
+          title: AppLocalizations.of(context)
+              .translate('projects', 'requests_help'),
+          urlToHit: dynamicLinks['requestsInfoLink']),
       context: context,
     );
   }
@@ -622,7 +636,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
       builder: (BuildContext context,
           AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
         if (requestListSnapshot.hasError) {
-          return new Text('${AppLocalizations.of(context).translate('shared','error')}: ${requestListSnapshot.error}');
+          return new Text(
+              '${AppLocalizations.of(context).translate('shared', 'error')}: ${requestListSnapshot.error}');
         }
         switch (requestListSnapshot.connectionState) {
           case ConnectionState.waiting:
@@ -644,10 +659,12 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                       children: <TextSpan>[
                         TextSpan(
                           style: TextStyle(color: Colors.grey, fontSize: 14),
-                          text: AppLocalizations.of(context).translate('projects','no_requests_a'),
+                          text: AppLocalizations.of(context)
+                              .translate('projects', 'no_requests_a'),
                         ),
                         TextSpan(
-                            text: AppLocalizations.of(context).translate('projects','createing_one'),
+                            text: AppLocalizations.of(context)
+                                .translate('projects', 'createing_one'),
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                             ),
@@ -681,7 +698,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                             model: requestModelList.elementAt(index),
                             loggedintimezone: widget.userModel.timezone,
                             mContext: context,
-                            address: AppLocalizations.of(context).translate('projects','fetching_loc'),
+                            address: AppLocalizations.of(context)
+                                .translate('projects', 'fetching_loc'),
                           );
                         default:
                           return getProjectRequestWidget(
@@ -895,9 +913,18 @@ class ProjectRequestListState extends State<ProjectRequestList> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              setTitle(num: '${totalRequests ?? ""}', title: AppLocalizations.of(context).translate('projects','requests_ti')),
-              setTitle(num: '${pendingRequest ?? ""}', title: AppLocalizations.of(context).translate('projects','pending_ti')),
-              setTitle(num: '${completedRequest ?? ""}', title: AppLocalizations.of(context).translate('projects','completed')),
+              setTitle(
+                  num: '${totalRequests ?? ""}',
+                  title: AppLocalizations.of(context)
+                      .translate('projects', 'requests_ti')),
+              setTitle(
+                  num: '${pendingRequest ?? ""}',
+                  title: AppLocalizations.of(context)
+                      .translate('projects', 'pending_ti')),
+              setTitle(
+                  num: '${completedRequest ?? ""}',
+                  title: AppLocalizations.of(context)
+                      .translate('projects', 'completed')),
             ],
           ),
         ],
@@ -907,7 +934,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
 //
 
   String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
-    DateFormat dateFormat = DateFormat('d MMM hh:mm a ', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
+    DateFormat dateFormat = DateFormat('d MMM hh:mm a ',
+        Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
     DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
     DateTime localtime = getDateTimeAccToUserTimezone(
         dateTime: datetime, timezoneAbb: timezoneAbb);
@@ -929,7 +957,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                 .loggedInUser
                 .blockedBy
                 .contains(request.sevaUserId)
-        ? AppLocalizations.of(context).translate('projects','filtering_blocked')
+        ? AppLocalizations.of(context)
+            .translate('projects', 'filtering_blocked')
         : filteredList.add(request));
 
     return filteredList;

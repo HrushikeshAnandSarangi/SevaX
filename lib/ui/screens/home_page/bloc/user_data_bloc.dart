@@ -41,7 +41,6 @@ class UserDataBloc extends BlocBase {
           (HomeRouterModel model) {
         _user.add(UserModel.fromMap(model.user.data));
         _community.add(CommunityModel(model.community.data));
-        print(_community.value.billingQuota);
       });
   }
 

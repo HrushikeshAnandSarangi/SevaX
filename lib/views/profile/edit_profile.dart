@@ -71,7 +71,7 @@ class _EditProfilePageState extends State<EditProfilePage>
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate('profile','title'),
+          AppLocalizations.of(context).translate('profile', 'title'),
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -116,23 +116,28 @@ class _EditProfilePageState extends State<EditProfilePage>
             ),
             SizedBox(height: 50),
             detailsBuilder(
-              title: AppLocalizations.of(context).translate('profile','name'),
+              title: AppLocalizations.of(context).translate('profile', 'name'),
               text: widget.userModel.fullname,
               onTap: _updateName,
             ),
             detailsBuilder(
-              title: AppLocalizations.of(context).translate('profile','bio'),
-              text: widget.userModel.bio ?? AppLocalizations.of(context).translate('profile','add_bio'),
+              title: AppLocalizations.of(context).translate('profile', 'bio'),
+              text: widget.userModel.bio ??
+                  AppLocalizations.of(context).translate('profile', 'add_bio'),
               onTap: _updateBio,
             ),
             detailsBuilder(
-              title: AppLocalizations.of(context).translate('profile','interests'),
-              text: AppLocalizations.of(context).translate('profile','add_interests'),
+              title: AppLocalizations.of(context)
+                  .translate('profile', 'interests'),
+              text: AppLocalizations.of(context)
+                  .translate('profile', 'add_interests'),
               onTap: () => _navigateToInterestsView(usermodel),
             ),
             detailsBuilder(
-              title: AppLocalizations.of(context).translate('profile','skills'),
-              text: AppLocalizations.of(context).translate('profile','add_skills'),
+              title:
+                  AppLocalizations.of(context).translate('profile', 'skills'),
+              text: AppLocalizations.of(context)
+                  .translate('profile', 'add_skills'),
               onTap: () => _navigateToSkillsView(usermodel),
             ),
             Padding(
@@ -146,7 +151,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   color: Theme.of(context).primaryColor,
                   textColor: Colors.white,
                   child: Text(
-                    AppLocalizations.of(context).translate('profile','logout'),
+                    AppLocalizations.of(context).translate('profile', 'logout'),
                   ),
                   onPressed: logOut,
                 ),
@@ -332,14 +337,18 @@ class _EditProfilePageState extends State<EditProfilePage>
         return AlertDialog(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text(AppLocalizations.of(context).translate('profile','update_name'), style: TextStyle(fontSize: 15.0)),
+          title: Text(
+              AppLocalizations.of(context).translate('profile', 'update_name'),
+              style: TextStyle(fontSize: 15.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Form(
                 key: _formKey,
                 child: TextFormField(
-                  decoration: InputDecoration(hintText: AppLocalizations.of(context).translate('profile','add_name')),
+                  decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)
+                          .translate('profile', 'add_name')),
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,
                   style: TextStyle(fontSize: 17.0),
@@ -349,7 +358,8 @@ class _EditProfilePageState extends State<EditProfilePage>
                   ],
                   validator: (value) {
                     if (value.isEmpty) {
-                      return AppLocalizations.of(context).translate('profile','enter_name');
+                      return AppLocalizations.of(context)
+                          .translate('profile', 'enter_name');
                     }
                     widget.userModel.fullname = value;
                   },
@@ -366,7 +376,8 @@ class _EditProfilePageState extends State<EditProfilePage>
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      AppLocalizations.of(context).translate('profile','update'),
+                      AppLocalizations.of(context)
+                          .translate('profile', 'update'),
                       style: TextStyle(
                         fontSize: dialogButtonSize,
                       ),
@@ -376,10 +387,11 @@ class _EditProfilePageState extends State<EditProfilePage>
                       if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content:
-                                Text(AppLocalizations.of(context).translate('shared','check_internet')),
+                            content: Text(AppLocalizations.of(context)
+                                .translate('shared', 'check_internet')),
                             action: SnackBarAction(
-                              label: AppLocalizations.of(context).translate('shared','dismiss'),
+                              label: AppLocalizations.of(context)
+                                  .translate('shared', 'dismiss'),
                               onPressed: () => _scaffoldKey.currentState
                                   .hideCurrentSnackBar(),
                             ),
@@ -397,7 +409,8 @@ class _EditProfilePageState extends State<EditProfilePage>
                   ),
                   FlatButton(
                     child: Text(
-                      AppLocalizations.of(context).translate('shared','cancel'),
+                      AppLocalizations.of(context)
+                          .translate('shared', 'cancel'),
                       style: TextStyle(
                           fontSize: dialogButtonSize, color: Colors.red),
                     ),
@@ -422,7 +435,9 @@ class _EditProfilePageState extends State<EditProfilePage>
         return AlertDialog(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text(AppLocalizations.of(context).translate('profile','update_bio'), style: TextStyle(fontSize: 15.0)),
+          title: Text(
+              AppLocalizations.of(context).translate('profile', 'update_bio'),
+              style: TextStyle(fontSize: 15.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -430,7 +445,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                 key: _formKey,
                 child: TextFormField(
                   //key: _formKey,
-                  decoration: InputDecoration(hintText: AppLocalizations.of(context).translate('profile','enter_bio')),
+                  decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)
+                          .translate('profile', 'enter_bio')),
                   maxLength: 150,
                   maxLengthEnforced: true,
                   keyboardType: TextInputType.text,
@@ -442,9 +459,11 @@ class _EditProfilePageState extends State<EditProfilePage>
                   },
                   validator: (value) {
                     if (value.isEmpty) {
-                      return AppLocalizations.of(context).translate('profile','please_enter_bio');
+                      return AppLocalizations.of(context)
+                          .translate('profile', 'please_enter_bio');
                     } else if (value.length < 50) {
-                      return AppLocalizations.of(context).translate('profile','bio_50');
+                      return AppLocalizations.of(context)
+                          .translate('profile', 'bio_50');
                     } else {
                       widget.userModel.bio = value;
                     }
@@ -460,7 +479,8 @@ class _EditProfilePageState extends State<EditProfilePage>
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      AppLocalizations.of(context).translate('profile','update'),
+                      AppLocalizations.of(context)
+                          .translate('profile', 'update'),
                       style: TextStyle(
                         fontSize: dialogButtonSize,
                       ),
@@ -470,10 +490,11 @@ class _EditProfilePageState extends State<EditProfilePage>
                       if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content:
-                                Text(AppLocalizations.of(context).translate('shared','check_internet')),
+                            content: Text(AppLocalizations.of(context)
+                                .translate('shared', 'check_internet')),
                             action: SnackBarAction(
-                              label: AppLocalizations.of(context).translate('shared','dismiss'),
+                              label: AppLocalizations.of(context)
+                                  .translate('shared', 'dismiss'),
                               onPressed: () => _scaffoldKey.currentState
                                   .hideCurrentSnackBar(),
                             ),
@@ -494,7 +515,8 @@ class _EditProfilePageState extends State<EditProfilePage>
                   ),
                   FlatButton(
                     child: Text(
-                      AppLocalizations.of(context).translate('shared','cancel'),
+                      AppLocalizations.of(context)
+                          .translate('shared', 'cancel'),
                       style: TextStyle(
                           fontSize: dialogButtonSize, color: Colors.red),
                     ),
@@ -540,14 +562,16 @@ class _EditProfilePageState extends State<EditProfilePage>
   void logOut() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext _context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context).translate('profile','logout')),
+          title: new Text(
+              AppLocalizations.of(context).translate('profile', 'logout')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(AppLocalizations.of(context).translate('profile','sure_logout')),
+              Text(AppLocalizations.of(context)
+                  .translate('profile', 'sure_logout')),
               SizedBox(height: 10),
               Row(
                 children: <Widget>[
@@ -557,7 +581,8 @@ class _EditProfilePageState extends State<EditProfilePage>
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: new Text(
-                      AppLocalizations.of(context).translate('profile','logout'),
+                      AppLocalizations.of(context)
+                          .translate('profile', 'logout'),
                       style: TextStyle(fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
@@ -565,10 +590,11 @@ class _EditProfilePageState extends State<EditProfilePage>
                       if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content:
-                                Text(AppLocalizations.of(context).translate('shared','check_internet')),
+                            content: Text(AppLocalizations.of(context)
+                                .translate('shared', 'check_internet')),
                             action: SnackBarAction(
-                              label: AppLocalizations.of(context).translate('shared','dismiss'),
+                              label: AppLocalizations.of(context)
+                                  .translate('shared', 'dismiss'),
                               onPressed: () => _scaffoldKey.currentState
                                   .hideCurrentSnackBar(),
                             ),
@@ -580,17 +606,18 @@ class _EditProfilePageState extends State<EditProfilePage>
                       //   statusBarBrightness: Brightness.light,
                       //   statusBarColor: Colors.white,
                       // ));
-                      Navigator.of(context).pop();
-                      _signOut(context);
+                      Navigator.of(_context).pop();
+                      _signOut(_context);
                     },
                   ),
                   new FlatButton(
                     child: new Text(
-                      AppLocalizations.of(context).translate('shared','cancel'),
+                      AppLocalizations.of(context)
+                          .translate('shared', 'cancel'),
                       style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
                     ),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.of(_context).pop();
                     },
                   ),
                 ],
