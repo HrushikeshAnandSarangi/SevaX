@@ -250,10 +250,12 @@
     "hint_text_joined": "You have been onboarded to",
     "successfull": "successfully.",
     "err_reenter": "Please enter PIN to verify",
-    "create_join_request": "Creating Join Request"
+    "create_join_request": "Creating Join Request",
+    "code_redeemed_already_title": "Timebank code already redeemed",
+    "code_redeemed_already_body": "The Timebank code that you have provided has already been redeemed earlier by you. Please request the Timebank admin for a new code."
   },
   "groups": {
-    "no_groups_helptext": "Groups help you to organize your specific \n activities,you don\\'t have any.Try ",
+    "no_groups_helptext": "Groups help you to organize your specific \n activities, you don't have any. Try ",
     "create_one": "creating one",
     "create_group": "Create Group",
     "exists": "Group name already exists",
@@ -683,7 +685,7 @@
     "done": "Done",
     "start_end": "date & time",
     "add_to_project": "Add to Project",
-    "none_project": "Un Assigned",
+    "none_project": "Unassigned",
     "assign_to_project": "Assign to project",
     "assign_to_one": "Please assign to one project",
     "tap_select": "Tap to select one or more...",
@@ -779,6 +781,9 @@
     "coins": "Coins",
     "hint": "On click of donate your balance will be adjusted",
     "zero_err": "You cannot donate 0 credits",
+    "less_zero_err": "You cannot donate lesser than 0 credits",
+    "empty_error": "Donate some credits",
+    "coins_hint": "No of seva coins",
     "donate_success": "You have donated credits successfully"
   },
   "earnings": {

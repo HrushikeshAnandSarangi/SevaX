@@ -250,7 +250,9 @@
     "hint_text_joined": "Você foi aceito no",
     "successfull": "Com sucesso.",
     "err_reenter": "Digite o PIN para verificar",
-    "create_join_request": "Crie solicitação para juntar-se "
+    "create_join_request": "Crie solicitação para juntar-se ",
+    "code_redeemed_already_title": "Código do timebank já resgatado",
+    "code_redeemed_already_body": "O código do Timebank que você forneceu já foi resgatado anteriormente. Solicite ao administrador do Timebank um novo código."
   },
   "groups": {
     "no_groups_helptext": "Os grupos ajudam você a organizar suas atividades, \n específicas, você não tem nenhuma. Tente",
@@ -784,7 +786,10 @@
     "coins": "Moedas",
     "hint": "Ao clicar em doar, seu saldo será ajustado",
     "zero_err": "Você não pode doar 0 créditos",
-    "donate_success": "Você doou créditos com sucesso"
+    "donate_success": "Você doou créditos com sucesso",
+    "less_zero_err": "Você não pode doar menos de 0 créditos",
+    "empty_error": "Donate some credits",
+    "coins_hint": "Nº de seva moedas"
   },
   "earnings": {
     "title": "Revisar ganhos",

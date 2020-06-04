@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -25,7 +26,8 @@ class ViewRequestsForAdmin extends StatelessWidget {
       return Scaffold(
           appBar: AppBar(
             title: Text(
-              "Select Request",
+              AppLocalizations.of(context)
+                  .translate('requests', 'select_request'),
               style: TextStyle(
                 fontSize: 18,
               ),
@@ -70,7 +72,12 @@ class ViewRequestsForAdmin extends StatelessWidget {
                           if (requestModelList.length == 0) {
                             return Padding(
                               padding: const EdgeInsets.all(16.0),
-                              child: Center(child: Text('No Requests')),
+                              child: Center(
+                                child: Text(
+                                  AppLocalizations.of(context)
+                                      .translate('requests', 'no_requests'),
+                                ),
+                              ),
                             );
                           }
 
@@ -124,7 +131,12 @@ class ViewRequestsForAdmin extends StatelessWidget {
                     if (requestModelList.length == 0) {
                       return Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Center(child: Text('No Requests')),
+                        child: Center(
+                          child: Text(
+                            AppLocalizations.of(context)
+                                .translate('requests', 'no_requests'),
+                          ),
+                        ),
                       );
                     }
                     var consolidatedList =
