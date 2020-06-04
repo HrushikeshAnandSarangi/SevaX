@@ -786,10 +786,7 @@
     "coins": "Pièces de monnaie",
     "hint": "En cliquant sur faire un don, votre solde sera ajusté",
     "zero_err": "Vous ne pouvez pas donner 0 crédits",
-    "donate_success": "Vous avez donné des crédits avec succès",
-    "less_zero_err": "Vous ne pouvez pas donner moins de 0 crédits",
-    "empty_error": "Doe alguns créditos",
-    "coins_hint": "Nombre de seva pièces"
+    "donate_success": "Vous avez donné des crédits avec succès"
   },
   "earnings": {
     "title": "Voir vos gains",

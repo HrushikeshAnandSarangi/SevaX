@@ -255,7 +255,7 @@
     "code_redeemed_already_body": "The Timebank code that you have provided has already been redeemed earlier by you. Please request the Timebank admin for a new code."
   },
   "groups": {
-    "no_groups_helptext": "Groups help you to organize your specific \n activities,you don\\'t have any.Try ",
+    "no_groups_helptext": "Groups help you to organize your specific \n activities, you don't have any. Try ",
     "create_one": "creating one",
     "create_group": "Create Group",
     "exists": "Group name already exists",
