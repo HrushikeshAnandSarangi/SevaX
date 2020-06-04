@@ -82,15 +82,17 @@ class NewsImagePickerHandler {
 
   Future cropImage(File image) async {
     File croppedFile;
-    await ImageCropper.cropImage(
+    ImageCropper.cropImage(
       sourcePath: image.path,
       ratioX: 1.0,
       ratioY: 1.0,
       maxWidth: 512,
       maxHeight: 512,
     ).then((value) {
-      croppedFile = value;
-      _listener.userImage(croppedFile);
+      if (value != null) {
+        croppedFile = value;
+        _listener.userImage(croppedFile);
+      }
     });
   }
 
