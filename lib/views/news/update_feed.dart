@@ -29,6 +29,8 @@ class UpdateNewsFeed extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async {
         globals.newsImageURL = null;
+        globals.newsDocumentName = null;
+        globals.newsDocumentURL = null;
         return true;
       },
       child: Scaffold(
@@ -78,6 +80,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     print("Getting news Feed -> $newsObject");
 
     globals.newsImageURL = newsObject.newsImageUrl;
+    globals.newsDocumentURL = newsObject.newsDocumentUrl;
+    globals.newsDocumentName = newsObject.newsDocumentName;
     // _getLocation();
   }
 

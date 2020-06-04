@@ -303,7 +303,7 @@ class NewsImageState extends State<NewsImage>
             label: Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                _image != null
+                globals.newsDocumentURL != null || globals.newsImageURL != null
                     ? AppLocalizations.of(context)
                         .translate('create_feed', 'change_attachment')
                     : AppLocalizations.of(context)

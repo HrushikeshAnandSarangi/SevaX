@@ -515,7 +515,9 @@
     "updating_timebank": "Updating timebank..",
     "reason_to_join": "Reason to join",
     "not_mentioned": "Reason not mentioned",
-    "allow": "Allow"
+    "allow": "Allow",
+    "timebank_join": "Timebank Join",
+    "added_you": "has added you to"
   },
   "profile": {
     "image_hint": "ProfileImage",
