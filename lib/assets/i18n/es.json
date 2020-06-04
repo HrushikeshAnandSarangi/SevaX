@@ -250,7 +250,9 @@
     "hint_text_joined": "Você foi aceito no",
     "successfull": "com sucesso.",
     "err_reenter": "Digite o PIN para verificar",
-    "create_join_request": "Crie solicitação para juntar-se "
+    "create_join_request": "Crie solicitação para juntar-se ",
+    "code_redeemed_already_title": "Código de banco de tiempo ya canjeado",
+    "code_redeemed_already_body": "El código del banco de tiempo que ha proporcionado ya ha sido canjeado anteriormente. Solicite al administrador de Timebank un nuevo código."
   },
   "groups": {
     "no_groups_helptext": "Os grupos ajudam você a organizar suas atividades, \n específicas, você não tem nenhuma. Tente",

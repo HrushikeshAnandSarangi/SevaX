@@ -250,7 +250,9 @@
     "hint_text_joined": "You have been onboarded to",
     "successfull": "successfully.",
     "err_reenter": "Please enter PIN to verify",
-    "create_join_request": "Creating Join Request"
+    "create_join_request": "Creating Join Request",
+    "code_redeemed_already_title": "Timebank code already redeemed",
+    "code_redeemed_already_body": "The Timebank code that you have provided has already been redeemed earlier by you. Please request the Timebank admin for a new code."
   },
   "groups": {
     "no_groups_helptext": "Groups help you to organize your specific \n activities,you don\\'t have any.Try ",
