@@ -57,13 +57,11 @@ Stream<List<RequestModel>> getRequestStreamCreatedByUser({
 
 Stream<List<RequestModel>> getRequestListStream({String timebankId}) async* {
   var query = timebankId == null || timebankId == 'All'
-      ? Firestore.instance
-          .collection('requests')
-          .where('accepted', isEqualTo: false)
+      ? Firestore.instance.collection('requests')
       : Firestore.instance
           .collection('requests')
           .where('timebankId', isEqualTo: timebankId)
-          .where('accepted', isEqualTo: false);
+          .where('requestMode', isEqualTo: 'TIMEBANK_REQUEST');
 
   var data = query.snapshots();
 
@@ -147,22 +145,21 @@ Future<List<ProjectModel>> getAllProjectListFuture({String timebankid}) async {
       .collection('projects')
       .where('timebank_id', isEqualTo: timebankid)
       .where('softDelete', isEqualTo: false)
-      .orderBy("created_at", descending: true).getDocuments()
-      .then(
-        (data) {
-          data.documents.forEach(
-                (documentSnapshot) {
-              print("documentSnapshot.data.name --------" +
-                  documentSnapshot.data["name"]);
-              ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
-              model.id = documentSnapshot.documentID;
-              projectsList.add(model);
-            },
-          );
-        });
+      .orderBy("created_at", descending: true)
+      .getDocuments()
+      .then((data) {
+    data.documents.forEach(
+      (documentSnapshot) {
+        print("documentSnapshot.data.name --------" +
+            documentSnapshot.data["name"]);
+        ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
+        model.id = documentSnapshot.documentID;
+        projectsList.add(model);
+      },
+    );
+  });
   return projectsList;
 }
-
 
 Stream<List<RequestModel>> getTimebankRequestListStream(
     {String timebankId}) async* {
@@ -305,22 +302,22 @@ Stream<List<RequestModel>> getNearRequestListStream(
       "Location retrieved fom user ->  ${lat.toString()} + ${lng.toString()}");
   GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
   var query;
-//  if (isFromSettings == true) {
-//    query = Firestore.instance
-//        .collection('requests')
-//        .where('timebankId', isEqualTo: timebankId)
-//        .where('accepted', isEqualTo: false)
-//        .where('requestMode', isEqualTo: 'TIMEBANK_REQUEST');
-//  } else {
-  query = timebankId == null || timebankId == 'All'
-      ? Firestore.instance
-          .collection('requests')
-          .where('accepted', isEqualTo: false)
-      // .orderBy('posttimestamp', descending: true)
-      : Firestore.instance
-          .collection('requests')
-          .where('timebankId', isEqualTo: timebankId);
-  // }
+  if (isFromSettings == true) {
+    query = Firestore.instance
+        .collection('requests')
+        .where('timebankId', isEqualTo: timebankId)
+        .where('requestMode', isEqualTo: 'TIMEBANK_REQUEST');
+  } else {
+    query = timebankId == null || timebankId == 'All'
+        ? Firestore.instance
+            .collection('requests')
+            .where('accepted', isEqualTo: false)
+        // .orderBy('posttimestamp', descending: true)
+        : Firestore.instance
+            .collection('requests')
+            .where('accepted', isEqualTo: false)
+            .where('timebankId', isEqualTo: timebankId);
+  }
   // .orderBy('posttimestamp', descending: true);
 
   var radius = 20;

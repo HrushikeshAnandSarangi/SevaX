@@ -93,8 +93,8 @@ class UserModel extends DataModel {
       List<String> reportedUsersList = List.castFrom(map['reportedUsers']);
       this.reportedUsers = reportedUsersList;
     }
-    if (map.containsKey('past_hires')) {
-      List<String> pasthires = List.castFrom(map['past_hires']);
+    if (map.containsKey('recommendedTimebank')) {
+      List<String> pasthires = List.castFrom(map['recommendedTimebank']);
       this.pastHires = pasthires;
     } else {
       this.pastHires = List();
@@ -337,9 +337,9 @@ class UserModel extends DataModel {
     }
 
     if (this.pastHires != null && this.pastHires.isNotEmpty) {
-      object['past_hires'] = this.pastHires;
+      object['recommendedTimebank'] = this.pastHires;
     } else {
-      object['past_hires'] = [];
+      object['recommendedTimebank'] = [];
     }
     object['root_timebank_id'] = FlavorConfig.values.timebankId;
 
