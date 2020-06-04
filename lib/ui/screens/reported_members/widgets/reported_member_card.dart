@@ -10,6 +10,7 @@ import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
 
 class ReportedMemberCard extends StatelessWidget {
@@ -181,6 +182,9 @@ class ReportedMemberCard extends StatelessWidget {
     Map<String, dynamic> responseData = await removeMemberFromGroup(
         sevauserid: model.reportedId, groupId: timebankModel.id);
     if (responseData['deletable'] == true) {
+      await Firestore.instance
+          .collection('reported_users_list').document(model.reportedId+"*"+model.communityId).delete();
+
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -203,6 +207,7 @@ class ReportedMemberCard extends StatelessWidget {
     } else {
       if (responseData['softDeleteCheck'] == false &&
           responseData['groupOwnershipCheck'] == false) {
+
         showDialog(
           context: context,
           builder: (BuildContext context) {
