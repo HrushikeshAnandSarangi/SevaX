@@ -29,6 +29,8 @@ class UpdateNewsFeed extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async {
         globals.newsImageURL = null;
+        globals.newsDocumentName = null;
+        globals.newsDocumentURL = null;
         return true;
       },
       child: Scaffold(
