@@ -78,6 +78,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     print("Getting news Feed -> $newsObject");
 
     globals.newsImageURL = newsObject.newsImageUrl;
+    globals.newsDocumentURL = newsObject.newsDocumentUrl;
+    globals.newsDocumentName = newsObject.newsDocumentName;
     // _getLocation();
   }
 
