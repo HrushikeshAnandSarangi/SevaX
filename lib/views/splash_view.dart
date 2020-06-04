@@ -98,7 +98,8 @@ class _SplashViewState extends State<SplashView> {
     super.didChangeDependencies();
     if (!_initialized) {
       Future.delayed(Duration.zero, () {
-        loadingMessage = AppLocalizations.of(context).translate('splash', 'hang_on');
+        loadingMessage =
+            AppLocalizations.of(context).translate('splash', 'hang_on');
       });
       _precacheImage().then((_) {
         initiateLogin();
@@ -362,7 +363,7 @@ class _SplashViewState extends State<SplashView> {
     var appLanguage = Provider.of<AppLanguage>(context);
 
     appLanguage.changeLanguage(Locale(loggedInUser.language));
-    
+
     print("---> ${loggedInUser.currentCommunity}");
     if ((loggedInUser.currentCommunity == " " ||
             loggedInUser.currentCommunity == "" ||
