@@ -277,7 +277,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
               SizedBox(height: 40),
 
               Container(
-                child: RaisedButton(
+                child: SizedBox(
+                  width: 200,
+                  child: RaisedButton(
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
@@ -333,7 +335,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         .translate('create_feed', 'create_button'),
                     style: Theme.of(context).primaryTextTheme.button,
                   ),
-                ),
+                )),
               ),
               // Text(sevaUserID),
             ],

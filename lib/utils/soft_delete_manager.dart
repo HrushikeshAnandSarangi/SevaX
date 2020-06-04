@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -65,7 +66,6 @@ Future<void> showAdvisoryBeforeDeletion({
   progressDialog.hide();
 
   if (isAlreadyRequested) {
-    print("Already registered");
     _showRequestProcessingWithStatus(context: context);
     return;
   }
@@ -86,15 +86,21 @@ Future<void> showAdvisoryBeforeDeletion({
     builder: (BuildContext contextDialog) {
       return AlertDialog(
         title: Text(
-          "Are your sure you want to delete " + associatedContentTitle + "?",
+          AppLocalizations.of(context)
+                  .translate("accidental_delete", "deletion_check") +
+              associatedContentTitle +
+              "?",
         ),
-        content: Text(_getContentFromType(softDeleteType)),
+        content: Text(_getContentFromType(softDeleteType, context)),
         actions: <Widget>[
           RaisedButton(
             onPressed: () {
               Navigator.pop(contextDialog);
             },
-            child: Text("  Cancel  "),
+            child: Text(
+              AppLocalizations.of(context)
+                  .translate('accidental_delete', 'cancel'),
+            ),
           ),
           FlatButton(
             color: Colors.white,
@@ -141,7 +147,10 @@ Future<void> showAdvisoryBeforeDeletion({
               }
             },
             child: Text(
-              "Delete " + associatedContentTitle,
+              AppLocalizations.of(context)
+                      .translate('accidental_delete', 'delete') +
+                  " " +
+                  associatedContentTitle,
               style: TextStyle(
                 color: Colors.red,
               ),
@@ -162,7 +171,7 @@ Future<bool> sendMailToSevaTeam({
   return await SevaMailer.createAndSendEmail(
       mailContent: MailContent.createMail(
     mailSender: senderEmail,
-    mailReciever: "burhan@uipep.com",
+    mailReciever: "abhishikt@uipep.com",
     mailSubject:
         "Deletion request for ${_getModelType(softDeleteType)} $associatedContentTitle by " +
             senderEmail +
@@ -236,21 +245,34 @@ void _showAccedentalDeleteConfirmation({
   BuildContext context,
   SoftDelete softDeleteType,
 }) {
+  print(
+    "<>>>>>>>>>>>>>>>>>>>>>>>>>" + AppLocalizations.of(context)
+        .translate("accidental_delete", "accidental_delete_enabled_title"),
+  );
   showDialog(
     context: context,
     builder: (BuildContext accedentalDialogContext) {
       return AlertDialog(
         title: Text(
-          "Accendetal Deletion enabled",
+          AppLocalizations.of(context)
+              .translate("accidental_delete", "accidental_delete_enabled_title"),
         ),
         content: Text(
-            "This timebank has \"Prevent Accidental Delete\" enabled. Please uncheck that box (in the \"Manage\" tab) before attempting to delete the ${_getModelType(softDeleteType)}."),
+          AppLocalizations.of(context)
+              .translate("accidental_delete", "accidental_delete_enabled_body")
+              .replaceAll(
+                "**",
+                _getModelType(softDeleteType),
+              ),
+        ),
         actions: <Widget>[
           RaisedButton(
             onPressed: () {
               Navigator.pop(accedentalDialogContext);
             },
-            child: Text("  Dismiss  "),
+            child: Text(
+              AppLocalizations.of(context).translate("soft_delete", "dismiss"),
+            ),
           ),
         ],
       );
@@ -264,16 +286,21 @@ void _showRequestProcessingWithStatus({BuildContext context}) {
     builder: (BuildContext _showRequestProcessingWithStatusContext) {
       return AlertDialog(
         title: Text(
-          "Your request for deletion is being processed.",
+          AppLocalizations.of(context)
+              .translate("soft_delete", "request_in_progress_tittle"),
         ),
         content: Text(
-            "Your request to delete has been received by us. We are processing the request. You will be notified once it is completed."),
+          AppLocalizations.of(context)
+              .translate("soft_delete", "request_in_progress_body"),
+        ),
         actions: <Widget>[
           RaisedButton(
             onPressed: () {
               Navigator.pop(_showRequestProcessingWithStatusContext);
             },
-            child: Text("  Dismiss  "),
+            child: Text(
+              AppLocalizations.of(context).translate("soft_delete", "dismiss"),
+            ),
           ),
         ],
       );
@@ -289,26 +316,30 @@ void showLinearProgress({BuildContext context}) {
     builder: (BuildContext context) {
       buildContextForLinearProgress = context;
       return AlertDialog(
-        title: Text("Submitting request..."),
+        title: Text(
+          AppLocalizations.of(context)
+              .translate('accidental_delete', 'submitting_request'),
+        ),
         content: LinearProgressIndicator(),
       );
     },
   );
 }
 
-String advisoryForTimebank =
-    "All relevent information including projects, requests and offers under the group will be deleted!";
-String advisoryForProjects =
-    "All requests associated to this request would be removed";
-
-String _getContentFromType(SoftDelete type) {
+String _getContentFromType(
+  SoftDelete type,
+  BuildContext context,
+) {
   switch (type) {
     case SoftDelete.REQUEST_DELETE_GROUP:
-      return advisoryForTimebank;
+      return AppLocalizations.of(context)
+          .translate("accidental_delete", "advisory_for_timebank");
     case SoftDelete.REQUEST_DELETE_PROJECT:
-      return advisoryForProjects;
+      return AppLocalizations.of(context)
+          .translate("accidental_delete", "advisory_for_projects");
     case SoftDelete.REQUEST_DELETE_TIMEBANK:
-      return advisoryForTimebank;
+      return AppLocalizations.of(context)
+          .translate("accidental_delete", "advisory_for_timebank");
   }
 }
 
@@ -337,7 +368,9 @@ void showFinalResultConfirmation(
           didSuceed ? successTitle : failureTitle,
         ),
         content: Text(
-          didSuceed ? getSuccessMessage(softDeleteType) : failureMessage,
+          didSuceed
+              ? getSuccessMessage(softDeleteType, context)
+              : failureMessage,
         ),
         actions: <Widget>[
           RaisedButton(
@@ -355,6 +388,11 @@ void showFinalResultConfirmation(
   );
 }
 
-String getSuccessMessage(SoftDelete softDeleteType) {
-  return "We have received your request to delete this ${_getModelType(softDeleteType)}. We are sorry to see you go. We will examine your request and (in some cases) get in touch with you offline before we process the deletion of the ${_getModelType(softDeleteType)}";
+String getSuccessMessage(
+  SoftDelete softDeleteType,
+  BuildContext context,
+) {
+  return AppLocalizations.of(context)
+      .translate("accidental_delete", "see_you_go")
+      .replaceAll('***', _getModelType(softDeleteType));
 }

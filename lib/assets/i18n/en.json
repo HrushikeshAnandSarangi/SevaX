@@ -329,7 +329,7 @@
     "change": "Change image",
     "change_attachment": "Change Attachment",
     "add": "Add image",
-    "add_attachment": "Add Image / Document",
+    "add_attachment": "Add Image \/ Document",
     "camera": "Camera",
     "gallery": "Gallery",
     "size_alert": "Files more than 10MB are not allowed",
@@ -640,6 +640,8 @@
   "create_request": {
     "humanity_first_create": "Create Yang Gang Request",
     "create": "Create Request",
+    "edit": "Edit Request",
+    "edit_project": "Edit Project Request",
     "create_project": "Create Project Request",
     "set_duration": " Click to Set Duration",
     "yang_gang_request_title": "Yang gang request title",
@@ -661,9 +663,11 @@
     "no_of_volunteers_zero_err": "No. of volunteers cannot be lesser than 0",
     "no_of_volunteers_zero_err1": "No. of volunteers cannot be 0",
     "create_request_button": "Create Request",
+    "update_request_button": "Update Request",
     "start_date_err": "Please mention the start and end date of the request",
     "add_location": "Please add location to your request",
     "progress": "Creating Request..",
+    "progress_update": "Updating Request..",
     "not_enough_seva": "Your seva credits are not sufficient to create the request.",
     "ok": "OK",
     "assign_members": "Assign to volunteers",
@@ -678,18 +682,26 @@
     "close": "Close",
     "done": "Done",
     "start_end": "date & time",
-    "add_to_project": "Assign to project",
-    "none_project": "Unassigned",
+    "add_to_project": "Add to Project",
+    "none_project": "Un Assigned",
+    "assign_to_project": "Assign to project",
+    "assign_to_one": "Please assign to one project",
+    "tap_select": "Tap to select one or more...",
+    "tap_error_select": "Please select one or more option(s)",
+    "save": "Save",
+    "no_members_toadd": "No members available to add",
+    "select_timebank": "Select Timebank",
+    "search_member": "Search members",
+    "atleast_3": "Search requires minimum 3 characters",
+    "no_user": "No user found",
     "selected_hint": "Currently selected",
     "tap_to_remove": "items (tap to remove)",
     "tap_to_delete": "Tap to delete this item",
     "assign_err_hint": "Please assign to one project",
     "tap_to_select": "Tap to select one or more..."
-
   },
   "edit_group": {
     "add_members": "Add Members",
-    "edit_group": "Group logo",
     "group_logo": "Group logo",
     "name": "Name your group",
     "hint_text": "Ex: Pets-in-town, Citizen collab",
@@ -868,7 +880,16 @@
     "prompt_text": "when prompted to join this Timebank. Please download the app from the links provided at https://sevaxapp.com",
     "code_generated": "Code generated",
     "is_code": "is your code.",
-    "publish_code": "Publish code"
+    "publish_code": "Publish code",
+    "select_volunteer": "Select volunteer",
+    "select_volunteers": "Select volunteers",
+    "no_volunteers": "No volunteers present",
+    "Approve": "Approve",
+    "Reject": "Reject",
+    "Remove": "Remove",
+    "Promote": "Promote",
+    "Demote": "Demote",
+    "Exit": "Exit"
   },
   "create_offer": {
     "title": "Create Offer",
@@ -935,5 +956,25 @@
     "size_of_class_not_int": "Size of class can't be in decimal",
     "size_of_class_error": "Please enter valid size of class",
     "offer_credit_error": "We cannot publish this Class. There are insufficient credits from the class. Please revise the Prep time or the number of students and submit the offer again"
+  },
+  "soft_delete": {
+    "request_in_progress_tittle": "Your request for deletion is being processed.",
+    "dismiss": "Dismiss",
+    "request_in_progress_body": "Your request to delete has been received by us. We are processing the request. You will be notified once it is completed."
+  },
+  "accidental_delete": {
+    "accidental_delete_enabled_title": "Accidental Deletion enabled",
+    "accidental_delete_enabled_body": "This ** has \"Prevent Accidental Delete\" enabled. Please uncheck that box (in the \"Manage\" tab) before attempting to delete the **.",
+    "submitting_request": "Submitting request...",
+    "deletion_check": "Are your sure you want to delete ",
+    "advisory_for_timebank": "All relevant information including projects, requests and offers under the group will be deleted!",
+    "advisory_for_projects": "All requests associated to this request would be removed",
+    "see_you_go": "We have received your request to delete this ***. We are sorry to see you go. We will examine your request and (in some cases) get in touch with you offline before we process the deletion of the ***",
+    "delete": "Delete",
+    "cancel": "Cancel"
+  },
+  "select_member": {
+    "select_timebank": "Select Timebank",
+    "select_volunteer": "Select volunteer"
   }
 }

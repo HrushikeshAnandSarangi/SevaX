@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-<key>NSPhotoLibraryAddUsageDescription</key>
-<string>这里填写为什么需要相册写入权限的描述语句</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -32,6 +30,16 @@
 				<string>com.googleusercontent.apps.1030900930316-9snjq6ul9adnkjbtagrvriqlnmq144ao</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Bundle ID</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.sevaexchange.dev</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
@@ -45,6 +53,8 @@
 	<string>We need this permission to show relevant posts near you</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This is to make sure your posts are tagged with your current location</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>这里填写为什么需要相册写入权限的描述语句</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need access to camera roll to select pictures to upload to the News Feed</string>
 	<key>UILaunchStoryboardName</key>

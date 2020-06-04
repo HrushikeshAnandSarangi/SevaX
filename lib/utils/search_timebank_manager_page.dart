@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -76,7 +77,7 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
                     borderSide: BorderSide(color: Colors.white)),
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white)),
-                hintText: 'Search members',
+                hintText: AppLocalizations.of(context).translate('members','search_member'),
                 hintStyle: TextStyle(color: Colors.white)),
             // controller: searchTextController,
           ),
@@ -286,7 +287,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
       );
     } else if (widget.controller.text.trim().length < 3) {
       print('Search requires minimum 3 characters');
-      return getEmptyWidget('Users', 'Search requires minimum 3 characters');
+      return getEmptyWidget('Users', AppLocalizations.of(context).translate('members','atleast_3'));
     }
     return StreamBuilder<List<UserModel>>(
       stream: SearchManager.searchForUserWithTimebankId(
@@ -307,7 +308,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
         }
         List<UserModel> userList = snapshot.data;
         if (userList.length == 0) {
-          return getEmptyWidget('Users', 'No user found');
+          return getEmptyWidget('Users', AppLocalizations.of(context).translate('members','no_user'));
         }
         return ListView.builder(
           shrinkWrap: true,

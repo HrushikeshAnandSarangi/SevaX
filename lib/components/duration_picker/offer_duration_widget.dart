@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 
 import 'calendar_picker.dart';
 
@@ -149,7 +150,7 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
       return '${type == DurationType.START ? AppLocalizations.of(context).translate('create_request','start') : AppLocalizations.of(context).translate('create_request','end')}\n${AppLocalizations.of(context).translate('create_request','start_end')}';
     }
     String dateTimeString = '';
-    DateFormat format = DateFormat('dd MMM,\nhh:mm a');
+    DateFormat format = DateFormat('dd MMM,\nhh:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
     dateTimeString = format.format(dateTime);
     return dateTimeString;
   }

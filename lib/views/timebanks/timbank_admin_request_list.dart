@@ -191,86 +191,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     );
   }
 
-//  Widget getAppBar(BuildContext context, TimebankModel timebankModel) {
-//    return SliverAppBar(
-//      iconTheme: IconThemeData(color: Colors.white),
-//      backgroundColor: Theme.of(context).primaryColor,
-//      centerTitle: true,
-//      expandedHeight: 0,
-//      floating: false,
-//      snap: false,
-//      pinned: true,
-//      elevation: 0,
-//      actions: <Widget>[
-//        !(timebankModel.admins
-//                .contains(SevaCore.of(context).loggedInUser.sevaUserID))
-//            ? Offstage()
-//            : IconButton(
-//                icon: Icon(
-//                  Icons.edit,
-//                  color: Colors.white,
-//                ),
-//                onPressed: () {
-//                  Navigator.pop(context);
-//                  Navigator.push(
-//                    context,
-//                    MaterialPageRoute(
-//                      builder: (context) => EditSuperTimebankView(
-//                        timebankId: timebankModel.id,
-//                        superAdminTimebankModel: timebankModel,
-//                      ),
-//                    ),
-//                  );
-//                },
-//              ),
-//      ],
-//      flexibleSpace: FlexibleSpaceBar(
-//        centerTitle: true,
-//        title: Text(
-//          timebankModel.name,
-//          style: TextStyle(color: Colors.white),
-//        ),
-//        collapseMode: CollapseMode.pin,
-//        background: Stack(
-//          children: <Widget>[
-//            Positioned(
-//              right: 0,
-//              left: 0,
-//              top: 0,
-//              bottom: 0,
-//              child: Center(
-//                child: Container(
-//                  height: 130,
-//                  width: 130,
-//                  margin: EdgeInsets.all(16),
-//                  decoration: ShapeDecoration(
-//                    shadows: [
-//                      BoxShadow(
-//                        color: Colors.black.withAlpha(30),
-//                        spreadRadius: 0,
-//                        offset: Offset(0, 4),
-//                        blurRadius: 17,
-//                      )
-//                    ],
-//                    shape: CircleBorder(),
-//                  ),
-//                  child: ClipOval(
-//                    child: FadeInImage.assetNetwork(
-//                      placeholder: 'lib/assets/images/profile.png',
-//                      image: timebankModel.photoUrl == null
-//                          ? 'lib/assets/images/profile.png'
-//                          : timebankModel.photoUrl,
-//                    ),
-//                  ),
-//                ),
-//              ),
-//            ),
-//          ],
-//        ),
-//      ),
-//    );
-//  }
-
   Future loadItems() async {
     if (adminsNotLoaded) {
       adminsNotLoaded = false;
@@ -872,9 +792,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     bool isAdmin,
     bool isPromoteBottonVisible,
   ) {
-//    print(
-//        "SevaCore.of(context).loggedInUser.sevaUserID:${SevaCore.of(context).loggedInUser.sevaUserID}");
-//    print("user.sevaUserID:${user.sevaUserID}");
 
     if (SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID &&
         !widget.isUserAdmin) {
@@ -899,13 +816,13 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         ),
       );
     } else {
-      return SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID ||
-              !widget.isUserAdmin ||
-              user.sevaUserID == timebankModel.creatorId
+      return widget.isUserAdmin &&
+              ( SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID ||
+              user.sevaUserID == timebankModel.creatorId)
           ? Offstage()
           : Row(
               children: <Widget>[
-                if (isPromoteBottonVisible)
+                isPromoteBottonVisible==true ?
                   Padding(
                     padding: EdgeInsets.only(left: 2, right: 2),
                     child: CustomRaisedButton(
@@ -921,6 +838,22 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                         _updateTimebank(timebankModel, admins: admins);
                       },
                     ),
+                  ) :
+                  Padding(
+                    padding: EdgeInsets.only(left: 2, right: 2),
+                    child: CustomRaisedButton(
+                      debouncer: debounceValue,
+                      action: Actions.Demote,
+                      onTap: () async {
+                        setState(() {
+                          isProgressBarActive = true;
+                        });
+                        List<String> admins =
+                        timebankModel.admins.map((s) => s).toList();
+                        admins.remove(user.sevaUserID);
+                        _updateTimebank(timebankModel, admins: admins);
+                      },
+                    ),
                   ),
                 Padding(
                   padding: EdgeInsets.only(left: 2, right: 2),
@@ -929,7 +862,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                     action: Actions.Remove,
                     onTap: () async {
                       //Here we need to put dialog
-
                       Map<String, bool> onActivityResult = await showAdvisory(
                           dialogTitle:
                               "${AppLocalizations.of(context).translate('members', 'are_you_sure')} ${user.fullname}?");
@@ -937,43 +869,25 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                         setState(() {
                           isProgressBarActive = true;
                         });
-
                         if (widget.isCommunity != null && widget.isCommunity) {
-                          print("user ${user.sevaUserID}");
-                          removeMemberTimebankFn(
+                          await removeMemberTimebankFn(
                               context: parentContext,
                               userModel: user,
                               isFromExit: false,
                               timebankModel: model);
+                          setState(() {
+                            isProgressBarActive = false;
+                          });
                         } else {
-                          removeMemberGroupFn(
+                          await removeMemberGroupFn(
                               context: parentContext,
                               userModel: user,
                               isFromExit: false,
                               timebankModel: model);
+                          setState(() {
+                            isProgressBarActive = false;
+                          });
                         }
-
-//                        if (isAdmin) {
-//                          List<String> admins =
-//                              timebankModel.admins.map((s) => s).toList();
-//                          admins.remove(user.sevaUserID);
-//                          _updateTimebank(timebankModel, admins: admins);
-//                        } else {
-//                          List<String> members =
-//                              timebankModel.members.map((s) => s).toList();
-//                          members.remove(user.sevaUserID);
-//                          if (widget.isCommunity != null &&
-//                              widget.isCommunity) {
-//                            _removeUserFromCommunityAndUpdateUserCommunityList(
-//                              model: timebankModel,
-//                              members: members,
-//                              userId: user.sevaUserID,
-//                            );
-//                          } else {
-//                            _updateTimebank(timebankModel, members: members);
-//                          }
-//                        }
-
                       } else {
                         return;
                       }
@@ -1037,58 +951,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     await FirestoreManager.updateTimebank(timebankModel: model);
     resetAndLoad();
   }
-
-//  WriteBatch _exitFromTimebank(
-//      {TimebankModel model, String userId, CommunityModel communityModel}) {
-//    WriteBatch batch = Firestore.instance.batch();
-//
-//    UserModel user = SevaCore.of(context).loggedInUser;
-//    String currentCommunity =
-//        SevaCore.of(context).loggedInUser.currentCommunity;
-//
-//    var timebankRef =
-//        Firestore.instance.collection('timebanknew').document(model.id);
-//    var communityRef =
-//        Firestore.instance.collection('communities').document(currentCommunity);
-//
-//    var userRef = Firestore.instance.collection('users').document(user.email);
-//
-//    if (model.members.contains(user.sevaUserID)) {
-//      batch.updateData(timebankRef, {
-//        'members': FieldValue.arrayRemove([user.sevaUserID]),
-//      });
-//    }
-//
-//    var communities = List<String>();
-//    if (user.communities != null &&
-//        user.communities.contains(currentCommunity)) {
-//      communities.addAll(user.communities);
-//      communities.remove(currentCommunity);
-//      batch.updateData(userRef, {
-//        'communities': FieldValue.arrayRemove([currentCommunity]),
-//        'currentCommunity': communities.length > 0 ? communities[0] : ''
-//      });
-//      if (communities.length > 0) {
-//        SevaCore.of(context).loggedInUser.currentCommunity = communities[0];
-//      }
-//    }
-//    if (communityModel.members.contains(user.sevaUserID)) {
-//      batch.updateData(communityRef, {
-//        'members': FieldValue.arrayRemove([user.sevaUserID]),
-//      });
-//    }
-//
-//    sendNotificationToAdmin(
-//        user: user, timebank: model, communityId: currentCommunity);
-//    Navigator.pushReplacement(
-//      context,
-//      MaterialPageRoute(
-//        builder: (context) => SwitchTimebank(),
-//      ),
-//    );
-//
-//    return batch;
-//  }
 
   Future _removeUserFromCommunityAndUpdateUserCommunityList({
     TimebankModel model,
@@ -1712,6 +1574,7 @@ enum Actions {
   Reject,
   Remove,
   Promote,
+  Demote,
   Exit,
 }
 
@@ -1751,7 +1614,7 @@ class CustomRaisedButton extends StatelessWidget {
           ? null
           : Colors.red,
       child: Text(
-        action.toString().split('.')[1],
+        AppLocalizations.of(context).translate('members',action.toString().split('.')[1]),
         style: TextStyle(fontSize: 12),
       ),
       onPressed: () {

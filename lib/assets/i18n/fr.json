@@ -70,7 +70,6 @@
     "timebank_projects": "Timebank Projects",
     "personal_projects": "Projets personnels",
     "clear": "Clair"
-
   },
   "signup": {
     "add_photo": "Ajouter une photo",
@@ -330,7 +329,7 @@
     "change": "Changer l'image",
     "add": "Ajouter une image",
     "change_attachment": "changer la pièce jointe",
-    "add_attachment": "Ajouter une image / un document",
+    "add_attachment": "Ajouter une image \/ un document",
     "camera": "Camera",
     "gallery": "Galerie",
     "size_alert": "Les fichiers de plus de 10 Mo ne sont pas autorisés",
@@ -646,6 +645,8 @@
   "create_request": {
     "humanity_first_create": "Crear solicitud de pandilla Yang",
     "create": "crear",
+    "edit": "Modifier la demande",
+    "edit_project": "Modifier la demande de projet",
     "create_project": "Crear solicitud de proyecto",
     "set_duration": "Haga clic para establecer la duración",
     "yang_gang_request_title": "El título de la solicitud del callejón",
@@ -667,9 +668,11 @@
     "no_of_volunteers_zero_err": "El número de voluntarios no puede ser menor que 0",
     "no_of_volunteers_zero_err1": "No de voluntarios no puede ser 0",
     "create_request_button": "Crear solicitud",
+    "update_request_button": "Créer une demande",
     "start_date_err": "Mencione la fecha de inicio y finalización de la solicitud.",
     "add_location": "Agregue ubicación a su solicitud",
     "progress": "Creando solicitud ..",
+    "progress_update": "Mise à jour de la demande ..",
     "not_enough_seva": "Vos crédits seva ne sont pas suffisants pour créer la demande.",
     "ok": "Okay",
     "assign_members": "Asignar a voluntarios",
@@ -684,24 +687,33 @@
     "close": "Cerca",
     "done": "Hecho",
     "start_end": "fdate et heure",
-    "add_to_project": "Attribuer au projet",
     "none_project": "Non attribué",
+    "assign_to_project": "Attribuer au projet",
+    "assign_to_one": "Veuillez affecter à un projet",
+    "tap_select": "Appuyez pour sélectionner un ou plusieurs ...",
+    "tap_error_select": "Veuillez sélectionner une ou plusieurs option (s)",
+    "save": "Enregistrer",
+    "no_members_toadd": "Aucun membre disponible à ajouter",
+    "select_timebank": "Sélectionnez Timebank",
+    "search_member": "Rechercher des membres",
+    "atleast_3": "La recherche nécessite au moins 3 caractères",
+    "no_user": "Aucun utilisateur trouvé",
+    "add_to_project": "Attribuer au projet",
     "selected_hint": "Actuellement sélectionné",
     "tap_to_remove": "articles (appuyez pour supprimer)",
     "tap_to_delete": "Appuyez pour supprimer cet élément",
     "assign_err_hint": "Veuillez attribuer à un projet",
     "tap_to_select": "Appuyez pour sélectionner un ou plusieurs..."
-
   },
   "edit_group": {
     "add_members": "Añadir miembros",
-    "edit_group": "Logotipo del grupo",
+    "group_logo": "Logotipo del grupo",
     "name": "Nombra tu grupo",
     "hint_text": "Ej: mascotas en la ciudad, colaboración ciudadana",
     "enter_text": "Por favor ingrese un texto",
     "about": "Acerca de",
     "a_bit_more": "Ej: un poco más sobre tu grupo",
-    "private_accidental": "Eliminar acceso privado",
+    "prevent_delete": "Eliminar acceso privado",
     "private": "Grupo privado",
     "is_pin_right": "¿Está este pin en el lugar correcto?",
     "update": "Actualizar",
@@ -869,7 +881,16 @@
     "prompt_text": "lorsque vous êtes invité à rejoindre cette Timebank. Veuillez télécharger l'application à partir des liens fournis sur https://sevaxapp.com",
     "code_generated": "Code généré",
     "is_code": "est votre code.",
-    "publish_code": "Publier du code"
+    "publish_code": "Publier du code",
+    "select_volunteer": "Sélectionnez volontaire",
+    "select_volunteers": "Sélectionnez les volontaires",
+    "no_volunteers": "Aucun volontaire présent",
+    "Approve": "Approuver",
+    "Reject": "Rejeter",
+    "Remove": "Retirer",
+    "Promote": "Promouvoir",
+    "Demote": "Rétrograder",
+    "Exit": "Sortie"
   },
   "create_offer": {
     "title": "Créer une offre",
@@ -928,5 +949,25 @@
     "size_of_class_not_int": "Taille de la classe ne peut pas être en décimal",
     "size_of_class_error": "S'il vous plaît entrer taille valide de classe",
     "offer_credit_error": "Nous ne pouvons pas publier cette classe. Il n'y a pas suffisamment de crédits de la classe. S'il vous plaît réviser le temps de préparation ou le nombre d'étudiants et de soumettre l'offre à nouveau"
+  },
+  "soft_delete": {
+    "request_in_progress_tittle": "Votre demande de suppression est en cours de traitement.",
+    "dismiss": "Rejeter",
+    "request_in_progress_body": "Nous avons reçu votre demande de suppression. Nous traitons la demande. Vous serez averti une fois terminé."
+  },
+  "accidental_delete": {
+    "accidental_delete_enabled_title": "Suppression accidentelle activée",
+    "accidental_delete_enabled_body": "Ce ** a \"Empêcher la suppression accidentelle \" activé. Veuillez décocher cette case (dans l'onglet \"Gérer \") avant d'essayer de supprimer le **.",
+    "submitting_request": "Envoi de la demande ...",
+    "deletion_check": "Êtes-vous sûr de vouloir supprimer",
+    "advisory_for_timebank": "Toutes les informations pertinentes, y compris les projets, demandes et offres du groupe, seront supprimées!",
+    "advisory_for_projects": "Toutes les demandes associées à cette demande seraient supprimées",
+    "see_you_go": "Nous avons reçu votre demande de suppression de ce ***. Nous sommes navrés de vous voir partir. Nous examinerons votre demande et (dans certains cas) vous contacterons hors ligne avant de traiter la suppression du ***",
+    "delete": "Supprimer",
+    "cancel": "Annuler"
+  },
+  "select_member": {
+    "select_timebank": "Sélectionnez Timebank",
+    "select_volunteer": "Sélectionnez un volontaire"
   }
 }

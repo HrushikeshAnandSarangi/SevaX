@@ -250,6 +250,7 @@ class CreateEditCommunityViewFormState
     location = timebankModel.location;
     totalMembersCount = await FirestoreManager.getMembersCountOfAllMembers(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity);
+    setState(() {});
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -439,7 +440,7 @@ class CreateEditCommunityViewFormState
                             children: <Widget>[
                               headingText(AppLocalizations.of(context)
                                   .translate(
-                                      'createtimebank', 'name_err_empty')),
+                                      'createtimebank', 'timebank_members')),
                               Padding(
                                 padding: EdgeInsets.only(left: 10, top: 15),
                                 child: IconButton(
