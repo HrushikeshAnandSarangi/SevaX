@@ -360,7 +360,9 @@ class _SplashViewState extends State<SplashView> {
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
     var appLanguage = Provider.of<AppLanguage>(context);
+
     appLanguage.changeLanguage(Locale(loggedInUser.language));
+    
     print("---> ${loggedInUser.currentCommunity}");
     if ((loggedInUser.currentCommunity == " " ||
             loggedInUser.currentCommunity == "" ||
