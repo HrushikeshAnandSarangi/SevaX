@@ -250,7 +250,9 @@
     "hint_text_joined": "Vous avez été intégré à",
     "successfull": "avec succès.",
     "err_reenter": "Veuillez saisir le code PIN pour vérifier",
-    "create_join_request": "Création d'une demande d'adhésion"
+    "create_join_request": "Création d'une demande d'adhésion",
+    "code_redeemed_already_title": "Code Timebank déjà utilisé",
+    "code_redeemed_already_body": "Le code Timebank que vous avez fourni a déjà été utilisé précédemment. Veuillez demander à l'administrateur Timebank un nouveau code."
   },
   "groups": {
     "no_groups_helptext": "Les groupes vous aident à organiser vos activités spécifiques, vous n'en avez pas encore créer. Essayez!",
@@ -784,10 +786,7 @@
     "coins": "Pièces de monnaie",
     "hint": "En cliquant sur faire un don, votre solde sera ajusté",
     "zero_err": "Vous ne pouvez pas donner 0 crédits",
-    "donate_success": "Vous avez donné des crédits avec succès",
-    "less_zero_err": "Vous ne pouvez pas donner moins de 0 crédits",
-    "empty_error": "Doe alguns créditos",
-    "coins_hint": "Nombre de seva pièces"
+    "donate_success": "Vous avez donné des crédits avec succès"
   },
   "earnings": {
     "title": "Voir vos gains",
