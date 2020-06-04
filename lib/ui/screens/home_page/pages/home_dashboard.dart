@@ -50,6 +50,17 @@ class _HomeDashBoardState extends State<HomeDashBoard>
         TabController(initialIndex: 0, length: 7, vsync: this);
     super.initState();
     Future.delayed(Duration.zero, () {
+      tabs = [
+        Tab(text: AppLocalizations.of(context).translate('main', 'timebank')),
+        Center(
+            child: Tab(
+                text: AppLocalizations.of(context).translate('main', 'feeds'))),
+        Tab(text: AppLocalizations.of(context).translate('main', 'projects')),
+        Tab(text: AppLocalizations.of(context).translate('main', 'requests')),
+        Tab(text: AppLocalizations.of(context).translate('main', 'offers')),
+        Tab(text: AppLocalizations.of(context).translate('main', 'about')),
+        Tab(text: AppLocalizations.of(context).translate('main', 'members'))
+      ];
       _homeDashBoardBloc.getAllCommunities(SevaCore.of(context).loggedInUser);
     });
   }
@@ -75,17 +86,6 @@ class _HomeDashBoardState extends State<HomeDashBoard>
 
   @override
   Widget build(BuildContext context) {
-    tabs = [
-      Tab(text: AppLocalizations.of(context).translate('main', 'timebank')),
-      Center(
-          child: Tab(
-              text: AppLocalizations.of(context).translate('main', 'feeds'))),
-      Tab(text: AppLocalizations.of(context).translate('main', 'projects')),
-      Tab(text: AppLocalizations.of(context).translate('main', 'requests')),
-      Tab(text: AppLocalizations.of(context).translate('main', 'offers')),
-      Tab(text: AppLocalizations.of(context).translate('main', 'about')),
-      Tab(text: AppLocalizations.of(context).translate('main', 'members'))
-    ];
     log("home dashboard page build");
     final _user = BlocProvider.of<UserDataBloc>(context);
     // print("user bloc ${_user.user.email}");
