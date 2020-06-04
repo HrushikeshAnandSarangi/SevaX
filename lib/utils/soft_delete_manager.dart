@@ -171,7 +171,7 @@ Future<bool> sendMailToSevaTeam({
   return await SevaMailer.createAndSendEmail(
       mailContent: MailContent.createMail(
     mailSender: senderEmail,
-    mailReciever: "abhishikt@uipep.com",
+    mailReciever: "delete-timebank@sevaexchange.com",
     mailSubject:
         "Deletion request for ${_getModelType(softDeleteType)} $associatedContentTitle by " +
             senderEmail +

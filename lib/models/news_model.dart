@@ -22,6 +22,7 @@ class NewsModel extends DataModel {
   String root_timebank_id;
   String placeAddress;
   bool isPinned;
+  bool softDelete;
 
   List<String> urlsFromPost = List();
   List<String> hashTags = List();
@@ -48,13 +49,17 @@ class NewsModel extends DataModel {
       this.isPinned,
       this.userPhotoURL,
       this.newsDocumentName,
-      this.newsDocumentUrl});
+      this.newsDocumentUrl,
+      this.softDelete});
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
 
     if (this.title != null && this.title.isNotEmpty) {
       map['title'] = this.title;
+    }
+    if(this.softDelete!=null){
+      map['softDelete'] = this.softDelete;
     }
 
     if (this.description != null && this.description.isNotEmpty) {

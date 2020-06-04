@@ -42,6 +42,7 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
         'entityId': timebankID,
         //'entityName': FlavorConfig.timebankName,
       })
+      .where('softDelete', isEqualTo: false)
       .orderBy('posttimestamp', descending: true)
       .snapshots();
 

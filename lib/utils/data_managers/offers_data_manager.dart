@@ -19,11 +19,12 @@ Stream<List<OfferModel>> getOffersStream({String timebankId}) async* {
       ? Firestore.instance
           .collection('offers')
           .where('assossiatedRequest', isNull: true)
+          .where('softDelete', isEqualTo: false)
       : Firestore.instance
           .collection('offers')
           .where('timebankId', isEqualTo: timebankId)
-          .where('assossiatedRequest', isNull: true);
-
+          .where('assossiatedRequest', isNull: true)
+          .where('softDelete', isEqualTo: false);
   var data = query.snapshots();
 
   yield* data.transform(
@@ -82,10 +83,13 @@ Stream<List<OfferModel>> getNearOffersStream({String timebankId}) async* {
       ? Firestore.instance
           .collection('offers')
           .where('assossiatedRequest', isNull: true)
+          .where('softDelete', isEqualTo: false)
+          .where('softDelete', isEqualTo: false)
       : Firestore.instance
           .collection('offers')
           .where('timebankId', isEqualTo: timebankId)
-          .where('assossiatedRequest', isNull: true);
+          .where('assossiatedRequest', isNull: true)
+          .where('softDelete', isEqualTo: false);
 
   var radius = 20;
   try {

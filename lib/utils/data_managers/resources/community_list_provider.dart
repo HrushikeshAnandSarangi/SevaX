@@ -92,9 +92,11 @@ class RequestApiProvider {
         ? Firestore.instance
             .collection('requests')
             .where('accepted', isEqualTo: false)
+            .where('softDelete', isEqualTo: false)
         : Firestore.instance
             .collection('requests')
             .where('timebankId', isEqualTo: timebankId)
+            .where('softDelete', isEqualTo: false)
             .where('accepted', isEqualTo: false);
 
     var data = query.snapshots();

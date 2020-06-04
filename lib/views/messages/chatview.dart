@@ -22,6 +22,11 @@ import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
+enum MessageMenu {
+  BLOCK,
+  CLEAR_CHAT,
+}
+
 class IsFromNewChat {
   bool isFromNewChat = false;
   int newChatTimeStamp;
@@ -61,9 +66,8 @@ class _ChatViewState extends State<ChatView> {
   final TextEditingController textcontroller = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   ScrollController _scrollController = new ScrollController();
-  Future _fetchAppBarData;
+
   String messageContent;
-  bool _isOnTop = true;
 
   String recieverId;
   String chatId;
@@ -88,8 +92,6 @@ class _ChatViewState extends State<ChatView> {
     recieverId = widget.chatModel.participants[0] != widget.senderId
         ? widget.chatModel.participants[0]
         : widget.chatModel.participants[1];
-
-    // timebankId = widget.chatModel.timebankId;
     FirestoreManager.getUserForId(sevaUserId: recieverId).then((userModel) {
       if (mounted) {
         setState(() {
@@ -102,18 +104,6 @@ class _ChatViewState extends State<ChatView> {
     sharedPosts = HashMap();
 
     _scrollController = ScrollController();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   newChatManager.updateMessagingReadStatus(
-    //     chat: widget.chatModel,
-    //     userEmail: widget.useremail,
-    //     userId: SevaCore.of(context).loggedInUser.sevaUserID,
-    //     once: true,
-    //   );
-    // });
-
-    // _fetchAppBarData = isValidEmail(widget.useremail)
-    //     ? FirestoreManager.getUserForEmail(emailAddress: widget.useremail)
-    //     : FirestoreManager.getTimeBankForId(timebankId: widget.useremail);
     if (widget.isFromRejectCompletion == null)
       widget.isFromRejectCompletion = false;
     if (widget.isFromRejectCompletion)
@@ -147,34 +137,29 @@ class _ChatViewState extends State<ChatView> {
   // }
 
   Widget appBar({String imageUrl, String appbarTitle}) {
-    return Expanded(
-      child: Row(
-        children: <Widget>[
-          Container(
-            height: 36,
-            width: 36,
-            decoration: ShapeDecoration(
-              shape: CircleBorder(
-                side: BorderSide(
-                  color: Colors.white,
-                  width: 1,
-                ),
-              ),
-              image: DecorationImage(
-                image: NetworkImage(imageUrl ?? defaultUserImageURL),
+    return Row(
+      children: <Widget>[
+        Container(
+          height: 36,
+          width: 36,
+          decoration: ShapeDecoration(
+            shape: CircleBorder(
+              side: BorderSide(
+                color: Colors.white,
+                width: 1,
               ),
             ),
+            image: DecorationImage(
+              image: NetworkImage(imageUrl ?? defaultUserImageURL),
+            ),
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-          ),
-          Expanded(
-            child: Text(appbarTitle,
-                style: TextStyle(fontSize: 18),
-                overflow: TextOverflow.ellipsis),
-          ),
-        ],
-      ),
+        ),
+        SizedBox(width: 10),
+        Expanded(
+          child: Text(appbarTitle,
+              style: TextStyle(fontSize: 18), overflow: TextOverflow.ellipsis),
+        ),
+      ],
     );
   }
 
@@ -209,34 +194,13 @@ class _ChatViewState extends State<ChatView> {
         ),
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            appBar(appbarTitle: senderInfo.name, imageUrl: senderInfo.photoUrl),
-            Divider(),
-            Offstage(
-              offstage: widget.chatModel.isTimebankMessage,
-              child: RaisedButton(
-                color: Color(0xffb71c1c),
-                child: Container(
-                  child: Text(
-                    AppLocalizations.of(context).translate('chat', 'block'),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                onPressed: () {
-                  blockMemberDialogView(context).then((result) {
-                    print("result " + result);
-                    if (result == 'BLOCK') {
-                      blockMember();
-                      Navigator.pop(context);
-                    }
-                  });
-                },
-              ),
-            ),
-          ],
+        title: appBar(
+          appbarTitle: senderInfo.name,
+          imageUrl: senderInfo.photoUrl,
         ),
+        actions: <Widget>[
+          chatMoreOptions(),
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -369,19 +333,6 @@ class _ChatViewState extends State<ChatView> {
         curve: Curves.easeOut,
       );
     });
-
-    // setState(() {});
-//    SchedulerBinding.instance.addPostFrameCallback((_) {
-//      Timer(Duration(milliseconds: 100), () {
-//        try {
-//          _scrollController.jumpTo(
-//            _scrollController.position.maxScrollExtent,
-//          );
-//        } catch (e) {
-//          print("Scroller not attached");
-//        }
-//      });
-//    });
   }
 
   void pushNewMessage({
@@ -389,13 +340,10 @@ class _ChatViewState extends State<ChatView> {
     String senderId,
     String communityId,
   }) {
-    // widget.chatModel.softDeletedBy = [];
-    // widget.chatModel.communityId = communityId;
     messageModel.fromId = senderId;
     messageModel.toId = widget.senderId;
     messageModel.message = messageContent;
     messageModel.timestamp = DateTime.now().millisecondsSinceEpoch;
-    // widget.chatModel.lastMessage = messageModel.message;
 
     if (widget.chatModel.isTimebankMessage) {}
 
@@ -479,7 +427,11 @@ class _ChatViewState extends State<ChatView> {
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    DateFormat('hh:mm a MMMM dd', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+                    DateFormat(
+                            'hh:mm a MMMM dd',
+                            Locale(AppConfig.prefs.getString('language_code'))
+                                .toLanguageTag())
+                        .format(
                       getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
                               messageModel.timestamp),
@@ -530,7 +482,11 @@ class _ChatViewState extends State<ChatView> {
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                 Text(
-                  DateFormat('h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+                  DateFormat(
+                          'h:mm a',
+                          Locale(AppConfig.prefs.getString('language_code'))
+                              .toLanguageTag())
+                      .format(
                     getDateTimeAccToUserTimezone(
                         dateTime: DateTime.fromMillisecondsSinceEpoch(
                             messageModel.timestamp),
@@ -546,56 +502,10 @@ class _ChatViewState extends State<ChatView> {
     );
   }
 
-  Future<String> blockMemberDialogView(BuildContext viewContext) async {
-    return showDialog(
-      context: viewContext,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: new Text(
-              AppLocalizations.of(context).translate('chat', 'block') +
-                  " ${partnerUser.fullname.split(' ')[0]}."),
-          content: new Text(
-              "${partnerUser.fullname.split(' ')[0]} ${AppLocalizations.of(context).translate('chat', 'block_warn')}"),
-          actions: <Widget>[
-            new FlatButton(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              color: Theme.of(context).accentColor,
-              textColor: FlavorConfig.values.buttonTextColor,
-              child: new Text(
-                AppLocalizations.of(context).translate('chat', 'block'),
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop("BLOCK");
-              },
-            ),
-            new FlatButton(
-              child: new Text(
-                AppLocalizations.of(context).translate('shared', 'cancel'),
-                style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop("CANCEL");
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   void dispose() {
     super.dispose();
     sharedPosts.clear();
-  }
-
-  bool isValidEmail(String email) {
-    RegExp regex =
-        RegExp(r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)');
-    return regex.hasMatch(email);
   }
 
   void blockMember() {
@@ -856,6 +766,111 @@ class _ChatViewState extends State<ChatView> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> clearChat(String chatId, String userId) async {
+    return Firestore.instance.collection('chatsnew').document(chatId).setData(
+      {
+        "softDeletedBy": FieldValue.arrayUnion([userId]),
+        "deletedBy": {
+          userId: DateTime.now().millisecondsSinceEpoch,
+        }
+      },
+      merge: true,
+    );
+  }
+
+  Future<String> showClearChatDialog(BuildContext viewContext, String title,
+      String content, String buttonLabel) {
+    return showDialog(
+      context: viewContext,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: new Text(content),
+          actions: <Widget>[
+            new FlatButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
+              child: new Text(
+                buttonLabel,
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop("SUCCESS");
+              },
+            ),
+            new FlatButton(
+              child: new Text(
+                AppLocalizations.of(context).translate('shared', 'cancel'),
+                style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop("CANCEL");
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget chatMoreOptions() {
+    return PopupMenuButton<MessageMenu>(
+      onSelected: (MessageMenu value) {
+        switch (value) {
+          case MessageMenu.BLOCK:
+            showClearChatDialog(
+              context,
+              AppLocalizations.of(context).translate('chat', 'block') +
+                  " ${partnerUser.fullname.split(' ')[0]}.",
+              "${partnerUser.fullname.split(' ')[0]} ${AppLocalizations.of(context).translate('chat', 'block_warn')}",
+              AppLocalizations.of(context).translate('chat', 'block'),
+            ).then((value) {
+              if (value != "CANCEL") {
+                blockMember();
+                Navigator.pop(context);
+              }
+            });
+            break;
+          case MessageMenu.CLEAR_CHAT:
+            showClearChatDialog(
+              context,
+              AppLocalizations.of(context).translate('chat', 'delete_title'),
+              AppLocalizations.of(context).translate('chat', 'delete_desc'),
+              AppLocalizations.of(context).translate('chat', 'delete_title'),
+            ).then((value) {
+              if (value != "CANCEL") {
+                clearChat(chatId, widget.senderId);
+                Navigator.pop(context);
+              }
+            });
+            break;
+        }
+      },
+      itemBuilder: (BuildContext context) {
+        return [
+          PopupMenuItem(
+              child: Text(
+                AppLocalizations.of(context).translate('chat', 'delete_title'),
+              ),
+              value: MessageMenu.CLEAR_CHAT),
+          ...!widget.chatModel.isTimebankMessage
+              ? [
+                  PopupMenuItem(
+                    child: Text(
+                      AppLocalizations.of(context).translate('chat', 'block'),
+                    ),
+                    value: MessageMenu.BLOCK,
+                  )
+                ]
+              : [],
+        ];
+      },
     );
   }
 }

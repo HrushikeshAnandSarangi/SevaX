@@ -57,6 +57,7 @@ class OneToManyOfferBloc extends BlocBase {
         OfferModel offerModel = OfferModel(
           id: id,
           email: user.email,
+          softDelete:false,
           fullName: user.fullname,
           sevaUserId: user.sevaUserID,
           timebankId: timebankId,

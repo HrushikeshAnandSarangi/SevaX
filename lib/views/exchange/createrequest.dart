@@ -843,10 +843,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.accepted = false;
     requestModel.acceptors = [];
     requestModel.address = selectedAddress;
-    requestModel.location =
-        location == null ? GeoFirePoint(40.754387, -73.984291) : location;
+    requestModel.location = location == null ? GeoFirePoint(40.754387, -73.984291) : location;
     requestModel.root_timebank_id = FlavorConfig.values.timebankId;
-
+    requestModel.softDelete = false;
     if (requestModel.id == null) return;
 
     // credit the timebank the required credits before the request creation

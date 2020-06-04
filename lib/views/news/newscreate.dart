@@ -109,6 +109,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.userPhotoURL = SevaCore.of(context).loggedInUser.photoURL;
     newsObject.newsDocumentUrl = globals.newsDocumentURL ?? '';
     newsObject.newsDocumentName = globals.newsDocumentName ?? '';
+    newsObject.softDelete = false;
 
 //    EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(

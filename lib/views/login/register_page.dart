@@ -102,9 +102,6 @@ class _RegisterPageState extends State<RegisterPage>
                             SizedBox(height: 24),
                             registerButton,
                             SizedBox(height: 8),
-                            Text(AppLocalizations.of(context)
-                                .translate('signup', 'or')),
-                            SizedBox(height: 8),
                             signUpWithGoogle,
                             SizedBox(height: 8),
                             Text(''),
@@ -579,7 +576,7 @@ class _RegisterPageState extends State<RegisterPage>
           children: <Widget>[
             horizontalLine(),
             Text(AppLocalizations.of(context)
-                .translate('signup', 'signup_with')),
+                .translate('signup', 'or')),
             horizontalLine()
           ],
         ),

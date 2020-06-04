@@ -34,6 +34,7 @@ class ChatModel {
         softDeletedBy: map["softDeletedBy"] == null
             ? []
             : List<String>.from(map["softDeletedBy"].map((x) => x)),
+        deletedBy: map.containsKey("deletedBy") ? map["deletedBy"] : {},
         isTimebankMessage: map["isTimebankMessage"],
         timebankId: map["timebankId"],
         communityId: map["communityId"],
@@ -44,13 +45,10 @@ class ChatModel {
         "participants": List<dynamic>.from(participants.map((x) => x)),
         "participantInfo":
             List<dynamic>.from(participantInfo.map((x) => x.toMap())),
-        // "lastMessage": lastMessage,
         "unreadStatus": unreadStatus,
-        "softDeletedBy": softDeletedBy,
         "isTimebankMessage": isTimebankMessage,
         "timebankId": timebankId,
         "communityId": communityId,
-        "timestamp": timestamp,
       };
 }
 

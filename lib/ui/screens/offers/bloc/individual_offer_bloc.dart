@@ -43,6 +43,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
       OfferModel offerModel = OfferModel(
         id: id,
         email: user.email,
+        softDelete:false,
         fullName: user.fullname,
         sevaUserId: user.sevaUserID,
         timebankId: timebankId,

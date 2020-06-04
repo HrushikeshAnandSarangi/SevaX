@@ -577,6 +577,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         projectModel.members = [];
                         projectModel.address = selectedAddress;
                         projectModel.id = Utils.getUuid();
+                        projectModel.softDelete = false;
                         // if (globals.projectsAvtaarURL == null) {
                         //   setState(() {
                         //     this.communityImageError =

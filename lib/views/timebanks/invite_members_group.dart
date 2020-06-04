@@ -388,7 +388,9 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
       GroupInviteUserModel groupInviteUserModel,
       GroupInviteStatus groupInviteStatus) {
     String statusText = getGroupUserStatusTitle(groupInviteStatus);
-    String date = DateFormat('dd MMM yyyy', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+    String date = DateFormat(
+      'dd MMM yyyy',
+    ).format(
       getDateTimeAccToUserTimezone(
           dateTime: DateTime.fromMillisecondsSinceEpoch(
               groupInviteUserModel.declined

@@ -186,6 +186,7 @@ class OfferModel extends DataModel {
   String sevaUserId;
   String timebankId;
   int timestamp;
+  bool softDelete;
 
   GroupOfferDataModel groupOfferDataModel;
   IndividualOfferDataModel individualOfferDataModel;
@@ -205,6 +206,7 @@ class OfferModel extends DataModel {
     this.individualOfferDataModel,
     this.selectedAdrress,
     this.communityId,
+    this.softDelete
   }) {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
@@ -217,6 +219,9 @@ class OfferModel extends DataModel {
   OfferModel.fromMapElasticSearch(Map<String, dynamic> map) {
     if (map.containsKey('offerType')) {
       this.offerType = offerTypeMapper[map['offerType']];
+    }
+    if(map.containsKey('softDelete')){
+      this.softDelete = map['softDelete'];
     }
 
     if (map.containsKey('id')) {
@@ -288,6 +293,9 @@ class OfferModel extends DataModel {
     if (map.containsKey('id')) {
       this.id = map['id'];
     }
+    if (map.containsKey('softDelete')) {
+      this.softDelete = map['softDelete'];
+    }
 
     if (map.containsKey("selectedAdrress")) {
       this.selectedAdrress = map['selectedAdrress'];
@@ -350,6 +358,9 @@ class OfferModel extends DataModel {
     if (this.offerType != null) {
       map['offerType'] = describeOfferType(this.offerType);
     }
+    if(this.softDelete!=null){
+      map['softDelete'] = this.softDelete;
+    }
 
     if (this.id != null && this.id.isNotEmpty) {
       map['id'] = this.id;
@@ -410,6 +421,9 @@ class OfferModel extends DataModel {
     // }
     if (this.email != null && this.email.isNotEmpty) {
       map['email'] = this.email;
+    }
+    if(this.softDelete!=null){
+      map['softDelete'] = this.softDelete;
     }
     if (this.fullName != null && this.fullName.isNotEmpty) {
       map['fullName'] = this.fullName;
