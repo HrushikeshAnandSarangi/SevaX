@@ -161,8 +161,6 @@ class TimebankModel extends DataModel {
       this.communityId = value;
     }
     if (key == 'preventAccedentalDelete') {
-      print(
-          "its coming here-------------------------------------- preventAccedentalDelete ");
       this.preventAccedentalDelete = value;
     }
   }
@@ -222,7 +220,6 @@ class TimebankModel extends DataModel {
     if (this.location != null) {
       map['location'] = this.location.data;
     }
-
 
     if (this.preventAccedentalDelete != null) {
       map['preventAccedentalDelete'] = this.preventAccedentalDelete;

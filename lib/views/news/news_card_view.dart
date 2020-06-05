@@ -479,7 +479,7 @@ class NewsCardViewState extends State<NewsCardView> {
     showDialog(
       context: parentContext,
       barrierDismissible: true,
-      builder: (context) {
+      builder: (_context) {
         return AlertDialog(
           title: Text(
               AppLocalizations.of(context).translate('chat', 'delete_feed')),
@@ -507,7 +507,7 @@ class NewsCardViewState extends State<NewsCardView> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.pop(_context);
                       showProgressDialog(
                           AppLocalizations.of(context)
                               .translate('chat', 'delete_feed_progress'),
@@ -524,7 +524,7 @@ class NewsCardViewState extends State<NewsCardView> {
                         fontSize: dialogButtonSize,
                       ),
                     ),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Navigator.pop(_context),
                   ),
                 ],
               ),

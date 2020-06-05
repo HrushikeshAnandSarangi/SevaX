@@ -1018,7 +1018,7 @@
     "userhas": "O usuário possui",
     "pending_projects": "projetos pendentes",
     "pending_requests": "Solicitações Pendentes",
-    "pending_offers":  "ofertas pendentes",
+    "pending_offers": "ofertas pendentes",
     "clear_trans": "Limpe as transações e tente novamente.",
     "close": "Fechar",
     "cannot_remove": "Não é possível remover-se do grupo. Em vez disso, tente excluir o grupo.",
@@ -1026,12 +1026,20 @@
     "cannot_timebank": "O usuário não pode ser excluído deste timebank"
   },
   "group": {
-    "edit_group":  "Editar grupo",
+    "edit_group": "Editar grupo",
     "settings": "Definições",
-    "about":  "Sobre",
+    "about": "Sobre",
     "view_request": "Ver pedidos",
     "reported_members": "Membros denunciados",
     "delete_group": "Excluir grupo",
     "manage": "Gerir"
+  },
+  "messages": {
+    "messages_title": "Mensagens",
+    "personal_messages": "Pessoal",
+    "admin_messages": "Admin"
+  },
+  "add_location": {
+    "confirm_location_label": "CONFIRMAR LOCAL"
   }
 }

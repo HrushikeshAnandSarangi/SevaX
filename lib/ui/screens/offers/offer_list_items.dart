@@ -27,7 +27,9 @@ class OfferListItems extends StatelessWidget {
         stream: getOffersStream(timebankId: timebankId),
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
-          if (snapshot.hasError) return new Text('${AppLocalizations.of(context).translate('requests','error')}: ${snapshot.error}');
+          if (snapshot.hasError)
+            return new Text(
+                '${AppLocalizations.of(context).translate('requests', 'error')}: ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
@@ -41,7 +43,8 @@ class OfferListItems extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
-                    child: Text(AppLocalizations.of(context).translate('offers','no_offers')),
+                    child: Text(AppLocalizations.of(context)
+                        .translate('offers', 'no_offers')),
                   ),
                 );
               }
@@ -57,7 +60,9 @@ class OfferListItems extends StatelessWidget {
         stream: getAllOffersStream(),
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
-          if (snapshot.hasError) return new Text('${AppLocalizations.of(context).translate('requests','error')} ${snapshot.error}');
+          if (snapshot.hasError)
+            return new Text(
+                '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
@@ -71,7 +76,8 @@ class OfferListItems extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
-                    child: Text(AppLocalizations.of(context).translate('offers','no_offers')),
+                    child: Text(AppLocalizations.of(context)
+                        .translate('offers', 'no_offers')),
                   ),
                 );
               }
@@ -96,7 +102,8 @@ class OfferListItems extends StatelessWidget {
                 .loggedInUser
                 .blockedBy
                 .contains(request.sevaUserId)
-        ? AppLocalizations.of(context).translate('offers','filtering_offers_content')
+        ? AppLocalizations.of(context)
+            .translate('offers', 'filtering_offers_content')
         : filteredList.add(request));
     return filteredList;
   }
@@ -113,21 +120,21 @@ class OfferListItems extends StatelessWidget {
                   height: 65,
                 );
               }
-              return getOfferWidget(consolidatedList[index]);
+              return getOfferWidget(consolidatedList[index], context);
             }),
       ),
     );
   }
 
-  Widget getOfferWidget(OfferModelList model) {
+  Widget getOfferWidget(OfferModelList model, BuildContext context) {
     return Container(
       decoration: containerDecoration,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
-      child: getOfferView(model),
+      child: getOfferView(model, context),
     );
   }
 
-  Widget getOfferView(OfferModelList offerModelList) {
+  Widget getOfferView(OfferModelList offerModelList, BuildContext context) {
     switch (offerModelList.getType()) {
       case OfferModelList.TITLE:
         var isMyContent =
@@ -139,7 +146,8 @@ class OfferListItems extends StatelessWidget {
               : EdgeInsets.fromLTRB(5, 12, 12, 18),
           child: Text(
             GroupOfferCommons.getGroupTitleForOffer(
-                groupKey: (offerModelList as OfferTitle).groupTitle),
+                groupKey: (offerModelList as OfferTitle).groupTitle,
+                context: context),
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
@@ -210,7 +218,9 @@ class NearOfferListItems extends StatelessWidget {
         stream: getNearOffersStream(timebankId: timebankId),
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
-          if (snapshot.hasError) return new Text('${AppLocalizations.of(context).translate('requests','error')} ${snapshot.error}');
+          if (snapshot.hasError)
+            return new Text(
+                '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
@@ -224,7 +234,8 @@ class NearOfferListItems extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
-                    child: Text(AppLocalizations.of(context).translate('offers','no_offers')),
+                    child: Text(AppLocalizations.of(context)
+                        .translate('offers', 'no_offers')),
                   ),
                 );
               }
@@ -234,7 +245,7 @@ class NearOfferListItems extends StatelessWidget {
                   child: ListView.builder(
                     itemBuilder: (context, index) {
                       OfferModel offer = offersList[index];
-                      return getOfferWidget(offer);
+                      return getOfferWidget(offer, context);
                     },
                     itemCount: offersList.length,
                   ),
@@ -248,7 +259,9 @@ class NearOfferListItems extends StatelessWidget {
         stream: getNearOffersStream(),
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
-          if (snapshot.hasError) return new Text('${AppLocalizations.of(context).translate('requests','error')} ${snapshot.error}');
+          if (snapshot.hasError)
+            return new Text(
+                '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
@@ -262,7 +275,8 @@ class NearOfferListItems extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
-                    child: Text(AppLocalizations.of(context).translate('offers','no_offers')),
+                    child: Text(AppLocalizations.of(context)
+                        .translate('offers', 'no_offers')),
                   ),
                 );
               }
@@ -272,7 +286,7 @@ class NearOfferListItems extends StatelessWidget {
                   child: ListView.builder(
                     itemBuilder: (context, index) {
                       OfferModel offer = offersList[index];
-                      return getOfferWidget(offer);
+                      return getOfferWidget(offer, context);
                     },
                     itemCount: offersList.length,
                   ),
@@ -295,12 +309,13 @@ class NearOfferListItems extends StatelessWidget {
                 .loggedInUser
                 .blockedBy
                 .contains(request.sevaUserId)
-        ? AppLocalizations.of(context).translate('offers','filtering_offers_content')
+        ? AppLocalizations.of(context)
+            .translate('offers', 'filtering_offers_content')
         : filteredList.add(request));
     return filteredList;
   }
 
-  Widget getOfferWidget(OfferModel model) {
+  Widget getOfferWidget(OfferModel model, BuildContext context) {
     return OfferCard(
       isCardVisible: isOfferVisible(
         model,

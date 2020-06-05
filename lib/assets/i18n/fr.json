@@ -1018,7 +1018,7 @@
     "userhas": "L'utilisateur a",
     "pending_projects": "projets en attente",
     "pending_requests": "Requêtes en cours",
-    "pending_offers":  "offres en attente",
+    "pending_offers": "offres en attente",
     "clear_trans": "Veuillez effacer les transactions et réessayer.",
     "close": "proche",
     "cannot_remove": "Impossible de vous retirer du groupe. Essayez plutôt de supprimer le groupe.",
@@ -1026,12 +1026,20 @@
     "cannot_timebank": "L'utilisateur ne peut pas être supprimé de cette banque de temps"
   },
   "group": {
-    "edit_group":  "Modifier le groupe",
+    "edit_group": "Modifier le groupe",
     "settings": "Réglages",
-    "about":  "À propos de",
+    "about": "À propos de",
     "view_request": "Afficher les demandes",
     "reported_members": "Membres signalés",
     "delete_group": "Supprimer le groupe",
     "manage": "Gérer"
+  },
+  "messages": {
+    "messages_title": "Messages",
+    "personal_messages": "Personnelle",
+    "admin_messages": "Admin"
+  },
+  "add_location": {
+    "confirm_location_label": "CONFIRMER L'EMPLACEMENT"
   }
 }

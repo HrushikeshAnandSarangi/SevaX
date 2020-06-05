@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 
 class LocationConfimationCard extends StatelessWidget {
@@ -59,7 +60,7 @@ class LocationConfimationCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    'CONFIRM LOCATION',
+                    AppLocalizations.of(context).translate('add_location', 'confirm_location_label'),
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   onPressed: () {

@@ -95,6 +95,8 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   width: 5,
                 ),
                 TransactionLimitCheck(
+                  isSoftDeleteRequested:
+                      widget.timebankModel.requestedSoftDelete,
                   child: GestureDetector(
                     child: Container(
                       margin: EdgeInsets.only(left: 0),
@@ -211,28 +213,28 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
     );
   }
 
-  void _showAdminAccessMessage() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: new Text(
-              AppLocalizations.of(context).translate('projects', 'alert')),
-          content: new Text(
-              AppLocalizations.of(context).translate('projects', 'admin_can')),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text(
-                  AppLocalizations.of(context).translate('shared', 'close')),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // void _showAdminAccessMessage() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: new Text(
+  //             AppLocalizations.of(context).translate('projects', 'alert')),
+  //         content: new Text(
+  //             AppLocalizations.of(context).translate('projects', 'admin_can')),
+  //         actions: <Widget>[
+  //           new FlatButton(
+  //             child: new Text(
+  //                 AppLocalizations.of(context).translate('shared', 'close')),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   void navigateToCreateProject() {
     Navigator.push(
