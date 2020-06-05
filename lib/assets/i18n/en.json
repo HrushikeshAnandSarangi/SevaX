@@ -1018,7 +1018,7 @@
     "userhas": "User has",
     "pending_projects": "pending projects",
     "pending_requests": "pending requests",
-    "pending_offers":  "pending offers",
+    "pending_offers": "pending offers",
     "clear_trans": "Please clear the transactions and try again.",
     "close": "Close",
     "cannot_remove": "Cannot remove yourself from the group. Instead, please try deleting the group.",
@@ -1026,12 +1026,17 @@
     "cannot_timebank": "User cannot be deleted from this timebank"
   },
   "group": {
-    "edit_group":  "Edit Group",
+    "edit_group": "Edit Group",
     "settings": "Settings",
-    "about":  "About",
+    "about": "About",
     "view_request": "View requests",
     "reported_members": "Reported Members",
     "delete_group": "Delete Group",
     "manage": "Manage"
+  },
+  "messages": {
+    "messages_title": "Messages",
+    "personal_messages": "Personal",
+    "admin_messages": "Admin"
   }
 }

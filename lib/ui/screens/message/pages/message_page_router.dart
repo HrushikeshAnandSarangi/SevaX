@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/personal_message_page.dart';
@@ -26,7 +27,7 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Messages",
+          AppLocalizations.of(context).translate('messages', 'messages_title'),
           style: TextStyle(fontSize: 18),
         ),
         actions: <Widget>[
@@ -103,7 +104,7 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
       width: double.infinity,
       child: CupertinoSegmentedControl<int>(
         selectedColor: Theme.of(context).primaryColor,
-        children: logoWidgets,
+        children: getLocalWidgets(context),
         borderColor: Colors.grey,
         groupValue: currentPage,
         onValueChanged: (int val) {
@@ -117,14 +118,16 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
     );
   }
 
-  final Map<int, Widget> logoWidgets = const <int, Widget>{
-    0: Text(
-      'Personal',
-      style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-    ),
-    1: Text(
-      'Admin',
-      style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-    ),
-  };
+  Map<int, Widget> getLocalWidgets(BuildContext context) {
+    return <int, Widget>{
+      0: Text(
+        AppLocalizations.of(context).translate('messages', 'personal_messages'),
+        style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+      ),
+      1: Text(
+        AppLocalizations.of(context).translate('messages', 'admin_messages'),
+        style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+      ),
+    };
+  }
 }

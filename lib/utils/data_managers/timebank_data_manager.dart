@@ -388,7 +388,7 @@ Future<CommunityModel> getCommunityDetailsByCommunityId(
 /// Get a Timebank data as a Stream
 Stream<TimebankModel> getTimebankModelStream(
     {@required String timebankId}) async* {
-  print('---->>> $timebankId');
+  // print('---->>> $timebankId');
   var data = Firestore.instance
       .collection('timebanknew')
       .document(timebankId)
@@ -410,7 +410,7 @@ Stream<TimebankModel> getTimebankModelStream(
 /// Get a community data as a Stream
 Stream<CommunityModel> getCommunityModelStream(
     {@required String communityId}) async* {
-  print('---->>> $communityId');
+  // print('---->>> $communityId');
   var data = Firestore.instance
       .collection('communities')
       .document(communityId)

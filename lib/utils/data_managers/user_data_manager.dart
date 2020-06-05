@@ -30,6 +30,17 @@ Future<void> updateUser({
       .setData(user.toMap(), merge: true);
 }
 
+Future<void> updateUserLanguage({
+  @required UserModel user,
+}) async {
+  return await Firestore.instance
+      .collection('users')
+      .document(user.email)
+      .updateData({
+    'language': user.language,
+  });
+}
+
 Future<Map<String, UserModel>> getUserForUserModels(
     {@required List<String> admins}) async {
   var map = Map<String, UserModel>();
@@ -88,7 +99,8 @@ Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(
   } else {
     saveXLink = 'Sevax';
   }
-  var urlLink = FlavorConfig.values.cloudFunctionBaseURL + '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
+  var urlLink = FlavorConfig.values.cloudFunctionBaseURL +
+      '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
 
   print("==============$urlLink==============");
   var res = await http
@@ -116,7 +128,8 @@ Future<UserModelListMoreStatus>
   } else {
     saveXLink = 'Sevax';
   }
-  var urlLink = FlavorConfig.values.cloudFunctionBaseURL + '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
+  var urlLink = FlavorConfig.values.cloudFunctionBaseURL +
+      '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
   print("==============$urlLink==============");
   var res = await http
       .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
@@ -143,7 +156,8 @@ Future<UserModelListMoreStatus> getUsersForTimebankId(
     saveXLink = 'Sevax';
   }
   print("peekaboo:${FlavorConfig.values.timebankName}");
-  var urlLink = FlavorConfig.values.cloudFunctionBaseURL + '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email';
+  var urlLink = FlavorConfig.values.cloudFunctionBaseURL +
+      '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email';
   print("\n\n\n\n\n\n\n\nMembersListURL:$urlLink");
   var res = await http
       .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
@@ -216,8 +230,12 @@ Stream<UserModel> getUserForEmailStream(String userEmailAddress) async* {
   );
 }
 
-Future<Map<String,dynamic>> removeMemberFromGroup({String sevauserid, String groupId, }) async {
-  String urlLink = FlavorConfig.values.cloudFunctionBaseURL + "/removeMemberFromGroup?sevauserid=$sevauserid&groupId=$groupId";
+Future<Map<String, dynamic>> removeMemberFromGroup({
+  String sevauserid,
+  String groupId,
+}) async {
+  String urlLink = FlavorConfig.values.cloudFunctionBaseURL +
+      "/removeMemberFromGroup?sevauserid=$sevauserid&groupId=$groupId";
 
   var res = await http
       .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
@@ -225,8 +243,12 @@ Future<Map<String,dynamic>> removeMemberFromGroup({String sevauserid, String gro
   return data;
 }
 
-Future<Map<String,dynamic>> removeMemberFromTimebank({String sevauserid, String timebankId, }) async {
-  String urlLink = FlavorConfig.values.cloudFunctionBaseURL + "/removeMemberFromTimebank?sevauserid=$sevauserid&timebankId=$timebankId";
+Future<Map<String, dynamic>> removeMemberFromTimebank({
+  String sevauserid,
+  String timebankId,
+}) async {
+  String urlLink = FlavorConfig.values.cloudFunctionBaseURL +
+      "/removeMemberFromTimebank?sevauserid=$sevauserid&timebankId=$timebankId";
 
   var res = await http
       .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});

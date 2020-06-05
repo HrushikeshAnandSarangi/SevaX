@@ -548,8 +548,6 @@ class CreateEditCommunityViewFormState
                                           .data.timebank.preventAccedentalDelete
                                       : timebankModel.preventAccedentalDelete,
                                   onChanged: (bool value) {
-                                    print(
-                                        "$value --->>>> ${timebankModel.preventAccedentalDelete} -- ${snapshot.data.timebank.preventAccedentalDelete}");
                                     timebankModel.preventAccedentalDelete =
                                         value;
                                     snapshot.data.timebank.updateValueByKey(

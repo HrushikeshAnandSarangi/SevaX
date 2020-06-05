@@ -34,7 +34,6 @@ class UserProfileBloc {
                 .collection("communities")
                 .document(id)
                 .get();
-            print('--->${value.documentID}   ${userModel.currentCommunity}');
             community.add(
               CommunityCard(
                 selected: userModel.currentCommunity == value.documentID,
