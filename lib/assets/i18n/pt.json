@@ -335,7 +335,7 @@
     "camera": "Camera",
     "gallery": "Galeria",
     "size_alert": "Arquivos com mais de 10 MB não são permitidos",
-    "size_alert_titile": "Alerta de arquivo grande",
+    "size_alert_title": "Alerta de arquivo grande",
     "update_post": "Atualizar postagem",
     "update_progress": "Atualizando postagem",
     "imagehint": "Crédito da foto"
@@ -505,6 +505,7 @@
     "request_accepted_by": "Pedido aceito por",
     "by_approving_short": "Aprovando",
     "add_to": "Será adicionado ao evento",
+    "added_you": "adicionou você a",
     "decline": "Negar",
     "want_volunteer": "Eu quero ser voluntário (a).",
     "request_reject": "NotificationType.RequestReject",
@@ -521,6 +522,7 @@
     "not_mentioned": "Razão não mencionada",
     "allow": "Permitir",
     "timebank_exit": "Saída do Timebank",
+    "timebank_join": "Timebank Join",
     "exited_from": "saiu de",
     "tap_to_view": "Toque para ver os detalhes"
   },
@@ -558,7 +560,6 @@
     "sure_logout": "Tem certeza de que deseja sair?"
   },
   "help": {
-    "title": "",
     "about_sevax": "Sobre o SevaX",
     "about_us": "Sobre nós",
     "training_video": "Vídeo de treinamento",
@@ -935,7 +936,15 @@
     "enter_start_end": "Digite as datas de início e término"
   },
   "info_window": {
-    "mapper": "i_button_info_pt"
+    "mapper": "i_button_info_pt",
+    "groups": "A Timebank (or Community) is divided into Groups. For example, a School Community would have Groups for Technology Committee, Fund Raising, Classroom, etc.",
+    "offers": "Users can either make Offers to the Timebank (eg. I can build HTML pages on Saturday mornings from 9 to 11 am) or to the other members in the Community (eg. I can teach a 4-week class on Making Quilts on Sunday afternoons from 2 to 4 pm). The offers to the Timebank needs to be accepted by an Admin. At this time the Offer gets converted to a Request.",
+    "private_group": "Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.",
+    "private_timebank": "Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.",
+    "projects": "Projects are logical collections under a Group. For example, the Technology Committee Group can have the following Projects: School web page, Equipment, Apps, etc.",
+    "protected_timebank": "Check this box if you want to disable user-to-user transactions. That is, “Requests” can only be originated by the designated Admins of this Timebank. Typically, Protected Timebanks are used for Political Campaigns and certain Nonprofit Organizations",
+    "requests": "Requests are either created by Time Admins - for community tasks that need to be performed (eg. Weed the school yard) , or by Users who need help from the community for things they need to be done (eg. seniors needing groceries delivered). Requests for a Timebank would be listed under a Project.",
+    "tax_configuration": "At the time that a user is credited Seva Credits for completing a request (for the Timebank), the Timebank Admin can specify a Tax - which is credited to the Timebank. Slide the ruler to specify the amount of the Tax."
   },
   "switching_timebank": {
     "switch_timebank": "Mudando o Timebank",
