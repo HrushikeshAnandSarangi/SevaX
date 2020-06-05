@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -29,8 +31,10 @@ class ShowLimitBadge extends StatelessWidget {
                 isAdmin
                     ? (_userBloc.community.payment['message'] != null
                         ? _userBloc.community.payment['message']
-                        : AppLocalizations.of(context).translate('homepage','payment_data_syncing'))
-                    : AppLocalizations.of(context).translate('homepage','actions_not_allowed'),
+                        : AppLocalizations.of(context)
+                            .translate('homepage', 'payment_data_syncing'))
+                    : AppLocalizations.of(context)
+                        .translate('homepage', 'actions_not_allowed'),
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -44,8 +48,14 @@ class ShowLimitBadge extends StatelessWidget {
 
 class TransactionLimitCheck extends StatelessWidget {
   final Widget child;
+  final bool isSoftDeleteRequested;
 
-  const TransactionLimitCheck({Key key, this.child}) : super(key: key);
+  const TransactionLimitCheck({
+    Key key,
+    this.child,
+    @required this.isSoftDeleteRequested,
+  })  : assert(isSoftDeleteRequested != null),
+        super(key: key);
   @override
   Widget build(BuildContext context) {
     final _userBloc = BlocProvider.of<UserDataBloc>(context);
@@ -55,14 +65,14 @@ class TransactionLimitCheck extends StatelessWidget {
       builder: (context, AsyncSnapshot<CommunityModel> snapshot) {
         bool isAdmin =
             _userBloc.community.admins.contains(_userBloc.user.sevaUserID);
+        bool isBillingFailed =
+            !(_userBloc.community.payment['payment_success'] ?? false);
         return GestureDetector(
           onTap: () {
-            _showDialog(context, isAdmin, _userBloc.user);
+            _showDialog(context, isAdmin, _userBloc.user, isBillingFailed);
           },
           child: AbsorbPointer(
-            absorbing:
-                // Actual code  !(_userBloc.community.payment['payment_success'] ?? false),
-                !(_userBloc.community.payment['payment_success'] ?? false),
+            absorbing: isBillingFailed || isSoftDeleteRequested,
             child: child,
           ),
         );
@@ -70,7 +80,8 @@ class TransactionLimitCheck extends StatelessWidget {
     );
   }
 
-  void _showDialog(context, bool isAdmin, UserModel user) {
+  void _showDialog(
+      context, bool isAdmin, UserModel user, bool isBillingFailed) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -91,18 +102,23 @@ class TransactionLimitCheck extends StatelessWidget {
                 ),
               ),
               Text(
-                isAdmin
-                    ? AppLocalizations.of(context).translate('homepage','failed')
-                    : AppLocalizations.of(context).translate('homepage','contact_admin'),
+                getMessage(
+                  context: context,
+                  isAdmin: isAdmin,
+                  isSoftDeleteRequested: isSoftDeleteRequested,
+                  isBillingFailed: isBillingFailed,
+                ),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 10),
               Offstage(
-                offstage: !isAdmin,
+                offstage:
+                    !isAdmin || (isSoftDeleteRequested && !isBillingFailed),
                 child: FlatButton(
                   color: Theme.of(context).accentColor,
                   child: new Text(
-                    AppLocalizations.of(context).translate('homepage','configure'),
+                    AppLocalizations.of(context)
+                        .translate('homepage', 'configure'),
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
@@ -114,7 +130,6 @@ class TransactionLimitCheck extends StatelessWidget {
                           autoImplyLeading: true,
                           user: user,
                           isPlanActive: false,
-                          // planName: "grande_plan",
                         ),
                       ),
                     );
@@ -125,23 +140,40 @@ class TransactionLimitCheck extends StatelessWidget {
               FlatButton(
                 color: Theme.of(context).accentColor,
                 child: new Text(
-                  AppLocalizations.of(context).translate('billing_plans','close'),
+                  AppLocalizations.of(context)
+                      .translate('billing_plans', 'close'),
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: <Widget>[
-
-              //   ],
-              // ),
             ],
           ),
         );
       },
     );
   }
+}
+
+String getMessage({
+  BuildContext context,
+  bool isAdmin,
+  bool isBillingFailed,
+  bool isSoftDeleteRequested,
+}) {
+  if (isBillingFailed) {
+    log("Billing failed isAdmin: $isAdmin");
+    return isAdmin
+        ? AppLocalizations.of(context).translate('homepage', 'failed')
+        : AppLocalizations.of(context).translate('homepage', 'contact_admin');
+  }
+  if (isSoftDeleteRequested) {
+    log("soft delete isAdmin: $isAdmin");
+    return isAdmin
+        ? AppLocalizations.of(context)
+            .translate('soft_delete', 'request_in_progress_body')
+        : AppLocalizations.of(context).translate('homepage', 'contact_admin');
+  }
+  return 'Something went wrong!';
 }
