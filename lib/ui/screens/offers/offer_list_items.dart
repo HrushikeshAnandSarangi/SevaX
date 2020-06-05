@@ -48,13 +48,11 @@ class OfferListItems extends StatelessWidget {
               var consolidatedList =
                   GroupOfferCommons.groupAndConsolidateOffers(
                       offersList, SevaCore.of(context).loggedInUser.sevaUserID);
-              print("============== $consolidatedList");
               return formatListOffer(consolidatedList: consolidatedList);
           }
         },
       );
     } else {
-      print("set stream for offers");
       return StreamBuilder<List<OfferModel>>(
         stream: getAllOffersStream(),
         builder:
@@ -154,7 +152,6 @@ class OfferListItems extends StatelessWidget {
   }
 
   _navigateToOfferDetails(OfferModel model) {
-    print(model);
     Navigator.push(
       parentContext,
       MaterialPageRoute(

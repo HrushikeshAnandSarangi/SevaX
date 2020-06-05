@@ -53,8 +53,6 @@ Widget infoButton({
       RenderBox renderBox = key.currentContext.findRenderObject();
       Size buttonSize = renderBox.size;
       Offset buttonPosition = renderBox.localToGlobal(Offset.zero);
-      print(
-          "$buttonSize   $buttonPosition ${MediaQuery.of(context).size.height}");
       showDialog(
         context: context,
         builder: (BuildContext context) {

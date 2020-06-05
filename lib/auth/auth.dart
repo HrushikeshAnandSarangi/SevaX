@@ -55,7 +55,6 @@ class Auth {
           AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName]);
       final AuthorizationResult result =
           await AppleSignIn.performRequests([request]);
-      print("Result:${AuthorizationStatus.error}");
       switch (result.status) {
         case AuthorizationStatus.authorized:
           final AppleIdCredential _auth = result.credential;
@@ -70,16 +69,13 @@ class Auth {
 
           return _processGoogleUser(_result.user);
         case AuthorizationStatus.error:
-          print("Sign in failed");
           break;
         case AuthorizationStatus.cancelled:
-          print("Sign in cancelled");
           break;
         default:
           break;
       }
     } else {
-      print("AppleSignIn.isNotAvailable");
     }
   }
 
@@ -97,7 +93,6 @@ class Auth {
     } on Exception catch (error) {
       throw error;
     } catch (error) {
-      print(error);
       log('Auth: signInWithEmailAndPassword: $error');
     }
     return _processGoogleUser(result.user);
@@ -117,50 +112,14 @@ class Auth {
       return _processEmailPasswordUser(result.user, displayName);
     } on PlatformException catch (error) {
       if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-        print(" ${email} already registered");
       }
-      print("signup error $error");
       throw error;
     } catch (error) {
       log('createUserWithEmailAndPassword: error: ${error.toString()}');
-      print(" ${email} already registered");
-      print("signup error $error");
 
       return null;
     }
   }
-
-  // /// Register a User with [email] and [password]
-  // Future<UserModel> createUserWithEmailAndPassword({
-  //   @required String email,
-  //   @required String password,
-  //   @required String displayName,
-  // }) async {
-  //   try {
-  //     await _firebaseAuth
-  //         .createUserWithEmailAndPassword(
-  //           email: email,
-  //           password: password,
-  //         )
-  //         .then((onValue) {})
-  //         .catchError((onError) {
-  //       print("sign up error $onError");
-  //     });
-  //     //return _processEmailPasswordUser(user, displayName);
-  //   } on PlatformException catch (error) {
-  //     if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-  //       print(" ${email} already registered");
-  //     }
-  //     print("signup error $error");
-  //     throw error;
-  //   } catch (error) {
-  //     log('createUserWithEmailAndPassword: error: ${error.toString()}');
-  //     print(" ${email} already registered");
-  //     print("signup error $error");
-
-  //     return null;
-  //   }
-  // }
 
   /// Sign out the logged in user and clear all user preferences
   Future<void> signOut() async {

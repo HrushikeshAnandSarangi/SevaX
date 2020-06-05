@@ -374,8 +374,6 @@ Future<void> readTimeBankNotification({
   String notificationId,
   String timebankId,
 }) async {
-  print(
-      "Updating status of $timebankId for $notificationId <<<<<<<<<<<<<<<<<<<,");
   await Firestore.instance
       .collection('timebanknew')
       .document(timebankId)
@@ -390,8 +388,6 @@ Stream<List<NotificationsModel>> getNotifications({
   String userEmail,
   @required String communityId,
 }) async* {
-  print("userEmail " + userEmail);
-  print("communityId " + communityId);
 
   var data = Firestore.instance
       .collection('users')
@@ -570,8 +566,6 @@ Stream<List<NotificationsModel>> getCompletedNotificationsStream(
           }
         });
         notificationSink.add(notifications);
-        print(
-            "${notifications.length}----------  -------------------------  -----");
       },
     ),
   );

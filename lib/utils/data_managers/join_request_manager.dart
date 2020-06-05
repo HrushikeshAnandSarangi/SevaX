@@ -70,14 +70,12 @@ Future<List<JoinRequestModel>> getFutureUserRequest({
       //  .where('entity_id',isEqualTo: primaryTimebank)
       .where('user_id', isEqualTo: userID);
   QuerySnapshot snapshot = await query.getDocuments();
-  //print('ghghgh ${snapshot.documents}');
   if (snapshot.documents == null) {
     return [];
   }
   var requestList = List<JoinRequestModel>();
   snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
     var model = JoinRequestModel.fromMap(documentSnapshot.data);
-    //  print('hghghg ${model.userId}');
 
     if (model.userId == userID) {
       requestList.add(model);
@@ -94,14 +92,12 @@ Future<List<JoinRequestModel>> getFutureUserTimeBankRequest(
       .where('entity_id', isEqualTo: primaryTimebank)
       .where('user_id', isEqualTo: userID);
   QuerySnapshot snapshot = await query.getDocuments();
-  //print('ghghgh ${snapshot.documents}');
   if (snapshot.documents == null) {
     return [];
   }
   var requestList = List<JoinRequestModel>();
   snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
     var model = JoinRequestModel.fromMap(documentSnapshot.data);
-    //  print('hghghg ${model.userId}');
 
     if (model.userId == userID) {
       requestList.add(model);
@@ -109,39 +105,6 @@ Future<List<JoinRequestModel>> getFutureUserTimeBankRequest(
   });
   return requestList;
 }
-
-/*
-Stream<List<JoinRequestModel>> getTimebankUserRequests({
-  @required String userID,
-}) async* {
-  var data = Firestore.instance
-      .collection('join_requests')
-      .where('entity_type' , isEqualTo: 'TimeBank')
-      .where('user_id', isEqualTo: userID)
-      .snapshots();
-
-  yield* data.transform(
-    StreamTransformer<QuerySnapshot, List<JoinRequestModel>>.fromHandlers(
-      handleData: (snapshot, joinrequestSink) {
-        print('requests data ${snapshot.toString()}');
-
-        List<JoinRequestModel> joinrequestList = [];
-        snapshot.documents.forEach(
-              (documentSnapshot) {
-            JoinRequestModel model =
-            JoinRequestModel.fromMap(documentSnapshot.data);
-            print('requests data ${documentSnapshot.data}');
-
-
-            if (model.accepted == null) joinrequestList.add(model);
-          },
-        );
-        joinrequestSink.add(joinrequestList);
-      },
-    ),
-  );
-}
-*/
 
 Stream<List<JoinRequestModel>> getTimebankJoinRequest({
   @required String timebankID,

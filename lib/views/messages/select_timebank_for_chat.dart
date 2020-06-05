@@ -36,7 +36,6 @@ List<String> dropdownList = [];
 
 Widget getTimebanks(BuildContext context) {
   List<TimebankModel> timebankList = [];
-  print("Getting data for messages timebanks");
   return StreamBuilder<List<TimebankModel>>(
       stream: FirestoreManager.getTimebanksForUserStream(
         userId: SevaCore.of(context).loggedInUser.sevaUserID,
@@ -53,7 +52,6 @@ Widget getTimebanks(BuildContext context) {
         });
 
         // Navigator.pop(context);
-        print("Length -=-=-=-= ${dropdownList.length}");
 
         return ListView.builder(
             itemCount: timebankList.length,

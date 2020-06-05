@@ -74,7 +74,6 @@ class TransactionLimitCheck extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        print(isAdmin);
         return AlertDialog(
           contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           shape:

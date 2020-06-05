@@ -97,13 +97,11 @@ class EulaAgreementState extends State<EulaPage> {
                           onPressed: userAcceptanceStatus
                               ? () {
                                   user.acceptedEULA = true;
-                                  print(user);
                                   Firestore.instance
                                       .collection('users')
                                       .document(user.email)
                                       .updateData({'acceptedEULA': true}).then(
                                           (onValue) {
-                                    print("routing");
                                     // customRouter(context: context, user: user);
                                   }).catchError((onError) {
                                     print("Error Updating introduction");
