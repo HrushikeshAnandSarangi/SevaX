@@ -519,7 +519,7 @@ Future<void> approveRequestCompletion({
         .get();
 
     taxPercentage = data.data['taxPercentage'] ?? 0;
-    print('---->tax percentage $taxPercentage');
+    // print('---->tax percentage $taxPercentage');
 
     double tax = transactionvalue * taxPercentage;
     transactionvalue = transactionvalue - tax;
@@ -993,7 +993,7 @@ Stream<List<TransactionModel>> getTimebankCreditsDebitsStream({
           requestList.add(model);
         });
         requestSink.add(requestList);
-        print("request model --->>> ${requestList.toString()}");
+        // print("request model --->>> ${requestList.toString()}");
       },
     ),
   );
@@ -1020,7 +1020,7 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
         });
         requestSink.add(requestList);
 
-        print("request model --->>> ${requestList.toString()}");
+        // print("request model --->>> ${requestList.toString()}");
       },
     ),
   );

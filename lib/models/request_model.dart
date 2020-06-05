@@ -174,6 +174,9 @@ class RequestModel extends DataModel {
     if (map.containsKey('id')) {
       this.id = map['id'];
     }
+    if(map.containsKey('id')){
+      this.softDelete = map['softDelete'];
+    }
 
     if (map.containsKey('projectId')) {
       this.projectId = map['projectId'];
@@ -300,6 +303,10 @@ class RequestModel extends DataModel {
       this.id = map['id'];
     }
 
+    if(map.containsKey('id')){
+      this.softDelete = map['softDelete'];
+    }
+
     if (map.containsKey('address')) {
       this.address = map['address'];
     }
@@ -417,6 +424,9 @@ class RequestModel extends DataModel {
     }
     if (this.title != null && this.title.isNotEmpty) {
       object['title'] = this.title;
+    }
+    if(this.softDelete!=null){
+       object['softDelete'] = this.softDelete;
     }
     if (this.root_timebank_id != null && this.root_timebank_id.isNotEmpty) {
       object['root_timebank_id'] = this.root_timebank_id;

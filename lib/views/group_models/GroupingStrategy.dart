@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:flutter/cupertino.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -87,7 +88,8 @@ class GroupRequestCommons {
         return "My Requests";
 
       case "Others":
-        return (FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)
+        return (FlavorConfig.appFlavor == Flavor.APP ||
+                FlavorConfig.appFlavor == Flavor.SEVA_DEV)
             ? "Timebank Requests"
             : "Timebank Requests";
 
@@ -180,14 +182,15 @@ class GroupOfferCommons {
     return hashMap;
   }
 
-  static String getGroupTitleForOffer({String groupKey, context}) {
+  static String getGroupTitleForOffer({String groupKey, BuildContext context}) {
     switch (groupKey) {
       case "MyOffers":
         return "";
-        
+
       case "Others":
         // return "${FlavorConfig.values.timebankTitle} Offers";
-        return AppLocalizations.of(context).translate('requests', 'timebank_offers');
+        return AppLocalizations.of(context)
+            .translate('requests', 'timebank_offers');
       default:
         return AppLocalizations.of(context).translate('requests', 'others');
     }

@@ -540,7 +540,7 @@
     "help": "Socorro",
     "dialog_text": "Tem certeza de que deseja criar um novo Banco de tempo - em vez de ingressar em um Banco de tempo existente? Criar um novo Banco de tempo implica que você será responsável por administrar o Banco de tempo - incluindo adicionar e gerenciar as necessidades dos membros, responder oportunamente às perguntas dos membros, promover resoluções de conflitos e realizar reuniões mensais. Para se tornar um membro de um Banco de tempo já existente, você precisará saber o nome do Banco de tempo e ter um código de convite ou enviar uma solicitação para ingressar no Banco de tempo.",
     "seva_credits": "Créditos Seva",
-    "title": "Profile",
+    "title": "Perfil",
     "name": "nombre",
     "bio": "biografía",
     "add_bio": "Añade tu biografía",
@@ -1018,7 +1018,7 @@
     "userhas": "El usuario tiene",
     "pending_projects": "proyectos pendientes",
     "pending_requests": "solicitudes pendientes",
-    "pending_offers":  "ofertas pendientes",
+    "pending_offers": "ofertas pendientes",
     "clear_trans": "Borre las transacciones e intente nuevamente.",
     "close": "Cerca",
     "cannot_remove": "No se puede eliminar del grupo. En su lugar, intente eliminar el grupo.",
@@ -1033,5 +1033,10 @@
     "reported_members": "Miembros reportados",
     "delete_group": "Eliminar grupo",
     "manage": "Gestionar"
+  },
+  "messages": {
+    "messages_title": "Mensajes",
+    "personal_messages": "Personal",
+    "admin_messages": "Administradora"
   }
 }

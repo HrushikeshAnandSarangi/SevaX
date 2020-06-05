@@ -1033,5 +1033,10 @@
     "reported_members": "Reported Members",
     "delete_group": "Delete Group",
     "manage": "Manage"
+  },
+  "messages": {
+    "messages_title": "Messages",
+    "personal_messages": "Personal",
+    "admin_messages": "Admin"
   }
 }

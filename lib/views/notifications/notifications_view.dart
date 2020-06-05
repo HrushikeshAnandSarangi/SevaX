@@ -589,8 +589,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       title: AppLocalizations.of(context)
           .translate('notifications', 'timebank_join'),
       subTitle:
-          '${userAddedModel.adminName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'added_you')} ${userAddedModel.timebankName} ${AppLocalizations.of(context).translate('members', 'timebank')}'
-          '${AppLocalizations.of(context).translate('notifications', 'added_you')}  ',
+          '${userAddedModel.adminName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'added_you')} ${userAddedModel.timebankName} ${AppLocalizations.of(context).translate('members', 'timebank')}',
     );
   }
 
