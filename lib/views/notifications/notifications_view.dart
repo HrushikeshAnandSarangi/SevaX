@@ -121,8 +121,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                 padding: EdgeInsets.only(bottom: 20),
                 itemCount: notifications.length,
                 itemBuilder: (context, index) {
-                  print(
-                      "----------------------------------------------------->>>");
                   NotificationsModel notification =
                       notifications.elementAt(index);
 
@@ -689,7 +687,8 @@ class NotificationsView extends State<NotificationViewHolder> {
             photoUrl: user.photoURL,
             title: AppLocalizations.of(context)
                 .translate('notifications', 'debited'),
-            subTitle: "${model.credits} ${AppLocalizations.of(context).translate('notifications', 'debited_to')}",
+            subTitle:
+                "${model.credits} ${AppLocalizations.of(context).translate('notifications', 'debited_to')}",
           );
         });
   }
