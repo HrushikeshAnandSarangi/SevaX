@@ -5,6 +5,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -174,7 +175,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                         timeAgo
                             .format(
                               DateTime.fromMillisecondsSinceEpoch(
-                                  projectModel.createdAt),
+                                  projectModel.createdAt), locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
                             )
                             .replaceAll('hours ago', 'h'),
                         style: TextStyle(

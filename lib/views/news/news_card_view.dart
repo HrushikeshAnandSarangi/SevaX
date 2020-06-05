@@ -7,6 +7,7 @@ import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/news/update_feed.dart';
@@ -536,7 +537,7 @@ class NewsCardViewState extends State<NewsCardView> {
 
   String _getFormattedTime(int timestamp) {
     return timeAgo.format(
-      DateTime.fromMillisecondsSinceEpoch(timestamp),
+      DateTime.fromMillisecondsSinceEpoch(timestamp), locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
     );
   }
 

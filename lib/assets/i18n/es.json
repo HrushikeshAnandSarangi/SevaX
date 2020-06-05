@@ -44,7 +44,7 @@
     "check_internet": "Por favor, verifique sua conexão à internet.",
     "dismiss": "Dispensar",
     "or": "ou",
-    "cancel": "cancelar",
+    "cancel": "Cancelar",
     "next": "Próximo",
     "skip": "Pular",
     "capital_cancel": "Cancelar",
@@ -335,15 +335,14 @@
     "camera": "Cámara",
     "gallery": "Galería",
     "size_alert": "No se permiten archivos de más de 10 MB.",
-    "size_alert_title": "Alerta de archivo grande"
+    "size_alert_title": "Alerta de archivo grande",
+    "imagehint": "autor de la foto",
+    "update_post": "Actualizar publicación",
+    "update_progress": "Actualizando publicación"
   },
   "invitations": {
     "invitation_email_title": "¡Increíble! Estás invitado a unirte a un banco de tiempo",
-    "email_body": "<p>Está invitado a descargar la aplicación SevaX y unirse al Timebank ***. La aplicación SevaX utiliza Timebanking, un sistema basado en la reciprocidad donde los miembros de la comunidad se ayudan mutuamente a cambio de créditos Seva. Haga clic en este <a href=\"###;&nbsp;\"> enlace </a> para unirse.</p>",
-    "size_alert_title": "Alerta de archivo grande",
-    "update_post": "Actualizar publicación",
-    "update_progress": "Actualizando publicación",
-    "imagehint": "Autor de la foto"
+    "email_body": "<p>Está invitado a descargar la aplicación SevaX y unirse al Timebank ***. La aplicación SevaX utiliza Timebanking, un sistema basado en la reciprocidad donde los miembros de la comunidad se ayudan mutuamente a cambio de créditos Seva. Haga clic en este <a href=\"###;&nbsp;\"> enlace </a> para unirse.</p>"
   },
   "projects": {
     "title": "Projetos",
@@ -520,7 +519,12 @@
     "updating_timebank": "Atualizando timebank ..",
     "reason_to_join": "Motivo para participar",
     "not_mentioned": "Razão não mencionada",
-    "allow": "Permitir"
+    "allow": "Permitir",
+    "timebank_exit": "Timebank Exit",
+    "exited_from": "ha salido de",
+    "tap_to_view": "Toca para ver los detalles",
+    "added_you": "te ha agregado a",
+    "timebank_join": "Timebank Join"
   },
   "profile": {
     "image_hint": "Imagem de perfil",
@@ -642,7 +646,9 @@
     "ok": "Está bem",
     "by_approving_that": "Ao aprovar, você aceita que",
     "worked_for": "trabalhou para",
-    "no_comments": "Sem comentários"
+    "no_comments": "Sem comentários",
+    "timebank_offers": "Ofertas de banco de tempo",
+    "others": "Otros"
   },
   "create_request": {
     "humanity_first_create": "Crear solicitud de pandilla Yang",
@@ -696,7 +702,7 @@
     "tap_error_select": "Seleccione una o más opciones",
     "save": "Guardar",
     "no_members_toadd": "No hay miembros disponibles para agregar",
-    "select_timebank": "Seleccionar banco de tiempo",
+    "select_timebank": "Selecciona grupo",
     "search_member": "Buscar miembros",
     "atleast_3": "La búsqueda requiere un mínimo de 3 caracteres",
     "no_user": "No se encontró usuario",
@@ -892,7 +898,16 @@
     "Remove": "Eliminar",
     "Promote": "Promover",
     "Demote": "Degradar",
-    "Exit": "Salida"
+    "Exit": "Salida",
+    "admins": "Administradores",
+    "coordinators": "Coordinadores",
+    "coordinator": "Coordinador",
+    "remove_as_admin": "Eliminar como administrador",
+    "add_as_admin": "Agregar como administrador",
+    "view_profile": "Ver perfil",
+    "remove_member": "Eliminar miembro",
+    "sure_a": "Estás seguro de que desea eliminar",
+    "timebank_members": "de los miembros del banco de tiempo?"
   },
   "create_offer": {
     "title": "Crear oferta",
@@ -977,10 +992,46 @@
     "cancel": "Cancelar"
   },
   "select_member": {
-    "select_timebank": "Seleccionar banco de tiempo",
+    "select_timebank": "Selecciona grupo",
     "select_volunteer": "Seleccionar voluntaria"
   },
   "links": {
     "linkToWeb": "links_es"
+  },
+  "reported_members": {
+    "reported_member": "Informar miembro",
+    "inform": "Informe por qué informa a este usuario.",
+    "details": "Proporcione tantos detalles como sea posible.",
+    "report": "Reporte",
+    "reporting_member": "Miembro informante",
+    "success": "Miembro informado con éxito",
+    "failed": "¡Error al informar al miembro! Inténtalo de nuevo",
+    "reported_users": "Usuarios reportados",
+    "detail": "Haga clic aquí para ver los usuarios informados de este banco de tiempo",
+    "reported_members": "Miembros reportados",
+    "no_data": "Sin datos",
+    "reported_by": "Reportado por",
+    "user": "usuario",
+    "users": "los usuarios",
+    "removed": "El usuario se eliminó correctamente del grupo",
+    "cannot_group": "El usuario no puede ser eliminado de este grupo",
+    "userhas": "El usuario tiene",
+    "pending_projects": "proyectos pendientes",
+    "pending_requests": "solicitudes pendientes",
+    "pending_offers":  "ofertas pendientes",
+    "clear_trans": "Borre las transacciones e intente nuevamente.",
+    "close": "Cerca",
+    "cannot_remove": "No se puede eliminar del grupo. En su lugar, intente eliminar el grupo.",
+    "remove_success": "El usuario se eliminó correctamente del banco de tempo",
+    "cannot_timebank": "El usuario no puede ser eliminado de este banco de tempo"
+  },
+  "group": {
+    "edit_group": "Editar grupo",
+    "settings": "Configuraciones",
+    "about": "Acerca de",
+    "view_request": "Ver solicitudes",
+    "reported_members": "Miembros reportados",
+    "delete_group": "Eliminar grupo",
+    "manage": "Gestionar"
   }
 }

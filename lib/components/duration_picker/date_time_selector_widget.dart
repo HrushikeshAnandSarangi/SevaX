@@ -69,6 +69,8 @@ class DateTimeSelector extends StatelessWidget {
   }
 
   Widget _buildTime(DateTime _date) {
+    print(
+        "+++++++++++++++++++++++++++++${AppConfig.prefs.getString('language_code') == null ? true.toString() : false.toString()}");
     if (_date == null) {
       return Text(
         'date & time',
@@ -79,7 +81,12 @@ class DateTimeSelector extends StatelessWidget {
         ),
       );
     } else {
-      String _forDate = new DateFormat('dd MMM yyyy, hh:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(_date);
+      String _forDate = new DateFormat(
+              'dd MMM yyyy, hh:mm a',
+              Locale(
+                AppConfig.prefs.getString('language_code'),
+              ).toString())
+          .format(_date);
       return Text(_forDate,
           style: TextStyle(
               // color: title == 'End' ? Colors.red : Colors.green,

@@ -335,14 +335,13 @@
     "camera": "Camera",
     "gallery": "Galerie",
     "size_alert": "Les fichiers de plus de 10 Mo ne sont pas autorisés",
-    "size_alert_title": "Alerte fichier volumineux"
+    "size_alert_title": "Alerte fichier volumineux",
+    "imagehint": "crédit photo",
+    "update_post": "Mettre à jour le message",
+    "update_progress": "Mise à jour du message"
   },
   "invitations": {
     "invitation_email_title": "Impressionnant! Vous êtes invité à rejoindre une Timebank",
-    "size_alert_title": "Alerte fichier volumineux",
-    "update_post": "Mettre à jour le message",
-    "update_progress": "Mise à jour du message",
-    "imagehint": "Crédit photo",
     "email_body": "<p>Vous êtes invité à télécharger l'application SevaX et à rejoindre la Timebank ***. L'application SevaX utilise Timebanking, un système basé sur la réciprocité où les membres de la communauté s'entraident en échange de crédits Seva. Veuillez cliquer sur ce <a href=\"###;&nbsp;\"> lien </a> pour vous inscrire.</p>"
   },
   "projects": {
@@ -465,6 +464,8 @@
   },
   "notifications": {
     "title": "Notifications",
+    "added_you": "vous a ajouté à",
+    "timebank_join": "Timebank Join",
     "no_notifications": "Aucune notification",
     "clear_all": "Effacer toutes les notifications",
     "credited": "Crédité",
@@ -520,7 +521,10 @@
     "updating_timebank": "Mise à jour de la banque de temps ..",
     "reason_to_join": "Raison d'adhérer",
     "not_mentioned": "Raison non mentionnée",
-    "allow": "Autoriser"
+    "allow": "Autoriser",
+    "timebank_exit": "Timebank Exit",
+    "exited_from": "est sorti de",
+    "tap_to_view": "Appuyez pour afficher les détails"
   },
   "profile": {
     "image_hint": "ProfileImage",
@@ -642,7 +646,9 @@
     "ok": "D'accord",
     "by_approving_that": "En approuvant, vous acceptez que",
     "worked_for": "a travaillé pour",
-    "no_comments": "Pas de commentaire"
+    "no_comments": "Pas de commentaire",
+    "timebank_offers": "Offres de la banque de temps",
+    "others": "Autres"
   },
   "create_request": {
     "humanity_first_create": "Crear solicitud de pandilla Yang",
@@ -696,7 +702,7 @@
     "tap_error_select": "Veuillez sélectionner une ou plusieurs option (s)",
     "save": "Enregistrer",
     "no_members_toadd": "Aucun membre disponible à ajouter",
-    "select_timebank": "Sélectionnez Timebank",
+    "select_timebank": "Sélectionnez un groupe",
     "search_member": "Rechercher des membres",
     "atleast_3": "La recherche nécessite au moins 3 caractères",
     "no_user": "Aucun utilisateur trouvé",
@@ -786,7 +792,10 @@
     "coins": "Pièces de monnaie",
     "hint": "En cliquant sur faire un don, votre solde sera ajusté",
     "zero_err": "Vous ne pouvez pas donner 0 crédits",
-    "donate_success": "Vous avez donné des crédits avec succès"
+    "donate_success": "Vous avez donné des crédits avec succès",
+    "coins_hint": "No de monedas seva",
+    "empty_error": "Done algunos créditos",
+    "less_zero_err": "No puedes donar menos de 0 créditos"
   },
   "earnings": {
     "title": "Voir vos gains",
@@ -889,7 +898,16 @@
     "Remove": "Retirer",
     "Promote": "Promouvoir",
     "Demote": "Rétrograder",
-    "Exit": "Sortie"
+    "Exit": "Sortie",
+    "admins": "Administrateurs",
+    "coordinators": "Coordinateurs",
+    "coordinator": "Coordinateur",
+    "remove_as_admin": "Supprimer en tant qu'administrateur",
+    "add_as_admin": "Ajouter en tant qu'administrateur",
+    "view_profile": "Voir le profil",
+    "remove_member": "Supprimer un membre",
+    "sure_a": "Êtes-vous sûr de vouloir désinstaller",
+    "timebank_members": "des membres de la banque de temps?"
   },
   "create_offer": {
     "title": "Créer une offre",
@@ -918,7 +936,15 @@
     "enter_start_end": "Veuillez entrer la date de début et de fin"
   },
   "info_window": {
-    "mapper": "i_button_info_fr"
+    "mapper": "i_button_info_fr",
+    "groups": "A Timebank (or Community) is divided into Groups. For example, a School Community would have Groups for Technology Committee, Fund Raising, Classroom, etc.",
+    "offers": "Users can either make Offers to the Timebank (eg. I can build HTML pages on Saturday mornings from 9 to 11 am) or to the other members in the Community (eg. I can teach a 4-week class on Making Quilts on Sunday afternoons from 2 to 4 pm). The offers to the Timebank needs to be accepted by an Admin. At this time the Offer gets converted to a Request.",
+    "private_group": "Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.",
+    "private_timebank": "Check this box if you would like your Timebank not to be discovered by anyone browsing - either by the name of the Timebank or the location of the Timebank. Note that everyone always needs a code to join your Timebank. A “Private Timebank” provides an additional level of privacy.",
+    "projects": "Projects are logical collections under a Group. For example, the Technology Committee Group can have the following Projects: School web page, Equipment, Apps, etc.",
+    "protected_timebank": "Check this box if you want to disable user-to-user transactions. That is, “Requests” can only be originated by the designated Admins of this Timebank. Typically, Protected Timebanks are used for Political Campaigns and certain Nonprofit Organizations",
+    "requests": "Requests are either created by Time Admins - for community tasks that need to be performed (eg. Weed the school yard) , or by Users who need help from the community for things they need to be done (eg. seniors needing groceries delivered). Requests for a Timebank would be listed under a Project.",
+    "tax_configuration": "At the time that a user is credited Seva Credits for completing a request (for the Timebank), the Timebank Admin can specify a Tax - which is credited to the Timebank. Slide the ruler to specify the amount of the Tax."
   },
   "switching_timebank": {
     "switch_timebank": "Changement de banque de temps",
@@ -966,10 +992,46 @@
     "cancel": "Annuler"
   },
   "select_member": {
-    "select_timebank": "Sélectionnez Timebank",
+    "select_timebank": "Sélectionnez un groupe",
     "select_volunteer": "Sélectionnez un volontaire"
   },
   "links": {
     "linkToWeb": "links_fr"
+  },
+  "reported_members": {
+    "reported_member": "Signaler un membre",
+    "inform": "Veuillez indiquer pourquoi vous signalez cet utilisateur.",
+    "details": "Veuillez fournir autant de détails que possible",
+    "report": "rapport",
+    "reporting_member": "Membre déclarant",
+    "success": "Le membre a signalé avec succès",
+    "failed": "Impossible de signaler le membre! Réessayer",
+    "reported_users": "Utilisateurs signalés",
+    "detail": "Cliquez ici pour voir les utilisateurs signalés de cette banque de temps",
+    "reported_members": "Membres signalés",
+    "no_data": "Pas de données",
+    "reported_by": "Rapporté par",
+    "user": "utilisateur",
+    "users": "utilisateurs",
+    "removed": "L'utilisateur a bien été supprimé du groupe",
+    "cannot_group": "L'utilisateur ne peut pas être supprimé de ce groupe",
+    "userhas": "L'utilisateur a",
+    "pending_projects": "projets en attente",
+    "pending_requests": "Requêtes en cours",
+    "pending_offers":  "offres en attente",
+    "clear_trans": "Veuillez effacer les transactions et réessayer.",
+    "close": "proche",
+    "cannot_remove": "Impossible de vous retirer du groupe. Essayez plutôt de supprimer le groupe.",
+    "remove_success": "L'utilisateur a bien été supprimé de la banque de temps",
+    "cannot_timebank": "L'utilisateur ne peut pas être supprimé de cette banque de temps"
+  },
+  "group": {
+    "edit_group":  "Modifier le groupe",
+    "settings": "Réglages",
+    "about":  "À propos de",
+    "view_request": "Afficher les demandes",
+    "reported_members": "Membres signalés",
+    "delete_group": "Supprimer le groupe",
+    "manage": "Gérer"
   }
 }

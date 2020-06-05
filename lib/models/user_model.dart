@@ -69,6 +69,7 @@ class UserModel extends DataModel {
       this.otp,
       this.requestStatus,
       //this.availability,
+      this.currentTimebank,
       this.timezone,
       this.tokens,
       this.reportedUsers,
@@ -219,7 +220,9 @@ class UserModel extends DataModel {
     } else {
       this.language = 'en';
     }
-
+    if (map.containsKey('currentTimebank')) {
+      this.currentTimebank = map['currentTimebank'];
+    }
     if (map.containsKey('notificationsReadCount') &&
         map['notificationsReadCount'] != null) {
       try {
@@ -326,6 +329,10 @@ class UserModel extends DataModel {
       object['language'] = 'en';
     }
 
+    if (this.currentTimebank != null) {
+      object['currentTimebank'] = this.currentTimebank;
+    }
+
     if (this.completedIntro != null) {
       this.completedIntro = object['completedIntro'];
     }
@@ -372,6 +379,7 @@ class UserModel extends DataModel {
       ${this.blockedBy.toString()},
       ${this.currentPosition.toString()},
       ${this.acceptedEULA.toString()},
+      ${this.currentTimebank.toString()},
       Communities:${this.communities.toString()},
     ''';
   }

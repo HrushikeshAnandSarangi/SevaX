@@ -133,6 +133,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
                   requestModel: requestModel,
                   userId: user.sevaUserID,
                   email: user.email,
+                  context: context
                 ),
               );
             },

@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 
@@ -179,16 +180,16 @@ class GroupOfferCommons {
     return hashMap;
   }
 
-  static String getGroupTitleForOffer({String groupKey}) {
+  static String getGroupTitleForOffer({String groupKey, context}) {
     switch (groupKey) {
       case "MyOffers":
         return "";
         
       case "Others":
         // return "${FlavorConfig.values.timebankTitle} Offers";
-        return 'Timebank Offers';
+        return AppLocalizations.of(context).translate('requests', 'timebank_offers');
       default:
-        return "Others";
+        return AppLocalizations.of(context).translate('requests', 'others');
     }
   }
 }
