@@ -173,7 +173,7 @@ class _ManageGroupView extends State<ManageGroupView> {
         );
       },
       child: Text(
-        AppLocalizations.of(context).translate('gruop', 'view_request'),
+        AppLocalizations.of(context).translate('group', 'view_request'),
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
