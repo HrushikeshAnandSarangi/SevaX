@@ -219,7 +219,7 @@ class _ChatViewState extends State<ChatView> {
                   AsyncSnapshot<List<MessageModel>> chatListSnapshot) {
                 if (chatListSnapshot.hasError) {
                   _scrollToBottom();
-                  return new Text(
+                  return Text(
                       '${AppLocalizations.of(context).translate('chat', 'error')} ${chatListSnapshot.error}');
                 }
 
@@ -229,7 +229,6 @@ class _ChatViewState extends State<ChatView> {
 
                 switch (chatListSnapshot.connectionState) {
                   default:
-                    print("Inside chat view");
                     List<MessageModel> chatModelList = chatListSnapshot.data;
                     if (chatModelList.length == 0) {
                       return Center(
@@ -366,7 +365,7 @@ class _ChatViewState extends State<ChatView> {
       future: FirestoreManager.getNewsForId(messageModel.message),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return new Text(
+          return Text(
               AppLocalizations.of(context).translate('chat', 'couldnt_post'));
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -401,50 +400,54 @@ class _ChatViewState extends State<ChatView> {
             )
           : _getSharedNewDetails(messageModel: messageModel);
     } else
-      return Container(
-        padding: messageModel.fromId == widget.senderId
-            ? EdgeInsets.fromLTRB(
-                MediaQuery.of(context).size.width / 10, 5, 0, 5)
-            : EdgeInsets.fromLTRB(
-                0, 5, MediaQuery.of(context).size.width / 10, 5),
-        alignment: messageModel.fromId == widget.senderId
-            ? Alignment.topRight
-            : Alignment.topLeft,
-        child: Wrap(
-          children: <Widget>[
-            Container(
-              decoration: messageModel.fromId == widget.senderId
-                  ? myBoxDecorationsend()
-                  : myBoxDecorationreceive(),
-              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-              child: Column(
-                crossAxisAlignment: messageModel.fromId != widget.senderId
-                    ? CrossAxisAlignment.start
-                    : CrossAxisAlignment.end,
-                children: <Widget>[
-                  Text(
-                    messageModel.message,
-                    style: TextStyle(fontWeight: FontWeight.w500),
+      print("Inside chat view 111");
+
+    return Container(
+      padding: messageModel.fromId == widget.senderId
+          ? EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 10, 5, 0, 5)
+          : EdgeInsets.fromLTRB(
+              0, 5, MediaQuery.of(context).size.width / 10, 5),
+      alignment: messageModel.fromId == widget.senderId
+          ? Alignment.topRight
+          : Alignment.topLeft,
+      child: Wrap(
+        children: <Widget>[
+          Container(
+            decoration: messageModel.fromId == widget.senderId
+                ? myBoxDecorationsend()
+                : myBoxDecorationreceive(),
+            padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+            child: Column(
+              crossAxisAlignment: messageModel.fromId != widget.senderId
+                  ? CrossAxisAlignment.start
+                  : CrossAxisAlignment.end,
+              children: <Widget>[
+                Text(
+                  messageModel.message,
+                  style: TextStyle(fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  DateFormat(
+                    'hh:mm a MMMM dd',
+                  )
+//                  DateFormat(
+//                          'hh:mm a MMMM dd',
+//                          Locale(AppConfig.prefs.getString('language_code'))
+//                              .toLanguageTag())
+                      .format(
+                    getDateTimeAccToUserTimezone(
+                        dateTime: DateTime.fromMillisecondsSinceEpoch(
+                            messageModel.timestamp),
+                        timezoneAbb: loggedInUser.timezone),
                   ),
-                  Text(
-                    DateFormat(
-                            'hh:mm a MMMM dd',
-                            Locale(AppConfig.prefs.getString('language_code'))
-                                .toLanguageTag())
-                        .format(
-                      getDateTimeAccToUserTimezone(
-                          dateTime: DateTime.fromMillisecondsSinceEpoch(
-                              messageModel.timestamp),
-                          timezoneAbb: loggedInUser.timezone),
-                    ),
-                    style: TextStyle(fontSize: 10, color: Colors.grey[700]),
-                  ),
-                ],
-              ),
+                  style: TextStyle(fontSize: 10, color: Colors.grey[700]),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
   }
 
   Widget getSharedNewsCard({
