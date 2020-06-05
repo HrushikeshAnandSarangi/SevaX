@@ -637,7 +637,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         approvedUsers.add(widget.userModel.email);
         requestModel.approvedUsers = approvedUsers;
       }
-
+      requestModel.softDelete = false;
       //Form and date is valid
       switch (requestModel.requestMode) {
         case RequestMode.PERSONAL_REQUEST:
