@@ -1038,5 +1038,8 @@
     "messages_title": "Mensagens",
     "personal_messages": "Pessoal",
     "admin_messages": "Admin"
+  },
+  "add_location": {
+    "confirm_location_label": "CONFIRMAR LOCAL"
   }
 }
