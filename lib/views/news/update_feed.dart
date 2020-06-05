@@ -77,7 +77,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   NewsModel newsObject;
   TextStyle textStyle;
   NewsCreateFormState({this.newsObject}) {
-    print("Getting news Feed -> $newsObject");
 
     globals.newsImageURL = newsObject.newsImageUrl;
     globals.newsDocumentURL = newsObject.newsDocumentUrl;
@@ -237,17 +236,14 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             keyboardType: TextInputType.text,
                             maxLines: 5,
                             onChanged: (value) {
-                              print("omChanged $value");
                               widget.newsModel.subheading = value;
                             },
                             validator: (value) {
-                              print("validator");
                               if (value.isEmpty) {
                                 return AppLocalizations.of(context)
                                     .translate('create_feed', 'empty_err');
                               }
                               newsObject.subheading = value;
-                              // print("object");
                             },
                           ),
                         ),
@@ -321,7 +317,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                           // await _getLocation();
                         },
                         onCreditsEntered: (photoCreditsFromNews) {
-                          // print("" + photoCredits);
                           photoCredits = photoCreditsFromNews;
                         },
                       ),
@@ -337,7 +332,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                 child: RaisedButton(
                   shape: StadiumBorder(),
                   onPressed: () async {
-                    //  print("address $selectedAddress");
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
                       Scaffold.of(context).showSnackBar(

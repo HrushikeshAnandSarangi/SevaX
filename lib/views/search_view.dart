@@ -199,7 +199,6 @@ class _ResultViewState extends State<ResultView> {
             image: 'lib/assets/images/search.png'),
       ));
     } else if (widget.controller.text.trim().length < 3) {
-      print('Search requires minimum 3 characters');
       return getEmptyWidget('Users', 'Search requires minimum 3 characters');
     }
     switch (widget.type) {
@@ -208,7 +207,6 @@ class _ResultViewState extends State<ResultView> {
           stream:
               SearchManager.searchForUser(queryString: widget.controller.text),
           builder: (context, snapshot) {
-            print('$snapshot');
             if (snapshot.hasError) {
               Text(snapshot.error.toString());
             }

@@ -69,7 +69,6 @@ class _CustomSearchScaffoldState1 extends PlacesAutocompleteState {
   Future<Null> displayPrediction(Prediction p, ScaffoldState scaffold) async {
     if (p != null) {
       // get detail (lat/lng)
-      print(p.description);
       PlacesDetailsResponse detail =
           await _places.getDetailsByPlaceId(p.placeId);
       final lat = detail.result.geometry.location.lat;
@@ -97,7 +96,6 @@ class _CustomSearchScaffoldState1 extends PlacesAutocompleteState {
   @override
   void onResponse(PlacesAutocompleteResponse response) {
     super.onResponse(response);
-    print(response);
     if (response != null && response.predictions.isNotEmpty) {
       // searchScaffoldKey.currentState.showSnackBar(
       //   SnackBar(content: Text("Got answer")),

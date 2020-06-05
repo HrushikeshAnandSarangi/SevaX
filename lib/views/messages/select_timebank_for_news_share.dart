@@ -61,7 +61,6 @@ Widget getTimebanks(
         });
 
         // Navigator.pop(context);
-        print("Length ${dropdownList.length}");
 
         return ListView.builder(
             itemCount: timebankList.length,

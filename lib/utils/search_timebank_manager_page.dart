@@ -249,7 +249,6 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
             break;
           default:
             return () {
-              print("");
             };
         }
       },
@@ -286,14 +285,12 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
         ),
       );
     } else if (widget.controller.text.trim().length < 3) {
-      print('Search requires minimum 3 characters');
       return getEmptyWidget('Users', AppLocalizations.of(context).translate('create_request','atleast_3'));
     }
     return StreamBuilder<List<UserModel>>(
       stream: SearchManager.searchForUserWithTimebankId(
           queryString: widget.controller.text, validItems: widget.validItems),
       builder: (context, snapshot) {
-        print('$snapshot');
         if (snapshot.hasError) {
           Text(snapshot.error.toString());
         }

@@ -59,13 +59,11 @@
 //       log.e('register: Exception ${error.toString()}');
 //       if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
 //         /// `foo@bar.com` has alread been registered.
-//         print(" ${emailId} already registered");
 //       }
 //       throw error;
 //     } catch (error) {
 //       if (error is PlatformException) {
 //         if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-//           print(" ${emailId} already registered");
 //         }
 //       }
 //       log.e('register: error ${error.toString()}');

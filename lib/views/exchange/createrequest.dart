@@ -163,8 +163,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
       _fetchCurrentlocation;
     }
-
-    print(location);
   }
 
   void get _fetchCurrentlocation async {
@@ -189,7 +187,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         }
       }
       Location().getLocation().then((onValue) {
-        print("Location1:$onValue");
         location = GeoFirePoint(onValue.latitude, onValue.longitude);
         LocationUtility()
             .getFormattedAddress(
@@ -203,7 +200,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         });
       });
     } on PlatformException catch (e) {
-      print(e);
       if (e.code == 'PERMISSION_DENIED') {
         //error = e.message;
       } else if (e.code == 'SERVICE_STATUS_ERROR') {
@@ -569,15 +565,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           groupValue: sharedValue,
 
           onValueChanged: (int val) {
-            print(val);
             if (val != sharedValue) {
               setState(() {
-                print("$sharedValue -- $val");
                 if (val == 0) {
-                  print("TIMEBANK___REQUEST");
                   requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
                 } else {
-                  print("PERSONAL___REQUEST");
                   requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
                 }
                 sharedValue = val;
@@ -617,7 +609,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       return;
     }
 
-    print('request mode ${requestModel.requestMode.toString()}');
     requestModel.requestStart = OfferDurationWidgetState.starttimestamp;
     requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
 
@@ -646,7 +637,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         approvedUsers.add(widget.userModel.email);
         requestModel.approvedUsers = approvedUsers;
       }
-
+      requestModel.softDelete = false;
       //Form and date is valid
       switch (requestModel.requestMode) {
         case RequestMode.PERSONAL_REQUEST:
@@ -776,9 +767,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             ? "${selectedUsers.length} ${AppLocalizations.of(context).translate('create_request', 'selected')}"
             : memberAssignment),
         onPressed: () async {
-          print("addVolunteersForAdmin():");
-
-          print(" Selected users before ${selectedUsers.length}");
 
           onActivityResult = await Navigator.of(context).push(
             MaterialPageRoute(
@@ -802,9 +790,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 memberAssignment =
                     "${selectedUsers.length ?? ''} ${AppLocalizations.of(context).translate('create_request', 'vol_selected')}";
             });
-            // print("Data is present Selected users ${selectedUsers.length}");
           } else {
-            print("No users where selected");
             //no users where selected
           }
           // SelectMembersInGroup
@@ -825,15 +811,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
   bool hasSufficientBalance() {
     var requestCoins = requestModel.numberOfHours;
-    print("Number of Seva Credits:${requestCoins}");
-    print("Seva coin available:${sevaCoinsValue}");
     var lowerLimit =
         json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
 
     var finalbalance = (sevaCoinsValue + lowerLimit ?? 10);
-
-    print("Final amount in hand:${finalbalance}");
-
     return requestCoins <= finalbalance;
   }
 

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+
 import './image_picker_handler.dart';
 
 class ImagePickerDialog extends StatelessWidget {
@@ -81,7 +82,8 @@ class ImagePickerDialog extends StatelessWidget {
                 new GestureDetector(
                   onTap: () => _listener.openCamera(),
                   child: roundedButton(
-                      AppLocalizations.of(context).translate('create_feed','camera'),
+                      AppLocalizations.of(context)
+                          .translate('image_picker', 'camera'),
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0x0FF766FE0),
                       const Color(0xFFFFFFFF),
@@ -93,7 +95,8 @@ class ImagePickerDialog extends StatelessWidget {
                 new GestureDetector(
                   onTap: () => _listener.openGallery(),
                   child: roundedButton(
-                      AppLocalizations.of(context).translate('create_feed','gallery'),
+                      AppLocalizations.of(context)
+                          .translate('image_picker', 'gallery'),
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0x0FF766FE0),
                       const Color(0xFFFFFFFF),
@@ -108,7 +111,8 @@ class ImagePickerDialog extends StatelessWidget {
                   child: new Padding(
                     padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
                     child: roundedButton(
-                        AppLocalizations.of(context).translate('shared','cancel'),
+                        AppLocalizations.of(context)
+                            .translate('shared', 'cancel'),
                         EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                         const Color(0x0FF766FE0),
                         const Color(0xFFFFFFFF),

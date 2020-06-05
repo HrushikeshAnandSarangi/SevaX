@@ -17,7 +17,6 @@ class RequestTabHolder extends StatelessWidget {
         stream: timeBankBloc.timebankController,
         builder: (context, AsyncSnapshot<TimebankController> snapshot) {
           if (snapshot.data != null && snapshot.data.selectedrequest != null) {
-            print("inside_if---" + snapshot.data.selectedrequest.toString());
 
             var requestModel = snapshot.data.selectedrequest;
             TimebankModel timebank = snapshot.data.selectedtimebank;
@@ -85,7 +84,6 @@ class RequestTabHolder extends StatelessWidget {
               ),
             );
           } else {
-            print("inside_else");
             return Text("");
           }
         });

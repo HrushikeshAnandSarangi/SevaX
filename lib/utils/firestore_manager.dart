@@ -23,7 +23,7 @@ class FirestoreManager {
         .snapshots();
 
     var timebankSnapshotStream = Firestore.instance
-        .collection('timebanks')
+        .collection('timebanknew')
         .where('membersemail', arrayContains: userEmail)
         .snapshots();
 

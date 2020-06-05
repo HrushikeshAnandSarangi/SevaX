@@ -30,26 +30,6 @@ Future<void> createJoinInvite(
       .setData(invitationModel.toMap());
 }
 
-//////to get all the user invites --
-//Future<GroupInvitationStatus> getGroupInvitationStatus({
-//  @required String timebankId,
-//  @required String sevauserid,
-//}) async {
-//  var query = Firestore.instance
-//      .collection('invitations')
-//      .where('invitationType', isEqualTo: 'GroupInvite')
-//      .where('data.invitedUserId', isEqualTo: sevauserid)
-//      .where('timebankId', isEqualTo: timebankId);
-//
-//  QuerySnapshot snapshot = await query.getDocuments();
-//  print('ghghgh ${snapshot.documents}');
-//  if (snapshot.documents.length > 0) {
-//    return GroupInvitationStatus.isInvited();
-//  } else {
-//    return GroupInvitationStatus.notYetInvited();
-//  }
-//}
-
 ////to get the user invites --
 Future<InvitationModel> getInvitationModel({
   @required String timebankId,
@@ -65,8 +45,6 @@ Future<InvitationModel> getInvitationModel({
     return null;
   }
   InvitationModel invitationModel;
-
-  print("query ${snapshot.documents.length}");
 
   snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
     invitationModel = InvitationModel.fromMap(documentSnapshot.data);
@@ -145,13 +123,11 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
       .get()
       .then((DocumentSnapshot documentSnaphot) {
     Map<String, dynamic> dataMap = documentSnaphot.data;
-    print("hey ${dataMap}");
     timeBankIdList = dataMap["timebanks"];
   });
 
   var comm = await getCommunityDetailsByCommunityId(communityId: communityId);
 
-  print(timeBankIdList);
   for (int i = 0; i < timeBankIdList.length; i += 1) {
     if (timeBankIdList[i] != comm.primary_timebank) {
       TimebankModel timeBankModel = await getTimeBankForId(
@@ -186,7 +162,6 @@ Future<int> getMembersCountOfAllMembers({@required String communityId}) async {
       .document(primaryTimebankId)
       .get();
   totalCount = timebankDoc.data['members'].length;
-  print("full counttttttttt " + totalCount.toString());
   return totalCount;
 }
 
@@ -230,14 +205,10 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
 
   var radius = 20;
   try {
-    print('inside near');
-
     radius = json.decode(AppConfig.remoteConfig.getString('radius'));
   } on Exception {
     print("Exception raised while getting radius ");
   }
-  print(
-      "radius is fetched from remote config near community list stream ${radius.toDouble()}");
 
   GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
   var query = Firestore.instance.collection('communities');
@@ -247,7 +218,6 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
         field: 'location',
         strictMode: true,
       );
-  //print('near data ${data}');
   yield* data.transform(
     StreamTransformer<List<DocumentSnapshot>,
         List<CommunityModel>>.fromHandlers(
@@ -301,7 +271,6 @@ Future<void> updateTimebank({@required TimebankModel timebankModel}) async {
     return;
   }
 
-  print("________" + timebankModel.id);
   return await Firestore.instance
       .collection('timebanknew')
       .document(timebankModel.id)
@@ -388,7 +357,6 @@ Future<CommunityModel> getCommunityDetailsByCommunityId(
 /// Get a Timebank data as a Stream
 Stream<TimebankModel> getTimebankModelStream(
     {@required String timebankId}) async* {
-  // print('---->>> $timebankId');
   var data = Firestore.instance
       .collection('timebanknew')
       .document(timebankId)
@@ -410,7 +378,6 @@ Stream<TimebankModel> getTimebankModelStream(
 /// Get a community data as a Stream
 Stream<CommunityModel> getCommunityModelStream(
     {@required String communityId}) async* {
-  // print('---->>> $communityId');
   var data = Firestore.instance
       .collection('communities')
       .document(communityId)
@@ -419,7 +386,6 @@ Stream<CommunityModel> getCommunityModelStream(
   yield* data.transform(
     StreamTransformer<DocumentSnapshot, CommunityModel>.fromHandlers(
       handleData: (snapshot, modelSink) {
-        print("billing ${snapshot.data}");
 
         CommunityModel model = CommunityModel(snapshot.data);
 
@@ -431,7 +397,6 @@ Stream<CommunityModel> getCommunityModelStream(
 }
 
 Stream<CardModel> getCardModelStream({@required String communityId}) async* {
-  // print('---->>> $communityId');
   var data =
       Firestore.instance.collection('cards').document(communityId).snapshots();
 
@@ -439,8 +404,6 @@ Stream<CardModel> getCardModelStream({@required String communityId}) async* {
     StreamTransformer<DocumentSnapshot, CardModel>.fromHandlers(
       handleData: (snapshot, modelSink) {
         CardModel model = CardModel(snapshot.data);
-        //print("card dataaaaa ${model}");
-
         model.timebankid = snapshot.documentID;
         modelSink.add(model);
       },

@@ -60,7 +60,6 @@ class _SelectMembersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("SelectMembers ---->");
 
     return StreamBuilder<TimebankModel>(
       stream: FirestoreManager.getTimebankModelStream(
@@ -141,7 +140,6 @@ class _SelectMembersView extends StatelessWidget {
               }
               UserModel user = snapshot.data;
               if (user.email == SevaCore.of(context).loggedInUser.email) {
-                print("Removed my item");
                 return Offstage();
               } else {
                 return getUserWidget(user, context);
@@ -156,10 +154,6 @@ class _SelectMembersView extends StatelessWidget {
   Widget getUserWidget(UserModel user, BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        print(user.email +
-            " Tapped on new chat for " +
-            SevaCore.of(context).loggedInUser.email);
-
         if (user.email == SevaCore.of(context).loggedInUser.email) {
           return null;
         } else {

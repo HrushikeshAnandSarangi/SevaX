@@ -8,6 +8,8 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/core.dart';
 
+import '../../flavor_config.dart';
+
 class SelectTimeBankForNewChat extends StatefulWidget {
   @override
   SelectTimeBankForNewChatState createState() =>
@@ -34,7 +36,6 @@ List<String> dropdownList = [];
 
 Widget getTimebanks(BuildContext context) {
   List<TimebankModel> timebankList = [];
-  print("Getting data for messages timebanks");
   return StreamBuilder<List<TimebankModel>>(
       stream: FirestoreManager.getTimebanksForUserStream(
         userId: SevaCore.of(context).loggedInUser.sevaUserID,
@@ -51,7 +52,6 @@ Widget getTimebanks(BuildContext context) {
         });
 
         // Navigator.pop(context);
-        print("Length -=-=-=-= ${dropdownList.length}");
 
         return ListView.builder(
             itemCount: timebankList.length,
@@ -79,9 +79,24 @@ Widget getTimebanks(BuildContext context) {
                   child: Container(
                     margin: EdgeInsets.all(15),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            timebank.parentTimebankId ==
+                                    FlavorConfig.values.timebankId
+                                ? AppLocalizations.of(context)
+                                    .translate("members", "timebank")
+                                : AppLocalizations.of(context)
+                                    .translate("members", "group"),
+                            style: TextStyle(fontSize: 8, color: Colors.white),
+                          ),
+                        ),
                         Text(timebank.name),
                       ],
                     ),

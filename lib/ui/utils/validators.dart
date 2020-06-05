@@ -5,10 +5,8 @@ class Validators {
     handleData: (title, sink) {
       if (title != null && title.length > 0) {
         sink.add(title);
-        print("no error");
       } else {
         sink.addError('Please enter the subject of your offer');
-        print(" error");
       }
     },
   );
@@ -35,9 +33,7 @@ class Validators {
     handleData: (text, sink) {
       if (text != null && text.length > 0) {
         sink.add(text);
-        print("no error");
       } else {
-        print("error");
         sink.addError('Please enter some text');
       }
     },

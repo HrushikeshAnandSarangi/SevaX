@@ -185,8 +185,6 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
     String notificationId,
     UserModel userModel,
   }) {
-    print(
-        'decline data ${model.toString() + notificationId + userModel.toString()}');
     rejectInviteRequest(
       requestId: model.requestId,
       rejectedUserId: userModel.sevaUserID,

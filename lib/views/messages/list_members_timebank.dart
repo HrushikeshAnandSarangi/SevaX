@@ -36,8 +36,6 @@ Widget getTimebankMembers() {
   FirestoreManager.getTimeBankForId(
           timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
       .then((timebank) {
-    print("successfully fetched timebank data");
-
     return Text("From then");
   });
 }

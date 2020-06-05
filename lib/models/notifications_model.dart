@@ -141,7 +141,6 @@ enum NotificationType {
 
 //Check the method
 NotificationType stringToNotificationType(String str) {
-  print(str);
   return NotificationType.values.firstWhere(
     (v) => v.toString() == 'NotificationType.' + str.trim(),
   );

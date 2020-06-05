@@ -278,7 +278,6 @@ class OfferModel extends DataModel {
     else
       this.groupOfferDataModel = null;
 
-    print("inside offermodel.frommapelasticsearch");
   }
 
   OfferModel.fromMap(Map<String, dynamic> map) {
@@ -349,7 +348,6 @@ class OfferModel extends DataModel {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {};
 
-    // print("+++++++++++++++++++++++ ${this.groupOfferDataModel}");
     map['groupOfferDataModel'] = this.groupOfferDataModel.toMap() ?? null;
 
     map['individualOfferDataModel'] =

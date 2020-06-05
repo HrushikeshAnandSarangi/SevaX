@@ -63,8 +63,6 @@ class SearchManager {
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
     List<UserModel> userList = [];
-    print("searchForUser :: ${hitList}");
-
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       UserModel user = UserModel.fromMap(sourceMap);
@@ -76,7 +74,6 @@ class SearchManager {
   static Stream<List<CommunityModel>> searchCommunity({
     @required queryString,
   }) async* {
-    print("searchForUser :: ---------------");
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_search';
     dynamic body = json.encode({
@@ -104,12 +101,10 @@ class SearchManager {
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
     List<CommunityModel> communityList = [];
-    // print("community data ${hitList}");
 
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       var community = CommunityModel(sourceMap);
-      // print("community data ${community.name}");
       if (community.private == false) {
         communityList.add(community);
       }
@@ -184,7 +179,6 @@ class SearchManager {
   static Stream<List<TimebankModel>> searchTimeBank({
     @required queryString,
   }) async* {
-    print("searchForUser :: ---------------");
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_search';
     dynamic body = json.encode({
@@ -211,7 +205,6 @@ class SearchManager {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       var timeBank = TimebankModel.fromMap(sourceMap);
-      // print("community data ${community.name}");
 
       timeBankList.add(timeBank);
 
@@ -225,7 +218,6 @@ class SearchManager {
     @required queryString,
     //  @required List<String> validItems,
   }) async* {
-    print("searchForUser :: ---------------");
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxusers/sevaxuser/_search';
     dynamic body = json.encode(
@@ -516,7 +508,6 @@ class SearchManager {
 
   static Future<List<Map<String, dynamic>>> _makeElasticSearchPostRequest(
       String url, dynamic body) async {
-    print("Hitting - " + url);
 
     String username = 'user';
     String password = 'CiN36UNixJyq';
@@ -543,7 +534,6 @@ class SearchManager {
 
   static Future<int> _makeElasticSearchPostRequestCommunityDuplicate(
       String url, dynamic body) async {
-    print("Hitting - " + url);
 
     String username = 'user';
     String password = 'CiN36UNixJyq';

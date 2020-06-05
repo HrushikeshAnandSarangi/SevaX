@@ -11,6 +11,7 @@ import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
 
 class ReportedMemberCard extends StatelessWidget {
@@ -181,6 +182,7 @@ class ReportedMemberCard extends StatelessWidget {
     log("remove member");
     Map<String, dynamic> responseData = await removeMemberFromGroup(
         sevauserid: model.reportedId, groupId: timebankModel.id);
+
     if (responseData['deletable'] == true) {
       showDialog(
         context: context,
@@ -193,7 +195,8 @@ class ReportedMemberCard extends StatelessWidget {
               new FlatButton(
                 child: new Text("Close"),
                 textColor: Colors.red,
-                onPressed: () {
+                onPressed: () async {
+                  await Firestore.instance.collection('reported_users_list').document(model.reportedId+"*"+model.communityId).delete();
                   Navigator.of(context).pop();
                 },
               ),
@@ -204,6 +207,7 @@ class ReportedMemberCard extends StatelessWidget {
     } else {
       if (responseData['softDeleteCheck'] == false &&
           responseData['groupOwnershipCheck'] == false) {
+
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -258,8 +262,7 @@ class ReportedMemberCard extends StatelessWidget {
     print(model.reportedId + " removing member ongoing " + timebankModel.id);
     Map<String, dynamic> responseData = await removeMemberFromTimebank(
         sevauserid: model.reportedId, timebankId: timebankModel.id);
-    print("reported members removal response is --- " +
-        responseData['ownerGroupsArr'].toString());
+
     if (responseData['deletable'] == true) {
       showDialog(
         context: context,
@@ -271,7 +274,9 @@ class ReportedMemberCard extends StatelessWidget {
               // usually buttons at the bottom of the dialog
               new FlatButton(
                 child: new Text(AppLocalizations.of(context).translate('reported_members', 'close')),
-                onPressed: () {
+                onPressed: () async {
+                  await Firestore.instance.collection('reported_users_list').document(model.reportedId+"*"+model.communityId).delete();
+
                   Navigator.of(context).pop();
                 },
               ),

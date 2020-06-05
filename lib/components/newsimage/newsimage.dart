@@ -113,9 +113,7 @@ class NewsImageState extends State<NewsImage>
   void checkPdfSize() async {
     var file = File(_path);
     final bytes = await file.lengthSync();
-    print("bytes ${bytes}");
     if (bytes > tenMegaBytes) {
-      print(" true file is big");
       this._isDocumentBeingUploaded = false;
       getAlertDialog(parentContext);
     } else {
@@ -172,7 +170,6 @@ class NewsImageState extends State<NewsImage>
     // _newsImageURL = imageURL;
     globals.newsDocumentURL = documentURL;
     globals.newsDocumentName = _fileName;
-    print("url of document $documentURL");
     // _setAvatarURL();
     // _updateDB();
     return documentURL;
@@ -183,7 +180,6 @@ class NewsImageState extends State<NewsImage>
     if (widget.geoFirePointLocation == null) _fetchCurrentlocation;
 
     super.initState();
-    print("locaton on newsimage ${widget.geoFirePointLocation?.coords}");
     selectedAddress = widget.selectedAddress;
     _controller = AnimationController(
       vsync: this,
@@ -350,7 +346,6 @@ class NewsImageState extends State<NewsImage>
         }
       }
       Location().getLocation().then((onValue) {
-        print("Location1:$onValue");
         GeoFirePoint location =
             GeoFirePoint(onValue.latitude, onValue.longitude);
 
@@ -371,7 +366,6 @@ class NewsImageState extends State<NewsImage>
         });
       });
     } on PlatformException catch (e) {
-      print(e);
       if (e.code == 'PERMISSION_DENIED') {
         //error = e.message;
       } else if (e.code == 'SERVICE_STATUS_ERROR') {
