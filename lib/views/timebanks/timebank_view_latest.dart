@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -193,9 +194,12 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                                 i++) {
                               UserModel userModel = snapshot.data[i];
                               if (userModel != null) {
-                                userModel.photoURL != null
-                                    ? memberPhotoUrlList.add(userModel.photoURL)
-                                    : print("Userimage not yet set");
+                                // userModel.photoURL != null
+                                memberPhotoUrlList.add(
+                                    userModel.photoURL == null
+                                        ? defaultUserImageURL
+                                        : userModel.photoURL);
+                                // : print("Userimage not yet set");
                               }
                             }
 
@@ -210,14 +214,26 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                                     child: Container(
                                       height: 40,
                                       width: 40,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: CachedNetworkImageProvider(
-                                              photoUrl ?? Icons.person,
-                                            ),
-                                          )),
+                                      child: CircleAvatar(
+                                        child: ClipOval(
+                                          child: FadeInImage.assetNetwork(
+                                            height: 40,
+                                            width: 40,
+                                            placeholder:
+                                                'lib/assets/images/noimagefound.png',
+                                            image:
+                                                photoUrl ?? defaultUserImageURL,
+                                          ),
+                                        ),
+                                      ),
+//                                      decoration: BoxDecoration(
+//                                          shape: BoxShape.circle,
+//                                          image: DecorationImage(
+//                                            fit: BoxFit.cover,
+//                                            image: CachedNetworkImageProvider(
+//                                              photoUrl ?? defaultUserImageURL,
+//                                            ),
+//                                          )),
                                     ),
                                   );
                                 }).toList()
