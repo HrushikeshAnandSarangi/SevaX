@@ -1041,5 +1041,11 @@
   },
   "add_location": {
     "confirm_location_label": "CONFIRMER L'EMPLACEMENT"
+  },
+  "review_feedback": {
+    "take_a_moment": "Prenez un moment pour réfléchir à votre expérience et partagez votre appréciation en écrivant une courte critique.",
+    "cant_leave_blank": "Le champ ne peut pas être laissé vide",
+    "review_submit": "Soumettre",
+    "review_toolbar_title": "La revue"
   }
 }

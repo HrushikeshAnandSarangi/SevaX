@@ -1041,5 +1041,11 @@
   },
   "add_location": {
     "confirm_location_label": "CONFIRMAR LOCAL"
+  },
+  "review_feedback": {
+    "take_a_moment": "Reserve um momento para refletir sobre sua experiência e compartilhar sua apreciação escrevendo uma breve resenha.",
+    "cant_leave_blank": "O campo não pode ser deixado em branco",
+    "review_submit": "Enviar",
+    "review_toolbar_title": "Reveja"
   }
 }

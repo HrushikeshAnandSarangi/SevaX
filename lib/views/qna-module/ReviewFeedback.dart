@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/qna-module/FeedbackConstants.dart';
 
@@ -22,7 +23,6 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   // var forVolunteer;
   // ReviewFeedbackState({this.forVolunteer});
 
-  var toolbarTitle = "Review";
   bool _validate = false;
 
   var questionIndex = 0;
@@ -37,7 +37,8 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
-            toolbarTitle,
+            AppLocalizations.of(context)
+                .translate('review_feedback', 'review_toolbar_title'),
             style: TextStyle(
               color: Colors.white,
             ),
@@ -64,25 +65,87 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   }
 
   List<Map<String, Object>> getQuestions(FeedbackType type) {
+    String languageCode = AppConfig.prefs.getString('language_code');
+
     switch (type) {
       case FeedbackType.FOR_REQUEST_CREATOR:
-        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN;
-        break;
+        return getFeedbackQuestionsForAdmin(languageCode);
+
       case FeedbackType.FOR_REQUEST_VOLUNTEER:
-        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER;
-        break;
+        return getFeedbackQUestionsForVolunteers(languageCode);
+
       case FeedbackType.FOR_ONE_TO_MANY_OFFER:
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER;
-        break;
+        return getFeedbackQuestionForOneToManyOffer(languageCode);
+
       default:
         throw "FEEDBACK TYPE NOT DEFINED";
     }
   }
 
-  Widget getFeebackQuestions() {
-    // Logger.root.level = Level.ALL;
-    // Logger.root.onRecord.listen((LogRecord rec) {});
+  List<Map<String, Object>> getFeedbackQuestionsForAdmin(
+    String languageCode,
+  ) {
+    switch (languageCode) {
+      case 'en':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_EN;
 
+      case 'fr':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_FR;
+
+      case 'pt':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_PT;
+
+      case 'es':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_ES;
+
+      default:
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_EN;
+    }
+  }
+
+  List<Map<String, Object>> getFeedbackQUestionsForVolunteers(
+    String languageCode,
+  ) {
+    switch (languageCode) {
+      case 'en':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_EN;
+
+      case 'fr':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_FR;
+
+      case 'pt':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_PT;
+
+      case 'es':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_ES;
+
+      default:
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_EN;
+    }
+  }
+
+  List<Map<String, Object>> getFeedbackQuestionForOneToManyOffer(
+    String languageCode,
+  ) {
+    switch (languageCode) {
+      case 'en':
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_EN;
+
+      case 'fr':
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_FR;
+
+      case 'pt':
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_PT;
+
+      case 'es':
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_ES;
+
+      default:
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_EN;
+    }
+  }
+
+  Widget getFeebackQuestions() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,10 +219,14 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                 controller: myCommentsController,
                 style: TextStyle(fontSize: 14.0, color: Colors.black87),
                 decoration: InputDecoration(
-                  errorText: _validate ? 'Field can\'t be left blank' : null,
+                  errorText: _validate
+                      ? AppLocalizations.of(context)
+                          .translate('review_feedback', 'cant_leave_blank')
+                      : null,
                   hintStyle: TextStyle(fontSize: 14),
-                  hintText:
-                      'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
+                  // hintText:'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
+                  hintText: AppLocalizations.of(context)
+                      .translate('review_feedback', 'take_a_moment'),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.red, //this has no effect
@@ -177,7 +244,8 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                   shape: StadiumBorder(),
                   color: Color(0x0FF766FE0),
                   child: Text(
-                    "Submit",
+                    AppLocalizations.of(context)
+                        .translate('review_feedback', 'review_submit'),
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
