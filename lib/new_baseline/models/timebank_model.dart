@@ -140,7 +140,6 @@ class TimebankModel extends DataModel {
     }
     if (key == 'protected') {
       this.protected = value;
-      print("its coming here-------------------------------------- protected ");
     }
 
     if (key == 'private') {
@@ -243,7 +242,6 @@ class TimebankModel extends DataModel {
       map['requestedSoftDelete'] = false;
     }
 
-    print("----------------Here  is the update part----------------");
     return map;
   }
 

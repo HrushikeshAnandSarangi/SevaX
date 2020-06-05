@@ -163,8 +163,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
       _fetchCurrentlocation;
     }
-
-    print(location);
   }
 
   void get _fetchCurrentlocation async {
@@ -189,7 +187,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         }
       }
       Location().getLocation().then((onValue) {
-        print("Location1:$onValue");
         location = GeoFirePoint(onValue.latitude, onValue.longitude);
         LocationUtility()
             .getFormattedAddress(
@@ -203,7 +200,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         });
       });
     } on PlatformException catch (e) {
-      print(e);
       if (e.code == 'PERMISSION_DENIED') {
         //error = e.message;
       } else if (e.code == 'SERVICE_STATUS_ERROR') {
@@ -569,15 +565,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           groupValue: sharedValue,
 
           onValueChanged: (int val) {
-            print(val);
             if (val != sharedValue) {
               setState(() {
-                print("$sharedValue -- $val");
                 if (val == 0) {
-                  print("TIMEBANK___REQUEST");
                   requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
                 } else {
-                  print("PERSONAL___REQUEST");
                   requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
                 }
                 sharedValue = val;
@@ -617,7 +609,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       return;
     }
 
-    print('request mode ${requestModel.requestMode.toString()}');
     requestModel.requestStart = OfferDurationWidgetState.starttimestamp;
     requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
 
@@ -776,9 +767,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             ? "${selectedUsers.length} ${AppLocalizations.of(context).translate('create_request', 'selected')}"
             : memberAssignment),
         onPressed: () async {
-          print("addVolunteersForAdmin():");
-
-          print(" Selected users before ${selectedUsers.length}");
 
           onActivityResult = await Navigator.of(context).push(
             MaterialPageRoute(
@@ -795,16 +783,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               onActivityResult.containsKey("membersSelected")) {
             selectedUsers = onActivityResult['membersSelected'];
             setState(() {
-              if (selectedUsers.length == 0)
+              if (selectedUsers != null && selectedUsers.length == 0)
                 memberAssignment = AppLocalizations.of(context)
                     .translate('create_request', 'assign_to_vol');
               else
                 memberAssignment =
-                    "${selectedUsers.length} ${AppLocalizations.of(context).translate('create_request', 'vol_selected')}";
+                    "${selectedUsers.length ?? ''} ${AppLocalizations.of(context).translate('create_request', 'vol_selected')}";
             });
-            print("Data is present Selected users ${selectedUsers.length}");
           } else {
-            print("No users where selected");
             //no users where selected
           }
           // SelectMembersInGroup
@@ -814,7 +800,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   String getTimeInFormat(int timeStamp) {
-    return DateFormat('EEEEEEE, MMMM dd yyyy', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+    return DateFormat('EEEEEEE, MMMM dd yyyy',
+            Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
+        .format(
       getDateTimeAccToUserTimezone(
           dateTime: DateTime.fromMillisecondsSinceEpoch(timeStamp),
           timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
@@ -823,15 +811,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
   bool hasSufficientBalance() {
     var requestCoins = requestModel.numberOfHours;
-    print("Number of Seva Credits:${requestCoins}");
-    print("Seva coin available:${sevaCoinsValue}");
     var lowerLimit =
         json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
 
     var finalbalance = (sevaCoinsValue + lowerLimit ?? 10);
-
-    print("Final amount in hand:${finalbalance}");
-
     return requestCoins <= finalbalance;
   }
 
@@ -843,7 +826,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.accepted = false;
     requestModel.acceptors = [];
     requestModel.address = selectedAddress;
-    requestModel.location = location == null ? GeoFirePoint(40.754387, -73.984291) : location;
+    requestModel.location =
+        location == null ? GeoFirePoint(40.754387, -73.984291) : location;
     requestModel.root_timebank_id = FlavorConfig.values.timebankId;
     requestModel.softDelete = false;
     if (requestModel.id == null) return;
@@ -948,7 +932,16 @@ class ProjectSelection extends StatefulWidget {
 class ProjectSelectionState extends State<ProjectSelection> {
   @override
   Widget build(BuildContext context) {
-    List<dynamic> list = [{"name": AppLocalizations.of(context).translate('create_request','none_project'), "code": "None"}];
+    if (widget.projectModelList == null) {
+      return Container();
+    }
+    List<dynamic> list = [
+      {
+        "name": AppLocalizations.of(context)
+            .translate('create_request', 'none_project'),
+        "code": "None"
+      }
+    ];
     for (var i = 0; i < widget.projectModelList.length; i++) {
       list.add({
         "name": widget.projectModelList[i].name,
@@ -959,16 +952,20 @@ class ProjectSelectionState extends State<ProjectSelection> {
     return new MultiSelect(
       autovalidate: true,
       initialValue: ['None'],
-      titleText: AppLocalizations.of(context).translate('create_request','assign_to_project'),
+      titleText: AppLocalizations.of(context)
+          .translate('create_request', 'assign_to_project'),
       maxLength: 1, // optional
-      hintText: AppLocalizations.of(context).translate('create_request','tap_select'),
+      hintText: AppLocalizations.of(context)
+          .translate('create_request', 'tap_select'),
       validator: (dynamic value) {
         if (value == null) {
-          return AppLocalizations.of(context).translate('create_request','assign_to_one');
+          return AppLocalizations.of(context)
+              .translate('create_request', 'assign_to_one');
         }
         return null;
       },
-      errorText: AppLocalizations.of(context).translate('create_request','assign_to_one'),
+      errorText: AppLocalizations.of(context)
+          .translate('create_request', 'assign_to_one'),
       dataSource: list,
       admin: widget.admin,
       textField: 'name',

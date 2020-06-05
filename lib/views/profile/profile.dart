@@ -1275,7 +1275,6 @@ class CommunityCard extends StatelessWidget {
               ),
             ),
           ),
-          // Icon(Icons.navigate_next),
           SizedBox(width: 10),
         ],
       ),

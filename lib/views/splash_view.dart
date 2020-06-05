@@ -381,7 +381,6 @@ class _SplashViewState extends State<SplashView> {
 
   void initiateLogin() {
     _getLoggedInUserId().then(handleLoggedInUserIdResponse).catchError((error) {
-      print("Inside -> Error $error");
     });
   }
 
@@ -407,7 +406,6 @@ class _SplashViewState extends State<SplashView> {
 
     appLanguage.changeLanguage(Locale(loggedInUser.language));
 
-    print("---> ${loggedInUser.currentCommunity}");
     if ((loggedInUser.currentCommunity == " " ||
             loggedInUser.currentCommunity == "" ||
             loggedInUser.currentCommunity == null) &&

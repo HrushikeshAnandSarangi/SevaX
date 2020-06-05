@@ -127,11 +127,9 @@ class UserModel extends DataModel {
     }
 
     if (map.containsKey('communities')) {
-      //print("Blocked Data present");
       List<String> communities = List.castFrom(map['communities']);
       this.communities = communities;
     } else {
-      print("worked");
       this.communities = new List();
       this.communities.add('asdfadf');
     }
@@ -232,8 +230,6 @@ class UserModel extends DataModel {
         this.notificationsReadCount = HashMap();
       }
     } else {
-      // print("Chat has not been deleted yet");
-
       notificationsReadCount = HashMap();
     }
   }

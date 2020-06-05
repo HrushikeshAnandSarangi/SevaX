@@ -308,7 +308,6 @@ class _LocationPickerState extends State<LocationPicker> {
         List<Placemark> p = await geolocator.placemarkFromCoordinates(
             latlng.latitude, latlng.longitude);
         Placemark place = p[0];
-        print(place.toJson());
         String locality =
             place.subLocality != '' ? place.subLocality : place.locality;
         return "$locality*${place.name}${locality.notNullLocation}${place.subAdministrativeArea.notNullLocation}${place.administrativeArea.notNullLocation}${place.country.notNullLocation}";
@@ -354,7 +353,6 @@ class _LocationPickerState extends State<LocationPicker> {
 
   void _addMarker({LatLng latLng}) {
     log('_addMarker ${target?.latitude} ${target?.longitude}  ${latLng?.latitude}  ${latLng?.longitude}');
-    print(latLng ?? target);
     Marker marker = Marker(
       markerId: MarkerId('1'),
       position: latLng ?? target,

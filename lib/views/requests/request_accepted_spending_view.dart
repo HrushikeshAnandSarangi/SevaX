@@ -197,8 +197,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   }
 
   Future getUserModel() async {
-    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-
     var totalCredits = 0.0;
     _avtars = [];
     List<Widget> _localAvtars = [];
@@ -372,8 +370,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         secondaryActions: <Widget>[],
         child: GestureDetector(
           onTap: () {
-            // print(
-            //     "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             // setState(() {
             //   isProgressBarActive = true;
             // });
@@ -381,7 +377,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
             // var notificationId =
             //     await RequestNotificationManager.getNotificationId(
             //         user, requestModel);
-            // print("here is the notficiation id -> ----------------------" +
             //     notificationId);
             // setState(() {
             //   isProgressBarActive = false;
@@ -426,14 +421,12 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                   textColor: Colors.white,
                   elevation: 5,
                   onPressed: () async {
-                    print("+++++++++++++++++++++++++++++++++++++++++++++++++");
                     var notificationId =
                         await RequestNotificationManager.getNotificationId(
                       user,
                       requestModel,
                     );
 
-                    print("==============$notificationId+++++++++++++");
 
                     if (requestModel.requestMode ==
                         RequestMode.PERSONAL_REQUEST) {
@@ -592,8 +585,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     String userId,
     num credits,
   }) async {
-    print(
-        "showMemberClaimConfirmation ===================================================$notificationId");
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
@@ -732,9 +723,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     num credits,
     TimebankModel timebankModel,
   }) async {
-    print(
-        "rejectMemberClaimForEvent ===================================================$notificationId");
-
     List<TransactionModel> transactions =
         model.transactions.map((t) => t).toList();
     transactions.removeWhere((t) => t.to == userId);
@@ -805,18 +793,15 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       reciever: reciever,
       isFromRejectCompletion: true,
       onChatCreate: () {
-        print("===============INSIDE ON CREATE OPEN CHAT======");
         FirestoreManager.saveRequestFinalAction(
           model: claimedRequestStatus,
         );
 
         if (requestModel.requestMode == RequestMode.PERSONAL_REQUEST) {
-          print("===============INSIDE ON CREATE OPEN CHAT======");
 
           FirestoreManager.readUserNotification(
               notificationId, SevaCore.of(context).loggedInUser.email);
         } else {
-          print("==========timrbank NOTIFICATION=========== ");
 
           readTimeBankNotification(
             notificationId: notificationId,

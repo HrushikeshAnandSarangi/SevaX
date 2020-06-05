@@ -43,7 +43,6 @@ class OneToManyOfferBloc extends BlocBase {
     UserModel user,
     String timebankId,
   }) {
-    //print(errorCheck());
     if (!errorCheck()) {
       int prepHours = int.parse(_preparationHours.value);
       int classHours = int.parse(_classHours.value);
@@ -107,7 +106,6 @@ class OneToManyOfferBloc extends BlocBase {
           ..numberOfClassHours = classHours
           ..sizeOfClass = classSize
           ..classDescription = _classDescription.value.replaceAll('__*__', '');
-        print("updating offer ${offer.timebankId}");
 
         updateOfferWithRequest(offer: offer).then((_) {
           _status.add(Status.COMPLETE);
@@ -200,7 +198,6 @@ class OneToManyOfferBloc extends BlocBase {
 
   @override
   void dispose() {
-    print("bloc disposed");
     _title.close();
     _classDescription.close();
     _preparationHours.close();

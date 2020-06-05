@@ -42,11 +42,6 @@ Future<void> main() async {
   AppConfig.remoteConfig = await RemoteConfig.instance;
   AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
   AppConfig.remoteConfig.activateFetched();
-  // print(AppConfig.remoteConfig.getString("plans"));
-  // AppConfig.billing = BillingPlanModel.fromJson(
-  //     json.decode(AppConfig.remoteConfig.getString("plans")));
-  // print(
-  //     "--->plans ${AppConfig.billing.freePlan.action.adminReviewsCompleted.billable}");
 
   _firebaseMessaging.configure(
     onMessage: (Map<String, dynamic> message) {

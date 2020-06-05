@@ -48,7 +48,6 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
       try {
         setState(() {});
       } on Exception {
-        print("Exception caught in request_participants_view");
       }
     });
   }
@@ -260,7 +259,6 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                             textColor: Colors.white,
                             elevation: 5,
                             onPressed: () {
-                              print("approved");
                             },
                             child: Text(AppLocalizations.of(context).translate('requests','approved'),
                                 style: TextStyle(

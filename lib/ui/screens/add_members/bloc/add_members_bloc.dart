@@ -55,7 +55,6 @@ class AddMembersBloc {
     } else {
       selectedMembers.add(userId);
     }
-    print(selectedMembers);
   }
 
   bool isMemberSelected(String userId) {

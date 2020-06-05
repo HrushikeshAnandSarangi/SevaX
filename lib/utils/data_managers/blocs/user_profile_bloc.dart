@@ -41,7 +41,7 @@ class UserProfileBloc {
                 community: CommunityModel(value.data),
                 onTap: () {
                   setDefaultCommunity(
-                      userModel.email, value.data, context);
+                      userModel.email, CommunityModel(value.data), context);
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -66,19 +66,21 @@ class UserProfileBloc {
   }
 
   void setDefaultCommunity(
-      String email, community, BuildContext context) {
+      String email, CommunityModel community, BuildContext context) {
+    print("======================+++ ${community.toString()}");
     _communityLoaded.add(false);
+
     if (community != null)
       SevaCore.of(context).loggedInUser.currentTimebank =
           community.primary_timebank;
     SevaCore.of(context).loggedInUser.associatedWithTimebanks =
         community.timebanks.length;
-    Firestore.instance
-        .collection('users')
-        .document(email)
-        .updateData({"currentCommunity": community.documentID, "currentTimebank":  community.primary_timebank}).then((onValue) {
+    Firestore.instance.collection('users').document(email).updateData({
+      "currentCommunity": community.id,
+      "currentTimebank": community.primary_timebank
+    }).then((onValue) {
       //TODO navigate to community page
-      SevaCore.of(context).loggedInUser.currentCommunity = community.documentID;
+      SevaCore.of(context).loggedInUser.currentCommunity = community.id;
       print(SevaCore.of(context).loggedInUser.currentCommunity);
       // print(onValue.data);
     });

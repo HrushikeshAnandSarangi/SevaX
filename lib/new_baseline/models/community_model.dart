@@ -319,7 +319,7 @@ class CommunityModel extends DataModel {
       object['location'] = this.location.data;
     }
 
-    object['softDelete'] = false;
+    object['softDelete'] = this.softDelete;
     return object;
   }
 

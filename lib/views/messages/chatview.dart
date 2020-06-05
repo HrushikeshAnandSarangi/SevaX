@@ -113,8 +113,6 @@ class _ChatViewState extends State<ChatView> {
     //here is we keep id
     if (widget.isFromShare) {
       textcontroller.text = widget.news.id;
-      print("Priniting new message ");
-
       pushNewMessage(
         communityId: widget.chatModel.communityId,
         senderId: widget.senderId,
@@ -125,16 +123,6 @@ class _ChatViewState extends State<ChatView> {
     super.initState();
     // getCurrentLocation();
   }
-
-  // void getCurrentLocation() {
-  //   Location().getLocation().then((onValue) {
-  //     widget.chatModel.candidateLocation =
-  //         GeoFirePoint(onValue.latitude, onValue.longitude);
-
-  //     print(
-  //         "-------------------------------------------->>> ${widget.chatModel.candidateLocation.latitude}");
-  //   });
-  // }
 
   Widget appBar({String imageUrl, String appbarTitle}) {
     return Row(
@@ -180,15 +168,12 @@ class _ChatViewState extends State<ChatView> {
           onPressed: widget.isFromShare == null
               ? () {
                   Navigator.pop(context);
-                  print("Inside pop widget.isFromShare == null");
                 }
               : widget.isFromShare
                   ? () {
-                      print("Inside pop widget.isFromShare true");
                       Navigator.pop(context);
                     }
                   : () {
-                      print("Inside pop widget.isFromShare false");
                       Navigator.pop(context);
                     },
         ),
@@ -400,8 +385,6 @@ class _ChatViewState extends State<ChatView> {
             )
           : _getSharedNewDetails(messageModel: messageModel);
     } else
-      print("Inside chat view 111");
-
     return Container(
       padding: messageModel.fromId == widget.senderId
           ? EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 10, 5, 0, 5)
@@ -659,8 +642,6 @@ class _ChatViewState extends State<ChatView> {
     var imageBanner = news.newsImageUrl == null
         ? (news.imageScraped == null ? "NoData" : news.imageScraped)
         : news.newsImageUrl;
-    print("FNAL IMAGE --> " + imageBanner);
-
     return GestureDetector(
       onTap: () {
         Navigator.push(

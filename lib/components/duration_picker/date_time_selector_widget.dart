@@ -69,8 +69,6 @@ class DateTimeSelector extends StatelessWidget {
   }
 
   Widget _buildTime(DateTime _date) {
-    print(
-        "+++++++++++++++++++++++++++++${AppConfig.prefs.getString('language_code') == null ? true.toString() : false.toString()}");
     if (_date == null) {
       return Text(
         'date & time',
