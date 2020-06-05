@@ -237,7 +237,8 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         );
       },
       child: Text(
-        'Reported Members',
+        AppLocalizations.of(context)
+            .translate('reported_members', 'reported_members'),
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,

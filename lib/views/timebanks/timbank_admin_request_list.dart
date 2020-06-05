@@ -792,7 +792,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     bool isAdmin,
     bool isPromoteBottonVisible,
   ) {
-
     if (SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID &&
         !widget.isUserAdmin) {
       return Padding(
@@ -816,172 +815,176 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         ),
       );
     } else {
-      print("am i viewing as admin - "+widget.isUserAdmin.toString());
+      print("am i viewing as admin - " + widget.isUserAdmin.toString());
       print((widget.isUserAdmin &&
-          ( SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID ||
+          (SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID ||
               user.sevaUserID == timebankModel.creatorId)));
-      if(!widget.isUserAdmin){
+      if (!widget.isUserAdmin) {
         return widget.isUserAdmin &&
-              ( SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID ||
-              user.sevaUserID == timebankModel.creatorId)
-          ? Row(
-        children: <Widget>[
-          isPromoteBottonVisible==true ?
-          Padding(
-            padding: EdgeInsets.only(left: 2, right: 2),
-            child: CustomRaisedButton(
-              debouncer: debounceValue,
-              action: Actions.Promote,
-              onTap: () async {
-                setState(() {
-                  isProgressBarActive = true;
-                });
-                List<String> admins =
-                timebankModel.admins.map((s) => s).toList();
-                admins.add(user.sevaUserID);
-                _updateTimebank(timebankModel, admins: admins);
-              },
-            ),
-          ) :
-          Padding(
-            padding: EdgeInsets.only(left: 2, right: 2),
-            child: CustomRaisedButton(
-              debouncer: debounceValue,
-              action: Actions.Demote,
-              onTap: () async {
-                setState(() {
-                  isProgressBarActive = true;
-                });
-                List<String> admins =
-                timebankModel.admins.map((s) => s).toList();
-                admins.remove(user.sevaUserID);
-                _updateTimebank(timebankModel, admins: admins);
-              },
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 2, right: 2),
-            child: CustomRaisedButton(
-              debouncer: debounceValue,
-              action: Actions.Remove,
-              onTap: () async {
-                //Here we need to put dialog
-                Map<String, bool> onActivityResult = await showAdvisory(
-                    dialogTitle:
-                    "${AppLocalizations.of(context).translate('members', 'are_you_sure')} ${user.fullname}?");
-                if (onActivityResult['PROCEED']) {
-                  setState(() {
-                    isProgressBarActive = true;
-                  });
-                  if (widget.isCommunity != null && widget.isCommunity) {
-                    await removeMemberTimebankFn(
-                        context: parentContext,
-                        userModel: user,
-                        isFromExit: false,
-                        timebankModel: model);
-                    setState(() {
-                      isProgressBarActive = false;
-                    });
-                  } else {
-                    await removeMemberGroupFn(
-                        context: parentContext,
-                        userModel: user,
-                        isFromExit: false,
-                        timebankModel: model);
-                    setState(() {
-                      isProgressBarActive = false;
-                    });
-                  }
-                } else {
-                  return;
-                }
-              },
-            ),
-          ),
-        ],
-      )
-          : Offstage();
-      }else{
+                (SevaCore.of(context).loggedInUser.sevaUserID ==
+                        user.sevaUserID ||
+                    user.sevaUserID == timebankModel.creatorId)
+            ? Row(
+                children: <Widget>[
+                  isPromoteBottonVisible == true
+                      ? Padding(
+                          padding: EdgeInsets.only(left: 2, right: 2),
+                          child: CustomRaisedButton(
+                            debouncer: debounceValue,
+                            action: Actions.Promote,
+                            onTap: () async {
+                              setState(() {
+                                isProgressBarActive = true;
+                              });
+                              List<String> admins =
+                                  timebankModel.admins.map((s) => s).toList();
+                              admins.add(user.sevaUserID);
+                              _updateTimebank(timebankModel, admins: admins);
+                            },
+                          ),
+                        )
+                      : Padding(
+                          padding: EdgeInsets.only(left: 2, right: 2),
+                          child: CustomRaisedButton(
+                            debouncer: debounceValue,
+                            action: Actions.Demote,
+                            onTap: () async {
+                              setState(() {
+                                isProgressBarActive = true;
+                              });
+                              List<String> admins =
+                                  timebankModel.admins.map((s) => s).toList();
+                              admins.remove(user.sevaUserID);
+                              _updateTimebank(timebankModel, admins: admins);
+                            },
+                          ),
+                        ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 2, right: 2),
+                    child: CustomRaisedButton(
+                      debouncer: debounceValue,
+                      action: Actions.Remove,
+                      onTap: () async {
+                        //Here we need to put dialog
+                        Map<String, bool> onActivityResult = await showAdvisory(
+                            dialogTitle:
+                                "${AppLocalizations.of(context).translate('members', 'are_you_sure')} ${user.fullname}?");
+                        if (onActivityResult['PROCEED']) {
+                          setState(() {
+                            isProgressBarActive = true;
+                          });
+                          if (widget.isCommunity != null &&
+                              widget.isCommunity) {
+                            await removeMemberTimebankFn(
+                                context: parentContext,
+                                userModel: user,
+                                isFromExit: false,
+                                timebankModel: model);
+                            setState(() {
+                              isProgressBarActive = false;
+                            });
+                          } else {
+                            await removeMemberGroupFn(
+                                context: parentContext,
+                                userModel: user,
+                                isFromExit: false,
+                                timebankModel: model);
+                            setState(() {
+                              isProgressBarActive = false;
+                            });
+                          }
+                        } else {
+                          return;
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              )
+            : Offstage();
+      } else {
         return widget.isUserAdmin &&
-            ( SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID ||
-                user.sevaUserID == timebankModel.creatorId)
+                (SevaCore.of(context).loggedInUser.sevaUserID ==
+                        user.sevaUserID ||
+                    user.sevaUserID == timebankModel.creatorId)
             ? Offstage()
-            :Row(
-          children: <Widget>[
-            isPromoteBottonVisible==true ?
-            Padding(
-              padding: EdgeInsets.only(left: 2, right: 2),
-              child: CustomRaisedButton(
-                debouncer: debounceValue,
-                action: Actions.Promote,
-                onTap: () async {
-                  setState(() {
-                    isProgressBarActive = true;
-                  });
-                  List<String> admins =
-                  timebankModel.admins.map((s) => s).toList();
-                  admins.add(user.sevaUserID);
-                  _updateTimebank(timebankModel, admins: admins);
-                },
-              ),
-            ) :
-            Padding(
-              padding: EdgeInsets.only(left: 2, right: 2),
-              child: CustomRaisedButton(
-                debouncer: debounceValue,
-                action: Actions.Demote,
-                onTap: () async {
-                  setState(() {
-                    isProgressBarActive = true;
-                  });
-                  List<String> admins =
-                  timebankModel.admins.map((s) => s).toList();
-                  admins.remove(user.sevaUserID);
-                  _updateTimebank(timebankModel, admins: admins);
-                },
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 2, right: 2),
-              child: CustomRaisedButton(
-                debouncer: debounceValue,
-                action: Actions.Remove,
-                onTap: () async {
-                  //Here we need to put dialog
-                  Map<String, bool> onActivityResult = await showAdvisory(
-                      dialogTitle:
-                      "${AppLocalizations.of(context).translate('members', 'are_you_sure')} ${user.fullname}?");
-                  if (onActivityResult['PROCEED']) {
-                    setState(() {
-                      isProgressBarActive = true;
-                    });
-                    if (widget.isCommunity != null && widget.isCommunity) {
-                      await removeMemberTimebankFn(
-                          context: parentContext,
-                          userModel: user,
-                          isFromExit: false,
-                          timebankModel: model);
-                      setState(() {
-                        isProgressBarActive = false;
-                      });
-                    } else {
-                      await removeMemberGroupFn(
-                          context: parentContext,
-                          userModel: user,
-                          isFromExit: false,
-                          timebankModel: model);
-                      setState(() {
-                        isProgressBarActive = false;
-                      });
-                    }
-                  } else {
-                    return;
-                  }
-                },
-              ),
-            ),
-          ],
-        );
+            : Row(
+                children: <Widget>[
+                  isPromoteBottonVisible == true
+                      ? Padding(
+                          padding: EdgeInsets.only(left: 2, right: 2),
+                          child: CustomRaisedButton(
+                            debouncer: debounceValue,
+                            action: Actions.Promote,
+                            onTap: () async {
+                              setState(() {
+                                isProgressBarActive = true;
+                              });
+                              List<String> admins =
+                                  timebankModel.admins.map((s) => s).toList();
+                              admins.add(user.sevaUserID);
+                              _updateTimebank(timebankModel, admins: admins);
+                            },
+                          ),
+                        )
+                      : Padding(
+                          padding: EdgeInsets.only(left: 2, right: 2),
+                          child: CustomRaisedButton(
+                            debouncer: debounceValue,
+                            action: Actions.Demote,
+                            onTap: () async {
+                              setState(() {
+                                isProgressBarActive = true;
+                              });
+                              List<String> admins =
+                                  timebankModel.admins.map((s) => s).toList();
+                              admins.remove(user.sevaUserID);
+                              _updateTimebank(timebankModel, admins: admins);
+                            },
+                          ),
+                        ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 2, right: 2),
+                    child: CustomRaisedButton(
+                      debouncer: debounceValue,
+                      action: Actions.Remove,
+                      onTap: () async {
+                        //Here we need to put dialog
+                        Map<String, bool> onActivityResult = await showAdvisory(
+                            dialogTitle:
+                                "${AppLocalizations.of(context).translate('members', 'are_you_sure')} ${user.fullname}?");
+                        if (onActivityResult['PROCEED']) {
+                          setState(() {
+                            isProgressBarActive = true;
+                          });
+                          if (widget.isCommunity != null &&
+                              widget.isCommunity) {
+                            await removeMemberTimebankFn(
+                                context: parentContext,
+                                userModel: user,
+                                isFromExit: false,
+                                timebankModel: model);
+                            setState(() {
+                              isProgressBarActive = false;
+                            });
+                          } else {
+                            await removeMemberGroupFn(
+                                context: parentContext,
+                                userModel: user,
+                                isFromExit: false,
+                                timebankModel: model);
+                            setState(() {
+                              isProgressBarActive = false;
+                            });
+                          }
+                        } else {
+                          return;
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              );
       }
     }
   }
@@ -1159,7 +1162,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
               ),
               FlatButton(
                 child: Text(
-                  confirmationTitle ?? AppLocalizations.of(context).translate('requests', 'delete_request'),
+                  confirmationTitle ??
+                      AppLocalizations.of(context)
+                          .translate('requests', 'delete_request'),
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -1189,6 +1194,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     if (_membersWidgets.length == 0) {
       if (widget.isUserAdmin) {
         var gesture = TransactionLimitCheck(
+          isSoftDeleteRequested: timebankModel.requestedSoftDelete,
           child: GestureDetector(
             child: Row(
               children: <Widget>[
@@ -1701,7 +1707,8 @@ class CustomRaisedButton extends StatelessWidget {
           ? null
           : Colors.red,
       child: Text(
-        AppLocalizations.of(context).translate('members',action.toString().split('.')[1]),
+        AppLocalizations.of(context)
+            .translate('members', action.toString().split('.')[1]),
         style: TextStyle(fontSize: 12),
       ),
       onPressed: () {

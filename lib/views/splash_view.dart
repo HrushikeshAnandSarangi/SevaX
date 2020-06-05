@@ -1,15 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:timeago/timeago.dart' as timeago;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flurry/flurry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -27,6 +25,7 @@ import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import 'onboarding/interests_view.dart';
 import 'onboarding/skills_view.dart';
@@ -380,8 +379,9 @@ class _SplashViewState extends State<SplashView> {
   }
 
   void initiateLogin() {
-    _getLoggedInUserId().then(handleLoggedInUserIdResponse).catchError((error) {
-    });
+    _getLoggedInUserId()
+        .then(handleLoggedInUserIdResponse)
+        .catchError((error) {});
   }
 
   Future<String> _getLoggedInUserId() async {
@@ -435,27 +435,21 @@ class _SplashViewState extends State<SplashView> {
         json.decode(AppConfig.remoteConfig.getString('app_version'));
 
     if (Platform.isAndroid) {
-      await PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
-        globals.currentVersionNumber = packageInfo.version.toString();
-        if (int.parse(packageInfo.buildNumber) <
-            versionInfo['android']['build']) {
-          if (versionInfo['android']['forceUpdate']) {
-            await _navigateToUpdatePage(loggedInUser, true);
-          } else {
-            await _navigateToUpdatePage(loggedInUser, false);
-          }
-        } else {}
-      });
+      if (AppConfig.buildNumber < versionInfo['android']['build']) {
+        if (versionInfo['android']['forceUpdate']) {
+          await _navigateToUpdatePage(loggedInUser, true);
+        } else {
+          await _navigateToUpdatePage(loggedInUser, false);
+        }
+      } else {}
     } else if (Platform.isIOS) {
-      await PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
-        if (int.parse(packageInfo.buildNumber) < versionInfo['ios']['build']) {
-          if (versionInfo['ios']['forceUpdate']) {
-            await _navigateToUpdatePage(loggedInUser, true);
-          } else {
-            await _navigateToUpdatePage(loggedInUser, false);
-          }
-        } else {}
-      });
+      if (AppConfig.buildNumber < versionInfo['ios']['build']) {
+        if (versionInfo['ios']['forceUpdate']) {
+          await _navigateToUpdatePage(loggedInUser, true);
+        } else {
+          await _navigateToUpdatePage(loggedInUser, false);
+        }
+      } else {}
     }
 
     if (widget.skipToHomePage) {

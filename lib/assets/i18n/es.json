@@ -1038,5 +1038,8 @@
     "messages_title": "Mensajes",
     "personal_messages": "Personal",
     "admin_messages": "Administradora"
+  },
+  "add_location": {
+    "confirm_location_label": "CONFIRMAR UBICACIÓN"
   }
 }

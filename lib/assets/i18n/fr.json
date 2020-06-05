@@ -1038,5 +1038,8 @@
     "messages_title": "Messages",
     "personal_messages": "Personnelle",
     "admin_messages": "Admin"
+  },
+  "add_location": {
+    "confirm_location_label": "CONFIRMER L'EMPLACEMENT"
   }
 }
