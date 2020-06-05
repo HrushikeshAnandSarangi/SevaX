@@ -274,8 +274,6 @@ class ReportedMemberCard extends StatelessWidget {
               // usually buttons at the bottom of the dialog
               new FlatButton(
                 child: new Text(AppLocalizations.of(context).translate('reported_members', 'close')),
-                onPressed: () {
-                child: new Text("Close"),
                 onPressed: () async {
                   await Firestore.instance.collection('reported_users_list').document(model.reportedId+"*"+model.communityId).delete();
 
