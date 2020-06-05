@@ -80,6 +80,8 @@ class OffersState extends State<OffersModule> {
                     ),
                   ),
                   TransactionLimitCheck(
+                    isSoftDeleteRequested:
+                        widget.timebankModel.requestedSoftDelete,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(

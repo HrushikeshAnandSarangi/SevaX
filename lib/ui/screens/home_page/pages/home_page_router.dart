@@ -13,6 +13,7 @@ import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/message_page_router.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/notifications/notifications_page.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
@@ -103,7 +104,16 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                       _userBloc.comunityStream, (u, c) => true),
                   builder: (context, AsyncSnapshot<bool> snapshot) {
                     if (snapshot.hasData && snapshot.data != null) {
-                      SevaCore.of(context).loggedInUser = _userBloc.user;
+                      print("Updating seva core user model here....");
+
+                      UserModel loggedInUser = _userBloc.user;
+                      loggedInUser.currentTimebank =
+                          _userBloc.community.primary_timebank;
+                      loggedInUser.associatedWithTimebanks =
+                          _userBloc.user.communities.length;
+
+                      SevaCore.of(context).loggedInUser = loggedInUser;
+
                       if (_userBloc.user.communities == null ||
                           _userBloc.user.communities.isEmpty) {
                         WidgetsBinding.instance.addPostFrameCallback((_) {

@@ -9,30 +9,23 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
+
 class LanguageListData {
   final languagelist = [
-    LanguageModel(
-        languageName:'English',
-      code: 'en'
-    ),
-    LanguageModel(
-        languageName:'Portuguese',
-        code: 'pt'),
-    LanguageModel(
-      languageName: 'French',
-      code: 'fr'),
-    LanguageModel(
-        languageName:'Spanish',
-        code: 'es')
+    LanguageModel(languageName: 'English', code: 'en'),
+    LanguageModel(languageName: 'Portuguese', code: 'pt'),
+    LanguageModel(languageName: 'French', code: 'fr'),
+    LanguageModel(languageName: 'Spanish', code: 'es')
   ];
   LanguageListData();
   getData() {
     return languagelist;
   }
+
   LanguageModel getLanguageSupported(String languagecode) {
     print(languagecode);
     var found = -1;
-    for(var i =0; i < this.languagelist.length;i++) {
+    for (var i = 0; i < this.languagelist.length; i++) {
       if (this.languagelist[i].code == languagecode) {
         found = i;
         break;
@@ -41,13 +34,11 @@ class LanguageListData {
     if (found > -1) {
       return this.languagelist[found];
     } else {
-      return LanguageModel(
-          languageName:'English',
-          code: 'en'
-      );
+      return LanguageModel(languageName: 'English', code: 'en');
     }
   }
 }
+
 class LanguageView extends StatefulWidget {
   @override
   _LanguageViewState createState() => _LanguageViewState();
@@ -59,7 +50,7 @@ class _LanguageViewState extends State<LanguageView> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context).translate('settings','language'),
+            AppLocalizations.of(context).translate('settings', 'language'),
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -125,7 +116,7 @@ class LanguageListState extends State<LanguageList> {
                       print(model.code);
                       appLanguage.changeLanguage(Locale(model.code));
                       userModel.language = model.code;
-                      await updateUser(user: userModel);
+                      await updateUserLanguage(user: userModel);
                     }
                   },
                 ),

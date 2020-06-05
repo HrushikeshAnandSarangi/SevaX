@@ -548,8 +548,6 @@ class CreateEditCommunityViewFormState
                                           .data.timebank.preventAccedentalDelete
                                       : timebankModel.preventAccedentalDelete,
                                   onChanged: (bool value) {
-                                    print(
-                                        "$value --->>>> ${timebankModel.preventAccedentalDelete} -- ${snapshot.data.timebank.preventAccedentalDelete}");
                                     timebankModel.preventAccedentalDelete =
                                         value;
                                     snapshot.data.timebank.updateValueByKey(
@@ -780,7 +778,8 @@ class CreateEditCommunityViewFormState
                                             snapshot.data.timebank.id;
                                         snapshot.data.community.location =
                                             location;
-                                        snapshot.data.community.softDelete = false;
+                                        snapshot.data.community.softDelete =
+                                            false;
 
                                         await createEditCommunityBloc
                                             .createCommunity(

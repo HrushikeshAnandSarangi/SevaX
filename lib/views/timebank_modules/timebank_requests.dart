@@ -103,6 +103,8 @@ class RequestsState extends State<RequestsModule> {
                     widget.isFromSettings
                         ? Container()
                         : TransactionLimitCheck(
+                            isSoftDeleteRequested:
+                                widget.timebankModel.requestedSoftDelete,
                             child: GestureDetector(
                               child: Container(
                                   margin: EdgeInsets.only(left: 0),
