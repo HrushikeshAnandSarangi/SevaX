@@ -147,8 +147,6 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
   return timeBankModelList;
 }
 
-
-
 /// Get all timebanknew associated with a User as a Stream_
 Future<int> getMembersCountOfAllMembers({@required String communityId}) async {
   int totalCount = 0;
@@ -328,13 +326,7 @@ Future updateCommunityDetails({@required CommunityModel communityModel}) async {
   await Firestore.instance
       .collection('communities')
       .document(communityModel.id)
-      .updateData({
-    'name': communityModel.name,
-    'about': communityModel.about,
-    'logo_url': communityModel.logo_url,
-    'billing_address': communityModel.billing_address.toMap(),
-    'taxPercentage': communityModel.taxPercentage,
-  });
+      .updateData(communityModel.toMap());
 }
 
 Future<CommunityModel> getCommunityDetailsByCommunityId(
@@ -386,7 +378,6 @@ Stream<CommunityModel> getCommunityModelStream(
   yield* data.transform(
     StreamTransformer<DocumentSnapshot, CommunityModel>.fromHandlers(
       handleData: (snapshot, modelSink) {
-
         CommunityModel model = CommunityModel(snapshot.data);
 
         model.id = snapshot.documentID;
@@ -430,8 +421,7 @@ Future<List<String>> getAllTimebankIdStream(
   return allItems;
 }
 
-Future<TimebankModel> getTimebankIdStream(
-    {@required String timebankId}) async {
+Future<TimebankModel> getTimebankIdStream({@required String timebankId}) async {
   DocumentSnapshot onValue = await Firestore.instance
       .collection('timebanknew')
       .document(timebankId)
