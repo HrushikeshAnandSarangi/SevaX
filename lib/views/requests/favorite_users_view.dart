@@ -97,6 +97,7 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
                   requestModel: requestModel,
                   userId: user.sevaUserID,
                   email: user.email,
+                  context: context
                 ),
               );
             },

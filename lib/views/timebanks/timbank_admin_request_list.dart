@@ -1148,7 +1148,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  'Cancel',
+                  AppLocalizations.of(context).translate('shared', 'cancel'),
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -1159,7 +1159,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
               ),
               FlatButton(
                 child: Text(
-                  confirmationTitle ?? "Yes",
+                  confirmationTitle ?? AppLocalizations.of(context).translate('requests', 'delete_request'),
                   style: TextStyle(
                     fontSize: 16,
                   ),

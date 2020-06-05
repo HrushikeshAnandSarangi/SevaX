@@ -71,7 +71,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
     super.dispose();
   }
 
-  void setCurrentCommunity(List<CommunityModel> data) {
+  void setCurrentCommunity(List<CommunityModel> data) async {
     if (data != null)
       data.forEach((model) {
         if (model.id == SevaCore.of(context).loggedInUser.currentCommunity) {

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/bloc/report_member_bloc.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
@@ -74,7 +75,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          "Report Member",
+          AppLocalizations.of(context).translate('reported_members', 'reported_member'),
           style: TextStyle(fontSize: 18),
         ),
         centerTitle: true,
@@ -87,12 +88,12 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
         child: ListView(
           children: <Widget>[
             Text(
-              "Please inform, why you are reporting this user.",
+              AppLocalizations.of(context).translate('reported_members', 'inform'),
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
             Text(
-              "Please provide as much detail as possible",
+              AppLocalizations.of(context).translate('reported_members', 'details'),
             ),
             StreamBuilder<String>(
               stream: _bloc.message,
@@ -189,11 +190,12 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                 bool isEnabled =
                     snapshot.data ?? false; //(snapshot.data?.length ?? 0) > 10;
                 return RaisedButton(
-                  child: Text("Report"),
+                  child: Text(AppLocalizations.of(context).translate('reported_members', 'report'),
+                  ),
                   onPressed: isEnabled
                       ? () {
                           _showSnackBar(
-                            "Reporting member",
+                            AppLocalizations.of(context).translate('reported_members', 'reporting_member'),
                             isLongDuration: true,
                           );
                           _bloc
@@ -205,13 +207,13 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                             isTimebankReport: widget.isFromTimebank,
                           )
                               .then((status) {
-                            _showSnackBar("Member reported successfully");
+                            _showSnackBar(AppLocalizations.of(context).translate('reported_members', 'success'));
                             Future.delayed(
                               Duration(seconds: 1),
                               () => Navigator.of(context).pop(),
                             );
                           }).catchError((e) {
-                            _showSnackBar("Failed to report member! Try again");
+                            _showSnackBar(AppLocalizations.of(context).translate('reported_members', 'failed'));
                           });
                         }
                       : null,

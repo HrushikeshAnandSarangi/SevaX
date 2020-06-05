@@ -69,7 +69,8 @@ class HomeDashBoardBloc extends BlocBase {
         .collection('users')
         .document(SevaCore.of(context).loggedInUser.email)
         .updateData({
-      "currentCommunity": SevaCore.of(context).loggedInUser.currentCommunity
+      "currentCommunity": SevaCore.of(context).loggedInUser.currentCommunity,
+      "currentTimebank": community.primary_timebank
     });
     return Future.value(true);
   }

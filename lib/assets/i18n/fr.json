@@ -520,7 +520,10 @@
     "updating_timebank": "Mise à jour de la banque de temps ..",
     "reason_to_join": "Raison d'adhérer",
     "not_mentioned": "Raison non mentionnée",
-    "allow": "Autoriser"
+    "allow": "Autoriser",
+    "timebank_exit": "Timebank Exit",
+    "exited_from": "est sorti de",
+    "tap_to_view": "Appuyez pour afficher les détails"
   },
   "profile": {
     "image_hint": "ProfileImage",
@@ -642,7 +645,9 @@
     "ok": "D'accord",
     "by_approving_that": "En approuvant, vous acceptez que",
     "worked_for": "a travaillé pour",
-    "no_comments": "Pas de commentaire"
+    "no_comments": "Pas de commentaire",
+    "timebank_offers": "Offres de la banque de temps",
+    "others": "Autres"
   },
   "create_request": {
     "humanity_first_create": "Crear solicitud de pandilla Yang",
@@ -889,7 +894,16 @@
     "Remove": "Retirer",
     "Promote": "Promouvoir",
     "Demote": "Rétrograder",
-    "Exit": "Sortie"
+    "Exit": "Sortie",
+    "admins": "Administrateurs",
+    "coordinators": "Coordinateurs",
+    "coordinator": "Coordinateur",
+    "remove_as_admin": "Supprimer en tant qu'administrateur",
+    "add_as_admin": "Ajouter en tant qu'administrateur",
+    "view_profile": "Voir le profil",
+    "remove_member": "Supprimer un membre",
+    "sure_a": "Êtes-vous sûr de vouloir désinstaller",
+    "timebank_members": "des membres de la banque de temps?"
   },
   "create_offer": {
     "title": "Créer une offre",
@@ -971,5 +985,41 @@
   },
   "links": {
     "linkToWeb": "links_fr"
+  },
+  "reported_members": {
+    "reported_member": "Signaler un membre",
+    "inform": "Veuillez indiquer pourquoi vous signalez cet utilisateur.",
+    "details": "Veuillez fournir autant de détails que possible",
+    "report": "rapport",
+    "reporting_member": "Membre déclarant",
+    "success": "Le membre a signalé avec succès",
+    "failed": "Impossible de signaler le membre! Réessayer",
+    "reported_users": "Utilisateurs signalés",
+    "detail": "Cliquez ici pour voir les utilisateurs signalés de cette banque de temps",
+    "reported_members": "Membres signalés",
+    "no_data": "Pas de données",
+    "reported_by": "Rapporté par",
+    "user": "utilisateur",
+    "users": "utilisateurs",
+    "removed": "L'utilisateur a bien été supprimé du groupe",
+    "cannot_group": "L'utilisateur ne peut pas être supprimé de ce groupe",
+    "userhas": "L'utilisateur a",
+    "pending_projects": "projets en attente",
+    "pending_requests": "Requêtes en cours",
+    "pending_offers":  "offres en attente",
+    "clear_trans": "Veuillez effacer les transactions et réessayer.",
+    "close": "proche",
+    "cannot_remove": "Impossible de vous retirer du groupe. Essayez plutôt de supprimer le groupe.",
+    "remove_success": "L'utilisateur a bien été supprimé de la banque de temps",
+    "cannot_timebank": "L'utilisateur ne peut pas être supprimé de cette banque de temps"
+  },
+  "group": {
+    "edit_group":  "Modifier le groupe",
+    "settings": "Réglages",
+    "about":  "À propos de",
+    "view_request": "Afficher les demandes",
+    "reported_members": "Membres signalés",
+    "delete_group": "Supprimer le groupe",
+    "manage": "Gérer"
   }
 }

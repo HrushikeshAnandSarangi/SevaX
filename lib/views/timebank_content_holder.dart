@@ -14,6 +14,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
@@ -808,7 +809,7 @@ class DiscussionListState extends State<DiscussionList> {
                     Spacer(),
                     Text(
                       timeAgo.format(
-                        DateTime.fromMillisecondsSinceEpoch(news.postTimestamp),
+                        DateTime.fromMillisecondsSinceEpoch(news.postTimestamp),locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
                       ),
                       style: TextStyle(color: Colors.grey),
                     ),
@@ -1339,7 +1340,7 @@ class DiscussionListState extends State<DiscussionList> {
                                           timeAgo.format(
                                             DateTime.fromMillisecondsSinceEpoch(
                                               news.postTimestamp,
-                                            ),
+                                            ),locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
                                           ),
                                           style: TextStyle(fontSize: 12)),
                                     ],

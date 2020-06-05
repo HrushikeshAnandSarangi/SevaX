@@ -273,6 +273,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
                 requestModel: requestModel,
                 userId: user.sevaUserID,
                 email: user.email,
+                context: context
               ),
             );
           },

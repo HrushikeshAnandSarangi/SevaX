@@ -10,13 +10,13 @@
     "email_label": "O EMAIL",
     "password_label": "SENHA",
     "by_continuing": "Ao continuar, você concorda com o SevaX",
-    "terms": "Termos de serviço",
+    "terms": " Termos de serviço ",
     "will_manage": "Gerenciaremos as informações conforme descrito em nosso",
-    "privacy_policy": "Política de Privacidade",
+    "privacy_policy": " Política de Privacidade ",
     "and": "e",
-    "payment_policy": "Política de pagamento.",
+    "payment_policy": " Política de pagamento. ",
     "new_user": "Novo usuário?",
-    "signup": "Inscrever-se",
+    "signup": " Inscrever-se",
     "forgot_password": "Esqueceu a senha?",
     "enter_email": "Introduzir email",
     "enter_email_to_reset": "Digite o e-mail para redefinir",
@@ -24,7 +24,7 @@
     "your_email_address": "Seu endereço de email",
     "reset_password": "Redefinir senha",
     "cancel": "Cancelar",
-    "reset": "Redefinir",
+    "reset": " Redefinir",
     "signin": "Assinar em",
     "signin_with": "Entrar com",
     "signin_with_google": "Faça login no Google",
@@ -519,7 +519,10 @@
     "updating_timebank": "Atualizando timebank ..",
     "reason_to_join": "Motivo para participar",
     "not_mentioned": "Razão não mencionada",
-    "allow": "Permitir"
+    "allow": "Permitir",
+    "timebank_exit": "Saída do Timebank",
+    "exited_from": "saiu de",
+    "tap_to_view": "Toque para ver os detalhes"
   },
   "profile": {
     "image_hint": "Imagem de perfil",
@@ -642,7 +645,9 @@
     "ok": "Está bem",
     "by_approving_that": "Ao aprovar, você aceita que",
     "worked_for": "Trabalhou para",
-    "no_comments": "Sem comentários"
+    "no_comments": "Sem comentários",
+    "timebank_offers": "Ofertas do Timebank",
+    "others": "Outros"
   },
   "create_request": {
     "humanity_first_create": "Criar solicitação de gangue Yang",
@@ -892,7 +897,16 @@
     "Remove": "Retirar",
     "Promote": "Promover",
     "Demote": "Rebaixar",
-    "Exit": "Saída"
+    "Exit": "Saída",
+    "admins": "Admins",
+    "coordinators": "Coordenadores",
+    "coordinator": "Coordenador",
+    "remove_as_admin": "Remover como administrador",
+    "add_as_admin": "Adicionar como administrador",
+    "view_profile": "Ver perfil",
+    "remove_member": "Remover membro",
+    "sure_a": "Você tem certeza que deseja remover",
+    "timebank_members": "dos membros do timebank?"
   },
   "create_offer": {
     "title": "Criar Oferta",
@@ -974,5 +988,41 @@
   },
   "links": {
     "linkToWeb": "links_pt"
+  },
+  "reported_members": {
+    "reported_member": "Membro do relatório",
+    "inform": "Informe por que você está denunciando esse usuário.",
+    "details": "Por favor forneça o máximo possível de detalhes",
+    "report": "Relatório",
+    "reporting_member": "Membro relator",
+    "success": "Membro relatado com sucesso",
+    "failed": "Falha ao denunciar membro! Tente novamente",
+    "reported_users": "Usuários denunciados",
+    "detail": "Clique aqui para ver os usuários denunciados deste timebank",
+    "reported_members": "Membros denunciados",
+    "no_data": "Sem dados",
+    "reported_by": "Reportado por",
+    "user": "do utilizador",
+    "users": "Comercial",
+    "removed": "Usuário removido com sucesso do grupo",
+    "cannot_group": "O usuário não pode ser excluído deste grupo",
+    "userhas": "O usuário possui",
+    "pending_projects": "projetos pendentes",
+    "pending_requests": "Solicitações Pendentes",
+    "pending_offers":  "ofertas pendentes",
+    "clear_trans": "Limpe as transações e tente novamente.",
+    "close": "Fechar",
+    "cannot_remove": "Não é possível remover-se do grupo. Em vez disso, tente excluir o grupo.",
+    "remove_success": "O usuário foi removido com sucesso do timebank",
+    "cannot_timebank": "O usuário não pode ser excluído deste timebank"
+  },
+  "group": {
+    "edit_group":  "Editar grupo",
+    "settings": "Definições",
+    "about":  "Sobre",
+    "view_request": "Ver pedidos",
+    "reported_members": "Membros denunciados",
+    "delete_group": "Excluir grupo",
+    "manage": "Gerir"
   }
 }

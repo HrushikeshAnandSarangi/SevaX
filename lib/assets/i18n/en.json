@@ -517,7 +517,10 @@
     "not_mentioned": "Reason not mentioned",
     "allow": "Allow",
     "timebank_join": "Timebank Join",
-    "added_you": "has added you to"
+    "added_you": "has added you to",
+    "timebank_exit": "Timebank Exit",
+    "exited_from": "has exited from",
+    "tap_to_view": "Tap to view details"
   },
   "profile": {
     "image_hint": "ProfileImage",
@@ -639,7 +642,9 @@
     "ok": "Ok",
     "by_approving_that": "By approving, you accept that",
     "worked_for": "has worked for",
-    "no_comments": "No comments"
+    "no_comments": "No comments",
+    "timebank_offers": "Timebank Offers",
+    "others": "Others"
   },
   "create_request": {
     "humanity_first_create": "Create Yang Gang Request",
@@ -893,7 +898,16 @@
     "Remove": "Remove",
     "Promote": "Promote",
     "Demote": "Demote",
-    "Exit": "Exit"
+    "Exit": "Exit",
+    "admins": "Admins",
+    "coordinators": "Coordinators",
+    "coordinator": "Coordinator",
+    "remove_as_admin": "Remove as admin",
+    "add_as_admin": "Add as Admin",
+    "view_profile": "View profile",
+    "remove_member": "Remove member",
+    "sure_a": "Are you sure you want to remove",
+    "timebank_members": "from timebank members?"
   },
   "create_offer": {
     "title": "Create Offer",
@@ -983,5 +997,41 @@
   },
   "links": {
     "linkToWeb": "links_en"
+  },
+  "reported_members": {
+    "reported_member": "Report Member",
+    "inform": "Please inform, why you are reporting this user.",
+    "details": "Please provide as much detail as possible",
+    "report": "Report",
+    "reporting_member": "Reporting member",
+    "success": "Member reported successfully",
+    "failed": "Failed to report member! Try again",
+    "reported_users": "Reported Users",
+    "detail": "Click here to view reported users of this timebank",
+    "reported_members": "Reported Members",
+    "no_data": "No data",
+    "reported_by": "Reported by",
+    "user": "user",
+    "users": "users",
+    "removed": "User is successfully removed from the group",
+    "cannot_group": "User cannot be deleted from this group",
+    "userhas": "User has",
+    "pending_projects": "pending projects",
+    "pending_requests": "pending requests",
+    "pending_offers":  "pending offers",
+    "clear_trans": "Please clear the transactions and try again.",
+    "close": "Close",
+    "cannot_remove": "Cannot remove yourself from the group. Instead, please try deleting the group.",
+    "remove_success": "User is successfully removed from the timebank",
+    "cannot_timebank": "User cannot be deleted from this timebank"
+  },
+  "group": {
+    "edit_group":  "Edit Group",
+    "settings": "Settings",
+    "about":  "About",
+    "view_request": "View requests",
+    "reported_members": "Reported Members",
+    "delete_group": "Delete Group",
+    "manage": "Manage"
   }
 }

@@ -668,14 +668,14 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             margin: notificationPadding,
             decoration: notificationDecoration,
             child: ListTile(
-              title: Text("Timebank Exit"),
+              title: Text(AppLocalizations.of(context).translate('notifications','timebank_exit')),
               leading: userExitModel.userPhotoUrl != null
                   ? CircleAvatar(
                       backgroundImage: NetworkImage(userExitModel.userPhotoUrl),
                     )
                   : Offstage(),
               subtitle: Text(
-                  '${userExitModel.userName.toLowerCase()} has exited from ${userExitModel.timebank}, Tap to view details'),
+                  '${userExitModel.userName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications','exited_from')} ${userExitModel.timebank}, ${AppLocalizations.of(context).translate('notifications','tap_to_view')}'),
             ),
           ),
           onTap: () {

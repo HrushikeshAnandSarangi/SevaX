@@ -752,7 +752,7 @@ class _ChatViewState extends State<ChatView> {
                           timeAgo.format(
                             DateTime.fromMillisecondsSinceEpoch(
                               news.postTimestamp,
-                            ),
+                            ), locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
                           ),
                           style: TextStyle(fontSize: 12)),
                     ],

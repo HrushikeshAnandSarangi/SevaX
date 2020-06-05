@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/timebank_message_page.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class AdminMessageCard extends StatelessWidget {
@@ -79,7 +80,7 @@ class AdminMessageCard extends StatelessWidget {
                 model.timestamp == null
                     ? ""
                     : timeago.format(
-                        model.timestamp,
+                        model.timestamp, locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
                       ),
                 style: TextStyle(fontSize: 12),
               ),

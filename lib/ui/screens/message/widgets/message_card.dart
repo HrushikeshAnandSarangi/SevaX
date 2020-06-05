@@ -4,6 +4,7 @@ import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -20,6 +21,7 @@ class MessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(Locale(AppConfig.prefs.getString('language_code')).toLanguageTag() + "hey");
     RegExp exp = RegExp(
         r'[a-zA-Z][a-zA-Z0-9_.%$&]*[@][a-zA-Z0-9]*[.][a-zA-Z.]*[*][0-9]{13,}');
     String userId = SevaCore.of(context).loggedInUser.sevaUserID;
@@ -137,7 +139,7 @@ class MessageCard extends StatelessWidget {
                           ? ""
                           : timeago.format(
                               DateTime.fromMillisecondsSinceEpoch(
-                                  model.timestamp),
+                                  model.timestamp),locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
                             ),
                       // "Now 10:00 pm",
                       style: TextStyle(fontSize: 12),
