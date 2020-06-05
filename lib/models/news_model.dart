@@ -58,7 +58,7 @@ class NewsModel extends DataModel {
     if (this.title != null && this.title.isNotEmpty) {
       map['title'] = this.title;
     }
-    if(this.softDelete!=null){
+    if (this.softDelete != null) {
       map['softDelete'] = this.softDelete;
     }
 
@@ -269,6 +269,9 @@ class NewsModel extends DataModel {
     }
     if (map.containsKey('root_timebank_id')) {
       this.root_timebank_id = map['root_timebank_id'];
+    }
+    if (map.containsKey('placeAddress')) {
+      this.placeAddress = map['placeAddress'];
     }
 
     if (map.containsKey('subheading')) {

@@ -795,14 +795,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               onActivityResult.containsKey("membersSelected")) {
             selectedUsers = onActivityResult['membersSelected'];
             setState(() {
-              if (selectedUsers.length == 0)
+              if (selectedUsers != null && selectedUsers.length == 0)
                 memberAssignment = AppLocalizations.of(context)
                     .translate('create_request', 'assign_to_vol');
               else
                 memberAssignment =
-                    "${selectedUsers.length} ${AppLocalizations.of(context).translate('create_request', 'vol_selected')}";
+                    "${selectedUsers.length ?? ''} ${AppLocalizations.of(context).translate('create_request', 'vol_selected')}";
             });
-            print("Data is present Selected users ${selectedUsers.length}");
+            // print("Data is present Selected users ${selectedUsers.length}");
           } else {
             print("No users where selected");
             //no users where selected
@@ -814,7 +814,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   String getTimeInFormat(int timeStamp) {
-    return DateFormat('EEEEEEE, MMMM dd yyyy', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+    return DateFormat('EEEEEEE, MMMM dd yyyy',
+            Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
+        .format(
       getDateTimeAccToUserTimezone(
           dateTime: DateTime.fromMillisecondsSinceEpoch(timeStamp),
           timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
@@ -843,7 +845,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.accepted = false;
     requestModel.acceptors = [];
     requestModel.address = selectedAddress;
-    requestModel.location = location == null ? GeoFirePoint(40.754387, -73.984291) : location;
+    requestModel.location =
+        location == null ? GeoFirePoint(40.754387, -73.984291) : location;
     requestModel.root_timebank_id = FlavorConfig.values.timebankId;
     requestModel.softDelete = false;
     if (requestModel.id == null) return;
@@ -948,7 +951,16 @@ class ProjectSelection extends StatefulWidget {
 class ProjectSelectionState extends State<ProjectSelection> {
   @override
   Widget build(BuildContext context) {
-    List<dynamic> list = [{"name": AppLocalizations.of(context).translate('create_request','none_project'), "code": "None"}];
+    if (widget.projectModelList == null) {
+      return Container();
+    }
+    List<dynamic> list = [
+      {
+        "name": AppLocalizations.of(context)
+            .translate('create_request', 'none_project'),
+        "code": "None"
+      }
+    ];
     for (var i = 0; i < widget.projectModelList.length; i++) {
       list.add({
         "name": widget.projectModelList[i].name,
@@ -959,16 +971,20 @@ class ProjectSelectionState extends State<ProjectSelection> {
     return new MultiSelect(
       autovalidate: true,
       initialValue: ['None'],
-      titleText: AppLocalizations.of(context).translate('create_request','assign_to_project'),
+      titleText: AppLocalizations.of(context)
+          .translate('create_request', 'assign_to_project'),
       maxLength: 1, // optional
-      hintText: AppLocalizations.of(context).translate('create_request','tap_select'),
+      hintText: AppLocalizations.of(context)
+          .translate('create_request', 'tap_select'),
       validator: (dynamic value) {
         if (value == null) {
-          return AppLocalizations.of(context).translate('create_request','assign_to_one');
+          return AppLocalizations.of(context)
+              .translate('create_request', 'assign_to_one');
         }
         return null;
       },
-      errorText: AppLocalizations.of(context).translate('create_request','assign_to_one'),
+      errorText: AppLocalizations.of(context)
+          .translate('create_request', 'assign_to_one'),
       dataSource: list,
       admin: widget.admin,
       textField: 'name',

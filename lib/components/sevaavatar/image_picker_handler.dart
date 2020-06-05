@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import './image_picker_dialog.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+
+import './image_picker_dialog.dart';
 
 class ImagePickerHandler {
   ImagePickerDialog imagePicker;
@@ -31,14 +32,19 @@ class ImagePickerHandler {
   }
 
   Future cropImage(File image) async {
-    File croppedFile = await ImageCropper.cropImage(
+    File croppedFile;
+    ImageCropper.cropImage(
       sourcePath: image.path,
       ratioX: 1.0,
       ratioY: 1.0,
       maxWidth: 200,
       maxHeight: 200,
-    );
-    _listener.userImage(croppedFile);
+    ).then((value) {
+      if (value != null) {
+        croppedFile = value;
+        _listener.userImage(croppedFile);
+      }
+    });
   }
 
   showDialog(BuildContext context) {

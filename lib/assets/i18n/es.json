@@ -335,15 +335,14 @@
     "camera": "Cámara",
     "gallery": "Galería",
     "size_alert": "No se permiten archivos de más de 10 MB.",
-    "size_alert_title": "Alerta de archivo grande"
+    "size_alert_title": "Alerta de archivo grande",
+    "imagehint": "autor de la foto",
+    "update_post": "Actualizar publicación",
+    "update_progress": "Actualizando publicación"
   },
   "invitations": {
     "invitation_email_title": "¡Increíble! Estás invitado a unirte a un banco de tiempo",
-    "email_body": "<p>Está invitado a descargar la aplicación SevaX y unirse al Timebank ***. La aplicación SevaX utiliza Timebanking, un sistema basado en la reciprocidad donde los miembros de la comunidad se ayudan mutuamente a cambio de créditos Seva. Haga clic en este <a href=\"###;&nbsp;\"> enlace </a> para unirse.</p>",
-    "size_alert_title": "Alerta de archivo grande",
-    "update_post": "Actualizar publicación",
-    "update_progress": "Actualizando publicación",
-    "imagehint": "Autor de la foto"
+    "email_body": "<p>Está invitado a descargar la aplicación SevaX y unirse al Timebank ***. La aplicación SevaX utiliza Timebanking, un sistema basado en la reciprocidad donde los miembros de la comunidad se ayudan mutuamente a cambio de créditos Seva. Haga clic en este <a href=\"###;&nbsp;\"> enlace </a> para unirse.</p>"
   },
   "projects": {
     "title": "Projetos",
@@ -523,7 +522,9 @@
     "allow": "Permitir",
     "timebank_exit": "Timebank Exit",
     "exited_from": "ha salido de",
-    "tap_to_view": "Toca para ver los detalles"
+    "tap_to_view": "Toca para ver los detalles",
+    "added_you": "te ha agregado a",
+    "timebank_join": "Timebank Join"
   },
   "profile": {
     "image_hint": "Imagem de perfil",
