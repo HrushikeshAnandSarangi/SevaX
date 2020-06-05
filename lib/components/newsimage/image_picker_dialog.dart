@@ -29,6 +29,7 @@ class ImagePickerDialog extends StatelessWidget {
   }
 
   getImage(BuildContext context) {
+    this.context = context;
     if (_controller == null ||
         _drawerDetailsPosition == null ||
         _drawerContentsOpacity == null) {
@@ -66,8 +67,8 @@ class ImagePickerDialog extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    this.context = context;
+  Widget build(BuildContext _context) {
+//    this.context = context;
     return new Material(
         type: MaterialType.transparency,
         child: new Opacity(
