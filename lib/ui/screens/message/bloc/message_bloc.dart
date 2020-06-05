@@ -40,8 +40,10 @@ class MessageBloc extends BlocBase {
         if (userModel.blockedBy.contains(senderId) ||
             userModel.blockedMembers.contains(senderId) ||
             (chat.deletedBy.containsKey(userModel.sevaUserID) &&
-                chat.deletedBy[userModel.sevaUserID] > (chat.timestamp ?? 0))) {
-          log("Blocked");
+                chat.deletedBy[userModel.sevaUserID] > (chat.timestamp ?? 0)) ||
+            chat.lastMessage == '' ||
+            chat.lastMessage == null) {
+          log("Blocked or no message");
         } else {
           if (chat.unreadStatus.containsKey(userModel.sevaUserID) &&
               chat.unreadStatus[userModel.sevaUserID] > 0) {
