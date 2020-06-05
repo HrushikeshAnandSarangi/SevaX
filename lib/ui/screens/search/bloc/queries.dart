@@ -114,12 +114,12 @@ class Searches {
     List<NewsModel> feedsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (loggedInUser.blockedBy.length == 0) {
+      if (loggedInUser.blockedBy.length == 0 && map['softDelete']==false) {
         NewsModel news = NewsModel.fromMapElasticSearch(sourceMap);
         news.id = map['_id'];
         feedsList.add(news);
       } else {
-        if (!loggedInUser.blockedBy.contains(sourceMap["sevauserid"])) {
+        if (map['softDelete']==false && !loggedInUser.blockedBy.contains(sourceMap["sevauserid"])) {
           NewsModel news = NewsModel.fromMapElasticSearch(sourceMap);
           news.id = map['_id'];
           feedsList.add(news);
@@ -233,7 +233,7 @@ class Searches {
     List<OfferModel> offersList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (loggedInUser.blockedBy.length == 0) {
+      if (loggedInUser.blockedBy.length == 0 && map['softDelete']==false) {
         try {
           OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
           if (model.associatedRequest == null ||
@@ -244,7 +244,7 @@ class Searches {
           print(e);
         }
       } else {
-        if (!loggedInUser.blockedBy.contains(sourceMap["sevauserId"])) {
+        if (map['softDelete']==false && !loggedInUser.blockedBy.contains(sourceMap["sevauserId"])) {
           OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
           print("**---->> ${model.offerType}");
           if (model.associatedRequest == null ||
@@ -254,9 +254,6 @@ class Searches {
         }
       }
     });
-    // UPDATE_REQUIRED
-//    offersList.sort((a, b) => getOfferTitle(offerDataModel: a)
-//        .compareTo(getOfferTitle(offerDataModel: b)));
     yield offersList;
   }
 
@@ -307,11 +304,11 @@ class Searches {
     List<ProjectModel> projectsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (loggedInUser.blockedBy.length == 0) {
+      if (loggedInUser.blockedBy.length == 0 && map['softDelete']==false) {
         ProjectModel model = ProjectModel.fromMap(sourceMap);
         projectsList.add(model);
       } else {
-        if (!loggedInUser.blockedBy.contains(sourceMap["creator_id"])) {
+        if (map['softDelete']==false && !loggedInUser.blockedBy.contains(sourceMap["creator_id"])) {
           ProjectModel model = ProjectModel.fromMap(sourceMap);
           projectsList.add(model);
         }
@@ -374,11 +371,11 @@ class Searches {
     List<RequestModel> requestsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (loggedInUser.blockedBy.length == 0 && sourceMap['projectId'] == "") {
+      if (map['softDelete']==false && loggedInUser.blockedBy.length == 0 && sourceMap['projectId'] == "") {
         RequestModel model = RequestModel.fromMapElasticSearch(sourceMap);
         if (model.accepted == false) requestsList.add(model);
       } else {
-        if (!loggedInUser.blockedBy.contains(sourceMap["sevauserid"]) &&
+        if (map['softDelete']==false && !loggedInUser.blockedBy.contains(sourceMap["sevauserid"]) &&
             sourceMap['projectId'] == "") {
           RequestModel model = RequestModel.fromMapElasticSearch(sourceMap);
           if (model.accepted == false) requestsList.add(model);
@@ -427,11 +424,11 @@ class Searches {
     List<TimebankModel> timeBanksList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (loggedInUser.blockedBy.length == 0) {
+      if (map['softDelete']==false && loggedInUser.blockedBy.length == 0) {
         var timeBank = TimebankModel.fromMap(sourceMap);
         timeBanksList.add(timeBank);
       } else {
-        if (!loggedInUser.blockedBy.contains(sourceMap["creator_id"])) {
+        if (map['softDelete']==false && !loggedInUser.blockedBy.contains(sourceMap["creator_id"])) {
           var timeBank = TimebankModel.fromMap(sourceMap);
           timeBanksList.add(timeBank);
         }
