@@ -656,7 +656,7 @@ class NotificationsView extends State<NotificationViewHolder> {
           title: AppLocalizations.of(context)
               .translate('notifications', 'credited'),
           subTitle:
-              '${AppLocalizations.of(context).translate('notifications', 'congrats')}  ',
+              ' ${AppLocalizations.of(context).translate('notifications', 'congrats')}! ${model.credits} ${AppLocalizations.of(context).translate('notifications', 'credited_to')}.',
         );
       },
     );
