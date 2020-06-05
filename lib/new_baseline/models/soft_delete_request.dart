@@ -5,15 +5,19 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 class SoftDeleteRequestDataHolder {
   int noOfOpenRequests;
   int noOfOpenOffers;
+  int noOfOpenProjects;
   bool requestAccepted;
   String entityTitle;
   SoftDelete softDeleteType;
+
 
   SoftDeleteRequestDataHolder.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('noOfOpenRequests')) {
       noOfOpenRequests = map['noOfOpenRequests'];
     }
-
+    if (map.containsKey('noOfOpenProjects')) {
+      noOfOpenProjects = map['noOfOpenProjects'];
+    }
     if (map.containsKey('entityTitle')) {
       entityTitle = map['entityTitle'];
     }
@@ -36,7 +40,8 @@ class SoftDeleteRequestDataHolder {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> object = HashMap();
 
-    object['noOfOpenRequests'] = this.noOfOpenOffers;
+    object['noOfOpenRequests'] = this.noOfOpenRequests;
+    object['noOfOpenProjects'] = this.noOfOpenProjects;
     object['noOfOpenOffers'] = this.noOfOpenOffers;
     object['requestAccepted'] = this.requestAccepted;
     object['entityTitle'] = this.entityTitle;
