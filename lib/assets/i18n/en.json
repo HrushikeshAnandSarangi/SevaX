@@ -1041,5 +1041,11 @@
   },
   "add_location": {
     "confirm_location_label": "CONFIRM LOCATION"
+  },
+  "review_feedback": {
+    "take_a_moment": "Take a moment to reflect on your experience and share your appreciation by writing a short review.",
+    "cant_leave_blank": "Field can't be left blank",
+    "review_submit": "Submit",
+    "review_toolbar_title": "Review"
   }
 }

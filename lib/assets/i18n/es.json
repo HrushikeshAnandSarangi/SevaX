@@ -1041,5 +1041,11 @@
   },
   "add_location": {
     "confirm_location_label": "CONFIRMAR UBICACIÓN"
+  },
+  "review_feedback": {
+    "take_a_moment": "Tómese un momento para reflexionar sobre su experiencia y comparta su aprecio escribiendo una breve reseña.",
+    "cant_leave_blank": "El campo no puede dejarse en blanco",
+    "review_submit": "Enviar",
+    "review_toolbar_title": "revisión"
   }
 }
