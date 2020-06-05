@@ -780,7 +780,8 @@ class CreateEditCommunityViewFormState
                                             snapshot.data.timebank.id;
                                         snapshot.data.community.location =
                                             location;
-                                        snapshot.data.community.softDelete = false;
+                                        snapshot.data.community.softDelete =
+                                            false;
 
                                         await createEditCommunityBloc
                                             .createCommunity(
