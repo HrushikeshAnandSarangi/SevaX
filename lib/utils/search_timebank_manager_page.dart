@@ -77,7 +77,7 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
                     borderSide: BorderSide(color: Colors.white)),
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white)),
-                hintText: AppLocalizations.of(context).translate('members','search_member'),
+                hintText: AppLocalizations.of(context).translate('create_request','search_member'),
                 hintStyle: TextStyle(color: Colors.white)),
             // controller: searchTextController,
           ),
@@ -287,7 +287,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
       );
     } else if (widget.controller.text.trim().length < 3) {
       print('Search requires minimum 3 characters');
-      return getEmptyWidget('Users', AppLocalizations.of(context).translate('members','atleast_3'));
+      return getEmptyWidget('Users', AppLocalizations.of(context).translate('create_request','atleast_3'));
     }
     return StreamBuilder<List<UserModel>>(
       stream: SearchManager.searchForUserWithTimebankId(
@@ -308,7 +308,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
         }
         List<UserModel> userList = snapshot.data;
         if (userList.length == 0) {
-          return getEmptyWidget('Users', AppLocalizations.of(context).translate('members','no_user'));
+          return getEmptyWidget('Users', AppLocalizations.of(context).translate('members','no_users'));
         }
         return ListView.builder(
           shrinkWrap: true,

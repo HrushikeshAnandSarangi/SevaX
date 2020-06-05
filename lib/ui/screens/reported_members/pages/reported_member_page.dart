@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/bloc/reported_member_bloc.dart';
@@ -52,7 +53,7 @@ class _ReportedMembersPageState extends State<ReportedMembersPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Reported Members',
+          AppLocalizations.of(context).translate('reported_members', 'reported_members'),
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -65,7 +66,7 @@ class _ReportedMembersPageState extends State<ReportedMembersPage> {
             }
 
             if (snapshot.data == null || snapshot.data.isEmpty) {
-              return Center(child: Text("No data"));
+              return Center(child: Text(AppLocalizations.of(context).translate('reported_members', 'no_data')));
             }
 
             return ListView.builder(

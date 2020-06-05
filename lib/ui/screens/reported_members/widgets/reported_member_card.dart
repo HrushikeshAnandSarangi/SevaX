@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -85,7 +86,7 @@ class ReportedMemberCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "Reported by $userCount ${userCount == 1 ? "user" : "users"}",
+                      "${AppLocalizations.of(context).translate('reported_members', 'reported_by')} $userCount ${userCount == 1 ? AppLocalizations.of(context).translate('reported_members', 'user') : AppLocalizations.of(context).translate('reported_members', 'users')}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -186,7 +187,7 @@ class ReportedMemberCard extends StatelessWidget {
         builder: (BuildContext context) {
           // return object of type Dialog
           return AlertDialog(
-            content: new Text("User is successfully removed from the group"),
+            content: new Text(AppLocalizations.of(context).translate('reported_members', 'removed')),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
               new FlatButton(
@@ -208,16 +209,16 @@ class ReportedMemberCard extends StatelessWidget {
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              title: new Text("User cannot be deleted from this group"),
-              content: new Text("User has \n"
-                  "${responseData['pendingProjects']['unfinishedProjects']} pending projects,\n"
-                  "${responseData['pendingRequests']['unfinishedRequests']} pending requests,\n"
-                  "${responseData['pendingOffers']['unfinishedOffers']} pending offers.\n "
-                  "Please clear the transactions and try again. "),
+              title: new Text(AppLocalizations.of(context).translate('reported_members', 'cannot_group')),
+              content: new Text("${AppLocalizations.of(context).translate('reported_members', 'userhas')} \n"
+                  "${responseData['pendingProjects']['unfinishedProjects']} ${AppLocalizations.of(context).translate('reported_members', 'pending_projects')},\n"
+                  "${responseData['pendingRequests']['unfinishedRequests']} ${AppLocalizations.of(context).translate('reported_members', 'pending_requests')},\n"
+                  "${responseData['pendingOffers']['unfinishedOffers']} ${AppLocalizations.of(context).translate('reported_members', 'pending_offers')}.\n "
+                  "${AppLocalizations.of(context).translate('reported_members', 'clear_trans')} "),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 new FlatButton(
-                  child: new Text("Close"),
+                  child: new Text(AppLocalizations.of(context).translate('reported_members', 'close')),
                   textColor: Colors.red,
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -235,11 +236,11 @@ class ReportedMemberCard extends StatelessWidget {
             // return object of type Dialog
             return AlertDialog(
               content: new Text(
-                  "Cannot remove yourself from the group. Instead, please try deleting the group."),
+                  AppLocalizations.of(context).translate('reported_members', 'cannot_remove')),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 new FlatButton(
-                  child: new Text("Close"),
+                  child: new Text(AppLocalizations.of(context).translate('reported_members', 'close')),
                   textColor: Colors.red,
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -265,11 +266,11 @@ class ReportedMemberCard extends StatelessWidget {
         builder: (BuildContext context) {
           // return object of type Dialog
           return AlertDialog(
-            content: new Text("User is successfully removed from the timebank"),
+            content: new Text(AppLocalizations.of(context).translate('reported_members', 'remove_success')),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
               new FlatButton(
-                child: new Text("Close"),
+                child: new Text(AppLocalizations.of(context).translate('reported_members', 'close')),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -286,12 +287,12 @@ class ReportedMemberCard extends StatelessWidget {
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              title: new Text("User cannot be deleted from this timebank"),
-              content: new Text("User has \n"
-                  "${responseData['pendingProjects']['unfinishedProjects']} pending projects,\n"
-                  "${responseData['pendingRequests']['unfinishedRequests']} pending requests,\n"
-                  "${responseData['pendingOffers']['unfinishedOffers']} pending offers.\n "
-                  "Please clear the transactions and try again. "),
+              title: new Text(AppLocalizations.of(context).translate('reported_members', 'cannot_timebank')),
+              content:  new Text("${AppLocalizations.of(context).translate('reported_members', 'userhas')} \n"
+                  "${responseData['pendingProjects']['unfinishedProjects']} ${AppLocalizations.of(context).translate('reported_members', 'pending_projects')},\n"
+                  "${responseData['pendingRequests']['unfinishedRequests']} ${AppLocalizations.of(context).translate('reported_members', 'pending_requests')},\n"
+                  "${responseData['pendingOffers']['unfinishedOffers']} ${AppLocalizations.of(context).translate('reported_members', 'pending_offers')}.\n "
+                  "${AppLocalizations.of(context).translate('reported_members', 'clear_trans')} "),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 new FlatButton(

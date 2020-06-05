@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/attachment_page.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 class ReportInfoCard extends StatelessWidget {
@@ -52,7 +53,7 @@ class ReportInfoCard extends StatelessWidget {
                             : timeAgo.format(
                                 DateTime.fromMillisecondsSinceEpoch(
                                   report.timestamp,
-                                ),
+                                ),locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
                               ),
                         style: TextStyle(
                           fontSize: 14,

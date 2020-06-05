@@ -17,10 +17,11 @@ class AppLanguage extends ChangeNotifier {
 
   void changeLanguage(Locale type) async {
     var prefs = await SharedPreferences.getInstance();
-    print(_appLocale.toString());
-    if (_appLocale == type) {
+
+    if (_appLocale == type && prefs.getString('language_code') != null) {
       return;
     }
+
     if (type == Locale("pt")) {
       _appLocale = Locale("pt");
       await prefs.setString('language_code', 'pt');
