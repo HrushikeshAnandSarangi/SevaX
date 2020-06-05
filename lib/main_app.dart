@@ -15,7 +15,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'internationalization/app_localization.dart';
 import 'internationalization/applanguage.dart';
-import 'models/news_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,14 +76,11 @@ Future<void> main() async {
 
 class MainApplication extends StatelessWidget {
   final bool skipToHomePage;
-  final AppLanguage appLanguage;
+  final AppLanguage appLanguage = AppLanguage()..fetchLocale();
 
-  const MainApplication(
-      {Key key, this.skipToHomePage = false, this.appLanguage})
-      : super(key: key);
+  MainApplication({Key key, this.skipToHomePage = false}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    NewsModel news;
     return ChangeNotifierProvider<AppLanguage>(
         create: (_) => appLanguage,
         child: Consumer<AppLanguage>(builder: (context, model, child) {
