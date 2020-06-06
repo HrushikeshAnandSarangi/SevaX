@@ -134,7 +134,7 @@ class _ProfilePageState extends State<ProfilePage>
         print("userMOde ->>>>>    >>>> ${userModel.currentCommunity}");
         _profileBloc.getAllCommunities(context, userModel);
         this.user = userModel;
-        setState(() {});
+//        setState(() {});
       });
     });
   }
