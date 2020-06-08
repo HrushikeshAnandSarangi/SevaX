@@ -1060,5 +1060,21 @@
     "cant_leave_blank": "Le champ ne peut pas être laissé vide",
     "review_submit": "Soumettre",
     "review_toolbar_title": "La revue"
+  },
+  "notifications_card": {
+    "delete_notification_title": "Supprimer la notification",
+    "sure_to_delete": "Voulez-vous vraiment supprimer cette notification?",
+    "cancel": "Annuler",
+    "delete": "Supprimer"
+  },
+  "transfer_ownership": {
+    "exit_user": "Quitter l'utilisateur",
+    "remove_user": "Supprimer l'utilisateur",
+    "transfer_hint": "Transférez la propriété des données de cet utilisateur à un autre utilisateur, comme la propriété du groupe.",
+    "transfer_hint_two": "Transférer à",
+    "search_user": "Rechercher un utilisateur",
+    "transfer_hint_three": "Toutes les données non transférées seront supprimées.",
+    "removed_success": "L'utilisateur a bien été supprimé de la banque de temps",
+    "transfer_error": "Erreur est survenue! S'il vous plaît, revenez plus tard et réessayez."
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
@@ -49,7 +50,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
     super.initState();
     getMembersList();
     ownerGroupsArr = widget.responseData['ownerGroupsArr'];
-    print("ownerGroupsArr==============" + ownerGroupsArr.toString());
+    //  print("ownerGroupsArr==============" + ownerGroupsArr.toString());
   }
 
   void getMembersList() {
@@ -80,7 +81,11 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
         ),
 //      automaticallyImplyLeading: true,
         title: Text(
-          widget.isComingFromExit ? 'Exit User' : 'Remove User',
+          widget.isComingFromExit
+              ? AppLocalizations.of(context)
+                  .translate('transfer_ownership', 'exit_user')
+              : AppLocalizations.of(context)
+                  .translate('transfer_ownership', 'remove_user'),
           style: TextStyle(
               fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Europa'),
         ),
@@ -105,7 +110,8 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                 height: 15,
               ),
               Text(
-                "Transfer ownership of this user's data to another user, like group ownership.",
+                AppLocalizations.of(context)
+                    .translate('transfer_ownership', 'transfer_hint'),
                 style: TextStyle(
                   fontSize: 18,
                   fontFamily: 'Europa',
@@ -123,7 +129,8 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
 //                height: 15,
 //              ),
               Text(
-                'Transfer to',
+                AppLocalizations.of(context)
+                    .translate('transfer_ownership', 'transfer_hint_two'),
                 style: TextStyle(
                   fontSize: 14,
                   fontFamily: 'Europa',
@@ -134,7 +141,8 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                 height: 10,
               ),
               Text(
-                'Search a user',
+                AppLocalizations.of(context)
+                    .translate('transfer_ownership', 'search_user'),
                 style: TextStyle(
                   fontSize: 14,
                   fontFamily: 'Europa',
@@ -170,19 +178,22 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
             Navigator.pop(context);
           },
           child: Text(
-            "Cancel",
+            AppLocalizations.of(context).translate('shared', 'cancel'),
             style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa'),
           ),
           textColor: Colors.grey,
         ),
         FlatButton(
-          child: Text(widget.isComingFromExit ? 'Exit ' : "Remove",
+          child: Text(
+              widget.isComingFromExit
+                  ? AppLocalizations.of(context).translate('members', 'exit')
+                  : AppLocalizations.of(context).translate('members', 'Remove'),
               style:
                   TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa')),
           textColor: FlavorConfig.values.theme.primaryColor,
           onPressed: () async {
             if (selectedNewOwner == null) {
-              print("reporter timebank creator id is ${tbmodel.creatorId}");
+              // print("reporter timebank creator id is ${tbmodel.creatorId}");
               ownerGroupsArr.forEach(
                 (group) {
                   futures.add(
@@ -217,12 +228,12 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                   Navigator.of(context).pop();
                 }
               } else {
-                print("else error block");
+                //  print("else error block");
                 getErrorDialog(context);
                 Navigator.of(context).pop();
               }
             } else {
-              print("new owner creator id is ${selectedNewOwner.sevaUserID}");
+              //  print("new owner creator id is ${selectedNewOwner.sevaUserID}");
               ownerGroupsArr.forEach((group) {
                 print("groupppppp=== ${group['id']}");
                 futures.add(
@@ -244,11 +255,9 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
               await Future.wait(futures);
               Map<String, dynamic> responseObj = await removeMemberFromTimebank(
                   sevauserid: widget.memberSevaUserId, timebankId: tbmodel.id);
-              print(
-                  "===response data of removal is${responseObj.toString()}===");
+              //  print("===response data of removal is${responseObj.toString()}===");
               if (responseObj['deletable'] == true) {
-                print(
-                    "else block---done transferring and removing the user from timebank");
+                //   print("else block---done transferring and removing the user from timebank");
                 if (widget.isComingFromExit) {
                   sendNotificationToAdmin();
                   Navigator.of(context).pushAndRemoveUntil(
@@ -261,7 +270,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                   Navigator.of(context).pop();
                 }
               } else {
-                print("else error block");
+                //  print("else error block");
                 getErrorDialog(context);
                 Navigator.of(context).pop();
               }
@@ -280,7 +289,8 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
       textFieldConfiguration: TextFieldConfiguration(
         controller: _textEditingController,
         decoration: InputDecoration(
-          hintText: 'Search',
+          hintText:
+              AppLocalizations.of(context).translate('search_page', 'search'),
           filled: true,
           fillColor: Colors.grey[300],
           focusedBorder: OutlineInputBorder(
@@ -341,7 +351,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            'No users found',
+            AppLocalizations.of(context).translate('requests', 'no_users'),
             style: TextStyle(fontSize: 16, color: Colors.grey),
           ),
         );
@@ -373,7 +383,8 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
           height: 30,
           width: 30,
         ),
-        title: Text('All data not transferred will be deleted.'),
+        title: Text(AppLocalizations.of(context)
+            .translate('transfer_ownership', 'transfer_hint_three')),
       ),
     );
   }
@@ -394,11 +405,13 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: new Text("User is successfully removed from the timebank"),
+          content: new Text(AppLocalizations.of(context)
+              .translate('transfer_ownership', 'removed_success')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Close"),
+              child: new Text(AppLocalizations.of(context)
+                  .translate('billing_plans', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -415,12 +428,13 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content:
-              new Text("Error occured! Please come back later and try again. "),
+          content: new Text(AppLocalizations.of(context)
+              .translate('transfer_ownership', 'transfer_error')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Close"),
+              child: new Text(AppLocalizations.of(context)
+                  .translate('billing_plans', 'close')),
               textColor: Colors.red,
               onPressed: () {
                 Navigator.of(context).pop();
@@ -438,7 +452,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
     UserExitModel userExitModel = UserExitModel(
         userPhotoUrl: widget.memberPhotUrl,
         timebank: tbmodel.name,
-        reason: globals.userExitReason ?? "User Exited",
+        reason: globals.userExitReason ?? "",
         userName: widget.memberName);
 
     NotificationsModel notification = NotificationsModel(

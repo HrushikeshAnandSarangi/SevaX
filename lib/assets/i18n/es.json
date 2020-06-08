@@ -1060,5 +1060,22 @@
     "cant_leave_blank": "El campo no puede dejarse en blanco",
     "review_submit": "Enviar",
     "review_toolbar_title": "revisión"
+  },
+  "notifications_card": {
+    "delete_notification_title": "Eliminar notificación",
+    "sure_to_delete": "¿Estás seguro de que deseas eliminar esta notificación?",
+    "cancel": "Cancelar",
+    "delete": "Eliminar"
+  },
+  "transfer_ownership": {
+    "exit_user": "Salir de usuario",
+    "remove_user": "Eliminar usuario",
+    "transfer_hint": "Transfiera la propiedad de los datos de este usuario a otro usuario, como la propiedad del grupo.",
+    "transfer_hint_two": "Transferir a",
+    "search_user": "Buscar un usuario",
+    "transfer_hint_three": "Todos los datos no transferidos serán eliminados.",
+    "removed_success": "El usuario se eliminó correctamente del banco de tiempo",
+    "transfer_error": "¡Se produjo un error! Por favor, vuelva más tarde y vuelva a intentarlo.",
+    "empty_user": "No users found"
   }
 }
