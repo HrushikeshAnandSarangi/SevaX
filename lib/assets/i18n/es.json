@@ -980,7 +980,15 @@
   "soft_delete": {
     "request_in_progress_tittle": "Su solicitud de eliminación se está procesando.",
     "dismiss": "Descartar",
-    "request_in_progress_body": "Su solicitud de eliminación ha sido recibida por nosotros. Estamos procesando la solicitud. Se le notificará una vez que se haya completado."
+    "request_in_progress_body": "Su solicitud de eliminación ha sido recibida por nosotros. Estamos procesando la solicitud. Se le notificará una vez que se haya completado.",
+    "was_deleted": " ¡fué borrado!",
+    "could_not_delete": " no se pudo eliminar!",
+    "deleted_successfully": " ha solicitado eliminarlo se ha eliminado correctamente.",
+    "could_not_deleted": " no se pudo eliminar porque tienes transacciones pendientes.",
+    "incomplete_transaction": " No pudimos procesar su solicitud de eliminación de ***, ya que todavía tiene transacciones abiertas que son como: \n",
+    "one_to_many_offers": " una a muchas ofertas\n",
+    "projects": " proyectos\n",
+    "open_requests": " solicitudes abiertas\n"
   },
   "accidental_delete": {
     "accidental_delete_enabled_title": "Eliminación accidental habilitada",
