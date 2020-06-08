@@ -246,16 +246,17 @@ void _showAccedentalDeleteConfirmation({
   SoftDelete softDeleteType,
 }) {
   print(
-    "<>>>>>>>>>>>>>>>>>>>>>>>>>" + AppLocalizations.of(context)
-        .translate("accidental_delete", "accidental_delete_enabled_title"),
+    "<>>>>>>>>>>>>>>>>>>>>>>>>>" +
+        AppLocalizations.of(context)
+            .translate("accidental_delete", "accidental_delete_enabled_title"),
   );
   showDialog(
     context: context,
     builder: (BuildContext accedentalDialogContext) {
       return AlertDialog(
         title: Text(
-          AppLocalizations.of(context)
-              .translate("accidental_delete", "accidental_delete_enabled_title"),
+          AppLocalizations.of(context).translate(
+              "accidental_delete", "accidental_delete_enabled_title"),
         ),
         content: Text(
           AppLocalizations.of(context)
@@ -365,12 +366,17 @@ void showFinalResultConfirmation(
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text(
-          didSuceed ? successTitle : failureTitle,
+          didSuceed
+              ? AppLocalizations.of(context)
+                  .translate('accidental_delete', 'success_title')
+              : AppLocalizations.of(context)
+                  .translate('accidental_delete', 'failure_title'),
         ),
         content: Text(
           didSuceed
               ? getSuccessMessage(softDeleteType, context)
-              : failureMessage,
+              : AppLocalizations.of(context)
+                  .translate('accidental_delete', 'failure_message'),
         ),
         actions: <Widget>[
           RaisedButton(
@@ -379,7 +385,10 @@ void showFinalResultConfirmation(
             },
             child: Container(
               margin: EdgeInsets.only(left: 10, right: 10),
-              child: Text("Dismiss"),
+              child: Text(
+                AppLocalizations.of(context)
+                    .translate('accidental_delete', 'dismiss'),
+              ),
             ),
           ),
         ],
