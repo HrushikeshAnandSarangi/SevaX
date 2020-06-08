@@ -1060,5 +1060,11 @@
     "cant_leave_blank": "O campo não pode ser deixado em branco",
     "review_submit": "Enviar",
     "review_toolbar_title": "Reveja"
+  },
+  "notifications_card": {
+    "delete_notification_title": "Excluir notificação",
+    "sure_to_delete": "Tem certeza de que deseja excluir esta notificação?",
+    "cancel": "Cancelar",
+    "delete": "Excluir"
   }
 }

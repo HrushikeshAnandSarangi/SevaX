@@ -1060,5 +1060,11 @@
     "cant_leave_blank": "Le champ ne peut pas être laissé vide",
     "review_submit": "Soumettre",
     "review_toolbar_title": "La revue"
+  },
+  "notifications_card": {
+    "delete_notification_title": "Supprimer la notification",
+    "sure_to_delete": "Voulez-vous vraiment supprimer cette notification?",
+    "cancel": "Annuler",
+    "delete": "Supprimer"
   }
 }

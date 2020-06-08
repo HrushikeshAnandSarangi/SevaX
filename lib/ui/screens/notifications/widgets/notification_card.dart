@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 
 class NotificationCard extends StatelessWidget {
@@ -33,7 +34,7 @@ class NotificationCard extends StatelessWidget {
         actionExtentRatio: 0.25,
         actions: <Widget>[
           new IconSlideAction(
-            caption: 'Delete',
+            caption: AppLocalizations.of(context).translate('notifications_card', 'delete'),
             color: Colors.red,
             icon: Icons.delete,
             onTap: () {
@@ -42,15 +43,20 @@ class NotificationCard extends StatelessWidget {
                 barrierDismissible: true,
                 builder: (BuildContext dialogContext) {
                   return AlertDialog(
-                    title: Text("Delete notification"),
+                    title: Text(
+                      AppLocalizations.of(context).translate(
+                          'notifications_card', 'delete_notification_title'),
+                    ),
                     content: Text(
-                      "Are you sure you want to remove this notificaition.",
+                      AppLocalizations.of(context)
+                          .translate('notifications_card', 'sure_to_delete'),
                     ),
                     actions: <Widget>[
                       FlatButton(
                         onPressed: () => {Navigator.of(dialogContext).pop()},
                         child: Text(
-                          "Cancel",
+                          AppLocalizations.of(context)
+                              .translate('notifications_card', 'cancel'),
                         ),
                       ),
                       FlatButton(
@@ -59,7 +65,7 @@ class NotificationCard extends StatelessWidget {
                           Navigator.of(dialogContext).pop();
                         },
                         child: Text(
-                          "Delete",
+                          AppLocalizations.of(context).translate('notifications_card', 'delete'),
                         ),
                       ),
                     ],

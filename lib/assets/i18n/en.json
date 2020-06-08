@@ -1060,5 +1060,11 @@
     "cant_leave_blank": "Field can't be left blank",
     "review_submit": "Submit",
     "review_toolbar_title": "Review"
+  },
+  "notifications_card": {
+    "delete_notification_title": "Delete notification",
+    "sure_to_delete": "Are you sure you want to delete this notification?",
+    "cancel": "Cancel",
+    "delete": "Delete"
   }
 }
