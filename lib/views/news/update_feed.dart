@@ -13,6 +13,7 @@ import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/scraper.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -77,7 +78,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   NewsModel newsObject;
   TextStyle textStyle;
   NewsCreateFormState({this.newsObject}) {
-
     globals.newsImageURL = newsObject.newsImageUrl;
     globals.newsDocumentURL = newsObject.newsDocumentUrl;
     globals.newsDocumentName = newsObject.newsDocumentName;
@@ -412,7 +412,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     });
 
     newsObject.urlsFromPost = scappedURLs;
-    // print("${newsObject.urlsFromPost}");
   }
 
   void scrapeHashTagsFromSubHeadings(String subHeadings) {
@@ -424,71 +423,13 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     matches.map((x) => x[0]).forEach((m) => hashTags.add(m));
 
     newsObject.hashTags = hashTags;
-    // print("${newsObject.hashTags}");
   }
 
   Future scrapeURLDetails(String subHeadings) async {
-    await fetchPosts(newsObject.urlsFromPost[0]);
-    // print("Final Project $newsObject");
+    newsObject = await fetchPosts(
+        url: newsObject.urlsFromPost[0],
+        newsObject: newsObject); // print("Final Project $newsObject");
   }
-
-//  Widget get entityDropdown {
-//    return Container(
-//      padding: EdgeInsets.only(bottom: 20.0),
-//      child: DropdownButtonFormField<DataModel>(
-//        decoration: InputDecoration.collapsed(
-//          hintText: '+ Category',
-//          hintStyle: Theme.of(context).textTheme.title.copyWith(
-//                color: Theme.of(context).hintColor,
-//              ),
-//        ),
-//        validator: (value) {
-//          if (value == null) {
-//            return 'Please select a category';
-//          }
-//        },
-//        items: dataList.map((dataModel) {
-//          if (dataModel.runtimeType == EntityModel) {
-//            return DropdownMenuItem<DataModel>(
-//              child: Text('General', style: textStyle),
-//              value: dataModel,
-//            );
-//          } else if (dataModel.runtimeType == TimebankModel) {
-//            TimebankModel model = dataModel;
-//            return DropdownMenuItem<DataModel>(
-//              child: Text(
-//                '${model.name}',
-//                style: textStyle,
-//              ),
-//              value: model,
-//            );
-//          } else if (dataModel.runtimeType == CampaignModel) {
-//            CampaignModel model = dataModel;
-//            return DropdownMenuItem<DataModel>(
-//              child: Text(
-//                '${model.name}',
-//                style: textStyle,
-//              ),
-//              value: model,
-//            );
-//          }
-//          return DropdownMenuItem<DataModel>(
-//            child: Text(
-//              'Undefined',
-//              style: textStyle,
-//            ),
-//            value: null,
-//          );
-//        }).toList(),
-//        value: selectedEntity,
-//        onChanged: (dataModel) {
-//          setState(() {
-//            this.selectedEntity = dataModel;
-//          });
-//        },
-//      ),
-//    );
-//  }
 
   Future _getLocation() async {
     String address = await LocationUtility().getFormattedAddress(
@@ -498,73 +439,5 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     setState(() {
       this.selectedAddress = address;
     });
-  }
-
-  Future<Void> fetchPosts(String url) async {
-    print("started fetch");
-    // url = "https://en.wikipedia.org/wiki/The_War_on_Normal_People";
-    final response = await http.get(
-      url,
-    );
-    var document = parse(response.body);
-
-    var images = document.getElementsByTagName("img");
-
-    var imagesList = [];
-
-    images
-        .map((element) => {
-              if (element.attributes['src'] != null &&
-                  element.attributes['src'].contains("http"))
-                {
-                  imagesList.add(element.attributes['src']),
-                  print("Added ${element.attributes['src']}"),
-                }
-            })
-        .toList();
-
-    print(imagesList);
-
-    if (imagesList.length > 1) {
-      print(" Final output ->  ${imagesList[imagesList.length ~/ 2]}");
-      newsObject.imageScraped = imagesList[imagesList.length ~/ 2];
-    } else if (imagesList.length > 0) {
-      print("Final output ${imagesList[0]}");
-      newsObject.imageScraped = imagesList[0];
-    } else {
-      print("No image scraped");
-      newsObject.imageScraped = "NoData";
-    }
-
-    // for (var i = 0; i < images.length; i++) {
-    //   if (images[i].attributes['src'] != null) {
-    //     // newsObject.imageScraped = images[i].attributes['img'];
-    //     print("Got the src :-> " + images[i].attributes['img']);
-    //   }
-    // }
-
-    // print("Fromimage selector $imagfes ");
-
-    var links = document.querySelectorAll('title');
-    for (var link in links) {
-      if (link.text != null) {
-        newsObject.title = link.text;
-        break;
-      }
-    }
-
-    var para = document.querySelectorAll('p');
-
-    for (var link in para) {
-      if (link.text != null) {
-        if (newsObject.description == null) {
-          newsObject.description = link.text;
-        } else if (newsObject.description.length < link.text.length)
-          newsObject.description = link.text;
-        else {
-          newsObject.description = newsObject.description + "\n" + link.text;
-        }
-      }
-    }
   }
 }
