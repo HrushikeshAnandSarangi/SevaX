@@ -59,7 +59,7 @@ class ImagePickerDialog extends StatelessWidget {
   }
 
   void navigationPage() {
-    Navigator.pop(context);
+    Navigator.pop(dialogContext);
   }
 
   dismissDialog() {
@@ -67,9 +67,11 @@ class ImagePickerDialog extends StatelessWidget {
     startTime();
   }
 
+  BuildContext dialogContext;
+
   @override
   Widget build(BuildContext _context) {
-//    this.context = context;
+    this.dialogContext = _context;
     return new Material(
         type: MaterialType.transparency,
         child: new Opacity(
