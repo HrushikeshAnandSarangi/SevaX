@@ -1049,7 +1049,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       subTitle:
           '${groupInviteUserModel.adminName.toLowerCase()} ${AppLocalizations.of(context).translate('members', 'invited_you')} ${groupInviteUserModel.timebankName}, ${AppLocalizations.of(context).translate('notifications', 'tap_to_view')}',
       title:
-          "${AppLocalizations.of(context).translate('members', 'group_invite')}",
+          "${AppLocalizations.of(context).translate('notifications', 'group_invite')}",
     );
   }
 
