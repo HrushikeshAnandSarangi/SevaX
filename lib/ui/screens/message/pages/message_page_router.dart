@@ -71,19 +71,16 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: Column(
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Container(
-                  height: 10,
-                )
-              ],
-            ),
             StreamBuilder<List<AdminMessageWrapperModel>>(
                 stream: _bloc.adminMessage,
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data.length > 0) {
-                    return messageSwitch();
+                    return Column(
+                      children: <Widget>[
+                        SizedBox(height: 10),
+                        messageSwitch(),
+                      ],
+                    );
                   }
                   return Container();
                 }),
