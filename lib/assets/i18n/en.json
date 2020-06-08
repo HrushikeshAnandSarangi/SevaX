@@ -998,7 +998,11 @@
     "advisory_for_projects": "All requests associated to this request would be removed",
     "see_you_go": "We have received your request to delete this ***. We are sorry to see you go. We will examine your request and (in some cases) get in touch with you offline before we process the deletion of the ***",
     "delete": "Delete",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "success_title": "Request submitted",
+    "failure_title": "Request failed!",
+    "failure_message": "Sending request failed somehow, please try again later!",
+    "dismiss": "Dismiss"
   },
   "select_member": {
     "select_timebank": "Select Group",

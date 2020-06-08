@@ -526,7 +526,6 @@
     "exited_from": "saiu de",
     "tap_to_view": "Toque para ver os detalhes",
     "group_invite": "Convite para ingresso no grupo"
-
   },
   "profile": {
     "image_hint": "Imagem de perfil",
@@ -999,7 +998,11 @@
     "advisory_for_projects": "Todas as solicitações associadas a essa solicitação seriam removidas",
     "see_you_go": "Recebemos sua solicitação para excluir este ***. Lamentamos vê-lo partir. Examinaremos sua solicitação e (em alguns casos) entraremos em contato com você off-line antes de processarmos a exclusão do ***",
     "delete": "Excluir",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "success_title": "Solicitação Enviada",
+    "failure_title": "Pedido falhou!",
+    "failure_message": "A solicitação de envio falhou de alguma forma. Tente novamente mais tarde!",
+    "dismiss": "Dispensar"
   },
   "select_member": {
     "select_timebank": "Selecionar grupo",
