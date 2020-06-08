@@ -982,7 +982,7 @@
     "request_in_progress_body": "Su solicitud de eliminación ha sido recibida por nosotros. Estamos procesando la solicitud. Se le notificará una vez que se haya completado.",
     "was_deleted": " ¡fué borrado!",
     "could_not_delete": " no se pudo eliminar!",
-    "deleted_successfully": " ha solicitado eliminarlo se ha eliminado correctamente.",
+    "deleted_successfully": "*** se ha eliminado con éxito.",
     "could_not_deleted": " no se pudo eliminar porque tienes transacciones pendientes.",
     "incomplete_transaction": " No pudimos procesar su solicitud de eliminación de ***, ya que todavía tiene transacciones abiertas que son como: \n",
     "one_to_many_offers": " una a muchas ofertas\n",
