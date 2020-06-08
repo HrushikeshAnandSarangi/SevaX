@@ -84,7 +84,7 @@ class TransactionLimitCheck extends StatelessWidget {
       context, bool isAdmin, UserModel user, bool isBillingFailed) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext _context) {
         return AlertDialog(
           contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           shape:
@@ -122,7 +122,7 @@ class TransactionLimitCheck extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(_context).pop();
 
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -145,7 +145,7 @@ class TransactionLimitCheck extends StatelessWidget {
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(_context).pop();
                 },
               ),
             ],
