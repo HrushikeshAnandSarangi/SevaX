@@ -785,17 +785,17 @@
   },
   "coins": {
     "donate": "Doar",
-    "donate_totimebank": "Doar moedas Seva para o  Banco de tempo",
+    "donate_totimebank": "Doar créditos Seva para o  Banco de tempo",
     "not_enough": "Você não tem créditos suficientes para doar!",
-    "donate_coins": "Doar moedas Seva para o Banco de tempo",
-    "current_coins": "Suas moedas atuais de seva são",
-    "coins": "Moedas",
+    "donate_coins": "Doar créditos Seva para o Banco de tempo",
+    "current_coins": "Suas créditos atuais de seva são",
+    "coins": "Créditos",
     "hint": "Ao clicar em doar, seu saldo será ajustado",
     "zero_err": "Você não pode doar 0 créditos",
     "donate_success": "Você doou créditos com sucesso",
     "less_zero_err": "Você não pode doar menos de 0 créditos",
     "empty_error": "Donate some credits",
-    "coins_hint": "Nº de seva moedas"
+    "coins_hint": "Nº de seva créditos"
   },
   "earnings": {
     "title": "Revisar ganhos",

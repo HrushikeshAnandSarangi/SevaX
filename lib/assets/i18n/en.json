@@ -781,16 +781,16 @@
   },
   "coins": {
     "donate": "Donate",
-    "donate_totimebank": "Donate seva coins to Timebank",
+    "donate_totimebank": "Donate seva credits to Timebank",
     "not_enough": "You do not have sufficient credits to donate!",
-    "donate_coins": "Donate seva coins to Timebank",
-    "current_coins": "Your current seva coins is",
-    "coins": "Coins",
+    "donate_coins": "Donate seva credits to Timebank",
+    "current_coins": "Your current seva credits is",
+    "coins": "Credits",
     "hint": "On click of donate your balance will be adjusted",
     "zero_err": "You cannot donate 0 credits",
     "less_zero_err": "You cannot donate lesser than 0 credits",
     "empty_error": "Donate some credits",
-    "coins_hint": "No of seva coins",
+    "coins_hint": "No of seva credits",
     "donate_success": "You have donated credits successfully"
   },
   "earnings": {

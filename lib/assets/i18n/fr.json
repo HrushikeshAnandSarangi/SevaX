@@ -787,15 +787,15 @@
     "donate": "Faire un don",
     "donate_totimebank": "Faire don de pièces SEVA à une banque de temps",
     "not_enough": "Vous n'avez pas suffisamment de crédits pour faire un don!",
-    "donate_coins": "Faire don de pièces SEVA à Timebank",
-    "current_coins": "Vos pièces seva actuelles sont",
-    "coins": "Pièces de monnaie",
+    "donate_coins": "Faire don de crédits SEVA à Timebank",
+    "current_coins": "Vos crédits seva actuelles sont",
+    "coins": "crédits",
     "hint": "En cliquant sur faire un don, votre solde sera ajusté",
     "zero_err": "Vous ne pouvez pas donner 0 crédits",
     "donate_success": "Vous avez donné des crédits avec succès",
-    "coins_hint": "No de monedas seva",
-    "empty_error": "Done algunos créditos",
-    "less_zero_err": "No puedes donar menos de 0 créditos"
+    "coins_hint": "No de crédits seva",
+    "empty_error": "Done algunos crédits",
+    "less_zero_err": "No puedes donar menos de 0 crédits"
   },
   "earnings": {
     "title": "Voir vos gains",
