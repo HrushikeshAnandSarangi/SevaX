@@ -7,7 +7,6 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/nav_bar_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
-import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -62,15 +61,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
           height: 55,
           items: <CustomNavigationItem>[
             CustomNavigationItem(
-              primaryIcon: NavigationIcons.exploreFilled,
-              secondaryIcon: NavigationIcons.exploreUnFilled,
+              primaryIcon: Icons.explore,
               title: AppLocalizations.of(context).translate('tabs', 'explore'),
               isSelected: selected == 0,
             ),
             CustomNavigationItem(
               key: UniqueKey(),
-              primaryIcon: NavigationIcons.notificationsFilled,
-              secondaryIcon: NavigationIcons.notificationsUnFilled,
+              primaryIcon: Icons.notifications,
+              secondaryIcon: Icons.notifications_none,
               title: AppLocalizations.of(context)
                   .translate('tabs', 'notifications'),
               isSelected: selected == 1,
@@ -78,23 +76,21 @@ class CustomBottomNavigationBar extends StatelessWidget {
               count: notificationCount.toString(),
             ),
             CustomNavigationItem(
-              primaryIcon: NavigationIcons.homeFilled,
-              secondaryIcon: NavigationIcons.homeUnFilled,
+              primaryIcon: Icons.home,
               title: AppLocalizations.of(context).translate('tabs', 'home'),
               isSelected: selected == 2,
             ),
             CustomNavigationItem(
               key: UniqueKey(),
-              primaryIcon: NavigationIcons.messageFilled,
-              secondaryIcon: NavigationIcons.messageUnFilled,
+              primaryIcon: Icons.chat_bubble,
+              secondaryIcon: Icons.chat_bubble_outline,
               title: AppLocalizations.of(context).translate('tabs', 'messages'),
               isSelected: selected == 3,
               showBadge: chatCount > 0,
               count: chatCount.toString(),
             ),
             CustomNavigationItem(
-              primaryIcon: NavigationIcons.settingsFilled,
-              secondaryIcon: NavigationIcons.settingsUnFilled,
+              primaryIcon: Icons.settings,
               title: AppLocalizations.of(context).translate('tabs', 'profile'),
               isSelected: selected == 4,
             ),

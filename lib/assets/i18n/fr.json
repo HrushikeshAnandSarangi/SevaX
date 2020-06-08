@@ -524,7 +524,9 @@
     "allow": "Autoriser",
     "timebank_exit": "Timebank Exit",
     "exited_from": "est sorti de",
-    "tap_to_view": "Appuyez pour afficher les détails"
+    "tap_to_view": "Appuyez pour afficher les détails",
+    "group_invite": "Invitation à rejoindre un groupe"
+
   },
   "profile": {
     "image_hint": "ProfileImage",

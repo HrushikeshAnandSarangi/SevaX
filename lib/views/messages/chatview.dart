@@ -385,52 +385,53 @@ class _ChatViewState extends State<ChatView> {
             )
           : _getSharedNewDetails(messageModel: messageModel);
     } else
-    return Container(
-      padding: messageModel.fromId == widget.senderId
-          ? EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 10, 5, 0, 5)
-          : EdgeInsets.fromLTRB(
-              0, 5, MediaQuery.of(context).size.width / 10, 5),
-      alignment: messageModel.fromId == widget.senderId
-          ? Alignment.topRight
-          : Alignment.topLeft,
-      child: Wrap(
-        children: <Widget>[
-          Container(
-            decoration: messageModel.fromId == widget.senderId
-                ? myBoxDecorationsend()
-                : myBoxDecorationreceive(),
-            padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-            child: Column(
-              crossAxisAlignment: messageModel.fromId != widget.senderId
-                  ? CrossAxisAlignment.start
-                  : CrossAxisAlignment.end,
-              children: <Widget>[
-                Text(
-                  messageModel.message,
-                  style: TextStyle(fontWeight: FontWeight.w500),
-                ),
-                Text(
-                  DateFormat(
-                    'hh:mm a MMMM dd',
-                  )
+      return Container(
+        padding: messageModel.fromId == widget.senderId
+            ? EdgeInsets.fromLTRB(
+                MediaQuery.of(context).size.width / 10, 5, 0, 5)
+            : EdgeInsets.fromLTRB(
+                0, 5, MediaQuery.of(context).size.width / 10, 5),
+        alignment: messageModel.fromId == widget.senderId
+            ? Alignment.topRight
+            : Alignment.topLeft,
+        child: Wrap(
+          children: <Widget>[
+            Container(
+              decoration: messageModel.fromId == widget.senderId
+                  ? myBoxDecorationsend()
+                  : myBoxDecorationreceive(),
+              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+              child: Column(
+                crossAxisAlignment: messageModel.fromId != widget.senderId
+                    ? CrossAxisAlignment.start
+                    : CrossAxisAlignment.end,
+                children: <Widget>[
+                  Text(
+                    messageModel.message,
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    DateFormat(
+                      'hh:mm a MMMM dd',
+                    )
 //                  DateFormat(
 //                          'hh:mm a MMMM dd',
 //                          Locale(AppConfig.prefs.getString('language_code'))
 //                              .toLanguageTag())
-                      .format(
-                    getDateTimeAccToUserTimezone(
-                        dateTime: DateTime.fromMillisecondsSinceEpoch(
-                            messageModel.timestamp),
-                        timezoneAbb: loggedInUser.timezone),
+                        .format(
+                      getDateTimeAccToUserTimezone(
+                          dateTime: DateTime.fromMillisecondsSinceEpoch(
+                              messageModel.timestamp),
+                          timezoneAbb: loggedInUser.timezone),
+                    ),
+                    style: TextStyle(fontSize: 10, color: Colors.grey[700]),
                   ),
-                  style: TextStyle(fontSize: 10, color: Colors.grey[700]),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
   }
 
   Widget getSharedNewsCard({
@@ -734,10 +735,12 @@ class _ChatViewState extends State<ChatView> {
                     children: <Widget>[
                       Text(
                           timeAgo.format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                              news.postTimestamp,
-                            ), locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
-                          ),
+                              DateTime.fromMillisecondsSinceEpoch(
+                                news.postTimestamp,
+                              ),
+                              locale: Locale(AppConfig.prefs
+                                      .getString('language_code'))
+                                  .toLanguageTag()),
                           style: TextStyle(fontSize: 12)),
                     ],
                   ),
@@ -766,7 +769,7 @@ class _ChatViewState extends State<ChatView> {
   }
 
   Future<String> showClearChatDialog(BuildContext viewContext, String title,
-      String content, String buttonLabel) {
+      String content, String buttonLabel, String cancelLabel) {
     return showDialog(
       context: viewContext,
       builder: (BuildContext context) {
@@ -790,7 +793,7 @@ class _ChatViewState extends State<ChatView> {
             ),
             new FlatButton(
               child: new Text(
-                AppLocalizations.of(context).translate('shared', 'cancel'),
+                cancelLabel,
                 style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
               ),
               onPressed: () {
@@ -814,6 +817,7 @@ class _ChatViewState extends State<ChatView> {
                   " ${partnerUser.fullname.split(' ')[0]}.",
               "${partnerUser.fullname.split(' ')[0]} ${AppLocalizations.of(context).translate('chat', 'block_warn')}",
               AppLocalizations.of(context).translate('chat', 'block'),
+              AppLocalizations.of(context).translate('shared', 'cancel'),
             ).then((value) {
               if (value != "CANCEL") {
                 blockMember();
@@ -827,6 +831,7 @@ class _ChatViewState extends State<ChatView> {
               AppLocalizations.of(context).translate('chat', 'delete_title'),
               AppLocalizations.of(context).translate('chat', 'delete_desc'),
               AppLocalizations.of(context).translate('chat', 'delete_title'),
+              AppLocalizations.of(context).translate('shared', 'cancel'),
             ).then((value) {
               if (value != "CANCEL") {
                 clearChat(chatId, widget.senderId);

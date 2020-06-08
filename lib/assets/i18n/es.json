@@ -524,7 +524,9 @@
     "exited_from": "ha salido de",
     "tap_to_view": "Toca para ver los detalles",
     "added_you": "te ha agregado a",
-    "timebank_join": "Timebank Join"
+    "timebank_join": "Timebank Join",
+    "group_invite": "Invitación para unirse al grupo"
+
   },
   "profile": {
     "image_hint": "Imagem de perfil",
