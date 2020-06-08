@@ -1066,5 +1066,16 @@
     "sure_to_delete": "Are you sure you want to delete this notification?",
     "cancel": "Cancel",
     "delete": "Delete"
+  },
+  "transfer_ownership": {
+    "exit_user": "Exit User",
+    "remove_user": "Remove User",
+    "transfer_hint": "Transfer ownership of this user's data to another user, like group ownership.",
+    "transfer_hint_two": "Transfer to",
+    "search_user": "Search a user",
+    "transfer_hint_three": "All data not transferred will be deleted.",
+    "removed_success": "User is successfully removed from the timebank",
+    "transfer_error": "Error occurred! Please come back later and try again.",
+    "empty_user": "No users found"
   }
 }
