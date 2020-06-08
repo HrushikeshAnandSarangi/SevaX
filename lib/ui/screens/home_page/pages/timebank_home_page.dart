@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/no_group_placeholder.dart';
@@ -11,6 +12,7 @@ import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/covid/covid_sceen.dart';
@@ -24,8 +26,10 @@ import '../../../../flavor_config.dart';
 
 class TimebankHomePage extends StatefulWidget {
   final SelectedCommuntityGroup selectedCommuntityGroup;
+  final TimebankModel primaryTimebankModel;
 
-  const TimebankHomePage({Key key, this.selectedCommuntityGroup})
+  const TimebankHomePage(
+      {Key key, this.selectedCommuntityGroup, this.primaryTimebankModel})
       : super(key: key);
   @override
   _TimebankHomePageState createState() => _TimebankHomePageState();
@@ -250,10 +254,14 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                             ],
                           ),
                         ),
-                        IconButton(
-                          icon: Icon(Icons.add_circle),
-                          color: FlavorConfig.values.theme.primaryColor,
-                          onPressed: navigateToCreateGroup,
+                        TransactionLimitCheck(
+                          isSoftDeleteRequested:
+                              widget.primaryTimebankModel.requestedSoftDelete,
+                          child: IconButton(
+                            icon: Icon(Icons.add_circle),
+                            color: FlavorConfig.values.theme.primaryColor,
+                            onPressed: navigateToCreateGroup,
+                          ),
                         ),
                         Spacer(),
                         Container(
@@ -362,7 +370,6 @@ class _TimebankHomePageState extends State<TimebankHomePage>
   }
 
   Widget getTimebanks(UserDataBloc user) {
-//    print("length ==> ${widget.selectedCommuntityGroup.timebanks.length}");
     if (widget.selectedCommuntityGroup.timebanks.length <= 1) {
       return NoGroupPlaceHolder(navigateToCreateGroup: navigateToCreateGroup);
     }
