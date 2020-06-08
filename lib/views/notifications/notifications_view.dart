@@ -1048,8 +1048,9 @@ class NotificationsView extends State<NotificationViewHolder> {
       },
       photoUrl: groupInviteUserModel.timebankImage,
       subTitle:
-          '${groupInviteUserModel.adminName.toLowerCase()} has invited you to join ${groupInviteUserModel.timebankName}, Tap to view invitation',
-      title: "Group join invite",
+          '${groupInviteUserModel.adminName.toLowerCase()} ${AppLocalizations.of(context).translate('members', 'invited_you')} ${groupInviteUserModel.timebankName}, ${AppLocalizations.of(context).translate('notifications', 'tap_to_view')}',
+      title:
+          "${AppLocalizations.of(context).translate('members', 'group_invite')}",
     );
   }
 

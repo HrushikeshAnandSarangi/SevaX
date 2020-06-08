@@ -520,7 +520,8 @@
     "added_you": "has added you to",
     "timebank_exit": "Timebank Exit",
     "exited_from": "has exited from",
-    "tap_to_view": "Tap to view details"
+    "tap_to_view": "Tap to view details",
+    "group_invite": "Group join invite"
   },
   "profile": {
     "image_hint": "ProfileImage",
