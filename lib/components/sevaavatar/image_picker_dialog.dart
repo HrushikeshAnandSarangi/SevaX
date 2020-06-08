@@ -59,7 +59,7 @@ class ImagePickerDialog extends StatelessWidget {
   }
 
   void navigationPage() {
-    Navigator.pop(context);
+    Navigator.pop(dialogContext);
   }
 
   dismissDialog() {
@@ -67,9 +67,12 @@ class ImagePickerDialog extends StatelessWidget {
     startTime();
   }
 
+
+BuildContext dialogContext;
   @override
   Widget build(BuildContext _context) {
-//    this.context = context;
+   //context; 
+   this.dialogContext = _context;
     return new Material(
         type: MaterialType.transparency,
         child: new Opacity(
@@ -126,13 +129,6 @@ class ImagePickerDialog extends StatelessWidget {
       decoration: new BoxDecoration(
         color: bgColor,
         borderRadius: new BorderRadius.all(const Radius.circular(10.0)),
-        // boxShadow: <BoxShadow>[
-        //   BoxShadow(
-        //     color: const Color(0xFF696969),
-        //     offset: Offset(1.0, 6.0),
-        //     blurRadius: 0.001,
-        //   ),
-        // ],
       ),
       child: Text(
         buttonLabel,
