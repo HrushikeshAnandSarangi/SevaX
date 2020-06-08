@@ -391,7 +391,12 @@ class _SplashViewState extends State<SplashView> {
 
     return userId;
   }
-
+  Future<UserModel> _getSignedInUserDocs(String userId) async {
+    UserModel userModel = await fireStoreManager.getUserForId(
+      sevaUserId: userId,
+    );
+    return userModel;
+  }
   Future<void> handleLoggedInUserIdResponse(String userId) async {
     if (userId == null || userId.isEmpty) {
       loadingMessage =
@@ -402,8 +407,7 @@ class _SplashViewState extends State<SplashView> {
     await fetchLinkData();
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
-    var appLanguage = Provider.of<AppLanguage>(context);
-
+    var appLanguage = AppLanguage();
     appLanguage.changeLanguage(Locale(loggedInUser.language));
 
     if ((loggedInUser.currentCommunity == " " ||
@@ -499,13 +503,6 @@ class _SplashViewState extends State<SplashView> {
     } else {
       _navigateToCoreView(loggedInUser);
     }
-  }
-
-  Future<UserModel> _getSignedInUserDocs(String userId) async {
-    UserModel userModel = await fireStoreManager.getUserForId(
-      sevaUserId: userId,
-    );
-    return userModel;
   }
 
   Future _navigateToLoginPage() async {

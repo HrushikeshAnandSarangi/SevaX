@@ -1075,6 +1075,7 @@
     "search_user": "Rechercher un utilisateur",
     "transfer_hint_three": "Toutes les données non transférées seront supprimées.",
     "removed_success": "L'utilisateur a bien été supprimé de la banque de temps",
-    "transfer_error": "Erreur est survenue! S'il vous plaît, revenez plus tard et réessayez."
+    "transfer_error": "Erreur est survenue! S'il vous plaît, revenez plus tard et réessayez.",
+    "empty_user": "Aucun utilisateur trouvé"
   }
 }
