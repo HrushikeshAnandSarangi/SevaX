@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
@@ -11,7 +12,6 @@ import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
 
 class ReportedMemberCard extends StatelessWidget {
@@ -189,14 +189,19 @@ class ReportedMemberCard extends StatelessWidget {
         builder: (BuildContext context) {
           // return object of type Dialog
           return AlertDialog(
-            content: new Text(AppLocalizations.of(context).translate('reported_members', 'removed')),
+            content: new Text(AppLocalizations.of(context)
+                .translate('reported_members', 'removed')),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
               new FlatButton(
-                child: new Text("Close"),
+                child: new Text(AppLocalizations.of(context)
+                    .translate('reported_members', 'close')),
                 textColor: Colors.red,
                 onPressed: () async {
-                  await Firestore.instance.collection('reported_users_list').document(model.reportedId+"*"+model.communityId).delete();
+                  await Firestore.instance
+                      .collection('reported_users_list')
+                      .document(model.reportedId + "*" + model.communityId)
+                      .delete();
                   Navigator.of(context).pop();
                 },
               ),
@@ -207,14 +212,15 @@ class ReportedMemberCard extends StatelessWidget {
     } else {
       if (responseData['softDeleteCheck'] == false &&
           responseData['groupOwnershipCheck'] == false) {
-
         showDialog(
           context: context,
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              title: new Text(AppLocalizations.of(context).translate('reported_members', 'cannot_group')),
-              content: new Text("${AppLocalizations.of(context).translate('reported_members', 'userhas')} \n"
+              title: new Text(AppLocalizations.of(context)
+                  .translate('reported_members', 'cannot_group')),
+              content: new Text(
+                  "${AppLocalizations.of(context).translate('reported_members', 'userhas')} \n"
                   "${responseData['pendingProjects']['unfinishedProjects']} ${AppLocalizations.of(context).translate('reported_members', 'pending_projects')},\n"
                   "${responseData['pendingRequests']['unfinishedRequests']} ${AppLocalizations.of(context).translate('reported_members', 'pending_requests')},\n"
                   "${responseData['pendingOffers']['unfinishedOffers']} ${AppLocalizations.of(context).translate('reported_members', 'pending_offers')}.\n "
@@ -222,7 +228,8 @@ class ReportedMemberCard extends StatelessWidget {
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 new FlatButton(
-                  child: new Text(AppLocalizations.of(context).translate('reported_members', 'close')),
+                  child: new Text(AppLocalizations.of(context)
+                      .translate('reported_members', 'close')),
                   textColor: Colors.red,
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -239,12 +246,13 @@ class ReportedMemberCard extends StatelessWidget {
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              content: new Text(
-                  AppLocalizations.of(context).translate('reported_members', 'cannot_remove')),
+              content: new Text(AppLocalizations.of(context)
+                  .translate('reported_members', 'cannot_remove')),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 new FlatButton(
-                  child: new Text(AppLocalizations.of(context).translate('reported_members', 'close')),
+                  child: new Text(AppLocalizations.of(context)
+                      .translate('reported_members', 'close')),
                   textColor: Colors.red,
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -269,13 +277,18 @@ class ReportedMemberCard extends StatelessWidget {
         builder: (BuildContext context) {
           // return object of type Dialog
           return AlertDialog(
-            content: new Text(AppLocalizations.of(context).translate('reported_members', 'remove_success')),
+            content: new Text(AppLocalizations.of(context)
+                .translate('reported_members', 'remove_success')),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
               new FlatButton(
-                child: new Text(AppLocalizations.of(context).translate('reported_members', 'close')),
+                child: new Text(AppLocalizations.of(context)
+                    .translate('reported_members', 'close')),
                 onPressed: () async {
-                  await Firestore.instance.collection('reported_users_list').document(model.reportedId+"*"+model.communityId).delete();
+                  await Firestore.instance
+                      .collection('reported_users_list')
+                      .document(model.reportedId + "*" + model.communityId)
+                      .delete();
 
                   Navigator.of(context).pop();
                 },
@@ -292,8 +305,10 @@ class ReportedMemberCard extends StatelessWidget {
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              title: new Text(AppLocalizations.of(context).translate('reported_members', 'cannot_timebank')),
-              content:  new Text("${AppLocalizations.of(context).translate('reported_members', 'userhas')} \n"
+              title: new Text(AppLocalizations.of(context)
+                  .translate('reported_members', 'cannot_timebank')),
+              content: new Text(
+                  "${AppLocalizations.of(context).translate('reported_members', 'userhas')} \n"
                   "${responseData['pendingProjects']['unfinishedProjects']} ${AppLocalizations.of(context).translate('reported_members', 'pending_projects')},\n"
                   "${responseData['pendingRequests']['unfinishedRequests']} ${AppLocalizations.of(context).translate('reported_members', 'pending_requests')},\n"
                   "${responseData['pendingOffers']['unfinishedOffers']} ${AppLocalizations.of(context).translate('reported_members', 'pending_offers')}.\n "
@@ -301,7 +316,8 @@ class ReportedMemberCard extends StatelessWidget {
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 new FlatButton(
-                  child: new Text("Close"),
+                  child: new Text(AppLocalizations.of(context)
+                      .translate('reported_members', 'close')),
                   textColor: Colors.red,
                   onPressed: () {
                     Navigator.of(context).pop();
