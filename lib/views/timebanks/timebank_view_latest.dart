@@ -371,7 +371,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 ],
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(5.0),
               child: Divider(
@@ -391,11 +390,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 ),
               ),
             ),
-
-            // print(widget.timebankModel.id);
-
-            // burhan@uipep.com*9ecec05e-71fd-456e-9f6d-35798f41bdf5*73d0de2c-198b-4788-be64-a804700a88a4*4b75347e-56ec-4d62-8ce7-374c5cd84e5f
-
             Padding(
               padding:
                   const EdgeInsets.only(left: 20, right: 20, bottom: 5, top: 5),
