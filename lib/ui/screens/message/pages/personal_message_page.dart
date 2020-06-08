@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/message_card.dart';
@@ -15,7 +16,11 @@ class PersonalMessagePage extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         }
         if (snapshot.data.length == 0) {
-          return Center(child: Text("No message"));
+          return Center(
+            child: Text(
+              AppLocalizations.of(context).translate('chat', 'no_messages'),
+            ),
+          );
         }
         return ListView.builder(
           padding: EdgeInsets.symmetric(vertical: 10),

@@ -526,7 +526,6 @@
     "exited_from": "est sorti de",
     "tap_to_view": "Appuyez pour afficher les détails",
     "group_invite": "Invitation à rejoindre un groupe"
-
   },
   "profile": {
     "image_hint": "ProfileImage",
@@ -980,7 +979,15 @@
   "soft_delete": {
     "request_in_progress_tittle": "Votre demande de suppression est en cours de traitement.",
     "dismiss": "Rejeter",
-    "request_in_progress_body": "Nous avons reçu votre demande de suppression. Nous traitons la demande. Vous serez averti une fois terminé."
+    "request_in_progress_body": "Nous avons reçu votre demande de suppression. Nous traitons la demande. Vous serez averti une fois terminé.",
+    "was_deleted": " A été supprimée!",
+    "could_not_delete": " n'a pas pu être supprimé!",
+    "deleted_successfully": "*** a été supprimé avec succès.",
+    "could_not_deleted": " n'a pas pu être supprimé car vous avez des transactions en attente!",
+    "incomplete_transaction": " Nous n'avons pas pu traiter votre demande de suppression de ***, car vous avez toujours des transactions ouvertes qui sont les suivantes:\n",
+    "one_to_many_offers": "une à plusieurs offres\n",
+    "projects": "projets\n",
+    "open_requests": "demandes ouvertes\n"
   },
   "accidental_delete": {
     "accidental_delete_enabled_title": "Suppression accidentelle activée",
@@ -991,7 +998,11 @@
     "advisory_for_projects": "Toutes les demandes associées à cette demande seraient supprimées",
     "see_you_go": "Nous avons reçu votre demande de suppression de ce ***. Nous sommes navrés de vous voir partir. Nous examinerons votre demande et (dans certains cas) vous contacterons hors ligne avant de traiter la suppression du ***",
     "delete": "Supprimer",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "success_title": "Demande soumise",
+    "failure_title": "Demande échoué!",
+    "failure_message": "L'envoi de la demande a échoué, veuillez réessayer plus tard!",
+    "dismiss": "Rejeter"
   },
   "select_member": {
     "select_timebank": "Sélectionnez un groupe",

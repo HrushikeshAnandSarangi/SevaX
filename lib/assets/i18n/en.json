@@ -979,7 +979,15 @@
   "soft_delete": {
     "request_in_progress_tittle": "Your request for deletion is being processed.",
     "dismiss": "Dismiss",
-    "request_in_progress_body": "Your request to delete has been received by us. We are processing the request. You will be notified once it is completed."
+    "request_in_progress_body": "Your request to delete has been received by us. We are processing the request. You will be notified once it is completed.",
+    "was_deleted": "was deleted!",
+    "could_not_delete": "couldn't be deleted!",
+    "deleted_successfully": "*** has been successfully deleted.",
+    "could_not_deleted": "couldn't be deleted because you have pending transactions!",
+    "incomplete_transaction": "We couldn't process you request for deletion of ***, as you are still having open transactions which are as : \n",
+    "one_to_many_offers": "one to many offers\n",
+    "projects": "projects\n",
+    "open_requests": "open requests\n"
   },
   "accidental_delete": {
     "accidental_delete_enabled_title": "Accidental Deletion enabled",
@@ -990,7 +998,11 @@
     "advisory_for_projects": "All requests associated to this request would be removed",
     "see_you_go": "We have received your request to delete this ***. We are sorry to see you go. We will examine your request and (in some cases) get in touch with you offline before we process the deletion of the ***",
     "delete": "Delete",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "success_title": "Request submitted",
+    "failure_title": "Request failed!",
+    "failure_message": "Sending request failed somehow, please try again later!",
+    "dismiss": "Dismiss"
   },
   "select_member": {
     "select_timebank": "Select Group",
