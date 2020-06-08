@@ -785,17 +785,17 @@
   },
   "coins": {
     "donate": "Doar",
-    "donate_totimebank": "Doar moedas Seva para o  Banco de tempo",
+    "donate_totimebank": "Done créditos de seva a Timebank",
     "not_enough": "Você não tem créditos suficientes para doar!",
-    "donate_coins": "Doar moedas Seva para o Banco de tempo",
-    "current_coins": "Suas moedas atuais de seva são",
-    "coins": "Moedas",
+    "donate_coins": "Doar créditos Seva para o Banco de tempo",
+    "current_coins": "Sus créditos seva actuales son",
+    "coins": "Créditos",
     "hint": "Ao clicar em doar, seu saldo será ajustado",
     "zero_err": "Você não pode doar 0 créditos",
     "donate_success": "Você doou créditos com sucesso",
     "less_zero_err": "No puedes donar menos de 0 créditos",
     "empty_error": "Done algunos créditos",
-    "coins_hint": "No de seva monedas"
+    "coins_hint": "No of seva créditos"
   },
   "earnings": {
     "title": "Revisar ganhos",
@@ -1041,5 +1041,11 @@
   },
   "add_location": {
     "confirm_location_label": "CONFIRMAR UBICACIÓN"
+  },
+  "review_feedback": {
+    "take_a_moment": "Tómese un momento para reflexionar sobre su experiencia y comparta su aprecio escribiendo una breve reseña.",
+    "cant_leave_blank": "El campo no puede dejarse en blanco",
+    "review_submit": "Enviar",
+    "review_toolbar_title": "revisión"
   }
 }

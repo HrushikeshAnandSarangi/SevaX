@@ -42,8 +42,8 @@ class CustomNavigationItem extends StatelessWidget {
             isSelected || showBadge
                 ? primaryIcon
                 : secondaryIcon ?? primaryIcon,
-            width: isSelected ? 28 : 24,
-            height: isSelected ? 28 : 24,
+            width: isSelected ? 25 : 22,
+            height: isSelected ? 25 : 22,
             fit: BoxFit.scaleDown,
             color: isSelected ? null : Theme.of(context).primaryColor,
           ),

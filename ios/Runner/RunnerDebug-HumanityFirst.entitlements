@@ -11,6 +11,7 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:sevadev.page.link</string>
+		<string>applinks:sevaexchange.page.link</string>
 	</array>
 </dict>
 </plist>

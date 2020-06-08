@@ -194,7 +194,7 @@ class FlavorConfig {
               ),
             ),
           ),
-          dynamicLinkUriPrefix: "https://sevadev.page.link",
+          dynamicLinkUriPrefix: "https://sevaexchange.page.link",
         );
         break;
 

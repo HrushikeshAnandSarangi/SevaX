@@ -121,8 +121,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                 padding: EdgeInsets.only(bottom: 20),
                 itemCount: notifications.length,
                 itemBuilder: (context, index) {
-                  print(
-                      "----------------------------------------------------->>>");
                   NotificationsModel notification =
                       notifications.elementAt(index);
 
@@ -656,7 +654,7 @@ class NotificationsView extends State<NotificationViewHolder> {
           title: AppLocalizations.of(context)
               .translate('notifications', 'credited'),
           subTitle:
-              '${AppLocalizations.of(context).translate('notifications', 'congrats')}  ',
+              ' ${AppLocalizations.of(context).translate('notifications', 'congrats')}! ${model.credits} ${AppLocalizations.of(context).translate('notifications', 'credited_to')}.',
         );
       },
     );
@@ -689,8 +687,8 @@ class NotificationsView extends State<NotificationViewHolder> {
             photoUrl: user.photoURL,
             title: AppLocalizations.of(context)
                 .translate('notifications', 'debited'),
-            subTitle: AppLocalizations.of(context)
-                .translate('notifications', 'debited_to'),
+            subTitle:
+                "${model.credits} ${AppLocalizations.of(context).translate('notifications', 'debited_to')}",
           );
         });
   }
@@ -1062,9 +1060,11 @@ class NotificationsView extends State<NotificationViewHolder> {
     if (deletionRequest.noOfOpenOffers > 0) {
       reason += '${deletionRequest.noOfOpenOffers} one to many offers\n';
     }
-
+    if (deletionRequest.noOfOpenProjects > 0) {
+      reason += '${deletionRequest.noOfOpenProjects} projects\n';
+    }
     if (deletionRequest.noOfOpenRequests > 0) {
-      reason += '${deletionRequest.noOfOpenOffers} open requests\n';
+      reason += '${deletionRequest.noOfOpenRequests} open requests\n';
     }
 
     showDialog(
@@ -1209,7 +1209,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                         child: RaisedButton(
                           child: Text(
                             AppLocalizations.of(context)
-                                .translate('notifications', 'appove'),
+                                .translate('notifications', 'approve'),
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
