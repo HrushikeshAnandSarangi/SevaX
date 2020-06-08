@@ -982,7 +982,7 @@
     "request_in_progress_body": "Sua solicitação para excluir foi recebida por nós. Estamos processando a solicitação. Você será notificado assim que estiver concluído.",
     "was_deleted": "Foi apagado!",
     "could_not_delete": "Não foi possível excluir!",
-    "deleted_successfully": " você solicitou a exclusão foi excluída com sucesso!",
+    "deleted_successfully": "*** foi excluído com sucesso.",
     "could_not_deleted": " não pôde ser excluído porque você possui transações pendentes!",
     "incomplete_transaction": "Não foi possível processar o seu pedido de exclusão de ***, pois você ainda possui transações abertas como: \n",
     "one_to_many_offers": "uma a muitas ofertas\n",

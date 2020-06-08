@@ -982,7 +982,7 @@
     "request_in_progress_body": "Nous avons reçu votre demande de suppression. Nous traitons la demande. Vous serez averti une fois terminé.",
     "was_deleted": " A été supprimée!",
     "could_not_delete": " n'a pas pu être supprimé!",
-    "deleted_successfully": " que vous avez demandé de supprimer a bien été supprimé!",
+    "deleted_successfully": "*** a été supprimé avec succès.",
     "could_not_deleted": " n'a pas pu être supprimé car vous avez des transactions en attente!",
     "incomplete_transaction": " Nous n'avons pas pu traiter votre demande de suppression de ***, car vous avez toujours des transactions ouvertes qui sont les suivantes:\n",
     "one_to_many_offers": "une à plusieurs offres\n",

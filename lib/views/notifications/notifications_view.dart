@@ -534,7 +534,13 @@ class NotificationsView extends State<NotificationViewHolder> {
                             ? "${requestData.entityTitle} ${AppLocalizations.of(context).translate('soft_delete', 'was_deleted')}"
                             : "${requestData.entityTitle} ${AppLocalizations.of(context).translate('soft_delete', 'could_not_delete')}",
                         subTitle: requestData.requestAccepted
-                            ? "${requestData.entityTitle} ${AppLocalizations.of(context).translate('soft_delete', 'deleted_successfully')}"
+                            ? AppLocalizations.of(context)
+                                .translate(
+                                    'soft_delete', 'deleted_successfully')
+                                .replaceAll(
+                                  '***',
+                                  requestData.entityTitle,
+                                )
                             : "${requestData.entityTitle} ${AppLocalizations.of(context).translate('soft_delete', 'could_not_deleted')}",
                         onPressed: () => !requestData.requestAccepted
                             ? showDialogForIncompleteTransactions(
