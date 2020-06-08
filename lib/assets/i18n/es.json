@@ -526,7 +526,6 @@
     "added_you": "te ha agregado a",
     "timebank_join": "Timebank Join",
     "group_invite": "Invitación para unirse al grupo"
-
   },
   "profile": {
     "image_hint": "Imagem de perfil",
@@ -999,7 +998,11 @@
     "advisory_for_projects": "Todas las solicitudes asociadas a esta solicitud serían eliminadas",
     "see_you_go": "Hemos recibido su solicitud para eliminar este ***. Lamentamos verte marchar. Examinaremos su solicitud y (en algunos casos) nos pondremos en contacto con usted sin conexión antes de procesar la eliminación de ***",
     "delete": "Eliminar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "success_title": "Solicitud enviada",
+    "failure_title": "¡Solicitud fallida!",
+    "failure_message": "La solicitud de envío falló de alguna manera, ¡intente más tarde!",
+    "dismiss": "Descartar"
   },
   "select_member": {
     "select_timebank": "Selecciona grupo",
