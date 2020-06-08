@@ -525,19 +525,17 @@ class NotificationsView extends State<NotificationViewHolder> {
                     case NotificationType.TYPE_DELETION_REQUEST_OUTPUT:
                       var requestData = SoftDeleteRequestDataHolder.fromMap(
                           notification.data);
-                      print(
-                          "---------------> " + requestData.toMap().toString());
 
                       return NotificationCard(
                         entityName:
                             requestData.entityTitle ?? "Deletion Request",
                         photoUrl: null,
                         title: requestData.requestAccepted
-                            ? "${requestData.entityTitle} was deleted!"
-                            : "${requestData.entityTitle} couldn't be deleted!",
+                            ? "${requestData.entityTitle} ${AppLocalizations.of(context).translate('soft_delete', 'was_deleted')}"
+                            : "${requestData.entityTitle} ${AppLocalizations.of(context).translate('soft_delete', 'could_not_delete')}",
                         subTitle: requestData.requestAccepted
-                            ? "${requestData.entityTitle} you requested to delete has been successfully deleted!"
-                            : "${requestData.entityTitle} couldn't be deleted because you are still some pending transactions!",
+                            ? "${requestData.entityTitle} ${AppLocalizations.of(context).translate('soft_delete', 'deleted_successfully')}"
+                            : "${requestData.entityTitle} ${AppLocalizations.of(context).translate('soft_delete', 'could_not_deleted')}",
                         onPressed: () => !requestData.requestAccepted
                             ? showDialogForIncompleteTransactions(
                                 requestData,
@@ -566,12 +564,13 @@ class NotificationsView extends State<NotificationViewHolder> {
     );
   }
 
-  Widget getUserAddedNotificationWidget(
-      {UserAddedModel userAddedModel,
-      String notificationId,
-      BuildContext buildContext,
-      String timebankId,
-      String communityId}) {
+  Widget getUserAddedNotificationWidget({
+    UserAddedModel userAddedModel,
+    String notificationId,
+    BuildContext buildContext,
+    String timebankId,
+    String communityId,
+  }) {
     // assert(user != null);
     return NotificationCard(
       entityName: userAddedModel.adminName,
@@ -1056,16 +1055,20 @@ class NotificationsView extends State<NotificationViewHolder> {
 
   void showDialogForIncompleteTransactions(
       SoftDeleteRequestDataHolder deletionRequest) {
-    var reason =
-        "We couldn\'t process you request for deletion of ${deletionRequest.entityTitle}, as you are still having open transactions which are as : \n";
+    var reason = AppLocalizations.of(context)
+        .translate('soft_delete', 'incomplete_transaction')
+        .replaceAll('***', deletionRequest.entityTitle);
     if (deletionRequest.noOfOpenOffers > 0) {
-      reason += '${deletionRequest.noOfOpenOffers} one to many offers\n';
+      reason +=
+          '${deletionRequest.noOfOpenOffers} ${AppLocalizations.of(context).translate('soft_delete', 'one_to_many_offers')}';
     }
     if (deletionRequest.noOfOpenProjects > 0) {
-      reason += '${deletionRequest.noOfOpenProjects} projects\n';
+      reason +=
+          '${deletionRequest.noOfOpenProjects} ${AppLocalizations.of(context).translate('soft_delete', 'projects')}';
     }
     if (deletionRequest.noOfOpenRequests > 0) {
-      reason += '${deletionRequest.noOfOpenRequests} open requests\n';
+      reason +=
+          '${deletionRequest.noOfOpenRequests} ${AppLocalizations.of(context).translate('soft_delete', 'open_requests')}';
     }
 
     showDialog(
@@ -1077,7 +1080,8 @@ class NotificationsView extends State<NotificationViewHolder> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  "Dismiss",
+                  AppLocalizations.of(context)
+                      .translate('soft_delete', 'dismiss'),
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.red,
