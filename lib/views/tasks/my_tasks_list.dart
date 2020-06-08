@@ -657,18 +657,6 @@ class TaskCardViewState extends State<TaskCardView> {
         });
   }
 
-  Stream<List<ReviewModel>> getMyReview() async* {
-    var data = Firestore.instance
-        .collection("reviews")
-        .where("user_id", isEqualTo: "burhan@uipep.com")
-        .where("requestId", isEqualTo: "requestId")
-        .snapshots();
-    yield* data.transform(
-        StreamTransformer<QuerySnapshot, List<ReviewModel>>.fromHandlers(
-            handleData: (querySnapshot, reviewSink) {
-      querySnapshot.documents.forEach((document) {});
-    }));
-  }
 
   Future<void> onActivityResult(Map results) async {
     // adds review to firestore
