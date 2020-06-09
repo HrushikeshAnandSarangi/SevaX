@@ -32,7 +32,7 @@ Future<void> main() async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   AppConfig.appVersion = packageInfo.version;
   AppConfig.buildNumber = int.parse(packageInfo.buildNumber);
-  AppConfig.appName = packageInfo.appName;
+//  AppConfig.appName = packageInfo.appName;
   AppConfig.packageName = packageInfo.packageName;
 
   //SharedPreferences

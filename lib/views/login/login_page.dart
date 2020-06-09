@@ -63,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Container(
-          width: ScreenUtil.getInstance().setWidth(120),
+          width: 120.w,
           height: 1.0,
           color: Colors.black26.withOpacity(.2),
         ),
@@ -77,9 +77,8 @@ class _LoginPageState extends State<LoginPage> {
         new LanguageListData().getLanguageSupported(_sysLng.toString());
     appLanguage.changeLanguage(Locale(language.code));
     UserData.shared.isFromLogin = true;
-    ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
-    ScreenUtil.instance =
-        ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
+//    ScreenUtil.init(context);
+    ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: true);
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: true,
@@ -111,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: <Widget>[
                     logo,
                     SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(60),
+                      height: 60.h,
                     ),
                     content,
                     RichText(
@@ -150,9 +149,9 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: ScreenUtil.getInstance().setHeight(50)),
+                    SizedBox(height: 50.h),
                     SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(15),
+                      height: 15.h,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -404,7 +403,7 @@ class _LoginPageState extends State<LoginPage> {
                     signInWithSocialMedia,
                     SizedBox(height: 10),
                     SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(30),
+                      height: 30.h,
                     ),
                     SizedBox(height: 16),
                   ],
@@ -558,7 +557,7 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
         SizedBox(
-          height: ScreenUtil.getInstance().setHeight(20),
+          height: 20.h,
         ),
         socialMediaLogin,
       ],

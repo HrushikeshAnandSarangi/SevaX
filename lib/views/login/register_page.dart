@@ -462,7 +462,7 @@ class _RegisterPageState extends State<RegisterPage>
 
   Future createUser() async {
     showDialogForAccountCreation();
-    var appLanguage = Provider.of<AppLanguage>(context);
+    var appLanguage = AppLanguage();
     log('Called createUser');
     Auth auth = AuthProvider.of(context).auth;
     try {
@@ -580,7 +580,7 @@ class _RegisterPageState extends State<RegisterPage>
           ],
         ),
         SizedBox(
-          height: ScreenUtil.getInstance().setHeight(20),
+          height: 20.h,
         ),
         socialMediaLogin,
       ],
@@ -755,7 +755,7 @@ class _RegisterPageState extends State<RegisterPage>
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Container(
-          width: ScreenUtil.getInstance().setWidth(120),
+          width: 120.w,
           height: 1.0,
           color: Colors.black26.withOpacity(.2),
         ),

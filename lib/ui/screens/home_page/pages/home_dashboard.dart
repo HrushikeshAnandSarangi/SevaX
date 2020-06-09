@@ -272,6 +272,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                     children: <Widget>[
                       TimebankHomePage(
                         selectedCommuntityGroup: snapshot.data,
+                        primaryTimebankModel: primaryTimebank,
                       ),
                       DiscussionList(
                         timebankId: primaryTimebank.id,
