@@ -40,12 +40,12 @@ Future<void> main() async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   AppConfig.appVersion = packageInfo.version;
   AppConfig.buildNumber = int.parse(packageInfo.buildNumber);
-  AppConfig.appName = packageInfo.appName;
   AppConfig.packageName = packageInfo.packageName;
 
   //SharedPreferences
   AppConfig.prefs = await SharedPreferences.getInstance();
-
+  final AppLanguage appLanguage = AppLanguage();
+  await appLanguage.fetchLocale();
   await fetchRemoteConfig();
   _firebaseMessaging.configure(
     onMessage: (Map<String, dynamic> message) {
@@ -83,10 +83,8 @@ Future<void> main() async {
 
 class MainApplication extends StatelessWidget {
   final bool skipToHomePage;
-  final AppLanguage appLanguage = AppLanguage()..fetchLocale();
-
-  MainApplication({Key key, this.skipToHomePage = false}) : super(key: key);
-
+  final AppLanguage appLanguage;
+  MainApplication({Key key, this.skipToHomePage = false, this.appLanguage}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppLanguage>(
