@@ -106,6 +106,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                                                       .payment["planId"],
                                                   isPlanActive: true,
                                                   autoImplyLeading: true,
+                                                  isPrivateTimebank:
+                                                      communityModel.private,
                                                 ),
                                               ),
                                             ),
@@ -152,11 +154,11 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                                         "grande_plan") {
                                       data =
 //                                      "${AppLocalizations.of(context).translate('billing_admin', 'on_the')} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${AppLocalizations.of(context).translate('billing_admin', 'plan_yearly1500')} \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10} ${AppLocalizations.of(context).translate('billing_admin', 'plan_details_quota1')}.";
-                                      "${AppLocalizations.of(context).translate('billing_admin', 'on_the')} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${AppLocalizations.of(context).translate('billing_admin', 'plan_yearly1500')} \$0.03 ${AppLocalizations.of(context).translate('billing_admin', 'plan_details_quota1')}.";
+                                          "${AppLocalizations.of(context).translate('billing_admin', 'on_the')} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${AppLocalizations.of(context).translate('billing_admin', 'plan_yearly1500')} \$0.03 ${AppLocalizations.of(context).translate('billing_admin', 'plan_details_quota1')}.";
                                     } else {
                                       data =
 //                                      "${AppLocalizations.of(context).translate('billing_admin', 'on_the')} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${AppLocalizations.of(context).translate('billing_admin', 'paying')} \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} ${AppLocalizations.of(context).translate('billing_admin', 'charges_of')} \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10}  ${AppLocalizations.of(context).translate('billing_admin', 'per_transaction')}.";
-                                      "${AppLocalizations.of(context).translate('billing_admin', 'on_the')} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${AppLocalizations.of(context).translate('billing_admin', 'paying')} \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} ${AppLocalizations.of(context).translate('billing_admin', 'charges_of')} \$0.01  ${AppLocalizations.of(context).translate('billing_admin', 'per_transaction')}.";
+                                          "${AppLocalizations.of(context).translate('billing_admin', 'on_the')} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${AppLocalizations.of(context).translate('billing_admin', 'paying')} \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} ${AppLocalizations.of(context).translate('billing_admin', 'charges_of')} \$0.01  ${AppLocalizations.of(context).translate('billing_admin', 'per_transaction')}.";
                                     }
                                     return spendingsTextWidgettwo(data ?? "");
                                   } else {
@@ -233,6 +235,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                           planName: cardModel.currentPlan,
                           isPlanActive: data != "",
                           autoImplyLeading: true,
+                          isPrivateTimebank: communityModel.private,
                         ),
                       ),
                     ),
@@ -348,6 +351,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                             user: SevaCore.of(context).loggedInUser,
                             isPlanActive: false,
                             autoImplyLeading: true,
+                            isPrivateTimebank: communityModel.private,
                           ),
                         ),
                       );
@@ -380,6 +384,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   }
 
   BuildContext buildContext;
+
   Widget configureBillingHeading(BuildContext buildContext) {
     this.buildContext = buildContext;
     return Row(
@@ -873,40 +878,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       scollContainer.position.maxScrollExtent,
       curve: Curves.easeOut,
       duration: const Duration(milliseconds: 300),
-    );
-  }
-
-  Widget changeButtonWidget() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            height: 30,
-            width: 100,
-            child: RaisedButton(
-              color: FlavorConfig.values.theme.accentColor,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BillingPlanDetails(
-                      user: SevaCore.of(context).loggedInUser,
-                      planName: cardModel.currentPlan,
-                      isPlanActive: true,
-                    ),
-                  ),
-                );
-              },
-              child: Text(
-                "Change",
-                style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

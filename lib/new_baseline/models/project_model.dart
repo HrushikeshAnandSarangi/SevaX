@@ -24,6 +24,7 @@ class ProjectModel extends DataModel {
   List<String> completedRequests;
   bool requestedSoftDelete;
   bool softDelete;
+//  bool saveAsTemplate;
 
   ProjectModel({
     this.id,
@@ -46,6 +47,7 @@ class ProjectModel extends DataModel {
     this.completedRequests,
     this.softDelete,
     this.requestedSoftDelete,
+    // this.saveAsTemplate,
   });
 
   factory ProjectModel.fromMap(Map<String, dynamic> json) => new ProjectModel(
@@ -64,6 +66,7 @@ class ProjectModel extends DataModel {
         startTime: json["start_time"] == null ? null : json["start_time"],
         endTime: json["end_time"] == null ? null : json["end_time"],
         softDelete: json["softDelete"] == null ? false : json["softDelete"],
+        //saveAsTemplate: json["saveAsTemplate"] == null ? false : json["saveAsTemplate"],
         requestedSoftDelete: json["requestedSoftDelete"] == null
             ? false
             : json["requestedSoftDelete"],
@@ -105,6 +108,7 @@ class ProjectModel extends DataModel {
         "end_time": endTime == null ? null : endTime,
         "softDelete": softDelete ?? false,
         "requestedSoftDelete": requestedSoftDelete ?? false,
+        //  "saveAsTemplate": saveAsTemplate ?? false,
         "location": location?.data,
         "members": members == null
             ? null
@@ -121,7 +125,7 @@ class ProjectModel extends DataModel {
 
   @override
   String toString() {
-    return 'ProjectModel{id: $id, name: $name, timebankId: $timebankId, communityId: $communityId, description: $description, emailId: $emailId, phoneNumber: $phoneNumber, creatorId: $creatorId, address: $address, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt, startTime: $startTime, endTime: $endTime, members: $members, pendingRequests: $pendingRequests, completedRequests: $completedRequests}';
+    return 'ProjectModel{id: $id, name: $name, timebankId: $timebankId, communityId: $communityId, description: $description, emailId: $emailId, phoneNumber: $phoneNumber, creatorId: $creatorId, address: $address, photoUrl: $photoUrl, mode: $mode, createdAt: $createdAt, startTime: $startTime, endTime: $endTime, members: $members, pendingRequests: $pendingRequests, completedRequests: $completedRequests,}';
   }
 }
 

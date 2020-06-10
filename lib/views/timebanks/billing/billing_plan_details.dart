@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/billing_plan_details.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 import 'package:sevaexchange/widgets/NoGlowScrollBehavior.dart';
-import 'package:flutter/scheduler.dart';
+
 class BillingPlanDetails extends StatefulWidget {
   final bool autoImplyLeading;
   final UserModel user;
   final bool isPlanActive;
+  final bool isPrivateTimebank;
   final String planName;
 
   const BillingPlanDetails(
@@ -18,7 +20,8 @@ class BillingPlanDetails extends StatefulWidget {
       this.user,
       this.isPlanActive,
       this.planName,
-      this.autoImplyLeading = false})
+      this.autoImplyLeading = false,
+      this.isPrivateTimebank})
       : super(key: key);
   @override
   _BillingPlanDetailsState createState() => _BillingPlanDetailsState();
@@ -33,16 +36,26 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
     // await remoteConfig.activateFetched();
     // print("====> ${AppConfig.remoteConfig.getString("billing_plans")}");
     _billingPlanDetailsModels = billingPlanDetailsModelFromJson(
-      AppConfig.remoteConfig.getString(AppLocalizations.of(context).translate('billing_plans','remote_config')),
+      AppConfig.remoteConfig.getString(AppLocalizations.of(context)
+          .translate('billing_plans', 'remote_config')),
     );
+    if (widget.isPrivateTimebank) {
+      _billingPlanDetailsModels
+          .removeWhere((element) => element.planName == 'Community Plan');
+    } else {
+      _billingPlanDetailsModels
+          .removeWhere((element) => element.planName == 'Tall Plan');
+    }
     setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    if (SchedulerBinding.instance.schedulerPhase == SchedulerPhase.persistentCallbacks) {
-      SchedulerBinding.instance.addPostFrameCallback((_) => getPlanData(context));
+    if (SchedulerBinding.instance.schedulerPhase ==
+        SchedulerPhase.persistentCallbacks) {
+      SchedulerBinding.instance
+          .addPostFrameCallback((_) => getPlanData(context));
     }
   }
 
@@ -51,7 +64,7 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate('billing_plans','title'),
+          AppLocalizations.of(context).translate('billing_plans', 'title'),
           style: TextStyle(fontSize: 20),
         ),
         centerTitle: !widget.isPlanActive,

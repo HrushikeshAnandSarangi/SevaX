@@ -15,6 +15,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/internationalization/app_localization.dart';
@@ -469,40 +470,61 @@ class CreateEditCommunityViewFormState
                             ],
                           ),
                         ),
-                        Row(
-                          children: <Widget>[
-                            headingText('Private Timebank'),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-                              child: infoButton(
-                                context: context,
-                                key: GlobalKey(),
-                                type: InfoType.PRIVATE_TIMEBANK,
-                              ),
-                            ),
-                            Column(
-                              children: <Widget>[
-                                Divider(),
-                                Checkbox(
-                                  value: widget.isCreateTimebank
-                                      ? snapshot.data.timebank.private
-                                      : timebankModel.private,
-                                  onChanged: (bool value) {
-                                    print(value);
-                                    timebankModel.private = value;
-                                    snapshot.data.community
-                                        .updateValueByKey('private', value);
-                                    communityModel.private = value;
-                                    snapshot.data.timebank
-                                        .updateValueByKey('private', value);
-                                    createEditCommunityBloc
-                                        .onChange(snapshot.data);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                        widget.isCreateTimebank
+                            ? Row(
+                                children: <Widget>[
+                                  headingText('Private Timebank'),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                                    child: infoButton(
+                                      context: context,
+                                      key: GlobalKey(),
+                                      type: InfoType.PRIVATE_TIMEBANK,
+                                    ),
+                                  ),
+                                  Column(
+                                    children: <Widget>[
+                                      Divider(),
+                                      Checkbox(
+                                        value: widget.isCreateTimebank
+                                            ? snapshot.data.timebank.private
+                                            : timebankModel.private,
+                                        onChanged: (bool value) {
+                                          print(value);
+                                          _showPrivateTimebankAdvisory()
+                                              .then((status) {
+                                            if (status == 'Proceed') {
+                                              timebankModel.private = true;
+                                              snapshot.data.community
+                                                  .updateValueByKey(
+                                                      'private', true);
+                                              communityModel.private = true;
+                                              snapshot.data.timebank
+                                                  .updateValueByKey(
+                                                      'private', true);
+                                              createEditCommunityBloc
+                                                  .onChange(snapshot.data);
+                                            } else {
+                                              timebankModel.private = false;
+                                              snapshot.data.community
+                                                  .updateValueByKey(
+                                                      'private', false);
+                                              communityModel.private = false;
+                                              snapshot.data.timebank
+                                                  .updateValueByKey(
+                                                      'private', false);
+                                              createEditCommunityBloc
+                                                  .onChange(snapshot.data);
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            : Offstage(),
                         Row(
                           children: <Widget>[
                             headingText(AppLocalizations.of(context)
@@ -821,6 +843,8 @@ class CreateEditCommunityViewFormState
                                               user: user,
                                               isPlanActive: false,
                                               planName: "",
+                                              isPrivateTimebank:
+                                                  timebankModel.private,
                                             ),
                                           ),
                                         );
@@ -978,50 +1002,90 @@ class CreateEditCommunityViewFormState
     return location != null;
   }
 
-  void _showVerificationAndLogoutDialogue() {
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: Text(
-              AppLocalizations.of(context).translate('shared', 'signing_out')),
-          content: Text(AppLocalizations.of(context)
-              .translate('createtimebank', 'ack_dialog')),
-          actions: <Widget>[
-            RaisedButton(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              elevation: 5,
-              color: Theme.of(context).accentColor,
-              textColor: FlavorConfig.values.buttonTextColor,
-              child: Text(
-                AppLocalizations.of(context)
-                    .translate('createtimebank', 'ok_signout'),
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-              onPressed: () {
-                firebaseUser.sendEmailVerification().then((value) {
-                  _signOut(context);
-                  Navigator.of(context).pop();
-                });
-              },
-            ),
-            FlatButton(
+  Future<String> _showPrivateTimebankAdvisory() {
+    return showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            //title: Text(AppLocalizations.of(context).translate('coins', 'donate_coins')),
+            title: Text('Private Timebank alert'),
+            content: Text(
+                'Please be informed that Private Timebanks do not have a free option. You will need to provide your billing details to continue to create this Timebank'),
+            actions: <Widget>[
+              RaisedButton(
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                color: Theme.of(context).accentColor,
+                textColor: FlavorConfig.values.buttonTextColor,
                 child: Text(
-                  AppLocalizations.of(context)
-                      .translate('createtimebank', 'illdolater'),
-                  style: TextStyle(fontSize: 16, color: Colors.red),
+                  AppLocalizations.of(context).translate('homepage', 'ok'),
+                  style: TextStyle(
+                    fontSize: dialogButtonSize,
+                  ),
                 ),
-                onPressed: () => Navigator.of(context).pop()),
-          ],
-        );
-      },
-    );
+                onPressed: () {
+                  Navigator.pop(context, 'Proceed');
+                },
+              ),
+              FlatButton(
+                child: Text(
+                  AppLocalizations.of(context).translate('shared', 'cancel'),
+                  style:
+                      TextStyle(color: Colors.red, fontSize: dialogButtonSize),
+                ),
+                onPressed: () {
+                  Navigator.pop(context, 'Cancel');
+                },
+              )
+            ],
+          );
+        });
   }
+
+//
+//  void _showVerificationAndLogoutDialogue() {
+//    // flutter defined function
+//    showDialog(
+//      context: context,
+//      builder: (BuildContext context) {
+//        // return object of type Dialog
+//        return AlertDialog(
+//          title: Text(
+//              AppLocalizations.of(context).translate('shared', 'signing_out')),
+//          content: Text(AppLocalizations.of(context)
+//              .translate('createtimebank', 'ack_dialog')),
+//          actions: <Widget>[
+//            RaisedButton(
+//              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+//              elevation: 5,
+//              color: Theme.of(context).accentColor,
+//              textColor: FlavorConfig.values.buttonTextColor,
+//              child: Text(
+//                AppLocalizations.of(context)
+//                    .translate('createtimebank', 'ok_signout'),
+//                style: TextStyle(
+//                  fontSize: 16,
+//                ),
+//              ),
+//              onPressed: () {
+//                firebaseUser.sendEmailVerification().then((value) {
+//                  _signOut(context);
+//                  Navigator.of(context).pop();
+//                });
+//              },
+//            ),
+//            FlatButton(
+//                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+//                child: Text(
+//                  AppLocalizations.of(context)
+//                      .translate('createtimebank', 'illdolater'),
+//                  style: TextStyle(fontSize: 16, color: Colors.red),
+//                ),
+//                onPressed: () => Navigator.of(context).pop()),
+//          ],
+//        );
+//      },
+//    );
+//  }
 
   Future<void> _signOut(BuildContext context) async {
     Navigator.pop(context);

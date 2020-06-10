@@ -228,7 +228,8 @@ class BillingPlanCard extends StatelessWidget {
           ),
           actions: <Widget>[
             new FlatButton(
-              child: new Text("Close"),
+              child: new Text(
+                  AppLocalizations.of(context).translate('homepage', 'ok')),
               onPressed: () {
                 Navigator.of(context).pop();
               },

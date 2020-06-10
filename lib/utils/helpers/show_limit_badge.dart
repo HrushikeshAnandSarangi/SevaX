@@ -69,7 +69,8 @@ class TransactionLimitCheck extends StatelessWidget {
             !(_userBloc.community.payment['payment_success'] ?? false);
         return GestureDetector(
           onTap: () {
-            _showDialog(context, isAdmin, _userBloc.user, isBillingFailed);
+            _showDialog(context, isAdmin, _userBloc.user, isBillingFailed,
+                _userBloc.community.private);
           },
           child: AbsorbPointer(
             absorbing: isBillingFailed || isSoftDeleteRequested,
@@ -80,8 +81,8 @@ class TransactionLimitCheck extends StatelessWidget {
     );
   }
 
-  void _showDialog(
-      context, bool isAdmin, UserModel user, bool isBillingFailed) {
+  void _showDialog(context, bool isAdmin, UserModel user, bool isBillingFailed,
+      bool isPrivate) {
     showDialog(
       context: context,
       builder: (BuildContext _context) {
@@ -130,6 +131,7 @@ class TransactionLimitCheck extends StatelessWidget {
                           autoImplyLeading: true,
                           user: user,
                           isPlanActive: false,
+                          isPrivateTimebank: isPrivate,
                         ),
                       ),
                     );
