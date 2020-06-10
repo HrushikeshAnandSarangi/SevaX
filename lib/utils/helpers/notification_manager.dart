@@ -3,7 +3,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 class FCMNotificationManager {
   static Future<bool> registerDeviceWithMemberForNotifications(
-    String token,
     String email,
   ) async {
     await _getFCMTokenForEmail(
