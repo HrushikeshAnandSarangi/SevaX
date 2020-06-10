@@ -19,6 +19,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 
 import '../core.dart';
 
@@ -632,7 +633,9 @@ class _EditProfilePageState extends State<EditProfilePage>
   Future<void> _signOut(BuildContext context) async {
     // Navigator.pop(context);
     var auth = AuthProvider.of(context).auth;
+
     await auth.signOut();
+    await FCMNotificationManager.removeDeviceRegisterationForMember();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(

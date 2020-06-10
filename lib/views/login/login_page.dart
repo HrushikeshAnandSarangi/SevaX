@@ -63,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Container(
-          width: 120.w,
+          width: 120,
           height: 1.0,
           color: Colors.black26.withOpacity(.2),
         ),
@@ -77,8 +77,10 @@ class _LoginPageState extends State<LoginPage> {
         new LanguageListData().getLanguageSupported(_sysLng.toString());
     appLanguage.changeLanguage(Locale(language.code));
     UserData.shared.isFromLogin = true;
-//    ScreenUtil.init(context);
-    ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: true);
+    //Todo check this line
+    // ScreenUtil.init(context);
+    // ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: true);
+
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: true,
@@ -110,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: <Widget>[
                     logo,
                     SizedBox(
-                      height: 60.h,
+                      height: 60,
                     ),
                     content,
                     RichText(
@@ -149,9 +151,9 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 50.h),
+                    SizedBox(height: 50),
                     SizedBox(
-                      height: 15.h,
+                      height: 15,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -403,7 +405,7 @@ class _LoginPageState extends State<LoginPage> {
                     signInWithSocialMedia,
                     SizedBox(height: 10),
                     SizedBox(
-                      height: 30.h,
+                      height: 30,
                     ),
                     SizedBox(height: 16),
                   ],
@@ -557,7 +559,7 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
         SizedBox(
-          height: 20.h,
+          height: 20,
         ),
         socialMediaLogin,
       ],

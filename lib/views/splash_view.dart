@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flurry/flurry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -391,12 +392,14 @@ class _SplashViewState extends State<SplashView> {
 
     return userId;
   }
+
   Future<UserModel> _getSignedInUserDocs(String userId) async {
     UserModel userModel = await fireStoreManager.getUserForId(
       sevaUserId: userId,
     );
     return userModel;
   }
+
   Future<void> handleLoggedInUserIdResponse(String userId) async {
     if (userId == null || userId.isEmpty) {
       loadingMessage =
@@ -422,6 +425,17 @@ class _SplashViewState extends State<SplashView> {
         'currentCommunity': loggedInUser.communities[0],
       });
     }
+
+    FirebaseMessaging().getToken().then((token) {
+      print("++++++++++++++++++++++++++++Updating token to $token");
+      Firestore.instance
+          .collection('users')
+          .document(loggedInUser.email)
+          .updateData({
+        'tokens': token,
+      });
+    });
+    
 
     if (loggedInUser == null) {
       loadingMessage =

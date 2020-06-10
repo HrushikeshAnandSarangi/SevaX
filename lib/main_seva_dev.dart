@@ -72,7 +72,9 @@ Future<void> main() async {
       // Crashlytics.instance.enableInDevMode = true;
       // FlutterError.onError = Crashlytics.instance.recordFlutterError;
       runApp(
-        MainApplication(),
+        MainApplication(
+          appLanguage : appLanguage 
+        ),
       );
       // runZoned(() {
 
