@@ -82,9 +82,7 @@ Future<void> main() async {
 }
 
 class MainApplication extends StatelessWidget {
-  final bool skipToHomePage;
-  final AppLanguage appLanguage;
-  MainApplication({Key key, this.skipToHomePage = false, this.appLanguage}) : super(key: key);
+  final AppLanguage appLanguage = AppLanguage()..fetchLocale();
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppLanguage>(
@@ -121,9 +119,7 @@ class MainApplication extends StatelessWidget {
                 );
               },
               // home:BillingPlanDetails(),
-              home: SplashView(
-                skipToHomePage: skipToHomePage,
-              ),
+              home: SplashView(),
             ),
           );
         }));
