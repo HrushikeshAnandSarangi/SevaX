@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
@@ -88,7 +89,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         .translate('findtimebank', 'timebanks_near_you');
     bool showBachBtn = widget.showBackBtn;
     showAppbar = widget.isFromHome;
-    print("isdash trueee ---${widget.isFromHome}");
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: !showAppbar
@@ -128,6 +128,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   }
 
   void logOut() {
+    String loggedInEmail = SevaCore.of(context).loggedInUser.email;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -153,11 +155,19 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                           .translate('shared', 'logout'),
                       style: TextStyle(fontFamily: 'Europa'),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
                       //   statusBarBrightness: Brightness.light,
                       //   statusBarColor: Colors.white,
                       // ));
+
+                      try {
+                        await FCMNotificationManager
+                            .removeDeviceRegisterationForMember(
+                                email: loggedInEmail);
+                      } catch (e) {
+                        print("Couldn't clear the token");
+                      }
                       Navigator.of(context).pop();
                       _signOut(context);
                     },
@@ -183,6 +193,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   Future<void> _signOut(BuildContext context) async {
     // Navigator.pop(context);
+
     var auth = AuthProvider.of(context).auth;
     await auth.signOut();
     Navigator.pushReplacement(

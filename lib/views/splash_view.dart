@@ -7,7 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flurry/flurry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
+import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
@@ -426,16 +426,8 @@ class _SplashViewState extends State<SplashView> {
       });
     }
 
-    FirebaseMessaging().getToken().then((token) {
-      print("++++++++++++++++++++++++++++Updating token to $token");
-      Firestore.instance
-          .collection('users')
-          .document(loggedInUser.email)
-          .updateData({
-        'tokens': token,
-      });
-    });
-    
+    await FCMNotificationManager.registerDeviceWithMemberForNotifications(
+        loggedInUser.email);
 
     if (loggedInUser == null) {
       loadingMessage =

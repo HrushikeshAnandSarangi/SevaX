@@ -603,12 +603,18 @@ class _EditProfilePageState extends State<EditProfilePage>
                         );
                         return;
                       }
+                      await FCMNotificationManager
+                          .removeDeviceRegisterationForMember(
+                              email: SevaCore.of(context).loggedInUser.email);
+
                       // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
                       //   statusBarBrightness: Brightness.light,
                       //   statusBarColor: Colors.white,
                       // ));
                       Navigator.of(_context).pop();
-                      _signOut(_context);
+
+                      _signOut(
+                          _context, SevaCore.of(context).loggedInUser.email);
                     },
                   ),
                   new FlatButton(
@@ -630,12 +636,13 @@ class _EditProfilePageState extends State<EditProfilePage>
     );
   }
 
-  Future<void> _signOut(BuildContext context) async {
+  Future<void> _signOut(
+    BuildContext context,
+    String email,
+  ) async {
     // Navigator.pop(context);
     var auth = AuthProvider.of(context).auth;
-
     await auth.signOut();
-    await FCMNotificationManager.removeDeviceRegisterationForMember();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
