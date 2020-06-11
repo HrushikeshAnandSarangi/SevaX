@@ -506,7 +506,7 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future _navigateToLoginPage() async {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
+    await Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => LoginPage(),
     ));
   }
