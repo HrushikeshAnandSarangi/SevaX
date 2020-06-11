@@ -345,9 +345,9 @@ class UserModel extends DataModel {
       object['recommendedTimebank'] = [];
     }
     object['root_timebank_id'] = FlavorConfig.values.timebankId;
-    if (this.notificationAlerts != null) {
-      this.notificationAlerts = object['notificationAlerts'];
-    }
+    // if (this.notificationAlerts != null) {
+    //   this.notificationAlerts = object['notificationAlerts'];
+    // }
     return object;
   }
 
