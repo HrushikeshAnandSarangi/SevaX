@@ -1,4 +1,5 @@
 class ChatModel {
+  String id;
   List<String> participants;
   List<ParticipantInfo> participantInfo;
   String lastMessage;
