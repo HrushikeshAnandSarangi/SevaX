@@ -100,7 +100,9 @@ class RequestCardWidget extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      userModel.fullname ?? AppLocalizations.of(context).translate('requests','no_name'),
+                      userModel.fullname ??
+                          AppLocalizations.of(context)
+                              .translate('requests', 'no_name'),
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 18,
@@ -133,7 +135,7 @@ class RequestCardWidget extends StatelessWidget {
                         );
                         Future.delayed(
                           Duration(milliseconds: 1800),
-                              () => refresh(),
+                          () => refresh(),
                         );
                       } else {
                         await addToFavoriteList(
@@ -143,9 +145,8 @@ class RequestCardWidget extends StatelessWidget {
                         );
                         Future.delayed(
                           Duration(milliseconds: 1800),
-                              () => refresh(),
+                          () => refresh(),
                         );
-
                       }
                     },
                   ),
@@ -153,7 +154,9 @@ class RequestCardWidget extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  userModel.bio ?? AppLocalizations.of(context).translate('requests','updated_bio'),
+                  userModel.bio ??
+                      AppLocalizations.of(context)
+                          .translate('requests', 'updated_bio'),
                   maxLines: 3,
                   style: TextStyle(
                     color: Colors.black,
@@ -180,7 +183,9 @@ class RequestCardWidget extends StatelessWidget {
                       color: Colors.indigo,
                       textColor: Colors.white,
                       elevation: 5,
-                      onPressed: reqStatus != 'Invite'
+                      onPressed: reqStatus !=
+                              AppLocalizations.of(context)
+                                  .translate('members', 'invite')
                           ? null
                           : () async {
                               await timeBankBloc.updateInvitedUsersForRequest(
@@ -240,7 +245,6 @@ class RequestCardWidget extends StatelessWidget {
         .collection("notifications")
         .document(notification.id)
         .setData(notification.toMap());
-
   }
 
   Future<void> addToFavoriteList(

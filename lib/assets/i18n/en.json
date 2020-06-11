@@ -1088,5 +1088,16 @@
 
     "alert_title": "Private Timebank alert",
     "alert_hint": "Please be informed that Private Timebanks do not have a free option. You will need to provide your billing details to continue to create this Timebank"
+  },
+  "upload_csv": {
+    "csv_hint_one": "Download the CSV template to",
+
+    "csv_hint_two": "fill the users you would like to add ",
+    "csv_hint_three": "then upload the CSV.",
+    "download_csv": "Download sample CSV file",
+      "csv_title":"Bulk invite users by CSV",
+    "upload": "Upload",
+    "choose_csv": "Choose CSV file to bulk invite Members",
+    "csv_error": "CSV file is not selected"
   }
 }

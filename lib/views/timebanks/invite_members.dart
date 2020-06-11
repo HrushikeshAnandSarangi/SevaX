@@ -1,12 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path_drawing/path_drawing.dart';
+import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/models/csv_file_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -38,10 +45,19 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       new TextEditingController();
   Future<TimebankModel> getTimebankDetails;
   TimebankModel timebankModel;
+  final _firestore = Firestore.instance;
 
   var validItems = List<String>();
   InvitationManager inivitationManager = InvitationManager();
-
+  bool _isDocumentBeingUploaded = false;
+  File _file;
+  List<File> _files;
+  String _fileName;
+  String _path;
+  final int tenMegaBytes = 10485760;
+  BuildContext parentContext;
+  CsvFileModel csvFileModel = CsvFileModel();
+  String csvFileError = '';
   @override
   void initState() {
     super.initState();
@@ -72,6 +88,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
   @override
   Widget build(BuildContext context) {
+    parentContext = context;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -100,102 +118,388 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   Widget get inviteCodeWidget {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: TextField(
-            style: TextStyle(color: Colors.black),
-            controller: searchTextController,
-            decoration: InputDecoration(
-                suffixIcon: Offstage(
-                  offstage: searchTextController.text.length == 0,
-                  child: IconButton(
-                    splashColor: Colors.transparent,
-                    icon: Icon(
-                      Icons.clear,
-                      color: Colors.black54,
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: TextField(
+              style: TextStyle(color: Colors.black),
+              controller: searchTextController,
+              decoration: InputDecoration(
+                  suffixIcon: Offstage(
+                    offstage: searchTextController.text.length == 0,
+                    child: IconButton(
+                      splashColor: Colors.transparent,
+                      icon: Icon(
+                        Icons.clear,
+                        color: Colors.black54,
+                      ),
+                      onPressed: () {
+                        //searchTextController.clear();
+                        WidgetsBinding.instance.addPostFrameCallback(
+                            (_) => searchTextController.clear());
+                      },
                     ),
-                    onPressed: () {
-                      //searchTextController.clear();
-                      WidgetsBinding.instance.addPostFrameCallback(
-                          (_) => searchTextController.clear());
+                  ),
+                  hasFloatingPlaceholder: false,
+                  alignLabelWithHint: true,
+                  isDense: true,
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
+                  contentPadding: EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 3.0),
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.white),
+                    borderRadius: new BorderRadius.circular(25.7),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: new BorderRadius.circular(25.7)),
+                  hintText: AppLocalizations.of(context)
+                      .translate('members', 'invite_via_email'),
+                  hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
+            ),
+          ),
+          headingTitle(
+              AppLocalizations.of(context).translate('members', 'members')),
+          buildList(),
+          !widget.timebankModel.private == true
+              ? Padding(
+                  padding: EdgeInsets.all(5),
+                  child: GestureDetector(
+                    child: Container(
+                      height: 25,
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            AppLocalizations.of(context)
+                                .translate('members', 'invite_via_code'),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Spacer(),
+                          Image.asset("lib/assets/images/add.png"),
+                        ],
+                      ),
+                    ),
+                    onTap: () async {
+                      _asyncInputDialog(context);
                     },
                   ),
-                ),
-                hasFloatingPlaceholder: false,
-                alignLabelWithHint: true,
-                isDense: true,
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: Colors.grey,
-                ),
-                contentPadding: EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 3.0),
-                filled: true,
-                fillColor: Colors.grey[300],
-                focusedBorder: OutlineInputBorder(
-                  borderSide: new BorderSide(color: Colors.white),
-                  borderRadius: new BorderRadius.circular(25.7),
-                ),
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: new BorderRadius.circular(25.7)),
-                hintText: AppLocalizations.of(context)
-                    .translate('members', 'invite_via_email'),
-                hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
+                )
+              : Offstage(),
+          !widget.timebankModel.private == true
+              ? getTimebankCodesWidget
+              : Offstage(),
+        ],
+      ),
+    );
+  }
+
+  Widget headingTitle(String label) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(5, 15, 0, 0),
+      child: Container(
+        height: 25,
+        child: Text(
+          label,
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(5, 15, 0, 0),
-          child: Container(
-            height: 25,
-            child: Text(
-              AppLocalizations.of(context).translate('members', 'members'),
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+
+  Widget uploadCSVWidget() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        headingTitle(
+            AppLocalizations.of(context).translate('upload_csv', 'csv_title')),
+        RichText(
+          text: TextSpan(
+            style: TextStyle(color: Colors.grey),
+            children: [
+              TextSpan(
+                  text:
+                      "${AppLocalizations.of(context).translate('upload_csv', 'csv_hint_one')}  "),
+              TextSpan(
+                text: AppLocalizations.of(context)
+                    .translate('upload_csv', 'csv_hint_two'),
+                style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                    fontFamily: 'Europa',
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic),
               ),
+              TextSpan(
+                  text:
+                      "${AppLocalizations.of(context).translate('upload_csv', 'csv_hint_three')}  "),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        RaisedButton(
+          onPressed: () async {},
+          child: Text(
+            AppLocalizations.of(context)
+                .translate('upload_csv', 'download_csv'),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+            ),
+          ),
+          color: FlavorConfig.values.theme.primaryColor,
+          textColor: Colors.white,
+          shape: StadiumBorder(),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        GestureDetector(
+          onTap: () {
+            _openFileExplorer();
+          },
+          child: Container(
+            height: 150,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: DashPathBorder.all(
+                dashArray: CircularIntervalList<double>(<double>[5.0, 2.5]),
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.attach_file,
+                  size: 50,
+                  color: FlavorConfig.values.theme.primaryColor,
+                ),
+                Text(
+                  AppLocalizations.of(context)
+                      .translate('upload_csv', 'choose_csv'),
+                  style: TextStyle(color: Colors.grey),
+                ),
+                _isDocumentBeingUploaded
+                    ? Container(
+                        margin: EdgeInsets.only(top: 20),
+                        child: Center(
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                      )
+                    : Container(
+                        child: csvFileModel.csvUrl == null
+                            ? Offstage()
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Card(
+                                  color: Colors.grey[100],
+                                  child: ListTile(
+                                    leading: Icon(Icons.attachment),
+                                    title: Text(
+                                      csvFileModel.csvTitle ?? "Document.csv",
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    trailing: IconButton(
+                                      icon: Icon(Icons.clear),
+                                      onPressed: () => setState(() {
+                                        csvFileModel.csvTitle = null;
+                                        csvFileModel.csvUrl = null;
+                                      }),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                      ),
+              ],
             ),
           ),
         ),
-        buildList(),
-        !widget.timebankModel.private == true
-            ? Padding(
-                padding: EdgeInsets.all(5),
-                child: GestureDetector(
-                  child: Container(
-                    height: 25,
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          AppLocalizations.of(context)
-                              .translate('members', 'invite_via_code'),
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Spacer(),
-                        Image.asset("lib/assets/images/add.png"),
-                      ],
+        Text(
+          csvFileError,
+          style: TextStyle(color: Colors.red),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: Container(
+                height: 30,
+                child: RaisedButton(
+                  onPressed: () async {
+                    if (csvFileModel.csvUrl == null ||
+                        csvFileModel.csvTitle == null) {
+                      setState(() {
+                        this.csvFileError = AppLocalizations.of(context)
+                            .translate('upload_csv', 'csv_error');
+                      });
+                    } else {
+                      csvFileModel.timebankId = widget.timebankId;
+                      csvFileModel.communityId =
+                          SevaCore.of(context).loggedInUser.currentCommunity;
+                      csvFileModel.timestamp =
+                          DateTime.now().millisecondsSinceEpoch;
+                      csvFileModel.sevaUserId =
+                          SevaCore.of(context).loggedInUser.sevaUserID;
+                      await _firestore
+                          .collection('csv_files')
+                          .add(csvFileModel.toMap());
+                      setState(() {
+                        this.csvFileError = '';
+                        csvFileModel.csvTitle = '';
+                        csvFileModel.csvUrl = '';
+                      });
+                    }
+                  },
+                  child: Text(
+                    AppLocalizations.of(context)
+                        .translate('upload_csv', 'upload'),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
                     ),
                   ),
-                  onTap: () async {
-                    _asyncInputDialog(context);
-                  },
+                  color: Colors.grey[300],
+                  shape: StadiumBorder(),
                 ),
-              )
-            : Offstage(),
-        !widget.timebankModel.private == true
-            ? getTimebankCodesWidget
-            : Offstage(),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 15,
+        ),
       ],
     );
   }
 
+  void _openFileExplorer() async {
+    //  bool _isDocumentBeingUploaded = false;
+    //File _file;
+    //List<File> _files;
+    String _fileName;
+    String _path;
+    Map<String, String> _paths;
+    try {
+      _paths = null;
+      _path = await FilePicker.getFilePath(
+          type: FileType.custom, allowedExtensions: ['csv']);
+    } on PlatformException catch (e) {
+      print("Unsupported operation" + e.toString());
+    }
+    //   if (!mounted) return;
+    if (_path != null) {
+      _fileName = _path.split('/').last;
+      print("FIle  name $_fileName");
+
+      userDoc(_path, _fileName);
+    }
+  }
+
+  Future<String> uploadDocument() async {
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+    String timestampString = timestamp.toString();
+    StorageReference ref = FirebaseStorage.instance
+        .ref()
+        .child('csv_files')
+        .child(SevaCore.of(context).loggedInUser.email +
+            timestampString +
+            _fileName);
+    StorageUploadTask uploadTask = ref.putFile(
+      File(_path),
+      StorageMetadata(
+        contentLanguage: 'en',
+        customMetadata: <String, String>{'activity': 'CSV File'},
+      ),
+    );
+    String documentURL =
+        await (await uploadTask.onComplete).ref.getDownloadURL();
+
+    csvFileModel.csvTitle = _fileName;
+    csvFileModel.csvUrl = documentURL;
+    // _setAvatarURL();
+    // _updateDB();
+    return documentURL;
+  }
+
+  void userDoc(String _doc, String fileName) {
+    // TODO: implement userDoc
+    setState(() {
+      this._path = _doc;
+      this._fileName = fileName;
+      this._isDocumentBeingUploaded = true;
+    });
+    checkPdfSize();
+
+    return null;
+  }
+
+  void checkPdfSize() async {
+    var file = File(_path);
+    final bytes = await file.lengthSync();
+    if (bytes > tenMegaBytes) {
+      this._isDocumentBeingUploaded = false;
+      getAlertDialog(parentContext);
+    } else {
+      uploadDocument().then((_) {
+        setState(() => this._isDocumentBeingUploaded = false);
+      });
+    }
+  }
+
+  getAlertDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)
+              .translate('create_feed', 'size_alert_title')),
+          content: new Text(AppLocalizations.of(context)
+              .translate('create_feed', 'size_alert')),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text(
+                  AppLocalizations.of(context).translate('help', 'close')),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget buildList() {
+    if (searchTextController.text.trim().length < 1) {
+      return Column(
+        children: <Widget>[
+          uploadCSVWidget(),
+        ],
+      );
+    }
     return StreamBuilder<List<UserModel>>(
         stream: SearchManager.searchUserInSevaX(
           queryString: searchTextController.text,
@@ -251,8 +555,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                       );
                     })),
           );
-
-          return Text("");
         });
   }
 
