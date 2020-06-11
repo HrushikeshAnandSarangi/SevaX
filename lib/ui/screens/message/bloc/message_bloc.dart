@@ -33,7 +33,8 @@ class MessageBloc extends BlocBase {
       log(querySnapshot.documents.length.toString());
       querySnapshot.documents.forEach((DocumentSnapshot snapshot) {
         ChatModel chat = ChatModel.fromMap(snapshot.data);
-
+        chat.id = snapshot.documentID;
+        log(chat.id);
         String senderId =
             chat.participants.firstWhere((id) => id != userModel.sevaUserID);
         log("===> sender id :$senderId");
