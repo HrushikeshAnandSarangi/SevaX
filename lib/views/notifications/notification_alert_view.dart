@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/views/core.dart';
 
 class NotificationAlert extends StatefulWidget {
@@ -16,7 +17,8 @@ class _NotificationAlertState extends State<NotificationAlert> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Notification alerts',
+          AppLocalizations.of(context)
+              .translate('notifications', 'notification_alert'),
           style: TextStyle(fontFamily: 'Europa', fontSize: 18),
         ),
       ),
@@ -25,7 +27,8 @@ class _NotificationAlertState extends State<NotificationAlert> {
         children: <Widget>[
           ListTile(
             title: Text(
-              'Turn on notification alerts',
+              AppLocalizations.of(context)
+                  .translate('notifications', 'turn_on_notification'),
               style: TextStyle(
                   fontFamily: 'Europa',
                   fontWeight: FontWeight.bold,
@@ -35,7 +38,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
               activeColor: Colors.green,
               value: SevaCore.of(context).loggedInUser.notificationAlerts,
               onChanged: (value) {
-                print("VALUE : $value");
+                //print("VALUE : $value");
                 setState(() {
                   isTurnedOn = value;
                   SevaCore.of(context).loggedInUser.notificationAlerts = value;

@@ -473,7 +473,9 @@ class CreateEditCommunityViewFormState
                         widget.isCreateTimebank
                             ? Row(
                                 children: <Widget>[
-                                  headingText('Private Timebank'),
+                                  headingText(AppLocalizations.of(context)
+                                      .translate('private_timebank',
+                                          'private_timebank')),
                                   Padding(
                                     padding:
                                         const EdgeInsets.fromLTRB(2, 10, 0, 0),
@@ -1007,10 +1009,10 @@ class CreateEditCommunityViewFormState
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            //title: Text(AppLocalizations.of(context).translate('coins', 'donate_coins')),
-            title: Text('Private Timebank alert'),
-            content: Text(
-                'Please be informed that Private Timebanks do not have a free option. You will need to provide your billing details to continue to create this Timebank'),
+            title: Text(AppLocalizations.of(context)
+                .translate('private_timebank', 'alert_title')),
+            content: Text(AppLocalizations.of(context)
+                .translate('private_timebank', 'alert_hint')),
             actions: <Widget>[
               RaisedButton(
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),

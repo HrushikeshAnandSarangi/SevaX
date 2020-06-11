@@ -525,7 +525,9 @@
     "tap_to_view": "Toca para ver los detalles",
     "added_you": "te ha agregado a",
     "timebank_join": "Timebank Join",
-    "group_invite": "Invitación para unirse al grupo"
+    "group_invite": "Invitación para unirse al grupo",
+    "notification_alert": "Alertas de notificación",
+    "turn_on_notification": "Activar/desactivar alertas de notificación"
   },
   "profile": {
     "image_hint": "Imagem de perfil",
@@ -559,6 +561,7 @@
     "please_enter_bio": "Ingrese la biografía para actualizar",
     "bio_50": "Ingrese min 50 caracteres",
     "sure_logout": "Está seguro de que desea cerrar sesión?"
+
   },
   "help": {
     "about_sevax": "Sobre o SevaX",
@@ -1077,5 +1080,11 @@
     "removed_success": "El usuario se eliminó correctamente del banco de tiempo",
     "transfer_error": "¡Se produjo un error! Por favor, vuelva más tarde y vuelva a intentarlo.",
     "empty_user": "No users found"
+  },
+
+  "private_timebank": {
+    "private_timebank": "Timebank privado",
+    "alert_title": "Alerta privada Timebank",
+    "alert_hint": "Please be informed that Private Timebanks do not have a free option. You will need to provide your billing details to continue to create this Timebank"
   }
 }

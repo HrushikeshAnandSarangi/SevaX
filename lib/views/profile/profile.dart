@@ -576,7 +576,7 @@ class _ProfilePageState extends State<ProfilePage>
                     padding: const EdgeInsets.only(left: 15),
                     child: Text(
                       AppLocalizations.of(context)
-                          .translate('profile', 'notifications'),
+                          .translate('notifications', 'notification_alert'),
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
