@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:core' as prefix0;
 import 'dart:core';
+import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:sevaexchange/models/message_model.dart';
 
 Future<void> createChat({
   @required ChatModel chat,
@@ -108,19 +110,19 @@ Future<void> createNewMessage({
   @required bool isAdmin,
   @required timebankId,
   bool isTimebankMessage = false,
+  File file,
 }) async {
   WriteBatch batch = Firestore.instance.batch();
-
+  DocumentReference messageRef = Firestore.instance
+      .collection('chatsnew')
+      .document(chatId)
+      .collection('messages')
+      .document();
   //Create new messages
   batch.setData(
-    Firestore.instance
-        .collection('chatsnew')
-        .document(chatId)
-        .collection('messages')
-        .document(),
+    messageRef,
     messageModel.toMap(),
   );
-
   //if sender is admin , mark the previous messages as read
 
   if (isAdmin) {
@@ -168,61 +170,27 @@ Future<void> createNewMessage({
     merge: true,
   );
   batch.commit();
-}
 
-Stream<List<MessageModel>> getMessagesforChat({
-  @required ChatModel chat,
-  String userId,
-  IsFromNewChat isFromNewChat,
-}) async* {
-  print('getMessagesforChat: chatModel: $chat');
-  var data = Firestore.instance
-      .collection('chatsnew')
-      .document(
-          "${chat.participants[0]}*${chat.participants[1]}*${chat.communityId}")
-      .collection('messages')
-      .snapshots();
-
-  yield* data.transform(
-    StreamTransformer<QuerySnapshot, List<MessageModel>>.fromHandlers(
-      handleData: (snapshot, messageSink) {
-        List<MessageModel> messagelist = [];
-        snapshot.documents.forEach(
-          (documentSnapshot) {
-            MessageModel model = MessageModel.fromMap(documentSnapshot.data);
-            messagelist.add(model);
-            messagelist.sort((m1, m2) {
-              return m1.timestamp.compareTo(m2.timestamp);
-            });
-          },
-        );
-
-        if (chat.deletedBy != null && chat.deletedBy.containsKey(userId)) {
-          var timestamp = chat.deletedBy[userId];
-
-          List<MessageModel> filteredList = [];
-          for (var i = 0; i < messagelist.length; i++) {
-            messagelist[i].timestamp > timestamp
-                ? filteredList.add(messagelist[i])
-                : print("valid message");
-          }
-          messageSink.add(filteredList);
-        } else if (isFromNewChat.isFromNewChat) {
-          var timestamp = isFromNewChat.newChatTimeStamp;
-
-          List<MessageModel> filteredList = [];
-          for (var i = 0; i < messagelist.length; i++) {
-            messagelist[i].timestamp > timestamp
-                ? filteredList.add(messagelist[i])
-                : print("valid message");
-          }
-          messageSink.add(filteredList);
-        } else {
-          messageSink.add(messagelist);
-        }
-      },
-    ),
-  );
+  if (messageModel.type == MessageType.IMAGE) {
+    log(file.path);
+    log(messageRef.documentID);
+    log("started upload");
+    FirebaseStorage _storage = FirebaseStorage();
+    StorageUploadTask _uploadTask =
+        _storage.ref().child("chats/${DateTime.now()}.png").putFile(file);
+    StorageTaskSnapshot snapshot = await _uploadTask.onComplete;
+    String attachmentUrl = await snapshot.ref.getDownloadURL();
+    log(attachmentUrl);
+    Firestore.instance
+        .collection("chatsnew")
+        .document(chatId)
+        .collection("messages")
+        .document(messageRef.documentID)
+        .setData(
+      {"data": attachmentUrl},
+      merge: true,
+    );
+  }
 }
 
 Future<DocumentSnapshot> getUserInfo(String userEmail) {

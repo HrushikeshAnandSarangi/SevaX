@@ -13,7 +13,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/search_view.dart';
 
 class SearchTimebankMemberElastic extends StatefulWidget {
@@ -35,7 +34,7 @@ class SearchTimebankMemberElastic extends StatefulWidget {
 
 class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
   final TextEditingController searchTextController = TextEditingController();
-  var fromNewChat = IsFromNewChat(true, DateTime.now().millisecondsSinceEpoch);
+
   final searchOnChange = new BehaviorSubject<String>();
   var validItems = List<String>();
 
@@ -77,7 +76,8 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
                     borderSide: BorderSide(color: Colors.white)),
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white)),
-                hintText: AppLocalizations.of(context).translate('create_request','search_member'),
+                hintText: AppLocalizations.of(context)
+                    .translate('create_request', 'search_member'),
                 hintStyle: TextStyle(color: Colors.white)),
             // controller: searchTextController,
           ),
@@ -194,9 +194,6 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
                 sender: sender,
                 reciever: reciever,
                 isFromShare: false,
-                news: NewsModel(),
-                isFromNewChat:
-                    IsFromNewChat(true, DateTime.now().millisecondsSinceEpoch),
               );
             }
             return user.email == SevaCore.of(context).loggedInUser.email
@@ -234,11 +231,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
                 sender: sender,
                 reciever: reciever,
                 isFromShare: true,
-                news: widget.newsModel,
-                isFromNewChat: IsFromNewChat(
-                  false,
-                  DateTime.now().millisecondsSinceEpoch,
-                ),
+                feedId: widget.newsModel.id,
               );
               // Navigator.of(context).pop();
             }
@@ -248,8 +241,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
 
             break;
           default:
-            return () {
-            };
+            return () {};
         }
       },
       child: Card(
@@ -285,7 +277,10 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
         ),
       );
     } else if (widget.controller.text.trim().length < 3) {
-      return getEmptyWidget('Users', AppLocalizations.of(context).translate('create_request','atleast_3'));
+      return getEmptyWidget(
+          'Users',
+          AppLocalizations.of(context)
+              .translate('create_request', 'atleast_3'));
     }
     return StreamBuilder<List<UserModel>>(
       stream: SearchManager.searchForUserWithTimebankId(
@@ -305,7 +300,8 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
         }
         List<UserModel> userList = snapshot.data;
         if (userList.length == 0) {
-          return getEmptyWidget('Users', AppLocalizations.of(context).translate('members','no_users'));
+          return getEmptyWidget('Users',
+              AppLocalizations.of(context).translate('members', 'no_users'));
         }
         return ListView.builder(
           shrinkWrap: true,

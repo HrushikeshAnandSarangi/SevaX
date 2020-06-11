@@ -11,7 +11,6 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'search_timebank_manager_page.dart';
@@ -90,8 +89,6 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
 
   var _lastReached = false;
 
-  var fromNewChat = IsFromNewChat(true, DateTime.now().millisecondsSinceEpoch);
-
   List<Widget> _avtars = [];
   HashMap<String, int> emailIndexMap = HashMap();
   HashMap<int, UserModel> indexToModelMap = HashMap();
@@ -131,7 +128,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
     var finalWidget = Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate('members','select_volunteer'),
+          AppLocalizations.of(context).translate('members', 'select_volunteer'),
           style: TextStyle(fontSize: 18),
         ),
         elevation: 0,
@@ -198,7 +195,8 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   Widget getContent(BuildContext context, TimebankModel model) {
     if (_avtars.length == 0 && _lastReached) {
       return Center(
-        child: Text(AppLocalizations.of(context).translate('members','no_volunteers')),
+        child: Text(
+            AppLocalizations.of(context).translate('members', 'no_volunteers')),
       );
     } else if (_avtars.length == 0 && _showMoreItems && !_isLoading) {
       return circularBar;
@@ -322,7 +320,6 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   Widget getUserWidget(UserModel user, BuildContext context) {
     return GestureDetector(
       onTap: () async {
-
         switch (widget.selectionMode) {
           case MEMBER_SELECTION_MODE.NEW_CHAT:
             if (user.email == SevaCore.of(context).loggedInUser.email) {
@@ -389,11 +386,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
                 reciever: reciever,
                 isFromRejectCompletion: false,
                 isFromShare: true,
-                news: widget.newsModel,
-                isFromNewChat: IsFromNewChat(
-                  false,
-                  DateTime.now().millisecondsSinceEpoch,
-                ),
+                feedId: widget.newsModel.id,
                 onChatCreate: () {
                   Navigator.of(dialogLoadingContext).pop();
                   Navigator.of(context).pop();

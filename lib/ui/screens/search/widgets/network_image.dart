@@ -8,6 +8,7 @@ class CustomNetworkImage extends StatelessWidget {
   final Widget error;
   final BoxFit fit;
   final double size;
+  final bool clipOval;
 
   const CustomNetworkImage(
     this.imageUrl, {
@@ -16,25 +17,24 @@ class CustomNetworkImage extends StatelessWidget {
     this.error,
     this.fit,
     this.size = 45,
+    this.clipOval = true,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return ClipOval(
-      child: SizedBox(
-        height: size,
-        width: size,
-        child: CachedNetworkImage(
-          imageUrl: imageUrl ??
-              defaultUserImageURL,
-          fit: fit ?? BoxFit.fitWidth,
-          placeholder: (context, url) => Center(
-            child: placeholder ?? CircularProgressIndicator(),
-          ),
-          errorWidget: (context, url, error) => Center(
-            child: Icon(Icons.error),
-          ),
+    final child = SizedBox(
+      height: size,
+      width: size,
+      child: CachedNetworkImage(
+        imageUrl: imageUrl ?? defaultUserImageURL,
+        fit: fit ?? BoxFit.fitWidth,
+        placeholder: (context, url) => Center(
+          child: placeholder ?? CircularProgressIndicator(),
+        ),
+        errorWidget: (context, url, error) => Center(
+          child: Icon(Icons.error),
         ),
       ),
     );
+    return clipOval ? ClipOval(child: child) : child;
   }
 }
