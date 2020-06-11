@@ -51,7 +51,6 @@ class UserModel extends DataModel {
   List<String> blockedBy = [];
   List<String> blockedMembers = [];
   LocationData currentPosition;
-  bool notificationAlerts;
 
   UserModel(
       {this.bio,
@@ -83,8 +82,7 @@ class UserModel extends DataModel {
       this.currentCommunity,
       this.communities,
       this.emailSent,
-      this.language,
-      this.notificationAlerts});
+      this.language}) {}
 
   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {
@@ -234,9 +232,6 @@ class UserModel extends DataModel {
     } else {
       notificationsReadCount = HashMap();
     }
-    if (map.containsKey('notificationAlerts')) {
-      this.notificationAlerts = map['notificationAlerts'];
-    }
   }
 
   UserModel.fromDynamic(dynamic user) {
@@ -383,7 +378,6 @@ class UserModel extends DataModel {
       ${this.currentPosition.toString()},
       ${this.acceptedEULA.toString()},
       ${this.currentTimebank.toString()},
-      ${this.notificationAlerts.toString()},
       Communities:${this.communities.toString()},
     ''';
   }

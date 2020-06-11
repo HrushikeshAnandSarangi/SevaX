@@ -94,16 +94,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 
       case 'pt':
         return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_PT;
-      case 'zh-CN':
-        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_ZH_CN;
-      case 'de':
-        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_DE;
-      case 'ja':
-        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_JA;
-      case 'ko':
-        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_KO;
-      case 'ru':
-        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_RU;
+
       case 'es':
         return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_ES;
 
@@ -128,17 +119,6 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       case 'es':
         return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_ES;
 
-      case 'zh-CN':
-        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_CN;
-      case 'de':
-        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_DE;
-      case 'ja':
-        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_JA;
-      case 'ko':
-        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_KO;
-      case 'ru':
-        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_RU;
-
       default:
         return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_EN;
     }
@@ -159,16 +139,6 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 
       case 'es':
         return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_ES;
-      case 'zh-CN':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_CN;
-      case 'de':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_DE;
-      case 'ja':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_JA;
-      case 'ko':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_KO;
-      case 'ru':
-        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_RU;
 
       default:
         return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_EN;

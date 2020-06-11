@@ -15,12 +15,7 @@ class LanguageListData {
     LanguageModel(languageName: 'English', code: 'en'),
     LanguageModel(languageName: 'Portuguese', code: 'pt'),
     LanguageModel(languageName: 'French', code: 'fr'),
-    LanguageModel(languageName: 'Spanish', code: 'es`'),
-    LanguageModel(languageName: 'Chinese Simplified', code: 'zh-CN'),
-    LanguageModel(languageName: 'German', code: 'de'),
-    LanguageModel(languageName: 'Japanese', code: 'ja'),
-    LanguageModel(languageName: 'Korean', code: 'ko'),
-    LanguageModel(languageName: 'Russian', code: 'ru'),
+    LanguageModel(languageName: 'Spanish', code: 'es')
   ];
   LanguageListData();
   getData() {

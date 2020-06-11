@@ -503,31 +503,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 fontSize: 12,
               ),
             ),
-//            Row(
-//              children: <Widget>[
-//                headingText('Save as Template'),
-////                Padding(
-////                  padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-////                  child: infoButton(
-////                    context: context,
-////                    key: GlobalKey(),
-////                    type: InfoType.PRIVATE_TIMEBANK,
-////                  ),
-////                ),
-//                Column(
-//                  children: <Widget>[
-//                    Divider(),
-//                    Checkbox(
-//                      value:widget.isCreateProject?false: projectModel.saveAsTemplate,
-//                      onChanged: (bool value) {
-//                        print(value);
-//                        projectModel.saveAsTemplate = value;
-//                      },
-//                    ),
-//                  ],
-//                ),
-//              ],
-//            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5.0),
               child: Container(
