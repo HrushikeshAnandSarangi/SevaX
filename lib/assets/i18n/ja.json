@@ -193,7 +193,8 @@
     "with_timebank_id": "タイムバンクIDが",
     "edit_profile_info": "プロファイル情報を編集",
     "profile_information": "プロフィール情報",
-    "updating_details": "詳細の更新"
+    "updating_details": "詳細の更新",
+    "private_timebank": "民間 Timebank"
   },
   "billing_plans": {
     "remote_config": "billing_plans",
@@ -554,7 +555,8 @@
     "enter_bio": "経歴を入力してください",
     "please_enter_bio": "更新するには略歴を入力してください",
     "bio_50": "50文字以上を入力してください",
-    "sure_logout": "ログアウトしてもよろしいですか？"
+    "sure_logout": "ログアウトしてもよろしいですか？",
+    "notifications": "通知アラート"
   },
   "help": {
     "about_sevax": "SevaXについて",

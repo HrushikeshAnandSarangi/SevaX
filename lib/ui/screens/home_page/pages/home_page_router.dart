@@ -84,7 +84,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
               Locale('pt', 'PT'),
               Locale('es', 'ES'),
               Locale('fr', 'FR'),
-              Locale('zh-CN', 'zh-CN'),
+              Locale('zh', 'ZH'),
               Locale('de', 'DE'),
               Locale('ja', 'JA'),
               Locale('ko', 'KO'),

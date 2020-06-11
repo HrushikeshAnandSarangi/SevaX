@@ -193,7 +193,8 @@
     "with_timebank_id": "mit Timebank ID als",
     "edit_profile_info": "Profilinformationen bearbeiten",
     "profile_information": "Profil Information",
-    "updating_details": "Details aktualisieren"
+    "updating_details": "Details aktualisieren",
+    "private_timebank": "Privat Timebank"
   },
   "billing_plans": {
     "remote_config": "Abrechnungspläne",
@@ -554,7 +555,8 @@
     "enter_bio": "Geben Sie Bio ein",
     "please_enter_bio": "Bitte geben Sie Bio ein, um zu aktualisieren",
     "bio_50": "Bitte geben Sie mindestens 50 Zeichen ein",
-    "sure_logout": "Möchten Sie sich abmelden?"
+    "sure_logout": "Möchten Sie sich abmelden?",
+    "notifications": "Benachrichtigungsbenachrichtigungen"
   },
   "help": {
     "about_sevax": "Über SevaX",

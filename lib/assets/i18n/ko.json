@@ -193,7 +193,8 @@
     "with_timebank_id": "타임 뱅크 ID를",
     "edit_profile_info": "프로필 정보 편집",
     "profile_information": "프로필 정보",
-    "updating_details": "세부 사항 업데이트"
+    "updating_details": "세부 사항 업데이트",
+    "private_timebank": "은밀한 Timebank"
   },
   "billing_plans": {
     "remote_config": "billing_plans",
@@ -554,7 +555,8 @@
     "enter_bio": "바이오 입력",
     "please_enter_bio": "업데이트하려면 바이오를 입력하십시오",
     "bio_50": "최소 50자를 입력하십시오",
-    "sure_logout": "로그 아웃 하시겠습니까?"
+    "sure_logout": "로그 아웃 하시겠습니까?",
+    "notifications": "알림 알림"
   },
   "help": {
     "about_sevax": "SevaX 소개",

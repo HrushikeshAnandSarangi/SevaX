@@ -193,7 +193,8 @@
     "with_timebank_id": "Com a identificação do Banco de tempo como",
     "edit_profile_info": "Editar informações do perfil",
     "profile_information": "Informações do perfil",
-    "updating_details": "Atualizando detalhes"
+    "updating_details": "Atualizando detalhes",
+    "private_timebank": "Privado Timebank"
   },
   "billing_plans": {
     "remote_config": "billing_plans",
@@ -558,7 +559,8 @@
     "enter_bio": "Inserir biografia",
     "please_enter_bio": "Insira a biografia para atualizar",
     "bio_50": "Digite 50 caracteres mínimos",
-    "sure_logout": "Tem certeza de que deseja sair?"
+    "sure_logout": "Tem certeza de que deseja sair?",
+    "notifications": "Alertas de notificación\n\n"
   },
   "help": {
     "about_sevax": "Sobre o SevaX",
