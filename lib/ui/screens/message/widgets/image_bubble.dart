@@ -1,0 +1,87 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:sevaexchange/models/message_model.dart';
+import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
+import 'package:sevaexchange/ui/utils/decorations.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/views/core.dart';
+
+class ImageBubble extends StatelessWidget {
+  final bool isSent;
+  final MessageModel messageModel;
+
+  const ImageBubble({Key key, this.isSent, this.messageModel})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: isSent ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 4),
+        padding: EdgeInsets.all(6),
+        width: MediaQuery.of(context).size.width * 0.7,
+        decoration: isSent
+            ? MessageDecoration.sendDecoration()
+            : MessageDecoration.receiveDecoration(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            AspectRatio(
+              aspectRatio: 1,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: messageModel.data == null
+                    ? Center(child: ImageUploading())
+                    : CustomNetworkImage(
+                        messageModel.data,
+                        fit: BoxFit.cover,
+                        clipOval: false,
+                      ),
+              ),
+            ),
+            Offstage(
+              offstage:
+                  messageModel.message == null || messageModel.message == '',
+              child: Padding(
+                padding: EdgeInsets.only(top: 4),
+                child: Text(messageModel.message),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                DateFormat(
+                  'hh:mm a MMMM dd',
+                ).format(
+                  getDateTimeAccToUserTimezone(
+                    dateTime: DateTime.fromMillisecondsSinceEpoch(
+                        messageModel.timestamp),
+                    timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+                  ),
+                ),
+                style: TextStyle(fontSize: 10, color: Colors.grey[700]),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ImageUploading extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        CircularProgressIndicator(),
+        SizedBox(height: 4),
+        Text("Sending..."),
+      ],
+    );
+  }
+}
