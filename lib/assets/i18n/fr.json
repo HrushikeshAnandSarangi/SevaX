@@ -334,7 +334,7 @@
     "add_attachment": "Ajouter une image / un document",
     "camera": "Caméra",
     "gallery": "Galerie",
-    "size_alert": "Les fichiers de plus de 10 Mo ne sont pas autorisés",
+    "size_alert": "Les fichiers de plus de 10 MB ne sont pas autorisés",
     "size_alert_title": "Alerte fichier volumineux",
     "imagehint": "crédit photo",
     "update_post": "Mettre à jour le message",
@@ -1087,5 +1087,21 @@
 
     "alert_title": "Alerte privée Timebank",
     "alert_hint": "Please be informed that Private Timebanks do not have a free option. You will need to provide your billing details to continue to create this Timebank"
+  },
+  "upload_csv": {
+    "csv_hint_one": "Téléchargez le modèle CSV sur",
+    "csv_hint_two": "remplissez les utilisateurs que vous souhaitez ajouter ",
+    "csv_hint_three": "puis téléchargez le fichier CSV.",
+    "download_csv": "Télécharger un exemple de fichier CSV",
+    "csv_title":"Inviter des utilisateurs en masse par CSV",
+    "upload": "Télécharger",
+    "choose_csv": "Choisissez un fichier CSV pour inviter des membres en masse",
+    "csv_error": "Le fichier CSV n'est pas sélectionné",
+    "download_progress": "le téléchargement",
+    "download_success": "Le téléchargement est terminé.",
+    "csv_file_alert": "Les fichiers supérieurs à 1 MB ne sont pas autorisés",
+    "csv_size_limit": "REMARQUE: la taille maximale du fichier est de 1 MB"
+
+
   }
 }

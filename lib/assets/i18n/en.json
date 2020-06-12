@@ -335,7 +335,7 @@
     "add_attachment": "Add Image / Document",
     "camera": "Camera",
     "gallery": "Gallery",
-    "size_alert": "Files more than 10MB are not allowed",
+    "size_alert": "Files larger than 10 MB are not allowed",
     "size_alert_title": "Large file alert",
     "update_post": "Update post",
     "update_progress": "Updating post",
@@ -1091,13 +1091,16 @@
   },
   "upload_csv": {
     "csv_hint_one": "Download the CSV template to",
-
     "csv_hint_two": "fill the users you would like to add ",
     "csv_hint_three": "then upload the CSV.",
     "download_csv": "Download sample CSV file",
-      "csv_title":"Bulk invite users by CSV",
+    "csv_title":"Bulk invite users by CSV",
     "upload": "Upload",
     "choose_csv": "Choose CSV file to bulk invite Members",
-    "csv_error": "CSV file is not selected"
+    "csv_error": "CSV file is not selected",
+    "download_progress": "Downloading",
+    "download_success": "Downloading is complete.",
+    "csv_file_alert": "Files larger than 1 MB are not allowed",
+    "csv_size_limit": "NOTE : Maximum file size is 1 MB"
   }
 }

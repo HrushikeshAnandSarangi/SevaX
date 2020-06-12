@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,7 @@ Future<void> fetchRemoteConfig() async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await FlutterDownloader.initialize();
   FlavorConfig.appFlavor = Flavor.SEVA_DEV;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   _firebaseMessaging.requestNotificationPermissions(

@@ -1086,5 +1086,20 @@
     "private_timebank": "Timebank privado",
     "alert_title": "Alerta privada Timebank",
     "alert_hint": "Please be informed that Private Timebanks do not have a free option. You will need to provide your billing details to continue to create this Timebank"
+  },
+  "upload_csv": {
+    "csv_hint_one": "Descargue la plantilla CSV en",
+    "csv_hint_two": "Rellena las usuarios que te gustaría agregar ",
+    "csv_hint_three": "luego cargue el archivo CSV",
+    "download_csv": "Descargue un archivo CSV de muestra",
+    "csv_title":"Invitación masiva de usuarios por CSV",
+    "upload": "Subir",
+    "choose_csv": "Elija el archivo CSV para invitar a miembros de forma masiva",
+    "csv_error": "El archivo CSV no está seleccionado",
+    "download_progress": "Descargando",
+    "download_success": "La descarga está completa.",
+    "csv_file_alert": "No se permiten archivos de más de 1 MB.",
+    "csv_size_limit": "NOTA: el tamaño máximo del archivo es de 1 MB"
+
   }
 }

@@ -8,7 +8,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_drawing/path_drawing.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -32,8 +34,9 @@ class InviteAddMembers extends StatefulWidget {
   final String communityId;
   final String timebankId;
   final TimebankModel timebankModel;
-
-  InviteAddMembers(this.timebankId, this.communityId, this.timebankModel);
+  final TargetPlatform platform;
+  InviteAddMembers(
+      this.timebankId, this.communityId, this.timebankModel, this.platform);
 
   @override
   State<StatefulWidget> createState() => InviteAddMembersState();
@@ -54,19 +57,25 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   List<File> _files;
   String _fileName;
   String _path;
-  final int tenMegaBytes = 10485760;
+  final int oneMegaBytes = 1048576;
   BuildContext parentContext;
   CsvFileModel csvFileModel = CsvFileModel();
   String csvFileError = '';
+  bool _isLoading;
+  bool _permissionReady;
+  String _localPath;
   @override
   void initState() {
     super.initState();
+    setup();
+
     _setTimebankModel();
     getMembersList();
     searchTextController.addListener(() {
       setState(() {});
     });
     initDynamicLinks(context);
+
     // setState(() {});
   }
 
@@ -80,10 +89,60 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     });
   }
 
+  Future<Null> setup() async {
+    //_permissionReady = await _checkPermission();
+
+    _localPath = (await _findLocalPath()) + Platform.pathSeparator + 'Download';
+
+    final savedDir = Directory(_localPath);
+    bool hasExisted = await savedDir.exists();
+    if (!hasExisted) {
+      savedDir.create();
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+//  Future<String> _findLocalPath() async {
+//    final directory = widget.platform == TargetPlatform.android
+//        ? await getExternalStorageDirectory()
+//        : await getApplicationDocumentsDirectory();
+//    return directory.path;
+//  }
+
+  Future<String> _findLocalPath() async {
+    final directory = widget.platform == TargetPlatform.android
+        ? await getExternalStorageDirectory()
+        : await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
   void _setTimebankModel() async {
     timebankModel = await getTimebankDetailsbyFuture(
       timebankId: widget.timebankId,
     );
+  }
+
+  void _requestDownload(String link) async {
+    try {
+      final taskId = await FlutterDownloader.enqueue(
+          url: link,
+          headers: {"auth": "test_for_sql_encoding"},
+          savedDir: _localPath,
+          fileName: 'SampleCSV.csv',
+          showNotification: true,
+          openFileFromNotification: true);
+      print("task id ${taskId}");
+
+      if (taskId == null) {
+        print('Task is not complete');
+      } else {
+        print('Task is complete');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -253,7 +312,12 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           height: 10,
         ),
         RaisedButton(
-          onPressed: () async {},
+          onPressed: () async {
+            _requestDownload(
+                //   "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/news_documents%2Fraj%40yopmail.com1591160274804FAQ.pdf?alt=media&token=fbd08ff3-3686-4168-b3a9-daa875e68ec0");
+                // 'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/profile_images%2Fbusiness@uipep.com.jpg?alt=media&token=8ba6d965-ff69-4cb2-9980-035c71d13458');
+                "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/csv_files%2Fumesha%40uipep.com15918788235481000%20Sales%20Records.csv?alt=media&token=d1919180-7e97-4f95-b2e3-6cca1c51c688");
+          },
           child: Text(
             AppLocalizations.of(context)
                 .translate('upload_csv', 'download_csv'),
@@ -285,14 +349,14 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Icon(
-                  Icons.attach_file,
-                  size: 50,
-                  color: FlavorConfig.values.theme.primaryColor,
+                Image.asset(
+                  'lib/assets/images/csv.png',
+                  // color: FlavorConfig.values.theme.primaryColor,
                 ),
                 Text(
                   AppLocalizations.of(context)
                       .translate('upload_csv', 'choose_csv'),
+                  textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey),
                 ),
                 _isDocumentBeingUploaded
@@ -333,6 +397,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               ],
             ),
           ),
+        ),
+        Text(
+          AppLocalizations.of(context)
+              .translate('upload_csv', 'csv_size_limit'),
+          style: TextStyle(color: Colors.grey),
         ),
         Text(
           csvFileError,
@@ -457,7 +526,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   void checkPdfSize() async {
     var file = File(_path);
     final bytes = await file.lengthSync();
-    if (bytes > tenMegaBytes) {
+    if (bytes > oneMegaBytes) {
       this._isDocumentBeingUploaded = false;
       getAlertDialog(parentContext);
     } else {
@@ -476,7 +545,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           title: Text(AppLocalizations.of(context)
               .translate('create_feed', 'size_alert_title')),
           content: new Text(AppLocalizations.of(context)
-              .translate('create_feed', 'size_alert')),
+              .translate('upload_csv', 'csv_file_alert')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(

@@ -656,7 +656,8 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                                 builder: (context) => InviteAddMembers(
                                     widget.timebankId,
                                     widget.superAdminTimebankModel.communityId,
-                                    timebankModel),
+                                    timebankModel,
+                                    Theme.of(context).platform),
                               ),
                             );
                           },

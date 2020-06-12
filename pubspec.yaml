@@ -92,7 +92,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    - lib/assets/lang/en.json
     - lib/assets/google-logo-png-open-2000.png
     - lib/assets/images/profile.png
     - lib/assets/images/seva-x-logo.png
@@ -115,6 +114,7 @@ flutter:
     - lib/assets/images/recycle-bin.png
     - lib/assets/images/image_02.png
     - lib/assets/images/search.png
+    - lib/assets/images/csv.png
     - lib/assets/i18n/
     - lib/assets/images/apple-id-outline-yes_2x.png
 
