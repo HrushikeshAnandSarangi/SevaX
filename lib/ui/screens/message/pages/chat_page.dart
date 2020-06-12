@@ -1,13 +1,9 @@
-import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/image_caption_model.dart';
@@ -20,14 +16,9 @@ import 'package:sevaexchange/ui/screens/message/widgets/image_bubble.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/message_bubble.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/message_input.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/APi/feed_api.dart';
 import 'package:sevaexchange/widgets/camera/camera_page.dart';
-
-enum MessageMenu {
-  BLOCK,
-  CLEAR_CHAT,
-}
 
 class ChatPage extends StatefulWidget {
   final ChatModel chatModel;
@@ -50,8 +41,7 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  UserModel loggedInUser;
-  UserModel partnerUser;
+  // UserModel loggedInUser;
   MessageModel messageModel = MessageModel();
   String loggedInEmail;
   final TextEditingController textcontroller = new TextEditingController();
@@ -59,33 +49,13 @@ class _ChatPageState extends State<ChatPage> {
   String messageContent;
   String recieverId;
   final ChatBloc _bloc = ChatBloc();
-  // String timebankId;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    loggedInEmail = SevaCore.of(context).loggedInUser.email;
-    FirestoreManager.getUserForEmailStream(loggedInEmail).listen((userModel) {
-      if (mounted) {
-        setState(() {
-          this.loggedInUser = userModel;
-        });
-      }
-    });
-  }
 
   @override
   void initState() {
     recieverId = widget.chatModel.participants[0] != widget.senderId
         ? widget.chatModel.participants[0]
         : widget.chatModel.participants[1];
-    FirestoreManager.getUserForId(sevaUserId: recieverId).then((userModel) {
-      if (mounted) {
-        setState(() {
-          this.partnerUser = userModel;
-        });
-      }
-    });
+
     _bloc.getAllMessages(widget.chatModel.id, widget.senderId);
     _scrollController = ScrollController();
 
@@ -104,19 +74,28 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    ParticipantInfo senderInfo = getUserInfo(
+    ParticipantInfo recieverInfo = getUserInfo(
       recieverId,
       widget.chatModel.participantInfo,
     );
 
     return Scaffold(
       backgroundColor: Colors.indigo[50],
-      appBar: chatAppBar(
-        context,
-        senderInfo,
-        <Widget>[
-          chatMoreOptions(),
-        ],
+      appBar: ChatAppBar(
+        recieverInfo: recieverInfo,
+        clearChat: () {
+          _bloc.clearChat(widget.chatModel.id, widget.senderId);
+          Navigator.pop(context);
+        },
+        blockUser: () {
+          _bloc.blockMember(
+            loggedInUserEmail: SevaCore.of(context).loggedInUser.email,
+            userId: SevaCore.of(context).loggedInUser.sevaUserID,
+            blockedUserId: recieverId,
+          );
+          Navigator.pop(context);
+        },
+        isTimebankMessage: widget.chatModel.isTimebankMessage,
       ),
       body: Column(
         children: <Widget>[
@@ -147,7 +126,8 @@ class _ChatPageState extends State<ChatPage> {
                 }
 
                 if (!widget.chatModel.isTimebankMessage ||
-                    widget.senderId == loggedInUser.sevaUserID) {
+                    widget.senderId ==
+                        SevaCore.of(context).loggedInUser.sevaUserID) {
                   _bloc.markMessageAsRead(
                     chatId: widget.chatModel.id,
                     userId: SevaCore.of(context).loggedInUser.sevaUserID,
@@ -272,7 +252,7 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _getSharedNewDetails({MessageModel messageModel}) {
     return FutureBuilder<Object>(
-      future: FirestoreManager.getNewsForId(messageModel.message),
+      future: FeedApi.getFeedFromId(messageModel.message),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text(
@@ -283,7 +263,6 @@ class _ChatPageState extends State<ChatPage> {
         }
 
         NewsModel news = snapshot.data;
-        // _scrollToBottom();
         return FeedBubble(
           news: news,
           messageModel: messageModel,
@@ -300,121 +279,22 @@ class _ChatPageState extends State<ChatPage> {
     super.dispose();
   }
 
-  void blockMember() {
-    Firestore.instance
-        .collection("users")
-        .document(SevaCore.of(context).loggedInUser.email)
-        .updateData({
-      'blockedMembers': FieldValue.arrayUnion([partnerUser.sevaUserID])
-    });
-    Firestore.instance
-        .collection("users")
-        .document(partnerUser.email)
-        .updateData({
-      'blockedBy':
-          FieldValue.arrayUnion([SevaCore.of(context).loggedInUser.sevaUserID])
-    });
-    setState(() {
-      var updateUser = SevaCore.of(context).loggedInUser;
-      var blockedMembers = List<String>.from(updateUser.blockedMembers);
-      blockedMembers.add(partnerUser.sevaUserID);
-      SevaCore.of(context).loggedInUser =
-          updateUser.setBlockedMembers(blockedMembers);
-    });
-  }
+  // void blockMember() {
+  //   _bloc.blockMember(
+  //     loggedInUserEmail: SevaCore.of(context).loggedInUser.email,
+  //     userId: SevaCore.of(context).loggedInUser.sevaUserID,
+  //     blockedUserId: recieverId,
+  //   )
+  //       .then((_) {
+  //     var updateUser = SevaCore.of(context).loggedInUser;
+  //     var blockedMembers = List<String>.from(updateUser.blockedMembers);
+  //     blockedMembers.add(recieverId);
+  //     SevaCore.of(context).loggedInUser =
+  //         updateUser.setBlockedMembers(blockedMembers);
+  //     if (this.mounted) {
+  //       setState(() {});
+  //     }
+  //   });
+  // }
 
-  Future<String> showClearChatDialog(BuildContext viewContext, String title,
-      String content, String buttonLabel, String cancelLabel) {
-    return showDialog(
-      context: viewContext,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: new Text(content),
-          actions: <Widget>[
-            new FlatButton(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              color: Theme.of(context).accentColor,
-              textColor: FlavorConfig.values.buttonTextColor,
-              child: new Text(
-                buttonLabel,
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop("SUCCESS");
-              },
-            ),
-            new FlatButton(
-              child: new Text(
-                cancelLabel,
-                style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop("CANCEL");
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget chatMoreOptions() {
-    return PopupMenuButton<MessageMenu>(
-      onSelected: (MessageMenu value) {
-        switch (value) {
-          case MessageMenu.BLOCK:
-            showClearChatDialog(
-              context,
-              AppLocalizations.of(context).translate('chat', 'block') +
-                  " ${partnerUser.fullname.split(' ')[0]}.",
-              "${partnerUser.fullname.split(' ')[0]} ${AppLocalizations.of(context).translate('chat', 'block_warn')}",
-              AppLocalizations.of(context).translate('chat', 'block'),
-              AppLocalizations.of(context).translate('shared', 'cancel'),
-            ).then((value) {
-              if (value != "CANCEL") {
-                blockMember();
-                Navigator.pop(context);
-              }
-            });
-            break;
-          case MessageMenu.CLEAR_CHAT:
-            showClearChatDialog(
-              context,
-              AppLocalizations.of(context).translate('chat', 'delete_title'),
-              AppLocalizations.of(context).translate('chat', 'delete_desc'),
-              AppLocalizations.of(context).translate('chat', 'delete_title'),
-              AppLocalizations.of(context).translate('shared', 'cancel'),
-            ).then((value) {
-              if (value != "CANCEL") {
-                _bloc.clearChat(widget.chatModel.id, widget.senderId);
-                Navigator.pop(context);
-              }
-            });
-            break;
-        }
-      },
-      itemBuilder: (BuildContext context) {
-        return [
-          PopupMenuItem(
-              child: Text(
-                AppLocalizations.of(context).translate('chat', 'delete_title'),
-              ),
-              value: MessageMenu.CLEAR_CHAT),
-          ...!widget.chatModel.isTimebankMessage
-              ? [
-                  PopupMenuItem(
-                    child: Text(
-                      AppLocalizations.of(context).translate('chat', 'block'),
-                    ),
-                    value: MessageMenu.BLOCK,
-                  )
-                ]
-              : [],
-        ];
-      },
-    );
-  }
 }

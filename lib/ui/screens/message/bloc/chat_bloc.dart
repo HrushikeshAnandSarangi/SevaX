@@ -5,6 +5,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart';
+import 'package:sevaexchange/widgets/APi/user_api.dart';
 
 class ChatBloc {
   final _messages = BehaviorSubject<List<MessageModel>>();
@@ -100,6 +101,18 @@ class ChatBloc {
         }
       },
       merge: true,
+    );
+  }
+
+  Future<void> blockMember({
+    String loggedInUserEmail,
+    String userId,
+    String blockedUserId,
+  }) async {
+    return await UserApi.blockUser(
+      loggedInUserEmail: loggedInUserEmail,
+      userId: userId,
+      blockedUserId: blockedUserId,
     );
   }
 
