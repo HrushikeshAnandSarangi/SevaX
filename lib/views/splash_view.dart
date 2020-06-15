@@ -406,7 +406,7 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
-    await fetchLinkData(context);
+    await fetchLinkData();
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
     var appLanguage = AppLanguage();

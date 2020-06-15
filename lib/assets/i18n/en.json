@@ -35,7 +35,7 @@
     "email_not_valid": "Email is not valid",
     "enter_password_warn": "Enter password",
     "password_warn_6char": "Password must be 6 characters long",
-    "reset_link_message": "We\\'ve sent the reset link to your email address",
+    "reset_link_message": "We've sent the reset link to your email address",
     "terms_of_service_link": "Terms of Service",
     "privacy_policy_link": "Privacy Policy",
     "payment_policy_link": "Payment Policy"

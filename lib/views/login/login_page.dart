@@ -1,28 +1,29 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
+
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/internationalization/applanguage.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/deep_link_manager/onboard_via_link.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
 import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'package:sevaexchange/internationalization/applanguage.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage();
@@ -80,7 +81,8 @@ class _LoginPageState extends State<LoginPage> {
     //Todo check this line
     // ScreenUtil.init(context);
     // ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: true);
-
+    // getDynamicLinkData(context);
+    fetchBulkInviteLinkData();
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: true,
@@ -553,8 +555,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             horizontalLine(),
-            Text(
-                AppLocalizations.of(context).translate('shared','or')),
+            Text(AppLocalizations.of(context).translate('shared', 'or')),
             horizontalLine()
           ],
         ),
@@ -948,5 +949,95 @@ class _LoginPageState extends State<LoginPage> {
         builder: (context) => SevaWebView(aboutMode),
       ),
     );
+  }
+
+  void getDynamicLinkData(
+    BuildContext context,
+  ) async {
+    await fetchBulkInviteLinkData();
+  }
+
+  Future<void> fetchBulkInviteLinkData() async {
+    // FirebaseDynamicLinks.getInitialLInk does a call to firebase to get us the real link because we have shortened it.
+    var link = await FirebaseDynamicLinks.instance.getInitialLink();
+    //buildContext = context;
+    // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
+    await handleLinkData(data: link);
+    FirebaseDynamicLinks.instance.onLink(onError: (_) async {
+      print("Error!!!");
+    }, onSuccess: (PendingDynamicLinkData dynamicLink) async {
+      return handleBulkInviteLinkData(
+        data: dynamicLink,
+      );
+    });
+
+    // This will handle incoming links if the application is already opened
+  }
+
+  Future<bool> handleBulkInviteLinkData({
+    PendingDynamicLinkData data,
+  }) async {
+    final Uri uri = data?.link;
+    if (uri != null) {
+      final queryParams = uri.queryParameters;
+      if (queryParams.length > 0) {
+        String invitedMemberEmail = queryParams["invitedMemberEmail"];
+        String communityId = queryParams["communityId"];
+        String primaryTimebankId = queryParams["primaryTimebankId"];
+        if (queryParams.containsKey("isFromBulkInvite") &&
+            queryParams["isFromBulkInvite"] == 'true') {
+          resetPassword(
+            invitedMemberEmail,
+          );
+        }
+      }
+    }
+    return false;
+  }
+
+  Future<void> resetPasswordd(String email, BuildContext mContext) async {
+    await FirebaseAuth.instance
+        .sendPasswordResetEmail(email: email)
+        .then((onValue) {
+      showDialog<AlertDialog>(
+        context: mContext,
+        builder: (BuildContext context) {
+          // return object of type Dialog
+          return AlertDialog(
+            title: Text(AppLocalizations.of(mContext)
+                .translate('login', 'reset_password')),
+            content: Container(
+              height: MediaQuery.of(mContext).size.height / 10,
+              width: MediaQuery.of(mContext).size.width / 12,
+              child: Text(
+                AppLocalizations.of(mContext)
+                    .translate('login', 'reset_link_message'),
+              ),
+            ),
+            actions: <Widget>[
+              // usually buttons at the bottom of the dialog
+              new FlatButton(
+                child: new Text(
+                    AppLocalizations.of(mContext).translate('shared', 'close')),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+
+//    _scaffoldKey.currentState.showSnackBar(SnackBar(
+//      content: Text(AppLocalizations.of(context)
+//          .translate('login', 'reset_link_message')),
+//      action: SnackBarAction(
+//        label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+//        onPressed: () {
+//          _scaffoldKey.currentState.hideCurrentSnackBar();
+//        },
+//      ),
+//    ));
+    });
   }
 }
