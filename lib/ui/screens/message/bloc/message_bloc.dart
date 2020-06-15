@@ -12,10 +12,14 @@ class MessageBloc extends BlocBase {
   final _adminMessage = BehaviorSubject<List<AdminMessageWrapperModel>>();
   final _personalMessageCount = BehaviorSubject<int>();
   final _adminMessageCount = BehaviorSubject<int>();
+  final _frequentContacts = BehaviorSubject<List<ParticipantInfo>>();
 
   Stream<List<ChatModel>> get personalMessage => _personalMessage.stream;
   Stream<List<AdminMessageWrapperModel>> get adminMessage =>
       _adminMessage.stream;
+
+  Stream<List<ParticipantInfo>> get frequentContacts =>
+      _frequentContacts.stream;
 
   Stream<int> get messageCount => CombineLatestStream.combine2(
       _personalMessageCount, _adminMessageCount, (int p, int a) => p + a);
@@ -29,6 +33,7 @@ class MessageBloc extends BlocBase {
         .snapshots()
         .listen((QuerySnapshot querySnapshot) {
       List<ChatModel> chats = [];
+      List<ParticipantInfo> frequentContacts = [];
       int unreadCount = 0;
       log(querySnapshot.documents.length.toString());
       querySnapshot.documents.forEach((DocumentSnapshot snapshot) {
@@ -50,10 +55,15 @@ class MessageBloc extends BlocBase {
               chat.unreadStatus[userModel.sevaUserID] > 0) {
             unreadCount++;
           }
+          if (frequentContacts.length < 5) {
+            frequentContacts.add(chat.participantInfo
+                .firstWhere((ParticipantInfo info) => info.id == senderId));
+          }
           chats.add(chat);
         }
       });
       if (!_personalMessage.isClosed) _personalMessage.add(chats);
+      if (!_frequentContacts.isClosed) _frequentContacts.add(frequentContacts);
       if (!_personalMessageCount.isClosed)
         _personalMessageCount.add(unreadCount);
     });
@@ -94,6 +104,7 @@ class MessageBloc extends BlocBase {
     _adminMessage.close();
     _personalMessageCount.close();
     _adminMessageCount.close();
+    _frequentContacts.close();
   }
 }
 

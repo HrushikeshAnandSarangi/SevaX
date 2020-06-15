@@ -36,8 +36,9 @@ Future<void> createAndOpenChat({
     communityId: communityId,
     participantInfo: [sender, reciever],
     isTimebankMessage: isTimebankMessage,
-  );
-  model.id = "${participants[0]}*${participants[1]}*$communityId";
+  )
+    ..id = "${participants[0]}*${participants[1]}*$communityId"
+    ..isGroupMessage = false;
 
   await createNewChat(chat: model);
   if (onChatCreate != null) {

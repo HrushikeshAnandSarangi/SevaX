@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
@@ -15,6 +14,7 @@ import 'package:sevaexchange/ui/screens/message/widgets/feed_shared_bubble.dart'
 import 'package:sevaexchange/ui/screens/message/widgets/image_bubble.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/message_bubble.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/message_input.dart';
+import 'package:sevaexchange/ui/utils/colors.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/APi/feed_api.dart';
@@ -49,12 +49,18 @@ class _ChatPageState extends State<ChatPage> {
   String messageContent;
   String recieverId;
   final ChatBloc _bloc = ChatBloc();
+  Map<String, ParticipantInfo> participantsInfoById = {};
 
   @override
   void initState() {
     recieverId = widget.chatModel.participants[0] != widget.senderId
         ? widget.chatModel.participants[0]
         : widget.chatModel.participants[1];
+
+    widget.chatModel.participantInfo.forEach((ParticipantInfo info) {
+      participantsInfoById[info.id] = info
+        ..color = colorGeneratorFromName(info.name);
+    });
 
     _bloc.getAllMessages(widget.chatModel.id, widget.senderId);
     _scrollController = ScrollController();
@@ -144,7 +150,7 @@ class _ChatPageState extends State<ChatPage> {
                     itemCount: snapshot.data.length,
                     itemBuilder: (_, int index) {
                       MessageModel messageModel = snapshot.data[index];
-                      print(messageModel.type);
+
                       switch (messageModel.type) {
                         case MessageType.FEED:
                           return _getSharedNewDetails(
@@ -155,6 +161,10 @@ class _ChatPageState extends State<ChatPage> {
                             message: messageModel.message,
                             isSent: messageModel.fromId == widget.senderId,
                             timestamp: messageModel.timestamp,
+                            isGroupMessage: widget.chatModel.isGroupMessage,
+                            info: widget.chatModel.isGroupMessage
+                                ? participantsInfoById[messageModel.fromId]
+                                : null,
                           );
                           break;
 
@@ -162,6 +172,10 @@ class _ChatPageState extends State<ChatPage> {
                           return ImageBubble(
                             messageModel: messageModel,
                             isSent: messageModel.fromId == widget.senderId,
+                            isGroupMessage: widget.chatModel.isGroupMessage,
+                            info: widget.chatModel.isGroupMessage
+                                ? participantsInfoById[messageModel.fromId]
+                                : null,
                           );
                           break;
                         case MessageType.URL:
@@ -196,7 +210,6 @@ class _ChatPageState extends State<ChatPage> {
                 )
                     .then((ImageCaptionModel model) {
                   if (model != null) {
-                    log(model.caption);
                     pushNewMessage(
                       messageContent: model.caption.isEmpty
                           ? 'Shared an image'
@@ -224,11 +237,13 @@ class _ChatPageState extends State<ChatPage> {
 
   _scrollToBottom() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController?.position?.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
     });
   }
 

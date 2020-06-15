@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 
 class UserApi {
@@ -52,5 +53,24 @@ class UserApi {
       merge: true,
     );
     batch.commit();
+  }
+
+  static Future<List<ParticipantInfo>> getShortDetailsOfAllMembersOfCommunity(
+      String communityId) async {
+    List<ParticipantInfo> members = [];
+    QuerySnapshot querySnapshot = await Firestore.instance
+        .collection("users")
+        .where("communities", arrayContains: communityId)
+        .orderBy("fullname")
+        .getDocuments();
+
+    querySnapshot.documents.forEach((DocumentSnapshot document) {
+      members.add(ParticipantInfo(
+        id: document.data["sevauserid"],
+        name: document.data["fullname"],
+        photoUrl: document.data["photourl"],
+      ));
+    });
+    return members;
   }
 }

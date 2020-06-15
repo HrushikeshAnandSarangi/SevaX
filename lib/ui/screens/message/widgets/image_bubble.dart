@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
+import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/decorations.dart';
-import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 
 class ImageBubble extends StatelessWidget {
   final bool isSent;
   final MessageModel messageModel;
+  final bool isGroupMessage;
+  final ParticipantInfo info;
 
-  const ImageBubble({Key key, this.isSent, this.messageModel})
-      : super(key: key);
+  const ImageBubble(
+      {Key key, this.isSent, this.messageModel, this.isGroupMessage, this.info})
+      : assert(isGroupMessage != null),
+        assert(isGroupMessage ? info != null : info == null),
+        super(key: key);
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -26,6 +31,15 @@ class ImageBubble extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            isGroupMessage && !isSent
+                ? Text(
+                    info.name,
+                    style: TextStyle(
+                      color: info.color,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                : Container(),
             AspectRatio(
               aspectRatio: 1,
               child: Container(
@@ -53,14 +67,9 @@ class ImageBubble extends StatelessWidget {
             Align(
               alignment: Alignment.centerRight,
               child: Text(
-                DateFormat(
-                  'hh:mm a MMMM dd',
-                ).format(
-                  getDateTimeAccToUserTimezone(
-                    dateTime: DateTime.fromMillisecondsSinceEpoch(
-                        messageModel.timestamp),
-                    timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-                  ),
+                formatChatDate(
+                  messageModel.timestamp,
+                  SevaCore.of(context).loggedInUser.timezone,
                 ),
                 style: TextStyle(fontSize: 10, color: Colors.grey[700]),
               ),

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:sevaexchange/ui/utils/decorations.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
@@ -32,7 +31,7 @@ class FeedBubble extends StatelessWidget {
           Container(
             decoration: isSent
                 ? MessageDecoration.sendDecoration()
-                : MessageDecoration.receiveDecoration,
+                : MessageDecoration.receiveDecoration(),
             padding: isSent && news != null
                 ? EdgeInsets.fromLTRB(0, 0, 5, 2)
                 : messageModel.fromId != senderId && news != null
@@ -41,24 +40,11 @@ class FeedBubble extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                news != null
-                    ? getFeedCard(context)
-                    : Text(
-                        messageModel.message,
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
+                getFeedCard(context),
                 Text(
-                  DateFormat(
-                          'h:mm a',
-                          Locale(AppConfig.prefs.getString('language_code'))
-                              .toLanguageTag())
-                      .format(
-                    getDateTimeAccToUserTimezone(
-                      dateTime: DateTime.fromMillisecondsSinceEpoch(
-                        messageModel.timestamp,
-                      ).toLocal(),
-                      timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-                    ),
+                  formatChatDate(
+                    messageModel.timestamp,
+                    SevaCore.of(context).loggedInUser.timezone,
                   ),
                   style: TextStyle(fontSize: 10, color: Colors.grey[700]),
                 ),

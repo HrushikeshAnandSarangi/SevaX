@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 class ChatModel {
   String id;
   List<String> participants;
@@ -9,20 +11,22 @@ class ChatModel {
   bool isTimebankMessage;
   String timebankId;
   String communityId;
+  bool isGroupMessage;
+
   int timestamp;
 
-  ChatModel({
-    this.participants,
-    this.participantInfo,
-    this.lastMessage,
-    this.unreadStatus,
-    this.softDeletedBy,
-    this.deletedBy,
-    this.isTimebankMessage = false,
-    this.timebankId,
-    this.communityId,
-    this.timestamp,
-  });
+  ChatModel(
+      {this.participants,
+      this.participantInfo,
+      this.lastMessage,
+      this.unreadStatus,
+      this.softDeletedBy,
+      this.deletedBy,
+      this.isTimebankMessage = false,
+      this.timebankId,
+      this.communityId,
+      this.timestamp,
+      this.isGroupMessage});
 
   factory ChatModel.fromMap(Map<String, dynamic> map) => ChatModel(
         participants: List<String>.from(map["participants"].map((x) => x)),
@@ -37,6 +41,8 @@ class ChatModel {
             : List<String>.from(map["softDeletedBy"].map((x) => x)),
         deletedBy: map.containsKey("deletedBy") ? map["deletedBy"] : {},
         isTimebankMessage: map["isTimebankMessage"],
+        isGroupMessage:
+            map.containsKey("isGroupMessage") ? map["isGroupMessage"] : false,
         timebankId: map["timebankId"],
         communityId: map["communityId"],
         timestamp: map["timestamp"],
@@ -50,6 +56,7 @@ class ChatModel {
         "isTimebankMessage": isTimebankMessage,
         "timebankId": timebankId,
         "communityId": communityId,
+        "isGroupMessage": isGroupMessage ?? false,
       };
 }
 
@@ -58,6 +65,7 @@ class ParticipantInfo {
   String name;
   String photoUrl;
   ChatType type;
+  Color color;
 
   ParticipantInfo({
     this.id,

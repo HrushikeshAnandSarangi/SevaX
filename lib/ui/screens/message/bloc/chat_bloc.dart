@@ -17,7 +17,6 @@ class ChatBloc {
   Future<void> getAllMessages(String chatId, String userId) async {
     DocumentSnapshot chatModelSnapshot =
         await Firestore.instance.collection("chatsnew").document(chatId).get();
-    print("chat data for $chatId => ${chatModelSnapshot.data}");
     ChatModel chatModel = ChatModel.fromMap(chatModelSnapshot.data);
     chatModel.id = chatModelSnapshot.documentID;
     Stream<QuerySnapshot> querySnapshot;
@@ -47,7 +46,7 @@ class ChatBloc {
         model.id = document.documentID;
         messages.add(model);
       });
-      _messages.add(messages);
+      if (!_messages.isClosed) _messages.add(messages);
     });
   }
 
