@@ -112,6 +112,30 @@ class TaskModel extends DataModel {
   }
 }
 
+class End extends DataModel {
+  String endType;
+  var on;
+  int after;
+
+  End(this.endType,this.on,this.after);
+
+  @override
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> object = {};
+    if (this.endType != null && this.endType.isNotEmpty) {
+      object['endType'] = this.endType;
+    }
+    if (this.on != null && this.on.isNotEmpty) {
+      object['endType'] = this.endType;
+    }
+    if (this.after != null) {
+      object['endType'] = this.after;
+    }
+
+  }
+
+}
+
 class RequestModel extends DataModel {
   String id;
   String title;
@@ -140,6 +164,10 @@ class RequestModel extends DataModel {
   String projectId = "";
   String address;
   bool softDelete;
+  bool isRecurring;
+  List<int> recurringDays;
+  int occurenceCount = 1;
+  End end;
 
   RequestMode requestMode;
 

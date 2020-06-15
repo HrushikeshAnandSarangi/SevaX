@@ -12,6 +12,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
+import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
@@ -350,6 +351,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                   .translate('create_request', 'duration'),
                             ),
                             SizedBox(height: 12),
+                            RepeatWidget(),
                             SizedBox(height: 20),
                             Text(
                               AppLocalizations.of(context)
@@ -611,6 +613,15 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
     requestModel.requestStart = OfferDurationWidgetState.starttimestamp;
     requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
+
+    requestModel.isRecurring = RepeatWidgetState.isRecurring;
+    if(requestModel.isRecurring) {      
+      requestModel.recurringDays = RepeatWidgetState.getRecurringdays();
+        requestModel.occurenceCount = 1;
+        requestModel.end.endType = RepeatWidgetState.endType == 0 ? "on" : "after";
+        requestModel.end.on = requestModel.end.endType=="on" ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch:null;
+        requestModel.end.after = (requestModel.end.endType =="after" ? RepeatWidgetState.after:null) as int;
+    }
 
     if (_formKey.currentState.validate()) {
       // validate request start and end date
