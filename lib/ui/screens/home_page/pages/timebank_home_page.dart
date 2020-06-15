@@ -105,7 +105,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
         return <Widget>[
           SliverOverlapAbsorber(
             handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-            child: SliverAppBar(
+            sliver: SliverAppBar(
               title: Text(
                 AppLocalizations.of(context).translate('tasks', 'your_tasks'),
                 style: TextStyle(
