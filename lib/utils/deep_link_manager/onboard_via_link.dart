@@ -1,14 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 
-Future<void> fetchLinkData() async {
+BuildContext buildContext;
+Future<void> fetchLinkData(BuildContext context) async {
   // FirebaseDynamicLinks.getInitialLInk does a call to firebase to get us the real link because we have shortened it.
   var link = await FirebaseDynamicLinks.instance.getInitialLink();
-
+  buildContext = context;
   // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
   await handleLinkData(data: link);
   FirebaseDynamicLinks.instance.onLink(onError: (_) async {
@@ -28,6 +31,10 @@ Future<bool> handleLinkData({PendingDynamicLinkData data}) async {
       String invitedMemberEmail = queryParams["invitedMemberEmail"];
       String communityId = queryParams["communityId"];
       String primaryTimebankId = queryParams["primaryTimebankId"];
+      if (queryParams.containsKey("isFromBulkInvite") &&
+          queryParams["isFromBulkInvite"] == 'true') {
+        resetPassword(invitedMemberEmail);
+      }
 
       var firebaseUserCred = await FirebaseAuth.instance.currentUser();
 
@@ -97,4 +104,50 @@ Future<bool> initRegisterationMemberToCommunity({
     newMemberJoinedEmail: newMemberJoinedEmail,
     primaryTimebankId: primaryTimebankId,
   ).then((onValue) => true).catchError((onError) => false);
+}
+
+Future<void> resetPassword(String email) async {
+  await FirebaseAuth.instance
+      .sendPasswordResetEmail(email: email)
+      .then((onValue) {
+    showDialog(
+      context: buildContext,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)
+              .translate('login', 'reset_password')),
+          content: Container(
+            height: MediaQuery.of(context).size.height / 10,
+            width: MediaQuery.of(context).size.width / 12,
+            child: Text(
+              AppLocalizations.of(context)
+                  .translate('login', 'reset_link_message'),
+            ),
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text(
+                  AppLocalizations.of(context).translate('shared', 'close')),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+//    _scaffoldKey.currentState.showSnackBar(SnackBar(
+//      content: Text(AppLocalizations.of(context)
+//          .translate('login', 'reset_link_message')),
+//      action: SnackBarAction(
+//        label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+//        onPressed: () {
+//          _scaffoldKey.currentState.hideCurrentSnackBar();
+//        },
+//      ),
+//    ));
+  });
 }

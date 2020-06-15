@@ -1101,6 +1101,7 @@
     "download_progress": "Downloading",
     "download_success": "Downloading is complete.",
     "csv_file_alert": "Files larger than 1 MB are not allowed",
-    "csv_size_limit": "NOTE : Maximum file size is 1 MB"
+    "csv_size_limit": "NOTE : Maximum file size is 1 MB",
+    "csv_progress": "Uploading CSV"
   }
 }
