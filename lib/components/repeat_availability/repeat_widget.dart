@@ -230,7 +230,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                           Container(
                             width: 180.0,
                             alignment: Alignment.topLeft,
-                            margin: EdgeInsets.fromLTRB(38.0, 8.0, 8.0, 8.0),
+                            margin: EdgeInsets.fromLTRB(32.0, 8.0, 8.0, 8.0),
                             padding: const EdgeInsets.fromLTRB(
                                 12.0, 12.0, 12.0, 12.0),
                             decoration: BoxDecoration(
@@ -268,7 +268,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                           Container(
                             width: 180.0,
                             alignment: Alignment.topLeft,
-                            margin: EdgeInsets.fromLTRB(20.0, 8.0, 8.0, 8.0),
+                            margin: EdgeInsets.fromLTRB(15.0, 8.0, 8.0, 8.0),
                             padding:
                                 const EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 0.0),
                             decoration: BoxDecoration(
@@ -277,7 +277,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                             ),
                             child: InkWell(
                                 child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
                                 Container(
                                   child: DropdownButton(
@@ -298,7 +298,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                   ),
                                 ),
                                 Text("OCCURENCES",
-                                    textAlign: TextAlign.end,
+                                    textAlign: TextAlign.start,
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
