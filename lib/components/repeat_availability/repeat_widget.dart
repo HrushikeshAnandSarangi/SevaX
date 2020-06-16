@@ -40,6 +40,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
   bool titleCheck = true;
   static int endType = 0;
   static String after = '1';
+  static String selectedDays = 'Monday';
 
   double _result = 0.0;
 
@@ -133,7 +134,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                         ),
                         child: InkWell(
                             onTap: _selectOnAfter,
-                            child: Text("Weekly on Monday",
+                            child: Text("Weekly on $selectedDays",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: 16,
@@ -191,7 +192,9 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.bold,
                                                 fontFamily: 'Europa',
-                                                color: Colors.black,
+                                                color: _selected[index]
+                                                    ? Colors.white
+                                                    : Colors.black,
                                               )),
                                         ),
                                         onTap: () => setState(() {
@@ -225,29 +228,33 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Europa',
-                                color: Colors.black,
+                                color: endType == 0
+                                    ? Colors.black
+                                    : Colors.black12,
                               )),
                           Container(
                             width: 180.0,
                             alignment: Alignment.topLeft,
                             margin: EdgeInsets.fromLTRB(32.0, 8.0, 8.0, 8.0),
                             padding: const EdgeInsets.fromLTRB(
-                                12.0, 12.0, 12.0, 12.0),
+                                12.0, 15.0, 12.0, 15.0),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(2.0),
                               color: Colors.black12,
                             ),
                             child: new InkWell(
                                 onTap: () async => await _selectDate(context),
-                                child: Text(
-                                    "${dateFormat.format(selectedDate)}",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Europa',
-                                      color: Colors.black12,
-                                    ))),
+                                child:
+                                    Text("${dateFormat.format(selectedDate)}",
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Europa',
+                                          color: endType == 0
+                                              ? Colors.black54
+                                              : Colors.black12,
+                                        ))),
                           )
                         ],
                       ),
@@ -263,7 +270,9 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Europa',
-                                color: Colors.black,
+                                color: endType == 1
+                                    ? Colors.black
+                                    : Colors.black12,
                               )),
                           Container(
                             width: 180.0,
@@ -303,7 +312,9 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'Europa',
-                                      color: Colors.black12,
+                                      color: endType == 1
+                                          ? Colors.black54
+                                          : Colors.black12,
                                     ))
                               ],
                             )),
