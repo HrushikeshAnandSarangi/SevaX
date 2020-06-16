@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   bool _isLoading;
   bool _permissionReady;
   String _localPath;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -150,6 +153,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     parentContext = context;
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
           FlavorConfig.values.timebankName == "Yang 2020"
@@ -311,6 +315,22 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         ),
         RaisedButton(
           onPressed: () async {
+            var connResult = await Connectivity().checkConnectivity();
+            if (connResult == ConnectivityResult.none) {
+              _scaffoldKey.currentState.showSnackBar(
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)
+                      .translate('shared', 'check_internet')),
+                  action: SnackBarAction(
+                    label: AppLocalizations.of(context)
+                        .translate('shared', 'dismiss'),
+                    onPressed: () =>
+                        _scaffoldKey.currentState.hideCurrentSnackBar(),
+                  ),
+                ),
+              );
+              return;
+            }
             _requestDownload(
                 //   "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/news_documents%2Fraj%40yopmail.com1591160274804FAQ.pdf?alt=media&token=fbd08ff3-3686-4168-b3a9-daa875e68ec0");
                 // 'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/profile_images%2Fbusiness@uipep.com.jpg?alt=media&token=8ba6d965-ff69-4cb2-9980-035c71d13458');
@@ -414,6 +434,22 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                 height: 30,
                 child: RaisedButton(
                   onPressed: () async {
+                    var connResult = await Connectivity().checkConnectivity();
+                    if (connResult == ConnectivityResult.none) {
+                      _scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text(AppLocalizations.of(context)
+                              .translate('shared', 'check_internet')),
+                          action: SnackBarAction(
+                            label: AppLocalizations.of(context)
+                                .translate('shared', 'dismiss'),
+                            onPressed: () =>
+                                _scaffoldKey.currentState.hideCurrentSnackBar(),
+                          ),
+                        ),
+                      );
+                      return;
+                    }
                     if (csvFileModel.csvUrl == '' ||
                         csvFileModel.csvTitle == '') {
                       setState(() {

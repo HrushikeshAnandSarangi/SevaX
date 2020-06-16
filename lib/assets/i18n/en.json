@@ -394,7 +394,8 @@
     "title_about": "Title",
     "mission_statement": "Mission Statement",
     "organizer": "Organiser",
-    "delete_project": "Delete Project"
+    "delete_project": "Delete Project",
+    "new_project": "New Project"
   },
   "tasks": {
     "error": "Error: ",
@@ -1103,5 +1104,12 @@
     "csv_file_alert": "Files larger than 1 MB are not allowed",
     "csv_size_limit": "NOTE : Maximum file size is 1 MB",
     "csv_progress": "Uploading CSV"
+  },
+
+  "project_template": {
+    "template_title": "Provide a unique name for the template",
+    "template_hint": "Template Name",
+    "name_error": "Template name cannot be empty",
+    "already_exists": "Template name already exists"
   }
 }
