@@ -113,16 +113,16 @@ class TaskModel extends DataModel {
 }
 
 class End extends DataModel {
-  String endType;
+  String endType ="on";
   var on;
   int after;
 
-  End(this.endType,this.on,this.after);
+  End({this.endType,this.on,this.after});
 
   @override
   Map<String, dynamic> toMap() {
     Map<String, dynamic> object = {};
-    if (this.endType != null && this.endType.isNotEmpty) {
+    if (this.endType != null) {
       object['endType'] = this.endType;
     }
     if (this.on != null && this.on.isNotEmpty) {
@@ -132,6 +132,17 @@ class End extends DataModel {
       object['endType'] = this.after;
     }
 
+  }
+  End.fromMap(Map<String, dynamic> map) {
+    if (map.containsKey('endType')) {
+      this.endType = map['endType'];
+    }
+    if (map.containsKey('on')) {
+      this.on = map['on'];
+    }
+    if (map.containsKey('after')) {
+      this.after = map['after'];
+    }
   }
 
 }
@@ -196,7 +207,11 @@ class RequestModel extends DataModel {
       this.root_timebank_id,
       this.projectId,
       this.address,
-      this.softDelete});
+      this.softDelete,
+      this.isRecurring,
+      this.recurringDays,
+      this.occurenceCount,
+      this.end});
 
   RequestModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
@@ -312,6 +327,20 @@ class RequestModel extends DataModel {
       this.location = Geoflutterfire()
           .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
     }
+    if (map.containsKey('isRecurring')) {
+      this.isRecurring = map['isRecurring'];
+    }
+    if (map.containsKey('recurringDays')) {
+      this.recurringDays = map['recurringDays'];
+    }
+    if (map.containsKey('occurenceCount')) {
+      this.occurenceCount = map['occurenceCount'];
+    }
+    if (map.containsKey('end')) {
+      this.end = map['end'];
+    }else{
+      this.end = End();
+    }
   }
 
   RequestModel.fromMapElasticSearch(Map<String, dynamic> map) {
@@ -425,6 +454,20 @@ class RequestModel extends DataModel {
       this.location = Geoflutterfire()
           .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
     }
+    if (map.containsKey('isRecurring')) {
+      this.isRecurring = map['isRecurring'];
+    }
+    if (map.containsKey('recurringDays')) {
+      this.recurringDays = map['recurringDays'];
+    }
+
+    if (map.containsKey('occurenceCount')) {
+      this.occurenceCount = map['occurenceCount'];
+    }
+
+    if (map.containsKey('end')) {
+      this.end = map['end'];
+    }
   }
 
   @override
@@ -536,6 +579,15 @@ class RequestModel extends DataModel {
     }
     if (this.id != null) {
       object['id'] = this.id;
+    }
+    if (this.isRecurring != null) {
+      object['isRecurring'] = this.isRecurring;
+    }if (this.recurringDays != null) {
+      object['recurringDays'] = this.recurringDays;
+    }if (this.occurenceCount != null) {
+      object['occurenceCount'] = this.occurenceCount;
+    }if (this.end != null) {
+      object['end'] = this.end;
     }
     return object;
   }

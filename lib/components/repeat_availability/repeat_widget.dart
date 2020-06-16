@@ -12,6 +12,7 @@ class RepeatWidget extends StatefulWidget {
 
 class RepeatWidgetState extends State<RepeatWidget> {
   List<String> dayNameList = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  List<String> daysName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   List<String> occurenccesList = [
     '1',
     '2',
@@ -26,13 +27,13 @@ class RepeatWidgetState extends State<RepeatWidget> {
   ];
 
   static List<bool> _selected;
-  static var recurringDays;
+  static var recurringDays = new List();
 
   @override
   void initState() {
     super.initState();
     _selected = List.generate(dayNameList.length, (i) => false);
-    recurringDays = new List(7);
+//    recurringDays = new List(7);
   }
 
   static bool isRecurring = true;
@@ -58,10 +59,28 @@ class RepeatWidgetState extends State<RepeatWidget> {
         x++;
       }
     }
+//    recurringDays.removeWhere((value) => value == null);
     print("list of data $recurringDays");
   }
 
   void _selectOnAfter() {
+    setState(() {
+      if (viewVisible) {
+        viewVisible = false;
+      } else {
+        viewVisible = true;
+      }
+      titleCheck = !viewVisible;
+      String days = "";
+      for(int i=0;i<7;i++){
+        if(_selected[i]){
+          days = days+" "+daysName[i];
+        }
+      }
+      selectedDays = days;
+    });
+  }
+  void _cancelOnAfter() {
     setState(() {
       if (viewVisible) {
         viewVisible = false;
@@ -126,6 +145,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(20.0, 8.0, 8.0, 8.0),
                       child: Container(
+                        width: 180.0,
                         alignment: Alignment.topLeft,
                         padding: const EdgeInsets.fromLTRB(12.0, 8.0, 8.0, 8.0),
                         decoration: BoxDecoration(
@@ -329,7 +349,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                             Container(
                                 margin: EdgeInsets.all(8.0),
                                 child: InkWell(
-                                  onTap: _selectOnAfter,
+                                  onTap: _cancelOnAfter,
                                   child: Text("CANCEL",
                                       style: TextStyle(
                                         fontSize: 16,
