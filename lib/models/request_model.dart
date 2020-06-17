@@ -114,7 +114,7 @@ class TaskModel extends DataModel {
 
 class End extends DataModel {
   String endType ="on";
-  var on;
+  int on;
   int after;
 
   End({this.endType,this.on,this.after});
@@ -125,7 +125,7 @@ class End extends DataModel {
     if (this.endType != null) {
       object['endType'] = this.endType;
     }
-    if (this.on != null && this.on.isNotEmpty) {
+    if (this.on != null) {
       object['on'] = this.on;
     }
     if (this.after != null) {
