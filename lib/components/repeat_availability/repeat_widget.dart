@@ -27,7 +27,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
   ];
 
   static List<bool> _selected;
-  static var recurringDays = new List();
+  static List<int> recurringDays = [];
 
   @override
   void initState() {
@@ -53,9 +53,10 @@ class RepeatWidgetState extends State<RepeatWidget> {
 
   static getRecurringdays() {
     var x = 0;
+    recurringDays.clear();
     for (var i = 0; i < _selected.length; i++) {
       if (_selected[i]) {
-        recurringDays[x] = i;
+        recurringDays.add(i);
         x++;
       }
     }

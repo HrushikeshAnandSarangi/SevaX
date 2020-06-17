@@ -338,8 +338,6 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey('end')) {
       this.end = map['end'];
-    }else{
-      this.end = End();
     }
   }
 
