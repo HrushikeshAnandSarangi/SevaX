@@ -10,9 +10,9 @@ import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/chat_app_bar.dart';
-import 'package:sevaexchange/ui/screens/message/widgets/feed_shared_bubble.dart';
-import 'package:sevaexchange/ui/screens/message/widgets/image_bubble.dart';
-import 'package:sevaexchange/ui/screens/message/widgets/message_bubble.dart';
+import 'package:sevaexchange/ui/screens/message/widgets/chat_bubbles/feed_shared_bubble.dart';
+import 'package:sevaexchange/ui/screens/message/widgets/chat_bubbles/image_bubble.dart';
+import 'package:sevaexchange/ui/screens/message/widgets/chat_bubbles/message_bubble.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/message_input.dart';
 import 'package:sevaexchange/ui/utils/colors.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
@@ -41,7 +41,6 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  // UserModel loggedInUser;
   MessageModel messageModel = MessageModel();
   String loggedInEmail;
   final TextEditingController textcontroller = new TextEditingController();
@@ -293,23 +292,4 @@ class _ChatPageState extends State<ChatPage> {
     _bloc.dispose();
     super.dispose();
   }
-
-  // void blockMember() {
-  //   _bloc.blockMember(
-  //     loggedInUserEmail: SevaCore.of(context).loggedInUser.email,
-  //     userId: SevaCore.of(context).loggedInUser.sevaUserID,
-  //     blockedUserId: recieverId,
-  //   )
-  //       .then((_) {
-  //     var updateUser = SevaCore.of(context).loggedInUser;
-  //     var blockedMembers = List<String>.from(updateUser.blockedMembers);
-  //     blockedMembers.add(recieverId);
-  //     SevaCore.of(context).loggedInUser =
-  //         updateUser.setBlockedMembers(blockedMembers);
-  //     if (this.mounted) {
-  //       setState(() {});
-  //     }
-  //   });
-  // }
-
 }

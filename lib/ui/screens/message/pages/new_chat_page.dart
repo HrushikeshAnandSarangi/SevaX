@@ -1,17 +1,19 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
-import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
+import 'package:sevaexchange/ui/screens/message/pages/create_new_chat_page.dart';
 import 'package:sevaexchange/ui/screens/message/pages/group_members_page.dart';
 import 'package:sevaexchange/ui/screens/message/pages/timebank_members_page.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/member_list_builder.dart';
+import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_builder.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
 class NewChatPage extends StatefulWidget {
+  final List<ParticipantInfo> frequentContacts;
+
+  const NewChatPage({Key key, this.frequentContacts}) : super(key: key);
   @override
   _NewChatPageState createState() => _NewChatPageState();
 }
@@ -28,39 +30,49 @@ class _NewChatPageState extends State<NewChatPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 8),
-            GestureDetector(
-              onTap: () {
-                log("new group chat");
-              },
-              child: Container(
-                height: 50,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      CircleAvatar(
-                        backgroundColor: Colors.grey[300],
+            _bloc.isSelectionEnabled
+                ? SelectedMemberListBuilder()
+                : Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => CreateNewChatPage(
+                              frequentContacts: widget.frequentContacts,
+                              isSelectionEnabled: true,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        height: 50,
                         child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Image.asset(groupIcon),
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              CircleAvatar(
+                                backgroundColor: Colors.grey[300],
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Image.asset(groupIcon),
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Text(
+                                "Multi-User Messaging",
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      SizedBox(width: 12),
-                      Text(
-                        "Multi-User Messaging",
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
-            SizedBox(height: 8),
             Container(
               height: 30,
               width: MediaQuery.of(context).size.width,
@@ -75,22 +87,17 @@ class _NewChatPageState extends State<NewChatPage> {
                 ),
               ),
             ),
-            StreamBuilder(
-              stream: BlocProvider.of<MessageBloc>(context).frequentContacts,
-              builder: (_, AsyncSnapshot<List<ParticipantInfo>> snapshot) {
-                if (snapshot.data == null || snapshot.data.length == 0) {
-                  return Center(
-                      child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Text("No Frequent Contacts"),
-                  ));
-                }
-                return MemberListBuilder(
-                  infos: snapshot.data,
-                  physics: NeverScrollableScrollPhysics(),
-                );
-              },
-            ),
+            widget.frequentContacts.length > 0
+                ? MemberListBuilder(
+                    infos: widget.frequentContacts,
+                    physics: NeverScrollableScrollPhysics(),
+                  )
+                : Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Text("No Frequent Contacts"),
+                    ),
+                  ),
             StreamBuilder<List<TimebankModel>>(
               stream: _bloc.timebanksOfUser,
               builder: (context, snapshot) {

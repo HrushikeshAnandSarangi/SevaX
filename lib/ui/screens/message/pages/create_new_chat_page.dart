@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
-import 'package:sevaexchange/ui/screens/message/widgets/create_new_chat_search_field.dart';
+import 'package:sevaexchange/ui/screens/message/widgets/create_new_chat_app_bar.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/member_list_builder.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -8,16 +9,24 @@ import 'package:sevaexchange/views/core.dart';
 import 'new_chat_page.dart';
 
 class CreateNewChatPage extends StatefulWidget {
+  final bool isSelectionEnabled;
+  final List<ParticipantInfo> frequentContacts;
+
+  const CreateNewChatPage(
+      {Key key, this.isSelectionEnabled, this.frequentContacts})
+      : assert(isSelectionEnabled != null),
+        super(key: key);
   @override
   _CreateNewChatPageState createState() => _CreateNewChatPageState();
 }
 
 class _CreateNewChatPageState extends State<CreateNewChatPage> {
-  CreateChatBloc _bloc = CreateChatBloc();
+  CreateChatBloc _bloc;
   TextEditingController textController = TextEditingController();
 
   @override
   initState() {
+    _bloc = CreateChatBloc(widget.isSelectionEnabled);
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _bloc.getMembers(
@@ -38,24 +47,10 @@ class _CreateNewChatPageState extends State<CreateNewChatPage> {
     return BlocProvider(
       bloc: _bloc,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "New Chat",
-            style: TextStyle(fontSize: 18),
-          ),
-          centerTitle: true,
-
-          // actions: <Widget>[
-          //   FlatButton(
-          //     child: Text("Cancel"),
-          //     textColor: Colors.white,
-          //     onPressed: () {},
-          //   ),
-          // ],
-          bottom: CreateNewChatSearchField(
-            controller: textController,
-            onChanged: (String value) {},
-          ),
+        appBar: CreateNewChatAppBar(
+          controller: textController,
+          onChanged: (String value) {},
+          isSelectionEnabled: widget.isSelectionEnabled,
         ),
         body: StreamBuilder(
           stream: _bloc.searchText,
@@ -65,8 +60,21 @@ class _CreateNewChatPageState extends State<CreateNewChatPage> {
                 infos: _bloc.getFilteredListOfParticipants(snapshot.data),
               );
             }
-            return NewChatPage();
+            return NewChatPage(frequentContacts: widget.frequentContacts);
           },
+        ),
+      ),
+    );
+  }
+
+  Widget customButton(String text, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Text(
+          text,
+          style: TextStyle(color: Colors.white, fontSize: 16),
         ),
       ),
     );

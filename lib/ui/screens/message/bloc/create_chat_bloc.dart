@@ -10,17 +10,30 @@ import 'package:sevaexchange/widgets/APi/user_api.dart';
 import '../../../../flavor_config.dart';
 
 class CreateChatBloc extends BlocBase {
+  final bool isSelectionEnabled;
+
+  CreateChatBloc(this.isSelectionEnabled);
+
   final _members = BehaviorSubject<List<ParticipantInfo>>();
   final _searchText = BehaviorSubject<String>();
   final _timebanksOfUser = BehaviorSubject<List<TimebankModel>>();
-  final Map<String, ParticipantInfo> selectedMembers = {};
+  final List<String> _selectedMembersList = [];
   final Map<String, ParticipantInfo> allMembers = {};
+  final _selectedMembers = BehaviorSubject<List<String>>();
 
   Function(String) get onSearchChanged => _searchText.sink.add;
 
   Stream<String> get searchText => _searchText.stream;
   Stream<List<ParticipantInfo>> get members => _members.stream;
   Stream<List<TimebankModel>> get timebanksOfUser => _timebanksOfUser.stream;
+  Stream<List<String>> get selectedMembers => _selectedMembers.stream;
+
+  void selectMember(String participantId) {
+    _selectedMembersList.contains(participantId)
+        ? _selectedMembersList.remove(participantId)
+        : _selectedMembersList.add(participantId);
+    _selectedMembers.add(_selectedMembersList);
+  }
 
   Future<void> getMembers(String userId, String communityId) async {
     List<ParticipantInfo> users =
@@ -52,6 +65,7 @@ class CreateChatBloc extends BlocBase {
 
   void dispose() {
     _members.close();
+    _selectedMembers.close();
     _timebanksOfUser.close();
     _searchText.close();
   }

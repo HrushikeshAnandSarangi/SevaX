@@ -37,35 +37,12 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    bloc: _bloc,
-                    child: CreateNewChatPage(),
+                  builder: (context) => CreateNewChatPage(
+                    isSelectionEnabled: false,
+                    frequentContacts: _bloc.frequentContacts,
                   ),
                 ),
               );
-              // if (SevaCore.of(context).loggedInUser.associatedWithTimebanks >
-              //     1) {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (context) => CreateNewChatPage(),
-              //     ),
-              //   );
-              // } else {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (context) => SelectMembersFromTimebank(
-              //         timebankId:
-              //             SevaCore.of(context).loggedInUser.currentTimebank,
-              //         newsModel: NewsModel(),
-              //         isFromShare: false,
-              //         selectionMode: MEMBER_SELECTION_MODE.NEW_CHAT,
-              //         userSelected: HashMap(),
-              //       ),
-              //     ),
-              //   );
-              // }
             },
           ),
         ],

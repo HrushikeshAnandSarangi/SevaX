@@ -1,39 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/views/core.dart';
 
 class MemberCard extends StatelessWidget {
   final ParticipantInfo info;
+  final bool isSelected;
 
-  const MemberCard({Key key, this.info}) : super(key: key);
+  const MemberCard({Key key, this.info, this.isSelected = false})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final Map<String, ParticipantInfo> selectedMembers =
-        BlocProvider.of<CreateChatBloc>(context).selectedMembers;
-    return Container(
-      child: GestureDetector(
-        onTap: () {
-          if (selectedMembers.containsKey(info.id)) {
-            selectedMembers.remove(info.id);
-          } else {
-            selectedMembers[info.id] = info;
-          }
-        },
+    final _bloc = BlocProvider.of<CreateChatBloc>(context);
+    return GestureDetector(
+      onTap: () {
+        if (_bloc.isSelectionEnabled) {
+          _bloc.selectMember(info.id);
+        } else {
+          UserModel loggedInUser = SevaCore.of(context).loggedInUser;
+          ParticipantInfo sender = ParticipantInfo(
+            id: loggedInUser.sevaUserID,
+            name: loggedInUser.fullname,
+            photoUrl: loggedInUser.photoURL,
+            type: ChatType.TYPE_PERSONAL,
+          );
+
+          ParticipantInfo reciever = ParticipantInfo(
+            id: info.id,
+            name: info.name,
+            photoUrl: info.photoUrl,
+            type: ChatType.TYPE_PERSONAL,
+          );
+
+          createAndOpenChat(
+            context: context,
+            communityId: loggedInUser.currentCommunity,
+            sender: sender,
+            reciever: reciever,
+            onChatCreate: () {
+              Navigator.of(context).pop();
+            },
+          );
+        }
+      },
+      child: Container(
         child: Row(
           children: <Widget>[
             CustomNetworkImage(
-              // info.photoUrl ??
-              "https://pluspng.com/img-png/user-png-icon-male-user-icon-512.png",
+              info.photoUrl,
+              // "https://pluspng.com/img-png/user-png-icon-male-user-icon-512.png",
               size: 40,
             ),
             SizedBox(width: 12),
             Expanded(child: Text(info.name)),
-            // Checkbox(
-            //   value: selectedMembers.containsKey(info.id),
-            //   onChanged: (value) {},
-            // ),
+            Offstage(
+              offstage:
+                  !BlocProvider.of<CreateChatBloc>(context).isSelectionEnabled,
+              child: Checkbox(
+                value: isSelected,
+                onChanged: (_) {
+                  BlocProvider.of<CreateChatBloc>(context)
+                      .selectMember(info.id);
+                },
+              ),
+            ),
           ],
         ),
       ),

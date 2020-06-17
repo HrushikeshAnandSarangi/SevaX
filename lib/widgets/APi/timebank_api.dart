@@ -15,6 +15,7 @@ class TimebankApi {
         .getDocuments();
 
     querySnapshot.documents.forEach((DocumentSnapshot document) {
+      print("timebank data ${document.data}");
       timebanks.add(TimebankModel.fromMap(document.data));
     });
     return timebanks;

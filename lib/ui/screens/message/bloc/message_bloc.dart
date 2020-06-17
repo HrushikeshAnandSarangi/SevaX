@@ -18,8 +18,7 @@ class MessageBloc extends BlocBase {
   Stream<List<AdminMessageWrapperModel>> get adminMessage =>
       _adminMessage.stream;
 
-  Stream<List<ParticipantInfo>> get frequentContacts =>
-      _frequentContacts.stream;
+  List<ParticipantInfo> get frequentContacts => _frequentContacts.value;
 
   Stream<int> get messageCount => CombineLatestStream.combine2(
       _personalMessageCount, _adminMessageCount, (int p, int a) => p + a);
@@ -62,7 +61,7 @@ class MessageBloc extends BlocBase {
           chats.add(chat);
         }
       });
-      if (!_personalMessage.isClosed) _personalMessage.add(chats);
+      _personalMessage.add(chats);
       if (!_frequentContacts.isClosed) _frequentContacts.add(frequentContacts);
       if (!_personalMessageCount.isClosed)
         _personalMessageCount.add(unreadCount);
