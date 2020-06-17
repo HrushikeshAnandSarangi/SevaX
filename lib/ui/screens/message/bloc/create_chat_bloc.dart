@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/widgets/APi/chats_api.dart';
+import 'package:sevaexchange/widgets/APi/storage_api.dart';
 import 'package:sevaexchange/widgets/APi/timebank_api.dart';
 import 'package:sevaexchange/widgets/APi/user_api.dart';
 
@@ -16,17 +20,24 @@ class CreateChatBloc extends BlocBase {
 
   final _members = BehaviorSubject<List<ParticipantInfo>>();
   final _searchText = BehaviorSubject<String>();
+  final _groupName = BehaviorSubject<String>();
   final _timebanksOfUser = BehaviorSubject<List<TimebankModel>>();
   final List<String> _selectedMembersList = [];
   final Map<String, ParticipantInfo> allMembers = {};
   final _selectedMembers = BehaviorSubject<List<String>>();
+  final _file = BehaviorSubject<File>();
 
   Function(String) get onSearchChanged => _searchText.sink.add;
+  Function(String) get onGroupNameChanged => _groupName.sink.add;
+  Function(File) get onImageChanged => _file.sink.add;
 
   Stream<String> get searchText => _searchText.stream;
+  Stream<String> get groupName => _groupName.stream;
+
   Stream<List<ParticipantInfo>> get members => _members.stream;
   Stream<List<TimebankModel>> get timebanksOfUser => _timebanksOfUser.stream;
   Stream<List<String>> get selectedMembers => _selectedMembers.stream;
+  Stream<File> get selectedImage => _file.stream;
 
   void selectMember(String participantId) {
     _selectedMembersList.contains(participantId)
@@ -51,6 +62,47 @@ class CreateChatBloc extends BlocBase {
     _members.add(users);
   }
 
+  Future<bool> createMultiUserMessaging(UserModel creator) async {
+    if (_groupName.value != null) {
+      String imageUrl = _file.value != null
+          ? await StorageApi.uploadFile("multiUserMessagingLogo", _file.value)
+          : null;
+      MultiUserMessagingModel groupDetails = MultiUserMessagingModel(
+        name: _groupName.value,
+        imageUrl: imageUrl,
+        admins: [creator.sevaUserID],
+      );
+
+      ParticipantInfo creatorDetails = ParticipantInfo(
+        id: creator.sevaUserID,
+        photoUrl: creator.photoURL,
+        name: creator.fullname,
+        type: ChatType.TYPE_GROUP,
+      );
+
+      List<ParticipantInfo> participantInfos = [creatorDetails];
+      _selectedMembers.value.forEach(
+        (String id) => participantInfos.add(
+          allMembers[id]..type = ChatType.TYPE_GROUP,
+        ),
+      );
+
+      ChatModel model = ChatModel(
+        participants: _selectedMembers.value..add(creator.sevaUserID),
+        communityId: creator.currentCommunity,
+        participantInfo: participantInfos,
+        isTimebankMessage: false,
+        isGroupMessage: true,
+        groupDetails: groupDetails,
+      );
+      await ChatsApi.createNewChat(model);
+      return true;
+    } else {
+      _groupName.addError("Name can't be empty");
+      return false;
+    }
+  }
+
   List<ParticipantInfo> getFilteredListOfParticipants(String searchText) {
     List<ParticipantInfo> participants = [];
     if (searchText != null && _members.value != null) {
@@ -68,5 +120,7 @@ class CreateChatBloc extends BlocBase {
     _selectedMembers.close();
     _timebanksOfUser.close();
     _searchText.close();
+    _file.close();
+    _groupName.close();
   }
 }

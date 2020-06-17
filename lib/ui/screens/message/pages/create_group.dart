@@ -1,11 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_builder.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/camera_icon.dart';
+import 'package:sevaexchange/widgets/image_picker_widget.dart';
 
 class CreateGroupPage extends StatelessWidget {
   final CreateChatBloc bloc;
-  const CreateGroupPage({Key key, this.bloc}) : super(key: key);
+  final TextEditingController _controller = TextEditingController();
+
+  CreateGroupPage({Key key, this.bloc}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +27,9 @@ class CreateGroupPage extends StatelessWidget {
               "Create",
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
-            onPressed: () {},
+            onPressed: () {
+              bloc.createMultiUserMessaging(SevaCore.of(context).loggedInUser);
+            },
           ),
         ],
       ),
@@ -34,27 +42,65 @@ class CreateGroupPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  child: CameraIcon(radius: 35),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
+                  child: StreamBuilder<File>(
+                    stream: bloc.selectedImage,
+                    builder: (context, snapshot) {
+                      return ImagePickerWidget(
+                        child: snapshot.data == null
+                            ? CameraIcon(radius: 35)
+                            : Container(
+                                width: 70,
+                                height: 70,
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(),
+                                ),
+                                child: ClipOval(
+                                  child: Image.file(
+                                    snapshot.data,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                        onChanged: bloc.onImageChanged,
+                      );
+                    },
+                  ),
                 ),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Divider(),
-                      TextField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          hintText: "Multi-User Messaging Name",
-                          hintStyle: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey,
-                          ),
-                        ),
+                      StreamBuilder<String>(
+                        stream: bloc.groupName,
+                        builder: (context, snapshot) {
+                          _controller.value = _controller.value.copyWith(
+                            text: snapshot.data,
+                          );
+                          return TextField(
+                            controller: _controller,
+                            onChanged: bloc.onGroupNameChanged,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              errorText: snapshot.error,
+                              hintText: "Multi-User Messaging Name",
+                              hintStyle: TextStyle(
+                                fontSize: 18,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                       Divider(),
                       Text(

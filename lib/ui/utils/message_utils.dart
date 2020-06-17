@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/message/pages/chat_page.dart';
-import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart';
+import 'package:sevaexchange/widgets/APi/chats_api.dart';
 
 ParticipantInfo getUserInfo(
     String userId, List<ParticipantInfo> participantInfo) {
@@ -40,7 +40,7 @@ Future<void> createAndOpenChat({
     ..id = "${participants[0]}*${participants[1]}*$communityId"
     ..isGroupMessage = false;
 
-  await createNewChat(chat: model);
+  await ChatsApi.createNewChat(model, documentId: model.id);
   if (onChatCreate != null) {
     onChatCreate();
   }
