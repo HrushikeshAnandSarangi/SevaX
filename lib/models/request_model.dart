@@ -126,10 +126,10 @@ class End extends DataModel {
       object['endType'] = this.endType;
     }
     if (this.on != null && this.on.isNotEmpty) {
-      object['endType'] = this.endType;
+      object['on'] = this.on;
     }
     if (this.after != null) {
-      object['endType'] = this.after;
+      object['after'] = this.after;
     }
 
   }
@@ -585,7 +585,7 @@ class RequestModel extends DataModel {
     }if (this.occurenceCount != null) {
       object['occurenceCount'] = this.occurenceCount;
     }if (this.end != null) {
-      object['end'] = this.end;
+      object['end'] = this.end.toMap();
     }
     return object;
   }
