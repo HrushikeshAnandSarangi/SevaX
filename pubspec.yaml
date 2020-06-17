@@ -139,6 +139,7 @@ flutter:
     - images/icons/create_message.png
     - images/icons/message.png
     - images/icons/remove_user.png
+    - images/icons/camera.png
 
   fonts:
     # - family: Montserrat
