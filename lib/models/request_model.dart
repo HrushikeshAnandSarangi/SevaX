@@ -131,9 +131,10 @@ class End extends DataModel {
     if (this.after != null) {
       object['after'] = this.after;
     }
+    return object;
 
   }
-  End.fromMap(Map<String, dynamic> map) {
+  End.fromMap(Map<dynamic, dynamic> map) {
     if (map.containsKey('endType')) {
       this.endType = map['endType'];
     }
@@ -337,7 +338,9 @@ class RequestModel extends DataModel {
       this.occurenceCount = map['occurenceCount'];
     }
     if (map.containsKey('end')) {
-      this.end = map['end'];
+      print("prift ==== ${End.fromMap(map['end']).toMap()}");
+      print(map['end'].toString());
+      this.end = End.fromMap(map['end']);
     }
   }
 

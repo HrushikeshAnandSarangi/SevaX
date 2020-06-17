@@ -622,6 +622,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         end.endType = RepeatWidgetState.endType == 0 ? "on" : "after";
         end.on = end.endType=="on" ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch:null;
         end.after = (end.endType =="after" ? RepeatWidgetState.after:null) as int;
+        print("end model is = ${end.toMap()} ${end.endType}");
         requestModel.end = end;
     }
 
@@ -843,9 +844,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         location == null ? GeoFirePoint(40.754387, -73.984291) : location;
     requestModel.root_timebank_id = FlavorConfig.values.timebankId;
     requestModel.softDelete = false;
-//    requestModel.end = end;
-    print("write to db === ${end.toMap()}");
-    return;
     if (requestModel.id == null) return;
 
     // credit the timebank the required credits before the request creation
