@@ -96,7 +96,6 @@ class InvitationManager {
       communityId: invitation.communityId,
       inviteeEmail: invitation.inviteeEmail,
       primaryTimebankId: invitation.timebankId,
-      isFromBulkInvite: 'true',
     )
         .then((String invitationLink) async {
           String invitationTitle = AppLocalizations.of(context)

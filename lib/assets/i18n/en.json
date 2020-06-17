@@ -1110,6 +1110,13 @@
     "template_title": "Provide a unique name for the template",
     "template_hint": "Template Name",
     "name_error": "Template name cannot be empty",
-    "already_exists": "Template name already exists"
+    "already_exists": "Template name already exists",
+    "search_template_hint": "Enter name of a Project Template",
+    "create_project_template": "Create Project from Template",
+    "create_new_project": "Create new Project",
+    "no_templates": "No templates found",
+    "empty_template": "Template is not selected",
+    "template_alert": "Template alert"
+
   }
 }

@@ -27,12 +27,11 @@ Future<String> createDynamicLinkFor({
   String inviteeEmail,
   String communityId,
   String primaryTimebankId,
-  String isFromBulkInvite,
 }) async {
   final DynamicLinkParameters parameters = DynamicLinkParameters(
     uriPrefix: FlavorConfig.values.dynamicLinkUriPrefix,
     link: Uri.parse(
-        'https://www.sevaexchange.com?invitedMemberEmail=$inviteeEmail&communityId=$communityId&primaryTimebankId=$primaryTimebankId&isFromBulkInvite=$isFromBulkInvite'),
+        'https://www.sevaexchange.com?invitedMemberEmail=$inviteeEmail&communityId=$communityId&primaryTimebankId=$primaryTimebankId'),
     androidParameters: AndroidParameters(
       packageName: FlavorConfig.values.packageName,
       minimumVersion: 0,

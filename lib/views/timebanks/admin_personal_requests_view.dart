@@ -384,7 +384,8 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
   }
 
   String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
-    DateFormat dateFormat = DateFormat('d MMM hh:mm a ', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
+    DateFormat dateFormat = DateFormat('d MMM hh:mm a ',
+        Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
     DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
     DateTime localtime = getDateTimeAccToUserTimezone(
         dateTime: datetime, timezoneAbb: timezoneAbb);

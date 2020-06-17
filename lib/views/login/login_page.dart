@@ -986,16 +986,15 @@ class _LoginPageState extends State<LoginPage> {
         String primaryTimebankId = queryParams["primaryTimebankId"];
         if (queryParams.containsKey("isFromBulkInvite") &&
             queryParams["isFromBulkInvite"] == 'true') {
-          resetPassword(
-            invitedMemberEmail,
-          );
+          resetDynamicLinkPassword(invitedMemberEmail, context);
         }
       }
     }
     return false;
   }
 
-  Future<void> resetPasswordd(String email, BuildContext mContext) async {
+  Future<void> resetDynamicLinkPassword(
+      String email, BuildContext mContext) async {
     await FirebaseAuth.instance
         .sendPasswordResetEmail(email: email)
         .then((onValue) {
@@ -1028,16 +1027,7 @@ class _LoginPageState extends State<LoginPage> {
         },
       );
 
-//    _scaffoldKey.currentState.showSnackBar(SnackBar(
-//      content: Text(AppLocalizations.of(context)
-//          .translate('login', 'reset_link_message')),
-//      action: SnackBarAction(
-//        label: AppLocalizations.of(context).translate('shared', 'dismiss'),
-//        onPressed: () {
-//          _scaffoldKey.currentState.hideCurrentSnackBar();
-//        },
-//      ),
-//    ));
+//
     });
   }
 }

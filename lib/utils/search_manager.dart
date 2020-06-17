@@ -6,6 +6,7 @@ import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 
 class SearchManager {
   static final String _baseUrl = 'http://api.sevaexchange.com:9200';
@@ -137,6 +138,81 @@ class SearchManager {
     }
 
     return commFound;
+//    int count =
+//        await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
+//    if (count > 0) {
+//      return true;
+//    } else {
+//      return false;
+//    }
+  }
+
+  static Stream<List<ProjectTemplateModel>> searchProjectTemplate({
+    @required queryString,
+  }) async* {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/posttemplates/_doc/_search';
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "multi_match": {
+                "query": queryString,
+                "fields": ["templateName"],
+                "type": "phrase_prefix"
+              }
+            }
+          ]
+        }
+      },
+      "sort": {
+        "name.keyword": {"order": "asc"}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<ProjectTemplateModel> templatesList = [];
+
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      var template = ProjectTemplateModel.fromMap(sourceMap);
+      if (template.softDelete == false) {
+        templatesList.add(template);
+      }
+
+      //CommunityModel communityModel = CommunityModel.fromMap(sourceMap);
+      //communityList.add(communityModel);
+    });
+    yield templatesList;
+  }
+
+  static Future<bool> searchTemplateForDuplicate(
+      {@required String queryString}) async {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/posttemplates/_doc/_search';
+//    '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_count';
+    dynamic body = json.encode({
+      "query": {
+        "match": {"templateName": queryString}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+//    await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
+    bool templateFound = false;
+    for (var map in hitList) {
+      print("template name is  ${map['_source']['templateName']}");
+      if (map['_source']['templateName'].toLowerCase() ==
+          queryString.toLowerCase()) {
+        templateFound = true;
+        print("template name is  ${map['_source']['templateName']}");
+
+        break;
+      }
+    }
+
+    return templateFound;
 //    int count =
 //        await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
 //    if (count > 0) {
@@ -508,7 +584,6 @@ class SearchManager {
 
   static Future<List<Map<String, dynamic>>> _makeElasticSearchPostRequest(
       String url, dynamic body) async {
-
     String username = 'user';
     String password = 'CiN36UNixJyq';
     log(
@@ -529,12 +604,12 @@ class SearchManager {
     Map<String, dynamic> bodyMap = json.decode(response.body);
     Map<String, dynamic> hitMap = bodyMap['hits'];
     List<Map<String, dynamic>> hitList = List.castFrom(hitMap['hits']);
+
     return hitList;
   }
 
   static Future<int> _makeElasticSearchPostRequestCommunityDuplicate(
       String url, dynamic body) async {
-
     String username = 'user';
     String password = 'CiN36UNixJyq';
     log(

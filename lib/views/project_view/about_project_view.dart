@@ -106,11 +106,13 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                                       timebankId: widget.timebankId,
                                       isCreateProject: false,
                                       projectId: projectModel.id,
+                                      projectTemplateModel: null,
                                     ),
                                   ));
                             },
                             child: Text(
-                              AppLocalizations.of(context).translate('projects','edit'),
+                              AppLocalizations.of(context)
+                                  .translate('projects', 'edit'),
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'Europa',
@@ -121,9 +123,11 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                           ),
                         )
                       : Container(),
-                  headingText(AppLocalizations.of(context).translate('projects','title_about')),
+                  headingText(AppLocalizations.of(context)
+                      .translate('projects', 'title_about')),
                   Text(projectModel.name ?? ""),
-                  headingText(AppLocalizations.of(context).translate('projects','mission_statement')),
+                  headingText(AppLocalizations.of(context)
+                      .translate('projects', 'mission_statement')),
                   SizedBox(height: 8),
                   Wrap(
                     crossAxisAlignment: WrapCrossAlignment.center,
@@ -150,7 +154,8 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                   ),
                   SizedBox(height: 10),
                   Text(projectModel.description ?? ""),
-                  headingText(AppLocalizations.of(context).translate('projects','organizer')),
+                  headingText(AppLocalizations.of(context)
+                      .translate('projects', 'organizer')),
                   SizedBox(height: 10),
                   Row(
                     children: <Widget>[
@@ -174,9 +179,11 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                       Text(
                         timeAgo
                             .format(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  projectModel.createdAt), locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
-                            )
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    projectModel.createdAt),
+                                locale: Locale(AppConfig.prefs
+                                        .getString('language_code'))
+                                    .toLanguageTag())
                             .replaceAll('hours ago', 'h'),
                         style: TextStyle(
                           fontFamily: 'Europa',
@@ -210,7 +217,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
       child: Container(
         margin: EdgeInsets.only(top: 20),
         child: Text(
-          AppLocalizations.of(context).translate('projects','delete_project'),
+          AppLocalizations.of(context).translate('projects', 'delete_project'),
           textAlign: TextAlign.left,
           style: TextStyle(
             fontWeight: FontWeight.bold,

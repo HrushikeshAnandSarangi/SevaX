@@ -874,6 +874,26 @@ Future<ProjectModel> getProjectFutureById({
   return ProjectModel.fromMap(documentsnapshot.data);
 }
 
+Future<ProjectTemplateModel> getProjectTemplateById(
+    {@required String templateId}) async {
+  assert(templateId != null && templateId.isNotEmpty,
+      "template id cannot be null or empty");
+
+  ProjectTemplateModel projectTemplateModel;
+  await Firestore.instance
+      .collection('project_templates')
+      .where('id', isEqualTo: templateId)
+      .getDocuments()
+      .then((QuerySnapshot querySnapshot) {
+    querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+      projectTemplateModel =
+          ProjectTemplateModel.fromMap(documentSnapshot.data);
+    });
+  });
+
+  return projectTemplateModel;
+}
+
 Stream<RequestModel> getRequestStreamById({
   @required String requestId,
 }) async* {

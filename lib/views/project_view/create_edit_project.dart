@@ -31,8 +31,13 @@ class CreateEditProject extends StatefulWidget {
   final bool isCreateProject;
   final String timebankId;
   final String projectId;
+  final ProjectTemplateModel projectTemplateModel;
 
-  CreateEditProject({this.isCreateProject, this.timebankId, this.projectId});
+  CreateEditProject(
+      {this.isCreateProject,
+      this.timebankId,
+      this.projectId,
+      this.projectTemplateModel});
 
   @override
   _CreateEditProjectState createState() => _CreateEditProjectState();
@@ -72,7 +77,14 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       getData();
     } else {
       setState(() {
-        this.projectModel.mode = 'Timebank';
+        if (widget.projectTemplateModel != null) {
+          this.projectModel.mode = widget.projectTemplateModel.mode;
+          this.projectModel.mode == 'Timebank'
+              ? sharedValue = 0
+              : sharedValue = 1;
+        } else {
+          this.projectModel.mode = 'Timebank';
+        }
       });
     }
 
@@ -94,7 +106,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         });
       } else {
         if (templateName != s) {
-          SearchManager.searchCommunityForDuplicate(queryString: s)
+          SearchManager.searchTemplateForDuplicate(queryString: s)
               .then((commFound) {
             print("querystring is  ${s} and templateName is ${templateName}");
             if (commFound) {
@@ -136,6 +148,16 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       endDate = getUpdatedDateTimeAccToUserTimezone(
           timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
           dateTime: DateTime.fromMillisecondsSinceEpoch(projectModel.endTime));
+    }
+    if (widget.isCreateProject && widget.projectTemplateModel != null) {
+      startDate = getUpdatedDateTimeAccToUserTimezone(
+          timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+          dateTime: DateTime.fromMillisecondsSinceEpoch(
+              widget.projectTemplateModel.startTime));
+      endDate = getUpdatedDateTimeAccToUserTimezone(
+          timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+          dateTime: DateTime.fromMillisecondsSinceEpoch(
+              widget.projectTemplateModel.endTime));
     }
 
     return Scaffold(
@@ -244,11 +266,17 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 child: Column(
                   children: <Widget>[
                     widget.isCreateProject
-                        ? ProjectAvtaar()
+                        ? widget.projectTemplateModel != null
+                            ? ProjectAvtaar(
+                                photoUrl:
+                                    widget.projectTemplateModel.photoUrl ??
+                                        defaultProjectImageURL)
+                            : ProjectAvtaar()
                         : ProjectAvtaar(
                             photoUrl: projectModel.photoUrl != null
-                                ? projectModel.photoUrl ?? defaultCameraImageURL
-                                : defaultCameraImageURL,
+                                ? projectModel.photoUrl ??
+                                    defaultProjectImageURL
+                                : defaultProjectImageURL,
                           ),
                     Text(''),
                     Text(
@@ -282,8 +310,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               inputFormatters: <TextInputFormatter>[
                 WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
               ],
-              initialValue:
-                  widget.isCreateProject ? "" : projectModel.name ?? "",
+              initialValue: widget.isCreateProject
+                  ? widget.projectTemplateModel != null
+                      ? widget.projectTemplateModel.name
+                      : ""
+                  : projectModel.name ?? "",
               decoration: InputDecoration(
                 errorText: errTxt,
                 hintText: AppLocalizations.of(context)
@@ -312,12 +343,19 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               },
             ),
             widget.isCreateProject
-                ? OfferDurationWidget(
-                    title:
-                        ' ${AppLocalizations.of(context).translate('projects', 'duration')}',
-                    //startTime: CalendarWidgetState.startDate,
-                    //endTime: CalendarWidgetState.endDate
-                  )
+                ? widget.projectTemplateModel != null
+                    ? OfferDurationWidget(
+                        title:
+                            ' ${AppLocalizations.of(context).translate('projects', 'duration')}',
+                        startTime: startDate,
+                        endTime: endDate,
+                      )
+                    : OfferDurationWidget(
+                        title:
+                            ' ${AppLocalizations.of(context).translate('projects', 'duration')}',
+                        //startTime: CalendarWidgetState.startDate,
+                        //endTime: CalendarWidgetState.endDate
+                      )
                 : OfferDurationWidget(
                     title:
                         ' ${AppLocalizations.of(context).translate('projects', 'duration')}',
@@ -344,8 +382,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               },
               textInputAction: TextInputAction.next,
               focusNode: focusNodes[1],
-              initialValue:
-                  widget.isCreateProject ? "" : projectModel.description ?? "",
+              initialValue: widget.isCreateProject
+                  ? widget.projectTemplateModel != null
+                      ? widget.projectTemplateModel.description
+                      : ""
+                  : projectModel.description ?? "",
               keyboardType: TextInputType.multiline,
               maxLines: null,
               textCapitalization: TextCapitalization.sentences,
@@ -389,7 +430,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 projectModel.emailId = value;
               },
               initialValue: widget.isCreateProject
-                  ? SevaCore.of(context).loggedInUser.email
+                  ? widget.projectTemplateModel != null
+                      ? widget.projectTemplateModel.emailId
+                      : SevaCore.of(context).loggedInUser.email
                   : projectModel.emailId ??
                       SevaCore.of(context).loggedInUser.email,
               decoration: InputDecoration(
@@ -440,7 +483,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               },
               maxLength: 15,
               initialValue: widget.isCreateProject
-                  ? ""
+                  ? widget.projectTemplateModel != null
+                      ? widget.projectTemplateModel.phoneNumber
+                      : ""
                   : projectModel.phoneNumber.replaceAll('+', '') ?? "",
               decoration: InputDecoration(
 //                icon: Icon(
@@ -487,8 +532,16 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             ),
             Center(
               child: LocationPickerWidget(
-                selectedAddress: selectedAddress,
-                location: location,
+                selectedAddress: widget.isCreateProject
+                    ? widget.projectTemplateModel != null
+                        ? widget.projectTemplateModel.address
+                        : selectedAddress
+                    : selectedAddress,
+                location: widget.isCreateProject
+                    ? widget.projectTemplateModel != null
+                        ? widget.projectTemplateModel.location
+                        : location
+                    : location,
                 onChanged: (LocationDataModel dataModel) {
                   log("received data model");
                   setState(() {
@@ -654,13 +707,15 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         projectModel.address = selectedAddress;
                         projectModel.id = Utils.getUuid();
                         projectModel.softDelete = false;
+
                         if (saveAsTemplate) {
                           projectTemplateModel.communityId =
                               projectModel.communityId;
                           projectTemplateModel.timebankId =
                               projectModel.timebankId;
                           projectTemplateModel.id = Utils.getUuid();
-                          projectTemplateModel.name = templateName;
+                          projectTemplateModel.name = projectModel.name;
+                          projectTemplateModel.templateName = templateName;
                           projectTemplateModel.address = projectModel.address;
                           projectTemplateModel.location = projectModel.location;
                           projectTemplateModel.photoUrl = projectModel.photoUrl;
@@ -681,6 +736,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           await FirestoreManager.createProjectTemplate(
                               projectTemplateModel: projectTemplateModel);
                         }
+
                         // if (globals.projectsAvtaarURL == null) {
                         //   setState(() {
                         //     this.communityImageError =
@@ -702,6 +758,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           Navigator.pop(dialogContext);
                         }
                         _formKey.currentState.reset();
+                        Navigator.of(context).pop();
                         Navigator.of(context).pop();
                       } else {}
                     } else {
