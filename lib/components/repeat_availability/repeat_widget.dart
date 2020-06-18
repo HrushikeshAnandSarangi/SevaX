@@ -12,6 +12,7 @@ class RepeatWidget extends StatefulWidget {
 
 class RepeatWidgetState extends State<RepeatWidget> {
   List<String> dayNameList = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  List<String> daysName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   List<String> occurenccesList = [
     '1',
     '2',
@@ -26,13 +27,13 @@ class RepeatWidgetState extends State<RepeatWidget> {
   ];
 
   static List<bool> _selected;
-  static List<int> recurringDays = new List<int>();
+  static List<int> recurringDays = [];
 
   @override
   void initState() {
     super.initState();
     _selected = List.generate(dayNameList.length, (i) => false);
-
+//    recurringDays = new List(7);
   }
 
   static bool isRecurring = true;
@@ -51,20 +52,36 @@ class RepeatWidgetState extends State<RepeatWidget> {
   }
 
   static getRecurringdays() {
-//    var x = 0;
+    var x = 0;
+    recurringDays.clear();
     for (var i = 0; i < _selected.length; i++) {
-      if(_selected[i]==false && _selected.contains(i)){
-        recurringDays.remove(i);
-      }else if(_selected[i]==true && !_selected.contains(i)){
+      if (_selected[i]) {
         recurringDays.add(i);
-      }else{
-        assert(true);
+        x++;
       }
     }
+//    recurringDays.removeWhere((value) => value == null);
     print("list of data $recurringDays");
   }
 
   void _selectOnAfter() {
+    setState(() {
+      if (viewVisible) {
+        viewVisible = false;
+      } else {
+        viewVisible = true;
+      }
+      titleCheck = !viewVisible;
+      String days = "";
+      for(int i=0;i<7;i++){
+        if(_selected[i]){
+          days = days+" "+daysName[i];
+        }
+      }
+      selectedDays = days;
+    });
+  }
+  void _cancelOnAfter() {
     setState(() {
       if (viewVisible) {
         viewVisible = false;
@@ -127,21 +144,21 @@ class RepeatWidgetState extends State<RepeatWidget> {
                   Visibility(
                     visible: titleCheck,
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(26.0, 8.0, 6.0, 8.0),
+                      padding: const EdgeInsets.fromLTRB(20.0, 8.0, 8.0, 8.0),
                       child: Container(
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.fromLTRB(12.0, 8.0, 10.0, 8.0),
+                        width: 180.0,
+                        alignment: Alignment.topLeft,
+                        padding: const EdgeInsets.fromLTRB(12.0, 8.0, 8.0, 8.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(2.0),
                           color: Colors.black12,
                         ),
                         child: InkWell(
                             onTap: _selectOnAfter,
-                            child: Text("Weekly",
-//                            child: Text("Weekly on $selectedDays",
+                            child: Text("Weekly on $selectedDays",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 16,
                                   fontFamily: 'Europa',
                                   color: Colors.black,
                                 ))),
@@ -239,7 +256,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                           Container(
                             width: 180.0,
                             alignment: Alignment.topLeft,
-                            margin: EdgeInsets.fromLTRB(32.0, 8.0, 8.0, 8.0),
+                            margin: EdgeInsets.fromLTRB(38.0, 8.0, 8.0, 8.0),
                             padding: const EdgeInsets.fromLTRB(
                                 12.0, 15.0, 12.0, 15.0),
                             decoration: BoxDecoration(
@@ -281,7 +298,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                           Container(
                             width: 180.0,
                             alignment: Alignment.topLeft,
-                            margin: EdgeInsets.fromLTRB(15.0, 8.0, 8.0, 8.0),
+                            margin: EdgeInsets.fromLTRB(20.0, 8.0, 8.0, 8.0),
                             padding:
                                 const EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 0.0),
                             decoration: BoxDecoration(
@@ -290,7 +307,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                             ),
                             child: InkWell(
                                 child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Container(
                                   child: DropdownButton(
@@ -311,7 +328,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                   ),
                                 ),
                                 Text("OCCURENCES",
-                                    textAlign: TextAlign.start,
+                                    textAlign: TextAlign.end,
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -333,10 +350,10 @@ class RepeatWidgetState extends State<RepeatWidget> {
                             Container(
                                 margin: EdgeInsets.all(8.0),
                                 child: InkWell(
-                                  onTap: _selectOnAfter,
+                                  onTap: _cancelOnAfter,
                                   child: Text("CANCEL",
                                       style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Europa',
                                         color: Colors.black12,
@@ -348,7 +365,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                 onTap: _selectOnAfter,
                                 child: Text("DONE",
                                     style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'Europa',
                                       color: Theme.of(context).primaryColor,

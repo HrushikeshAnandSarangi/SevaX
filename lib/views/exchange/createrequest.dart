@@ -129,6 +129,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   final volunteersTextFocus = FocusNode();
 
   RequestModel requestModel = RequestModel();
+  End end = End();
   var focusNodes = List.generate(5, (_) => FocusNode());
 
   GeoFirePoint location;
@@ -618,9 +619,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     if(requestModel.isRecurring) {      
       requestModel.recurringDays = RepeatWidgetState.getRecurringdays();
         requestModel.occurenceCount = 1;
-        requestModel.end.endType = RepeatWidgetState.endType == 0 ? "on" : "after";
-        requestModel.end.on = requestModel.end.endType=="on" ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch:null;
-        requestModel.end.after = (requestModel.end.endType =="after" ? RepeatWidgetState.after:null) as int;
+        end.endType = RepeatWidgetState.endType == 0 ? "on" : "after";
+        end.on = end.endType=="on" ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch:null;
+        end.after = (end.endType =="after" ? RepeatWidgetState.after:null) as int;
+        print("end model is = ${end.toMap()} ${end.endType}");
+        requestModel.end = end;
     }
 
     if (_formKey.currentState.validate()) {
