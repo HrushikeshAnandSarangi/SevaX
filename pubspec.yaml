@@ -80,13 +80,13 @@ dependencies:
   path_provider: ^1.6.10
   share_extend: ^1.1.6
   flutter_downloader: ^1.4.4
+  flutter_local_notifications: ^1.4.4+1
 dev_dependencies:
   #  flutter_test:
   #    sdk: flutter
 #
 #  flutter_localizations:
 #    sdk: flutter
-
 
 flutter:
   uses-material-design: true
