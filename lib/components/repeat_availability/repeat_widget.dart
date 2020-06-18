@@ -26,13 +26,13 @@ class RepeatWidgetState extends State<RepeatWidget> {
   ];
 
   static List<bool> _selected;
-  static var recurringDays;
+  static List<int> recurringDays = new List<int>();
 
   @override
   void initState() {
     super.initState();
     _selected = List.generate(dayNameList.length, (i) => false);
-    recurringDays = new List(7);
+
   }
 
   static bool isRecurring = true;
@@ -51,11 +51,14 @@ class RepeatWidgetState extends State<RepeatWidget> {
   }
 
   static getRecurringdays() {
-    var x = 0;
+//    var x = 0;
     for (var i = 0; i < _selected.length; i++) {
-      if (_selected[i]) {
-        recurringDays[x] = i;
-        x++;
+      if(_selected[i]==false && _selected.contains(i)){
+        recurringDays.remove(i);
+      }else if(_selected[i]==true && !_selected.contains(i)){
+        recurringDays.add(i);
+      }else{
+        assert(true);
       }
     }
     print("list of data $recurringDays");
@@ -124,20 +127,21 @@ class RepeatWidgetState extends State<RepeatWidget> {
                   Visibility(
                     visible: titleCheck,
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20.0, 8.0, 8.0, 8.0),
+                      padding: const EdgeInsets.fromLTRB(26.0, 8.0, 6.0, 8.0),
                       child: Container(
-                        alignment: Alignment.topLeft,
-                        padding: const EdgeInsets.fromLTRB(12.0, 8.0, 8.0, 8.0),
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.fromLTRB(12.0, 8.0, 10.0, 8.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(2.0),
                           color: Colors.black12,
                         ),
                         child: InkWell(
                             onTap: _selectOnAfter,
-                            child: Text("Weekly on $selectedDays",
+                            child: Text("Weekly",
+//                            child: Text("Weekly on $selectedDays",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontFamily: 'Europa',
                                   color: Colors.black,
                                 ))),
@@ -332,7 +336,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                   onTap: _selectOnAfter,
                                   child: Text("CANCEL",
                                       style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: 'Europa',
                                         color: Colors.black12,
@@ -344,7 +348,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                 onTap: _selectOnAfter,
                                 child: Text("DONE",
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'Europa',
                                       color: Theme.of(context).primaryColor,
