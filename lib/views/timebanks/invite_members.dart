@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   bool _isLoading;
   bool _permissionReady;
   String _localPath;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -150,6 +153,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     parentContext = context;
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
           FlavorConfig.values.timebankName == "Yang 2020"
@@ -177,89 +181,87 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   Widget get inviteCodeWidget {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: TextField(
-              style: TextStyle(color: Colors.black),
-              controller: searchTextController,
-              decoration: InputDecoration(
-                  suffixIcon: Offstage(
-                    offstage: searchTextController.text.length == 0,
-                    child: IconButton(
-                      splashColor: Colors.transparent,
-                      icon: Icon(
-                        Icons.clear,
-                        color: Colors.black54,
-                      ),
-                      onPressed: () {
-                        //searchTextController.clear();
-                        WidgetsBinding.instance.addPostFrameCallback(
-                            (_) => searchTextController.clear());
-                      },
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: TextField(
+            style: TextStyle(color: Colors.black),
+            controller: searchTextController,
+            decoration: InputDecoration(
+                suffixIcon: Offstage(
+                  offstage: searchTextController.text.length == 0,
+                  child: IconButton(
+                    splashColor: Colors.transparent,
+                    icon: Icon(
+                      Icons.clear,
+                      color: Colors.black54,
                     ),
-                  ),
-                  hasFloatingPlaceholder: false,
-                  alignLabelWithHint: true,
-                  isDense: true,
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.grey,
-                  ),
-                  contentPadding: EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 3.0),
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.white),
-                    borderRadius: new BorderRadius.circular(25.7),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: new BorderRadius.circular(25.7)),
-                  hintText: AppLocalizations.of(context)
-                      .translate('members', 'invite_via_email'),
-                  hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
-            ),
-          ),
-          headingTitle(
-              AppLocalizations.of(context).translate('members', 'members')),
-          buildList(),
-          !widget.timebankModel.private == true
-              ? Padding(
-                  padding: EdgeInsets.all(5),
-                  child: GestureDetector(
-                    child: Container(
-                      height: 25,
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            AppLocalizations.of(context)
-                                .translate('members', 'invite_via_code'),
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Spacer(),
-                          Image.asset("lib/assets/images/add.png"),
-                        ],
-                      ),
-                    ),
-                    onTap: () async {
-                      _asyncInputDialog(context);
+                    onPressed: () {
+                      //searchTextController.clear();
+                      WidgetsBinding.instance.addPostFrameCallback(
+                          (_) => searchTextController.clear());
                     },
                   ),
-                )
-              : Offstage(),
-          !widget.timebankModel.private == true
-              ? getTimebankCodesWidget
-              : Offstage(),
-        ],
-      ),
+                ),
+                hasFloatingPlaceholder: false,
+                alignLabelWithHint: true,
+                isDense: true,
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                ),
+                contentPadding: EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 3.0),
+                filled: true,
+                fillColor: Colors.grey[300],
+                focusedBorder: OutlineInputBorder(
+                  borderSide: new BorderSide(color: Colors.white),
+                  borderRadius: new BorderRadius.circular(25.7),
+                ),
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: new BorderRadius.circular(25.7)),
+                hintText: AppLocalizations.of(context)
+                    .translate('members', 'invite_via_email'),
+                hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
+          ),
+        ),
+        headingTitle(
+            AppLocalizations.of(context).translate('members', 'members')),
+        buildList(),
+        !widget.timebankModel.private == true
+            ? Padding(
+                padding: EdgeInsets.all(5),
+                child: GestureDetector(
+                  child: Container(
+                    height: 25,
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          AppLocalizations.of(context)
+                              .translate('members', 'invite_via_code'),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Spacer(),
+                        Image.asset("lib/assets/images/add.png"),
+                      ],
+                    ),
+                  ),
+                  onTap: () async {
+                    _asyncInputDialog(context);
+                  },
+                ),
+              )
+            : Offstage(),
+        !widget.timebankModel.private == true
+            ? getTimebankCodesWidget
+            : Offstage(),
+      ],
     );
   }
 
@@ -313,6 +315,22 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         ),
         RaisedButton(
           onPressed: () async {
+            var connResult = await Connectivity().checkConnectivity();
+            if (connResult == ConnectivityResult.none) {
+              _scaffoldKey.currentState.showSnackBar(
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)
+                      .translate('shared', 'check_internet')),
+                  action: SnackBarAction(
+                    label: AppLocalizations.of(context)
+                        .translate('shared', 'dismiss'),
+                    onPressed: () =>
+                        _scaffoldKey.currentState.hideCurrentSnackBar(),
+                  ),
+                ),
+              );
+              return;
+            }
             _requestDownload(
                 //   "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/news_documents%2Fraj%40yopmail.com1591160274804FAQ.pdf?alt=media&token=fbd08ff3-3686-4168-b3a9-daa875e68ec0");
                 // 'https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/profile_images%2Fbusiness@uipep.com.jpg?alt=media&token=8ba6d965-ff69-4cb2-9980-035c71d13458');
@@ -416,13 +434,32 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                 height: 30,
                 child: RaisedButton(
                   onPressed: () async {
-                    if (csvFileModel.csvUrl == null ||
-                        csvFileModel.csvTitle == null) {
+                    var connResult = await Connectivity().checkConnectivity();
+                    if (connResult == ConnectivityResult.none) {
+                      _scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text(AppLocalizations.of(context)
+                              .translate('shared', 'check_internet')),
+                          action: SnackBarAction(
+                            label: AppLocalizations.of(context)
+                                .translate('shared', 'dismiss'),
+                            onPressed: () =>
+                                _scaffoldKey.currentState.hideCurrentSnackBar(),
+                          ),
+                        ),
+                      );
+                      return;
+                    }
+                    if (csvFileModel.csvUrl == '' ||
+                        csvFileModel.csvTitle == '') {
                       setState(() {
                         this.csvFileError = AppLocalizations.of(context)
                             .translate('upload_csv', 'csv_error');
                       });
                     } else {
+                      showProgressDialog(AppLocalizations.of(context)
+                          .translate('upload_csv', 'csv_progress'));
+
                       csvFileModel.timebankId = widget.timebankId;
                       csvFileModel.communityId =
                           SevaCore.of(context).loggedInUser.currentCommunity;
@@ -430,13 +467,18 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                           DateTime.now().millisecondsSinceEpoch;
                       csvFileModel.sevaUserId =
                           SevaCore.of(context).loggedInUser.sevaUserID;
+
                       await _firestore
                           .collection('csv_files')
                           .add(csvFileModel.toMap());
+
+                      if (dialogContext != null) {
+                        Navigator.pop(dialogContext);
+                      }
                       setState(() {
                         this.csvFileError = '';
-                        csvFileModel.csvTitle = '';
-                        csvFileModel.csvUrl = '';
+                        csvFileModel.csvTitle = null;
+                        csvFileModel.csvUrl = null;
                       });
                     }
                   },
@@ -518,12 +560,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       this._fileName = fileName;
       this._isDocumentBeingUploaded = true;
     });
-    checkPdfSize();
-
+    checkFileSize();
     return null;
   }
 
-  void checkPdfSize() async {
+  void checkFileSize() async {
     var file = File(_path);
     final bytes = await file.lengthSync();
     if (bytes > oneMegaBytes) {
@@ -724,7 +765,20 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     );
   }
 
-  void showProgressDialog() {}
+  BuildContext dialogContext;
+
+  void showProgressDialog(String message) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          dialogContext = createDialogContext;
+          return AlertDialog(
+            title: Text(message),
+            content: LinearProgressIndicator(),
+          );
+        });
+  }
 
   Widget resendInvitation({InvitationViaLink invitation}) {
     return RaisedButton(

@@ -1,5 +1,6 @@
 //import 'dart:html';
 
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/sevaavatar/projects_avtaar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -14,6 +16,7 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -28,8 +31,13 @@ class CreateEditProject extends StatefulWidget {
   final bool isCreateProject;
   final String timebankId;
   final String projectId;
+  final ProjectTemplateModel projectTemplateModel;
 
-  CreateEditProject({this.isCreateProject, this.timebankId, this.projectId});
+  CreateEditProject(
+      {this.isCreateProject,
+      this.timebankId,
+      this.projectId,
+      this.projectTemplateModel});
 
   @override
   _CreateEditProjectState createState() => _CreateEditProjectState();
@@ -37,14 +45,17 @@ class CreateEditProject extends StatefulWidget {
 
 class _CreateEditProjectState extends State<CreateEditProject> {
   final _formKey = GlobalKey<FormState>();
+  final _formDialogKey = GlobalKey<FormState>();
   String communityImageError = '';
   TextEditingController searchTextController = new TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   String errTxt;
   ProjectModel projectModel = ProjectModel();
+  ProjectTemplateModel projectTemplateModel = ProjectTemplateModel();
   GeoFirePoint location;
   String selectedAddress = '';
-
+  String templateName = '';
+  bool saveAsTemplate = false;
   TimebankModel timebankModel = TimebankModel({});
   BuildContext dialogContext;
   String dateTimeEroor = '';
@@ -55,7 +66,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   int sharedValue = 0;
   ScrollController _controller = ScrollController();
   var focusNodes = List.generate(4, (_) => FocusNode());
-
+  final _textUpdates = StreamController<String>();
+  bool templateFound = false;
+  String templateError = '';
   @override
   void initState() {
     // TODO: implement initState
@@ -64,7 +77,14 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       getData();
     } else {
       setState(() {
-        this.projectModel.mode = 'Timebank';
+        if (widget.projectTemplateModel != null) {
+          this.projectModel.mode = widget.projectTemplateModel.mode;
+          this.projectModel.mode == 'Timebank'
+              ? sharedValue = 0
+              : sharedValue = 1;
+        } else {
+          this.projectModel.mode = 'Timebank';
+        }
       });
     }
 
@@ -73,6 +93,37 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     );
 
     setState(() {});
+
+    searchTextController
+        .addListener(() => _textUpdates.add(searchTextController.text));
+
+    Observable(_textUpdates.stream)
+        .debounceTime(Duration(milliseconds: 600))
+        .forEach((s) {
+      if (s.isEmpty) {
+        setState(() {
+          templateError = null;
+        });
+      } else {
+        if (templateName != s) {
+          SearchManager.searchTemplateForDuplicate(queryString: s)
+              .then((commFound) {
+            print("querystring is  ${s} and templateName is ${templateName}");
+            if (commFound) {
+              setState(() {
+                templateFound = true;
+                templateError = 'Template name already exists';
+              });
+            } else {
+              setState(() {
+                templateFound = false;
+                templateError = null;
+              });
+            }
+          });
+        }
+      }
+    });
   }
 
   void getData() async {
@@ -97,6 +148,16 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       endDate = getUpdatedDateTimeAccToUserTimezone(
           timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
           dateTime: DateTime.fromMillisecondsSinceEpoch(projectModel.endTime));
+    }
+    if (widget.isCreateProject && widget.projectTemplateModel != null) {
+      startDate = getUpdatedDateTimeAccToUserTimezone(
+          timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+          dateTime: DateTime.fromMillisecondsSinceEpoch(
+              widget.projectTemplateModel.startTime));
+      endDate = getUpdatedDateTimeAccToUserTimezone(
+          timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+          dateTime: DateTime.fromMillisecondsSinceEpoch(
+              widget.projectTemplateModel.endTime));
     }
 
     return Scaffold(
@@ -205,11 +266,17 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 child: Column(
                   children: <Widget>[
                     widget.isCreateProject
-                        ? ProjectAvtaar()
+                        ? widget.projectTemplateModel != null
+                            ? ProjectAvtaar(
+                                photoUrl:
+                                    widget.projectTemplateModel.photoUrl ??
+                                        defaultProjectImageURL)
+                            : ProjectAvtaar()
                         : ProjectAvtaar(
                             photoUrl: projectModel.photoUrl != null
-                                ? projectModel.photoUrl ?? defaultCameraImageURL
-                                : defaultCameraImageURL,
+                                ? projectModel.photoUrl ??
+                                    defaultProjectImageURL
+                                : defaultProjectImageURL,
                           ),
                     Text(''),
                     Text(
@@ -243,8 +310,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               inputFormatters: <TextInputFormatter>[
                 WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
               ],
-              initialValue:
-                  widget.isCreateProject ? "" : projectModel.name ?? "",
+              initialValue: widget.isCreateProject
+                  ? widget.projectTemplateModel != null
+                      ? widget.projectTemplateModel.name
+                      : ""
+                  : projectModel.name ?? "",
               decoration: InputDecoration(
                 errorText: errTxt,
                 hintText: AppLocalizations.of(context)
@@ -273,12 +343,19 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               },
             ),
             widget.isCreateProject
-                ? OfferDurationWidget(
-                    title:
-                        ' ${AppLocalizations.of(context).translate('projects', 'duration')}',
-                    //startTime: CalendarWidgetState.startDate,
-                    //endTime: CalendarWidgetState.endDate
-                  )
+                ? widget.projectTemplateModel != null
+                    ? OfferDurationWidget(
+                        title:
+                            ' ${AppLocalizations.of(context).translate('projects', 'duration')}',
+                        startTime: startDate,
+                        endTime: endDate,
+                      )
+                    : OfferDurationWidget(
+                        title:
+                            ' ${AppLocalizations.of(context).translate('projects', 'duration')}',
+                        //startTime: CalendarWidgetState.startDate,
+                        //endTime: CalendarWidgetState.endDate
+                      )
                 : OfferDurationWidget(
                     title:
                         ' ${AppLocalizations.of(context).translate('projects', 'duration')}',
@@ -305,8 +382,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               },
               textInputAction: TextInputAction.next,
               focusNode: focusNodes[1],
-              initialValue:
-                  widget.isCreateProject ? "" : projectModel.description ?? "",
+              initialValue: widget.isCreateProject
+                  ? widget.projectTemplateModel != null
+                      ? widget.projectTemplateModel.description
+                      : ""
+                  : projectModel.description ?? "",
               keyboardType: TextInputType.multiline,
               maxLines: null,
               textCapitalization: TextCapitalization.sentences,
@@ -350,7 +430,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 projectModel.emailId = value;
               },
               initialValue: widget.isCreateProject
-                  ? SevaCore.of(context).loggedInUser.email
+                  ? widget.projectTemplateModel != null
+                      ? widget.projectTemplateModel.emailId
+                      : SevaCore.of(context).loggedInUser.email
                   : projectModel.emailId ??
                       SevaCore.of(context).loggedInUser.email,
               decoration: InputDecoration(
@@ -401,7 +483,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               },
               maxLength: 15,
               initialValue: widget.isCreateProject
-                  ? ""
+                  ? widget.projectTemplateModel != null
+                      ? widget.projectTemplateModel.phoneNumber
+                      : ""
                   : projectModel.phoneNumber.replaceAll('+', '') ?? "",
               decoration: InputDecoration(
 //                icon: Icon(
@@ -448,8 +532,16 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             ),
             Center(
               child: LocationPickerWidget(
-                selectedAddress: selectedAddress,
-                location: location,
+                selectedAddress: widget.isCreateProject
+                    ? widget.projectTemplateModel != null
+                        ? widget.projectTemplateModel.address
+                        : selectedAddress
+                    : selectedAddress,
+                location: widget.isCreateProject
+                    ? widget.projectTemplateModel != null
+                        ? widget.projectTemplateModel.location
+                        : location
+                    : location,
                 onChanged: (LocationDataModel dataModel) {
                   log("received data model");
                   setState(() {
@@ -503,31 +595,43 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 fontSize: 12,
               ),
             ),
-//            Row(
-//              children: <Widget>[
-//                headingText('Save as Template'),
-////                Padding(
-////                  padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-////                  child: infoButton(
-////                    context: context,
-////                    key: GlobalKey(),
-////                    type: InfoType.PRIVATE_TIMEBANK,
-////                  ),
-////                ),
+            widget.isCreateProject
+                ? Row(
+                    children: <Widget>[
+                      headingText('Save as Template'),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15),
+                        child: Checkbox(
+                          value: saveAsTemplate,
+                          onChanged: (bool value) {
+                            if (saveAsTemplate) {
+                              setState(() {
+                                saveAsTemplate = false;
+                              });
+                            } else {
+                              _showSaveAsTemplateDialog().then((templateName) {
+                                if (templateName != null) {
+                                  setState(() {
+                                    saveAsTemplate = true;
+                                  });
+                                } else {
+                                  setState(() {
+                                    saveAsTemplate = false;
+                                  });
+                                }
+                              });
+                            }
+                          },
+                        ),
+                      ),
 //                Column(
 //                  children: <Widget>[
-//                    Divider(),
-//                    Checkbox(
-//                      value:widget.isCreateProject?false: projectModel.saveAsTemplate,
-//                      onChanged: (bool value) {
-//                        print(value);
-//                        projectModel.saveAsTemplate = value;
-//                      },
-//                    ),
+//
 //                  ],
 //                ),
-//              ],
-//            ),
+                    ],
+                  )
+                : Offstage(),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5.0),
               child: Container(
@@ -603,6 +707,36 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         projectModel.address = selectedAddress;
                         projectModel.id = Utils.getUuid();
                         projectModel.softDelete = false;
+
+                        if (saveAsTemplate) {
+                          projectTemplateModel.communityId =
+                              projectModel.communityId;
+                          projectTemplateModel.timebankId =
+                              projectModel.timebankId;
+                          projectTemplateModel.id = Utils.getUuid();
+                          projectTemplateModel.name = projectModel.name;
+                          projectTemplateModel.templateName = templateName;
+                          projectTemplateModel.address = projectModel.address;
+                          projectTemplateModel.location = projectModel.location;
+                          projectTemplateModel.photoUrl = projectModel.photoUrl;
+                          projectTemplateModel.phoneNumber =
+                              projectModel.phoneNumber;
+                          projectTemplateModel.description =
+                              projectModel.description;
+                          projectTemplateModel.emailId = projectModel.emailId;
+                          projectTemplateModel.creatorId =
+                              projectModel.creatorId;
+                          projectTemplateModel.createdAt =
+                              projectModel.createdAt;
+                          projectTemplateModel.endTime = projectModel.endTime;
+                          projectTemplateModel.startTime =
+                              projectModel.startTime;
+                          projectTemplateModel.mode = projectModel.mode;
+
+                          await FirestoreManager.createProjectTemplate(
+                              projectTemplateModel: projectTemplateModel);
+                        }
+
                         // if (globals.projectsAvtaarURL == null) {
                         //   setState(() {
                         //     this.communityImageError =
@@ -624,6 +758,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           Navigator.pop(dialogContext);
                         }
                         _formKey.currentState.reset();
+                        Navigator.of(context).pop();
                         Navigator.of(context).pop();
                       } else {}
                     } else {
@@ -792,5 +927,137 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     return TextStyle(
       color: Colors.black54,
     );
+  }
+
+  Future<String> _showSaveAsTemplateDialog() {
+    return showDialog<String>(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            child: Form(
+              key: _formDialogKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    height: 50,
+                    width: double.infinity,
+                    color: FlavorConfig.values.theme.primaryColor,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: Text(
+                        AppLocalizations.of(context)
+                            .translate('project_template', 'template_title'),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: 'Europa'),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    child: Container(
+//                      decoration: new BoxDecoration(
+//                        shape: BoxShape.rectangle,
+//                        border: new Border.all(
+//                          color: Colors.grey,
+//                          width: 1.0,
+//                        ),
+//                      ),
+                      child: TextFormField(
+                        controller: searchTextController,
+                        decoration: InputDecoration(
+                            border: new OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(0.0),
+                              ),
+                              borderSide: new BorderSide(
+                                color: Colors.black,
+                                width: 1.0,
+                              ),
+                            ),
+                            contentPadding:
+                                EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+//                            enabledBorder: UnderlineInputBorder(
+//                              borderSide: BorderSide(color: Colors.grey),
+//                            ),
+                            hintText: AppLocalizations.of(context).translate(
+                                'project_template', 'template_hint')),
+                        keyboardType: TextInputType.text,
+                        textCapitalization: TextCapitalization.sentences,
+                        style: TextStyle(fontSize: 17.0),
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(50),
+                        ],
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return AppLocalizations.of(context)
+                                .translate('project_template', 'name_error');
+                          } else if (templateFound) {
+                            return AppLocalizations.of(context).translate(
+                                'project_template', 'already_exists');
+                          } else {
+                            templateName = value;
+                            return null;
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Divider(
+                    color: Colors.black12,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      FlatButton(
+                        onPressed: () {
+                          Navigator.pop(viewContext);
+                        },
+                        child: Text(
+                          AppLocalizations.of(context)
+                              .translate('shared', 'cancel'),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa'),
+                        ),
+                        textColor: Colors.grey,
+                      ),
+                      FlatButton(
+                        child: Text(
+                            AppLocalizations.of(context)
+                                .translate('projects', 'save'),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Europa')),
+                        textColor: FlavorConfig.values.theme.primaryColor,
+                        onPressed: () async {
+                          if (!_formDialogKey.currentState.validate()) {
+                            return;
+                          }
+                          Navigator.pop(viewContext, templateName);
+                        },
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  )
+                ],
+              ),
+            ),
+          );
+        });
   }
 }

@@ -12,6 +12,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
@@ -873,6 +874,26 @@ Future<ProjectModel> getProjectFutureById({
   return ProjectModel.fromMap(documentsnapshot.data);
 }
 
+Future<ProjectTemplateModel> getProjectTemplateById(
+    {@required String templateId}) async {
+  assert(templateId != null && templateId.isNotEmpty,
+      "template id cannot be null or empty");
+
+  ProjectTemplateModel projectTemplateModel;
+  await Firestore.instance
+      .collection('project_templates')
+      .where('id', isEqualTo: templateId)
+      .getDocuments()
+      .then((QuerySnapshot querySnapshot) {
+    querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+      projectTemplateModel =
+          ProjectTemplateModel.fromMap(documentSnapshot.data);
+    });
+  });
+
+  return projectTemplateModel;
+}
+
 Stream<RequestModel> getRequestStreamById({
   @required String requestId,
 }) async* {
@@ -905,6 +926,14 @@ Stream<ProjectModel> getProjectStream({
       },
     ),
   );
+}
+
+Future<void> createProjectTemplate(
+    {@required ProjectTemplateModel projectTemplateModel}) async {
+  return await Firestore.instance
+      .collection('project_templates')
+      .document(projectTemplateModel.id)
+      .setData(projectTemplateModel.toMap());
 }
 
 Future<void> createProject({@required ProjectModel projectModel}) async {

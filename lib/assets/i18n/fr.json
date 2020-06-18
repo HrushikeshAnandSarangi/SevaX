@@ -397,7 +397,8 @@
     "title_about": "Titre",
     "mission_statement": "Mission Statement",
     "organizer": "Organisateur",
-    "delete_project": "Supprimer le projet"
+    "delete_project": "Supprimer le projet",
+    "new_project": "Nouveau projet"
   },
   "tasks": {
     "error": "Erreur:",
@@ -1100,8 +1101,7 @@
     "download_progress": "le téléchargement",
     "download_success": "Le téléchargement est terminé.",
     "csv_file_alert": "Les fichiers supérieurs à 1 MB ne sont pas autorisés",
-    "csv_size_limit": "REMARQUE: la taille maximale du fichier est de 1 MB"
-
-
+    "csv_size_limit": "REMARQUE: la taille maximale du fichier est de 1 MB",
+    "csv_progress": "Téléchargement d'un fichier CSV"
   }
 }
