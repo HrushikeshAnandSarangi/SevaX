@@ -33,6 +33,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
   void initState() {
     super.initState();
     _selected = List.generate(dayNameList.length, (i) => false);
+    _selected[1] = true;
 //    recurringDays = new List(7);
   }
 
@@ -62,6 +63,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
     }
 //    recurringDays.removeWhere((value) => value == null);
     print("list of data $recurringDays");
+    return recurringDays;
   }
 
   void _selectOnAfter() {
