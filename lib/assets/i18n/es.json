@@ -36,6 +36,7 @@
     "enter_password_warn": "Digite a senha",
     "password_warn_6char": "A senha deve ter 6 caracteres",
     "reset_link_message": "Enviamos o link de redefinição para o seu endereço de e-mail",
+    "reset_dynamic_link_message": "Por favor revise su correo electrónico para configurar su contraseña. Luego ingrese esa contraseña aquí",
     "terms_of_service_link": "Termos de serviço",
     "privacy_policy_link": "Política de Privacidade",
     "payment_policy_link": "Política de pagamento"
@@ -1096,7 +1097,7 @@
     "csv_title":"Invitación masiva de usuarios por CSV",
     "upload": "Subir",
     "choose_csv": "Elija el archivo CSV para invitar a miembros de forma masiva",
-    "csv_error": "El archivo CSV no está seleccionado",
+    "csv_error": "Seleccione primero un archivo CSV antes de cargar",
     "download_progress": "Descargando",
     "download_success": "La descarga está completa.",
     "csv_file_alert": "No se permiten archivos de más de 1 MB.",
@@ -1104,11 +1105,17 @@
     "csv_progress": "Subir archivo CSV"
   },
 
+
   "project_template": {
-    "template_title": "",
-    "template_title": "",
-    "template_title": "",
-    "template_title": "",
-    "template_title": ""
+    "template_title": "Proporcione un nombre único para la plantilla.",
+    "template_hint": "Nombre de la plantilla",
+    "name_error": "El nombre de la plantilla no puede estar vacío.",
+    "already_exists": "El nombre de la plantilla ya está en uso.\nPor favor proporcione otro nombre.",
+    "search_template_hint": "Ingrese el nombre de una plantilla de proyecto",
+    "create_project_template": "Crear proyecto desde plantilla",
+    "create_new_project": "Crear nuevo proyecto",
+    "no_templates": "No se encontraron plantillas",
+    "empty_template": "Seleccione una plantilla de la lista de plantillas disponibles.",
+    "template_alert": "Alerta de plantilla"
   }
 }

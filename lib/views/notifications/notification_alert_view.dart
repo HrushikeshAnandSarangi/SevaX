@@ -49,7 +49,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                 });
               },
             ),
-          )
+          ),
         ],
       ),
     );

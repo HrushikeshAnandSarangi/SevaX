@@ -235,12 +235,12 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
           fillColor: Colors.white,
 
           alignLabelWithHint: true,
-          prefix: Icon(
+          prefixIcon: Icon(
             Icons.search,
-            // size: 20,
+            size: 20,
             color: Colors.grey,
           ),
-          contentPadding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 10.0),
+          contentPadding: EdgeInsets.fromLTRB(10.0, 5.0, 0.0, 10.0),
 
           suffixIcon: Offstage(
             offstage: searchTextController.text.length == 0,

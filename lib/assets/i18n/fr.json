@@ -36,6 +36,7 @@
     "enter_password_warn": "Entrer votre mot de passe",
     "password_warn_6char": "Le mot de passe doit être composé d'au moins 6 caractères",
     "reset_link_message": "Nous avons envoyé le lien de réinitialisation à votre adresse e-mail",
+    "reset_dynamic_link_message": "Veuillez vérifier votre e-mail pour définir votre mot de passe. Entrez ensuite ce mot de passe ici",
     "terms_of_service_link": "Conditions d'utilisation",
     "privacy_policy_link": "Politique de confidentialité",
     "payment_policy_link": "Politique de paiement"
@@ -1097,11 +1098,24 @@
     "csv_title":"Inviter des utilisateurs en masse par CSV",
     "upload": "Télécharger",
     "choose_csv": "Choisissez un fichier CSV pour inviter des membres en masse",
-    "csv_error": "Le fichier CSV n'est pas sélectionné",
+    "csv_error": "Veuillez sélectionner un fichier CSV avant de télécharger",
     "download_progress": "le téléchargement",
     "download_success": "Le téléchargement est terminé.",
     "csv_file_alert": "Les fichiers supérieurs à 1 MB ne sont pas autorisés",
     "csv_size_limit": "REMARQUE: la taille maximale du fichier est de 1 MB",
     "csv_progress": "Téléchargement d'un fichier CSV"
+  },
+
+  "project_template": {
+    "template_title": "Indiquez un nom unique pour le modèle",
+    "template_hint": "Nom du modèle",
+    "name_error": "Le nom du modèle ne peut pas être vide",
+    "already_exists": "Le nom du modèle est déjà utilisé.\nVeuillez fournir un autre nom.",
+    "search_template_hint": "Entrez le nom d'un modèle de projet",
+    "create_project_template": "Créer un projet à partir d'un modèle",
+    "create_new_project": "Créer un nouveau projet",
+    "no_templates": "Aucun modèle trouvé",
+    "empty_template": "Veuillez sélectionner un modèle dans la liste des modèles disponibles",
+    "template_alert": "Alerte de modèle"
   }
 }

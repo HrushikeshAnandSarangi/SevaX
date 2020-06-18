@@ -98,7 +98,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         .addListener(() => _textUpdates.add(searchTextController.text));
 
     Observable(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 600))
+        .debounceTime(Duration(milliseconds: 400))
         .forEach((s) {
       if (s.isEmpty) {
         setState(() {
@@ -485,6 +485,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               initialValue: widget.isCreateProject
                   ? widget.projectTemplateModel != null
                       ? widget.projectTemplateModel.phoneNumber
+                              .replaceAll('+', "") ??
+                          ""
                       : ""
                   : projectModel.phoneNumber.replaceAll('+', '') ?? "",
               decoration: InputDecoration(
@@ -812,7 +814,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     widget.isCreateProject
                         ? AppLocalizations.of(context)
                             .translate('projects', 'create')
-                        : 'Save',
+                        : AppLocalizations.of(context)
+                            .translate('projects', 'save'),
                     style: TextStyle(fontSize: 16.0, color: Colors.white),
                   ),
                   textColor: FlavorConfig.values.buttonTextColor,
@@ -975,6 +978,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                       child: TextFormField(
                         controller: searchTextController,
                         decoration: InputDecoration(
+                            hintMaxLines: 2,
                             border: new OutlineInputBorder(
                               borderRadius: const BorderRadius.all(
                                 const Radius.circular(0.0),
