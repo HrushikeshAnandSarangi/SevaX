@@ -93,9 +93,12 @@ class _LocationPickerState extends State<LocationPicker> {
     loadInitialLocation();
   }
 
-  Future<void> loadInitialAddress() async {
+  Future<void> loadInitialAddress(marker) async {
     address = await _getAddressFromLatLng(target);
-    setState(() {});
+    setState(() {
+      address;
+      markers = {marker};
+    });
   }
 
   @override
@@ -359,11 +362,7 @@ class _LocationPickerState extends State<LocationPicker> {
       icon: BitmapDescriptor.defaultMarker,
       infoWindow: InfoWindow(title: AppLocalizations.of(context).translate('shared','marker')),
     );
-
-    setState(() {
-      loadInitialAddress();
-      markers = {marker};
-    });
+    loadInitialAddress(marker);
   }
 
   /// Animate to location corresponding to [LatLng]

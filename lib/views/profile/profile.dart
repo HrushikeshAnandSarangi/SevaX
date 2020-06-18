@@ -23,7 +23,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/community/about_app.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/notifications/notification_alert_view.dart';
 import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
@@ -357,7 +356,6 @@ class _ProfilePageState extends State<ProfilePage>
                         ),
                         SizedBox(height: 10),
                         getHelpSection,
-                        getNotificationSection,
                         InkWell(
                           onTap: () {
                             Navigator.of(context).push(

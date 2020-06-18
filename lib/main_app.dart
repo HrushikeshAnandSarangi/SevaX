@@ -10,12 +10,18 @@ import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/internationalization/applanguage.dart';
+import 'package:sevaexchange/ui/utils/connectivity.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'internationalization/app_localization.dart';
-import 'internationalization/applanguage.dart';
+Future<void> fetchRemoteConfig() async {
+  AppConfig.remoteConfig = await RemoteConfig.instance;
+  AppConfig.remoteConfig.fetch(expiration: Duration.zero);
+  AppConfig.remoteConfig.activateFetched();
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,21 +36,21 @@ Future<void> main() async {
       sound: true,
     ),
   );
+  ConnectionStatusSingleton connectionStatus =
+      ConnectionStatusSingleton.getInstance();
+  connectionStatus.initialize();
 
   //Initialize app details
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   AppConfig.appVersion = packageInfo.version;
   AppConfig.buildNumber = int.parse(packageInfo.buildNumber);
-//  AppConfig.appName = packageInfo.appName;
   AppConfig.packageName = packageInfo.packageName;
 
   //SharedPreferences
   AppConfig.prefs = await SharedPreferences.getInstance();
-
-  AppConfig.remoteConfig = await RemoteConfig.instance;
-  AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
-  AppConfig.remoteConfig.activateFetched();
-
+  final AppLanguage appLanguage = AppLanguage();
+  await appLanguage.fetchLocale();
+  await fetchRemoteConfig();
   _firebaseMessaging.configure(
     onMessage: (Map<String, dynamic> message) {
       print('onMessage: $message');
@@ -69,7 +75,7 @@ Future<void> main() async {
     (_) {
       Crashlytics.instance.enableInDevMode = true;
       FlutterError.onError = Crashlytics.instance.recordFlutterError;
-      runApp(MainApplication());
+      runApp(MainApplication(appLanguage: appLanguage));
       // runZoned(() {
 
       // }, onError: Crashlytics.instance.recordError);
@@ -79,9 +85,9 @@ Future<void> main() async {
 
 class MainApplication extends StatelessWidget {
   final bool skipToHomePage;
-  final AppLanguage appLanguage = AppLanguage()..fetchLocale();
-
-  MainApplication({Key key, this.skipToHomePage = false}) : super(key: key);
+  final AppLanguage appLanguage;
+  MainApplication({Key key, this.skipToHomePage = false, this.appLanguage})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppLanguage>(
@@ -95,7 +101,7 @@ class MainApplication extends StatelessWidget {
                 Locale('en', 'US'),
                 Locale('pt', 'PT'),
                 Locale('fr', 'FR'),
-                Locale('es', 'ES'),
+                Locale('es', 'ES')
               ],
               localizationsDelegates: [
                 AppLocalizations.delegate,
@@ -113,7 +119,7 @@ class MainApplication extends StatelessWidget {
                 return GestureDetector(
                   child: child,
                   onTap: () {
-                    FocusScope.of(context).requestFocus(FocusNode());
+                    FocusScope.of(context).unfocus();
                   },
                 );
               },
@@ -126,5 +132,3 @@ class MainApplication extends StatelessWidget {
         }));
   }
 }
-
-class News {}
