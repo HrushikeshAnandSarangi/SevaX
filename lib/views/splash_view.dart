@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flurry/flurry.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
@@ -83,6 +84,22 @@ class _SplashViewState extends State<SplashView> {
       initFlurry();
     }
     initLocaleForTimeAgoLibrary();
+    _createNotificationChannel();
+  }
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  Future<void> _createNotificationChannel() async {
+    var androidNotificationChannel = AndroidNotificationChannel(
+      '91512', // channel ID
+      'General', // channel name
+      'General notifications', //channel description
+      importance: Importance.High,
+    );
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(androidNotificationChannel);
   }
 
   void initLocaleForTimeAgoLibrary() {

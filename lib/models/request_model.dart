@@ -121,6 +121,7 @@ class RequestModel extends DataModel {
   String sevaUserId;
   String photoUrl;
   List<String> acceptors;
+  // List<String> rejected;
   int durationOfRequest;
   int postTimestamp;
   int requestEnd;
@@ -140,6 +141,8 @@ class RequestModel extends DataModel {
   String projectId = "";
   String address;
   bool softDelete;
+
+
 
   RequestMode requestMode;
 
