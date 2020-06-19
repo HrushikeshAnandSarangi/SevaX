@@ -29,9 +29,9 @@ class ProfileViewer extends StatefulWidget {
     this.isFromTimebank,
     this.entityName,
   })  : assert(userEmail != null),
-        assert(entityName != null),
-        assert(timebankId != null),
-        assert(isFromTimebank != null);
+//        assert(entityName != null),
+        assert(timebankId != null);
+//        assert(isFromTimebank != null);
   @override
   State<StatefulWidget> createState() {
     return ProfileViewerState();

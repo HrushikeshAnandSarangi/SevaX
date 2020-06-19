@@ -448,48 +448,57 @@ class Searches {
       QuerySnapshot skillsListSnap,
       QuerySnapshot interestsListSnap,
   }) async* {
-    Map<String, List<String>> allSkillsInterestsConsolidated = getSkillsInterestsIdsOfUser(skillsListSnap, interestsListSnap, queryString.toLowerCase());
-    print("ids of selected skills " + allSkillsInterestsConsolidated['skills'].toString());
-    String url = FlavorConfig.values.elasticSearchBaseURL +
-        '//elasticsearch/sevaxusers/sevaxuser/_search';
-    dynamic body = json.encode(
-      {
-        "size": 3000,
-        "query": {
-          "bool": {
-            "must": [
-              {
-                "match": {
-                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
+
+      Map<String, List<String>> allSkillsInterestsConsolidated = getSkillsInterestsIdsOfUser(skillsListSnap, interestsListSnap, queryString.toLowerCase());
+      print("ids of selected skills " + allSkillsInterestsConsolidated['skills'].toString());
+      print("ids of selected interests " + allSkillsInterestsConsolidated['interests'].toString());
+      String url = FlavorConfig.values.elasticSearchBaseURL +
+          '//elasticsearch/sevaxusers/sevaxuser/_search';
+      dynamic body = json.encode(
+        {
+          "size": 3000,
+          "query": {
+            "bool": {
+              "must": [
+                {
+                  "match": {
+                    "root_timebank_id": "${FlavorConfig.values.timebankId}"
+                  }
+                },
+                {
+                  "term": {
+                    "communities.keyword": loggedInUser.currentCommunity
+                  }
+                },
+                {
+                  "bool": {
+                    "should": [
+                      {
+                        "multi_match": {
+                          "query": queryString,
+                          "fields": [
+                            "email",
+                            "fullname",
+                            "bio"
+                          ],
+                          "type": "phrase_prefix"
+                        }
+                      },
+                      {
+                        "terms": {
+                          "skills.keyword": allSkillsInterestsConsolidated['skills']
+//                        "skills.keyword": ['0kSCbykooGckE3yJV3RF']
+                        }
+                      },
+                      {
+                        "terms": {
+                          "interests.keyword": allSkillsInterestsConsolidated['interests']
+//                        "interests.keyword": []
+                        }
+                      }
+                    ]
+                  }
                 }
-              },
-              {
-                "bool": {
-                  "should": [
-                    {
-                      "multi_match": {
-                        "query": queryString,
-                        "fields": [
-                          "email",
-                          "fullname",
-                          "bio"
-                        ],
-                        "type": "phrase_prefix"
-                      }
-                    },
-                    {
-                      "terms": {
-                        "skills.keyword": allSkillsInterestsConsolidated['skills']
-                      }
-                    },
-                    {
-                      "terms": {
-                        "interests.keyword": allSkillsInterestsConsolidated['interests']
-                      }
-                    }
-                  ]
-                }
-              }
 //              {
 //                "multi_match": {
 //                  "query": queryString,
@@ -497,34 +506,44 @@ class Searches {
 //                  "type": "phrase_prefix"
 //                }
 //              },
-            ]
+              ]
+            }
           }
-        }
-      },
-    );
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(url, body);
-    List<UserModel> usersList = [];
+        },
+      );
+      List<Map<String, dynamic>> hitList =
+      await _makeElasticSearchPostRequest(url, body);
+      List<UserModel> usersList = [];
+      print("hitlist length---"+hitList.length.toString());
 
-    hitList.forEach((map) {
-      Map<String, dynamic> sourceMap = map['_source'];
+      hitList.forEach((map) {
+        Map<String, dynamic> sourceMap = map['_source'];
       if (loggedInUser.blockedBy.length == 0) {
-        if (sourceMap['communities'].contains(loggedInUser.currentCommunity) &&
+        print("inside 1st if "+sourceMap['communities'].toString());
+        if (
+//        sourceMap['communities'].contains(loggedInUser.currentCommunity) &&
             loggedInUser.sevaUserID != sourceMap['sevauserid']) {
-          UserModel user = UserModel.fromMap(sourceMap);
-          usersList.add(user);
-        }
-      } else {
-        if (sourceMap['communities'].contains(loggedInUser.currentCommunity) &&
-            !loggedInUser.blockedBy.contains(sourceMap['sevauserid']) &&
-            loggedInUser.sevaUserID != sourceMap['sevauserid']) {
+          print("usersList===========>"+sourceMap["fullname"]);
           UserModel user = UserModel.fromMap(sourceMap);
           usersList.add(user);
         }
       }
-    });
-    usersList.sort((a, b) => a.fullname.compareTo(b.fullname));
-    yield usersList;
+      else {
+        print("inside else");
+        if (
+//        sourceMap['communities'].contains(loggedInUser.currentCommunity) &&
+            !loggedInUser.blockedBy.contains(sourceMap['sevauserid']) &&
+            loggedInUser.sevaUserID != sourceMap['sevauserid']) {
+          print("usersList===========>"+sourceMap["fullname"]);
+          UserModel user = UserModel.fromMap(sourceMap);
+          usersList.add(user);
+        }
+      }
+      });
+
+//      usersList.sort((a, b) => a.fullname.compareTo(b.fullname));
+      yield usersList;
+
   }
 
   static List<String> getTimebanksAndGroupsOfUser(
@@ -546,9 +565,7 @@ class Searches {
     String temp = "";
     allSkills.documents.forEach((skillDoc){
       temp = skillDoc.data['name'].toLowerCase();
-      print("temp.contains is "+ temp + " "+queryString);
       if(temp.contains(queryString.toLowerCase())){
-        print("temp.contains is ---"+temp);
         skillsarr.add(skillDoc.documentID);
       }
     });

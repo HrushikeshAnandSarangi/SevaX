@@ -33,12 +33,12 @@ class _NotificationAlertState extends State<NotificationAlert> {
             ),
             trailing: Switch(
               activeColor: Colors.green,
-              value: SevaCore.of(context).loggedInUser.notificationAlerts,
+//              value: SevaCore.of(context).loggedInUser.notificationAlerts,
               onChanged: (value) {
                 print("VALUE : $value");
                 setState(() {
                   isTurnedOn = value;
-                  SevaCore.of(context).loggedInUser.notificationAlerts = value;
+//                  SevaCore.of(context).loggedInUser.notificationAlerts = value;
                   _firestore
                       .collection('users')
                       .document(SevaCore.of(context).loggedInUser.email)
