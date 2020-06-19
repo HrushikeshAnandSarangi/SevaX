@@ -1118,5 +1118,11 @@
     "no_templates": "No se encontraron plantillas",
     "empty_template": "Seleccione una plantilla de la lista de plantillas disponibles.",
     "template_alert": "Alerta de plantilla"
+  },
+  "change_ownership": {
+    "change_ownership_title": "Cambiar propiedad",
+    "change": "Change"
+
+
   }
 }

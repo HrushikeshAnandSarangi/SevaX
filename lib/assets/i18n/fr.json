@@ -1118,5 +1118,11 @@
     "no_templates": "Aucun modèle trouvé",
     "empty_template": "Veuillez sélectionner un modèle dans la liste des modèles disponibles",
     "template_alert": "Alerte de modèle"
+  },
+
+  "change_ownership": {
+    "change_ownership_title": "Changer de propriétaire",
+    "change": "Change"
   }
+
 }

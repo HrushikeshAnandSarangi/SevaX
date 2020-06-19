@@ -1119,5 +1119,12 @@
     "no_templates": "No templates found",
     "empty_template": "Please select a Template from the list of available Templates",
     "template_alert": "Template alert"
+  },
+
+  "change_ownership": {
+    "change_ownership_title": "Change Ownership",
+    "change": "Change",
+    "change_hint": "Changing ownership of this Timebank/Group to another user.",
+    "change_hint_two": "Change to"
   }
 }
