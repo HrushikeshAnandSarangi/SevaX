@@ -30,11 +30,13 @@ class CreateGroupPage extends StatelessWidget {
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             onPressed: () {
+              BuildContext viewContext;
               if (showLoadingDialog) {
                 showDialog(
                   context: context,
                   barrierDismissible: false,
                   builder: (BuildContext context) {
+                    viewContext = context;
                     return AlertDialog(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -48,6 +50,7 @@ class CreateGroupPage extends StatelessWidget {
                   .createMultiUserMessaging(SevaCore.of(context).loggedInUser)
                   .then((ChatModel model) {
                 if (model != null) {
+                  Navigator.of(viewContext).pop();
                   Navigator.of(context).pop(model);
                 }
               });

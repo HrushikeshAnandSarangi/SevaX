@@ -102,7 +102,7 @@ class _NewChatPageState extends State<NewChatPage> {
                 ),
               ),
             ),
-            widget.frequentContacts.length > 0
+            (widget.frequentContacts?.length ?? 0) > 0
                 ? FrequentContactsBuilder(
                     widget.frequentContacts,
                     _bloc.isSelectionEnabled,
