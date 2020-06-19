@@ -11,10 +11,14 @@ import 'new_chat_page.dart';
 class CreateNewChatPage extends StatefulWidget {
   final bool isSelectionEnabled;
   final List<ParticipantInfo> frequentContacts;
+  final List<String> selectedMembers;
 
-  const CreateNewChatPage(
-      {Key key, this.isSelectionEnabled, this.frequentContacts})
-      : assert(isSelectionEnabled != null),
+  const CreateNewChatPage({
+    Key key,
+    this.isSelectionEnabled,
+    this.frequentContacts,
+    this.selectedMembers,
+  })  : assert(isSelectionEnabled != null),
         super(key: key);
   @override
   _CreateNewChatPageState createState() => _CreateNewChatPageState();
@@ -27,12 +31,19 @@ class _CreateNewChatPageState extends State<CreateNewChatPage> {
   @override
   initState() {
     _bloc = CreateChatBloc(widget.isSelectionEnabled);
+
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _bloc.getMembers(
+      _bloc
+          .getMembers(
         SevaCore.of(context).loggedInUser.sevaUserID,
         SevaCore.of(context).loggedInUser.currentCommunity,
-      );
+      )
+          .then((_) {
+        if (widget.selectedMembers != null) {
+          widget.selectedMembers.forEach((String id) => _bloc.selectMember(id));
+        }
+      });
     });
   }
 
@@ -51,6 +62,7 @@ class _CreateNewChatPageState extends State<CreateNewChatPage> {
           controller: textController,
           onChanged: (String value) {},
           isSelectionEnabled: widget.isSelectionEnabled,
+          isFromEditGroup: widget.selectedMembers != null,
         ),
         body: StreamBuilder(
           stream: _bloc.searchText,

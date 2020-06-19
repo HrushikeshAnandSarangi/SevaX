@@ -11,7 +11,7 @@ class ChatModel {
   List<String> softDeletedBy;
   Map<dynamic, dynamic> deletedBy;
   bool isTimebankMessage;
-  String timebankId;
+  // String timebankId;
   String communityId;
   bool isGroupMessage;
   MultiUserMessagingModel groupDetails;
@@ -26,7 +26,7 @@ class ChatModel {
     this.softDeletedBy,
     this.deletedBy,
     this.isTimebankMessage = false,
-    this.timebankId,
+    // this.timebankId,
     this.communityId,
     this.timestamp,
     this.isGroupMessage,
@@ -54,7 +54,7 @@ class ChatModel {
                     Map<String, dynamic>.from(map["groupDetails"]),
                   )
                 : null,
-        timebankId: map["timebankId"],
+        // timebankId: map["timebankId"],
         communityId: map["communityId"],
         timestamp: map["timestamp"],
       );
@@ -65,7 +65,7 @@ class ChatModel {
             List<dynamic>.from(participantInfo.map((x) => x.toMap())),
         "unreadStatus": unreadStatus,
         "isTimebankMessage": isTimebankMessage,
-        "timebankId": timebankId,
+        // "timebankId": timebankId,
         "communityId": communityId,
         "isGroupMessage": isGroupMessage ?? false,
         "groupDetails": groupDetails?.toMap()
@@ -105,12 +105,14 @@ enum ChatType {
   TYPE_PERSONAL,
   TYPE_TIMEBANK,
   TYPE_GROUP,
+  TYPE_MULTI_USER_MESSAGING
 }
 
 Map<String, ChatType> typeMapper = {
   "TYPE_PERSONAL": ChatType.TYPE_PERSONAL,
   "TYPE_TIMEBANK": ChatType.TYPE_TIMEBANK,
   "TYPE_GROUP": ChatType.TYPE_GROUP,
+  "TYPE_MULTI_USER_MESSAGING": ChatType.TYPE_MULTI_USER_MESSAGING,
 };
 
 class MultiUserMessagingModel {
@@ -140,4 +142,13 @@ class MultiUserMessagingModel {
         "admins": FieldValue.arrayUnion(admins),
         "timestamp": timestamp ?? DateTime.now().millisecondsSinceEpoch,
       };
+}
+
+class FrequentContactsModel {
+  final ChatModel chatModel;
+  final ParticipantInfo participantInfo;
+  final bool isGroupMessage;
+
+  FrequentContactsModel(
+      this.chatModel, this.participantInfo, this.isGroupMessage);
 }

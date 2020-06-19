@@ -3,23 +3,36 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:sevaexchange/views/core.dart';
 
 enum MessageMenu {
   BLOCK,
   CLEAR_CHAT,
+  EXIT_CHAT,
+  EDIT_GROUP,
 }
 
 class ChatAppBar extends PreferredSize {
   final ParticipantInfo recieverInfo;
+  final MultiUserMessagingModel groupDetails;
+  final bool isGroupMessage;
   final VoidCallback clearChat;
   final VoidCallback blockUser;
-  final bool isTimebankMessage;
+  final VoidCallback exitGroup;
+  final VoidCallback openGroupInfo;
+
+  final bool isBlockEnabled;
 
   ChatAppBar({
+    this.openGroupInfo,
+    this.exitGroup,
+    this.groupDetails,
+    this.isGroupMessage,
     this.recieverInfo,
     this.clearChat,
     this.blockUser,
-    this.isTimebankMessage,
+    this.isBlockEnabled,
   });
 
   @override
@@ -27,38 +40,38 @@ class ChatAppBar extends PreferredSize {
 
   @override
   Widget build(BuildContext context) {
+    final String name = isGroupMessage ? groupDetails.name : recieverInfo.name;
+    final String photoUrl =
+        isGroupMessage ? groupDetails.imageUrl : recieverInfo.photoUrl;
     return AppBar(
       iconTheme: IconThemeData(color: Colors.white),
       backgroundColor: Theme.of(context).primaryColor,
       titleSpacing: 0,
-      title: Row(
-        children: <Widget>[
-          Container(
-            height: 36,
-            width: 36,
-            decoration: ShapeDecoration(
-              shape: CircleBorder(
-                side: BorderSide(
-                  color: Colors.white,
-                  width: 1,
-                ),
-              ),
-              image: DecorationImage(
-                image: CachedNetworkImageProvider(
-                  recieverInfo.photoUrl ?? defaultUserImageURL,
-                ),
+      title: GestureDetector(
+        onTap: openGroupInfo,
+        child: Row(
+          children: <Widget>[
+            photoUrl != null
+                ? CircleAvatar(
+                    radius: 18,
+                    backgroundImage: CachedNetworkImageProvider(photoUrl),
+                  )
+                : CustomAvatar(
+                    name: name,
+                    radius: 18,
+                    color: Colors.white,
+                    foregroundColor: Colors.black,
+                  ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                name,
+                style: TextStyle(fontSize: 18),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              recieverInfo.name,
-              style: TextStyle(fontSize: 18),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
       actions: [
         chatMoreOptions(context),
@@ -84,6 +97,30 @@ class ChatAppBar extends PreferredSize {
               }
             });
             break;
+          case MessageMenu.EXIT_CHAT:
+            bool isCreator = groupDetails.admins.contains(
+              SevaCore.of(context).loggedInUser.sevaUserID,
+            );
+            showCustomDialog(
+              context,
+              "Exit Multi-User Messaging",
+              isCreator
+                  ? "You are admin of this multi-user messaging, are you sure you want to exit the Multi-User Messaging ${groupDetails.name}"
+                  : "Are you sure you want to exit the Multi-User Messaging ${groupDetails.name}",
+              "Exit",
+              // AppLocalizations.of(context).translate('chat', 'delete_title'),
+              // AppLocalizations.of(context).translate('chat', 'delete_desc'),
+              // AppLocalizations.of(context).translate('chat', 'delete_title'),
+              AppLocalizations.of(context).translate('shared', 'cancel'),
+            ).then((value) {
+              if (value != "CANCEL") {
+                if (exitGroup != null) exitGroup();
+              }
+            });
+            break;
+          case MessageMenu.EDIT_GROUP:
+            openGroupInfo();
+            break;
           case MessageMenu.CLEAR_CHAT:
             showCustomDialog(
               context,
@@ -107,13 +144,35 @@ class ChatAppBar extends PreferredSize {
             ),
             value: MessageMenu.CLEAR_CHAT,
           ),
-          ...!isTimebankMessage
+          ...!isBlockEnabled
               ? [
                   PopupMenuItem(
                     child: Text(
                       AppLocalizations.of(context).translate('chat', 'block'),
                     ),
                     value: MessageMenu.BLOCK,
+                  )
+                ]
+              : [],
+          // ...(isGroupMessage)
+          //     ? [
+          //         PopupMenuItem(
+          //           child: Text("Exit"
+          //               // AppLocalizations.of(context).translate('chat', 'block'),
+          //               ),
+          //           value: MessageMenu.EXIT_CHAT,
+          //         )
+          //       ]
+          //     : [],
+          ...(isGroupMessage &&
+                  groupDetails.admins
+                      .contains(SevaCore.of(context).loggedInUser.sevaUserID))
+              ? [
+                  PopupMenuItem(
+                    child: Text("Edit"
+                        // AppLocalizations.of(context).translate('chat', 'block'),
+                        ),
+                    value: MessageMenu.EDIT_GROUP,
                   )
                 ]
               : [],

@@ -62,6 +62,7 @@ class _TimebankMessagePageState extends State<TimebankMessagePage> {
               return MessageCard(
                 model: chat,
                 isAdminMessage: true,
+                timebankId: widget.adminMessageWrapperModel.id,
               );
             },
           );

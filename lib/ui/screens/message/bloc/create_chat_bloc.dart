@@ -62,7 +62,7 @@ class CreateChatBloc extends BlocBase {
     _members.add(users);
   }
 
-  Future<bool> createMultiUserMessaging(UserModel creator) async {
+  Future<ChatModel> createMultiUserMessaging(UserModel creator) async {
     if (_groupName.value != null) {
       String imageUrl = _file.value != null
           ? await StorageApi.uploadFile("multiUserMessagingLogo", _file.value)
@@ -77,13 +77,13 @@ class CreateChatBloc extends BlocBase {
         id: creator.sevaUserID,
         photoUrl: creator.photoURL,
         name: creator.fullname,
-        type: ChatType.TYPE_GROUP,
+        type: ChatType.TYPE_MULTI_USER_MESSAGING,
       );
 
       List<ParticipantInfo> participantInfos = [creatorDetails];
       _selectedMembers.value.forEach(
         (String id) => participantInfos.add(
-          allMembers[id]..type = ChatType.TYPE_GROUP,
+          allMembers[id]..type = ChatType.TYPE_MULTI_USER_MESSAGING,
         ),
       );
 
@@ -95,11 +95,11 @@ class CreateChatBloc extends BlocBase {
         isGroupMessage: true,
         groupDetails: groupDetails,
       );
-      await ChatsApi.createNewChat(model);
-      return true;
+      String chatId = await ChatsApi.createNewChat(model);
+      return model..id = chatId;
     } else {
       _groupName.addError("Name can't be empty");
-      return false;
+      return null;
     }
   }
 

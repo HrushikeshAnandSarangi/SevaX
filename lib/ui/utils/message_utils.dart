@@ -32,7 +32,6 @@ Future<void> createAndOpenChat({
   participants.sort();
   ChatModel model = ChatModel(
     participants: participants,
-    timebankId: timebankId,
     communityId: communityId,
     participantInfo: [sender, reciever],
     isTimebankMessage: isTimebankMessage,

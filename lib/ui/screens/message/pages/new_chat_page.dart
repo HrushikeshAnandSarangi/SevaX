@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
+import 'package:sevaexchange/ui/screens/message/pages/chat_page.dart';
 import 'package:sevaexchange/ui/screens/message/pages/create_new_chat_page.dart';
 import 'package:sevaexchange/ui/screens/message/pages/group_members_page.dart';
 import 'package:sevaexchange/ui/screens/message/pages/timebank_members_page.dart';
@@ -36,14 +37,28 @@ class _NewChatPageState extends State<NewChatPage> {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
+                        Navigator.of(context)
+                            .push(
+                          MaterialPageRoute<ChatModel>(
                             builder: (context) => CreateNewChatPage(
                               frequentContacts: widget.frequentContacts,
                               isSelectionEnabled: true,
                             ),
                           ),
-                        );
+                        )
+                            .then((ChatModel model) {
+                          if (model != null) {
+                            Navigator.of(context).pop(model);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ChatPage(
+                                  chatModel: model,
+                                  senderId: model.groupDetails.admins[0],
+                                ),
+                              ),
+                            );
+                          }
+                        });
                       },
                       child: Container(
                         height: 50,

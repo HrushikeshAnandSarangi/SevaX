@@ -5,6 +5,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/message/bloc/chat_model_sync_singleton.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
 class MessageBloc extends BlocBase {
@@ -25,6 +26,7 @@ class MessageBloc extends BlocBase {
 
   Future<void> fetchAllMessage(String communityId, UserModel userModel) async {
     log("$communityId");
+    ChatModelSync chatModelSync = ChatModelSync();
     Firestore.instance
         .collection("chatsnew")
         .where("participants", arrayContains: userModel.sevaUserID)
@@ -46,8 +48,8 @@ class MessageBloc extends BlocBase {
             userModel.blockedMembers.contains(senderId) ||
             (chat.deletedBy.containsKey(userModel.sevaUserID) &&
                 chat.deletedBy[userModel.sevaUserID] > (chat.timestamp ?? 0)) ||
-            chat.lastMessage == '' ||
-            chat.lastMessage == null) {
+            (chat.lastMessage == '' || chat.lastMessage == null) &&
+                !chat.isGroupMessage) {
           log("Blocked or no message");
         } else {
           if (chat.unreadStatus.containsKey(userModel.sevaUserID) &&
@@ -62,6 +64,7 @@ class MessageBloc extends BlocBase {
         }
       });
       _personalMessage.add(chats);
+      chatModelSync.addChatModels(chats);
       if (!_frequentContacts.isClosed) _frequentContacts.add(frequentContacts);
       if (!_personalMessageCount.isClosed)
         _personalMessageCount.add(unreadCount);
@@ -104,6 +107,7 @@ class MessageBloc extends BlocBase {
     _personalMessageCount.close();
     _adminMessageCount.close();
     _frequentContacts.close();
+    ChatModelSync().dispose();
   }
 }
 

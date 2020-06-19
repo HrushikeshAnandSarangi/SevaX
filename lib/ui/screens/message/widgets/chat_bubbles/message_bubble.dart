@@ -26,22 +26,19 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: isSent
-          ? EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 10, 5, 0, 5)
-          : EdgeInsets.fromLTRB(
-              0, 5, MediaQuery.of(context).size.width / 10, 5),
+    return Align(
       alignment: isSent ? Alignment.topRight : Alignment.topLeft,
-      child: Wrap(
-        children: <Widget>[
-          Container(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.6,
+          child: Container(
             decoration: isSent
                 ? MessageDecoration.sendDecoration()
                 : MessageDecoration.receiveDecoration(),
             padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
             child: Column(
-              crossAxisAlignment:
-                  isSent ? CrossAxisAlignment.start : CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 isGroupMessage && !isSent
                     ? Text(
@@ -74,7 +71,7 @@ class MessageBubble extends StatelessWidget {
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

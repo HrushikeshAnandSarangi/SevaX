@@ -5,14 +5,13 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart';
+import 'package:sevaexchange/widgets/APi/chats_api.dart';
 import 'package:sevaexchange/widgets/APi/user_api.dart';
 
 class ChatBloc {
   final _messages = BehaviorSubject<List<MessageModel>>();
 
   Stream<List<MessageModel>> get messages => _messages.stream;
-
-  // FirebaseStorage _storage = FirebaseStorage();
 
   Future<void> getAllMessages(String chatId, String userId) async {
     DocumentSnapshot chatModelSnapshot =
@@ -72,9 +71,9 @@ class ChatBloc {
       chatId: chatModel.id,
       recieverId: recieverId,
       messageModel: messageModel,
-      timebankId: chatModel.timebankId,
+      timebankId: senderId,
       isTimebankMessage: chatModel.isTimebankMessage,
-      isAdmin: chatModel.timebankId == senderId,
+      isAdmin: senderId.contains("-"), //timebank id contains "-"
       file: file,
     );
   }
@@ -115,21 +114,20 @@ class ChatBloc {
     );
   }
 
-  // Future<void> uploadImage(File _file, String chatId, String messageId) async {
-  //   StorageUploadTask _uploadTask =
-  //       _storage.ref().child("chats/${DateTime.now()}.png").putFile(_file);
-  //   StorageTaskSnapshot snapshot = await _uploadTask.onComplete;
-  //   String attachmentUrl = await snapshot.ref.getDownloadURL();
-  //   Firestore.instance
-  //       .collection("chatsnew")
-  //       .document(chatId)
-  //       .collection("messages")
-  //       .document(messageId)
-  //       .setData(
-  //     {"data": attachmentUrl},
-  //     merge: true,
-  //   );
-  // }
+  Future<void> removeMember(
+    String chatId,
+    String userId,
+    bool isCreator,
+  ) async {
+    await ChatsApi.removeMember(chatId, userId);
+    if (isCreator) {
+      await ChatsApi.transferOwnership(chatId);
+    }
+  }
+
+  Future<void> addMember(String chatId, ParticipantInfo participant) async {
+    return await ChatsApi.addMember(chatId, participant);
+  }
 
   void dispose() {
     _messages.close();

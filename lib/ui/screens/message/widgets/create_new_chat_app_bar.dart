@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/create_group.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -8,8 +9,10 @@ class CreateNewChatAppBar extends PreferredSize {
   final ValueChanged<String> onChanged;
   final TextEditingController controller;
   final bool isSelectionEnabled;
+  final bool isFromEditGroup;
 
   CreateNewChatAppBar({
+    this.isFromEditGroup = false,
     this.isSelectionEnabled,
     this.controller,
     this.onChanged,
@@ -68,17 +71,30 @@ class CreateNewChatAppBar extends PreferredSize {
                         builder: (context, snapshot) {
                           return (snapshot.data?.length ?? 0) > 0
                               ? customButton("Next", () {
-                                  Navigator.of(context)
-                                      .push(
-                                    MaterialPageRoute<String>(
-                                      builder: (context) =>
-                                          CreateGroupPage(bloc: _bloc),
-                                    ),
-                                  )
-                                      .then((String value) {
-                                    if (value == "success")
-                                      Navigator.of(context).pop();
-                                  });
+                                  if (isFromEditGroup) {
+                                    _bloc.selectedMembers.first
+                                        .then((List<String> members) {
+                                      List<ParticipantInfo> infos =
+                                          List.generate(
+                                        members.length,
+                                        (index) =>
+                                            _bloc.allMembers[members[index]],
+                                      );
+                                      Navigator.of(context).pop(infos);
+                                    });
+                                  } else {
+                                    Navigator.of(context)
+                                        .push(
+                                      MaterialPageRoute<ChatModel>(
+                                        builder: (context) =>
+                                            CreateGroupPage(bloc: _bloc),
+                                      ),
+                                    )
+                                        .then((ChatModel value) {
+                                      if (value != null)
+                                        Navigator.of(context).pop(value);
+                                    });
+                                  }
                                 })
                               : Container(width: 40);
                         })

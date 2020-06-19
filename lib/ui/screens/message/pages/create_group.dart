@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_builder.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -28,7 +29,13 @@ class CreateGroupPage extends StatelessWidget {
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             onPressed: () {
-              bloc.createMultiUserMessaging(SevaCore.of(context).loggedInUser);
+              bloc
+                  .createMultiUserMessaging(SevaCore.of(context).loggedInUser)
+                  .then((ChatModel model) {
+                if (model != null) {
+                  Navigator.of(context).pop(model);
+                }
+              });
             },
           ),
         ],

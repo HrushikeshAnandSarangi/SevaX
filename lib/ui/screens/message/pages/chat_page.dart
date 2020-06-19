@@ -9,6 +9,8 @@ import 'package:sevaexchange/models/image_caption_model.dart';
 import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/chat_bloc.dart';
+import 'package:sevaexchange/ui/screens/message/bloc/chat_model_sync_singleton.dart';
+import 'package:sevaexchange/ui/screens/message/pages/group_info.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/chat_app_bar.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/chat_bubbles/feed_shared_bubble.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/chat_bubbles/image_bubble.dart';
@@ -22,6 +24,7 @@ import 'package:sevaexchange/widgets/camera/camera_page.dart';
 
 class ChatPage extends StatefulWidget {
   final ChatModel chatModel;
+  final bool isAdminMessage;
   final bool isFromRejectCompletion;
   final bool isFromShare;
   final String feedId;
@@ -34,6 +37,7 @@ class ChatPage extends StatefulWidget {
     this.isFromShare = false,
     this.senderId,
     this.feedId,
+    this.isAdminMessage,
   }) : super(key: key);
 
   @override
@@ -49,19 +53,22 @@ class _ChatPageState extends State<ChatPage> {
   String recieverId;
   final ChatBloc _bloc = ChatBloc();
   Map<String, ParticipantInfo> participantsInfoById = {};
+  ChatModel chatModel;
+  bool exitFromChatPage = false;
 
   @override
   void initState() {
-    recieverId = widget.chatModel.participants[0] != widget.senderId
-        ? widget.chatModel.participants[0]
-        : widget.chatModel.participants[1];
+    chatModel = widget.chatModel;
+    recieverId = chatModel.participants[0] != widget.senderId
+        ? chatModel.participants[0]
+        : chatModel.participants[1];
 
-    widget.chatModel.participantInfo.forEach((ParticipantInfo info) {
+    chatModel.participantInfo.forEach((ParticipantInfo info) {
       participantsInfoById[info.id] = info
         ..color = colorGeneratorFromName(info.name);
     });
 
-    _bloc.getAllMessages(widget.chatModel.id, widget.senderId);
+    _bloc.getAllMessages(chatModel.id, widget.senderId);
     _scrollController = ScrollController();
 
     if (widget.isFromRejectCompletion)
@@ -74,6 +81,33 @@ class _ChatPageState extends State<ChatPage> {
         type: MessageType.FEED,
       );
     }
+
+    if (widget.chatModel.isGroupMessage) {
+      ChatModelSync().chatModels.listen((List<ChatModel> chats) {
+        ChatModel model = chats.firstWhere(
+          (element) => element.id == widget.chatModel.id,
+          orElse: () => null,
+        );
+
+        if (model == null) {
+          if (!exitFromChatPage) {
+            Navigator.of(context).pop();
+          }
+        } else {
+          model.participantInfo.forEach((ParticipantInfo info) {
+            participantsInfoById[info.id] = info
+              ..color = colorGeneratorFromName(info.name);
+          });
+
+          if (chatModel.groupDetails.name != model.groupDetails.name ||
+              chatModel.groupDetails.imageUrl != model.groupDetails.imageUrl) {
+            chatModel = model;
+            setState(() {});
+          }
+        }
+      });
+    }
+
     super.initState();
   }
 
@@ -81,15 +115,19 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     ParticipantInfo recieverInfo = getUserInfo(
       recieverId,
-      widget.chatModel.participantInfo,
+      chatModel.participantInfo,
     );
+
+    final bool isGroupMessage = chatModel.isGroupMessage;
 
     return Scaffold(
       backgroundColor: Colors.indigo[50],
       appBar: ChatAppBar(
-        recieverInfo: recieverInfo,
+        isGroupMessage: isGroupMessage,
+        recieverInfo: isGroupMessage ? null : recieverInfo,
+        groupDetails: isGroupMessage ? chatModel.groupDetails : null,
         clearChat: () {
-          _bloc.clearChat(widget.chatModel.id, widget.senderId);
+          _bloc.clearChat(chatModel.id, widget.senderId);
           Navigator.pop(context);
         },
         blockUser: () {
@@ -98,9 +136,22 @@ class _ChatPageState extends State<ChatPage> {
             userId: SevaCore.of(context).loggedInUser.sevaUserID,
             blockedUserId: recieverId,
           );
+
           Navigator.pop(context);
         },
-        isTimebankMessage: widget.chatModel.isTimebankMessage,
+        exitGroup: isGroupMessage
+            ? () {
+                String userId = SevaCore.of(context).loggedInUser.sevaUserID;
+                _bloc.removeMember(
+                  chatModel.id,
+                  userId,
+                  chatModel.groupDetails.admins.contains(userId),
+                );
+                Navigator.pop(context);
+              }
+            : () {},
+        isBlockEnabled: chatModel.isTimebankMessage || chatModel.isGroupMessage,
+        openGroupInfo: isGroupMessage ? openGroupInfo : null,
       ),
       body: Column(
         children: <Widget>[
@@ -130,11 +181,11 @@ class _ChatPageState extends State<ChatPage> {
                   );
                 }
 
-                if (!widget.chatModel.isTimebankMessage ||
+                if (!chatModel.isTimebankMessage ||
                     widget.senderId ==
                         SevaCore.of(context).loggedInUser.sevaUserID) {
                   _bloc.markMessageAsRead(
-                    chatId: widget.chatModel.id,
+                    chatId: chatModel.id,
                     userId: SevaCore.of(context).loggedInUser.sevaUserID,
                   );
                 }
@@ -160,8 +211,8 @@ class _ChatPageState extends State<ChatPage> {
                             message: messageModel.message,
                             isSent: messageModel.fromId == widget.senderId,
                             timestamp: messageModel.timestamp,
-                            isGroupMessage: widget.chatModel.isGroupMessage,
-                            info: widget.chatModel.isGroupMessage
+                            isGroupMessage: chatModel.isGroupMessage,
+                            info: chatModel.isGroupMessage
                                 ? participantsInfoById[messageModel.fromId]
                                 : null,
                           );
@@ -171,8 +222,8 @@ class _ChatPageState extends State<ChatPage> {
                           return ImageBubble(
                             messageModel: messageModel,
                             isSent: messageModel.fromId == widget.senderId,
-                            isGroupMessage: widget.chatModel.isGroupMessage,
-                            info: widget.chatModel.isGroupMessage
+                            isGroupMessage: chatModel.isGroupMessage,
+                            info: chatModel.isGroupMessage
                                 ? participantsInfoById[messageModel.fromId]
                                 : null,
                           );
@@ -252,7 +303,7 @@ class _ChatPageState extends State<ChatPage> {
     File file,
   }) {
     _bloc.pushNewMessage(
-      chatModel: widget.chatModel,
+      chatModel: chatModel,
       messageContent: messageContent,
       senderId: widget.senderId,
       recieverId: recieverId,
@@ -284,6 +335,14 @@ class _ChatPageState extends State<ChatPage> {
           isSent: messageModel.fromId == widget.senderId,
         );
       },
+    );
+  }
+
+  void openGroupInfo() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => GroupInfoPage(chatModel: chatModel),
+      ),
     );
   }
 
