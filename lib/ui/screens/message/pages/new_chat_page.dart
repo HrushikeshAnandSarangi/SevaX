@@ -6,13 +6,13 @@ import 'package:sevaexchange/ui/screens/message/pages/chat_page.dart';
 import 'package:sevaexchange/ui/screens/message/pages/create_new_chat_page.dart';
 import 'package:sevaexchange/ui/screens/message/pages/group_members_page.dart';
 import 'package:sevaexchange/ui/screens/message/pages/timebank_members_page.dart';
-import 'package:sevaexchange/ui/screens/message/widgets/member_list_builder.dart';
+import 'package:sevaexchange/ui/screens/message/widgets/frequent_contacts_builder.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_builder.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
 class NewChatPage extends StatefulWidget {
-  final List<ParticipantInfo> frequentContacts;
+  final List<FrequentContactsModel> frequentContacts;
 
   const NewChatPage({Key key, this.frequentContacts}) : super(key: key);
   @override
@@ -103,9 +103,9 @@ class _NewChatPageState extends State<NewChatPage> {
               ),
             ),
             widget.frequentContacts.length > 0
-                ? MemberListBuilder(
-                    infos: widget.frequentContacts,
-                    physics: NeverScrollableScrollPhysics(),
+                ? FrequentContactsBuilder(
+                    widget.frequentContacts,
+                    _bloc.isSelectionEnabled,
                   )
                 : Center(
                     child: Padding(

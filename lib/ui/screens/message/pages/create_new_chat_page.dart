@@ -10,7 +10,7 @@ import 'new_chat_page.dart';
 
 class CreateNewChatPage extends StatefulWidget {
   final bool isSelectionEnabled;
-  final List<ParticipantInfo> frequentContacts;
+  final List<FrequentContactsModel> frequentContacts;
   final List<String> selectedMembers;
 
   const CreateNewChatPage({

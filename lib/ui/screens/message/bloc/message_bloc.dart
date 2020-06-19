@@ -13,13 +13,13 @@ class MessageBloc extends BlocBase {
   final _adminMessage = BehaviorSubject<List<AdminMessageWrapperModel>>();
   final _personalMessageCount = BehaviorSubject<int>();
   final _adminMessageCount = BehaviorSubject<int>();
-  final _frequentContacts = BehaviorSubject<List<ParticipantInfo>>();
+  final _frequentContacts = BehaviorSubject<List<FrequentContactsModel>>();
 
   Stream<List<ChatModel>> get personalMessage => _personalMessage.stream;
   Stream<List<AdminMessageWrapperModel>> get adminMessage =>
       _adminMessage.stream;
 
-  List<ParticipantInfo> get frequentContacts => _frequentContacts.value;
+  List<FrequentContactsModel> get frequentContacts => _frequentContacts.value;
 
   Stream<int> get messageCount => CombineLatestStream.combine2(
       _personalMessageCount, _adminMessageCount, (int p, int a) => p + a);
@@ -34,7 +34,7 @@ class MessageBloc extends BlocBase {
         .snapshots()
         .listen((QuerySnapshot querySnapshot) {
       List<ChatModel> chats = [];
-      List<ParticipantInfo> frequentContacts = [];
+      List<FrequentContactsModel> frequentContacts = [];
       int unreadCount = 0;
       log(querySnapshot.documents.length.toString());
       querySnapshot.documents.forEach((DocumentSnapshot snapshot) {
@@ -57,8 +57,17 @@ class MessageBloc extends BlocBase {
             unreadCount++;
           }
           if (frequentContacts.length < 5) {
-            frequentContacts.add(chat.participantInfo
-                .firstWhere((ParticipantInfo info) => info.id == senderId));
+            FrequentContactsModel fc;
+            if (chat.isGroupMessage) {
+              fc = FrequentContactsModel(chat, null, chat.isGroupMessage);
+            } else {
+              fc = FrequentContactsModel(
+                  null,
+                  chat.participantInfo.firstWhere(
+                      (ParticipantInfo info) => info.id == senderId),
+                  chat.isGroupMessage);
+            }
+            frequentContacts.add(fc);
           }
           chats.add(chat);
         }

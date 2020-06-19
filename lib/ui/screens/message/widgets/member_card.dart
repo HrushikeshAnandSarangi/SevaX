@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
+import 'package:sevaexchange/ui/screens/message/pages/chat_page.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -10,8 +11,10 @@ import 'package:sevaexchange/views/core.dart';
 class MemberCard extends StatelessWidget {
   final ParticipantInfo info;
   final bool isSelected;
+  final ChatModel chatModel;
 
-  const MemberCard({Key key, this.info, this.isSelected = false})
+  const MemberCard(
+      {Key key, this.info, this.isSelected = false, this.chatModel})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -21,30 +24,42 @@ class MemberCard extends StatelessWidget {
         if (_bloc.isSelectionEnabled) {
           _bloc.selectMember(info.id);
         } else {
-          UserModel loggedInUser = SevaCore.of(context).loggedInUser;
-          ParticipantInfo sender = ParticipantInfo(
-            id: loggedInUser.sevaUserID,
-            name: loggedInUser.fullname,
-            photoUrl: loggedInUser.photoURL,
-            type: ChatType.TYPE_PERSONAL,
-          );
+          if (chatModel == null) {
+            UserModel loggedInUser = SevaCore.of(context).loggedInUser;
+            ParticipantInfo sender = ParticipantInfo(
+              id: loggedInUser.sevaUserID,
+              name: loggedInUser.fullname,
+              photoUrl: loggedInUser.photoURL,
+              type: ChatType.TYPE_PERSONAL,
+            );
 
-          ParticipantInfo reciever = ParticipantInfo(
-            id: info.id,
-            name: info.name,
-            photoUrl: info.photoUrl,
-            type: ChatType.TYPE_PERSONAL,
-          );
+            ParticipantInfo reciever = ParticipantInfo(
+              id: info.id,
+              name: info.name,
+              photoUrl: info.photoUrl,
+              type: ChatType.TYPE_PERSONAL,
+            );
 
-          createAndOpenChat(
-            context: context,
-            communityId: loggedInUser.currentCommunity,
-            sender: sender,
-            reciever: reciever,
-            onChatCreate: () {
-              Navigator.of(context).pop();
-            },
-          );
+            createAndOpenChat(
+              context: context,
+              communityId: loggedInUser.currentCommunity,
+              sender: sender,
+              reciever: reciever,
+              onChatCreate: () {
+                Navigator.of(context).pop();
+              },
+            );
+          } else {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ChatPage(
+                  chatModel: chatModel,
+                  senderId: SevaCore.of(context).loggedInUser.sevaUserID,
+                  isAdminMessage: false,
+                ),
+              ),
+            );
+          }
         }
       },
       child: Container(

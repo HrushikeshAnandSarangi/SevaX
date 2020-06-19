@@ -150,5 +150,8 @@ class FrequentContactsModel {
   final bool isGroupMessage;
 
   FrequentContactsModel(
-      this.chatModel, this.participantInfo, this.isGroupMessage);
+    this.chatModel,
+    this.participantInfo,
+    this.isGroupMessage,
+  );
 }
