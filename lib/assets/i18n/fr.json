@@ -1107,6 +1107,7 @@
   },
 
   "project_template": {
+    "save_as_template": "Enregistrer en tant que modèle",
     "template_title": "Indiquez un nom unique pour le modèle",
     "template_hint": "Nom du modèle",
     "name_error": "Le nom du modèle ne peut pas être vide",

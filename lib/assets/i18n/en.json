@@ -1108,6 +1108,7 @@
   },
 
   "project_template": {
+    "save_as_template": "Save as Template",
     "template_title": "Provide a unique name for the template",
     "template_hint": "Template Name",
     "name_error": "Template name cannot be empty",

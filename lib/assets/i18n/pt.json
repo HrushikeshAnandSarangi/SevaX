@@ -1108,6 +1108,7 @@
   },
 
   "project_template": {
+    "save_as_template": "Guardar como modelo",
     "template_title": "Forneça um nome exclusivo para o modelo",
     "template_hint": "Nome do modelo",
     "name_error": "O nome do modelo não pode estar vazio",

@@ -1107,6 +1107,7 @@
 
 
   "project_template": {
+    "save_as_template": "Guardar como plantilla",
     "template_title": "Proporcione un nombre único para la plantilla.",
     "template_hint": "Nombre de la plantilla",
     "name_error": "El nombre de la plantilla no puede estar vacío.",

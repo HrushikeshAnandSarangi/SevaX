@@ -13,11 +13,12 @@ class _RequestInviteUserCardState extends State<RequestInviteUserCard> {
     return Scaffold(
       backgroundColor: Colors.grey,
       body: Container(
-          margin: EdgeInsets.fromLTRB(35, 100, 30, 10),
-          child: Stack(children: <Widget>[
-            getUserCard(),
-            getUserThumbnail(),
-          ])),
+        margin: EdgeInsets.fromLTRB(35, 100, 30, 10),
+        child: Stack(children: <Widget>[
+          getUserCard(),
+          getUserThumbnail(),
+        ]),
+      ),
     );
   }
 
