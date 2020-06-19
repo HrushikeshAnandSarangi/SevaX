@@ -35,7 +35,8 @@ class FrequentContactsBuilder extends StatelessWidget {
                     chatModel: model.chatModel,
                     isSelected: model.isGroupMessage
                         ? false
-                        : snapshot.data.contains(model.participantInfo.id),
+                        : snapshot.data?.contains(model.participantInfo.id) ??
+                            false,
                   ),
                 ),
               );

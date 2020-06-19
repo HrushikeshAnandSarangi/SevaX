@@ -15,6 +15,7 @@ class CreateGroupPage extends StatelessWidget {
   CreateGroupPage({Key key, this.bloc}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    bool showLoadingDialog = false;
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
@@ -29,6 +30,20 @@ class CreateGroupPage extends StatelessWidget {
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             onPressed: () {
+              if (showLoadingDialog) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      content: Text("Creating Multi-User Messaging..."),
+                    );
+                  },
+                );
+              }
               bloc
                   .createMultiUserMessaging(SevaCore.of(context).loggedInUser)
                   .then((ChatModel model) {
@@ -91,6 +106,10 @@ class CreateGroupPage extends StatelessWidget {
                           _controller.value = _controller.value.copyWith(
                             text: snapshot.data,
                           );
+                          if (_controller.text != null &&
+                              _controller.text.length > 0) {
+                            showLoadingDialog = true;
+                          }
                           return TextField(
                             controller: _controller,
                             onChanged: bloc.onGroupNameChanged,

@@ -58,8 +58,8 @@ class CreateChatBloc extends BlocBase {
           model.members.length == 1 ||
           model.parentTimebankId == FlavorConfig.values.timebankId,
     );
-    _timebanksOfUser.add(timebanks);
-    _members.add(users);
+    if (!_timebanksOfUser.isClosed) _timebanksOfUser.add(timebanks);
+    if (!_members.isClosed) _members.add(users);
   }
 
   Future<ChatModel> createMultiUserMessaging(UserModel creator) async {

@@ -152,7 +152,7 @@ class CreateNewChatAppBar extends PreferredSize {
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 2),
         child: Text(
           text,
           style: TextStyle(color: Colors.white, fontSize: 16),
