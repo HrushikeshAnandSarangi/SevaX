@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/models/models.dart';
 
@@ -22,8 +21,8 @@ class NotificationsModel extends DataModel {
     this.targetUserId,
     this.isRead = false,
     this.senderUserId,
-     this.timebankId,
-     this.communityId,
+    this.timebankId,
+    this.communityId,
   });
 
   NotificationsModel.fromMap(Map<String, dynamic> map) {
@@ -124,6 +123,7 @@ enum NotificationType {
   JoinRequest,
   AcceptedOffer,
   TypeMemberExitTimebank,
+  TypeChangeOwnership,
   TypeMemberAdded,
   GroupJoinInvite,
   TYPE_DEBIT_FROM_OFFER,
@@ -162,6 +162,7 @@ Map<String, NotificationType> typeMapper = {
   "AcceptedOffer": NotificationType.AcceptedOffer,
   "TypeMemberExitTimebank": NotificationType.TypeMemberExitTimebank,
   "TypeMemberAdded": NotificationType.TypeMemberAdded,
+  "TypeChangeOwnership": NotificationType.TypeChangeOwnership,
   "GroupJoinInvite": NotificationType.GroupJoinInvite,
   "TYPE_DEBIT_FROM_OFFER": NotificationType.TYPE_DEBIT_FROM_OFFER,
   "TYPE_CREDIT_FROM_OFFER_ON_HOLD":

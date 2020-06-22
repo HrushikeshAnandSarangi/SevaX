@@ -1527,7 +1527,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 new FlatButton(
-                  child: new Text("Close"),
+                  child: new Text(AppLocalizations.of(context)
+                      .translate('billing_plans', 'close')),
                   textColor: Colors.red,
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -1552,7 +1553,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 new FlatButton(
-                  child: new Text("Close"),
+                  child: new Text(AppLocalizations.of(context)
+                      .translate('billing_plans', 'close')),
                   textColor: Colors.red,
                   onPressed: () {
                     Navigator.of(context).pop();

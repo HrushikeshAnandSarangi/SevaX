@@ -18,6 +18,7 @@ import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
 import 'package:sevaexchange/views/notifications/notification_alert_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/widgets/notification_switch.dart';
+import 'package:sevaexchange/views/timebanks/change_ownership_view.dart';
 
 class ManageTimebankSeva extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -225,6 +226,30 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.red,
+        ),
+      ),
+    );
+  }
+
+  Widget get changeOwnerShip {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChangeOwnerShipView(
+              timebankId: widget.timebankModel.id,
+            ),
+          ),
+        );
+      },
+      child: Text(
+        AppLocalizations.of(context)
+            .translate('change_ownership', 'change_ownership_title'),
+        textAlign: TextAlign.left,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.blue,
         ),
       ),
     );
@@ -498,6 +523,13 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
           widget.timebankModel.creatorId ==
                   SevaCore.of(context).loggedInUser.sevaUserID
               ? deleteTimebank
+              : Container(),
+          SizedBox(
+            height: 20,
+          ),
+          widget.timebankModel.creatorId ==
+                  SevaCore.of(context).loggedInUser.sevaUserID
+              ? changeOwnerShip
               : Container(),
           // viewAcceptedOffers(context: context),
           // manageTimebankCodes(context: context),

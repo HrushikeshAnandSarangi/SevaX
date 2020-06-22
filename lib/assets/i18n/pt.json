@@ -36,6 +36,7 @@
     "enter_password_warn": "Digite a senha",
     "password_warn_6char": "A senha deve ter 6 caracteres",
     "reset_link_message": "Enviamos o link de redefinição para o seu endereço de e-mail",
+    "reset_dynamic_link_message": "Verifique seu e-mail para definir sua senha. Em seguida, insira essa senha aqui",
     "terms_of_service_link": "Termos de serviço",
     "privacy_policy_link": "Política de Privacidade",
     "payment_policy_link": "Política de pagamento"
@@ -1094,7 +1095,7 @@
     "csv_title": "Convidar usuários em massa por CSV",
     "upload": "Envio",
     "choose_csv": "Escolha o arquivo CSV para convidar membros em massa",
-    "csv_error": "O arquivo CSV não está selecionado\n\n",
+    "csv_error": "Selecione um arquivo CSV primeiro antes de fazer o upload",
     "download_progress": "Transferindo",
     "download_success": "O download está concluído.",
     "csv_file_alert": "Arquivos maiores que 1 MB não são permitidos",
@@ -1112,5 +1113,22 @@
     "credit_request": "Crédito recebido por uma oferta para muitos",
     "timebank": "Timebank",
     "group": "Group"
+  },
+  "project_template": {
+    "save_as_template": "Guardar como modelo",
+    "template_title": "Forneça um nome exclusivo para o modelo",
+    "template_hint": "Nome do modelo",
+    "name_error": "O nome do modelo não pode estar vazio",
+    "already_exists": "O nome do modelo já está em uso.\nForneça outro nome",
+    "search_template_hint": "Digite o nome de um modelo de projeto",
+    "create_project_template": "Criar projeto a partir do modelo",
+    "create_new_project": "Criar novo projeto",
+    "no_templates": "Nenhum modelo encontrado",
+    "empty_template": "Selecione um modelo na lista de modelos disponíveis",
+    "template_alert": "Alerta de modelo"
+  },
+  "change_ownership": {
+    "change_ownership_title": "Alterar propriedade",
+    "change": "Change"
   }
 }

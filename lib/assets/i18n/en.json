@@ -36,6 +36,7 @@
     "enter_password_warn": "Enter password",
     "password_warn_6char": "Password must be 6 characters long",
     "reset_link_message": "We've sent the reset link to your email address",
+    "reset_dynamic_link_message": "Please check your email to set your password. Then enter that password here",
     "terms_of_service_link": "Terms of Service",
     "privacy_policy_link": "Privacy Policy",
     "payment_policy_link": "Payment Policy"
@@ -1095,23 +1096,24 @@
     "csv_title": "Bulk invite users by CSV",
     "upload": "Upload",
     "choose_csv": "Choose CSV file to bulk invite Members",
-    "csv_error": "CSV file is not selected",
+    "csv_error": "Please select a CSV file first before uploading",
     "download_progress": "Downloading",
     "download_success": "Downloading is complete.",
     "csv_file_alert": "Files larger than 1 MB are not allowed",
     "csv_size_limit": "NOTE : Maximum file size is 1 MB",
-    "csv_progress": "Uploading CSV"
+    "csv_progress": "Uploading CSV File"
   },
   "project_template": {
+    "save_as_template": "Save as Template",
     "template_title": "Provide a unique name for the template",
     "template_hint": "Template Name",
     "name_error": "Template name cannot be empty",
-    "already_exists": "Template name already exists",
+    "already_exists": "Template name is already in use.\nPlease provide another name",
     "search_template_hint": "Enter name of a Project Template",
     "create_project_template": "Create Project from Template",
     "create_new_project": "Create new Project",
     "no_templates": "No templates found",
-    "empty_template": "Template is not selected",
+    "empty_template": "Please select a Template from the list of available Templates",
     "template_alert": "Template alert"
   },
   "external_notifications": {
@@ -1125,5 +1127,20 @@
     "credit_request": "Received Credit for one to many offer",
     "timebank": "Timebank",
     "group": "Group"
+  },
+
+  "change_ownership": {
+    "change_ownership_title": "Change Ownership",
+    "change": "Change",
+    "change_hint": "Changing ownership of this Timebank/Group to another user.",
+    "change_hint_two": "Change to",
+    "invitation_sent": "Invitation successfully sent to admin. Once admin accepts invitation ownership will get change",
+    "notification_msg": "invited you to become the owner of the",
+    "accept": "Accept",
+    "change_alert": "By accepting, you will become owner of the timebank",
+    "users_empty": "Please select a user",
+    "pending_task": "You have pending tasks. Please complete these tasks before ownership can be transferred",
+    "pending_payment": "You have payment pending of ",
+    "pending_payment_two": ". Please complete these payment before ownership can be transferred"
   }
 }

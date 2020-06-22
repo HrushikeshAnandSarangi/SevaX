@@ -450,8 +450,10 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                       );
                       return;
                     }
-                    if (csvFileModel.csvUrl == '' ||
-                        csvFileModel.csvTitle == '') {
+                    if (csvFileModel.csvUrl == null ||
+                        csvFileModel.csvUrl == '' ||
+                        csvFileModel.csvTitle == '' ||
+                        csvFileModel.csvTitle == null) {
                       setState(() {
                         this.csvFileError = AppLocalizations.of(context)
                             .translate('upload_csv', 'csv_error');

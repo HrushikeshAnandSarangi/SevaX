@@ -19,7 +19,6 @@ import 'package:sevaexchange/internationalization/applanguage.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/deep_link_manager/onboard_via_link.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
 import 'package:sevaexchange/views/profile/language.dart';
@@ -44,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
   String password;
   bool _shouldObscurePassword = true;
   Color enabled = Colors.white.withAlpha(120);
-
+  BuildContext parentContext;
   void initState() {
     super.initState();
     if (Platform.isIOS) {
@@ -72,6 +71,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    parentContext = context;
     var appLanguage = Provider.of<AppLanguage>(context);
     var _sysLng = ui.window.locale.languageCode;
     var language =
@@ -951,18 +951,20 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void getDynamicLinkData(
-    BuildContext context,
-  ) async {
-    await fetchBulkInviteLinkData();
-  }
+//  void getDynamicLinkData(
+//    BuildContext context,
+//  ) async {
+//    await fetchBulkInviteLinkData();
+//  }
 
   Future<void> fetchBulkInviteLinkData() async {
     // FirebaseDynamicLinks.getInitialLInk does a call to firebase to get us the real link because we have shortened it.
     var link = await FirebaseDynamicLinks.instance.getInitialLink();
+    print("method  triggered");
+
     //buildContext = context;
     // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
-    await handleLinkData(data: link);
+    await handleBulkInviteLinkData(data: link);
     FirebaseDynamicLinks.instance.onLink(onError: (_) async {
       print("Error!!!");
     }, onSuccess: (PendingDynamicLinkData dynamicLink) async {
@@ -981,43 +983,49 @@ class _LoginPageState extends State<LoginPage> {
     if (uri != null) {
       final queryParams = uri.queryParameters;
       if (queryParams.length > 0) {
+        print("inside link");
+        print("parans ${queryParams.toString()}");
+        print("uri ${uri.toString()}");
+        print("url full ${data.link.toString()}");
+
         String invitedMemberEmail = queryParams["invitedMemberEmail"];
-        String communityId = queryParams["communityId"];
-        String primaryTimebankId = queryParams["primaryTimebankId"];
+
+        //   String communityId = queryParams["communityId"];
+        // String primaryTimebankId = queryParams["primaryTimebankId"];
         if (queryParams.containsKey("isFromBulkInvite") &&
             queryParams["isFromBulkInvite"] == 'true') {
-          resetDynamicLinkPassword(invitedMemberEmail, context);
+          print("inside bulk");
+          resetDynamicLinkPassword(invitedMemberEmail);
         }
       }
     }
     return false;
   }
 
-  Future<void> resetDynamicLinkPassword(
-      String email, BuildContext mContext) async {
+  void resetDynamicLinkPassword(
+    String email,
+  ) async {
     await FirebaseAuth.instance
         .sendPasswordResetEmail(email: email)
         .then((onValue) {
-      showDialog<AlertDialog>(
-        context: mContext,
+      showDialog(
+        context: parentContext,
         builder: (BuildContext context) {
           // return object of type Dialog
           return AlertDialog(
-            title: Text(AppLocalizations.of(mContext)
+            title: Text(AppLocalizations.of(context)
                 .translate('login', 'reset_password')),
             content: Container(
-              height: MediaQuery.of(mContext).size.height / 10,
-              width: MediaQuery.of(mContext).size.width / 12,
               child: Text(
-                AppLocalizations.of(mContext)
-                    .translate('login', 'reset_link_message'),
+                AppLocalizations.of(context)
+                    .translate('login', 'reset_dynamic_link_message'),
               ),
             ),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
               new FlatButton(
-                child: new Text(
-                    AppLocalizations.of(mContext).translate('shared', 'close')),
+                child: new Text(AppLocalizations.of(context)
+                    .translate('billing_plans', 'close')),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -1026,8 +1034,6 @@ class _LoginPageState extends State<LoginPage> {
           );
         },
       );
-
-//
     });
   }
 }
