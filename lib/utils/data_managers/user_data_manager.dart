@@ -255,3 +255,14 @@ Future<Map<String, dynamic>> removeMemberFromTimebank({
   var data = json.decode(res.body);
   return data;
 }
+
+Future<Map<String, dynamic>> checkChangeOwnershipStatus(
+    {String timebankId, String sevauserid}) async {
+  var result = await http.post(
+    "${FlavorConfig.values.cloudFunctionBaseURL}/checkTasksAndPaymentsForTransferOwnership",
+    body: {"timebankId": timebankId, "sevauserid": sevauserid},
+  );
+  print("result ${result.toString()}");
+  var data = json.decode(result.body);
+  return data;
+}

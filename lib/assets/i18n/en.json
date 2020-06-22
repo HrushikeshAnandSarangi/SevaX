@@ -1125,6 +1125,14 @@
     "change_ownership_title": "Change Ownership",
     "change": "Change",
     "change_hint": "Changing ownership of this Timebank/Group to another user.",
-    "change_hint_two": "Change to"
+    "change_hint_two": "Change to",
+    "invitation_sent": "Invitation successfully sent to admin. Once admin accepts invitation ownership will get change",
+    "notification_msg": "invited you to become the owner of the",
+    "accept": "Accept",
+    "change_alert": "By accepting, you will become owner of the timebank",
+    "users_empty": "Please select a user",
+    "pending_task": "You have pending tasks. Please complete these tasks before ownership can be transferred",
+    "pending_payment": "You have payment pending of ",
+    "pending_payment_two": ". Please complete these payment before ownership can be transferred"
   }
 }

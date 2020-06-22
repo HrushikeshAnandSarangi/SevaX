@@ -986,6 +986,7 @@ class _LoginPageState extends State<LoginPage> {
         print("inside link");
         print("parans ${queryParams.toString()}");
         print("uri ${uri.toString()}");
+        print("url full ${data.link.toString()}");
 
         String invitedMemberEmail = queryParams["invitedMemberEmail"];
 

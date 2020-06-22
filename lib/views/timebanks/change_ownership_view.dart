@@ -2,10 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
@@ -34,6 +33,8 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
   UserModel loggedInUser;
   TimebankModel tbmodel;
   var futures = <Future>[];
+  BuildContext parentContext;
+  String user_error = '';
   @override
   void initState() {
     // TODO: implement initState
@@ -58,6 +59,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
   @override
   Widget build(BuildContext context) {
     loggedInUser = SevaCore.of(context).loggedInUser;
+    parentContext = context;
     return Scaffold(
       resizeToAvoidBottomPadding: true,
       appBar: AppBar(
@@ -135,6 +137,10 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
                 height: 10,
               ),
               searchUser(),
+              Text(
+                user_error,
+                style: TextStyle(color: Colors.red, fontFamily: "Europa"),
+              ),
               SizedBox(
                 height: 15,
               ),
@@ -175,82 +181,32 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
           textColor: FlavorConfig.values.theme.primaryColor,
           onPressed: () async {
             if (selectedNewOwner == null) {
-              // print("reporter timebank creator id is ${tbmodel.creatorId}");
-//              ownerGroupsArr.forEach(
-//                (group) {
-//                  futures.add(
-//                    Firestore.instance
-//                        .collection('timebanknew')
-//                        .document(group['id'])
-//                        .updateData(
-//                      {
-//                        "creator_id": tbmodel.creatorId,
-//                        "email_id": tbmodel.emailId,
-//                        "admins": FieldValue.arrayUnion([tbmodel.creatorId]),
-//                        "members": FieldValue.arrayUnion([tbmodel.creatorId]),
-//                      },
-//                    ),
-//                  );
-//                },
-//              );
-              await Future.wait(futures);
-              Map<String, dynamic> responseObj = await removeMemberFromTimebank(
-                  sevauserid: loggedInUser.sevaUserID, timebankId: tbmodel.id);
-              if (responseObj['deletable'] == true) {
-//                if (widget.isComingFromExit) {
-//                  sendNotificationToAdmin();
-//                  Navigator.pushReplacement(
-//                    context,
-//                    MaterialPageRoute(
-//                      builder: (context) => SwitchTimebank(),
-//                    ),
-//                  );
-//                } else {
-//                  getSuccessDialog(context);
-//                  Navigator.of(context).pop();
-//                }
-              } else {
-                //  print("else error block");
-                getErrorDialog(context);
-                Navigator.of(context).pop();
-              }
+              setState(() {
+                user_error = AppLocalizations.of(context)
+                    .translate('change_ownership', 'users_empty');
+              });
             } else {
-              //  print("new owner creator id is ${selectedNewOwner.sevaUserID}");
-//              ownerGroupsArr.forEach((group) {
-//                print("groupppppp=== ${group['id']}");
-//                futures.add(
-//                  Firestore.instance
-//                      .collection('timebanknew')
-//                      .document(group['id'])
-//                      .updateData(
-//                    {
-//                      "creator_id": selectedNewOwner.sevaUserID,
-//                      "email_id": selectedNewOwner.email,
-//                      "admins":
-//                          FieldValue.arrayUnion([selectedNewOwner.sevaUserID]),
-//                      "members":
-//                          FieldValue.arrayUnion([selectedNewOwner.sevaUserID]),
-//                    },
-//                  ),
-//                );
-//              });
               await Future.wait(futures);
-              Map<String, dynamic> responseObj = await removeMemberFromTimebank(
-                  sevauserid: loggedInUser.sevaUserID, timebankId: tbmodel.id);
-              //  print("===response data of removal is${responseObj.toString()}===");
-              if (responseObj['deletable'] == true) {
-                //   print("else block---done transferring and removing the user from timebank");
-//                if (widget.isComingFromExit) {
-//                  sendNotificationToAdmin();
-//                  Navigator.of(context).pushAndRemoveUntil(
-//                      MaterialPageRoute(
-//                        builder: (context) => HomePageRouter(),
-//                      ),
-//                      (Route<dynamic> route) => false);
-//                } else {
-//                  getSuccessDialog(context);
-//                  Navigator.of(context).pop();
-//                }
+              Map<String, dynamic> responseObj =
+                  await checkChangeOwnershipStatus(
+                      sevauserid: loggedInUser.sevaUserID,
+                      timebankId: tbmodel.id);
+              if (responseObj['transferable'] == true) {
+                print('yes transferable ');
+                // sendNotificationToAdmin();
+                Navigator.of(context).pop();
+              } else if (responseObj['taskCheck'] == true) {
+                dialogBox(
+                    message: AppLocalizations.of(context)
+                        .translate('change_ownership', 'pending_task'));
+              } else if (responseObj['pendingPaymentsCheck'] == true) {
+                dialogBox(
+                    message: AppLocalizations.of(context).translate(
+                                'change_ownership', 'pending_payment') +
+                            responseObj['planName'] ??
+                        '' +
+                            AppLocalizations.of(context).translate(
+                                'change_ownership', 'pending_payment_two'));
               } else {
                 //  print("else error block");
                 getErrorDialog(context);
@@ -260,6 +216,29 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
           },
         )
       ],
+    );
+  }
+
+  void dialogBox({String message}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          content: new Text(message),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text(AppLocalizations.of(context)
+                  .translate('billing_plans', 'close')),
+              textColor: Colors.red,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -340,6 +319,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
       },
       onSuggestionSelected: (suggestion) {
         setState(() {
+          user_error = '';
           selectedNewOwner = suggestion;
         });
         _textEditingController.clear();
@@ -355,21 +335,21 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
     );
   }
 
-  Widget getInfoWidget() {
-    return Container(
-      color: Colors.grey[100],
-      child: ListTile(
-        leading: Image.asset(
-          'lib/assets/images/info.png',
-          color: FlavorConfig.values.theme.primaryColor,
-          height: 30,
-          width: 30,
-        ),
-        title: Text(AppLocalizations.of(context)
-            .translate('transfer_ownership', 'transfer_hint_three')),
-      ),
-    );
-  }
+//  Widget getInfoWidget() {
+//    return Container(
+//      color: Colors.grey[100],
+//      child: ListTile(
+//        leading: Image.asset(
+//          'lib/assets/images/info.png',
+//          color: FlavorConfig.values.theme.primaryColor,
+//          height: 30,
+//          width: 30,
+//        ),
+//        title: Text(AppLocalizations.of(context)
+//            .translate('transfer_ownership', 'transfer_hint_three')),
+//      ),
+//    );
+//  }
 
 //  Widget getDataList(ownerGroupsArr) {
 //    return ListView.builder(
@@ -388,7 +368,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
         // return object of type Dialog
         return AlertDialog(
           content: new Text(AppLocalizations.of(context)
-              .translate('transfer_ownership', 'removed_success')),
+              .translate('change_ownership', 'invitation_sent')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
@@ -396,6 +376,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
                   .translate('billing_plans', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();
+                Navigator.of(parentContext).pop();
               },
             ),
           ],
@@ -428,32 +409,32 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
     );
   }
 
-  void sendNotificationToAdmin({
-    String communityId,
-  }) async {
-    UserExitModel userExitModel = UserExitModel(
-        userPhotoUrl: loggedInUser.photoURL,
+  void sendNotificationToAdmin() async {
+    ChangeOwnershipModel changeOwnershipModel = ChangeOwnershipModel(
+        creatorPhotoUrl: loggedInUser.photoURL,
+        creatorEmail: loggedInUser.email,
         timebank: tbmodel.name,
-        reason: globals.userExitReason ?? "",
-        userName: loggedInUser.fullname);
+        message: 'Creator invited you to become owner',
+        creatorName: loggedInUser.fullname);
 
     NotificationsModel notification = NotificationsModel(
         id: utils.Utils.getUuid(),
         timebankId: tbmodel.id,
-        data: userExitModel.toMap(),
+        data: changeOwnershipModel.toMap(),
         isRead: false,
-        type: NotificationType.TypeMemberExitTimebank,
+        type: NotificationType.TypeChangeOwnership,
         communityId: tbmodel.communityId,
         senderUserId: loggedInUser.sevaUserID,
-        targetUserId: tbmodel.creatorId);
-    print("bhhfhff ${userExitModel} ");
+        targetUserId: selectedNewOwner.sevaUserID);
+    print("bhhfhff ${changeOwnershipModel} ");
     print(" timebank id ${tbmodel.id + tbmodel.members.toString()}");
     await Firestore.instance
-        .collection('timebanknew')
-        .document(tbmodel.id)
+        .collection('users')
+        .document(selectedNewOwner.email)
         .collection("notifications")
         .document(notification.id)
         .setData(notification.toMap());
+    getSuccessDialog(context);
   }
 
   Widget timeBankOrGroupCard() {
