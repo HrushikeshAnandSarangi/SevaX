@@ -416,9 +416,13 @@ PODS:
     - Flutter
   - Flurry-iOS-SDK/FlurrySDK (10.3.1)
   - Flutter (1.0.0)
+  - flutter_downloader (0.0.1):
+    - Flutter
   - flutter_full_pdf_viewer (1.0.1):
     - Flutter
   - flutter_keyboard_visibility (0.7.0):
+    - Flutter
+  - flutter_local_notifications (0.0.1):
     - Flutter
   - flutter_plugin_android_lifecycle (0.0.1):
     - Flutter
@@ -583,8 +587,10 @@ DEPENDENCIES:
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - flurry (from `.symlinks/plugins/flurry/ios`)
   - Flutter (from `Flutter`)
+  - flutter_downloader (from `.symlinks/plugins/flutter_downloader/ios`)
   - flutter_full_pdf_viewer (from `.symlinks/plugins/flutter_full_pdf_viewer/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_plugin_android_lifecycle (from `.symlinks/plugins/flutter_plugin_android_lifecycle/ios`)
   - geoflutterfire (from `.symlinks/plugins/geoflutterfire/ios`)
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
@@ -695,10 +701,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flurry/ios"
   Flutter:
     :path: Flutter
+  flutter_downloader:
+    :path: ".symlinks/plugins/flutter_downloader/ios"
   flutter_full_pdf_viewer:
     :path: ".symlinks/plugins/flutter_full_pdf_viewer/ios"
   flutter_keyboard_visibility:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_plugin_android_lifecycle:
     :path: ".symlinks/plugins/flutter_plugin_android_lifecycle/ios"
   geoflutterfire:
@@ -792,8 +802,10 @@ SPEC CHECKSUMS:
   flurry: 15b01f664ab1367c62b50291541ea7f78ca85aad
   Flurry-iOS-SDK: 2cc5b4f494db71d90a8bd195ba7ebb7cdebf3535
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_downloader: 058b9c41564a90500f67f3e432e3524613a7fd83
   flutter_full_pdf_viewer: 1b65139fc3236cde300ba6bea2a72669cb07f2e6
   flutter_keyboard_visibility: 6195387fb6d8f46e5cd6dda4a4154e41f800f545
+  flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
   flutter_plugin_android_lifecycle: dc0b544e129eebb77a6bfb1239d4d1c673a60a35
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   geoflutterfire: 2a6493e01fb6eef1a6c9046b1baf9a943d0c5ffe

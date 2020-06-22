@@ -51,38 +51,40 @@ class UserModel extends DataModel {
   List<String> blockedBy = [];
   List<String> blockedMembers = [];
   LocationData currentPosition;
+  bool notificationAlerts;
 
   UserModel(
       {this.bio,
-      this.email,
-      this.fullname,
-      this.photoURL,
-      this.interests,
-      this.membershipCampaigns,
-      this.membershipTimebanks,
-      this.favoriteByMember,
-      this.favoriteByTimeBank,
-      this.sevaUserID,
-      this.skills,
-      this.currentBalance,
-      this.calendar,
-      this.otp,
-      this.requestStatus,
-      //this.availability,
-      this.currentTimebank,
-      this.timezone,
-      this.tokens,
-      this.reportedUsers,
-      this.blockedMembers,
-      this.acceptedEULA,
-      this.completedIntro,
-      this.pastHires,
-      this.blockedBy,
-      this.currentPosition,
-      this.currentCommunity,
-      this.communities,
-      this.emailSent,
-      this.language}) {}
+        this.email,
+        this.fullname,
+        this.photoURL,
+        this.interests,
+        this.membershipCampaigns,
+        this.membershipTimebanks,
+        this.favoriteByMember,
+        this.favoriteByTimeBank,
+        this.sevaUserID,
+        this.skills,
+        this.currentBalance,
+        this.calendar,
+        this.otp,
+        this.requestStatus,
+        //this.availability,
+        this.currentTimebank,
+        this.timezone,
+        this.tokens,
+        this.reportedUsers,
+        this.blockedMembers,
+        this.acceptedEULA,
+        this.completedIntro,
+        this.pastHires,
+        this.blockedBy,
+        this.currentPosition,
+        this.currentCommunity,
+        this.communities,
+        this.emailSent,
+        this.language,
+        this.notificationAlerts});
 
   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {
@@ -112,6 +114,7 @@ class UserModel extends DataModel {
     if (map.containsKey('completedIntro')) {
       this.completedIntro = map['completedIntro'];
     }
+    print('temp 22');
 
     if (map.containsKey('blockedMembers')) {
       List<String> blockedMembers = List.castFrom(map['blockedMembers']);
@@ -144,7 +147,7 @@ class UserModel extends DataModel {
     if (map.containsKey('bio')) {
       this.bio = map['bio'];
     }
-
+    print('temp 3');
     if (map.containsKey('notificationsRead')) {
       this.notificationsRead = map['notificationsRead'];
     }
@@ -183,20 +186,22 @@ class UserModel extends DataModel {
     if (map.containsKey('sevauserid')) {
       this.sevaUserID = map['sevauserid'];
     }
+    print('temp 2');
     if (map.containsKey('skills')) {
       List<String> skillsList = List.castFrom(map['skills']);
       this.skills = skillsList;
     }
     if (map.containsKey('favoriteByMember')) {
       List<String> favoriteByMemberList =
-          List.castFrom(map['favoriteByMember']);
+      List.castFrom(map['favoriteByMember']);
       this.favoriteByMember = favoriteByMemberList;
     }
     if (map.containsKey('favoriteByTimeBank')) {
       List<String> favoriteByTimeBankList =
-          List.castFrom(map['favoriteByTimeBank']);
+      List.castFrom(map['favoriteByTimeBank']);
       this.favoriteByTimeBank = favoriteByTimeBankList;
     }
+    print('temp 1');
     if (map.containsKey('currentBalance')) {
       this.currentBalance = map['currentBalance'].toDouble();
     } else {
@@ -232,6 +237,10 @@ class UserModel extends DataModel {
     } else {
       notificationsReadCount = HashMap();
     }
+    if (map.containsKey('notificationAlerts')) {
+      this.notificationAlerts = map['notificationAlerts'];
+    }
+    print(this);
   }
 
   UserModel.fromDynamic(dynamic user) {
@@ -378,6 +387,7 @@ class UserModel extends DataModel {
       ${this.currentPosition.toString()},
       ${this.acceptedEULA.toString()},
       ${this.currentTimebank.toString()},
+      ${this.notificationAlerts.toString()},
       Communities:${this.communities.toString()},
     ''';
   }
