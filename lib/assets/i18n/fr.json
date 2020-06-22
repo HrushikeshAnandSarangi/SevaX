@@ -562,7 +562,6 @@
     "please_enter_bio": "Veuillez entrer la biographie pour mettre à jour",
     "bio_50": "Veuillez saisir au moins 50 caractères",
     "sure_logout": "Êtes-vous sûr de vouloir vous déconnecter?"
-
   },
   "help": {
     "about_sevax": "À propos de SevaX",
@@ -1082,10 +1081,8 @@
     "transfer_error": "Erreur est survenue! S'il vous plaît, revenez plus tard et réessayez.",
     "empty_user": "Aucun utilisateur trouvé"
   },
-
   "private_timebank": {
     "private_timebank": "Timebank Privé ",
-
     "alert_title": "Alerte privée Timebank",
     "alert_hint": "Please be informed that Private Timebanks do not have a free option. You will need to provide your billing details to continue to create this Timebank"
   },
@@ -1094,7 +1091,7 @@
     "csv_hint_two": "remplissez les utilisateurs que vous souhaitez ajouter ",
     "csv_hint_three": "puis téléchargez le fichier CSV.",
     "download_csv": "Télécharger un exemple de fichier CSV",
-    "csv_title":"Inviter des utilisateurs en masse par CSV",
+    "csv_title": "Inviter des utilisateurs en masse par CSV",
     "upload": "Télécharger",
     "choose_csv": "Choisissez un fichier CSV pour inviter des membres en masse",
     "csv_error": "Le fichier CSV n'est pas sélectionné",
@@ -1103,5 +1100,17 @@
     "csv_file_alert": "Les fichiers supérieurs à 1 MB ne sont pas autorisés",
     "csv_size_limit": "REMARQUE: la taille maximale du fichier est de 1 MB",
     "csv_progress": "Téléchargement d'un fichier CSV"
+  },
+  "external_notifications": {
+    "notification_title": "Notifications",
+    "request_accepted": "Le membre a accepté une demande et attend l'approbation",
+    "request_completed": "Le membre réclame des crédits de temps et attend l'approbation",
+    "join_request": "Demande d'un membre pour rejoindre un",
+    "offer_debit": "Débit pour une offre à plusieurs",
+    "member_exits": "Le membre quitte un",
+    "deletion_request": "La demande de suppression n'a pas pu être traitée (en raison de transactions en attente)",
+    "credit_request": "Crédit reçu pour une offre à plusieurs",
+    "timebank": "Timebank",
+    "group": "groupe"
   }
 }

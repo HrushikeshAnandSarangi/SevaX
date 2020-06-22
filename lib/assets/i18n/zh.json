@@ -194,28 +194,17 @@
     "edit_profile_info": "编辑个人资料信息",
     "profile_information": "档案信息",
     "updating_details": "更新细节"
+  },
+  "external_notifications": {
+    "notification_title": "通知",
+    "request_accepted": "成员已接受请求并正在等待批准",
+    "request_completed": "成员要求获得时间积分并正在等待批准",
+    "join_request": "加入会员请求，",
+    "offer_debit": "一对多优惠的借方",
+    "member_exits": "成员退出",
+    "deletion_request": "无法处理删除请求（由于有待处理的事务）",
+    "credit_request": "一对多报价收到的信用额",
+    "timebank": "时间银行",
+    "group": "小组"
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

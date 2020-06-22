@@ -562,7 +562,6 @@
     "please_enter_bio": "Insira a biografia para atualizar",
     "bio_50": "Digite 50 caracteres mínimos",
     "sure_logout": "Tem certeza de que deseja sair?"
-
   },
   "help": {
     "about_sevax": "Sobre o SevaX",
@@ -1082,20 +1081,17 @@
     "transfer_error": "Ocorreu um erro! Por favor volte mais tarde e tente novamente.",
     "empty_user": "No users found"
   },
-
   "private_timebank": {
     "private_timebank": "Private Timebank",
-
     "alert_title": "Alerta privado do Timebank",
     "alert_hint": "Please be informed that Private Timebanks do not have a free option. You will need to provide your billing details to continue to create this Timebank"
   },
-
   "upload_csv": {
     "csv_hint_one": "Faça o download do modelo CSV para",
     "csv_hint_two": "preencha os usuários que você gostaria de adicionar ",
     "csv_hint_three": "faça o upload do arquivo CSV",
     "download_csv": "Baixar arquivo CSV de amostra",
-    "csv_title":"Convidar usuários em massa por CSV",
+    "csv_title": "Convidar usuários em massa por CSV",
     "upload": "Envio",
     "choose_csv": "Escolha o arquivo CSV para convidar membros em massa",
     "csv_error": "O arquivo CSV não está selecionado\n\n",
@@ -1104,7 +1100,17 @@
     "csv_file_alert": "Arquivos maiores que 1 MB não são permitidos",
     "csv_size_limit": "NOTA: O tamanho máximo do arquivo é 1 MB",
     "csv_progress": "Fazendo upload de arquivo CSV"
-
-
+  },
+  "external_notifications": {
+    "notification_title": "Notificações",
+    "request_accepted": "O membro aceitou uma solicitação e está aguardando aprovação",
+    "request_completed": "O membro reivindica créditos de tempo e aguarda aprovação",
+    "join_request": "Solicitação de membro para ingressar em",
+    "offer_debit": "Débito para uma oferta para muitos",
+    "member_exits": "O membro sai de um",
+    "deletion_request": "Não foi possível processar a solicitação de exclusão (devido a transações pendentes)",
+    "credit_request": "Crédito recebido por uma oferta para muitos",
+    "timebank": "Timebank",
+    "group": "Group"
   }
 }

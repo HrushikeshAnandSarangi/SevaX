@@ -562,7 +562,6 @@
     "please_enter_bio": "Ingrese la biografía para actualizar",
     "bio_50": "Ingrese min 50 caracteres",
     "sure_logout": "Está seguro de que desea cerrar sesión?"
-
   },
   "help": {
     "about_sevax": "Sobre o SevaX",
@@ -1082,7 +1081,6 @@
     "transfer_error": "¡Se produjo un error! Por favor, vuelva más tarde y vuelva a intentarlo.",
     "empty_user": "No users found"
   },
-
   "private_timebank": {
     "private_timebank": "Timebank privado",
     "alert_title": "Alerta privada Timebank",
@@ -1093,7 +1091,7 @@
     "csv_hint_two": "Rellena las usuarios que te gustaría agregar ",
     "csv_hint_three": "luego cargue el archivo CSV",
     "download_csv": "Descargue un archivo CSV de muestra",
-    "csv_title":"Invitación masiva de usuarios por CSV",
+    "csv_title": "Invitación masiva de usuarios por CSV",
     "upload": "Subir",
     "choose_csv": "Elija el archivo CSV para invitar a miembros de forma masiva",
     "csv_error": "El archivo CSV no está seleccionado",
@@ -1103,12 +1101,23 @@
     "csv_size_limit": "NOTA: el tamaño máximo del archivo es de 1 MB",
     "csv_progress": "Subir archivo CSV"
   },
-
   "project_template": {
     "template_title": "",
     "template_title": "",
     "template_title": "",
     "template_title": "",
     "template_title": ""
+  },
+  "external_notifications": {
+    "notification_title": "Notificaciones",
+    "request_accepted": "El miembro ha aceptado una solicitud y está esperando su aprobación",
+    "request_completed": "El miembro reclama créditos de tiempo y está esperando su aprobación",
+    "join_request": "Solicitud de miembro para unirse a",
+    "offer_debit": "Débito para una o varias ofertas",
+    "member_exits": "El miembro sale de a",
+    "deletion_request": "No se pudo procesar la solicitud de eliminación (debido a transacciones pendientes)",
+    "credit_request": "Crédito recibido por una o varias ofertas",
+    "timebank": "Timebank",
+    "group": "Grupo"
   }
 }
