@@ -1098,7 +1098,7 @@
     "csv_hint_two": "preencha os usuários que você gostaria de adicionar ",
     "csv_hint_three": "faça o upload do arquivo CSV",
     "download_csv": "Baixar arquivo CSV de amostra",
-    "csv_title":"Convidar usuários em massa por CSV",
+    "csv_title": "Convidar usuários em massa por CSV",
     "upload": "Envio",
     "choose_csv": "Escolha o arquivo CSV para convidar membros em massa",
     "csv_error": "Selecione um arquivo CSV primeiro antes de fazer o upload",
@@ -1108,8 +1108,20 @@
     "csv_size_limit": "NOTA: O tamanho máximo do arquivo é 1 MB",
     "csv_progress": "Fazendo upload de arquivo CSV"
   },
-
+  "external_notifications": {
+    "notification_title": "Notificações",
+    "request_accepted": "O membro aceitou uma solicitação e está aguardando aprovação",
+    "request_completed": "O membro reivindica créditos de tempo e aguarda aprovação",
+    "join_request": "Solicitação de membro para ingressar em",
+    "offer_debit": "Débito para uma oferta para muitos",
+    "member_exits": "O membro sai de um",
+    "deletion_request": "Não foi possível processar a solicitação de exclusão (devido a transações pendentes)",
+    "credit_request": "Crédito recebido por uma oferta para muitos",
+    "timebank": "Timebank",
+    "group": "Group"
+  },
   "project_template": {
+    "save_as_template": "Guardar como modelo",
     "template_title": "Forneça um nome exclusivo para o modelo",
     "template_hint": "Nome do modelo",
     "name_error": "O nome do modelo não pode estar vazio",
@@ -1120,5 +1132,9 @@
     "no_templates": "Nenhum modelo encontrado",
     "empty_template": "Selecione um modelo na lista de modelos disponíveis",
     "template_alert": "Alerta de modelo"
+  },
+  "change_ownership": {
+    "change_ownership_title": "Alterar propriedade",
+    "change": "Change"
   }
 }

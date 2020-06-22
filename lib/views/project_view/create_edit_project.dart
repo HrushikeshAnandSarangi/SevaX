@@ -149,16 +149,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
           dateTime: DateTime.fromMillisecondsSinceEpoch(projectModel.endTime));
     }
-    if (widget.isCreateProject && widget.projectTemplateModel != null) {
-      startDate = getUpdatedDateTimeAccToUserTimezone(
-          timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-          dateTime: DateTime.fromMillisecondsSinceEpoch(
-              widget.projectTemplateModel.startTime));
-      endDate = getUpdatedDateTimeAccToUserTimezone(
-          timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-          dateTime: DateTime.fromMillisecondsSinceEpoch(
-              widget.projectTemplateModel.endTime));
-    }
 
     return Scaffold(
       key: _scaffoldKey,
@@ -430,9 +420,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 projectModel.emailId = value;
               },
               initialValue: widget.isCreateProject
-                  ? widget.projectTemplateModel != null
-                      ? widget.projectTemplateModel.emailId
-                      : SevaCore.of(context).loggedInUser.email
+                  ? SevaCore.of(context).loggedInUser.email
                   : projectModel.emailId ??
                       SevaCore.of(context).loggedInUser.email,
               decoration: InputDecoration(
@@ -483,11 +471,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               },
               maxLength: 15,
               initialValue: widget.isCreateProject
-                  ? widget.projectTemplateModel != null
-                      ? widget.projectTemplateModel.phoneNumber
-                              .replaceAll('+', "") ??
-                          ""
-                      : ""
+                  ? ""
                   : projectModel.phoneNumber.replaceAll('+', '') ?? "",
               decoration: InputDecoration(
 //                icon: Icon(
@@ -534,16 +518,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             ),
             Center(
               child: LocationPickerWidget(
-                selectedAddress: widget.isCreateProject
-                    ? widget.projectTemplateModel != null
-                        ? widget.projectTemplateModel.address
-                        : selectedAddress
-                    : selectedAddress,
-                location: widget.isCreateProject
-                    ? widget.projectTemplateModel != null
-                        ? widget.projectTemplateModel.location
-                        : location
-                    : location,
+                selectedAddress:
+                    widget.isCreateProject ? selectedAddress : selectedAddress,
+                location: widget.isCreateProject ? location : location,
                 onChanged: (LocationDataModel dataModel) {
                   log("received data model");
                   setState(() {
@@ -600,7 +577,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             widget.isCreateProject
                 ? Row(
                     children: <Widget>[
-                      headingText('Save as Template'),
+                      headingText(AppLocalizations.of(context)
+                          .translate('project_template', 'save_as_template')),
                       Padding(
                         padding: const EdgeInsets.only(top: 15),
                         child: Checkbox(
@@ -718,22 +696,15 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           projectTemplateModel.id = Utils.getUuid();
                           projectTemplateModel.name = projectModel.name;
                           projectTemplateModel.templateName = templateName;
-                          projectTemplateModel.address = projectModel.address;
-                          projectTemplateModel.location = projectModel.location;
                           projectTemplateModel.photoUrl = projectModel.photoUrl;
-                          projectTemplateModel.phoneNumber =
-                              projectModel.phoneNumber;
                           projectTemplateModel.description =
                               projectModel.description;
-                          projectTemplateModel.emailId = projectModel.emailId;
                           projectTemplateModel.creatorId =
                               projectModel.creatorId;
                           projectTemplateModel.createdAt =
                               projectModel.createdAt;
-                          projectTemplateModel.endTime = projectModel.endTime;
-                          projectTemplateModel.startTime =
-                              projectModel.startTime;
                           projectTemplateModel.mode = projectModel.mode;
+                          projectTemplateModel.softDelete = false;
 
                           await FirestoreManager.createProjectTemplate(
                               projectTemplateModel: projectTemplateModel);

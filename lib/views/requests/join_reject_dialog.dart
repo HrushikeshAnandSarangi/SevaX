@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
@@ -49,8 +50,9 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               height: 70,
               width: 70,
               child: CircleAvatar(
-                backgroundImage:
-                    NetworkImage(requestInvitationModel.timebankImage ?? defaultUserImageURL),
+                backgroundImage: NetworkImage(
+                    requestInvitationModel.timebankImage ??
+                        defaultUserImageURL),
               ),
             ),
             Padding(
@@ -110,7 +112,8 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                   child: RaisedButton(
                     color: FlavorConfig.values.theme.primaryColor,
                     child: Text(
-                      'Accept',
+                      AppLocalizations.of(context)
+                          .translate('change_ownership', 'accept'),
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
@@ -139,7 +142,8 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                   child: RaisedButton(
                     color: Theme.of(context).accentColor,
                     child: Text(
-                      'Decline',
+                      AppLocalizations.of(context)
+                          .translate('notifications', 'decline'),
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),

@@ -12,6 +12,9 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/edit_group.dart';
+import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
+
+import '../../flavor_config.dart';
 
 class ManageGroupView extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -54,7 +57,7 @@ class _ManageGroupView extends State<ManageGroupView> {
 
     if (isSuperAdmin) {
       return DefaultTabController(
-        length: 2,
+        length: 3,
         child: Column(
           children: <Widget>[
             TabBar(
@@ -62,8 +65,16 @@ class _ManageGroupView extends State<ManageGroupView> {
               labelColor: Colors.black,
               isScrollable: false,
               tabs: <Widget>[
-                Tab(text: AppLocalizations.of(context).translate('group', 'edit_group')),
-                Tab(text: AppLocalizations.of(context).translate('group', 'settings')),
+                Tab(
+                    text: AppLocalizations.of(context)
+                        .translate('group', 'edit_group')),
+                Tab(
+                    text: AppLocalizations.of(context)
+                        .translate('group', 'settings')),
+                Tab(
+                  text: AppLocalizations.of(context).translate(
+                      'external_notifications', 'notification_title'),
+                ),
               ],
             ),
             Expanded(
@@ -73,6 +84,12 @@ class _ManageGroupView extends State<ManageGroupView> {
                     timebankModel: widget.timebankModel,
                   ),
                   Settings,
+                  NotificationManagerForAmins(
+                    widget.timebankModel.id,
+                    SevaCore.of(context).loggedInUser.sevaUserID,
+                    widget.timebankModel.parentTimebankId ==
+                        FlavorConfig.values.timebankId,
+                  )
                 ],
               ),
             ),
@@ -81,7 +98,7 @@ class _ManageGroupView extends State<ManageGroupView> {
       );
     } else {
       return DefaultTabController(
-        length: 2,
+        length: 3,
         child: Column(
           children: <Widget>[
             TabBar(
@@ -89,8 +106,16 @@ class _ManageGroupView extends State<ManageGroupView> {
               labelColor: Colors.black,
               isScrollable: false,
               tabs: <Widget>[
-                Tab(text: AppLocalizations.of(context).translate('group', 'edit_group')),
-                Tab(text: AppLocalizations.of(context).translate('group', 'settings')),
+                Tab(
+                    text: AppLocalizations.of(context)
+                        .translate('group', 'edit_group')),
+                Tab(
+                    text: AppLocalizations.of(context)
+                        .translate('group', 'settings')),
+                Tab(
+                  text: AppLocalizations.of(context).translate(
+                      'external_notifications', 'notification_title'),
+                ),
               ],
             ),
             Expanded(
@@ -100,6 +125,13 @@ class _ManageGroupView extends State<ManageGroupView> {
                     timebankModel: widget.timebankModel,
                   ),
                   Settings,
+                  NotificationManagerForAmins(
+                    widget.timebankModel.id,
+                    SevaCore.of(context).loggedInUser.sevaUserID,
+                    widget.timebankModel.parentTimebankId ==
+                        FlavorConfig.values.timebankId,
+
+                  )
                 ],
               ),
             ),
@@ -121,8 +153,12 @@ class _ManageGroupView extends State<ManageGroupView> {
               labelColor: Colors.black,
               isScrollable: false,
               tabs: <Widget>[
-                Tab(text: AppLocalizations.of(context).translate('group', 'about')),
-                Tab(text: AppLocalizations.of(context).translate('group', 'settings')),
+                Tab(
+                    text: AppLocalizations.of(context)
+                        .translate('group', 'about')),
+                Tab(
+                    text: AppLocalizations.of(context)
+                        .translate('group', 'settings')),
               ],
             ),
             Expanded(

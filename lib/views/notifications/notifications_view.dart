@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -31,6 +32,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
+import 'package:sevaexchange/views/timebanks/widgets/change_ownership_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/group_join_reject_dialog.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -156,6 +158,18 @@ class NotificationsView extends State<NotificationViewHolder> {
                               notification.id,
                             );
                           });
+                      break;
+
+                    case NotificationType.TypeChangeOwnership:
+                      ChangeOwnershipModel ownershipModel =
+                          ChangeOwnershipModel.fromMap(notification.data);
+                      // TODO needs flow correction to tasks model and transaction model
+                      return getChangeOwnershipNotificationWidget(
+                        notificationId: notification.id,
+                        communityId: notification.communityId,
+                        changeOwnershipModel: ownershipModel,
+                        timebankId: notification.timebankId,
+                      );
                       break;
                     case NotificationType.RequestApprove:
                       RequestModel model =
@@ -593,6 +607,42 @@ class NotificationsView extends State<NotificationViewHolder> {
           .translate('notifications', 'timebank_join'),
       subTitle:
           '${userAddedModel.adminName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'added_you')} ${userAddedModel.timebankName} ${AppLocalizations.of(context).translate('members', 'timebank')}',
+    );
+  }
+
+  Widget getChangeOwnershipNotificationWidget({
+    ChangeOwnershipModel changeOwnershipModel,
+    String notificationId,
+    BuildContext buildContext,
+    String timebankId,
+    String communityId,
+  }) {
+    // assert(user != null);
+    return NotificationCard(
+      entityName: changeOwnershipModel.creatorName,
+      isDissmissible: true,
+      onDismissed: () {
+        FirestoreManager.readUserNotification(
+          notificationId,
+          SevaCore.of(context).loggedInUser.email,
+        );
+      },
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return ChangeOwnershipDialog(
+                changeOwnershipModel: changeOwnershipModel,
+                timeBankId: timebankId,
+                notificationId: notificationId,
+              );
+            });
+      },
+      photoUrl: changeOwnershipModel.creatorPhotoUrl,
+      title: AppLocalizations.of(context)
+          .translate('change_ownership', 'change_ownership_title'),
+      subTitle:
+          '${changeOwnershipModel.creatorName.toLowerCase()} ${AppLocalizations.of(context).translate('change_ownership', 'notification_msg')} ${changeOwnershipModel.timebank.toLowerCase().replaceAll("timebank", "")} ${AppLocalizations.of(context).translate('members', 'timebank')}',
     );
   }
 

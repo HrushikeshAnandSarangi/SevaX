@@ -1,5 +1,11 @@
+import 'dart:collection';
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/globals.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -9,7 +15,10 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
+import 'package:sevaexchange/views/notifications/notification_alert_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
+import 'package:sevaexchange/widgets/notification_switch.dart';
+import 'package:sevaexchange/views/timebanks/change_ownership_view.dart';
 
 class ManageTimebankSeva extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -56,7 +65,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 
     if (isSuperAdmin) {
       return DefaultTabController(
-        length: 3,
+        length: 4,
         child: Column(
           children: <Widget>[
             TabBar(
@@ -72,8 +81,13 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                     text: AppLocalizations.of(context)
                         .translate('manage', 'billing')),
                 Tab(
-                    text: AppLocalizations.of(context)
-                        .translate('manage', 'settings')),
+                  text: AppLocalizations.of(context)
+                      .translate('manage', 'settings'),
+                ),
+                Tab(
+                  text: AppLocalizations.of(context).translate(
+                      'external_notifications', 'notification_title'),
+                ),
               ],
             ),
             Expanded(
@@ -86,6 +100,12 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                   ),
                   TimeBankBillingAdminView(),
                   Settings,
+                  NotificationManagerForAmins(
+                    widget.timebankModel.id,
+                    SevaCore.of(context).loggedInUser.sevaUserID,
+                    widget.timebankModel.parentTimebankId ==
+                        FlavorConfig.values.timebankId,
+                  )
                 ],
               ),
             ),
@@ -94,7 +114,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
       );
     } else {
       return DefaultTabController(
-        length: 2,
+        length: 3,
         child: Column(
           children: <Widget>[
             TabBar(
@@ -106,8 +126,13 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                     text: AppLocalizations.of(context)
                         .translate('manage', 'edit_timebank')),
                 Tab(
-                    text: AppLocalizations.of(context)
-                        .translate('manage', 'settings')),
+                  text: AppLocalizations.of(context)
+                      .translate('manage', 'settings'),
+                ),
+                Tab(
+                  text: AppLocalizations.of(context).translate(
+                      'external_notifications', 'notification_title'),
+                ),
               ],
 //                onTap: (index) {
 //                  if (_indextab != index) {
@@ -125,6 +150,12 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                     timebankId: widget.timebankModel.id,
                   ),
                   Settings,
+                  NotificationManagerForAmins(
+                    widget.timebankModel.id,
+                    SevaCore.of(context).loggedInUser.sevaUserID,
+                    widget.timebankModel.parentTimebankId ==
+                        FlavorConfig.values.timebankId,
+                  )
                 ],
               ),
             ),
@@ -195,6 +226,30 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.red,
+        ),
+      ),
+    );
+  }
+
+  Widget get changeOwnerShip {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChangeOwnerShipView(
+              timebankId: widget.timebankModel.id,
+            ),
+          ),
+        );
+      },
+      child: Text(
+        AppLocalizations.of(context)
+            .translate('change_ownership', 'change_ownership_title'),
+        textAlign: TextAlign.left,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.blue,
         ),
       ),
     );
@@ -469,6 +524,13 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                   SevaCore.of(context).loggedInUser.sevaUserID
               ? deleteTimebank
               : Container(),
+          SizedBox(
+            height: 20,
+          ),
+          widget.timebankModel.creatorId ==
+                  SevaCore.of(context).loggedInUser.sevaUserID
+              ? changeOwnerShip
+              : Container(),
           // viewAcceptedOffers(context: context),
           // manageTimebankCodes(context: context),
 //          billingView(context: context),
@@ -499,4 +561,220 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 //    );
 //  }
 //}
+}
+
+class NotificationSetting {
+  bool joinRequest = true;
+  bool acceptedRequest = true;
+  bool requestCompleted = true;
+  bool creditNotificationForOffer = true;
+  bool debitNotificationForOffer = true;
+  bool softDeleteRequest = true;
+  bool memberExit = true;
+
+  Map<String, bool> toMap() {
+    Map<String, bool> object = HashMap();
+    object['JoinRequest'] = joinRequest;
+    object['RequestAccept'] = acceptedRequest;
+    object['RequestCompleted'] = requestCompleted;
+    object['TYPE_CREDIT_NOTIFICATION_FROM_TIMEBANK'] =
+        creditNotificationForOffer;
+    object['TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK'] = debitNotificationForOffer;
+    object['TYPE_DELETION_REQUEST_OUTPUT'] = softDeleteRequest;
+    object['TypeMemberExit'] = memberExit;
+
+    return object;
+  }
+
+  NotificationSetting() {}
+
+  NotificationSetting.fromMap(Map<dynamic, dynamic> map) {
+    if (map.containsKey('JoinRequest')) {
+      joinRequest = map['JoinRequest'];
+    }
+
+    if (map.containsKey('RequestAccept')) {
+      acceptedRequest = map['RequestAccept'];
+    }
+
+    if (map.containsKey('RequestCompleted')) {
+      requestCompleted = map['RequestCompleted'];
+    }
+
+    if (map.containsKey('TYPE_CREDIT_NOTIFICATION_FROM_TIMEBANK')) {
+      creditNotificationForOffer =
+          map['TYPE_CREDIT_NOTIFICATION_FROM_TIMEBANK'];
+    }
+
+    if (map.containsKey('TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK')) {
+      debitNotificationForOffer = map['TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK'];
+    }
+
+    if (map.containsKey('TYPE_DELETION_REQUEST_OUTPUT')) {
+      softDeleteRequest = map['TYPE_DELETION_REQUEST_OUTPUT'];
+    }
+
+    if (map.containsKey('TypeMemberExit')) {
+      memberExit = map['TypeMemberExit'];
+    }
+  }
+}
+
+class NotificationManagerForAmins extends StatefulWidget {
+  final String timebankId;
+  final String adminSevaUserId;
+  final bool isPrimaryTimebank;
+
+  NotificationManagerForAmins(
+    this.timebankId,
+    this.adminSevaUserId,
+    this.isPrimaryTimebank,
+  );
+
+  @override
+  State<StatefulWidget> createState() {
+    return _NotificationManagerForAminsState();
+  }
+}
+
+class _NotificationManagerForAminsState
+    extends State<NotificationManagerForAmins> {
+  Stream settingsStreamer;
+  @override
+  void initState() {
+    super.initState();
+    settingsStreamer = FirestoreManager.getTimebankModelStream(
+      timebankId: widget.timebankId,
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: StreamBuilder<TimebankModel>(
+            stream: settingsStreamer,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container();
+              }
+
+              NotificationSetting notificationSetting = snapshot
+                      .data.notificationSetting
+                      .containsKey(widget.adminSevaUserId)
+                  ? snapshot.data.notificationSetting[widget.adminSevaUserId]
+                  : NotificationSetting();
+
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    NotificationWidgetSwitch(
+                      isTurnedOn: notificationSetting.acceptedRequest,
+                      title: AppLocalizations.of(context).translate(
+                          'external_notifications', 'request_accepted'),
+                      onPressed: (bool status) {
+                        NotificationWidgetSwitch.updateNotificationFormAdmin(
+                          adminSevaUserId: widget.adminSevaUserId,
+                          notificationType: 'RequestAccept',
+                          status: status,
+                          timebankId: widget.timebankId,
+                        );
+                      },
+                    ),
+                    NotificationWidgetSwitch(
+                      isTurnedOn: notificationSetting.requestCompleted,
+                      title: AppLocalizations.of(context).translate(
+                          'external_notifications', 'request_completed'),
+                      onPressed: (bool status) {
+                        NotificationWidgetSwitch.updateNotificationFormAdmin(
+                          adminSevaUserId: widget.adminSevaUserId,
+                          notificationType: 'RequestCompleted',
+                          status: status,
+                          timebankId: widget.timebankId,
+                        );
+                      },
+                    ),
+                    NotificationWidgetSwitch(
+                      isTurnedOn: notificationSetting.joinRequest,
+                      title: AppLocalizations.of(context).translate(
+                              'external_notifications', 'join_request') +
+                          AppLocalizations.of(context).translate(
+                              'external_notifications',
+                              widget.isPrimaryTimebank ? 'timebank' : 'group'),
+                      onPressed: (bool status) {
+                        NotificationWidgetSwitch.updateNotificationFormAdmin(
+                          adminSevaUserId: widget.adminSevaUserId,
+                          notificationType: 'JoinRequest',
+                          status: status,
+                          timebankId: widget.timebankId,
+                        );
+                      },
+                    ),
+                    NotificationWidgetSwitch(
+                      isTurnedOn: notificationSetting.debitNotificationForOffer,
+                      title: AppLocalizations.of(context)
+                          .translate('external_notifications', 'offer_debit'),
+                      onPressed: (bool status) {
+                        NotificationWidgetSwitch.updateNotificationFormAdmin(
+                          adminSevaUserId: widget.adminSevaUserId,
+                          notificationType:
+                              'TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK',
+                          status: status,
+                          timebankId: widget.timebankId,
+                        );
+                      },
+                    ),
+                    NotificationWidgetSwitch(
+                      isTurnedOn: notificationSetting.memberExit,
+                      title: AppLocalizations.of(context).translate(
+                              'external_notifications', 'member_exits') +
+                          AppLocalizations.of(context).translate(
+                              'external_notifications',
+                              widget.isPrimaryTimebank ? 'timebank' : 'group'),
+                      onPressed: (bool status) {
+                        NotificationWidgetSwitch.updateNotificationFormAdmin(
+                          adminSevaUserId: widget.adminSevaUserId,
+                          notificationType: 'TypeMemberExit',
+                          status: status,
+                          timebankId: widget.timebankId,
+                        );
+                      },
+                    ),
+                    NotificationWidgetSwitch(
+                      isTurnedOn: notificationSetting.softDeleteRequest,
+                      title: AppLocalizations.of(context).translate(
+                          'external_notifications', 'deletion_request'),
+                      onPressed: (bool status) {
+                        NotificationWidgetSwitch.updateNotificationFormAdmin(
+                          adminSevaUserId: widget.adminSevaUserId,
+                          notificationType: 'TYPE_DELETION_REQUEST_OUTPUT',
+                          status: status,
+                          timebankId: widget.timebankId,
+                        );
+                      },
+                    ),
+                    NotificationWidgetSwitch(
+                      isTurnedOn:
+                          notificationSetting.creditNotificationForOffer,
+                      title: AppLocalizations.of(context).translate(
+                          'external_notifications', 'credit_request'),
+                      onPressed: (bool status) {
+                        NotificationWidgetSwitch.updateNotificationFormAdmin(
+                          adminSevaUserId: widget.adminSevaUserId,
+                          notificationType:
+                              'TYPE_CREDIT_NOTIFICATION_FROM_TIMEBANK',
+                          status: status,
+                          timebankId: widget.timebankId,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              );
+            }));
+  }
 }

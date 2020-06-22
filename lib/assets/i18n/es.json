@@ -1082,7 +1082,6 @@
     "transfer_error": "Ocorreu um erro! Por favor volte mais tarde e tente novamente.",
     "empty_user": "No users found"
   },
-
   "private_timebank": {
     "private_timebank": "Timebank privado",
     "alert_title": "Alerta privada Timebank",
@@ -1093,7 +1092,7 @@
     "csv_hint_two": "Rellena las usuarios que te gustaría agregar ",
     "csv_hint_three": "luego cargue el archivo CSV",
     "download_csv": "Descargue un archivo CSV de muestra",
-    "csv_title":"Invitación masiva de usuarios por CSV",
+    "csv_title": "Invitación masiva de usuarios por CSV",
     "upload": "Subir",
     "choose_csv": "Elija el archivo CSV para invitar a miembros de forma masiva",
     "csv_error": "Seleccione primero un archivo CSV antes de cargar",
@@ -1103,9 +1102,20 @@
     "csv_size_limit": "NOTA: el tamaño máximo del archivo es de 1 MB",
     "csv_progress": "Subir archivo CSV"
   },
-
-
+  "external_notifications": {
+    "notification_title": "Notificaciones",
+    "request_accepted": "El miembro ha aceptado una solicitud y está esperando su aprobación",
+    "request_completed": "El miembro reclama créditos de tiempo y está esperando su aprobación",
+    "join_request": "Solicitud de miembro para unirse a",
+    "offer_debit": "Débito para una o varias ofertas",
+    "member_exits": "El miembro sale de a",
+    "deletion_request": "No se pudo procesar la solicitud de eliminación (debido a transacciones pendientes)",
+    "credit_request": "Crédito recibido por una o varias ofertas",
+    "timebank": "Timebank",
+    "group": "Grupo"
+  },
   "project_template": {
+    "save_as_template": "Guardar como plantilla",
     "template_title": "Proporcione un nombre único para la plantilla.",
     "template_hint": "Nombre de la plantilla",
     "name_error": "El nombre de la plantilla no puede estar vacío.",
@@ -1116,5 +1126,9 @@
     "no_templates": "No se encontraron plantillas",
     "empty_template": "Seleccione una plantilla de la lista de plantillas disponibles.",
     "template_alert": "Alerta de plantilla"
+  },
+  "change_ownership": {
+    "change_ownership_title": "Cambiar propiedad",
+    "change": "Change"
   }
 }

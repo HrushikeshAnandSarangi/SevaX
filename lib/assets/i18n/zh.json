@@ -1077,5 +1077,17 @@
     "removed_success": "用户已成功从临时银行中删除",
     "transfer_error": "发生了错误！请稍后再试，然后重试。",
     "empty_user": "未找到相应的用户"
+  },
+  "external_notifications": {
+    "notification_title": "通知",
+    "request_accepted": "成员已接受请求并正在等待批准",
+    "request_completed": "成员要求获得时间积分并正在等待批准",
+    "join_request": "加入会员请求，",
+    "offer_debit": "一对多优惠的借方",
+    "member_exits": "成员退出",
+    "deletion_request": "无法处理删除请求（由于有待处理的事务）",
+    "credit_request": "一对多报价收到的信用额",
+    "timebank": "时间银行",
+    "group": "小组"
   }
 }

@@ -60,8 +60,7 @@
 //        isAccepted: json["is_accepted"] == null ? null : json["is_accepted"],
 //        transactionModel: json["transaction_model"] == null
 //            ? null
-//            : new List<TransactionModel>.from(json["transaction_model"]
-//                .map((x) => TransactionModel.fromMap(x))),
+//            : new List<TransactionModel>.from(json["transaction_model"].map((x) => TransactionModel.fromMap(x))),
 //      );
 //
 //  Map<String, dynamic> toMap() => {
