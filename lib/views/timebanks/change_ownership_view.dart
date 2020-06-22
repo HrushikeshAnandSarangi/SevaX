@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/change_ownership_model.dart';
@@ -146,7 +147,13 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
               ),
               selectedNewOwner == null
                   ? Container()
-                  : ListTile(title: Text(selectedNewOwner.fullname)),
+                  : ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          selectedNewOwner.photoURL ?? defaultUserImageURL,
+                        ),
+                      ),
+                      title: Text(selectedNewOwner.fullname)),
               SizedBox(
                 height: 15,
               ),
@@ -193,8 +200,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
                       timebankId: tbmodel.id);
               if (responseObj['transferable'] == true) {
                 print('yes transferable ');
-                // sendNotificationToAdmin();
-                Navigator.of(context).pop();
+                sendNotificationToAdmin();
               } else if (responseObj['taskCheck'] == true) {
                 dialogBox(
                     message: AppLocalizations.of(context)
