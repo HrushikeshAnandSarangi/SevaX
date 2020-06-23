@@ -477,6 +477,20 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                       if (dialogContext != null) {
                         Navigator.pop(dialogContext);
                       }
+                      _scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            AppLocalizations.of(context)
+                                .translate('upload_csv', 'upload_success'),
+                          ),
+                          action: SnackBarAction(
+                            label: AppLocalizations.of(context)
+                                .translate('shared', 'dismiss'),
+                            onPressed: () =>
+                                _scaffoldKey.currentState.hideCurrentSnackBar(),
+                          ),
+                        ),
+                      );
                       setState(() {
                         this.csvFileError = '';
                         csvFileModel.csvTitle = null;
