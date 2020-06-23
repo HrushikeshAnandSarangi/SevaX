@@ -1,11 +1,8 @@
 import 'dart:collection';
-import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/globals.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -15,10 +12,9 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
-import 'package:sevaexchange/views/notifications/notification_alert_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
-import 'package:sevaexchange/widgets/notification_switch.dart';
 import 'package:sevaexchange/views/timebanks/change_ownership_view.dart';
+import 'package:sevaexchange/widgets/notification_switch.dart';
 
 class ManageTimebankSeva extends StatefulWidget {
   final TimebankModel timebankModel;
