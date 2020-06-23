@@ -28,7 +28,7 @@ class GroupMembersPage extends StatelessWidget {
                   print(model.members);
                   print(_bloc.allMembers);
                   return ExpansionTile(
-                    //tilePadding: EdgeInsets.only(left: 12),
+                    tilePadding: EdgeInsets.only(left: 12),
                     leading: CustomNetworkImage(
                         model.photoUrl ?? defaultGroupImageURL),
                     title: Text(model.name),
