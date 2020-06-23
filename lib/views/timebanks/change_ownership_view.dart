@@ -36,6 +36,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
   var futures = <Future>[];
   BuildContext parentContext;
   String user_error = '';
+  bool dataLoaded = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -53,6 +54,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
         admins = onValue.admins;
         allItems.addAll(admins);
         groupMembersList = allItems;
+        dataLoaded = true;
       });
     });
   }
@@ -77,91 +79,99 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                loggedInUser.fullname,
-                style: TextStyle(
-                    fontSize: 18,
-                    fontFamily: 'Europa',
-                    fontWeight: FontWeight.bold,
-                    color: FlavorConfig.values.theme.primaryColor),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Text(
-                AppLocalizations.of(context)
-                    .translate('change_ownership', 'change_hint'),
-                style: TextStyle(
-                  fontSize: 18,
-                  fontFamily: 'Europa',
-                ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              timeBankOrGroupCard(),
-              SizedBox(
-                height: 15,
-              ),
+      body: dataLoaded
+          ? SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      loggedInUser.fullname,
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontFamily: 'Europa',
+                          fontWeight: FontWeight.bold,
+                          color: FlavorConfig.values.theme.primaryColor),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      AppLocalizations.of(context)
+                              .translate('change_ownership', 'change_hint') +
+                          tbmodel.name +
+                          AppLocalizations.of(context).translate(
+                              'change_ownership', 'change_hint_three'),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'Europa',
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    timeBankOrGroupCard(),
+                    SizedBox(
+                      height: 15,
+                    ),
 //              getInfoWidget(),
 //              SizedBox(
 //                height: 15,
 //              ),
-              Text(
-                AppLocalizations.of(context)
-                    .translate('change_ownership', 'change_hint_two'),
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Europa',
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                AppLocalizations.of(context)
-                    .translate('transfer_ownership', 'search_user'),
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Europa',
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              searchUser(),
-              Text(
-                user_error,
-                style: TextStyle(color: Colors.red, fontFamily: "Europa"),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              selectedNewOwner == null
-                  ? Container()
-                  : ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          selectedNewOwner.photoURL ?? defaultUserImageURL,
-                        ),
+                    Text(
+                      AppLocalizations.of(context)
+                          .translate('change_ownership', 'change_hint_two'),
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Europa',
+                        fontWeight: FontWeight.bold,
                       ),
-                      title: Text(selectedNewOwner.fullname)),
-              SizedBox(
-                height: 15,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      AppLocalizations.of(context)
+                          .translate('change_ownership', 'search_admin'),
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Europa',
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    searchUser(),
+                    Text(
+                      user_error,
+                      style: TextStyle(color: Colors.red, fontFamily: "Europa"),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    selectedNewOwner == null
+                        ? Container()
+                        : ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                selectedNewOwner.photoURL ??
+                                    defaultUserImageURL,
+                              ),
+                            ),
+                            title: Text(selectedNewOwner.fullname)),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    optionButtons(),
+                  ],
+                ),
               ),
-              optionButtons(),
-            ],
-          ),
-        ),
-      ),
+            )
+          : Center(
+              child: CircularProgressIndicator(),
+            ),
     );
   }
 
@@ -222,6 +232,31 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
           },
         )
       ],
+    );
+  }
+
+  getSuccessDialogtwo() {
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          content: new Text(AppLocalizations.of(context)
+              .translate('change_ownership', 'ownership_suceess')),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text(
+                  AppLocalizations.of(context).translate('homepage', 'ok')),
+              onPressed: () {
+                //  resetAndLoad();
+                // Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -367,14 +402,20 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
 //        });
 //  }
 
-  getSuccessDialog(BuildContext context) {
+  getSuccessDialog({BuildContext context, String timebankName, String admin}) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
           content: new Text(AppLocalizations.of(context)
-              .translate('change_ownership', 'invitation_sent')),
+                  .translate('change_ownership', 'invitation_sent') +
+              timebankName +
+              AppLocalizations.of(context)
+                  .translate('change_ownership', 'invitation_sent_two') +
+              admin +
+              AppLocalizations.of(context)
+                  .translate('change_ownership', 'invitation_sent_three')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
@@ -420,7 +461,11 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
         creatorPhotoUrl: loggedInUser.photoURL,
         creatorEmail: loggedInUser.email,
         timebank: tbmodel.name,
-        message: 'Creator invited you to become owner',
+        message: AppLocalizations.of(context)
+                .translate('change_ownership', 'change_message') +
+            tbmodel.name +
+            AppLocalizations.of(context)
+                .translate('change_ownership', 'change_message_two'),
         creatorName: loggedInUser.fullname);
 
     NotificationsModel notification = NotificationsModel(
@@ -440,7 +485,10 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
         .collection("notifications")
         .document(notification.id)
         .setData(notification.toMap());
-    getSuccessDialog(context);
+    getSuccessDialog(
+        context: context,
+        timebankName: tbmodel.name,
+        admin: selectedNewOwner.fullname);
   }
 
   Widget timeBankOrGroupCard() {

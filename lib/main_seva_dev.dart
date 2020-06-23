@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -84,15 +85,7 @@ Future<void> main() async {
 }
 
 class MainApplication extends StatelessWidget {
-  final bool skipToHomePage;
-  //final AppLanguage appLanguage;
   final AppLanguage appLanguage = AppLanguage()..fetchLocale();
-
-  MainApplication({
-    Key key,
-    this.skipToHomePage = false,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppLanguage>(
@@ -107,6 +100,7 @@ class MainApplication extends StatelessWidget {
                 Locale('pt', 'PT'),
                 Locale('fr', 'FR'),
                 Locale('es', 'ES'),
+                Locale('zh-CN', 'zh-CN')
               ],
               localizationsDelegates: [
                 AppLocalizations.delegate,
@@ -129,9 +123,7 @@ class MainApplication extends StatelessWidget {
                 );
               },
               // home:BillingPlanDetails(),
-              home: SplashView(
-                skipToHomePage: skipToHomePage,
-              ),
+              home: SplashView(),
             ),
           );
         }));

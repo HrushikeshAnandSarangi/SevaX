@@ -11,7 +11,7 @@ class AboutMode {
 }
 
 class SevaWebView extends StatefulWidget {
-  AboutMode aboutMode;
+  final AboutMode aboutMode;
 
   SevaWebView(this.aboutMode);
 
@@ -32,11 +32,7 @@ class _WebViewExampleState extends State<SevaWebView> {
           widget.aboutMode.title,
           style: TextStyle(fontSize: 18),
         ),
-        // This drop down menu demonstrates that Flutter widgets can be shown over the web view.
-        actions: <Widget>[],
       ),
-      // We're using a Builder here so we have a context that is below the Scaffold
-      // to allow calling Scaffold.of(context) so we can show a snackbar.
       body: Builder(builder: (BuildContext context) {
         return IndexedStack(index: _stackToView, children: [
           WebView(
@@ -45,8 +41,6 @@ class _WebViewExampleState extends State<SevaWebView> {
             onWebViewCreated: (WebViewController webViewController) {
               _controller.complete(webViewController);
             },
-            // TODO(iskakaushik): Remove this when collection literals makes it to stable.
-            // ignore: prefer_collection_literals
             javascriptChannels: <JavascriptChannel>[
               _toasterJavascriptChannel(context),
             ].toSet(),
@@ -59,10 +53,6 @@ class _WebViewExampleState extends State<SevaWebView> {
               return NavigationDecision.navigate;
             },
             onPageStarted: (String url) {
-//            setState(() {
-//              _stackToView = 1;
-//            });
-//            showDialogForProgress();
               print('Page started loading: $url');
             },
             onPageFinished: (String url) {
@@ -70,16 +60,20 @@ class _WebViewExampleState extends State<SevaWebView> {
                 _stackToView = 0;
               });
               print('Page finished loading: $url');
-//            Navigator.pop(dialogContext);
             },
             gestureNavigationEnabled: true,
           ),
           Container(
-              child: Center(
-                  child: AlertDialog(
-            title: Text('Loading'),
-            content: LinearProgressIndicator(),
-          )))
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CircularProgressIndicator(),
+                SizedBox(height: 4),
+                Text("Loading ...")
+              ],
+            ),
+          ),
         ]);
       }),
     );
@@ -99,14 +93,15 @@ class _WebViewExampleState extends State<SevaWebView> {
 
   void showDialogForProgress() {
     showDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (context) {
-          dialogContext = context;
-          return AlertDialog(
-            title: Text('Loading'),
-            content: LinearProgressIndicator(),
-          );
-        });
+      barrierDismissible: true,
+      context: context,
+      builder: (context) {
+        dialogContext = context;
+        return AlertDialog(
+          title: Text('Loading'),
+          content: CircularProgressIndicator(),
+        );
+      },
+    );
   }
 }

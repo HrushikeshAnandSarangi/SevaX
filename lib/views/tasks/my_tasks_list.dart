@@ -592,7 +592,7 @@ class TaskCardViewState extends State<TaskCardView> {
             content: Text(content),
             actions: <Widget>[
               FlatButton(
-                child: Text(AppLocalizations.of(context).translate('shared','close')),
+                child: Text(AppLocalizations.of(context).translate('homepage','close')),
                 onPressed: () {
                   Navigator.of(buildContext).pop();
                 },
@@ -615,7 +615,7 @@ class TaskCardViewState extends State<TaskCardView> {
 
     if (creditRequest > maxClaim) {
       showDialogFoInfo(
-        title: AppLocalizations.of(context).translate('tasks','limited_exceeded'),
+        title: AppLocalizations.of(context).translate('tasks','limit_exceeded'),
         content:
             "${AppLocalizations.of(context).translate('tasks','only_request')} $maxClaim ${AppLocalizations.of(context).translate('tasks','hours_of_credit')}",
       );

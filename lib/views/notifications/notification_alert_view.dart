@@ -38,7 +38,6 @@ class _NotificationAlertState extends State<NotificationAlert> {
               activeColor: Colors.green,
               value: SevaCore.of(context).loggedInUser.notificationAlerts,
               onChanged: (value) {
-                //print("VALUE : $value");
                 setState(() {
                   isTurnedOn = value;
                   SevaCore.of(context).loggedInUser.notificationAlerts = value;

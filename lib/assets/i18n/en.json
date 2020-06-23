@@ -113,7 +113,7 @@
   },
   "skills": {
     "title": "Skills",
-    "title_desc": "What skills are you good at that you\\'d like to share with your community?",
+    "title_desc": "What skills are you good at that you'd like to share with your community?",
     "no_match": "No matching skills found",
     "search": "Search",
     "update": "Update",
@@ -441,7 +441,7 @@
     "block": "Block",
     "block_warn": "will no longer be available to send you messages and engage with the content you create",
     "type": "Type message",
-    "couldnt_post": "Couldn\\'t load the post!",
+    "couldnt_post": "Couldn't load the post!",
     "type_empty": "Please type message",
     "no_messages": "No Messages",
     "new_message": "New Message",
@@ -526,8 +526,7 @@
     "tap_to_view": "Tap to view details",
     "group_invite": "Group join invite",
     "notification_alert": "Notification alerts",
-    "turn_on_notification": "Turn on/off notification alerts"
-
+    "turn_on_notification": "Notification alerts"
   },
   "profile": {
     "image_hint": "ProfileImage",
@@ -1056,7 +1055,21 @@
   "messages": {
     "messages_title": "Messages",
     "personal_messages": "Personal",
-    "admin_messages": "Admin"
+    "admin_messages": "Admin",
+    "new_chat": "New Chat",
+    "multi_user": "Multi-User Messaging",
+    "frequently_contacted": "FREQUENTLY CONTACTED",
+    "groups": "GROUPS",
+    "timebank_members": "TIMEBANK MEMBERS",
+    "add_participants": "Add Participants",
+    "new_multi_user_messaging": "New Multi-User Messaging",
+    "multi_user_messaging_name": "Multi-User Messaging Name",
+    "note": "Please provide a multi-user messaging subject and optional group icon",
+    "participants": "Participants",
+    "creating_multi_user_messaging": "Creating Multi-User Messaging...",
+    "cancel": "Cancel",
+    "next": "Next",
+    "create": "Create"
   },
   "add_location": {
     "confirm_location_label": "CONFIRM LOCATION"
@@ -1084,10 +1097,8 @@
     "transfer_error": "Error occurred! Please come back later and try again.",
     "empty_user": "No users found"
   },
-
   "private_timebank": {
     "private_timebank": "Private Timebank",
-
     "alert_title": "Private Timebank alert",
     "alert_hint": "Please be informed that Private Timebanks do not have a free option. You will need to provide your billing details to continue to create this Timebank"
   },
@@ -1096,7 +1107,7 @@
     "csv_hint_two": "fill the users you would like to add ",
     "csv_hint_three": "then upload the CSV.",
     "download_csv": "Download sample CSV file",
-    "csv_title":"Bulk invite users by CSV",
+    "csv_title": "Bulk invite users by CSV",
     "upload": "Upload",
     "choose_csv": "Choose CSV file to bulk invite Members",
     "csv_error": "Please select a CSV file first before uploading",
@@ -1107,7 +1118,6 @@
     "csv_progress": "Uploading CSV File",
     "upload_success": "Uploaded Successfully"
   },
-
   "project_template": {
     "save_as_template": "Save as Template",
     "template_title": "Provide a unique name for the template",
@@ -1121,19 +1131,40 @@
     "empty_template": "Please select a Template from the list of available Templates",
     "template_alert": "Template alert"
   },
+  "external_notifications": {
+    "notification_title": "Notifications",
+    "request_accepted": "Member has accepted a request and is waiting for approval",
+    "request_completed": "Member claims time credits and is waiting for approval",
+    "join_request": "Member request to join a ",
+    "offer_debit": "Debit for one to many offer ",
+    "member_exits": "Member exits a ",
+    "deletion_request": "Deletion request could not be processed (Due to pending transactions)",
+    "credit_request": "Received Credit for one to many offer",
+    "timebank": "Timebank",
+    "group": "Group"
+  },
 
   "change_ownership": {
     "change_ownership_title": "Change Ownership",
     "change": "Change",
-    "change_hint": "Changing ownership of this Timebank/Group to another user.",
+    "change_hint": "Changing ownership of this ",
+    "change_hint_three": " to another admin.",
     "change_hint_two": "Change to",
-    "invitation_sent": "Invitation successfully sent to admin. Once admin accepts invitation ownership will get change",
-    "notification_msg": "invited you to become the owner of the",
+    "invitation_sent": "We have sent your transfer of ownership invitation. You will remain to be the owner of Timebank ",
+    "invitation_sent_two": "until",
+    "invitation_sent_three": " accepts the invitation and provides their new billing information.",
+    "notification_msg": "has invited you to be the new owner of the Timebank",
     "accept": "Accept",
     "change_alert": "By accepting, you will become owner of the timebank",
     "users_empty": "Please select a user",
     "pending_task": "You have pending tasks. Please complete these tasks before ownership can be transferred",
     "pending_payment": "You have payment pending of ",
-    "pending_payment_two": ". Please complete these payment before ownership can be transferred"
+    "pending_payment_two": ". Please complete these payment before ownership can be transferred",
+    "search_admin": "Search Admin",
+
+    "change_message": "You are the new owner of Timebank ",
+    "change_message_two": " You need to accept it to complete the process",
+    "change_advisory": " You are required to provide billing details for this Timebank - including the new billing address. The transfer of ownership will not be completed until this is done.",
+    "ownership_suceess": "Congratulations! You are now the new owner of the Timebank "
   }
 }

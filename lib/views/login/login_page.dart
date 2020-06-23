@@ -960,7 +960,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> fetchBulkInviteLinkData() async {
     // FirebaseDynamicLinks.getInitialLInk does a call to firebase to get us the real link because we have shortened it.
     var link = await FirebaseDynamicLinks.instance.getInitialLink();
-    print("method  triggered");
+    print("method  triggered" + link.toString());
 
     //buildContext = context;
     // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CLIENT_ID</key>
+    <string>726382185793-6vq06halrr1m3u9vfdlml7q1ubkqcmde.apps.googleusercontent.com</string>
+    <key>REVERSED_CLIENT_ID</key>
+    <string>com.googleusercontent.apps.726382185793-6vq06halrr1m3u9vfdlml7q1ubkqcmde</string>
+    <key>ANDROID_CLIENT_ID</key>
+    <string>726382185793-c0hhi2qe8suravqnl7b0nfteq2r2edmm.apps.googleusercontent.com</string>
+    <key>API_KEY</key>
+    <string>AIzaSyBidwsPvUgvzR4IlrR6u-2VmxdBKtkLU38</string>
+    <key>GCM_SENDER_ID</key>
+    <string>726382185793</string>
+    <key>PLIST_VERSION</key>
+    <string>1</string>
+    <key>BUNDLE_ID</key>
+    <string>com.sevaexchange.dev</string>
+    <key>PROJECT_ID</key>
+    <string>sevax-dev-project-for-sevax</string>
+    <key>STORAGE_BUCKET</key>
+    <string>sevax-dev-project-for-sevax.appspot.com</string>
+    <key>IS_ADS_ENABLED</key>
+    <false></false>
+    <key>IS_ANALYTICS_ENABLED</key>
+    <false></false>
+    <key>IS_APPINVITE_ENABLED</key>
+    <true></true>
+    <key>IS_GCM_ENABLED</key>
+    <true></true>
+    <key>IS_SIGNIN_ENABLED</key>
+    <true></true>
+    <key>GOOGLE_APP_ID</key>
+    <string>1:726382185793:ios:c7d07b11c7551aaef3a5c0</string>
+    <key>DATABASE_URL</key>
+    <string>https://sevax-dev-project-for-sevax.firebaseio.com</string>
+</dict>
+</plist>

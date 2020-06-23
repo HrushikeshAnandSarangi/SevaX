@@ -5,6 +5,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/message/bloc/chat_model_sync_singleton.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
 class MessageBloc extends BlocBase {
@@ -12,16 +13,20 @@ class MessageBloc extends BlocBase {
   final _adminMessage = BehaviorSubject<List<AdminMessageWrapperModel>>();
   final _personalMessageCount = BehaviorSubject<int>();
   final _adminMessageCount = BehaviorSubject<int>();
+  final _frequentContacts = BehaviorSubject<List<FrequentContactsModel>>();
 
   Stream<List<ChatModel>> get personalMessage => _personalMessage.stream;
   Stream<List<AdminMessageWrapperModel>> get adminMessage =>
       _adminMessage.stream;
+
+  List<FrequentContactsModel> get frequentContacts => _frequentContacts.value;
 
   Stream<int> get messageCount => CombineLatestStream.combine2(
       _personalMessageCount, _adminMessageCount, (int p, int a) => p + a);
 
   Future<void> fetchAllMessage(String communityId, UserModel userModel) async {
     log("$communityId");
+    ChatModelSync chatModelSync = ChatModelSync();
     Firestore.instance
         .collection("chatsnew")
         .where("participants", arrayContains: userModel.sevaUserID)
@@ -29,11 +34,13 @@ class MessageBloc extends BlocBase {
         .snapshots()
         .listen((QuerySnapshot querySnapshot) {
       List<ChatModel> chats = [];
+      List<FrequentContactsModel> frequentContacts = [];
       int unreadCount = 0;
       log(querySnapshot.documents.length.toString());
       querySnapshot.documents.forEach((DocumentSnapshot snapshot) {
         ChatModel chat = ChatModel.fromMap(snapshot.data);
-
+        chat.id = snapshot.documentID;
+        log(chat.id);
         String senderId =
             chat.participants.firstWhere((id) => id != userModel.sevaUserID);
         log("===> sender id :$senderId");
@@ -41,18 +48,33 @@ class MessageBloc extends BlocBase {
             userModel.blockedMembers.contains(senderId) ||
             (chat.deletedBy.containsKey(userModel.sevaUserID) &&
                 chat.deletedBy[userModel.sevaUserID] > (chat.timestamp ?? 0)) ||
-            chat.lastMessage == '' ||
-            chat.lastMessage == null) {
+            (chat.lastMessage == '' || chat.lastMessage == null) &&
+                !chat.isGroupMessage) {
           log("Blocked or no message");
         } else {
           if (chat.unreadStatus.containsKey(userModel.sevaUserID) &&
               chat.unreadStatus[userModel.sevaUserID] > 0) {
             unreadCount++;
           }
+          if (frequentContacts.length < 5) {
+            FrequentContactsModel fc;
+            if (chat.isGroupMessage) {
+              fc = FrequentContactsModel(chat, null, chat.isGroupMessage);
+            } else {
+              fc = FrequentContactsModel(
+                  null,
+                  chat.participantInfo.firstWhere(
+                      (ParticipantInfo info) => info.id == senderId),
+                  chat.isGroupMessage);
+            }
+            frequentContacts.add(fc);
+          }
           chats.add(chat);
         }
       });
-      if (!_personalMessage.isClosed) _personalMessage.add(chats);
+      _personalMessage.add(chats);
+      chatModelSync.addChatModels(chats);
+      if (!_frequentContacts.isClosed) _frequentContacts.add(frequentContacts);
       if (!_personalMessageCount.isClosed)
         _personalMessageCount.add(unreadCount);
     });
@@ -93,6 +115,8 @@ class MessageBloc extends BlocBase {
     _adminMessage.close();
     _personalMessageCount.close();
     _adminMessageCount.close();
+    _frequentContacts.close();
+    ChatModelSync().dispose();
   }
 }
 

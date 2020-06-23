@@ -219,7 +219,7 @@ class _ResultViewState extends State<ResultView> {
                           sender: sender,
                           reciever: reciever,
                           isFromShare: widget.isShare,
-                          news: widget.news,
+                          feedId: widget.news.id,
                         );
                       },
                 leading: user.photoURL != null

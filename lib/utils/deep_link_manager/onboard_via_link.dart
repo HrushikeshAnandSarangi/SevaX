@@ -17,6 +17,7 @@ Future<void> fetchLinkData() async {
   FirebaseDynamicLinks.instance.onLink(onError: (_) async {
     print("Error!!!");
   }, onSuccess: (PendingDynamicLinkData dynamicLink) async {
+    print("succes!!!");
     return handleLinkData(
       data: dynamicLink,
     );

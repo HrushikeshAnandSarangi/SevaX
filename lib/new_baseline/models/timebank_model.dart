@@ -1,6 +1,11 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/globals.dart';
 import 'package:sevaexchange/models/data_model.dart';
+import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 //import 'package:collection/ lib\views\timebank_content_holder.dart';
 
 class TimebankModel extends DataModel {
@@ -30,7 +35,11 @@ class TimebankModel extends DataModel {
 
   int unreadMessageCount;
   DateTime lastMessageTimestamp;
+
+  Map<String, NotificationSetting> notificationSetting;
   // CompareToTimeBank joinStatus;
+
+  // List<String> members;
 
   TimebankModel(map) {
     this.id = map.containsKey("id") ? map["id"] : '';
@@ -78,7 +87,16 @@ class TimebankModel extends DataModel {
         : null;
     this.unreadMessageCount =
         map.containsKey("unreadMessages") ? map["unreadMessages"].length : -1;
-    // joinStatus = CompareToTimeBank.JOIN;
+
+    Map<String, Map<dynamic, dynamic>> temp =
+        map.containsKey("notificationSetting")
+            ? new Map<String, Map<dynamic, dynamic>>.from(
+                map["notificationSetting"])
+            : Map();
+    notificationSetting = HashMap();
+    temp.forEach((key, value) {
+      notificationSetting[key] = NotificationSetting.fromMap(value);
+    });
   }
   GeoFirePoint getLocation(map) {
     GeoFirePoint geoFirePoint;
@@ -182,6 +200,17 @@ class TimebankModel extends DataModel {
         //     .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
       }
     }
+
+    Map<String, Map<dynamic, dynamic>> temp =
+        json.containsKey("notificationSetting")
+            ? new Map<String, Map<dynamic, dynamic>>.from(
+                json["notificationSetting"])
+            : Map();
+    timebankModel.notificationSetting = HashMap();
+    temp.forEach((key, value) {
+      timebankModel.notificationSetting[key] = NotificationSetting.fromMap(value);
+    });
+
     return timebankModel;
   }
 
