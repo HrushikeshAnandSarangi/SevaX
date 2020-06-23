@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -34,7 +35,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                   fontWeight: FontWeight.bold,
                   fontSize: 16),
             ),
-            trailing: Switch(
+            trailing: CupertinoSwitch(
               activeColor: Colors.green,
               value: SevaCore.of(context).loggedInUser.notificationAlerts,
               onChanged: (value) {

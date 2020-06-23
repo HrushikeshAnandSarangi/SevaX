@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NotificationWidgetSwitch extends StatefulWidget {
@@ -57,7 +58,7 @@ class _NotificationWidgetSwitchState extends State<NotificationWidgetSwitch> {
                   fontWeight: FontWeight.bold,
                   fontSize: 16),
             ),
-            trailing: Switch(
+            trailing: CupertinoSwitch(
               activeColor: Theme.of(context).primaryColor,
               value: switchStatus,
               onChanged: (value) {
