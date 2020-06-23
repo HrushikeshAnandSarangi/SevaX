@@ -6,6 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
+import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.dart';
+import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -188,6 +190,13 @@ class RequestEditFormState extends State<RequestEditForm> {
                   startTime: startDate,
                   endTime: endDate),
               SizedBox(height: 8),
+              Visibility(
+                visible: widget.requestModel.isRecurring,
+                child: Container(
+                  child: EditRepeatWidget(requestModel:widget.requestModel),
+                ),
+              ),
+
               Padding(
                 padding: EdgeInsets.all(10.0),
               ),
@@ -361,10 +370,10 @@ class RequestEditFormState extends State<RequestEditForm> {
 //                        selectedUsers
 //                            .forEach((k, v) => arrayOfSelectedMembers.add(k));
 //                        requestModel.approvedUsers = arrayOfSelectedMembers;
-                          print(widget.requestModel.toMap());
+                          print("request model data === ${widget.requestModel.toMap()}");
                           //adding some members for humanity first
 
-                          if (_formKey.currentState.validate()) {
+                          /*if (_formKey.currentState.validate()) {
                             linearProgressForCreatingRequest();
                             await this.updateRequest(
                                 requestModel: widget.requestModel);
@@ -391,7 +400,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                               Navigator.pop(dialogContext);
                             }
                             Navigator.pop(context);
-                          }
+                          }*/
                         } else {
                           Scaffold.of(context).showSnackBar(SnackBar(
                             content: Text('Location not added'),

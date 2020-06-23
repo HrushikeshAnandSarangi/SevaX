@@ -6,12 +6,14 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 
 class RecurringRequestList extends StatefulWidget {
   final RequestModel model;
+  final TimebankModel timebankModel;
 
-  RecurringRequestList({Key key, @required this.model}) : super(key: key);
+  RecurringRequestList({Key key, @required this.model,this.timebankModel}) : super(key: key);
 
   getRequestModel() {
 //    print("model url is == ${model.id}");
@@ -41,8 +43,9 @@ class _RecurringRequestListState extends State<RecurringRequestList> {
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.data != null) {
                   List<RequestModel> requestModelList = snapshot.data;
-                  print("snapshot data is ==== ${snapshot.data.toString()}");
-                  return RecurringList(requestModelList);
+                    print("snapshot data is ==== ${snapshot.data.toString()}");
+                  requestModelList.forEach((k) => print('snapshot data is ==> ${k}'));
+                  return RecurringList(requestModelList,widget.timebankModel);
                 } else {
                   return Center(child: CircularProgressIndicator());
 
@@ -54,8 +57,9 @@ class _RecurringRequestListState extends State<RecurringRequestList> {
 
 class RecurringList extends StatefulWidget {
   List<RequestModel> model;
+  TimebankModel timebankModel;
 
-  RecurringList(this.model);
+  RecurringList(this.model,this.timebankModel);
 
   @override
   _RecurringListState createState() => _RecurringListState();
@@ -77,7 +81,7 @@ class _RecurringListState extends State<RecurringList> {
                 color: Colors.white,
                 elevation: 2,
                 child: InkWell(
-                  onTap: () {},//=>// editRequest(model: widget.model[index]);
+                  onTap: () =>editRequest(model: widget.model[index],timebankModel: widget.timebankModel),
                   child: Padding(
                     padding:
                         const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -91,7 +95,9 @@ class _RecurringListState extends State<RecurringList> {
                             child: FadeInImage.assetNetwork(
                               fit: BoxFit.cover,
                               placeholder: 'lib/assets/images/profile.png',
-                              image: "lib/assets/images/profile.png",
+                              image: widget.model[index].photoUrl == null
+                                  ? defaultUserImageURL
+                                  : widget.model[index].photoUrl,
                             ),
                           ),
                         ),
@@ -101,8 +107,7 @@ class _RecurringListState extends State<RecurringList> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text(
-                                widget.model[index].title !=null ? widget.model[index].title :"Title" ,
+                              Text(widget.model[index].title,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: Theme.of(context).textTheme.subhead,
@@ -121,20 +126,18 @@ class _RecurringListState extends State<RecurringList> {
                                 crossAxisAlignment: WrapCrossAlignment.center,
                                 children: <Widget>[
                                   Text(
-                                    "time"
-                                    /*getTimeFormattedString(
-                                        model.requestStart, "loggedintimezone")*/
+                                    getTimeFormattedString(
+                                        widget.model[index].requestStart)
                                     ,
                                   ),
                                   SizedBox(width: 2),
                                   Icon(Icons.arrow_forward, size: 14),
                                   SizedBox(width: 4),
                                   Text(
-                                    "time"
-                                    /*getTimeFormattedString(
-                                      model.requestEnd,
-                                      "",
-                                    )*/
+                                    getTimeFormattedString(
+                                        widget.model[index].requestEnd
+
+                                    )
                                     ,
                                   ),
                                 ],
@@ -150,8 +153,20 @@ class _RecurringListState extends State<RecurringList> {
             ));
   }
 
- /* void editRequest({RequestModel model}) {
+  void editRequest({RequestModel model,TimebankModel timebankModel}) {
 
+    if (model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
+        widget.timebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RequestTabHolder(
+            isAdmin: true,
+          ),
+        ),
+      );
+    } else {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -163,9 +178,21 @@ class _RecurringListState extends State<RecurringList> {
         ),
       );
     }
-  }*/
+     /* Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RequestDetailsAboutPage(
+            requestItem: model,
+            timebankModel: timebankModel,
+            isAdmin: false,
+          ),
+        ),
+      );*/
 
-  String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
+  }
+
+  String getTimeFormattedString(int timeInMilliseconds) {
+    String timezoneAbb = SevaCore.of(context).loggedInUser.timezone;
     DateFormat dateFormat = DateFormat('d MMM hh:mm a ',
         Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
     DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
