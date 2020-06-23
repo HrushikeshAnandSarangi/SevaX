@@ -357,6 +357,7 @@ class _ProfilePageState extends State<ProfilePage>
                         ),
                         SizedBox(height: 10),
                         getHelpSection,
+                        getNotificationSection,
                         InkWell(
                           onTap: () {
                             Navigator.of(context).push(
