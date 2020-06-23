@@ -37,11 +37,11 @@ class _NotificationAlertState extends State<NotificationAlert> {
             ),
             trailing: CupertinoSwitch(
               activeColor: Colors.green,
-              value: SevaCore.of(context).loggedInUser.notificationAlerts,
+//              value: SevaCore.of(context).loggedInUser.notificationAlerts,
               onChanged: (value) {
                 setState(() {
                   isTurnedOn = value;
-                  SevaCore.of(context).loggedInUser.notificationAlerts = value;
+//                  SevaCore.of(context).loggedInUser.notificationAlerts = value;
                   _firestore
                       .collection('users')
                       .document(SevaCore.of(context).loggedInUser.email)

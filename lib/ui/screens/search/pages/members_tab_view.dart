@@ -51,6 +51,7 @@ class _MembersTabViewState extends State<MembersTabView> {
               interestsListSnap: interestsListSnap,
             ),
             builder: (context, snapshot) {
+//              print(snapshot.error);
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
                   child: CircularProgressIndicator(),
