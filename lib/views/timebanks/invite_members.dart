@@ -561,12 +561,10 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Future<String> uploadDocument() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
-    StorageReference ref = FirebaseStorage.instance
-        .ref()
-        .child('csv_files')
-        .child(SevaCore.of(context).loggedInUser.email +
-            timestampString +
-            _fileName);
+    String name =
+        SevaCore.of(context).loggedInUser.email + timestampString + _fileName;
+    StorageReference ref =
+        FirebaseStorage.instance.ref().child('csv_files').child(name);
     StorageUploadTask uploadTask = ref.putFile(
       File(_path),
       StorageMetadata(
@@ -577,7 +575,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     String documentURL =
         await (await uploadTask.onComplete).ref.getDownloadURL();
 
-    csvFileModel.csvTitle = _fileName;
+    csvFileModel.csvTitle = name;
     csvFileModel.csvUrl = documentURL;
     // _setAvatarURL();
     // _updateDB();
