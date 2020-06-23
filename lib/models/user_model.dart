@@ -55,36 +55,36 @@ class UserModel extends DataModel {
 
   UserModel(
       {this.bio,
-        this.email,
-        this.fullname,
-        this.photoURL,
-        this.interests,
-        this.membershipCampaigns,
-        this.membershipTimebanks,
-        this.favoriteByMember,
-        this.favoriteByTimeBank,
-        this.sevaUserID,
-        this.skills,
-        this.currentBalance,
-        this.calendar,
-        this.otp,
-        this.requestStatus,
-        //this.availability,
-        this.currentTimebank,
-        this.timezone,
-        this.tokens,
-        this.reportedUsers,
-        this.blockedMembers,
-        this.acceptedEULA,
-        this.completedIntro,
-        this.pastHires,
-        this.blockedBy,
-        this.currentPosition,
-        this.currentCommunity,
-        this.communities,
-        this.emailSent,
-        this.language,
-        this.notificationAlerts});
+      this.email,
+      this.fullname,
+      this.photoURL,
+      this.interests,
+      this.membershipCampaigns,
+      this.membershipTimebanks,
+      this.favoriteByMember,
+      this.favoriteByTimeBank,
+      this.sevaUserID,
+      this.skills,
+      this.currentBalance,
+      this.calendar,
+      this.otp,
+      this.requestStatus,
+      //this.availability,
+      this.currentTimebank,
+      this.timezone,
+      this.tokens,
+      this.reportedUsers,
+      this.blockedMembers,
+      this.acceptedEULA,
+      this.completedIntro,
+      this.pastHires,
+      this.blockedBy,
+      this.currentPosition,
+      this.currentCommunity,
+      this.communities,
+      this.emailSent,
+      this.language,
+      this.notificationAlerts});
 
   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {
@@ -193,12 +193,12 @@ class UserModel extends DataModel {
     }
     if (map.containsKey('favoriteByMember')) {
       List<String> favoriteByMemberList =
-      List.castFrom(map['favoriteByMember']);
+          List.castFrom(map['favoriteByMember']);
       this.favoriteByMember = favoriteByMemberList;
     }
     if (map.containsKey('favoriteByTimeBank')) {
       List<String> favoriteByTimeBankList =
-      List.castFrom(map['favoriteByTimeBank']);
+          List.castFrom(map['favoriteByTimeBank']);
       this.favoriteByTimeBank = favoriteByTimeBankList;
     }
     print('temp 1');
@@ -239,8 +239,9 @@ class UserModel extends DataModel {
     }
     if (map.containsKey('notificationAlerts')) {
       this.notificationAlerts = map['notificationAlerts'];
+    } else {
+      this.notificationAlerts = true;
     }
-    print(this);
   }
 
   UserModel.fromDynamic(dynamic user) {
