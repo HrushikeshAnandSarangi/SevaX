@@ -527,9 +527,9 @@
     "timebank_join": "Timebank Join",
     "exited_from": "saiu de",
     "tap_to_view": "Toque para ver os detalhes",
-    "group_invite": "Convite para ingresso no grupo"
-    "notification_alert": "Alertas de notificación",
-    "turn_on_notification": "Activar/desactivar alertas de notificación"
+    "group_invite": "Convite para ingresso no grupo",
+    "notification_alert": "Notificaciones",
+    "turn_on_notification": "Permitir notificaciones personales"
   },
   "profile": {
     "image_hint": "Imagem de perfil",

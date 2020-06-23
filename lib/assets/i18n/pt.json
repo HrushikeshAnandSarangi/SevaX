@@ -527,12 +527,12 @@
     "tap_to_view": "Toca para ver los detalles",
     "added_you": "te ha agregado a",
     "timebank_join": "Timebank Join",
-    "group_invite": "Invitación para unirse al grupo"
+    "group_invite": "Invitación para unirse al grupo",
     "exited_from": "saiu de",
     "tap_to_view": "Toque para ver os detalhes",
     "group_invite": "Convite para ingresso no grupo",
-    "notification_alert": "Alertas de notificação",
-    "turn_on_notification": "Ativar/desativar alertas de notificação"
+    "notification_alert": "Notifications",
+    "turn_on_notification": "Permitir notificações pessoais"
   },
   "profile": {
     "image_hint": "Imagem de perfil",

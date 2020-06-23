@@ -528,8 +528,8 @@
     "exited_from": "est sorti de",
     "tap_to_view": "Appuyez pour afficher les détails",
     "group_invite": "Invitation à rejoindre un groupe",
-    "notification_alert": "Alertes de notification",
-    "turn_on_notification": "Activer/désactiver les alertes de notification"
+    "notification_alert": "Notifications",
+    "turn_on_notification": "Autoriser les notifications personnelles"
   },
   "profile": {
     "image_hint": "ProfileImage",

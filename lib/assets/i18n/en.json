@@ -525,8 +525,8 @@
     "exited_from": "has exited from",
     "tap_to_view": "Tap to view details",
     "group_invite": "Group join invite",
-    "notification_alert": "Notification alerts",
-    "turn_on_notification": "Notification alerts"
+    "notification_alert": "Notifications",
+    "turn_on_notification": "Allow Personal Notifications"
   },
   "profile": {
     "image_hint": "ProfileImage",
