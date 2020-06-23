@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/material.dart';

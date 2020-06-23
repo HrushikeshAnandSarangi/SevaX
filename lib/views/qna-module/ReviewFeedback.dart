@@ -97,7 +97,8 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 
       case 'es':
         return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_ES;
-
+      case 'zh-CN':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_ZH_CN;
       default:
         return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_EN;
     }
@@ -119,6 +120,9 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       case 'es':
         return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_ES;
 
+      case 'zh-CN':
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_CN;
+
       default:
         return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER_EN;
     }
@@ -139,6 +143,9 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 
       case 'es':
         return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_ES;
+
+      case 'zh-CN':
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_CN;
 
       default:
         return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_EN;

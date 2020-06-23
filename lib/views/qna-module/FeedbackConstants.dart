@@ -63,7 +63,38 @@ class FeedbackConstants {
       ]
     }
   ];
-
+  static const FEEDBACK_QUESTIONS_FOR_ADMIN_ZH_CN = const [
+    {
+      "FEEDBACK_TITLE": "您如何评价您的经验？",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "优秀的", "SCORE": 5},
+        {"ANSWER_TEXT": "好", "SCORE": 4},
+        {"ANSWER_TEXT": "好的", "SCORE": 3},
+        {"ANSWER_TEXT": "不太好", "SCORE": 2},
+        {"ANSWER_TEXT": "可怕", "SCORE": 1}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "您完成任务有困难吗？",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "没有困难", "SCORE": 5},
+        {"ANSWER_TEXT": "只有一点", "SCORE": 4},
+        {"ANSWER_TEXT": "是的，我遇到了一些困难", "SCORE": 3}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "您有多大可能再次为此目的自愿？",
+      "ANSWERS": [
+        {"text": "是的我要", "SCORE": 5},
+        {"text": "也许", "SCORE": 4},
+        {"text": "不我不会", "SCORE": 3}
+      ]
+    }
+  ];
+  static const FEEDBACK_QUESTIONS_FOR_ADMIN_DE = const[{"FEEDBACK_TITLE":"Wie würden Sie Ihre Erfahrung bewerten?","ANSWERS":[{"ANSWER_TEXT":"Ausgezeichnet","SCORE":5},{"ANSWER_TEXT":"Gut","SCORE":4},{"ANSWER_TEXT":"okay","SCORE":3},{"ANSWER_TEXT":"Nicht so gut","SCORE":2},{"ANSWER_TEXT":"Schrecklich","SCORE":1}]},{"FEEDBACK_TITLE":"Hatten Sie Schwierigkeiten, die Aufgabe zu erledigen?","ANSWERS":[{"ANSWER_TEXT":"Keine Schwierigkeit","SCORE":5},{"ANSWER_TEXT":"Nur ein bisschen","SCORE":4},{"ANSWER_TEXT":"Ja, ich hatte einige Schwierigkeiten","SCORE":3}]},{"FEEDBACK_TITLE":"Wie wahrscheinlich ist es, dass Sie sich erneut für diese Sache melden?","ANSWERS":[{"text":"Ja würde ich gerne","SCORE":5},{"text":"Könnte sein","SCORE":4},{"text":"Nein, werde ich nicht","SCORE":3}]}];
+  static const FEEDBACK_QUESTIONS_FOR_ADMIN_JA = const [{"FEEDBACK_TITLE":"あなたの経験をどのように評価しますか？","ANSWERS":[{"ANSWER_TEXT":"優秀な","SCORE":5},{"ANSWER_TEXT":"良い","SCORE":4},{"ANSWER_TEXT":"はい","SCORE":3},{"ANSWER_TEXT":"そんなに良くない","SCORE":2},{"ANSWER_TEXT":"ひどい","SCORE":1}]},{"FEEDBACK_TITLE":"タスクを完了するのに苦労しましたか？","ANSWERS":[{"ANSWER_TEXT":"難なく","SCORE":5},{"ANSWER_TEXT":"少しだけ","SCORE":4},{"ANSWER_TEXT":"はい、私はいくつかの困難を抱えていました","SCORE":3}]},{"FEEDBACK_TITLE":"この大義のためにもう一度ボランティアをする可能性はどのくらいありますか？","ANSWERS":[{"text":"はい私は希望します","SCORE":5},{"text":"多分","SCORE":4},{"text":"いいえ、私はしません","SCORE":3}]}];
+  static const FEEDBACK_QUESTIONS_FOR_ADMIN_KO = const [{"FEEDBACK_TITLE":"경험을 어떻게 평가 하시겠습니까?","ANSWERS":[{"ANSWER_TEXT":"우수한","SCORE":5},{"ANSWER_TEXT":"좋은","SCORE":4},{"ANSWER_TEXT":"괜찮아","SCORE":3},{"ANSWER_TEXT":"너무 좋지 않다","SCORE":2},{"ANSWER_TEXT":"무서운","SCORE":1}]},{"FEEDBACK_TITLE":"작업을 완료하는 데 어려움이 있었습니까?","ANSWERS":[{"ANSWER_TEXT":"어려움 없음","SCORE":5},{"ANSWER_TEXT":"만 조금","SCORE":4},{"ANSWER_TEXT":"예, 어려움이있었습니다","SCORE":3}]},{"FEEDBACK_TITLE":"이 원인에 대해 다시 자원 할 가능성은 얼마나됩니까?","ANSWERS":[{"text":"예, 부탁합니다","SCORE":5},{"text":"아마도","SCORE":4},{"text":"아니, 난 안할거야","SCORE":3}]}];
+  static const FEEDBACK_QUESTIONS_FOR_ADMIN_RU = const [{"FEEDBACK_TITLE":"как вы оцениваете ваш опыт?","ANSWERS":[{"ANSWER_TEXT":"Отлично","SCORE":5},{"ANSWER_TEXT":"Хорошо","SCORE":4},{"ANSWER_TEXT":"Ладно","SCORE":3},{"ANSWER_TEXT":"Не так хорошо, как хотелось бы","SCORE":2},{"ANSWER_TEXT":"ужасный","SCORE":1}]},{"FEEDBACK_TITLE":"У вас были трудности с выполнением задания?","ANSWERS":[{"ANSWER_TEXT":"Без затруднений","SCORE":5},{"ANSWER_TEXT":"Лишь малость","SCORE":4},{"ANSWER_TEXT":"Да у меня были некоторые трудности","SCORE":3}]},{"FEEDBACK_TITLE":"Какова вероятность того, что вы снова станете добровольцем по этой причине?","ANSWERS":[{"text":"Да, я бы хотел","SCORE":5},{"text":"Может быть","SCORE":4},{"text":"Нет, я не буду","SCORE":3}]}];
   static const FEEDBACK_QUESTIONS_FOR_ADMIN_PT = const [
     {
       FEEDBACK_TITLE: "Como você classificaria sua experiência?",
@@ -282,6 +313,186 @@ class FeedbackConstants {
       ]
     }
   ];
+  static const FEEDBACK_QUESTIONS_FOR_VOLUNTEER_CN = const [
+    {
+      "FEEDBACK_TITLE": "您如何评价这个志愿者的经历？",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "优秀的", "SCORE": 6},
+        {"ANSWER_TEXT": "好", "SCORE": 4},
+        {"ANSWER_TEXT": "好", "SCORE": 3},
+        {"ANSWER_TEXT": "不太好", "SCORE": 2},
+        {"ANSWER_TEXT": "可怕", "SCORE": 1}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "志愿者按时出现了吗？",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "准时", "SCORE": 3},
+        {"ANSWER_TEXT": "有一点晚", "SCORE": 4},
+        {"ANSWER_TEXT": "让我等待", "SCORE": 3},
+        {"ANSWER_TEXT": "没有出现", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "您想建议再次与该志愿者合作吗？",
+      "answers": [
+        {"ANSWER_TEXT": "是的，我会", "SCORE": 3},
+        {"ANSWER_TEXT": "不，我不会", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "这位志愿者在这项特定服务中的技能如何？",
+      "answers": [
+        {"ANSWER_TEXT": "十分合格的", "SCORE": 3},
+        {"ANSWER_TEXT": "平均", "SCORE": 3},
+        {"ANSWER_TEXT": "根本不是专家", "SCORE": 1}
+      ]
+    }
+  ];
+  static const FEEDBACK_QUESTIONS_FOR_VOLUNTEER_DE = const [
+    {
+      "FEEDBACK_TITLE": "Wie würden Sie Ihre Erfahrungen mit diesem Freiwilligen bewerten?",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "Ausgezeichnet", "SCORE": 6},
+        {"ANSWER_TEXT": "Gut", "SCORE": 4},
+        {"ANSWER_TEXT": "Gut", "SCORE": 3},
+        {"ANSWER_TEXT": "Nicht so gut", "SCORE": 2},
+        {"ANSWER_TEXT": "Schrecklich", "SCORE": 1}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "Ist der Freiwillige pünktlich erschienen?",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "Pünktlich", "SCORE": 3},
+        {"ANSWER_TEXT": "Etwas verspätet", "SCORE": 4},
+        {"ANSWER_TEXT": "Hat mich warten lassen", "SCORE": 3},
+        {"ANSWER_TEXT": "Ist nicht aufgetaucht", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "Möchten Sie empfehlen, wieder mit diesem Freiwilligen zusammenzuarbeiten?",
+      "answers": [
+        {"ANSWER_TEXT": "Ja, würde ich", "SCORE": 3},
+        {"ANSWER_TEXT": "Nein, würde ich nicht", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "Wie gut war dieser Freiwillige für diesen speziellen Dienst?",
+      "answers": [
+        {"ANSWER_TEXT": "Hochqualifizierte", "SCORE": 3},
+        {"ANSWER_TEXT": "Durchschnittlich", "SCORE": 3},
+        {"ANSWER_TEXT": "Überhaupt kein Experte", "SCORE": 1}
+      ]
+    }
+  ];
+  static const FEEDBACK_QUESTIONS_FOR_VOLUNTEER_JA = const [
+    {
+      "FEEDBACK_TITLE": "このボランティアでの経験をどのように評価しますか？",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "優秀な", "SCORE": 6},
+        {"ANSWER_TEXT": "良い", "SCORE": 4},
+        {"ANSWER_TEXT": "良い", "SCORE": 3},
+        {"ANSWER_TEXT": "そんなに良くない", "SCORE": 2},
+        {"ANSWER_TEXT": "ひどい", "SCORE": 1}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "ボランティアは時間通りに来ましたか？",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "定刻", "SCORE": 3},
+        {"ANSWER_TEXT": "少し遅れて", "SCORE": 4},
+        {"ANSWER_TEXT": "私を待っていた", "SCORE": 3},
+        {"ANSWER_TEXT": "現れなかった", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "このボランティアと一緒にもう一度作業することをお勧めしますか？",
+      "answers": [
+        {"ANSWER_TEXT": "はい、そうします", "SCORE": 3},
+        {"ANSWER_TEXT": "いいえ、私はしません", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "このボランティアは、この特定のサービスにどの程度熟練していましたか？",
+      "answers": [
+        {"ANSWER_TEXT": "高資格", "SCORE": 3},
+        {"ANSWER_TEXT": "平均", "SCORE": 3},
+        {"ANSWER_TEXT": "まったく専門家ではない", "SCORE": 1}
+      ]
+    }
+  ];
+  static const FEEDBACK_QUESTIONS_FOR_VOLUNTEER_KO = const [
+    {
+      "FEEDBACK_TITLE": "이 자원 봉사에 대한 경험을 어떻게 평가 하시겠습니까?",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "우수한", "SCORE": 6},
+        {"ANSWER_TEXT": "좋은", "SCORE": 4},
+        {"ANSWER_TEXT": "좋은", "SCORE": 3},
+        {"ANSWER_TEXT": "너무 좋지 않다", "SCORE": 2},
+        {"ANSWER_TEXT": "무서운", "SCORE": 1}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "자원 봉사자가 제 시간에 나타 났습니까?",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "정시에", "SCORE": 3},
+        {"ANSWER_TEXT": "조금 늦다", "SCORE": 4},
+        {"ANSWER_TEXT": "기다리고있어", "SCORE": 3},
+        {"ANSWER_TEXT": "나타나지 않았다", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "이 자원 봉사자와 다시 협력 해 보시겠습니까?",
+      "answers": [
+        {"ANSWER_TEXT": "그래, 난 것", "SCORE": 3},
+        {"ANSWER_TEXT": "아뇨", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "이 특정 봉사에 자원 봉사자가 얼마나 숙련 되었습니까?",
+      "answers": [
+        {"ANSWER_TEXT": "높은 자격", "SCORE": 3},
+        {"ANSWER_TEXT": "평균", "SCORE": 3},
+        {"ANSWER_TEXT": "전혀 전문가가 아닙니다", "SCORE": 1}
+      ]
+    }
+  ];
+  static const FEEDBACK_QUESTIONS_FOR_VOLUNTEER_RU = const [
+    {
+      "FEEDBACK_TITLE": "Как бы вы оценили свой опыт работы с этим волонтером?",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "Отлично", "SCORE": 6},
+        {"ANSWER_TEXT": "Хорошо", "SCORE": 4},
+        {"ANSWER_TEXT": "Хорошо", "SCORE": 3},
+        {"ANSWER_TEXT": "Не так хорошо, как хотелось бы", "SCORE": 2},
+        {"ANSWER_TEXT": "ужасный", "SCORE": 1}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "Волонтер появился вовремя?",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "Вовремя", "SCORE": 3},
+        {"ANSWER_TEXT": "Немного поздно", "SCORE": 4},
+        {"ANSWER_TEXT": "Заставил меня ждать", "SCORE": 3},
+        {"ANSWER_TEXT": "Не появился", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "Хотите порекомендовать снова поработать с этим волонтером?",
+      "answers": [
+        {"ANSWER_TEXT": "Да я бы", "SCORE": 3},
+        {"ANSWER_TEXT": "Нет я бы не стал", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "Насколько квалифицирован этот волонтер для этой конкретной службы?",
+      "answers": [
+        {"ANSWER_TEXT": "Высококвалифицированный", "SCORE": 3},
+        {"ANSWER_TEXT": "Средний", "SCORE": 3},
+        {"ANSWER_TEXT": "Совсем не эксперт", "SCORE": 1}
+      ]
+    }
+  ];
 
   //FEEDBACK QUESTION FOR ONE TO MANY
   static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_EN = const [
@@ -366,6 +577,142 @@ class FeedbackConstants {
         {ANSWER_TEXT: "Muito detalhado", SCORE: 2},
       ]
     },
+  ];
+
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_CN = const [
+    {
+      "FEEDBACK_TITLE": "您的整体课程等级是多少？",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "优秀的", "SCORE": 5},
+        {"ANSWER_TEXT": "好", "SCORE": 4},
+        {"ANSWER_TEXT": "平均", "SCORE": 3},
+        {"ANSWER_TEXT": "较差的", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "您如何看待课程内容？",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "正好", "SCORE": 4},
+        {"ANSWER_TEXT": "太轻", "SCORE": 3},
+        {"ANSWER_TEXT": "太详细了", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "您如何看待上课时间？",
+      "answers": [
+        {"ANSWER_TEXT": "正好", "SCORE": 4},
+        {"ANSWER_TEXT": "太轻", "SCORE": 3},
+        {"ANSWER_TEXT": "太详细了", "SCORE": 2}
+      ]
+    }
+  ];
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_DE = const [
+    {
+      "FEEDBACK_TITLE": "Was ist Ihre Gesamtklassenbewertung?",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "Ausgezeichnet", "SCORE": 5},
+        {"ANSWER_TEXT": "Gut", "SCORE": 4},
+        {"ANSWER_TEXT": "Durchschnittlich", "SCORE": 3},
+        {"ANSWER_TEXT": "Arm", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "Was denkst du über den Inhalt der Klasse?",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "Alles gut", "SCORE": 4},
+        {"ANSWER_TEXT": "Zu leicht", "SCORE": 3},
+        {"ANSWER_TEXT": "Zu detailliert", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "Was denkst du über die Dauer des Unterrichts?",
+      "answers": [
+        {"ANSWER_TEXT": "Alles gut", "SCORE": 4},
+        {"ANSWER_TEXT": "Zu leicht", "SCORE": 3},
+        {"ANSWER_TEXT": "Zu detailliert", "SCORE": 2}
+      ]
+    }
+  ];
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_JA = const [
+    {
+      "FEEDBACK_TITLE": "あなたの全体的なクラスの評価は何ですか？",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "優秀な", "SCORE": 5},
+        {"ANSWER_TEXT": "良い", "SCORE": 4},
+        {"ANSWER_TEXT": "平均", "SCORE": 3},
+        {"ANSWER_TEXT": "悪い", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "クラスの内容についてどう思いましたか？",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "大丈夫", "SCORE": 4},
+        {"ANSWER_TEXT": "薄すぎる", "SCORE": 3},
+        {"ANSWER_TEXT": "詳細すぎる", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "クラスの期間についてどう思いましたか？",
+      "answers": [
+        {"ANSWER_TEXT": "大丈夫", "SCORE": 4},
+        {"ANSWER_TEXT": "薄すぎる", "SCORE": 3},
+        {"ANSWER_TEXT": "詳細すぎる", "SCORE": 2}
+      ]
+    }
+  ];
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_KO = const [
+    {
+      "FEEDBACK_TITLE": "전체적인 등급은 무엇입니까?",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "우수한", "SCORE": 5},
+        {"ANSWER_TEXT": "좋은", "SCORE": 4},
+        {"ANSWER_TEXT": "평균", "SCORE": 3},
+        {"ANSWER_TEXT": "가난한", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "수업 내용에 대해 어떻게 생각 했습니까?",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "괜찮아", "SCORE": 4},
+        {"ANSWER_TEXT": "너무 가벼운", "SCORE": 3},
+        {"ANSWER_TEXT": "너무 상세", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "수업 시간에 대해 어떻게 생각 했습니까?",
+      "answers": [
+        {"ANSWER_TEXT": "괜찮아", "SCORE": 4},
+        {"ANSWER_TEXT": "너무 가벼운", "SCORE": 3},
+        {"ANSWER_TEXT": "너무 상세", "SCORE": 2}
+      ]
+    }
+  ];
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_RU = const [
+    {
+      "FEEDBACK_TITLE": "Каков ваш общий рейтинг класса?",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "Отлично", "SCORE": 5},
+        {"ANSWER_TEXT": "Хорошо", "SCORE": 4},
+        {"ANSWER_TEXT": "Средний", "SCORE": 3},
+        {"ANSWER_TEXT": "Бедных", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "Что вы думаете о содержании класса?",
+      "ANSWERS": [
+        {"ANSWER_TEXT": "Просто хорошо", "SCORE": 4},
+        {"ANSWER_TEXT": "Слишком легкий", "SCORE": 3},
+        {"ANSWER_TEXT": "Слишком подробно", "SCORE": 2}
+      ]
+    },
+    {
+      "FEEDBACK_TITLE": "Что вы думаете о продолжительности урока?",
+      "answers": [
+        {"ANSWER_TEXT": "Просто хорошо", "SCORE": 4},
+        {"ANSWER_TEXT": "Слишком легкий", "SCORE": 3},
+        {"ANSWER_TEXT": "Слишком подробно", "SCORE": 2}
+      ]
+    }
   ];
 
   static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER_ES = const [
