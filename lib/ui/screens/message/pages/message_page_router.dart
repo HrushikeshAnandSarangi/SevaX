@@ -1,18 +1,13 @@
-import 'dart:collection';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
-import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/personal_message_page.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/utils/members_of_timebank.dart';
-import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/messages/select_timebank_for_chat.dart';
 
 import 'admin_message_page.dart';
+import 'create_new_chat_page.dart';
 
 class MessagePageRouter extends StatefulWidget {
   @override
@@ -39,29 +34,15 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
               height: 20,
             ),
             onPressed: () {
-              if (SevaCore.of(context).loggedInUser.associatedWithTimebanks >
-                  1) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SelectTimeBankForNewChat(),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateNewChatPage(
+                    isSelectionEnabled: false,
+                    frequentContacts: _bloc.frequentContacts,
                   ),
-                );
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SelectMembersFromTimebank(
-                      timebankId:
-                          SevaCore.of(context).loggedInUser.currentTimebank,
-                      newsModel: NewsModel(),
-                      isFromShare: false,
-                      selectionMode: MEMBER_SELECTION_MODE.NEW_CHAT,
-                      userSelected: HashMap(),
-                    ),
-                  ),
-                );
-              }
+                ),
+              );
             },
           ),
         ],

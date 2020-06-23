@@ -11,8 +11,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'chatview.dart';
-
 class SelectMember extends StatefulWidget {
   final String timebankId;
   NewsModel newsModel;
@@ -60,7 +58,6 @@ class _SelectMembersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return StreamBuilder<TimebankModel>(
       stream: FirestoreManager.getTimebankModelStream(
         timebankId: timebankId,
@@ -180,8 +177,7 @@ class _SelectMembersView extends StatelessWidget {
             reciever: reciever,
             isFromRejectCompletion: false,
             isFromShare: isFromShare,
-            news: isFromShare ? newsModel : NewsModel(),
-            isFromNewChat: fromNewChat,
+            feedId: newsModel?.id,
             onChatCreate: () {
               Navigator.of(context).pop();
             },
@@ -203,8 +199,6 @@ class _SelectMembersView extends StatelessWidget {
       ),
     );
   }
-
-  var fromNewChat = IsFromNewChat(true, DateTime.now().millisecondsSinceEpoch);
 
   Widget getSectionTitle(BuildContext context, String title) {
     return Container(

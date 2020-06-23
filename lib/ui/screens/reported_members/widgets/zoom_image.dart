@@ -7,8 +7,6 @@ import 'package:flutter/rendering.dart';
 
 // Given a canvas and an image, determine what size the image should be to be
 // contained in but not exceed the canvas while preserving its aspect ratio.
-Size _containmentSize(Size canvas, Size image) {}
-
 class ZoomableImage extends StatefulWidget {
   final ImageProvider image;
   final double maxScale;

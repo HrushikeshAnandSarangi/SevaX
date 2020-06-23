@@ -1,6 +1,8 @@
 String removeUserIcon = "images/icons/remove_user.png";
 String messageIcon = "images/icons/message.png";
 String createMessageIcon = "images/icons/create_message.png";
+String cameraIcon = "images/icons/camera.png";
+String groupIcon = "lib/assets/images/group_icon.png";
 
 class NavigationIcons {
   //Filled Icons

@@ -5,12 +5,14 @@ import 'initial_generator.dart';
 class CustomAvatar extends StatelessWidget {
   final String name;
   final Color color;
+  final Color foregroundColor;
   final double radius;
   const CustomAvatar({
     Key key,
     this.name,
     this.color,
     this.radius,
+    this.foregroundColor,
   })  : assert(name != null),
         super(key: key);
   @override
@@ -18,7 +20,7 @@ class CustomAvatar extends StatelessWidget {
     return CircleAvatar(
       radius: radius,
       backgroundColor: color ?? Theme.of(context).primaryColor,
-      foregroundColor: Colors.white,
+      foregroundColor: foregroundColor ?? Colors.white,
       child: Center(
         child: Text(
           getInitials(name.trim()).trim().toUpperCase(),

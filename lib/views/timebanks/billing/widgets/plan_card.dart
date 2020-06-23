@@ -289,12 +289,8 @@ class BillingPlanCard extends StatelessWidget {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context1) => FlavorConfig.appFlavor == Flavor.APP
-                    ? MainApplication(
-                        skipToHomePage: true,
-                      )
-                    : dev.MainApplication(
-                        skipToHomePage: true,
-                      ),
+                    ? MainApplication()
+                    : dev.MainApplication(),
               ),
               (Route<dynamic> route) => false);
         }).catchError((e) => print(e));

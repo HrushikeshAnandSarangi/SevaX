@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/models/news_model.dart';
-import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart';
-import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:sevaexchange/ui/screens/message/pages/chat_page.dart';
+import 'package:sevaexchange/widgets/APi/chats_api.dart';
 
 ParticipantInfo getUserInfo(
     String userId, List<ParticipantInfo> participantInfo) {
@@ -23,8 +22,7 @@ Future<void> createAndOpenChat({
   bool isFromRejectCompletion = false,
   bool isTimebankMessage = false,
   bool isFromShare = false,
-  NewsModel news,
-  IsFromNewChat isFromNewChat,
+  String feedId,
   VoidCallback onChatCreate,
 }) async {
   print(
@@ -34,13 +32,14 @@ Future<void> createAndOpenChat({
   participants.sort();
   ChatModel model = ChatModel(
     participants: participants,
-    timebankId: timebankId,
     communityId: communityId,
     participantInfo: [sender, reciever],
     isTimebankMessage: isTimebankMessage,
-  );
+  )
+    ..id = "${participants[0]}*${participants[1]}*$communityId"
+    ..isGroupMessage = false;
 
-  await createNewChat(chat: model);
+  await ChatsApi.createNewChat(model, documentId: model.id);
   if (onChatCreate != null) {
     onChatCreate();
   }
@@ -48,58 +47,13 @@ Future<void> createAndOpenChat({
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => ChatView(
-        news: news,
+      builder: (context) => ChatPage(
+        feedId: feedId,
         isFromShare: isFromShare,
         senderId: sender.id,
         chatModel: model,
         isFromRejectCompletion: isFromRejectCompletion,
-        isFromNewChat: isFromNewChat,
       ),
     ),
   );
 }
-
-// Future<void> createAndOpenTimebankChat({
-//   BuildContext context,
-//   String sender,
-//   UserModel reciever,
-//   String communityId,
-//   bool isFromRejectCompletion = false,
-//   MessageType type = MessageType.TYPE_PERSONAL,
-// }) async {
-//   List<String> participants = [sender, reciever.sevaUserID];
-//   participants.sort();
-//   ChatModel model = ChatModel(
-//     participants: participants,
-//     timebankId: sender,
-//     communityId: communityId,
-//     participantInfo: [
-//       ParticipantInfo(
-//         id: reciever.sevaUserID,
-//         name: reciever.fullname,
-//         photoUrl: reciever.photoURL,
-//         type: MessageType.TYPE_TIMEBANK,
-//       ),
-//       ParticipantInfo(
-//         id: sender,
-//         // name: sender.name,
-//         // photoUrl: sender.photoUrl,
-//         type: MessageType.TYPE_TIMEBANK,
-//       ),
-//     ],
-//   );
-
-//   await createNewChat(chat: model);
-
-//   Navigator.push(
-//     context,
-//     MaterialPageRoute(
-//       builder: (context) => ChatView(
-//         senderId: sender,
-//         chatModel: model,
-//         isFromRejectCompletion: isFromRejectCompletion,
-//       ),
-//     ),
-//   );
-// }

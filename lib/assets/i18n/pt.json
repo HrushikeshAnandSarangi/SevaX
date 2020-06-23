@@ -1057,7 +1057,21 @@
   "messages": {
     "messages_title": "Mensajes",
     "personal_messages": "Personal",
-    "admin_messages": "Administradora"
+    "admin_messages": "Administradora",
+    "new_chat": "Novo chat",
+    "multi_user": "Multi-User Mensagens",
+    "frequently_contacted": "FREQUENTES CONTACTADO",
+    "groups": "GRUPOS",
+    "timebank_members": "Timebank MEMBROS",
+    "add_participants": "Adicione Participantes",
+    "new_multi_user_messaging": "New Multi-User Mensagens",
+    "multi_user_messaging_name": "Multi-User Nome Messaging",
+    "note": "Por favor, forneça um assunto de mensagens multi-usuário e ícone do grupo opcional",
+    "participants": "Participantes",
+    "creating_multi_user_messaging": "Criando Messaging Multi-User ...",
+    "cancel": "Cancelar",
+    "next": "Próximo",
+    "create": "Crio"
   },
   "add_location": {
     "confirm_location_label": "CONFIRMAR UBICACIÓN"

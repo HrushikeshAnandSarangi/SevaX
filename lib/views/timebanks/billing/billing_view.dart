@@ -313,12 +313,8 @@ class BillingViewState extends State<BillingView> {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                 builder: (context1) => FlavorConfig.appFlavor == Flavor.APP
-                    ? MainApplication(
-                        skipToHomePage: true,
-                      )
-                    : dev.MainApplication(
-                        skipToHomePage: true,
-                      ),
+                    ? MainApplication()
+                    : dev.MainApplication(),
               ),
               (Route<dynamic> route) => false);
         });

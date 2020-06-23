@@ -1055,7 +1055,21 @@
   "messages": {
     "messages_title": "Messages",
     "personal_messages": "Personal",
-    "admin_messages": "Admin"
+    "admin_messages": "Admin",
+    "new_chat": "New Chat",
+    "multi_user": "Multi-User Messaging",
+    "frequently_contacted": "FREQUENTLY CONTACTED",
+    "groups": "GROUPS",
+    "timebank_members": "TIMEBANK MEMBERS",
+    "add_participants": "Add Participants",
+    "new_multi_user_messaging": "New Multi-User Messaging",
+    "multi_user_messaging_name": "Multi-User Messaging Name",
+    "note": "Please provide a multi-user messaging subject and optional group icon",
+    "participants": "Participants",
+    "creating_multi_user_messaging": "Creating Multi-User Messaging...",
+    "cancel": "Cancel",
+    "next": "Next",
+    "create": "Create"
   },
   "add_location": {
     "confirm_location_label": "CONFIRM LOCATION"
