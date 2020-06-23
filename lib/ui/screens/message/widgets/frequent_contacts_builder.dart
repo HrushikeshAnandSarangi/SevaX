@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
@@ -11,6 +13,7 @@ class FrequentContactsBuilder extends StatelessWidget {
   const FrequentContactsBuilder(this.models, this.showGroup);
   @override
   Widget build(BuildContext context) {
+    log("lenght ${models.length}");
     return StreamBuilder<List<String>>(
         stream: BlocProvider.of<CreateChatBloc>(context).selectedMembers,
         builder: (context, snapshot) {

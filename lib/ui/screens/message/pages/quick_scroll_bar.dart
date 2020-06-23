@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/ui/utils/strings.dart';
 
 class QuickScrollBar extends StatefulWidget {
-  final ScrollController scrollController;
   final ValueChanged<String> onChanged;
 
-  QuickScrollBar({@required this.scrollController, this.onChanged});
+  QuickScrollBar({this.onChanged});
 
   @override
-  _QuickScrollBarState createState() => _QuickScrollBarState(scrollController);
+  _QuickScrollBarState createState() => _QuickScrollBarState();
 }
 
 class _QuickScrollBarState extends State<QuickScrollBar> {
@@ -21,40 +21,8 @@ class _QuickScrollBarState extends State<QuickScrollBar> {
   var scrollBarPosSelected = 0;
   var scrollBarHeightDiff = 0.0;
   var screenHeight = 0.0;
-  ScrollController scrollController;
   String scrollBarBubbleText = "";
   bool scrollBarBubbleVisibility = true;
-
-  _QuickScrollBarState(this.scrollController);
-
-  List<String> alphabetList = [
-    'A',
-    'B',
-    'C',
-    'D',
-    'E',
-    'F',
-    'G',
-    'H',
-    'I',
-    'J',
-    'K',
-    'L',
-    'M',
-    'N',
-    'O',
-    'P',
-    'Q',
-    'R',
-    'S',
-    'T',
-    'U',
-    'V',
-    'W',
-    'X',
-    'Y',
-    'Z'
-  ];
 
   void _onVerticalDragUpdate(DragUpdateDetails details) {
     setState(() {

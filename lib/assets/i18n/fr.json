@@ -1050,8 +1050,23 @@
   "messages": {
     "messages_title": "Messages",
     "personal_messages": "Personnelle",
-    "admin_messages": "Admin"
+    "admin_messages": "Admin",
+    "new_chat": "Nouveau chat",
+    "multi_user": "Messagerie multi-utilisateur",
+    "frequently_contacted": "FOIRE CONTACTÉ",
+    "groups": "GROUPES",
+    "timebank_members": "TimeBank MEMBRES",
+    "add_participants": "Ajouter des participants",
+    "new_multi_user_messaging": "Nouvelle messagerie multi-utilisateur",
+    "multi_user_messaging_name": "Multi-utilisateur de messagerie Nom",
+    "note": "S'il vous plaît fournir un sujet de messagerie multi-utilisateur et icône du groupe en option",
+    "participants": "Les participants",
+    "creating_multi_user_messaging": "Création de messagerie multi-utilisateur ...",
+    "cancel": "Annuler",
+    "next": "Prochain",
+    "create": "Créer"
   },
+
   "add_location": {
     "confirm_location_label": "CONFIRMER L'EMPLACEMENT"
   },

@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/chat_page.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
+import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -65,11 +66,15 @@ class MemberCard extends StatelessWidget {
       child: Container(
         child: Row(
           children: <Widget>[
-            CustomNetworkImage(
-              info.photoUrl,
-              // "https://pluspng.com/img-png/user-png-icon-male-user-icon-512.png",
-              size: 40,
-            ),
+            info.photoUrl != null
+                ? CustomNetworkImage(
+                    info.photoUrl,
+                    size: 40,
+                  )
+                : CustomAvatar(
+                    name: info.name,
+                    radius: 20,
+                  ),
             SizedBox(width: 12),
             Expanded(child: Text(info.name)),
             Offstage(

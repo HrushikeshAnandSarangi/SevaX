@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_builder.dart';
@@ -20,13 +21,19 @@ class CreateGroupPage extends StatelessWidget {
       appBar: AppBar(
         titleSpacing: 0,
         title: Text(
-          "New Multi-User Messaging",
+          AppLocalizations.of(context).translate(
+            'messages',
+            'new_multi_user_messaging',
+          ),
           style: TextStyle(fontSize: 18),
         ),
         actions: <Widget>[
           FlatButton(
             child: Text(
-              "Create",
+              AppLocalizations.of(context).translate(
+                'messages',
+                'create',
+              ),
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             onPressed: () {
@@ -41,7 +48,12 @@ class CreateGroupPage extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      content: Text("Creating Multi-User Messaging..."),
+                      content: Text(
+                        AppLocalizations.of(context).translate(
+                          'messages',
+                          'creating_multi_user_messaging',
+                        ),
+                      ),
                     );
                   },
                 );
@@ -122,7 +134,10 @@ class CreateGroupPage extends StatelessWidget {
                               disabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
                               errorText: snapshot.error,
-                              hintText: "Multi-User Messaging Name",
+                              hintText: AppLocalizations.of(context).translate(
+                                'messages',
+                                'multi_user_messaging_name',
+                              ),
                               hintStyle: TextStyle(
                                 fontSize: 18,
                                 color: Colors.grey,
@@ -133,7 +148,10 @@ class CreateGroupPage extends StatelessWidget {
                       ),
                       Divider(),
                       Text(
-                        "Please provide a multi-user messaging \nsubject and optional group icon.",
+                        AppLocalizations.of(context).translate(
+                          'messages',
+                          'note',
+                        ),
                         style: TextStyle(
                           color: Colors.grey,
                         ),
@@ -155,7 +173,7 @@ class CreateGroupPage extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     padding: EdgeInsets.only(left: 20),
                     child: Text(
-                      "PARTICIPANTS: ${snapshot.data?.length ?? 0} OF 256",
+                      "${AppLocalizations.of(context).translate('messages', 'participants')}: ${snapshot.data?.length ?? 0} OF 256",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),

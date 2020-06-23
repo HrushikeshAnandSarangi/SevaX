@@ -39,13 +39,26 @@ class CreateNewChatAppBar extends PreferredSize {
             padding: const EdgeInsets.all(10),
             child: Row(
               children: <Widget>[
-                customButton("Cancel", Navigator.of(context).pop),
+                customButton(
+                    AppLocalizations.of(context).translate(
+                      'messages',
+                      'cancel',
+                    ),
+                    Navigator.of(context).pop),
                 Spacer(),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      isSelectionEnabled ? "Add Participants" : "New Chat",
+                      isSelectionEnabled
+                          ? AppLocalizations.of(context).translate(
+                              'messages',
+                              'add_participants',
+                            )
+                          : AppLocalizations.of(context).translate(
+                              'messages',
+                              'new_chat',
+                            ),
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                     isSelectionEnabled
@@ -70,7 +83,11 @@ class CreateNewChatAppBar extends PreferredSize {
                         stream: _bloc.selectedMembers,
                         builder: (context, snapshot) {
                           return (snapshot.data?.length ?? 0) > 0
-                              ? customButton("Next", () {
+                              ? customButton(
+                                  AppLocalizations.of(context).translate(
+                                    'messages',
+                                    'next',
+                                  ), () {
                                   if (isFromEditGroup) {
                                     _bloc.selectedMembers.first
                                         .then((List<String> members) {

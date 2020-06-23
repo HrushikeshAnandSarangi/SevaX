@@ -26,6 +26,8 @@ class CreateChatBloc extends BlocBase {
   final Map<String, ParticipantInfo> allMembers = {};
   final _selectedMembers = BehaviorSubject<List<String>>();
   final _file = BehaviorSubject<File>();
+  final Map<String, List<ParticipantInfo>> sortedMembers = {};
+  final Map<String, int> scrollOffset = {};
 
   Function(String) get onSearchChanged => _searchText.sink.add;
   Function(String) get onGroupNameChanged => _groupName.sink.add;
@@ -50,7 +52,26 @@ class CreateChatBloc extends BlocBase {
     List<ParticipantInfo> users =
         await UserApi.getShortDetailsOfAllMembersOfCommunity(communityId);
     users.removeWhere((ParticipantInfo info) => info.id == userId);
-    users.forEach((ParticipantInfo info) => allMembers[info.id] = info);
+    users.forEach((ParticipantInfo info) {
+      allMembers[info.id] = info;
+      String key = info.name[0].toUpperCase();
+      if (sortedMembers.containsKey(key)) {
+        sortedMembers[key].add(info);
+        // scrollOffset[key] += 1;
+      } else {
+        sortedMembers[key] = [info];
+        // scrollOffset[key] = 1;
+      }
+    });
+
+    int count = 0;
+    sortedMembers.forEach((String key, List<ParticipantInfo> value) {
+      count += value.length;
+      scrollOffset[key] = count;
+    });
+
+    print(scrollOffset);
+
     List<TimebankModel> timebanks =
         await TimebankApi.getTimebanksWhichUserIsPartOf(userId, communityId);
     timebanks.removeWhere(
