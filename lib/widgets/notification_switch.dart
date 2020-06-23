@@ -16,7 +16,6 @@ class NotificationWidgetSwitch extends StatefulWidget {
   _NotificationWidgetSwitchState createState() =>
       _NotificationWidgetSwitchState();
 
-
   static void updateNotificationFormAdmin({
     String timebankId,
     String adminSevaUserId,
@@ -54,7 +53,7 @@ class _NotificationWidgetSwitchState extends State<NotificationWidgetSwitch> {
               widget.title,
               style: TextStyle(
                   fontFamily: 'Europa',
-                  fontWeight: FontWeight.bold,
+                  //  fontWeight: FontWeight.bold,
                   fontSize: 16),
             ),
             trailing: Switch(
@@ -74,4 +73,3 @@ class _NotificationWidgetSwitchState extends State<NotificationWidgetSwitch> {
     );
   }
 }
-
