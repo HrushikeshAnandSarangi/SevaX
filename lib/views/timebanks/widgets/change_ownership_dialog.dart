@@ -205,6 +205,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
     print('curr plan ${communityModel.payment["planId"]}');
     if (communityModel.payment["planId"] != null &&
         communityModel.payment["planId"] == 'community_plan') {
+      showProgressDialog(AppLocalizations.of(context)
+          .translate('createtimebank', 'updating_details'));
       changeOwnership(
               primaryTimebank: communityModel.primary_timebank,
               adminId: loggedInUser.sevaUserID,
@@ -213,7 +215,10 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
               notificaitonId: notificationId)
           .commit()
           .then((onValue) {
-        resetAndLoad();
+        if (progressContext != null) {
+          Navigator.pop(progressContext);
+        }
+        getSuccessDialog();
       });
     } else {
       Firestore.instance
@@ -263,6 +268,31 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
       MaterialPageRoute(
           builder: (context) =>
               SevaCore(loggedInUser: loggedInUser, child: HomePageRouter())),
+    );
+  }
+
+  getSuccessDialog() {
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          content: new Text(AppLocalizations.of(context)
+              .translate('change_ownership', 'ownership_suceess')),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text(
+                  AppLocalizations.of(context).translate('homepage', 'ok')),
+              onPressed: () {
+                resetAndLoad();
+                // Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -363,7 +393,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
 
   BuildContext dialogContext;
 
-  void showProgressDialog(BuildContext context, String message) {
+  void showProgressDialog(String message) {
     showDialog(
         barrierDismissible: false,
         context: context,

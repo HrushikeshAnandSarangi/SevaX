@@ -11,6 +11,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/payment_bloc.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/credit_card/utils/card_background.dart';
 import 'package:stripe_payment/stripe_payment.dart';
@@ -45,6 +46,8 @@ class BillingViewState extends State<BillingView> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   Future<UserCardsModel> userCardDetails;
+
+  BuildContext dialogContext;
   @override
   void initState() {
     print(widget.planId);
@@ -80,6 +83,8 @@ class BillingViewState extends State<BillingView> {
           widget.user ?? SevaCore.of(context).loggedInUser, widget.planId);
 
       if (widget.isFromChangeOwnership) {
+        showProgressDialog(AppLocalizations.of(context)
+            .translate('createtimebank', 'updating_details'));
         setDefaultCard(
                 token: paymentMethod.id,
                 communityId: widget.user.currentCommunity)
@@ -93,7 +98,7 @@ class BillingViewState extends State<BillingView> {
                   notificaitonId: widget.notificationId)
               .commit()
               .then((onValue) {
-            getSuccessDialog();
+            updateCustomer();
           });
           setState(() {});
         });
@@ -103,12 +108,43 @@ class BillingViewState extends State<BillingView> {
     }
   }
 
+  void updateCustomer() async {
+    String response = await updateChangeOwnerDetails(
+        communityId: widget.communityModel.id,
+        email: widget.user.email,
+        city: widget.communityModel.billing_address.city,
+        country: widget.communityModel.billing_address.country,
+        pinCode: widget.communityModel.billing_address.pincode.toString(),
+        state: widget.communityModel.billing_address.state,
+        streetAddress1: widget.communityModel.billing_address.street_address1,
+        streetAddress2: widget.communityModel.billing_address.street_address2);
+    if (response == "200") {
+      if (dialogContext != null) {
+        Navigator.pop(dialogContext);
+      }
+      getSuccessDialog();
+    }
+  }
+
   void resetAndLoad() async {
     await Navigator.of(context).push(
       MaterialPageRoute(
           builder: (context) =>
               SevaCore(loggedInUser: widget.user, child: HomePageRouter())),
     );
+  }
+
+  void showProgressDialog(String message) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          dialogContext = createDialogContext;
+          return AlertDialog(
+            title: Text(message),
+            content: LinearProgressIndicator(),
+          );
+        });
   }
 
   getSuccessDialog() {

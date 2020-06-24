@@ -208,7 +208,11 @@
     "contact": "Entre em contato com o suporte da SevaX para alterar os planos",
     "close": "Fechar",
     "billing_plans": "Você está no plano comunitário",
-    "progress": "Levando você ao seu novo Banco de tempo ..."
+    "progress": "Levando você ao seu novo Banco de tempo ...",
+    "bill_me": "facturarme",
+    "bill_me_info": "Esto está disponible solo para usuarios que tienen acuerdos previos con Seva Exchange. Por favor envíe un correo electrónico a billme@sevaexchange.com para más detalles.",
+    "bill_me_info_two": "Solo los usuarios que han sido aprobados a priori pueden marcar la casilla \"Bill Me\". Si desea hacer esto, envíe un correo electrónico a billme@sevaexchange.com"
+
   },
   "explore": {
     "title": "Explorar",
@@ -1150,7 +1154,7 @@
     "change_hint_three": " a otro administrador",
     "change_hint_two": "Cambiar a",
     "invitation_sent": "Hemos enviado su invitación de transferencia de propiedad. Seguirás siendo el propietario de Timebank ",
-    "invitation_sent_two": "hasta",
+    "invitation_sent_two": " hasta ",
     "invitation_sent_three": " acepta la invitación y proporciona su nueva información de facturación.",
     "notification_msg": "te ha invitado a ser el nuevo propietario del Banco de tiempo",
     "accept": "Aceptar",
@@ -1164,6 +1168,8 @@
     "change_message": "Eres el nuevo propietario de Timebank ",
     "change_message_two": " Debes aceptarlo para completar el proceso.",
     "change_advisory": " Debe proporcionar los detalles de facturación de este Timebank, incluida la nueva dirección de facturación. La transferencia de propiedad no se completará hasta que se haga esto.",
-    "ownership_suceess": "¡Felicidades! Ahora eres el nuevo propietario del Banco de tiempo "
+    "ownership_suceess": "¡Felicidades! Ahora eres el nuevo propietario del Banco de tiempo ",
+    "already_invited": " Ya invitado."
+
   }
 }

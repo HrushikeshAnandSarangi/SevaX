@@ -37,6 +37,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
   BuildContext parentContext;
   String user_error = '';
   bool dataLoaded = false;
+  List<String> invtitedUsers = [];
   @override
   void initState() {
     // TODO: implement initState
@@ -202,31 +203,51 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
                 user_error = AppLocalizations.of(context)
                     .translate('change_ownership', 'users_empty');
               });
+            } else if (invtitedUsers.contains(selectedNewOwner.email)) {
+              dialogBox(
+                  message: AppLocalizations.of(context)
+                      .translate('change_ownership', 'already_invited'));
             } else {
-              await Future.wait(futures);
+              showProgressDialog(AppLocalizations.of(context)
+                  .translate('members', 'sending_invitation'));
               Map<String, dynamic> responseObj =
                   await checkChangeOwnershipStatus(
                       sevauserid: loggedInUser.sevaUserID,
                       timebankId: tbmodel.id);
+              print(
+                  "else error block ${responseObj.keys.toString() + " " + responseObj.values.toString()}");
+
               if (responseObj['transferable'] == true) {
                 print('yes transferable ');
+                invtitedUsers.add(selectedNewOwner.email);
                 sendNotificationToAdmin();
-              } else if (responseObj['taskCheck'] == true) {
-                dialogBox(
-                    message: AppLocalizations.of(context)
-                        .translate('change_ownership', 'pending_task'));
-              } else if (responseObj['pendingPaymentsCheck'] == true) {
-                dialogBox(
-                    message: AppLocalizations.of(context).translate(
-                                'change_ownership', 'pending_payment') +
-                            responseObj['planName'] ??
-                        '' +
-                            AppLocalizations.of(context).translate(
-                                'change_ownership', 'pending_payment_two'));
               } else {
-                //  print("else error block");
-                getErrorDialog(context);
-                Navigator.of(context).pop();
+                if (responseObj['tasksCheck'] == false) {
+                  if (progressContext != null) {
+                    Navigator.pop(progressContext);
+                  }
+                  dialogBox(
+                      message: AppLocalizations.of(context)
+                          .translate('change_ownership', 'pending_task'));
+                } else if (responseObj['pendingPaymentsCheck'] == false) {
+                  if (progressContext != null) {
+                    Navigator.pop(progressContext);
+                  }
+                  dialogBox(
+                      message: AppLocalizations.of(context).translate(
+                                  'change_ownership', 'pending_payment') +
+                              responseObj['planName'] ??
+                          '' +
+                              AppLocalizations.of(context).translate(
+                                  'change_ownership', 'pending_payment_two'));
+                } else {
+                  if (progressContext != null) {
+                    Navigator.pop(progressContext);
+                  }
+                  getErrorDialog(context);
+                }
+
+                //Navigator.of(context).pop();
               }
             }
           },
@@ -258,6 +279,20 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
         );
       },
     );
+  }
+
+  BuildContext progressContext;
+  void showProgressDialog(String message) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          progressContext = createDialogContext;
+          return AlertDialog(
+            title: Text(message),
+            content: LinearProgressIndicator(),
+          );
+        });
   }
 
   void dialogBox({String message}) {
@@ -485,6 +520,9 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
         .collection("notifications")
         .document(notification.id)
         .setData(notification.toMap());
+    if (progressContext != null) {
+      Navigator.pop(progressContext);
+    }
     getSuccessDialog(
         context: context,
         timebankName: tbmodel.name,

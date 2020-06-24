@@ -9,18 +9,53 @@ import '../../../../main_app.dart';
 import '../../../../main_seva_dev.dart' as dev;
 import '../billing_view.dart';
 
-class BillingPlanCard extends StatelessWidget {
+class BillingPlanCard extends StatefulWidget {
   final bool isSelected;
   final bool isPlanActive;
   final UserModel user;
   final BillingPlanDetailsModel plan;
+  final bool canBillMe;
+  final bool billMeVisibility;
   const BillingPlanCard({
     Key key,
     this.plan,
     this.user,
     this.isSelected = false,
     this.isPlanActive = false,
+    this.canBillMe,
+    this.billMeVisibility,
   }) : super(key: key);
+
+  @override
+  BillingPlanCardState createState() {
+    return BillingPlanCardState(
+        user: user,
+        billMeVisibility: billMeVisibility,
+        canBillMe: canBillMe,
+        isPlanActive: isPlanActive,
+        isSelected: isSelected,
+        plan: plan);
+  }
+}
+
+// the form.
+class BillingPlanCardState extends State<BillingPlanCard> {
+  final bool isSelected;
+  final bool isPlanActive;
+  final UserModel user;
+  final BillingPlanDetailsModel plan;
+  final bool canBillMe;
+  final bool billMeVisibility;
+  bool isBillMe = false;
+
+  BillingPlanCardState(
+      {this.isSelected,
+      this.isPlanActive,
+      this.user,
+      this.plan,
+      this.canBillMe,
+      this.billMeVisibility});
+
   @override
   Widget build(BuildContext context) {
     final textColor = isSelected ? Colors.white : Colors.black;
@@ -117,6 +152,51 @@ class BillingPlanCard extends StatelessWidget {
                     itemCount: plan.freeTransaction.length,
                   ),
                 ),
+                SizedBox(height: 4),
+                billMeVisibility
+                    ? Row(
+                        children: <Widget>[
+                          Text(
+                            AppLocalizations.of(context)
+                                .translate('billing_plans', 'bill_me'),
+                            style: TextStyle(fontSize: 14, color: textColor),
+                          ),
+                          SizedBox(width: 8),
+                          InkWell(
+                            onTap: () {
+                              _showBillMeDialog(
+                                  context,
+                                  AppLocalizations.of(context).translate(
+                                      'billing_plans', 'bill_me_info'));
+                            },
+                            child: CircleAvatar(
+                              radius: 8,
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                              child: Text(
+                                "i",
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            ),
+                          ),
+                          Checkbox(
+                            value: isBillMe,
+                            onChanged: (value) {
+                              if (canBillMe) {
+                                setState(() {
+                                  isBillMe = value;
+                                });
+                              } else {
+                                _showBillMeDialog(
+                                    context,
+                                    AppLocalizations.of(context).translate(
+                                        'billing_plans', 'bill_me_info_two'));
+                              }
+                            },
+                          )
+                        ],
+                      )
+                    : Offstage(),
                 Spacer(),
                 FlatButton(
                   shape: RoundedRectangleBorder(
@@ -227,6 +307,28 @@ class BillingPlanCard extends StatelessWidget {
               itemCount: plan.billableTransaction.length,
             ),
           ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text(
+                  AppLocalizations.of(context).translate('homepage', 'ok')),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showBillMeDialog(context, msg) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text(AppLocalizations.of(context)
+              .translate('billing_plans', 'billable_transactions')),
+          content: Text(msg),
           actions: <Widget>[
             new FlatButton(
               child: new Text(
