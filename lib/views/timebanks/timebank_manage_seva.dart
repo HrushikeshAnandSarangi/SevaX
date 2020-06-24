@@ -668,6 +668,7 @@ class _NotificationManagerForAminsState
               return SingleChildScrollView(
                 child: Column(
                   children: [
+                    lineDivider,
                     NotificationWidgetSwitch(
                       isTurnedOn: notificationSetting.acceptedRequest,
                       title: AppLocalizations.of(context).translate(
@@ -681,6 +682,7 @@ class _NotificationManagerForAminsState
                         );
                       },
                     ),
+                    lineDivider,
                     NotificationWidgetSwitch(
                       isTurnedOn: notificationSetting.requestCompleted,
                       title: AppLocalizations.of(context).translate(
@@ -694,6 +696,7 @@ class _NotificationManagerForAminsState
                         );
                       },
                     ),
+                    lineDivider,
                     NotificationWidgetSwitch(
                       isTurnedOn: notificationSetting.joinRequest,
                       title: AppLocalizations.of(context).translate(
@@ -710,6 +713,7 @@ class _NotificationManagerForAminsState
                         );
                       },
                     ),
+                    lineDivider,
                     NotificationWidgetSwitch(
                       isTurnedOn: notificationSetting.debitNotificationForOffer,
                       title: AppLocalizations.of(context)
@@ -724,6 +728,7 @@ class _NotificationManagerForAminsState
                         );
                       },
                     ),
+                    lineDivider,
                     NotificationWidgetSwitch(
                       isTurnedOn: notificationSetting.memberExit,
                       title: AppLocalizations.of(context).translate(
@@ -740,6 +745,7 @@ class _NotificationManagerForAminsState
                         );
                       },
                     ),
+                    lineDivider,
                     NotificationWidgetSwitch(
                       isTurnedOn: notificationSetting.softDeleteRequest,
                       title: AppLocalizations.of(context).translate(
@@ -753,6 +759,7 @@ class _NotificationManagerForAminsState
                         );
                       },
                     ),
+                    lineDivider,
                     NotificationWidgetSwitch(
                       isTurnedOn:
                           notificationSetting.creditNotificationForOffer,
@@ -768,9 +775,18 @@ class _NotificationManagerForAminsState
                         );
                       },
                     ),
+                  lineDivider
                   ],
                 ),
               );
             }));
+  }
+
+  Widget get lineDivider {
+    return Container(
+      margin: EdgeInsets.only(left: 15, right: 15),
+      height: 1,
+      color: Color.fromARGB(100, 233, 233, 233),
+    );
   }
 }

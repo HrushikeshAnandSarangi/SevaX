@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class NotificationWidgetSwitch extends StatefulWidget {
@@ -16,7 +17,6 @@ class NotificationWidgetSwitch extends StatefulWidget {
   @override
   _NotificationWidgetSwitchState createState() =>
       _NotificationWidgetSwitchState();
-
 
   static void updateNotificationFormAdmin({
     String timebankId,
@@ -54,20 +54,25 @@ class _NotificationWidgetSwitchState extends State<NotificationWidgetSwitch> {
             title: Text(
               widget.title,
               style: TextStyle(
-                  fontFamily: 'Europa',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16),
+                fontFamily: 'Europa',
+                // fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
             ),
-            trailing: CupertinoSwitch(
-              activeColor: Theme.of(context).primaryColor,
-              value: switchStatus,
-              onChanged: (value) {
-                switchStatus = value;
-
-                widget.onPressed(value);
-
-                setState(() {});
-              },
+            trailing: Transform.scale(
+              scale: 0.8,
+              child: Transform(
+                transform: Matrix4.diagonal3Values(0.9, 0.9, 0),
+                child: CupertinoSwitch(
+                  activeColor: Theme.of(context).primaryColor,
+                  value: switchStatus,
+                  onChanged: (value) {
+                    switchStatus = value;
+                    widget.onPressed(value);
+                    setState(() {});
+                  },
+                ),
+              ),
             ),
           )
         ],
@@ -75,4 +80,3 @@ class _NotificationWidgetSwitchState extends State<NotificationWidgetSwitch> {
     );
   }
 }
-
