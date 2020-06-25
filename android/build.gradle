@@ -33,3 +33,16 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+
+    project.evaluationDependsOn(':app')
+
+    afterEvaluate {project ->
+        if (project.hasProperty("android") && project.property("android").compileSdkVersion.equals("android-R")) {
+            android {
+                compileSdkVersion 30
+            }
+        }
+    }
+}

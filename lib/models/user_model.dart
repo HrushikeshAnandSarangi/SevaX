@@ -114,7 +114,6 @@ class UserModel extends DataModel {
     if (map.containsKey('completedIntro')) {
       this.completedIntro = map['completedIntro'];
     }
-    print('temp 22');
 
     if (map.containsKey('blockedMembers')) {
       List<String> blockedMembers = List.castFrom(map['blockedMembers']);
@@ -147,7 +146,6 @@ class UserModel extends DataModel {
     if (map.containsKey('bio')) {
       this.bio = map['bio'];
     }
-    print('temp 3');
     if (map.containsKey('notificationsRead')) {
       this.notificationsRead = map['notificationsRead'];
     }
@@ -186,7 +184,6 @@ class UserModel extends DataModel {
     if (map.containsKey('sevauserid')) {
       this.sevaUserID = map['sevauserid'];
     }
-    print('temp 2');
     if (map.containsKey('skills')) {
       List<String> skillsList = List.castFrom(map['skills']);
       this.skills = skillsList;
@@ -201,7 +198,6 @@ class UserModel extends DataModel {
           List.castFrom(map['favoriteByTimeBank']);
       this.favoriteByTimeBank = favoriteByTimeBankList;
     }
-    print('temp 1');
     if (map.containsKey('currentBalance')) {
       this.currentBalance = map['currentBalance'].toDouble();
     } else {
