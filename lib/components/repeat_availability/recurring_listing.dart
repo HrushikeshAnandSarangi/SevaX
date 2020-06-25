@@ -4,6 +4,7 @@ import 'package:sevaexchange/components/repeat_availability/recurring_list_data_
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
@@ -43,8 +44,8 @@ class _RecurringRequestListState extends State<RecurringRequestList> {
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.data != null) {
                   List<RequestModel> requestModelList = snapshot.data;
-                    print("snapshot data is ==== ${snapshot.data.toString()}");
-                  requestModelList.forEach((k) => print('snapshot data is ==> ${k}'));
+                    print("snapshot data is ==== ${snapshot.data.length}");
+                  requestModelList.forEach((k) => print('snapshot id is ==> ${k.id}'));
                   return RecurringList(requestModelList,widget.timebankModel);
                 } else {
                   return Center(child: CircularProgressIndicator());
@@ -75,7 +76,9 @@ class _RecurringListState extends State<RecurringList> {
   Widget build(BuildContext context) {
     return new ListView.builder(
         itemCount: widget.model.length,
-        itemBuilder: (BuildContext context, int index) => Container(
+        itemBuilder: (BuildContext context, int index){
+          print("occurenceCounttt===>${widget.model[index].occurenceCount} ${widget.model[index].requestStart}");
+          return Container(
               margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
               child: Card(
                 color: Colors.white,
@@ -150,11 +153,11 @@ class _RecurringListState extends State<RecurringList> {
                   ),
                 ),
               ),
-            ));
+            );});
   }
 
   void editRequest({RequestModel model,TimebankModel timebankModel}) {
-
+    timeBankBloc.setSelectedRequest(model);
     if (model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
         widget.timebankModel.admins
             .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {

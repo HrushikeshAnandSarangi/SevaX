@@ -11,7 +11,8 @@ class RecurringListDataManager {
         .collection('requests')
         .where('softDelete', isEqualTo: false)
         .where('accepted', isEqualTo: false)
-        .where('parent_request_id', isEqualTo: parentRequestId);
+        .where('parent_request_id', isEqualTo: parentRequestId)
+        .orderBy('request_start',descending: false);
     var data = query.snapshots();
     yield* data.transform(
       StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(

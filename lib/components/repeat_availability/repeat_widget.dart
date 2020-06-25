@@ -138,7 +138,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                   ),
                   Text("Repeat",
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Europa',
                         color: Colors.black,

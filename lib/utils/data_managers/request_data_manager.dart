@@ -891,11 +891,14 @@ Stream<RequestModel> getRequestStreamById({
   );
 }
 
-Future<void> updateRecurrenceRequests(RequestModel requestModel) async {
+Future<void> updateRecurrenceRequests(String requestId) async {
   final response = await http.post(
       '${FlavorConfig.values.cloudFunctionBaseURL}/updateRecurrenceRequests',
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"updatedRequestModel": requestModel}));
+//      headers: {"Content-Type": "application/json"},
+//      body: json.encode({"updatedRequestModel": requestModel.toMap()}));
+
+      body: {"updatedRequestModelId": requestId});
+
   print("recurrence updation statusCode === "+response.statusCode.toString());
 }
 

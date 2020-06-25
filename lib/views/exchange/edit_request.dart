@@ -98,7 +98,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   String selectedAddress;
 
   String _selectedTimebankId;
-
+  int oldHours =0;
   TextStyle hintTextStyle = TextStyle(
     fontSize: 14,
     // fontWeight: FontWeight.bold,
@@ -114,7 +114,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     this.requestModel.timebankId = _selectedTimebankId;
     this.location = widget.requestModel.location;
     this.selectedAddress = widget.requestModel.address;
-
+    this.oldHours = widget.requestModel.numberOfHours;
     //this.selectedUsers = widget.requestModel.approvedUsers;
   }
 
@@ -350,6 +350,16 @@ class RequestEditFormState extends State<RequestEditForm> {
                     width: 250,
                     child: RaisedButton(
                       onPressed: () async {
+                        if(widget.requestModel.requestMode.toString()=="PERSONAL_REQUEST" && oldHours!=widget.requestModel.numberOfHours){
+                          var onBalanceCheckResult = await RequestManager.hasSufficientCredits(
+                            credits: requestModel.numberOfHours.toDouble(),
+                            userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                          );
+                          if (!onBalanceCheckResult) {
+                            showInsufficientBalance();
+                            return;
+                          }
+                        }
                         if (location != null) {
                           widget.requestModel.requestStart =
                               OfferDurationWidgetState.starttimestamp;
@@ -388,6 +398,10 @@ class RequestEditFormState extends State<RequestEditForm> {
                                       onPressed: () async {
                                         editType = 0;
                                         Navigator.pop(viewContext);
+                                        linearProgressForCreatingRequest();
+                                        await updateRequest(requestModel: widget.requestModel);
+                                        Navigator.pop(dialogContext);
+                                        Navigator.pop(context);
 
                                       },
                                     ),
@@ -402,6 +416,24 @@ class RequestEditFormState extends State<RequestEditForm> {
                                       onPressed: () async {
                                         editType=1;
                                         Navigator.pop(viewContext);
+                                        linearProgressForCreatingRequest();
+                                        await updateRequest(requestModel: widget.requestModel);
+                                        await RequestManager.updateRecurrenceRequests(widget.requestModel.id);
+                                        Navigator.pop(dialogContext);
+                                        Navigator.pop(context);
+
+                                      },
+                                    ),
+                                    FlatButton(
+                                      child: Text(
+                                        "cancel",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontFamily: 'Europa'),
+                                      ),
+                                      onPressed: () async {
+                                        Navigator.pop(viewContext);
                                       },
                                     ),
                                   ]
@@ -410,15 +442,14 @@ class RequestEditFormState extends State<RequestEditForm> {
                               );
                             });
 
-                            linearProgressForCreatingRequest();
+//                            linearProgressForCreatingRequest();
 
-                            await updateRequest(requestModel: widget.requestModel);
+//                              await updateRequest(requestModel: widget.requestModel);
+//
+//                              if(editType==1){
+//                                await RequestManager.updateRecurrenceRequests(widget.requestModel);
+//                              }
 
-                            if(editType==1){
-                              await RequestManager.updateRecurrenceRequests(widget.requestModel);
-                            }
-                            Navigator.pop(dialogContext);
-                            Navigator.pop(context);
 
                           } else {
 
@@ -528,6 +559,31 @@ class RequestEditFormState extends State<RequestEditForm> {
         .collection('requests')
         .document(requestModel.id)
         .updateData(requestModel.toMap());
+  }
+
+  void showInsufficientBalance() {
+    showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(AppLocalizations.of(context)
+                .translate('create_request', 'not_enough_seva')),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  AppLocalizations.of(context)
+                      .translate('create_request', 'ok'),
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   Future _getLocation() async {

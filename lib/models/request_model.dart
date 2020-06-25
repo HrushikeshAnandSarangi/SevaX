@@ -344,9 +344,8 @@ class RequestModel extends DataModel {
       this.occurenceCount = map['occurenceCount'];
     }
     if (map.containsKey('end')) {
-      print("prift ==== ${End.fromMap(map['end']).toMap()}");
-      print(map['end'].toString());
-      this.end = End.fromMap(map['end']);
+
+      this.end = End.fromMap(Map<String, dynamic>.from(map['end']));
     }
     if (map.containsKey('parent_request_id')) {
       this.parent_request_id = map['parent_request_id'];
@@ -594,7 +593,7 @@ class RequestModel extends DataModel {
       object['numberOfApprovals'] = this.numberOfApprovals;
     }
     if (this.location != null) {
-      object['location'] = this.location.data;
+      object['location'] = Map<String, dynamic>.from(this.location.data);
     }
     if (this.id != null) {
       object['id'] = this.id;

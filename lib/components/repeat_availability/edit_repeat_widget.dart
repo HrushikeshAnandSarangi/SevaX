@@ -147,7 +147,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                   ),
                   Text("Repeat",
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Europa',
                         color: Colors.black,
@@ -157,7 +157,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(20.0, 8.0, 8.0, 8.0),
                       child: Container(
-                        width: 180.0,
+                        width: 160.0,
                         alignment: Alignment.topLeft,
                         padding: const EdgeInsets.fromLTRB(12.0, 8.0, 8.0, 8.0),
                         decoration: BoxDecoration(
