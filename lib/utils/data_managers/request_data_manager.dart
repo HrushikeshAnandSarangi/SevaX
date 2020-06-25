@@ -15,6 +15,7 @@ import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:http/http.dart' as http;
 
 import '../app_config.dart';
 import 'notifications_data_manager.dart';
@@ -888,6 +889,14 @@ Stream<RequestModel> getRequestStreamById({
       },
     ),
   );
+}
+
+Future<void> updateRecurrenceRequests(RequestModel requestModel) async {
+  final response = await http.post(
+      '${FlavorConfig.values.cloudFunctionBaseURL}/updateRecurrenceRequests',
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({"updatedRequestModel": requestModel}));
+  print("recurrence updation statusCode === "+response.statusCode.toString());
 }
 
 Stream<ProjectModel> getProjectStream({

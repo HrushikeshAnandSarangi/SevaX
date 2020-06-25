@@ -12,10 +12,12 @@ import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart' as RequestManager;
 
 class EditRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -86,6 +88,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   final GlobalKey<_EditRequestState> _offerState = GlobalKey();
   final GlobalKey<OfferDurationWidgetState> _calendarState = GlobalKey();
   End end = End();
+  int editType = 0;
   final _formKey = GlobalKey<FormState>();
 
   RequestModel requestModel = RequestModel();
@@ -365,8 +368,67 @@ class RequestEditFormState extends State<RequestEditForm> {
                             widget.requestModel.end = end;
                             print("request model is = ${requestModel.toMap()}");
 
+                            showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (BuildContext viewContext) {
+                              return WillPopScope(
+                                onWillPop: () {},
+                                child:AlertDialog(
+                                  title:Text("This is a repeating event"),
+                                  actions:[
+                                    FlatButton(
+                                      child: Text(
+                                        "Edit this event only",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontFamily: 'Europa'),
+                                      ),
+                                      onPressed: () async {
+                                        editType = 0;
+                                        Navigator.pop(viewContext);
+
+                                      },
+                                    ),
+                                    FlatButton(
+                                      child: Text(
+                                        "Edit subsequent events",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontFamily: 'Europa'),
+                                      ),
+                                      onPressed: () async {
+                                        editType=1;
+                                        Navigator.pop(viewContext);
+                                      },
+                                    ),
+                                  ]
+
+                                )
+                              );
+                            });
+
+                            linearProgressForCreatingRequest();
+
+                            await updateRequest(requestModel: widget.requestModel);
+
+                            if(editType==1){
+                              await RequestManager.updateRecurrenceRequests(widget.requestModel);
+                            }
+                            Navigator.pop(dialogContext);
+                            Navigator.pop(context);
+
+                          } else {
+
+                            linearProgressForCreatingRequest();
+
+                            await updateRequest(requestModel: widget.requestModel);
+
+                            Navigator.pop(dialogContext);
+                            Navigator.pop(context);
                           }
-                          await updateRequest(requestModel:widget.requestModel);
                         } else {
                           Scaffold.of(context).showSnackBar(SnackBar(
                             content: Text('Location not added'),
@@ -398,7 +460,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           dialogContext = createDialogContext;
           return AlertDialog(
             title: Text(AppLocalizations.of(context).translate(
-                'create_request', 'progress')),
+                'create_request', 'progress_update')),
             content: LinearProgressIndicator(),
           );
         });
