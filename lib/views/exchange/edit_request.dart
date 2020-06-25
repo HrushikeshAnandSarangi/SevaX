@@ -85,7 +85,7 @@ class RequestEditForm extends StatefulWidget {
 class RequestEditFormState extends State<RequestEditForm> {
   final GlobalKey<_EditRequestState> _offerState = GlobalKey();
   final GlobalKey<OfferDurationWidgetState> _calendarState = GlobalKey();
-
+  End end = End();
   final _formKey = GlobalKey<FormState>();
 
   RequestModel requestModel = RequestModel();
@@ -299,16 +299,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                       .translate(
                       'create_request', 'no_of_volunteers'),
                   hintStyle: hintTextStyle,
-
-                  // border: OutlineInputBorder(
-                  //   borderRadius: const BorderRadius.all(
-                  //     const Radius.circular(20.0),
-                  //   ),
-                  //   borderSide: new BorderSide(
-                  //     color: Colors.black,
-                  //     width: 1.0,
-                  //   ),
-                  // ),
                 ),
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
@@ -364,43 +354,19 @@ class RequestEditFormState extends State<RequestEditForm> {
                               OfferDurationWidgetState.endtimestamp;
                           widget.requestModel.location = location;
                           widget.requestModel.address = selectedAddress;
-
-                          //adding some members for humanity first
-//                        List<String> arrayOfSelectedMembers = List();
-//                        selectedUsers
-//                            .forEach((k, v) => arrayOfSelectedMembers.add(k));
-//                        requestModel.approvedUsers = arrayOfSelectedMembers;
                           print("request model data === ${widget.requestModel.toMap()}");
-                          //adding some members for humanity first
 
-                          /*if (_formKey.currentState.validate()) {
-                            linearProgressForCreatingRequest();
-                            await this.updateRequest(
-                                requestModel: widget.requestModel);
+                          if(widget.requestModel.isRecurring) {
+                            widget.requestModel.recurringDays = EditRepeatWidgetState.getRecurringdays();
+                            end.endType = EditRepeatWidgetState.endType == 0 ? "on" : "after";
+                            end.on = end.endType=="on" ? EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch:null;
+                            end.after = (end.endType =="after" ? int.parse(EditRepeatWidgetState.after) : 1);
+                            print("end model is = ${end.toMap()}");
+                            widget.requestModel.end = end;
+                            print("request model is = ${requestModel.toMap()}");
 
-//                          if (widget.isOfferRequest == true) {
-//                            OfferModel offer = widget.offer;
-//
-//                            Set<String> offerRequestList = () {
-//                              if (offer.requestList == null) return [];
-//                              return offer.requestList;
-//                            }()
-//                                .toSet();
-//                            offerRequestList.add(requestModel.id);
-//                            offer.requestList = offerRequestList.toList();
-//                            FirestoreManager.updateOfferWithRequest(
-//                                offer: offer);
-//                            sendOfferRequest(
-//                                offerModel: widget.offer,
-//                                requestSevaID: requestModel.sevaUserId);
-//                            Navigator.pop(context);
-//                            Navigator.pop(context);
-//                          }
-                            if (dialogContext != null) {
-                              Navigator.pop(dialogContext);
-                            }
-                            Navigator.pop(context);
-                          }*/
+                          }
+                          await updateRequest(requestModel:widget.requestModel);
                         } else {
                           Scaffold.of(context).showSnackBar(SnackBar(
                             content: Text('Location not added'),
@@ -417,78 +383,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                   ),
                 ),
               ),
-//               Padding(
-//                 padding: const EdgeInsets.symmetric(vertical: 16.0),
-//                 child: Center(
-//                   child: RaisedButton(
-//                     shape: StadiumBorder(),
-//                     color: Theme.of(context).accentColor,
-//                     onPressed: () async {
-//                       if (location != null) {
-//                         widget.requestModel.requestStart =
-//                             OfferDurationWidgetState.starttimestamp;
-//                         widget.requestModel.requestEnd =
-//                             OfferDurationWidgetState.endtimestamp;
-//                         widget.requestModel.location = location;
-
-//                         //adding some members for humanity first
-// //                        List<String> arrayOfSelectedMembers = List();
-// //                        selectedUsers
-// //                            .forEach((k, v) => arrayOfSelectedMembers.add(k));
-// //                        requestModel.approvedUsers = arrayOfSelectedMembers;
-//                         print(widget.requestModel.toMap());
-//                         //adding some members for humanity first
-
-//                         if (_formKey.currentState.validate()) {
-//                           await this
-//                               .updateRequest(requestModel: widget.requestModel);
-
-// //                          if (widget.isOfferRequest == true) {
-// //                            OfferModel offer = widget.offer;
-// //
-// //                            Set<String> offerRequestList = () {
-// //                              if (offer.requestList == null) return [];
-// //                              return offer.requestList;
-// //                            }()
-// //                                .toSet();
-// //                            offerRequestList.add(requestModel.id);
-// //                            offer.requestList = offerRequestList.toList();
-// //                            FirestoreManager.updateOfferWithRequest(
-// //                                offer: offer);
-// //                            sendOfferRequest(
-// //                                offerModel: widget.offer,
-// //                                requestSevaID: requestModel.sevaUserId);
-// //                            Navigator.pop(context);
-// //                            Navigator.pop(context);
-// //                          }
-//                           Navigator.pop(context);
-//                         }
-//                       } else {
-//                         Scaffold.of(context).showSnackBar(SnackBar(
-//                           content: Text('Location not added'),
-//                         ));
-//                       }
-//                     },
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.center,
-//                       children: <Widget>[
-//                         Icon(
-//                           Icons.attachment,
-//                           size: 24.0,
-//                           color: FlavorConfig.values.buttonTextColor,
-//                         ),
-//                         Text(' '),
-//                         Text(
-//                           'Update Campign Request',
-//                           style: TextStyle(
-//                             color: FlavorConfig.values.buttonTextColor,
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ),
             ],
           ),
         ),
@@ -562,6 +456,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       ),
     );
   }
+
   Future<void> updateRequest({
     @required RequestModel requestModel,
   }) async {

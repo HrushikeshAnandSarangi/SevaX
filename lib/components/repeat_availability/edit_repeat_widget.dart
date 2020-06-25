@@ -13,7 +13,7 @@ class EditRepeatWidget extends StatefulWidget {
 }
 
 class EditRepeatWidgetState extends State<EditRepeatWidget> {
-  RequestModel requestModel;
+  RequestModel requestModel ;
   List<String> dayNameList = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
   List<String> daysName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   List<String> occurenccesList = [
@@ -31,21 +31,26 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
 
   static List<bool> _selected;
   static List<int> recurringDays = [];
-
+  static DateTime selectedDate = DateTime.now();
+  static int endType = 0;
+  static String after = "";
   @override
   void initState() {
     super.initState();
+    requestModel = widget.requestModel;
     print("request mode recurring data ${widget.requestModel.isRecurring}");
-    _selected = List.generate(dayNameList.length, (i) => false);
-    _selected[1] = true;
+    _selected = List.generate(dayNameList.length, (i) =>requestModel.recurringDays.contains(i) ? true : false);
+    endType = requestModel.end.endType=="on"? 0 : 1;
+    selectedDate = requestModel.end.endType=="on"?new DateTime.fromMillisecondsSinceEpoch(requestModel.end.on*1000) : DateTime.now();
+    after = requestModel.end.endType=="on"?"1":requestModel.end.after.toString();
 //    recurringDays = new List(7);
   }
 
   static bool isRecurring = true;
   bool viewVisible = false;
   bool titleCheck = true;
-  static int endType = 0;
-  static String after = '1';
+
+
   static String selectedDays = 'Monday';
 
   double _result = 0.0;
@@ -98,7 +103,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
     });
   }
 
-  static DateTime selectedDate = DateTime.now();
+
   DateFormat dateFormat = new DateFormat.yMMMd();
 
 //  var now = new DateTime.now();
@@ -164,7 +169,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                             child: Text("Weekly on $selectedDays",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontFamily: 'Europa',
                                   color: Colors.black,
                                 ))),
@@ -252,7 +257,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                           ),
                           Text("On",
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Europa',
                                 color: endType == 0
@@ -260,7 +265,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                                     : Colors.black12,
                               )),
                           Container(
-                            width: 180.0,
+                            width: 160.0,
                             alignment: Alignment.topLeft,
                             margin: EdgeInsets.fromLTRB(38.0, 8.0, 8.0, 8.0),
                             padding: const EdgeInsets.fromLTRB(
@@ -294,7 +299,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                           ),
                           Text("After",
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Europa',
                                 color: endType == 1
@@ -302,7 +307,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                                     : Colors.black12,
                               )),
                           Container(
-                            width: 180.0,
+                            width: 160.0,
                             alignment: Alignment.topLeft,
                             margin: EdgeInsets.fromLTRB(20.0, 8.0, 8.0, 8.0),
                             padding:
@@ -328,7 +333,13 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                                                 (String number) {
                                               return DropdownMenuItem(
                                                 value: number,
-                                                child: new Text(number),
+                                                child: new Text(number, style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'Europa',
+                                                  color: endType == 1
+                                                      ? Colors.black54
+                                                      : Colors.black12,),),
                                               );
                                             }).toList(),
                                       ),

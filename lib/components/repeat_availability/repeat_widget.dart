@@ -33,7 +33,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
   void initState() {
     super.initState();
     _selected = List.generate(dayNameList.length, (i) => false);
-    _selected[1] = true;
+//    _selected[1] = true;
 //    recurringDays = new List(7);
   }
 
@@ -148,7 +148,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(20.0, 8.0, 8.0, 8.0),
                       child: Container(
-                        width: 180.0,
+                        width: 160.0,
                         alignment: Alignment.topLeft,
                         padding: const EdgeInsets.fromLTRB(12.0, 8.0, 8.0, 8.0),
                         decoration: BoxDecoration(
@@ -160,7 +160,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                             child: Text("Weekly on $selectedDays",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontFamily: 'Europa',
                                   color: Colors.black,
                                 ))),
@@ -248,7 +248,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                           ),
                           Text("On",
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Europa',
                                 color: endType == 0
@@ -256,9 +256,9 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                     : Colors.black12,
                               )),
                           Container(
-                            width: 180.0,
+                            width: 160.0,
                             alignment: Alignment.topLeft,
-                            margin: EdgeInsets.fromLTRB(38.0, 8.0, 8.0, 8.0),
+                            margin: EdgeInsets.fromLTRB(34.0, 8.0, 8.0, 8.0),
                             padding: const EdgeInsets.fromLTRB(
                                 12.0, 15.0, 12.0, 15.0),
                             decoration: BoxDecoration(
@@ -290,7 +290,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                           ),
                           Text("After",
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 14,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Europa',
                                 color: endType == 1
@@ -298,7 +298,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                     : Colors.black12,
                               )),
                           Container(
-                            width: 180.0,
+                            width: 160.0,
                             alignment: Alignment.topLeft,
                             margin: EdgeInsets.fromLTRB(20.0, 8.0, 8.0, 8.0),
                             padding:
@@ -324,7 +324,13 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                             (String number) {
                                       return DropdownMenuItem(
                                         value: number,
-                                        child: new Text(number),
+                                        child: new Text(number, style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Europa',
+                                          color: endType == 1
+                                              ? Colors.black54
+                                              : Colors.black12,),),
                                       );
                                     }).toList(),
                                   ),

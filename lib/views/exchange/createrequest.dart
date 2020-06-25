@@ -622,7 +622,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         requestModel.occurenceCount = 1;
         end.endType = RepeatWidgetState.endType == 0 ? "on" : "after";
         end.on = end.endType=="on" ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch:null;
-        end.after = (end.endType =="after" ? int.parse(RepeatWidgetState.after)+1 :1);
+        end.after = (end.endType =="after" ? int.parse(RepeatWidgetState.after) : 1);
         print("end model is = ${end.toMap()} ${end.endType}");
         requestModel.end = end;
       print("request model is = ${requestModel.toMap()}");
