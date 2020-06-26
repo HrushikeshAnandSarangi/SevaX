@@ -920,10 +920,11 @@ Future<void> updateRecurrenceRequests(String requestId) async {
 
       body: {"updatedRequestModelId": requestId});
 
-  print("recurrence updation statusCode === "+response.toString());
+  print("recurrence updation statusCode === " + response.toString());
 }
 
-Stream<ProjectModel> getProjectStream({notifications
+Stream<ProjectModel> getProjectStream({
+  notifications,
   @required String projectId,
 }) async* {
   var data =
@@ -1091,12 +1092,8 @@ Future<bool> hasSufficientCredits({
   return maxAvailableBalance - credits >= 0;
 }
 
-Future<bool> hasSufficientCreditsIncludingRecurring({
-  String userId,
-  double credits,
-  int recurrences,
-  bool isRecurring
-}) async {
+Future<bool> hasSufficientCreditsIncludingRecurring(
+    {String userId, double credits, int recurrences, bool isRecurring}) async {
   var sevaCoinsBalance = await getMemberBalance(
     userId,
   );
@@ -1110,7 +1107,7 @@ Future<bool> hasSufficientCreditsIncludingRecurring({
   }
 
   var maxAvailableBalance = (sevaCoinsBalance + lowerLimit ?? 50);
-var creditsNew = isRecurring? credits*recurrences : credits;
+  var creditsNew = isRecurring ? credits * recurrences : credits;
   print(
       "Seva Credits ($sevaCoinsBalance) Credits requested $credits ----------------------------- LOWER LIMIT BALANCE $maxAvailableBalance can credit + ${maxAvailableBalance - credits >= 0}");
 
