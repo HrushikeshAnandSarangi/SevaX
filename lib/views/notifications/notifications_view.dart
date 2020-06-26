@@ -165,11 +165,11 @@ class NotificationsView extends State<NotificationViewHolder> {
                           ChangeOwnershipModel.fromMap(notification.data);
                       // TODO needs flow correction to tasks model and transaction model
                       return getChangeOwnershipNotificationWidget(
-                        notificationId: notification.id,
-                        communityId: notification.communityId,
-                        changeOwnershipModel: ownershipModel,
-                        timebankId: notification.timebankId,
-                      );
+                          notificationId: notification.id,
+                          communityId: notification.communityId,
+                          changeOwnershipModel: ownershipModel,
+                          timebankId: notification.timebankId,
+                          notificationsModel: notification);
                       break;
                     case NotificationType.RequestApprove:
                       RequestModel model =
@@ -612,6 +612,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 
   Widget getChangeOwnershipNotificationWidget({
     ChangeOwnershipModel changeOwnershipModel,
+    NotificationsModel notificationsModel,
     String notificationId,
     BuildContext buildContext,
     String timebankId,
@@ -635,6 +636,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                 changeOwnershipModel: changeOwnershipModel,
                 timeBankId: timebankId,
                 notificationId: notificationId,
+                notificationModel: notificationsModel,
+                loggedInUser: user,
               );
             });
       },

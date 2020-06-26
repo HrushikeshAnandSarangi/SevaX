@@ -819,6 +819,8 @@ class CreateEditCommunityViewFormState
                                         snapshot.data.community.softDelete =
                                             false;
 
+                                        snapshot.data.community.billMe = false;
+
                                         await createEditCommunityBloc
                                             .createCommunity(
                                           snapshot.data,

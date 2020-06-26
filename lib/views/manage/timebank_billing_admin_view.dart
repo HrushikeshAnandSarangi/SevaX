@@ -362,6 +362,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                             SevaCore.of(context).loggedInUser.currentCommunity,
                             planName,
                             user: SevaCore.of(context).loggedInUser,
+                            isFromChangeOwnership: false,
                           ),
                         ),
                       );

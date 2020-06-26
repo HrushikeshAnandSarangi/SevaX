@@ -207,7 +207,11 @@
     "contact": "Entre em contato com o suporte da SevaX para alterar os planos",
     "close": "Fechar",
     "billing_plans": "Você está no plano comunitário",
-    "progress": "Levando você ao seu novo Banco de tempo ..."
+    "progress": "Levando você ao seu novo Banco de tempo ...",
+    "bill_me": "me fature",
+    "bill_me_info": "Isso está disponível apenas para usuários que têm acordos prévios com o Seva Exchange. Envie um email para billme@sevaexchange.com para obter detalhes.",
+    "bill_me_info_two": "Somente usuários que foram aprovados a priori podem marcar a caixa \"Bill Me\". Se você quiser fazer isso, envie um email para billme@sevaexchange.com."
+
   },
   "explore": {
     "title": "Explorar",
@@ -397,7 +401,8 @@
     "title_about": "Título",
     "mission_statement": "Declaração de missão",
     "organizer": "Organizador",
-    "delete_project": "Eliminar projeto"
+    "delete_project": "Eliminar projeto",
+    "new_project": "Novo projeto"
   },
   "tasks": {
     "error": "Erro:",
@@ -520,7 +525,12 @@
     "reason_to_join": "Motivo para participar",
     "not_mentioned": "Razão não mencionada",
     "allow": "Permitir",
-    "timebank_exit": sair do banco de tempo ",
+    "timebank_exit": "sair do banco de tempo",
+    "exited_from": "ha salido de",
+    "tap_to_view": "Toca para ver los detalles",
+    "added_you": "te ha agregado a",
+    "timebank_join": "Timebank Join",
+    "group_invite": "Invitación para unirse al grupo"
     "exited_from": "saiu de",
     "tap_to_view": "Toque para ver os detalhes",
     "added_you": "adicionou você a",
@@ -1109,7 +1119,9 @@
     "download_success": "O download está concluído.",
     "csv_file_alert": "Arquivos maiores que 1 MB não são permitidos",
     "csv_size_limit": "NOTA: O tamanho máximo do arquivo é 1 MB",
-    "csv_progress": "Fazendo upload de arquivo CSV"
+    "csv_progress": "Fazendo upload de arquivo CSV",
+    "upload_success": "Carregado com sucesso"
+
   },
   "external_notifications": {
     "notification_title": "Notificações",
@@ -1138,6 +1150,26 @@
   },
   "change_ownership": {
     "change_ownership_title": "Alterar propriedade",
-    "change": "Change"
+    "change": "mudança",
+    "change_hint": "Alterar propriedade deste ",
+    "change_hint_three": " para outro administrador.",
+    "change_hint_two": "Mudar para",
+    "invitation_sent": "Enviámos a sua transferência de convite de propriedade. Você continuará sendo o proprietário do Timebank ",
+    "invitation_sent_two": " até ",
+    "invitation_sent_three": " aceita o convite e fornece suas novas informações de cobrança.",
+    "notification_msg": "convidou você para ser o novo proprietário do Timebank",
+    "accept": "Aceitar",
+    "change_alert": "Ao aceitar, você se tornará proprietário do timebank",
+    "users_empty": "Por favor selecione um usuário",
+    "pending_task": "Você tem tarefas pendentes. Conclua estas tarefas antes que a propriedade possa ser transferida",
+    "pending_payment": "Você tem pagamento pendente de ",
+    "pending_payment_two": ". Complete este pagamento antes que a propriedade possa ser transferida",
+    "search_admin": "Pesquisar administrador",
+    "change_message": "Você é o novo proprietário do Timebank ",
+    "change_message_two": " Você precisa aceitá-lo para concluir o processo",
+    "change_advisory": " Você precisa fornecer detalhes de cobrança para este Timebank, incluindo o novo endereço de cobrança. A transferência de propriedade não será concluída até que isso seja feito.",
+    "ownership_suceess": "Parabéns! Agora você é o novo proprietário do Timebank ",
+    "already_invited": " já convidado."
+
   }
 }

@@ -166,15 +166,17 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           ),
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.only(left: 10, right: 10),
-        child: FutureBuilder(
-          future: getTimebankDetails,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return CircularProgressIndicator();
-            return inviteCodeWidget;
-          },
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(left: 10, right: 10),
+          child: FutureBuilder(
+            future: getTimebankDetails,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return CircularProgressIndicator();
+              return inviteCodeWidget;
+            },
+          ),
         ),
       ),
     );
@@ -231,6 +233,19 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         headingTitle(
             AppLocalizations.of(context).translate('members', 'members')),
         buildList(),
+        Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Divider(
+            color: Colors.black54,
+          ),
+        ),
+        uploadCSVWidget(),
+        Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Divider(
+            color: Colors.black54,
+          ),
+        ),
         !widget.timebankModel.private == true
             ? Padding(
                 padding: EdgeInsets.all(5),
@@ -477,6 +492,20 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                       if (dialogContext != null) {
                         Navigator.pop(dialogContext);
                       }
+                      _scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            AppLocalizations.of(context)
+                                .translate('upload_csv', 'upload_success'),
+                          ),
+                          action: SnackBarAction(
+                            label: AppLocalizations.of(context)
+                                .translate('shared', 'dismiss'),
+                            onPressed: () =>
+                                _scaffoldKey.currentState.hideCurrentSnackBar(),
+                          ),
+                        ),
+                      );
                       setState(() {
                         this.csvFileError = '';
                         csvFileModel.csvTitle = null;
@@ -532,12 +561,10 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Future<String> uploadDocument() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
-    StorageReference ref = FirebaseStorage.instance
-        .ref()
-        .child('csv_files')
-        .child(SevaCore.of(context).loggedInUser.email +
-            timestampString +
-            _fileName);
+    String name =
+        SevaCore.of(context).loggedInUser.email + timestampString + _fileName;
+    StorageReference ref =
+        FirebaseStorage.instance.ref().child('csv_files').child(name);
     StorageUploadTask uploadTask = ref.putFile(
       File(_path),
       StorageMetadata(
@@ -548,7 +575,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     String documentURL =
         await (await uploadTask.onComplete).ref.getDownloadURL();
 
-    csvFileModel.csvTitle = _fileName;
+    csvFileModel.csvTitle = name;
     csvFileModel.csvUrl = documentURL;
     // _setAvatarURL();
     // _updateDB();
@@ -605,13 +632,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   }
 
   Widget buildList() {
-    if (searchTextController.text.trim().length < 1) {
-      return Column(
-        children: <Widget>[
-          uploadCSVWidget(),
-        ],
-      );
-    }
     return StreamBuilder<List<UserModel>>(
         stream: SearchManager.searchUserInSevaX(
           queryString: searchTextController.text,
@@ -655,18 +675,17 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               ),
             );
           }
-          return Expanded(
-            child: Padding(
-                padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: userlist.length,
-                    itemBuilder: (context, index) {
-                      return userWidget(
-                        user: userlist[index],
-                      );
-                    })),
-          );
+          return Padding(
+              padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
+              child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: userlist.length,
+                  itemBuilder: (context, index) {
+                    return userWidget(
+                      user: userlist[index],
+                    );
+                  }));
         });
   }
 
@@ -917,93 +936,92 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               ),
             );
           }
-          return Expanded(
-            child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: codeList.length,
-                itemBuilder: (context, index) {
-                  String length = "0";
+          return ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: codeList.length,
+              itemBuilder: (context, index) {
+                String length = "0";
 
-                  TimebankCodeModel timebankCode = codeList.elementAt(index);
-                  if (timebankCode.usersOnBoarded == null) {
+                TimebankCodeModel timebankCode = codeList.elementAt(index);
+                if (timebankCode.usersOnBoarded == null) {
+                  length = AppLocalizations.of(context)
+                      .translate('members', 'no_yet_redeemed');
+                } else {
+                  if (timebankCode.usersOnBoarded.length == 1) {
+                    length = AppLocalizations.of(context)
+                        .translate('members', 'by_1');
+                  } else if (timebankCode.usersOnBoarded.length > 1) {
+                    length =
+                        "${AppLocalizations.of(context).translate('members', 'by_n')} ${timebankCode.usersOnBoarded.length} ${AppLocalizations.of(context).translate('members', 'users')}";
+                  } else {
                     length = AppLocalizations.of(context)
                         .translate('members', 'no_yet_redeemed');
-                  } else {
-                    if (timebankCode.usersOnBoarded.length == 1) {
-                      length = AppLocalizations.of(context)
-                          .translate('members', 'by_1');
-                    } else if (timebankCode.usersOnBoarded.length > 1) {
-                      length =
-                          "${AppLocalizations.of(context).translate('members', 'by_n')} ${timebankCode.usersOnBoarded.length} ${AppLocalizations.of(context).translate('members', 'users')}";
-                    } else {
-                      length = AppLocalizations.of(context)
-                          .translate('members', 'no_yet_redeemed');
-                    }
                   }
-                  return GestureDetector(
-                    child: Card(
-                      margin: EdgeInsets.all(5),
-                      child: Container(
-                        margin: EdgeInsets.all(15),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(FlavorConfig.values.timebankName == "Yang 2020"
+                }
+                return GestureDetector(
+                  child: Card(
+                    margin: EdgeInsets.all(5),
+                    child: Container(
+                      margin: EdgeInsets.all(15),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(FlavorConfig.values.timebankName == "Yang 2020"
+                              ? AppLocalizations.of(context)
+                                      .translate('members', 'yang_code') +
+                                  timebankCode.timebankCode
+                              : AppLocalizations.of(context)
+                                      .translate('members', 'timebank_code') +
+                                  timebankCode.timebankCode),
+                          Text(length),
+                          Text(
+                            DateTime.now().millisecondsSinceEpoch >
+                                    timebankCode.validUpto
                                 ? AppLocalizations.of(context)
-                                        .translate('members', 'yang_code') +
-                                    timebankCode.timebankCode
+                                    .translate('members', 'expired')
                                 : AppLocalizations.of(context)
-                                        .translate('members', 'timebank_code') +
-                                    timebankCode.timebankCode),
-                            Text(length),
-                            Text(
-                              DateTime.now().millisecondsSinceEpoch >
-                                      timebankCode.validUpto
-                                  ? AppLocalizations.of(context)
-                                      .translate('members', 'expired')
-                                  : AppLocalizations.of(context)
-                                      .translate('members', 'active'),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                GestureDetector(
-                                  onTap: () {
-                                    Share.share(shareText(timebankCode));
+                                    .translate('members', 'active'),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () {
+                                  Share.share(shareText(timebankCode));
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                  child: Text(
+                                    AppLocalizations.of(context)
+                                        .translate('members', 'share_code'),
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.grey,
+                                  ),
+                                  iconSize: 30,
+                                  onPressed: () {
+                                    deleteShareCode(
+                                        timebankCode.timebankCodeId);
+                                    setState(() {});
                                   },
-                                  child: Container(
-                                    margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                    child: Text(
-                                      AppLocalizations.of(context)
-                                          .translate('members', 'share_code'),
-                                      style: TextStyle(color: Colors.blue),
-                                    ),
-                                  ),
                                 ),
-                                GestureDetector(
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color: Colors.grey,
-                                    ),
-                                    iconSize: 30,
-                                    onPressed: () {
-                                      deleteShareCode(
-                                          timebankCode.timebankCodeId);
-                                      setState(() {});
-                                    },
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
+                              ),
+                            ],
+                          )
+                        ],
                       ),
                     ),
-                  );
-                }),
-          );
+                  ),
+                );
+              });
         });
   }
 

@@ -208,7 +208,11 @@
     "contact": "Veuillez contacter l'équipe support de SevaX pour modifier les plans",
     "close": "proche",
     "billing_plans": "Vous êtes sur le plan communautaire",
-    "progress": "Accéder à votre nouvelle banque de temps dans quelques instants ..."
+    "progress": "Accéder à votre nouvelle banque de temps dans quelques instants ...",
+    "bill_me": "facture moi",
+    "bill_me_info": "Ceci n'est disponible que pour les utilisateurs qui ont des accords préalables avec Seva Exchange. Veuillez envoyer un e-mail à billme@sevaexchange.com pour plus de détails.",
+    "bill_me_info_two": "Seuls les utilisateurs qui ont été approuvés a priori peuvent cocher la case \"Bill Me\". Si vous souhaitez le faire, veuillez envoyer un e-mail à billme@sevaexchange.com"
+
   },
   "explore": {
     "title": "Explorer",
@@ -1115,7 +1119,9 @@
     "download_success": "Le téléchargement est terminé.",
     "csv_file_alert": "Les fichiers supérieurs à 1 MB ne sont pas autorisés",
     "csv_size_limit": "REMARQUE: la taille maximale du fichier est de 1 MB",
-    "csv_progress": "Téléchargement d'un fichier CSV"
+    "csv_progress": "Téléchargement d'un fichier CSV",
+    "upload_success": "Téléchargé avec succès"
+
   },
   "external_notifications": {
     "notification_title": "Notifications",
@@ -1144,6 +1150,26 @@
   },
   "change_ownership": {
     "change_ownership_title": "Changer de propriétaire",
-    "change": "Change"
+    "change": "Changement",
+    "change_hint": "Changer de propriétaire ",
+    "change_hint_three": " à un autre administrateur.",
+    "change_hint_two": " Remplacer par ",
+    "invitation_sent": "Nous avons envoyé votre invitation de transfert de propriété. Vous resterez propriétaire de Timebank ",
+    "invitation_sent_two": "jusqu'à ce que",
+    "invitation_sent_three": " accepte l'invitation et fournit ses nouvelles informations de facturation.",
+    "notification_msg": "vous a invité à devenir le nouveau propriétaire de la Timebank",
+    "accept": "J'accepte",
+    "change_alert": "En acceptant, vous deviendrez propriétaire de la banque de temps",
+    "users_empty": "Veuillez sélectionner un utilisateur",
+    "pending_task": "Vous avez des tâches en attente. Veuillez effectuer ces tâches avant le transfert de propriété",
+    "pending_payment": "Vous avez un paiement en attente de ",
+    "pending_payment_two": ". Veuillez effectuer ces paiements avant le transfert de propriété",
+    "search_admin": "Administrateur de recherche",
+    "change_message": "Vous êtes le nouveau propriétaire de Timebank ",
+    "change_message_two": " Vous devez l'accepter pour terminer le processus",
+    "change_advisory": " Vous devez fournir les détails de facturation de cette Timebank, y compris la nouvelle adresse de facturation. Le transfert de propriété ne sera pas achevé tant que cela ne sera pas fait.",
+    "ownership_suceess": "Toutes nos félicitations! Vous êtes maintenant le nouveau propriétaire de la Timebank ",
+    "already_invited": " déjà invité."
+
   }
 }
