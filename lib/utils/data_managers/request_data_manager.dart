@@ -899,10 +899,10 @@ Future<void> updateRecurrenceRequests(String requestId) async {
 
       body: {"updatedRequestModelId": requestId});
 
-  print("recurrence updation statusCode === "+response.statusCode.toString());
+  print("recurrence updation statusCode === "+response.toString());
 }
 
-Stream<ProjectModel> getProjectStream({
+Stream<ProjectModel> getProjectStream({notifications
   @required String projectId,
 }) async* {
   var data =

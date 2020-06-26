@@ -110,6 +110,7 @@ class NotificationsModel extends DataModel {
 }
 
 enum NotificationType {
+  RecurringRequestUpdated,
   RequestAccept,
   RequestApprove,
   RequestInvite,
