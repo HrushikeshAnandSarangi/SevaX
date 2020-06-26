@@ -460,6 +460,9 @@
     "are_you_sure_feed": "このニュースフィードを削除してもよろしいですか？"
   },
   "notifications": {
+    "you_signed_up_for": "登録しました",
+    "on": "オン",
+    "owner_changes": ". イベントオーナーがこのイベントを変更しました。行った変更が正しいことを確認して、もう一度適用してください",
     "title": "お知らせ",
     "no_notifications": "通知なし",
     "clear_all": "すべての通知をクリア",
@@ -710,7 +713,14 @@
     "tap_to_remove": "アイテム（タップして削除）",
     "tap_to_delete": "タップしてこのアイテムを削除します",
     "assign_err_hint": "1つのプロジェクトに割り当ててください",
-    "tap_to_select": "タップして1つ以上を選択します..."
+    "tap_to_select": "タップして1つ以上を選択します...",
+    "repeat": "繰り返す",
+    "repeat_on": "繰り返す",
+    "ends": "終わり",
+    "on": "オン",
+    "after": "後",
+    "repeat_cancel": "キャンセル",
+    "repeat_done": "終わった"
   },
   "edit_group": {
     "add_members": "メンバーを追加",

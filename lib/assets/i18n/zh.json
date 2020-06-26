@@ -460,6 +460,9 @@
     "are_you_sure_feed": "您确定要删除此新闻提要吗？"
   },
   "notifications": {
+    "you_signed_up_for": "您已注册",
+    "on": "上",
+    "owner_changes": ". 事件所有者已修改此事件。确保所做的更改适合您并再次应用",
     "title": "通知事项",
     "no_notifications": "没有通知",
     "clear_all": "清除所有通知",
@@ -710,7 +713,14 @@
     "tap_to_remove": "项目（TAP若要删除）",
     "tap_to_delete": "点击删除此项目",
     "assign_err_hint": "请分配到一个项目",
-    "tap_to_select": "点击选择一个或更多..."
+    "tap_to_select": "点击选择一个或更多...",
+    "repeat": "重复",
+    "repeat_on": "重复上",
+    "ends": "完结",
+    "on": "上",
+    "after": "后",
+    "repeat_cancel": "取消",
+    "repeat_done": "完成"
   },
   "edit_group": {
     "add_members": "添加成员",
