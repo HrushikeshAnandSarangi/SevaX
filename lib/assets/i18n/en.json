@@ -209,7 +209,10 @@
     "contact": "Please contact SevaX support to change the plans",
     "close": "Close",
     "billing_plans": "You are on Community Plan",
-    "progress": "Taking you to your new Timebank..."
+    "progress": "Taking you to your new Timebank...",
+    "bill_me": "Bill Me",
+    "bill_me_info": "This is available only to users who have prior arrangements with Seva Exchange. Please send an email to billme@sevaexchange.com for details",
+    "bill_me_info_two": "Only users who have been approved a priori can check the “Bill Me” box. If you would like to do this, please send an email to billme@sevaexchange.com"
   },
   "explore": {
     "title": "Explore",
@@ -1125,7 +1128,8 @@
     "download_success": "Downloading is complete.",
     "csv_file_alert": "Files larger than 1 MB are not allowed",
     "csv_size_limit": "NOTE : Maximum file size is 1 MB",
-    "csv_progress": "Uploading CSV File"
+    "csv_progress": "Uploading CSV File",
+    "upload_success": "Uploaded Successfully"
   },
   "project_template": {
     "save_as_template": "Save as Template",
@@ -1156,15 +1160,25 @@
   "change_ownership": {
     "change_ownership_title": "Change Ownership",
     "change": "Change",
-    "change_hint": "Changing ownership of this Timebank/Group to another user.",
+    "change_hint": "Changing ownership of this ",
+    "change_hint_three": " to another admin.",
     "change_hint_two": "Change to",
-    "invitation_sent": "Invitation successfully sent to admin. Once admin accepts invitation ownership will get change",
-    "notification_msg": "invited you to become the owner of the",
+    "invitation_sent": "We have sent your transfer of ownership invitation. You will remain to be the owner of Timebank ",
+    "invitation_sent_two": " until ",
+    "invitation_sent_three": " accepts the invitation and provides their new billing information.",
+    "notification_msg": "has invited you to be the new owner of the Timebank",
     "accept": "Accept",
     "change_alert": "By accepting, you will become owner of the timebank",
     "users_empty": "Please select a user",
-    "pending_task": "You have pending tasks. Please complete these tasks before ownership can be transferred",
+    "pending_task": "You have pending tasks. Please complete tasks before ownership can be transferred",
     "pending_payment": "You have payment pending of ",
-    "pending_payment_two": ". Please complete these payment before ownership can be transferred"
+    "pending_payment_two": ". Please complete these payment before ownership can be transferred",
+    "search_admin": "Search Admin",
+
+    "change_message": "You are the new owner of Timebank ",
+    "change_message_two": " You need to accept it to complete the process",
+    "change_advisory": " You are required to provide billing details for this Timebank - including the new billing address. The transfer of ownership will not be completed until this is done.",
+    "ownership_suceess": "Congratulations! You are now the new owner of the Timebank ",
+    "already_invited": " already invited."
   }
 }

@@ -1,6 +1,6 @@
 {
   "splash": {
-    "hang_on": "Aguarde",
+    "hang_on": "Agárrate fuerte",
     "humanity_first": "Humanity\nFirst",
     "we_met": "Nós nos encontramos antes",
     "welcome": "Bem-vindo ao mundo das comunidades",
@@ -59,7 +59,18 @@
     "fetching_location": "Obteniendo ubicación ... *",
     "missing_permission": "Permiso faltante",
     "open_settings": "Configuración abierta",
-    "fetching_location_failed": "Error al recuperar la ubicación *"
+    "fetching_location_failed": "Error al recuperar la ubicación *",
+    "all": "Todos",
+    "near_me": "Cerca de mí",
+    "timebank_request": "solicitud de banco de tiempo",
+    "personal_request": "Solicitud personal",
+    "timebank_project": "Proyecto Timebank",
+    "personal_project": "Proyecto personal",
+    "individual_offer": "Oferta individual",
+    "one_to_many": "Uno para muchos",
+    "timebank_projects": "Proyectos de banco de tiempo",
+    "personal_projects": "Proyectos personales",
+    "clear": "Clear"
   },
   "signup": {
     "add_photo": "Añadir foto",
@@ -198,7 +209,11 @@
     "contact": "Comuníquese con el soporte de SevaX para cambiar los planes.",
     "close": "Cerca",
     "billing_plans": "Estás en el plan comunitario",
-    "progress": "Llevarte a tu nuevo banco de tiempo ..."
+    "progress": "Llevarte a tu nuevo banco de tiempo ...",
+    "bill_me": "facturarme",
+    "bill_me_info": "Esto está disponible solo para usuarios que tienen acuerdos previos con Seva Exchange. Por favor envíe un correo electrónico a billme@sevaexchange.com para más detalles.",
+    "bill_me_info_two": "Solo los usuarios que han sido aprobados a priori pueden marcar la casilla \"Bill Me\". Si desea hacer esto, envíe un correo electrónico a billme@sevaexchange.com"
+
   },
   "explore": {
     "title": "Explorar",
@@ -241,7 +256,9 @@
     "hint_text_joined": "Has sido abordado para",
     "successfull": "exitosamente.",
     "err_reenter": "Por favor, introduzca el PIN para verificar",
-    "create_join_request": "Crear solicitud de unión"
+    "create_join_request": "Crear solicitud de unión",
+    "code_redeemed_already_title": "Código do timebank já resgatado",
+    "code_redeemed_already_body": "O código do Timebank que você forneceu já foi resgatado anteriormente. Solicite ao administrador do Timebank um novo código."
   },
   "groups": {
     "no_groups_helptext": "Los grupos te ayudan a organizar tus \\ n actividades específicas, no tienes ninguna. Prueba",
@@ -318,7 +335,20 @@
     "select_category": "Porfavor seleccione una categoría",
     "image_hint": "Créditos fotográficos",
     "change": "Cambiar imagen",
-    "add": "Añadir imagen"
+    "add": "Añadir imagen",
+    "change_attachment": "Alterar anexo",
+    "add_attachment": "Adicionar imagem / documento",
+    "camera": "Camera",
+    "gallery": "Galeria",
+    "size_alert": "Arquivos com mais de 10 MB não são permitidos",
+    "size_alert_title": "Alerta de arquivo grande",
+    "update_post": "Atualizar postagem",
+    "update_progress": "Atualizando postagem",
+    "imagehint": "Crédito da foto"
+  },
+  "invitations": {
+    "invitation_email_title": "Impressionante! Você está convidado a participar de um Timebank",
+    "email_body": "<p>Você está convidado a baixar o aplicativo SevaX e ingressar no Timebank ***. O aplicativo SevaX usa o Timebanking, um sistema baseado em reciprocidade, em que os membros da comunidade se ajudam em troca de créditos Seva. Por favor, clique neste <a href=\"###;&nbsp;\"> link </a> para participar.</p>"
   },
   "projects": {
     "title": "Proyectos",
@@ -373,7 +403,8 @@
     "title_about": "Title",
     "mission_statement": "Missão",
     "organizer": "Organizador",
-    "delete_project": "Excluir projeto"
+    "delete_project": "Excluir projeto",
+    "new_project": "Nuevo proyecto"
   },
   "tasks": {
     "error": "Error:",
@@ -493,10 +524,17 @@
     "getnotificationdebit": "getNotificationDebit",
     "debited_to_so": "ha sido cargado a",
     "getofferacceptnotification": "getOfferAcceptNotification",
-    "updating_timebank": "Actualizando el banco de tiempo.",
-    "reason_to_join": "Razón para unirse",
-    "not_mentioned": "Motivo no mencionado",
-    "allow": "Permitir"
+    "updating_timebank": "Atualizando timebank ..",
+    "reason_to_join": "Motivo para participar",
+    "not_mentioned": "Razão não mencionada",
+    "allow": "Permitir",
+    "timebank_exit": "Saída do Timebank",
+    "timebank_join": "Timebank Join",
+    "exited_from": "saiu de",
+    "tap_to_view": "Toque para ver os detalhes",
+    "group_invite": "Convite para ingresso no grupo",
+    "notification_alert": "Alertas de notificación",
+    "turn_on_notification": "Activar/desactivar alertas de notificación"
   },
   "profile": {
     "image_hint": "Imagen de perfil",
@@ -1082,7 +1120,9 @@
     "download_success": "La descarga está completa.",
     "csv_file_alert": "No se permiten archivos de más de 1 MB.",
     "csv_size_limit": "NOTA: el tamaño máximo del archivo es de 1 MB",
-    "csv_progress": "Subir archivo CSV"
+    "csv_progress": "Subir archivo CSV",
+    "upload_success": "Subido correctamente"
+
   },
   "external_notifications": {
     "notification_title": "Notificaciones",
@@ -1111,6 +1151,27 @@
   },
   "change_ownership": {
     "change_ownership_title": "Cambiar propiedad",
-    "change": "Change"
+    "change": "Cambio",
+    "change_hint": "Cambio de propiedad de este ",
+    "change_hint_three": " a otro administrador",
+    "change_hint_two": "Cambiar a",
+    "invitation_sent": "Hemos enviado su invitación de transferencia de propiedad. Seguirás siendo el propietario de Timebank ",
+    "invitation_sent_two": " hasta ",
+    "invitation_sent_three": " acepta la invitación y proporciona su nueva información de facturación.",
+    "notification_msg": "te ha invitado a ser el nuevo propietario del Banco de tiempo",
+    "accept": "Aceptar",
+    "change_alert": "Al aceptar, se convertirá en propietario del banco de tiempo",
+    "users_empty": "Por favor seleccione un usuario",
+    "pending_task": "Tienes tareas pendientes. Complete estas tareas antes de poder transferir la propiedad",
+    "pending_payment": "Tienes un pago pendiente de ",
+    "pending_payment_two": ". Complete estos pagos antes de poder transferir la propiedad",
+    "search_admin": "Administrateur de recherche",
+
+    "change_message": "Eres el nuevo propietario de Timebank ",
+    "change_message_two": " Debes aceptarlo para completar el proceso.",
+    "change_advisory": " Debe proporcionar los detalles de facturación de este Timebank, incluida la nueva dirección de facturación. La transferencia de propiedad no se completará hasta que se haga esto.",
+    "ownership_suceess": "¡Felicidades! Ahora eres el nuevo propietario del Banco de tiempo ",
+    "already_invited": " Ya invitado."
+
   }
 }

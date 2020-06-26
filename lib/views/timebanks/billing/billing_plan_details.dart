@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
@@ -5,6 +7,7 @@ import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/billing_plan_details.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 import 'package:sevaexchange/widgets/NoGlowScrollBehavior.dart';
 
@@ -49,6 +52,7 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
     setState(() {});
   }
 
+  List<dynamic> billMeEmails = [];
   @override
   void initState() {
     super.initState();
@@ -56,6 +60,12 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
         SchedulerPhase.persistentCallbacks) {
       SchedulerBinding.instance
           .addPostFrameCallback((_) => getPlanData(context));
+    }
+    try {
+      billMeEmails =
+          json.decode(AppConfig.remoteConfig.getString('bill_me_emails'));
+    } on Exception {
+      print("Exception raised while getting user emials ");
     }
   }
 
@@ -91,11 +101,20 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
                         return Offstage(
                           offstage: _billingPlanDetailsModels[index].hidden,
                           child: BillingPlanCard(
+                            billMeVisibility:
+                                _billingPlanDetailsModels[index].id ==
+                                            'grande_plan' ||
+                                        _billingPlanDetailsModels[index].id ==
+                                            'venti_plan'
+                                    ? true
+                                    : false,
                             plan: _billingPlanDetailsModels[index],
                             user: widget.user,
                             isSelected: _billingPlanDetailsModels[index].id ==
                                 widget.planName,
                             isPlanActive: widget.isPlanActive,
+                            canBillMe: billMeEmails.contains(
+                                SevaCore.of(context).loggedInUser.email),
                           ),
                         );
                       },

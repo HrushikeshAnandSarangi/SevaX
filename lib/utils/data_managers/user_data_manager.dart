@@ -262,7 +262,37 @@ Future<Map<String, dynamic>> checkChangeOwnershipStatus(
     "${FlavorConfig.values.cloudFunctionBaseURL}/checkTasksAndPaymentsForTransferOwnership",
     body: {"timebankId": timebankId, "sevauserid": sevauserid},
   );
-  print("result ${result.toString()}");
+  print("result ${result}");
   var data = json.decode(result.body);
   return data;
+}
+
+Future<String> updateChangeOwnerDetails(
+    {String communityId,
+    String email,
+    String streetAddress1,
+    String streetAddress2,
+    String country,
+    String city,
+    String pinCode,
+    String state}) async {
+  // print("community id ${email + streetAddress1 + streetAddress2 + state + country + city}");
+  var result = await http.post(
+      "${FlavorConfig.values.cloudFunctionBaseURL}/updateCustomerDetailsStripe",
+      body: jsonEncode({
+        "communityId": communityId,
+        "email": email,
+        "billing_address": {
+          "street_address1": streetAddress1,
+          "street_address2": streetAddress2,
+          "country": country,
+          "city": city,
+          "pincode": pinCode,
+          "state": state
+        }
+      }),
+      headers: {"Content-Type": "application/json"});
+  print("result ${result.body}");
+  //var data = json.decode(result.body);
+  return result.statusCode.toString();
 }
