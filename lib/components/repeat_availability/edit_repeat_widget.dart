@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class EditRepeatWidget extends StatefulWidget {
@@ -145,7 +146,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                       });
                     },
                   ),
-                  Text("Repeat",
+                  Text("${AppLocalizations.of(context).translate('create_request', 'repeat')}",
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -186,7 +187,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                       Container(
                         alignment: Alignment.topLeft,
                         padding: const EdgeInsets.fromLTRB(12.0, 8.0, 8.0, 8.0),
-                        child: Text("Repeat on",
+                        child: Text("${AppLocalizations.of(context).translate('create_request', 'repeat_on')}",
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 16,
@@ -239,7 +240,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                         alignment: Alignment.topLeft,
                         padding:
                         const EdgeInsets.fromLTRB(12.0, 12.0, 8.0, 8.0),
-                        child: Text("Ends",
+                        child: Text("${AppLocalizations.of(context).translate('create_request', 'ends')}",
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 16,
@@ -255,7 +256,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                             groupValue: endType,
                             onChanged: _handleRadioValueChange,
                           ),
-                          Text("On",
+                          Text("${AppLocalizations.of(context).translate('create_request', 'on')}",
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -297,7 +298,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                             groupValue: endType,
                             onChanged: _handleRadioValueChange,
                           ),
-                          Text("After",
+                          Text("${AppLocalizations.of(context).translate('create_request', 'after')}",
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -344,7 +345,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                                             }).toList(),
                                       ),
                                     ),
-                                    Text("OCCURENCES",
+                                    Text("${AppLocalizations.of(context).translate('create_request', 'occurences')}",
                                         textAlign: TextAlign.end,
                                         style: TextStyle(
                                           fontSize: 14,
@@ -368,7 +369,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                                 margin: EdgeInsets.all(8.0),
                                 child: InkWell(
                                   onTap: _cancelOnAfter,
-                                  child: Text("CANCEL",
+                                  child: Text("${AppLocalizations.of(context).translate('create_request', 'repeat_cancel')}",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -380,7 +381,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                               margin: EdgeInsets.all(8.0),
                               child: InkWell(
                                 onTap: _selectOnAfter,
-                                child: Text("DONE",
+                                child: Text("${AppLocalizations.of(context).translate('create_request', 'repeat_done')}",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,

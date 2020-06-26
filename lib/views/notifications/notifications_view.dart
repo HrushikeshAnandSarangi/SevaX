@@ -138,7 +138,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                       return NotificationCard(
                         title: "Request Updated",
                         subTitle:
-                        "You have signed up for ***eventName on ***eventDate. The Event Owner has modified this event. Please check to see if the changes made are suitable for you"
+                        "${AppLocalizations.of(context).translate('notifications', 'you_signed_up_for')} ***eventName ${AppLocalizations.of(context).translate('notifications', 'on')} ***eventDate. ${AppLocalizations.of(context).translate('notifications', 'owner_changes')}"
                             .replaceFirst(
                             '***eventName', eventData.eventName)
                             .replaceFirst(

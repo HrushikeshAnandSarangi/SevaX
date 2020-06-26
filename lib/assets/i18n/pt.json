@@ -464,6 +464,9 @@
     "are_you_sure_feed": "Tem certeza de que deseja excluir esta publicação de notícias?"
   },
   "notifications": {
+    "you_signed_up_for": "Você se inscreveu para",
+    "on": "em",
+    "owner_changes": ". O Dono do evento modificou este evento. Verifique se as alterações feitas são adequadas para você e aplique novamente.",
     "title": "Notificações",
     "no_notifications": "Nenhuma notificação",
     "clear_all": "Limpar todas as notificações",
@@ -714,7 +717,15 @@
     "tap_to_remove": "artículos (toque para eliminar)",
     "tap_to_delete": "Toca para eliminar este elemento.",
     "assign_err_hint": "Por favor asigne a un proyecto",
-    "tap_to_select": "Toque para seleccionar una o más..."
+    "tap_to_select": "Toque para seleccionar una o más...",
+    "repeat": "Repetir",
+    "repeat_on": "Repita em",
+    "ends": "Termina",
+    "on": "Em",
+    "after": "Depois de",
+    "occurences": "Ocorrências",
+    "repeat_cancel": "Cancelar",
+    "repeat_done": "feito"
   },
   "edit_group": {
     "add_members": "Añadir miembros",

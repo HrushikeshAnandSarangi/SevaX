@@ -464,6 +464,9 @@
     "are_you_sure_feed": "Voulez-vous vraiment supprimer ce fil d'actualités?"
   },
   "notifications": {
+    "you_signed_up_for": "Vous vous étiez inscrit à la",
+    "on": "le vendredi",
+    "owner_changes": ". Le propriétaire de l'événement a modifié cet événement. Veuillez vous assurer que les modifications apportées vous conviennent et faites une nouvelle demande",
     "title": "Notifications",
     "added_you": "vous a ajouté à",
     "timebank_join": "Timebank Join",
@@ -652,6 +655,7 @@
     "no_comments": "Pas de commentaire",
     "timebank_offers": "Offres de la banque de temps",
     "others": "Autres"
+
   },
   "create_request": {
     "humanity_first_create": "Crear solicitud de pandilla Yang",
@@ -714,7 +718,16 @@
     "tap_to_remove": "articles (appuyez pour supprimer)",
     "tap_to_delete": "Appuyez pour supprimer cet élément",
     "assign_err_hint": "Veuillez attribuer à un projet",
-    "tap_to_select": "Appuyez pour sélectionner un ou plusieurs..."
+    "tap_to_select": "Appuyez pour sélectionner un ou plusieurs...",
+    "repeat": "Répéter",
+    "repeat_on": "Répéter sur",
+    "ends": "Prend fin",
+    "on": "Sur",
+    "after": "Après",
+    "occurences": "Occurrences",
+    "occurences": "Occurences",
+    "repeat_cancel": "Annuler",
+    "repeat_done": "Terminé"
   },
   "edit_group": {
     "add_members": "Añadir miembros",
