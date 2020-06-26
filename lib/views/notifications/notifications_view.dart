@@ -134,6 +134,22 @@ class NotificationsView extends State<NotificationViewHolder> {
                   }
 
                   switch (notification.type) {
+                    case NotificationType.RecurringRequestUpdated:
+                      ReccuringRequestUpdated eventData =
+                      ReccuringRequestUpdated.fromMap(notification.data);
+                      return NotificationCard(
+                        title: "Request Updated",
+                        subTitle:
+                        "${AppLocalizations.of(context).translate('notifications', 'you_signed_up_for')} ***eventName ${AppLocalizations.of(context).translate('notifications', 'on')} ***eventDate. ${AppLocalizations.of(context).translate('notifications', 'owner_changes')}"
+                            .replaceFirst(
+                            '***eventName', eventData.eventName)
+                            .replaceFirst(
+                            '***eventDate', eventData.eventDate),
+                        entityName: "Request Updated",
+                        photoUrl: eventData.photoUrl,
+                        onDismissed: onDismissed,
+                      );
+                      break;
                     case NotificationType.RequestAccept:
                       RequestModel model =
                           RequestModel.fromMap(notification.data);

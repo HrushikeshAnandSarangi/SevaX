@@ -193,7 +193,8 @@
     "with_timebank_id": "com a identificação do Banco de tempo como",
     "edit_profile_info": "Editar informação de perfil",
     "profile_information": "Informação do perfil",
-    "updating_details": "Atualizando detalhes "
+    "updating_details": "Atualizando detalhes ",
+    "private_timebank": "Privado Timebank"
   },
   "billing_plans": {
     "remote_config": "billing_plans",
@@ -463,6 +464,9 @@
     "are_you_sure_feed": "Tem certeza de que deseja excluir esta publicação de notícias?"
   },
   "notifications": {
+    "you_signed_up_for": "Você se inscreveu para",
+    "on": "em",
+    "owner_changes": ". O Dono do evento modificou este evento. Verifique se as alterações feitas são adequadas para você e aplique novamente.",
     "title": "Notificações",
     "no_notifications": "Nenhuma notificação",
     "clear_all": "Limpar todas as notificações",
@@ -520,7 +524,7 @@
     "reason_to_join": "Motivo para participar",
     "not_mentioned": "Razão não mencionada",
     "allow": "Permitir",
-    "timebank_exit": sair do banco de tempo ",
+    "timebank_exit": "sair do banco de tempo ",
     "exited_from": "saiu de",
     "tap_to_view": "Toque para ver os detalhes",
     "added_you": "adicionou você a",
@@ -558,7 +562,8 @@
     "enter_bio": "Ingresar biografia",
     "please_enter_bio": "por favor ingresse sua biografia para atualização",
     "bio_50": "Ingresse mínimo 50 caracteres",
-    "sure_logout": "Tem certeza de que deseja encerrar a sessão?"
+    "sure_logout": "Tem certeza de que deseja encerrar a sessão?",
+    "notifications": "Alertas de notificação"
   },
   "help": {
     "about_sevax": "Sobre o SevaX",
@@ -712,7 +717,15 @@
     "tap_to_remove": "artigos (toque para eliminar)",
     "tap_to_delete": "Tocar para eliminar este elemento.",
     "assign_err_hint": "Por favor atribuir a um projeto",
-    "tap_to_select": "Toque para selecionar um ou mais..."
+    "tap_to_select": "Toque para selecionar um ou mais...",
+    "repeat": "Repetir",
+    "repeat_on": "Repita em",
+    "ends": "Termina",
+    "on": "Em",
+    "after": "Depois de",
+    "occurences": "Ocorrências",
+    "repeat_cancel": "Cancelar",
+    "repeat_done": "feito"
   },
   "edit_group": {
     "add_members": "Adicionar membros",
@@ -886,8 +899,7 @@
     "active": "Ativo",
     "share_code": "Compartilhar código",
     "invited_you": "te convidou para juntar-se ao ",
-    "invite_text": " Banco de tempo Os bancos de tempo são comunidades que permitem que você seja voluntário e também receba créditos de tempo para realizar as tarefas. Use o código
-    ",
+    "invite_text": " Banco de tempo Os bancos de tempo são comunidades que permitem que você seja voluntário e também receba créditos de tempo para realizar as tarefas. Use o código",
     "prompt_text": " quando solicitado a ingressar neste banco de tempo. Faça o download do aplicativo nos links fornecidos em https://sevaexchange.page.link/sevaxapp",
     "code_generated": "Código gerado",
     "is_code": "é seu código",
@@ -939,19 +951,14 @@
   },
   "info_window": {
     "mapper": "i_button_info_es",
-    "groupsInfo": " Um banco de tempo (ou comunidade) é dividido em grupos. Por exemplo, uma comunidade escolar teria grupos para o comitê de tecnologia, levantamento de recursos, sala de aula etc.
-    ",
-    "offersInfo": " Os projetos são coleções lógicas em um grupo. Por exemplo, o Grupo do Comitê de Tecnologia pode ter os seguintes projetos: site da escola, equipamentos, aplicativos, etc.
-    .",
-    "requestsInfo": " As solicitações são criadas pelos Administradores de Tempo, para tarefas da comunidade que precisam ser realizadas (por exemplo, capinar o pátio da escola) ou para usuários que precisam de ajuda da comunidade para realizar tarefas (por exemplo, idosos que precisam de comida). As solicitações de um banco de tempo seriam listadas em um projeto.
-    ",
-    "projectsInfo": " Os usuários podem fazer ofertas para o banco de horas (por exemplo, eu posso criar páginas HTML nas manhãs de sábado das 9 às 11 da manhã) ou para outros membros da comunidade (por exemplo, eu posso dar uma aula de 4 semanas em como fazer colchas nas tardes de domingo, das 14h às 16h). As ofertas ao Banco de tempo devem ser aceitas por um administrador. No momento, a oferta se torna uma solicitação.
-    ",
-    "taxInfo": " Marque esta opção se desejar desativar as transações entre usuários. Ou seja, as \ "Solicitações \" podem ser originadas apenas pelos administradores designados deste Banco de Tempo. Os bancos de horas protegidas são geralmente usados para campanhas políticas e certas organizações sem fins lucrativos ".
-    ",
-    "protectedTimebankInfo": " Marque esta opção se desejar que seu banco de tempo não seja descoberto por qualquer pessoa que esteja navegando, seja pelo nome do banco de tempo ou pelo local do banco. Observe que todos sempre precisarão de um código para ingressar em seu banco de tempo. Um \ "Banco privado de tempo \" fornece um nível adicional de privacidade. ",
-    "privateTimebankInfo": "Marque esta caixa se desejar que seu banco de horas não seja descoberto por qualquer pessoa que esteja navegando, seja pelo nome do banco de horas ou pela localização do banco de horas. Observe que todos sempre precisam de um código para ingressar no seu banco de tempo. Um \ "Banco privado de tempo \" fornece um nível adicional de privacidade. ",
-    "privateGroupInfo": "No momento em que um usuário recebe créditos Seva por preencher as solicitações do aplicativo (para o Banco de tempo), o administrador do banco de tempo pode especificar um imposto no banco de horas. Estipule o valor do imposto ".
+    "groupsInfo": " Um banco de tempo (ou comunidade) é dividido em grupos. Por exemplo, uma comunidade escolar teria grupos para o comitê de tecnologia, levantamento de recursos, sala de aula etc.",
+    "offersInfo": " Os projetos são coleções lógicas em um grupo. Por exemplo, o Grupo do Comitê de Tecnologia pode ter os seguintes projetos: site da escola, equipamentos, aplicativos, etc..",
+    "requestsInfo": " As solicitações são criadas pelos Administradores de Tempo, para tarefas da comunidade que precisam ser realizadas (por exemplo, capinar o pátio da escola) ou para usuários que precisam de ajuda da comunidade para realizar tarefas (por exemplo, idosos que precisam de comida). As solicitações de um banco de tempo seriam listadas em um projeto.",
+    "projectsInfo": " Os usuários podem fazer ofertas para o banco de horas (por exemplo, eu posso criar páginas HTML nas manhãs de sábado das 9 às 11 da manhã) ou para outros membros da comunidade (por exemplo, eu posso dar uma aula de 4 semanas em como fazer colchas nas tardes de domingo, das 14h às 16h). As ofertas ao Banco de tempo devem ser aceitas por um administrador. No momento, a oferta se torna uma solicitação.",
+    "taxInfo": " Marque esta opção se desejar desativar as transações entre usuários. Ou seja, as \"Solicitações \" podem ser originadas apenas pelos administradores designados deste Banco de Tempo. Os bancos de horas protegidas são geralmente usados para campanhas políticas e certas organizações sem fins lucrativos",
+    "protectedTimebankInfo": " Marque esta opção se desejar que seu banco de tempo não seja descoberto por qualquer pessoa que esteja navegando, seja pelo nome do banco de tempo ou pelo local do banco. Observe que todos sempre precisarão de um código para ingressar em seu banco de tempo. Um \"Banco privado de tempo \" fornece um nível adicional de privacidade. ",
+    "privateTimebankInfo": "Marque esta caixa se desejar que seu banco de horas não seja descoberto por qualquer pessoa que esteja navegando, seja pelo nome do banco de horas ou pela localização do banco de horas. Observe que todos sempre precisam de um código para ingressar no seu banco de tempo. Um \"Banco privado de tempo \" fornece um nível adicional de privacidade. ",
+    "privateGroupInfo": "No momento em que um usuário recebe créditos Seva por preencher as solicitações do aplicativo (para o Banco de tempo), o administrador do banco de tempo pode especificar um imposto no banco de horas. Estipule o valor do imposto "
   },
   "switching_timebank": {
     "switch_timebank": "Troca de banco de tempo",
@@ -999,14 +1006,14 @@
     "accidental_delete_enabled_title": "Eliminação acidental habilitada",
     "accidental_delete_enabled_body": "Isso ** tem \"Prevenir eliminação acidental \" habilitado. Desmarcar esta opção (en la pestaña \"Administrar\") antes de tentar eliminar el **.",
     "submitting_request": "Enviando solicitações ...",
-    "deletion_check": “Tem certeza de que quer eliminar?",
+    "deletion_check": "Tem certeza de que quer eliminar?",
     "advisory_for_timebank": " Toda informação relevante será eliminada, incluídos projetos, solicitações  e ofertas do grupo!",
     "advisory_for_projects": "Todas as solicitações associadas a esta solicitação seriam eliminadas",
     "see_you_go": "Recebemos sua solicitação para remover este ***. Lamentamos vê-lo partir. Examinaremos sua solicitação e (em alguns casos) entraremos em contato com você offline antes de processarmos a remoção de***",
     "delete": "Eliminar",
     "cancel": "Cancelar",
     "success_title": "Solicitações enviadas",
-    "failure_title":  falha na solicitação!",
+    "failure_title":  "falha na solicitação!",
     "failure_message": "A solicitação de envio falhou de alguma maneira, tente mais tarde!",
     "dismiss": "Descartar"
   },

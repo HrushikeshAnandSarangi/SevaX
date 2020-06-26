@@ -6,14 +6,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
+import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.dart';
+import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart' as RequestManager;
 
 class EditRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -83,7 +87,8 @@ class RequestEditForm extends StatefulWidget {
 class RequestEditFormState extends State<RequestEditForm> {
   final GlobalKey<_EditRequestState> _offerState = GlobalKey();
   final GlobalKey<OfferDurationWidgetState> _calendarState = GlobalKey();
-
+  End end = End();
+  int editType = 0;
   final _formKey = GlobalKey<FormState>();
 
   RequestModel requestModel = RequestModel();
@@ -93,7 +98,8 @@ class RequestEditFormState extends State<RequestEditForm> {
   String selectedAddress;
 
   String _selectedTimebankId;
-
+  int oldHours =0;
+  int oldTotalRecurrences =0;
   TextStyle hintTextStyle = TextStyle(
     fontSize: 14,
     // fontWeight: FontWeight.bold,
@@ -109,7 +115,8 @@ class RequestEditFormState extends State<RequestEditForm> {
     this.requestModel.timebankId = _selectedTimebankId;
     this.location = widget.requestModel.location;
     this.selectedAddress = widget.requestModel.address;
-
+    this.oldHours = widget.requestModel.numberOfHours;
+    this.oldTotalRecurrences = widget.requestModel.end.endType=="after"? widget.requestModel.end.after : 0;
     //this.selectedUsers = widget.requestModel.approvedUsers;
   }
 
@@ -188,6 +195,13 @@ class RequestEditFormState extends State<RequestEditForm> {
                   startTime: startDate,
                   endTime: endDate),
               SizedBox(height: 8),
+              Visibility(
+                visible: widget.requestModel.isRecurring,
+                child: Container(
+                  child: EditRepeatWidget(requestModel:widget.requestModel),
+                ),
+              ),
+
               Padding(
                 padding: EdgeInsets.all(10.0),
               ),
@@ -290,16 +304,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                       .translate(
                       'create_request', 'no_of_volunteers'),
                   hintStyle: hintTextStyle,
-
-                  // border: OutlineInputBorder(
-                  //   borderRadius: const BorderRadius.all(
-                  //     const Radius.circular(20.0),
-                  //   ),
-                  //   borderSide: new BorderSide(
-                  //     color: Colors.black,
-                  //     width: 1.0,
-                  //   ),
-                  // ),
                 ),
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
@@ -348,6 +352,18 @@ class RequestEditFormState extends State<RequestEditForm> {
                     width: 250,
                     child: RaisedButton(
                       onPressed: () async {
+                        if(widget.requestModel.requestMode.toString()=="PERSONAL_REQUEST" && oldHours!=widget.requestModel.numberOfHours){
+                          var onBalanceCheckResult = await RequestManager.hasSufficientCreditsIncludingRecurring(
+                            credits: requestModel.numberOfHours.toDouble(),
+                            userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                            isRecurring: widget.requestModel.isRecurring,
+                            recurrences: widget.requestModel.end.endType=="after"?(widget.requestModel.end.after-widget.requestModel.occurenceCount).abs():0
+                          );
+                          if (!onBalanceCheckResult) {
+                            showInsufficientBalance();
+                            return;
+                          }
+                        }
                         if (location != null) {
                           widget.requestModel.requestStart =
                               OfferDurationWidgetState.starttimestamp;
@@ -355,41 +371,97 @@ class RequestEditFormState extends State<RequestEditForm> {
                               OfferDurationWidgetState.endtimestamp;
                           widget.requestModel.location = location;
                           widget.requestModel.address = selectedAddress;
+                          print("request model data === ${widget.requestModel.toMap()}");
 
-                          //adding some members for humanity first
-//                        List<String> arrayOfSelectedMembers = List();
-//                        selectedUsers
-//                            .forEach((k, v) => arrayOfSelectedMembers.add(k));
-//                        requestModel.approvedUsers = arrayOfSelectedMembers;
-                          print(widget.requestModel.toMap());
-                          //adding some members for humanity first
+                          if(widget.requestModel.isRecurring) {
+                            widget.requestModel.recurringDays = EditRepeatWidgetState.getRecurringdays();
+                            end.endType = EditRepeatWidgetState.endType == 0 ? "on" : "after";
+                            end.on = end.endType=="on" ? EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch:null;
+                            end.after = (end.endType =="after" ? int.parse(EditRepeatWidgetState.after) : 1);
+                            print("end model is = ${end.toMap()}");
+                            widget.requestModel.end = end;
+                            print("request model is = ${requestModel.toMap()}");
 
-                          if (_formKey.currentState.validate()) {
-                            linearProgressForCreatingRequest();
-                            await this.updateRequest(
-                                requestModel: widget.requestModel);
+                            showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (BuildContext viewContext) {
+                              return WillPopScope(
+                                onWillPop: () {},
+                                child:AlertDialog(
+                                  title:Text("This is a repeating event"),
+                                  actions:[
+                                    FlatButton(
+                                      child: Text(
+                                        "Edit this event only",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontFamily: 'Europa'),
+                                      ),
+                                      onPressed: () async {
+                                        editType = 0;
+                                        Navigator.pop(viewContext);
+                                        linearProgressForCreatingRequest();
+                                        await updateRequest(requestModel: widget.requestModel);
+                                        Navigator.pop(dialogContext);
+                                        Navigator.pop(context);
 
-//                          if (widget.isOfferRequest == true) {
-//                            OfferModel offer = widget.offer;
+                                      },
+                                    ),
+                                    FlatButton(
+                                      child: Text(
+                                        "Edit subsequent events",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontFamily: 'Europa'),
+                                      ),
+                                      onPressed: () async {
+                                        editType=1;
+                                        Navigator.pop(viewContext);
+                                        linearProgressForCreatingRequest();
+                                        await updateRequest(requestModel: widget.requestModel);
+                                        await RequestManager.updateRecurrenceRequests(widget.requestModel.id);
+                                        Navigator.pop(dialogContext);
+                                        Navigator.pop(context);
+
+                                      },
+                                    ),
+                                    FlatButton(
+                                      child: Text(
+                                        "cancel",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.red,
+                                            fontFamily: 'Europa'),
+                                      ),
+                                      onPressed: () async {
+                                        Navigator.pop(viewContext);
+                                      },
+                                    ),
+                                  ]
+
+                                )
+                              );
+                            });
+
+//                            linearProgressForCreatingRequest();
+
+//                              await updateRequest(requestModel: widget.requestModel);
 //
-//                            Set<String> offerRequestList = () {
-//                              if (offer.requestList == null) return [];
-//                              return offer.requestList;
-//                            }()
-//                                .toSet();
-//                            offerRequestList.add(requestModel.id);
-//                            offer.requestList = offerRequestList.toList();
-//                            FirestoreManager.updateOfferWithRequest(
-//                                offer: offer);
-//                            sendOfferRequest(
-//                                offerModel: widget.offer,
-//                                requestSevaID: requestModel.sevaUserId);
-//                            Navigator.pop(context);
-//                            Navigator.pop(context);
-//                          }
-                            if (dialogContext != null) {
-                              Navigator.pop(dialogContext);
-                            }
+//                              if(editType==1){
+//                                await RequestManager.updateRecurrenceRequests(widget.requestModel);
+//                              }
+
+
+                          } else {
+
+                            linearProgressForCreatingRequest();
+
+                            await updateRequest(requestModel: widget.requestModel);
+
+                            Navigator.pop(dialogContext);
                             Navigator.pop(context);
                           }
                         } else {
@@ -408,78 +480,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                   ),
                 ),
               ),
-//               Padding(
-//                 padding: const EdgeInsets.symmetric(vertical: 16.0),
-//                 child: Center(
-//                   child: RaisedButton(
-//                     shape: StadiumBorder(),
-//                     color: Theme.of(context).accentColor,
-//                     onPressed: () async {
-//                       if (location != null) {
-//                         widget.requestModel.requestStart =
-//                             OfferDurationWidgetState.starttimestamp;
-//                         widget.requestModel.requestEnd =
-//                             OfferDurationWidgetState.endtimestamp;
-//                         widget.requestModel.location = location;
-
-//                         //adding some members for humanity first
-// //                        List<String> arrayOfSelectedMembers = List();
-// //                        selectedUsers
-// //                            .forEach((k, v) => arrayOfSelectedMembers.add(k));
-// //                        requestModel.approvedUsers = arrayOfSelectedMembers;
-//                         print(widget.requestModel.toMap());
-//                         //adding some members for humanity first
-
-//                         if (_formKey.currentState.validate()) {
-//                           await this
-//                               .updateRequest(requestModel: widget.requestModel);
-
-// //                          if (widget.isOfferRequest == true) {
-// //                            OfferModel offer = widget.offer;
-// //
-// //                            Set<String> offerRequestList = () {
-// //                              if (offer.requestList == null) return [];
-// //                              return offer.requestList;
-// //                            }()
-// //                                .toSet();
-// //                            offerRequestList.add(requestModel.id);
-// //                            offer.requestList = offerRequestList.toList();
-// //                            FirestoreManager.updateOfferWithRequest(
-// //                                offer: offer);
-// //                            sendOfferRequest(
-// //                                offerModel: widget.offer,
-// //                                requestSevaID: requestModel.sevaUserId);
-// //                            Navigator.pop(context);
-// //                            Navigator.pop(context);
-// //                          }
-//                           Navigator.pop(context);
-//                         }
-//                       } else {
-//                         Scaffold.of(context).showSnackBar(SnackBar(
-//                           content: Text('Location not added'),
-//                         ));
-//                       }
-//                     },
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.center,
-//                       children: <Widget>[
-//                         Icon(
-//                           Icons.attachment,
-//                           size: 24.0,
-//                           color: FlavorConfig.values.buttonTextColor,
-//                         ),
-//                         Text(' '),
-//                         Text(
-//                           'Update Campign Request',
-//                           style: TextStyle(
-//                             color: FlavorConfig.values.buttonTextColor,
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ),
             ],
           ),
         ),
@@ -495,7 +495,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           dialogContext = createDialogContext;
           return AlertDialog(
             title: Text(AppLocalizations.of(context).translate(
-                'create_request', 'progress')),
+                'create_request', 'progress_update')),
             content: LinearProgressIndicator(),
           );
         });
@@ -553,6 +553,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       ),
     );
   }
+
   Future<void> updateRequest({
     @required RequestModel requestModel,
   }) async {
@@ -562,6 +563,31 @@ class RequestEditFormState extends State<RequestEditForm> {
         .collection('requests')
         .document(requestModel.id)
         .updateData(requestModel.toMap());
+  }
+
+  void showInsufficientBalance() {
+    showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(AppLocalizations.of(context)
+                .translate('create_request', 'not_enough_seva')),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  AppLocalizations.of(context)
+                      .translate('create_request', 'ok'),
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   Future _getLocation() async {

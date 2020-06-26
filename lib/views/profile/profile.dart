@@ -249,7 +249,7 @@ class _ProfilePageState extends State<ProfilePage>
                               Scaffold.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(AppLocalizations.of(context)
-                                      .translate('shared', 'check_internet')),
+                                        .translate('shared', 'check_internet')),
                                   action: SnackBarAction(
                                     label: AppLocalizations.of(context)
                                         .translate('shared', 'dismiss'),

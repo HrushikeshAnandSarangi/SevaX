@@ -193,7 +193,8 @@
     "with_timebank_id": "타임 뱅크 ID를",
     "edit_profile_info": "프로필 정보 편집",
     "profile_information": "프로필 정보",
-    "updating_details": "세부 사항 업데이트"
+    "updating_details": "세부 사항 업데이트",
+    "private_timebank": "은밀한 Timebank"
   },
   "billing_plans": {
     "remote_config": "billing_plans",
@@ -459,6 +460,9 @@
     "are_you_sure_feed": "이 뉴스 피드를 삭제 하시겠습니까?"
   },
   "notifications": {
+    "you_signed_up_for": "당신은 가입했습니다",
+    "on": "의 위에",
+    "owner_changes": ". 이벤트 소유자가이 이벤트를 수정했습니다. 변경 사항이 본인에게 적합한 지 확인하고 다시 적용하십시오.",
     "title": "알림",
     "no_notifications": "알림 없음",
     "clear_all": "모든 알림 지우기",
@@ -554,7 +558,8 @@
     "enter_bio": "바이오 입력",
     "please_enter_bio": "업데이트하려면 바이오를 입력하십시오",
     "bio_50": "최소 50자를 입력하십시오",
-    "sure_logout": "로그 아웃 하시겠습니까?"
+    "sure_logout": "로그 아웃 하시겠습니까?",
+    "notifications": "알림 알림"
   },
   "help": {
     "about_sevax": "SevaX 소개",
@@ -708,7 +713,14 @@
     "tap_to_remove": "항목 (제거하려면 탭)",
     "tap_to_delete": "이 항목을 삭제하려면 누르십시오",
     "assign_err_hint": "하나의 프로젝트에 할당하십시오",
-    "tap_to_select": "하나 이상을 선택하려면 누르십시오 ..."
+    "tap_to_select": "하나 이상을 선택하려면 누르십시오 ...",
+    "repeat": "반복",
+    "repeat_on": "반복",
+    "ends": "끝",
+    "on": "의 위에",
+    "after": "후",
+    "repeat_cancel": "취소",
+    "repeat_done": "끝난"
   },
   "edit_group": {
     "add_members": "회원 추가",

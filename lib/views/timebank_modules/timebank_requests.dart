@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -641,6 +642,7 @@ class NearRequestListItems extends StatelessWidget {
           }
           UserModel user = snapshot.data;
           String loggedintimezone = user.timezone;
+          print("time zone is === $loggedintimezone");
           return StreamBuilder<List<RequestModel>>(
             stream: timebankId != 'All'
                 ? FirestoreManager.getNearRequestListStream(
@@ -1162,12 +1164,34 @@ class RequestListItemsState extends State<RequestListItems> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        model.title,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: Theme.of(widget.parentContext).textTheme.subhead,
-                      ),
+                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          model.title,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: Theme.of(widget.parentContext).textTheme.subhead,
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(16.0,0.0,16.0,0.0),
+                          child:Center(
+                            child: Visibility(
+                              visible : model.isRecurring,
+                              child:  InkWell(
+                                onTap: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => RecurringRequestList(model: model),
+                                    ),
+                                  );
+                                },
+                                child: Icon(Icons.navigate_next),
+                              ),
+                            ),
+                          )
+                        )
+                      ],),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.7,
                         child: Text(
@@ -1179,23 +1203,36 @@ class RequestListItemsState extends State<RequestListItems> {
                         ),
                       ),
                       SizedBox(height: 8),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            getTimeFormattedString(
-                                model.requestStart, loggedintimezone),
-                          ),
-                          SizedBox(width: 2),
-                          Icon(Icons.arrow_forward, size: 14),
-                          SizedBox(width: 4),
-                          Text(
-                            getTimeFormattedString(
-                              model.requestEnd,
-                              loggedintimezone,
+                      Visibility(
+                        visible: !model.isRecurring,
+                        child: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              getTimeFormattedString(
+                                  model.requestStart, loggedintimezone),
                             ),
-                          ),
-                        ],
+                            SizedBox(width: 2),
+                            Icon(Icons.arrow_forward, size: 14),
+                            SizedBox(width: 4),
+                            Text(
+                              getTimeFormattedString(
+                                model.requestEnd,
+                                loggedintimezone,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: model.isRecurring,
+                        child: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: <Widget>[
+                            Text("Recurring",
+                            style: TextStyle(fontSize: 16.0,color:Theme.of(context).primaryColor,fontWeight:FontWeight.bold),),
+                          ],
+                        ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -1258,7 +1295,12 @@ class RequestListItemsState extends State<RequestListItems> {
             : false;
     timeBankBloc.setIsAdmin(widget.isAdmin);
 
-    if (model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
+    if(model.isRecurring){
+    print("is recurring ===== ${model.isRecurring}");
+    Navigator.push(widget.parentContext, MaterialPageRoute(
+    builder: (context)=> RecurringRequestList(model: model,timebankModel: widget.timebankModel,)
+    ));
+    }else if (model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
         widget.timebankModel.admins
             .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
       Navigator.push(

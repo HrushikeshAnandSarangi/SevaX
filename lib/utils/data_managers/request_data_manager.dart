@@ -16,6 +16,7 @@ import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:http/http.dart' as http;
 
 import '../app_config.dart';
 import 'notifications_data_manager.dart';
@@ -911,7 +912,18 @@ Stream<RequestModel> getRequestStreamById({
   );
 }
 
-Stream<ProjectModel> getProjectStream({
+Future<void> updateRecurrenceRequests(String requestId) async {
+  final response = await http.post(
+      '${FlavorConfig.values.cloudFunctionBaseURL}/updateRecurrenceRequests',
+//      headers: {"Content-Type": "application/json"},
+//      body: json.encode({"updatedRequestModel": requestModel.toMap()}));
+
+      body: {"updatedRequestModelId": requestId});
+
+  print("recurrence updation statusCode === "+response.toString());
+}
+
+Stream<ProjectModel> getProjectStream({notifications
   @required String projectId,
 }) async* {
   var data =
@@ -1077,6 +1089,32 @@ Future<bool> hasSufficientCredits({
       "Seva Credits ($sevaCoinsBalance) Credits requested $credits ----------------------------- LOWER LIMIT BALANCE $maxAvailableBalance can credit + ${maxAvailableBalance - credits >= 0}");
 
   return maxAvailableBalance - credits >= 0;
+}
+
+Future<bool> hasSufficientCreditsIncludingRecurring({
+  String userId,
+  double credits,
+  int recurrences,
+  bool isRecurring
+}) async {
+  var sevaCoinsBalance = await getMemberBalance(
+    userId,
+  );
+
+  var lowerLimit = 50;
+  try {
+    lowerLimit =
+        json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
+  } on Exception {
+    print("Exception raised while getting user minimum balance");
+  }
+
+  var maxAvailableBalance = (sevaCoinsBalance + lowerLimit ?? 50);
+var creditsNew = isRecurring? credits*recurrences : credits;
+  print(
+      "Seva Credits ($sevaCoinsBalance) Credits requested $credits ----------------------------- LOWER LIMIT BALANCE $maxAvailableBalance can credit + ${maxAvailableBalance - credits >= 0}");
+
+  return maxAvailableBalance - (creditsNew) >= 0;
 }
 
 Future<double> getMemberBalance(userId) async {
