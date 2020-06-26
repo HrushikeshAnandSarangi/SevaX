@@ -224,7 +224,7 @@ class BillingPlanCardState extends State<BillingPlanCard> {
                     if (isPlanActive) {
                       _changePlanAlert(context);
                     } else {
-                      if (plan.id == "community_plan") {
+                      if (plan.id == "community_plan" || isBillMe == true) {
                         _planSuccessMessage(
                           context: context,
                         );
@@ -383,9 +383,12 @@ class BillingPlanCardState extends State<BillingPlanCard> {
             "payment": {
               "payment_success": true,
               "planId": plan.id,
-              "message": AppLocalizations.of(context)
-                  .translate('billing_plans', 'community_plan')
-            }
+              "message": isBillMe
+                  ? plan.planName
+                  : AppLocalizations.of(context)
+                      .translate('billing_admin', 'community_plan')
+            },
+            "billMe": isBillMe
           },
         ).then((_) {
           Navigator.of(context).pop();
