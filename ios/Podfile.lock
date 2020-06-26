@@ -240,14 +240,14 @@ PODS:
     - Flutter
   - Crashlytics (3.14.0):
     - Fabric (~> 1.10.2)
-  - DKImagePickerController/Core (4.3.1):
+  - DKImagePickerController/Core (4.3.2):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
-  - DKImagePickerController/ImageDataManager (4.3.1)
-  - DKImagePickerController/PhotoGallery (4.3.1):
+  - DKImagePickerController/ImageDataManager (4.3.2)
+  - DKImagePickerController/PhotoGallery (4.3.2):
     - DKImagePickerController/Core
     - DKPhotoGallery
-  - DKImagePickerController/Resource (4.3.1)
+  - DKImagePickerController/Resource (4.3.2)
   - DKPhotoGallery (0.0.15):
     - DKPhotoGallery/Core (= 0.0.15)
     - DKPhotoGallery/Model (= 0.0.15)
@@ -419,9 +419,13 @@ PODS:
     - Flutter
   - Flurry-iOS-SDK/FlurrySDK (10.3.1)
   - Flutter (1.0.0)
+  - flutter_downloader (0.0.1):
+    - Flutter
   - flutter_full_pdf_viewer (1.0.1):
     - Flutter
   - flutter_keyboard_visibility (0.7.0):
+    - Flutter
+  - flutter_local_notifications (0.0.1):
     - Flutter
   - flutter_plugin_android_lifecycle (0.0.1):
     - Flutter
@@ -575,6 +579,8 @@ DEPENDENCIES:
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - connectivity_macos (from `.symlinks/plugins/connectivity_macos/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
+  - Firebase/Analytics
+  - Firebase/Messaging
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_auth_web (from `.symlinks/plugins/firebase_auth_web/ios`)
@@ -587,8 +593,10 @@ DEPENDENCIES:
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - flurry (from `.symlinks/plugins/flurry/ios`)
   - Flutter (from `Flutter`)
+  - flutter_downloader (from `.symlinks/plugins/flutter_downloader/ios`)
   - flutter_full_pdf_viewer (from `.symlinks/plugins/flutter_full_pdf_viewer/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_plugin_android_lifecycle (from `.symlinks/plugins/flutter_plugin_android_lifecycle/ios`)
   - geoflutterfire (from `.symlinks/plugins/geoflutterfire/ios`)
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
@@ -701,10 +709,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flurry/ios"
   Flutter:
     :path: Flutter
+  flutter_downloader:
+    :path: ".symlinks/plugins/flutter_downloader/ios"
   flutter_full_pdf_viewer:
     :path: ".symlinks/plugins/flutter_full_pdf_viewer/ios"
   flutter_keyboard_visibility:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_plugin_android_lifecycle:
     :path: ".symlinks/plugins/flutter_plugin_android_lifecycle/ios"
   geoflutterfire:
@@ -765,7 +777,7 @@ SPEC CHECKSUMS:
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   connectivity_macos: e2e9731b6b22dda39eb1b128f6969d574460e191
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
-  DKImagePickerController: f3d397887f38b98276a506b02ed9c167425f7cf3
+  DKImagePickerController: b5eb7f7a388e4643264105d648d01f727110fc3d
   DKPhotoGallery: e880aef16c108333240e1e7327896f2ea380f4f0
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
@@ -799,14 +811,16 @@ SPEC CHECKSUMS:
   flurry: 15b01f664ab1367c62b50291541ea7f78ca85aad
   Flurry-iOS-SDK: 2cc5b4f494db71d90a8bd195ba7ebb7cdebf3535
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_downloader: 058b9c41564a90500f67f3e432e3524613a7fd83
   flutter_full_pdf_viewer: 1b65139fc3236cde300ba6bea2a72669cb07f2e6
   flutter_keyboard_visibility: 6195387fb6d8f46e5cd6dda4a4154e41f800f545
+  flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
   flutter_plugin_android_lifecycle: dc0b544e129eebb77a6bfb1239d4d1c673a60a35
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   geoflutterfire: 2a6493e01fb6eef1a6c9046b1baf9a943d0c5ffe
   geolocator: f7622e0e7e2a24718285b73916d60c4a54b9f5b6
   google_api_availability: 15fa42a8cd83c0a6738507ffe6e87096f12abcb8
-  google_maps_flutter: 78a52114c898b42ea647919679a4c58b70abe876
+  google_maps_flutter: df4e7de95264aa0a2f11aac0fc7e313acb8ffc7e
   google_sign_in: 6bd214b9c154f881422f5fe27b66aaa7bbd580cc
   google_sign_in_web: 52deb24929ac0992baff65c57956031c44ed44c3
   GoogleAppMeasurement: 137afe68bfa406c3f4221b9395253d9e5d4654cf
@@ -846,6 +860,6 @@ SPEC CHECKSUMS:
   url_launcher: 0067ddb8f10d36786672aa0722a21717dba3a298
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
 
-PODFILE CHECKSUM: b50f759a5911b534c52316e93845c911208c6aef
+PODFILE CHECKSUM: b38ca003ac50041f7ecd4ea0d1717dfac9dea13b
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.9.3
