@@ -611,7 +611,10 @@ class _EditProfilePageState extends State<EditProfilePage>
                       //   statusBarBrightness: Brightness.light,
                       //   statusBarColor: Colors.white,
                       // ));
-                      Navigator.of(_context).pop();
+                      try {
+                        Navigator.of(_context).pop();
+                      } catch (e) {
+                      }
 
                       _signOut(
                           _context, SevaCore.of(context).loggedInUser.email);
