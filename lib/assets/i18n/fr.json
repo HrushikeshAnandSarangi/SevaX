@@ -194,7 +194,8 @@
     "with_timebank_id": "avec id banque de temps comme",
     "edit_profile_info": "Modifier les informations de profil",
     "profile_information": "Informations sur le profil",
-    "updating_details": "Mise à jour des détails"
+    "updating_details": "Mise à jour des détails",
+    "private_timebank": "Privé Timebank"
   },
   "billing_plans": {
     "remote_config": "billing_plans",
@@ -212,7 +213,6 @@
     "bill_me": "facture moi",
     "bill_me_info": "Ceci n'est disponible que pour les utilisateurs qui ont des accords préalables avec Seva Exchange. Veuillez envoyer un e-mail à billme@sevaexchange.com pour plus de détails.",
     "bill_me_info_two": "Seuls les utilisateurs qui ont été approuvés a priori peuvent cocher la case \"Bill Me\". Si vous souhaitez le faire, veuillez envoyer un e-mail à billme@sevaexchange.com"
-
   },
   "explore": {
     "title": "Explorer",
@@ -469,6 +469,9 @@
     "are_you_sure_feed": "Voulez-vous vraiment supprimer ce fil d'actualités?"
   },
   "notifications": {
+    "you_signed_up_for": "Vous vous étiez inscrit à la",
+    "on": "le vendredi",
+    "owner_changes": ". Le propriétaire de l'événement a modifié cet événement. Veuillez vous assurer que les modifications apportées vous conviennent et faites une nouvelle demande",
     "title": "Notifications",
     "added_you": "vous a ajouté à",
     "timebank_join": "Timebank Join",
@@ -566,7 +569,8 @@
     "enter_bio": "Entrez bio",
     "please_enter_bio": "Veuillez entrer la biographie pour mettre à jour",
     "bio_50": "Veuillez saisir au moins 50 caractères",
-    "sure_logout": "Êtes-vous sûr de vouloir vous déconnecter?"
+    "sure_logout": "Êtes-vous sûr de vouloir vous déconnecter?",
+    "notifications": "Alertes de notification"
   },
   "help": {
     "about_sevax": "À propos de SevaX",
@@ -720,7 +724,16 @@
     "tap_to_remove": "articles (appuyez pour supprimer)",
     "tap_to_delete": "Appuyez pour supprimer cet élément",
     "assign_err_hint": "Veuillez attribuer à un projet",
-    "tap_to_select": "Appuyez pour sélectionner un ou plusieurs..."
+    "tap_to_select": "Appuyez pour sélectionner un ou plusieurs...",
+    "repeat": "Répéter",
+    "repeat_on": "Répéter sur",
+    "ends": "Prend fin",
+    "on": "Sur",
+    "after": "Après",
+    "occurences": "Occurrences",
+    "occurences": "Occurences",
+    "repeat_cancel": "Annuler",
+    "repeat_done": "Terminé"
   },
   "edit_group": {
     "add_members": "Añadir miembros",
@@ -1057,24 +1070,23 @@
   },
   "messages": {
     "messages_title": "Messages",
-    "personal_messages": "Personnelle",
+    "personal_messages": "Personal",
     "admin_messages": "Admin",
     "new_chat": "Nouveau chat",
-    "multi_user": "Messagerie multi-utilisateur",
-    "frequently_contacted": "FOIRE CONTACTÉ",
+    "multi_user": "Salle de messages multi-utilisateurs",
+    "frequently_contacted": "FRÉQUEMMENT CONTACTE",
     "groups": "GROUPES",
-    "timebank_members": "TimeBank MEMBRES",
+    "timebank_members": "MEMBRES TIMEBANK",
     "add_participants": "Ajouter des participants",
-    "new_multi_user_messaging": "Nouvelle messagerie multi-utilisateur",
-    "multi_user_messaging_name": "Multi-utilisateur de messagerie Nom",
-    "note": "S'il vous plaît fournir un sujet de messagerie multi-utilisateur et icône du groupe en option",
-    "participants": "Les participants",
-    "creating_multi_user_messaging": "Création de messagerie multi-utilisateur ...",
+    "new_multi_user_messaging": "Nouvelle salle de messages multi-utilisateurs",
+    "multi_user_messaging_name": "Nom de la salle de messages multi-utilisateurs",
+    "note": "Veuillez fournir un objet de salle de messages multi-utilisateurs et une icône de groupe en option",
+    "participants": "Participants",
+    "creating_multi_user_messaging": "Création d'une salle de messages multi-utilisateurs ...",
     "cancel": "Annuler",
-    "next": "Prochain",
-    "create": "Créer"
+    "next": "Suivant",
+    "create": "Créer",
   },
-
   "add_location": {
     "confirm_location_label": "CONFIRMER L'EMPLACEMENT"
   },
@@ -1121,7 +1133,6 @@
     "csv_size_limit": "REMARQUE: la taille maximale du fichier est de 1 MB",
     "csv_progress": "Téléchargement d'un fichier CSV",
     "upload_success": "Téléchargé avec succès"
-
   },
   "external_notifications": {
     "notification_title": "Notifications",
@@ -1170,6 +1181,5 @@
     "change_advisory": " Vous devez fournir les détails de facturation de cette Timebank, y compris la nouvelle adresse de facturation. Le transfert de propriété ne sera pas achevé tant que cela ne sera pas fait.",
     "ownership_suceess": "Toutes nos félicitations! Vous êtes maintenant le nouveau propriétaire de la Timebank ",
     "already_invited": " déjà invité."
-
   }
 }

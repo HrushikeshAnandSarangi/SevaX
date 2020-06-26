@@ -117,6 +117,8 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                               SevaCore.of(context)
                                   .loggedInUser
                                   .currentCommunity = v.id;
+                              SevaCore.of(context)
+                                  .loggedInUser.currentTimebank = v.primary_timebank;
                               _homeDashBoardBloc
                                   .setDefaultCommunity(
                                 context: context,
@@ -127,6 +129,9 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                                 SevaCore.of(context)
                                     .loggedInUser
                                     .currentCommunity = v.id;
+                                SevaCore.of(context)
+                                    .loggedInUser
+                                    .currentTimebank = v.primary_timebank;
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(

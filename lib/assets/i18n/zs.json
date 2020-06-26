@@ -193,8 +193,7 @@
     "with_timebank_id": " 时间银行编号",
     "edit_profile_info": "编辑个人资料信息",
     "profile_information": "档案信息",
-    "updating_details": "更新细节",
-    "private_timebank": "私人的 Timebank"
+    "updating_details": "更新细节"
   },
   "billing_plans": {
     "remote_config": "付款安排",
@@ -460,9 +459,6 @@
     "are_you_sure_feed": "您确定要删除此新闻提要吗？"
   },
   "notifications": {
-    "you_signed_up_for": "您已注册",
-    "on": "上",
-    "owner_changes": ". 事件所有者已修改此事件。确保所做的更改适合您并再次应用",
     "title": "通知事项",
     "no_notifications": "没有通知",
     "clear_all": "清除所有通知",
@@ -558,8 +554,7 @@
     "enter_bio": "进入个人资料",
     "please_enter_bio": "请输入个人资料以更新",
     "bio_50": "请输入至少50个字符",
-    "sure_logout": "你确定要离开？",
-    "notifications": "通知警报"
+    "sure_logout": "你确定要离开？"
   },
   "help": {
     "about_sevax": "关于SevaX",
@@ -713,14 +708,7 @@
     "tap_to_remove": "项目（TAP若要删除）",
     "tap_to_delete": "点击删除此项目",
     "assign_err_hint": "请分配到一个项目",
-    "tap_to_select": "点击选择一个或更多...",
-    "repeat": "重复",
-    "repeat_on": "重复上",
-    "ends": "完结",
-    "on": "上",
-    "after": "后",
-    "repeat_cancel": "取消",
-    "repeat_done": "完成"
+    "tap_to_select": "点击选择一个或更多..."
   },
   "edit_group": {
     "add_members": "添加成员",
@@ -996,10 +984,10 @@
     "could_not_delete": " 无法删除！",
     "deleted_successfully": " 您要求删除已成功删除！",
     "could_not_deleted": "因为你已经挂起的事务不能被删除！",
-    "incomplete_transaction": "我们无法处理您的***删除请求，你仍然有它的开放交易：\n",
-    "one_to_many_offers": "一对多报价\n",
-    "projects": "项目\n",
-    "open_requests": "打开请求\n"
+    "incomplete_transaction": "我们无法处理您的***删除请求，你仍然有它的开放交易：\\ n",
+    "one_to_many_offers": "一对多报价\\ n",
+    "projects": "项目\\ n",
+    "open_requests": "打开请求\\ n"
   },
   "accidental_delete": {
     "accidental_delete_enabled_title": "启用意外删除",
@@ -1033,7 +1021,7 @@
     "failed": "未能报告员！再试一次",
     "reported_users": "报告用户",
     "detail": "点击此处查看该时间银行的用户报告",
-    "reported_members": "报告成员",
+    "members": "报道员",
     "no_data": "没有数据",
     "by": "通过报道",
     "user": "用户",
@@ -1055,14 +1043,28 @@
     "settings": "设置",
     "about": "关于",
     "view_request": "查看请求",
-    "reported_members": "报告成员",
+    "members": "报道员",
     "delete_group": "删除组",
     "manage": "管理"
   },
   "messages": {
-    "messages_title": "消息",
+    "messages_title": " 消息 ",
     "personal_messages": "个人",
-    "admin_messages": "管理员"
+    "admin_messages": "管理员",
+    "new_chat": "新聊天",
+    "multi_user": "多用户消息传递室",
+    "frequently_contacted": "频繁接触",
+    "groups": " 团体",
+    "timebank_members": "TIMEBANK成员",
+    "add_participants": "添加参与者",
+    "new_multi_user_messaging": "新的多用户消息室",
+    "multi_user_messaging_name": "多用户消息传递室名称",
+    "note": "请提供多用户消息传递室主题和可选的组图标",
+    "参与者": "参与者",
+    "creating_multi_user_messaging": "正在创建多用户消息室...",
+    "cancel": "取消",
+    "next": "下一个",
+    "创建": "创建"
   },
   "add_location": {
     "confirm_location_label": "确认位置下"
@@ -1075,19 +1077,19 @@
   },
   "notifications_card": {
     "delete_notification_title": "删除通知",
-    "sure_to_delete": "您确定要删除此通知吗?",
+    "sure_to_delete": "您确定要删除此通知吗？",
     "cancel": "取消",
     "delete": "删除"
   },
   "transfer_ownership": {
-    "exit_user": "退出用户",
+    "exit_user": "用户注销",
     "remove_user": "删除用户",
-    "transfer_hint": "将此用户数据的所有权转让给另一个用户，例如组所有权.",
-    "transfer_hint_two": "转移至",
-    "search_user": "搜索用户",
-    "transfer_hint_three": "所有未传输的数据将被删除。",
-    "removed_success": "用户已成功从时区中删除",
-    "transfer_error": "错误发生！请稍后回来再试一次。",
+    "transfer_hint": "将此用户的数据所有权转移到另一个用户，例如组的所有权。",
+    "transfer_hint_two": "翻译成",
+    "search_user": "用户搜索",
+    "transfer_hint_three": "所有尚未传输的数据将被删除。",
+    "removed_success": "用户已成功从临时银行中删除",
+    "transfer_error": "发生了错误！请稍后再试，然后重试。",
     "empty_user": "未找到相应的用户"
   },
   "external_notifications": {
