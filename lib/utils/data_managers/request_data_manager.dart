@@ -1062,6 +1062,32 @@ Future<bool> hasSufficientCredits({
   return maxAvailableBalance - credits >= 0;
 }
 
+Future<bool> hasSufficientCreditsIncludingRecurring({
+  String userId,
+  double credits,
+  int recurrences,
+  bool isRecurring
+}) async {
+  var sevaCoinsBalance = await getMemberBalance(
+    userId,
+  );
+
+  var lowerLimit = 50;
+  try {
+    lowerLimit =
+        json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
+  } on Exception {
+    print("Exception raised while getting user minimum balance");
+  }
+
+  var maxAvailableBalance = (sevaCoinsBalance + lowerLimit ?? 50);
+var creditsNew = isRecurring? credits*recurrences : credits;
+  print(
+      "Seva Credits ($sevaCoinsBalance) Credits requested $credits ----------------------------- LOWER LIMIT BALANCE $maxAvailableBalance can credit + ${maxAvailableBalance - credits >= 0}");
+
+  return maxAvailableBalance - (creditsNew) >= 0;
+}
+
 Future<double> getMemberBalance(userId) async {
   double sevaCoins = 0;
   var userModel = await FirestoreManager.getUserForIdFuture(

@@ -99,6 +99,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   String _selectedTimebankId;
   int oldHours =0;
+  int oldTotalRecurrences =0;
   TextStyle hintTextStyle = TextStyle(
     fontSize: 14,
     // fontWeight: FontWeight.bold,
@@ -115,6 +116,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     this.location = widget.requestModel.location;
     this.selectedAddress = widget.requestModel.address;
     this.oldHours = widget.requestModel.numberOfHours;
+    this.oldTotalRecurrences = widget.requestModel.end.endType=="after"? widget.requestModel.end.after : 0;
     //this.selectedUsers = widget.requestModel.approvedUsers;
   }
 
@@ -351,9 +353,11 @@ class RequestEditFormState extends State<RequestEditForm> {
                     child: RaisedButton(
                       onPressed: () async {
                         if(widget.requestModel.requestMode.toString()=="PERSONAL_REQUEST" && oldHours!=widget.requestModel.numberOfHours){
-                          var onBalanceCheckResult = await RequestManager.hasSufficientCredits(
+                          var onBalanceCheckResult = await RequestManager.hasSufficientCreditsIncludingRecurring(
                             credits: requestModel.numberOfHours.toDouble(),
                             userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                            isRecurring: widget.requestModel.isRecurring,
+                            recurrences: widget.requestModel.end.endType=="after"?(widget.requestModel.end.after-widget.requestModel.occurenceCount).abs():0
                           );
                           if (!onBalanceCheckResult) {
                             showInsufficientBalance();
