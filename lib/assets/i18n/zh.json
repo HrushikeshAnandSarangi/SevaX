@@ -36,6 +36,7 @@
     "enter_password_warn": "输入密码",
     "password_warn_6char": "密码必须为6个字符长",
     "reset_link_message": "我们已将重置链接发送到您的电子邮件地址",
+    "reset_dynamic_link_message": "请检查您的电子邮件以设置密码。然后在此处输入该密码",
     "terms_of_service_link": "服务条款",
     "privacy_policy_link": "隐私政策",
     "payment_policy_link": "付款政策"
@@ -208,7 +209,10 @@
     "contact": "请联系SevaX支持以更改计划",
     "close": "关",
     "billing_plans": "您正在参加的付款计划",
-    "progress": "带您进入新的时间银行..."
+    "progress": "带您进入新的时间银行...",
+    "bill_me": "比尔我",
+    "bill_me_info": "这仅适用于事先与Seva Exchange达成协议的用户。请发送电子邮件至billme@sevaexchange.com了解详细信息",
+    "bill_me_info_two": "只有获得先验批准的用户才能选中“向我收费”框。如果您想这样做，请发送电子邮件至billme@sevaexchange.com"
   },
   "explore": {
     "title": "探索",
@@ -394,7 +398,8 @@
     "title_about": "标题",
     "mission_statement": "使命宣言",
     "organizer": "组织者",
-    "delete_project": "删除专案"
+    "delete_project": "删除专案",
+    "new_project": "新项目"
   },
   "tasks": {
     "error": "错误: ",
@@ -525,7 +530,9 @@
     "timebank_exit": "离开定时银行",
     "exited_from": "已从退出",
     "tap_to_view": "点按可查看详细信息",
-    "group_invite": "群组加入邀请"
+    "group_invite": "群组加入邀请",
+    "notification_alert": "通知事项",
+    "turn_on_notification": "允许个人通知"
   },
   "profile": {
     "image_hint": "图片提示",
@@ -1035,6 +1042,7 @@
     "detail": "点击此处查看该时间银行的用户报告",
     "reported_members": "报告成员",
     "no_data": "没有数据",
+    "reported_by": "Reported by",
     "by": "通过报道",
     "user": "用户",
     "users": "用户",
@@ -1062,7 +1070,21 @@
   "messages": {
     "messages_title": "消息",
     "personal_messages": "个人",
-    "admin_messages": "管理员"
+    "admin_messages": "管理员",
+    "new_chat": "新聊天",
+    "multi_user": "多用户留言室",
+    "frequently_contacted": "频繁接触",
+    "groups": "团体",
+    "timebank_members": "定时银行会员",
+    "add_participants": "添加参与者",
+    "new_multi_user_messaging": "新的多用户留言室",
+    "multi_user_messaging_name": "多用户留言室名称",
+    "note": "请提供多用户消息室主题和可选的组图标",
+    "participants": "参加者",
+    "creating_multi_user_messaging": "创建多用户留言室...",
+    "cancel": "取消",
+    "next": "下一个",
+    "create": "创造"
   },
   "add_location": {
     "confirm_location_label": "确认位置下"
@@ -1090,6 +1112,40 @@
     "transfer_error": "错误发生！请稍后回来再试一次。",
     "empty_user": "未找到相应的用户"
   },
+  "private_timebank": {
+    "private_timebank": "私人时间银行",
+    "alert_title": "私人时区提醒",
+    "alert_hint": "请注意，私人时间银行没有免费选项。您需要提供您的结算明细，才能继续创建此Timebank"
+  },
+  "upload_csv": {
+    "csv_hint_one": "将CSV模板下载到",
+    "csv_hint_two": "填写您要添加的用户",
+    "csv_hint_three": "然后上传CSV。",
+    "download_csv": "下载示例CSV文件",
+    "csv_title": "通过CSV批量邀请用户",
+    "upload": "上载",
+    "choose_csv": "选择CSV文件批量邀请会员",
+    "csv_error": "请先选择一个CSV文件，然后再上传",
+    "download_progress": "正在下载",
+    "download_success": "下载完成。",
+    "csv_file_alert": "不允许大于1 MB的文件",
+    "csv_size_limit": "注意：最大文件大小为1 MB",
+    "csv_progress": "上载CSV文件",
+    "upload_success": "上传成功"
+  },
+  "project_template": {
+    "save_as_template": "另存为模板",
+    "template_title": "为模板提供唯一的名称",
+    "template_hint": "模板名称",
+    "name_error": "模板名称不能为空",
+    "already_exists": "模板名称已被使用。请提供另一个名字",
+    "search_template_hint": "输入项目模板的名称",
+    "create_project_template": "从模板创建项目",
+    "create_new_project": "建立新专案",
+    "no_templates": "找不到模板",
+    "empty_template": "请从可用模板列表中选择一个模板",
+    "template_alert": "模板警报"
+  },
   "external_notifications": {
     "notification_title": "通知",
     "request_accepted": "成员已接受请求并正在等待批准",
@@ -1101,5 +1157,28 @@
     "credit_request": "一对多报价收到的信用额",
     "timebank": "时间银行",
     "group": "小组"
+  },
+  "change_ownership": {
+    "change_ownership_title": "Change Ownership",
+    "change": "Change",
+    "change_hint": "Changing ownership of this ",
+    "change_hint_three": " to another admin.",
+    "change_hint_two": "Change to",
+    "invitation_sent": "We have sent your transfer of ownership invitation. You will remain to be the owner of Timebank ",
+    "invitation_sent_two": " until ",
+    "invitation_sent_three": " accepts the invitation and provides their new billing information.",
+    "notification_msg": "has invited you to be the new owner of the Timebank",
+    "accept": "Accept",
+    "change_alert": "By accepting, you will become owner of the timebank",
+    "users_empty": "Please select a user",
+    "pending_task": "You have pending tasks. Please complete tasks before ownership can be transferred",
+    "pending_payment": "You have payment pending of ",
+    "pending_payment_two": ". Please complete these payment before ownership can be transferred",
+    "search_admin": "Search Admin",
+    "change_message": "You are the new owner of Timebank ",
+    "change_message_two": " You need to accept it to complete the process",
+    "change_advisory": " You are required to provide billing details for this Timebank - including the new billing address. The transfer of ownership will not be completed until this is done.",
+    "ownership_suceess": "Congratulations! You are now the new owner of the Timebank ",
+    "already_invited": " already invited."
   }
 }

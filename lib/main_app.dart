@@ -102,7 +102,7 @@ class MainApplication extends StatelessWidget {
                 Locale('pt', 'PT'),
                 Locale('fr', 'FR'),
                 Locale('es', 'ES'),
-                Locale('zh-CN', 'zh-CN')
+                Locale('zh', 'CN')
               ],
               localizationsDelegates: [
                 AppLocalizations.delegate,
