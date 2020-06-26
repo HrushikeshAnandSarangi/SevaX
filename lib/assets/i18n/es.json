@@ -213,7 +213,6 @@
     "bill_me": "facturarme",
     "bill_me_info": "Esto está disponible solo para usuarios que tienen acuerdos previos con Seva Exchange. Por favor envíe un correo electrónico a billme@sevaexchange.com para más detalles.",
     "bill_me_info_two": "Solo los usuarios que han sido aprobados a priori pueden marcar la casilla \"Bill Me\". Si desea hacer esto, envíe un correo electrónico a billme@sevaexchange.com"
-
   },
   "explore": {
     "title": "Explorar",
@@ -1062,16 +1061,16 @@
     "personal_messages": "Personal",
     "admin_messages": "Admin",
     "new_chat": "Nuevo chat",
-    "multi_user": "Sala de mensajería multiusuario",
+    "multi_user": "Sala de mensajes multiusuario",
     "frequently_contacted": "CONTACTADO CON FRECUENCIA",
     "groups": "GRUPOS",
     "timebank_members": "MIEMBROS DE TIMEBANK",
     "add_participants": "Agregar participantes",
-    "new_multi_user_messaging": "Nueva sala de mensajería multiusuario",
-    "multi_user_messaging_name": "Nombre de la sala de mensajería multiusuario",
-    "note": "Proporcione un asunto de sala de mensajería multiusuario e ícono de grupo opcional",
+    "new_multi_user_messaging": "Nueva sala de mensajes multiusuario",
+    "multi_user_messaging_name": "Nombre de la sala de mensajes multiusuario",
+    "note": "Proporcione un asunto de sala de mensajes multiusuario e ícono de grupo opcional",
     "participants": "Participantes",
-    "creating_multi_user_messaging": "Creando sala de mensajería multiusuario ...",
+    "creating_multi_user_messaging": "Creando sala de mensajes multiusuario ...",
     "cancel": "Cancelar",
     "next": "siguiente",
     "create": "Crear"
@@ -1122,7 +1121,6 @@
     "csv_size_limit": "NOTA: el tamaño máximo del archivo es de 1 MB",
     "csv_progress": "Subir archivo CSV",
     "upload_success": "Subido correctamente"
-
   },
   "external_notifications": {
     "notification_title": "Notificaciones",
@@ -1166,12 +1164,10 @@
     "pending_payment": "Tienes un pago pendiente de ",
     "pending_payment_two": ". Complete estos pagos antes de poder transferir la propiedad",
     "search_admin": "Administrateur de recherche",
-
     "change_message": "Eres el nuevo propietario de Timebank ",
     "change_message_two": " Debes aceptarlo para completar el proceso.",
     "change_advisory": " Debe proporcionar los detalles de facturación de este Timebank, incluida la nueva dirección de facturación. La transferencia de propiedad no se completará hasta que se haga esto.",
     "ownership_suceess": "¡Felicidades! Ahora eres el nuevo propietario del Banco de tiempo ",
     "already_invited": " Ya invitado."
-
   }
 }
