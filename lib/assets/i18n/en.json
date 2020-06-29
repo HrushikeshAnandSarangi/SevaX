@@ -1080,6 +1080,9 @@
     "note": "Please provide a multi-user message room subject and optional group icon",
     "participants": "Participants",
     "creating_multi_user_messaging": "Creating Multi-User Message Room...",
+    "updating_multi_user_messaging": "Updating Multi-User Messaging Room...",
+    "sending": "Sending...",
+    "loading": "Loading ...",
     "cancel": "Cancel",
     "next": "Next",
     "create": "Create"
