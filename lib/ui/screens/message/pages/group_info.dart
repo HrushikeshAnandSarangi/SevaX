@@ -52,7 +52,29 @@ class _GroupInfoState extends State<GroupInfoPage> {
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
               onPressed: () {
-                _bloc.editGroupDetails(widget.chatModel.id);
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      content: Text("Updating..."
+                          // AppLocalizations.of(context).translate(
+                          //   'messages',
+                          //   'creating_multi_user_messaging',
+                          // ),
+                          ),
+                    );
+                  },
+                );
+                _bloc.editGroupDetails(widget.chatModel.id).then(
+                  (_) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    Navigator.of(context).pop();
+                  },
+                );
               },
             ),
           ),

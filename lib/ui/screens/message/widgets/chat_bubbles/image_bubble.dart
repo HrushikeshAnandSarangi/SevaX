@@ -48,7 +48,7 @@ class ImageBubble extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: messageModel.data == null
-                    ? Center(child: ImageUploading())
+                    ? Center(child: ImageUploading(isSending: isSent))
                     : CustomNetworkImage(
                         messageModel.data,
                         fit: BoxFit.cover,
@@ -82,6 +82,9 @@ class ImageBubble extends StatelessWidget {
 }
 
 class ImageUploading extends StatelessWidget {
+  final bool isSending;
+
+  const ImageUploading({Key key, this.isSending}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -89,7 +92,7 @@ class ImageUploading extends StatelessWidget {
       children: <Widget>[
         CircularProgressIndicator(),
         SizedBox(height: 4),
-        Text("Sending..."),
+        Text(isSending ? "Sending..." : "Loading..."),
       ],
     );
   }

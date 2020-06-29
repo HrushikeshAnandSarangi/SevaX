@@ -7,6 +7,8 @@ class ChatModelSync {
 
   final _chatModels = BehaviorSubject<List<ChatModel>>();
 
+  bool get isClosed => _chatModels.isClosed;
+
   Function(List<ChatModel>) get addChatModels => _chatModels.sink.add;
   Stream<List<ChatModel>> get chatModels => _chatModels.stream;
 

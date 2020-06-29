@@ -17,7 +17,7 @@ class SelectedMemberListBuilder extends StatelessWidget {
           return Container();
         }
         return Container(
-          height: 110,
+          height: 130,
           child: ListView.builder(
             padding: EdgeInsets.symmetric(
               horizontal: 10,
