@@ -69,12 +69,13 @@ class ChatBloc {
 
     createNewMessage(
       chatId: chatModel.id,
-      recieverId: recieverId,
+      senderId: senderId,
       messageModel: messageModel,
       timebankId: senderId,
       isTimebankMessage: chatModel.isTimebankMessage,
       isAdmin: senderId.contains("-"), //timebank id contains "-"
       file: file,
+      participants: chatModel.participants,
     );
   }
 

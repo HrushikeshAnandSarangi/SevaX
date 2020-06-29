@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/edit_group_info_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/create_new_chat_page.dart';
@@ -52,7 +53,29 @@ class _GroupInfoState extends State<GroupInfoPage> {
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
               onPressed: () {
-                _bloc.editGroupDetails(widget.chatModel.id);
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      content: Text(
+                        AppLocalizations.of(context).translate(
+                          'messages',
+                          'updating_multi_user_messaging',
+                        ),
+                      ),
+                    );
+                  },
+                );
+                _bloc.editGroupDetails(widget.chatModel.id).then(
+                  (_) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    Navigator.of(context).pop();
+                  },
+                );
               },
             ),
           ),

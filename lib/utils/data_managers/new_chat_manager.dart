@@ -105,10 +105,11 @@ Future<void> markMessageAsRead({
 
 Future<void> createNewMessage({
   @required String chatId,
-  @required String recieverId,
+  @required String senderId,
   @required MessageModel messageModel,
   @required bool isAdmin,
-  @required timebankId,
+  @required String timebankId,
+  @required List<String> participants,
   bool isTimebankMessage = false,
   File file,
 }) async {
@@ -158,14 +159,19 @@ Future<void> createNewMessage({
   }
 
   //update chat with last message, timestamp and unreadStatus
+
+  Map<String, FieldValue> unreadStatus = Map<String, FieldValue>.fromIterable(
+    participants,
+    key: (id) => id,
+    value: (_) => FieldValue.increment(1),
+  )..remove(senderId);
+
   batch.setData(
     Firestore.instance.collection("chatsnew").document(chatId),
     {
       'lastMessage': messageModel.message,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
-      "unreadStatus": {
-        recieverId: FieldValue.increment(1),
-      },
+      "unreadStatus": unreadStatus,
     },
     merge: true,
   );

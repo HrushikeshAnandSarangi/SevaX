@@ -83,29 +83,33 @@ class _ChatPageState extends State<ChatPage> {
     }
 
     if (widget.chatModel.isGroupMessage) {
-      ChatModelSync().chatModels.listen((List<ChatModel> chats) {
-        ChatModel model = chats.firstWhere(
-          (element) => element.id == widget.chatModel.id,
-          orElse: () => null,
-        );
+      ChatModelSync().chatModels.listen(
+        (List<ChatModel> chats) {
+          ChatModel model = chats.firstWhere(
+            (element) => element.id == widget.chatModel.id,
+            orElse: () => null,
+          );
 
-        if (model == null) {
-          if (!exitFromChatPage) {
-            Navigator.of(context).pop();
-          }
-        } else {
-          model.participantInfo.forEach((ParticipantInfo info) {
-            participantsInfoById[info.id] = info
-              ..color = colorGeneratorFromName(info.name);
-          });
+          if (model == null) {
+            if (!exitFromChatPage) {
+              print("called  $exitFromChatPage");
+              Navigator.of(context).pop();
+            }
+          } else {
+            model.participantInfo.forEach((ParticipantInfo info) {
+              participantsInfoById[info.id] = info
+                ..color = colorGeneratorFromName(info.name);
+            });
 
-          if (chatModel.groupDetails.name != model.groupDetails.name ||
-              chatModel.groupDetails.imageUrl != model.groupDetails.imageUrl) {
-            chatModel = model;
-            setState(() {});
+            if (chatModel.groupDetails.name != model.groupDetails.name ||
+                chatModel.groupDetails.imageUrl !=
+                    model.groupDetails.imageUrl) {
+              chatModel = model;
+              if (this.mounted) setState(() {});
+            }
           }
-        }
-      });
+        },
+      );
     }
 
     super.initState();
@@ -127,6 +131,7 @@ class _ChatPageState extends State<ChatPage> {
         recieverInfo: isGroupMessage ? null : recieverInfo,
         groupDetails: isGroupMessage ? chatModel.groupDetails : null,
         clearChat: () {
+          exitFromChatPage = true;
           _bloc.clearChat(chatModel.id, widget.senderId);
           Navigator.pop(context);
         },

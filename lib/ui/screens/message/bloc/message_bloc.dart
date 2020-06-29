@@ -73,7 +73,7 @@ class MessageBloc extends BlocBase {
         }
       });
       _personalMessage.add(chats);
-      chatModelSync.addChatModels(chats);
+      if (!chatModelSync.isClosed) chatModelSync.addChatModels(chats);
       if (!_frequentContacts.isClosed) _frequentContacts.add(frequentContacts);
       if (!_personalMessageCount.isClosed)
         _personalMessageCount.add(unreadCount);

@@ -213,7 +213,6 @@
     "bill_me": "facturarme",
     "bill_me_info": "Esto está disponible solo para usuarios que tienen acuerdos previos con Seva Exchange. Por favor envíe un correo electrónico a billme@sevaexchange.com para más detalles.",
     "bill_me_info_two": "Solo los usuarios que han sido aprobados a priori pueden marcar la casilla \"Bill Me\". Si desea hacer esto, envíe un correo electrónico a billme@sevaexchange.com"
-
   },
   "explore": {
     "title": "Explorar",
@@ -1062,16 +1061,19 @@
     "personal_messages": "Pessoal",
     "admin_messages": "Admin",
     "new_chat": "Nueva conversación",
-    "multi_user": "Multi-usuario de la Mensajería",
+    "multi_user": "Sala de mensajería multi-usuario",
     "frequently_contacted": "contactados frecuentemente",
     "groups": "GRUPOS",
     "timebank_members": "TimeBank MIEMBROS",
     "add_participants": "Añadir participantes",
-    "new_multi_user_messaging": "Nueva Multi-usuario de la Mensajería",
+    "new_multi_user_messaging": "Sala de mensajería nuevo multiusuario",
     "multi_user_messaging_name": "Nombre de mensajería multi-usuario",
-    "note": "Por favor, proporcione un tema de mensajería multi-usuario y el icono de grupo opcional",
+    "note": "Por favor, proporcione un nombre de usuario multi-sala de la mensajería y el icono opcional",
     "participants": "Participantes",
-    "creating_multi_user_messaging": "La creación de mensajería multi-usuario ...",
+    "creating_multi_user_messaging": "Sala de mensajería creación de múltiples usuarios ...",
+    "updating_multi_user_messaging": "Sala de mensajería actualizar multiusuario ...",
+    "sending": "Enviando...",
+    "loading": "Cargando...",
     "cancel": "Cancelar",
     "next": "Próximo",
     "create": "Crear"
@@ -1122,7 +1124,6 @@
     "csv_size_limit": "NOTA: el tamaño máximo del archivo es de 1 MB",
     "csv_progress": "Subir archivo CSV",
     "upload_success": "Subido correctamente"
-
   },
   "external_notifications": {
     "notification_title": "Notificaciones",
@@ -1172,6 +1173,5 @@
     "change_advisory": " Debe proporcionar los detalles de facturación de este Timebank, incluida la nueva dirección de facturación. La transferencia de propiedad no se completará hasta que se haga esto.",
     "ownership_suceess": "¡Felicidades! Ahora eres el nuevo propietario del Banco de tiempo ",
     "already_invited": " Ya invitado."
-
   }
 }
