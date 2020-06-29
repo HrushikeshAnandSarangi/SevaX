@@ -194,7 +194,8 @@
     "with_timebank_id": "avec id banque de temps comme",
     "edit_profile_info": "Modifier les informations de profil",
     "profile_information": "Informations sur le profil",
-    "updating_details": "Mise à jour des détails"
+    "updating_details": "Mise à jour des détails",
+    "private_timebank": "Privé Timebank"
   },
   "billing_plans": {
     "remote_config": "billing_plans",
@@ -208,7 +209,10 @@
     "contact": "Veuillez contacter l'équipe support de SevaX pour modifier les plans",
     "close": "proche",
     "billing_plans": "Vous êtes sur le plan communautaire",
-    "progress": "Accéder à votre nouvelle banque de temps dans quelques instants ..."
+    "progress": "Accéder à votre nouvelle banque de temps dans quelques instants ...",
+    "bill_me": "facture moi",
+    "bill_me_info": "Ceci n'est disponible que pour les utilisateurs qui ont des accords préalables avec Seva Exchange. Veuillez envoyer un e-mail à billme@sevaexchange.com pour plus de détails.",
+    "bill_me_info_two": "Seuls les utilisateurs qui ont été approuvés a priori peuvent cocher la case \"Bill Me\". Si vous souhaitez le faire, veuillez envoyer un e-mail à billme@sevaexchange.com"
   },
   "explore": {
     "title": "Explorer",
@@ -465,6 +469,9 @@
     "are_you_sure_feed": "Voulez-vous vraiment supprimer ce fil d'actualités?"
   },
   "notifications": {
+    "you_signed_up_for": "Vous vous étiez inscrit à la",
+    "on": "le vendredi",
+    "owner_changes": ". Le propriétaire de l'événement a modifié cet événement. Veuillez vous assurer que les modifications apportées vous conviennent et faites une nouvelle demande",
     "title": "Notifications",
     "added_you": "vous a ajouté à",
     "timebank_join": "Timebank Join",
@@ -562,7 +569,8 @@
     "enter_bio": "Entrez bio",
     "please_enter_bio": "Veuillez entrer la biographie pour mettre à jour",
     "bio_50": "Veuillez saisir au moins 50 caractères",
-    "sure_logout": "Êtes-vous sûr de vouloir vous déconnecter?"
+    "sure_logout": "Êtes-vous sûr de vouloir vous déconnecter?",
+    "notifications": "Alertes de notification"
   },
   "help": {
     "about_sevax": "À propos de SevaX",
@@ -716,7 +724,16 @@
     "tap_to_remove": "articles (appuyez pour supprimer)",
     "tap_to_delete": "Appuyez pour supprimer cet élément",
     "assign_err_hint": "Veuillez attribuer à un projet",
-    "tap_to_select": "Appuyez pour sélectionner un ou plusieurs..."
+    "tap_to_select": "Appuyez pour sélectionner un ou plusieurs...",
+    "repeat": "Répéter",
+    "repeat_on": "Répéter sur",
+    "ends": "Prend fin",
+    "on": "Sur",
+    "after": "Après",
+    "occurences": "Occurrences",
+    "occurences": "Occurences",
+    "repeat_cancel": "Annuler",
+    "repeat_done": "Terminé"
   },
   "edit_group": {
     "add_members": "Añadir miembros",
@@ -1053,24 +1070,23 @@
   },
   "messages": {
     "messages_title": "Messages",
-    "personal_messages": "Personnelle",
+    "personal_messages": "Personal",
     "admin_messages": "Admin",
     "new_chat": "Nouveau chat",
-    "multi_user": "Messagerie multi-utilisateur",
-    "frequently_contacted": "FOIRE CONTACTÉ",
+    "multi_user": "Salle de messages multi-utilisateurs",
+    "frequently_contacted": "FRÉQUEMMENT CONTACTE",
     "groups": "GROUPES",
-    "timebank_members": "TimeBank MEMBRES",
+    "timebank_members": "MEMBRES TIMEBANK",
     "add_participants": "Ajouter des participants",
-    "new_multi_user_messaging": "Nouvelle messagerie multi-utilisateur",
-    "multi_user_messaging_name": "Multi-utilisateur de messagerie Nom",
-    "note": "S'il vous plaît fournir un sujet de messagerie multi-utilisateur et icône du groupe en option",
-    "participants": "Les participants",
-    "creating_multi_user_messaging": "Création de messagerie multi-utilisateur ...",
+    "new_multi_user_messaging": "Nouvelle salle de messages multi-utilisateurs",
+    "multi_user_messaging_name": "Nom de la salle de messages multi-utilisateurs",
+    "note": "Veuillez fournir un objet de salle de messages multi-utilisateurs et une icône de groupe en option",
+    "participants": "Participants",
+    "creating_multi_user_messaging": "Création d'une salle de messages multi-utilisateurs ...",
     "cancel": "Annuler",
-    "next": "Prochain",
-    "create": "Créer"
+    "next": "Suivant",
+    "create": "Créer",
   },
-
   "add_location": {
     "confirm_location_label": "CONFIRMER L'EMPLACEMENT"
   },
@@ -1115,7 +1131,8 @@
     "download_success": "Le téléchargement est terminé.",
     "csv_file_alert": "Les fichiers supérieurs à 1 MB ne sont pas autorisés",
     "csv_size_limit": "REMARQUE: la taille maximale du fichier est de 1 MB",
-    "csv_progress": "Téléchargement d'un fichier CSV"
+    "csv_progress": "Téléchargement d'un fichier CSV",
+    "upload_success": "Téléchargé avec succès"
   },
   "external_notifications": {
     "notification_title": "Notifications",
@@ -1144,6 +1161,25 @@
   },
   "change_ownership": {
     "change_ownership_title": "Changer de propriétaire",
-    "change": "Change"
+    "change": "Changement",
+    "change_hint": "Changer de propriétaire ",
+    "change_hint_three": " à un autre administrateur.",
+    "change_hint_two": " Remplacer par ",
+    "invitation_sent": "Nous avons envoyé votre invitation de transfert de propriété. Vous resterez propriétaire de Timebank ",
+    "invitation_sent_two": "jusqu'à ce que",
+    "invitation_sent_three": " accepte l'invitation et fournit ses nouvelles informations de facturation.",
+    "notification_msg": "vous a invité à devenir le nouveau propriétaire de la Timebank",
+    "accept": "J'accepte",
+    "change_alert": "En acceptant, vous deviendrez propriétaire de la banque de temps",
+    "users_empty": "Veuillez sélectionner un utilisateur",
+    "pending_task": "Vous avez des tâches en attente. Veuillez effectuer ces tâches avant le transfert de propriété",
+    "pending_payment": "Vous avez un paiement en attente de ",
+    "pending_payment_two": ". Veuillez effectuer ces paiements avant le transfert de propriété",
+    "search_admin": "Administrateur de recherche",
+    "change_message": "Vous êtes le nouveau propriétaire de Timebank ",
+    "change_message_two": " Vous devez l'accepter pour terminer le processus",
+    "change_advisory": " Vous devez fournir les détails de facturation de cette Timebank, y compris la nouvelle adresse de facturation. Le transfert de propriété ne sera pas achevé tant que cela ne sera pas fait.",
+    "ownership_suceess": "Toutes nos félicitations! Vous êtes maintenant le nouveau propriétaire de la Timebank ",
+    "already_invited": " déjà invité."
   }
 }

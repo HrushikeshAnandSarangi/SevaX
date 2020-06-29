@@ -134,6 +134,22 @@ class NotificationsView extends State<NotificationViewHolder> {
                   }
 
                   switch (notification.type) {
+                    case NotificationType.RecurringRequestUpdated:
+                      ReccuringRequestUpdated eventData =
+                      ReccuringRequestUpdated.fromMap(notification.data);
+                      return NotificationCard(
+                        title: "Request Updated",
+                        subTitle:
+                        "${AppLocalizations.of(context).translate('notifications', 'you_signed_up_for')} ***eventName ${AppLocalizations.of(context).translate('notifications', 'on')} ***eventDate. ${AppLocalizations.of(context).translate('notifications', 'owner_changes')}"
+                            .replaceFirst(
+                            '***eventName', eventData.eventName)
+                            .replaceFirst(
+                            '***eventDate', eventData.eventDate),
+                        entityName: "Request Updated",
+                        photoUrl: eventData.photoUrl,
+                        onDismissed: onDismissed,
+                      );
+                      break;
                     case NotificationType.RequestAccept:
                       RequestModel model =
                           RequestModel.fromMap(notification.data);
@@ -165,11 +181,11 @@ class NotificationsView extends State<NotificationViewHolder> {
                           ChangeOwnershipModel.fromMap(notification.data);
                       // TODO needs flow correction to tasks model and transaction model
                       return getChangeOwnershipNotificationWidget(
-                        notificationId: notification.id,
-                        communityId: notification.communityId,
-                        changeOwnershipModel: ownershipModel,
-                        timebankId: notification.timebankId,
-                      );
+                          notificationId: notification.id,
+                          communityId: notification.communityId,
+                          changeOwnershipModel: ownershipModel,
+                          timebankId: notification.timebankId,
+                          notificationsModel: notification);
                       break;
                     case NotificationType.RequestApprove:
                       RequestModel model =
@@ -612,6 +628,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 
   Widget getChangeOwnershipNotificationWidget({
     ChangeOwnershipModel changeOwnershipModel,
+    NotificationsModel notificationsModel,
     String notificationId,
     BuildContext buildContext,
     String timebankId,
@@ -635,6 +652,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                 changeOwnershipModel: changeOwnershipModel,
                 timeBankId: timebankId,
                 notificationId: notificationId,
+                notificationModel: notificationsModel,
+                loggedInUser: user,
               );
             });
       },

@@ -1,39 +1,51 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/change_ownership_model.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
+import 'package:sevaexchange/views/timebanks/billing/billing_view.dart';
+
+import '../../core.dart';
 
 class ChangeOwnershipDialog extends StatefulWidget {
   final ChangeOwnershipModel changeOwnershipModel;
   final String timeBankId;
   final String notificationId;
-
+  final NotificationsModel notificationModel;
+  final UserModel loggedInUser;
   ChangeOwnershipDialog({
     this.changeOwnershipModel,
     this.timeBankId,
     this.notificationId,
+    this.notificationModel,
+    this.loggedInUser,
   });
 
   @override
   _ChangeOwnershipDialogViewState createState() =>
-      _ChangeOwnershipDialogViewState(
-        changeOwnershipModel,
-        timeBankId,
-        notificationId,
-      );
+      _ChangeOwnershipDialogViewState(changeOwnershipModel, timeBankId,
+          notificationId, notificationModel, loggedInUser);
 }
 
 class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
   final ChangeOwnershipModel changeOwnershipModel;
   final String timeBankId;
   final String notificationId;
+  final NotificationsModel notificationModel;
+  final UserModel loggedInUser;
 
   _ChangeOwnershipDialogViewState(
     this.changeOwnershipModel,
     this.timeBankId,
     this.notificationId,
+    this.notificationModel,
+    this.loggedInUser,
   );
   List<FocusNode> focusNodes;
   CommunityModel communityModel = CommunityModel({});
@@ -45,7 +57,18 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getCommunityDetails();
     focusNodes = List.generate(8, (_) => FocusNode());
+  }
+
+  getCommunityDetails() async {
+    await FirestoreManager.getCommunityDetailsByCommunityId(
+            communityId: widget.loggedInUser.currentCommunity)
+        .then((value) {
+      communityModel = value;
+      print("community ${communityModel.payment.toString()}");
+    });
+    setState(() {});
   }
 
   @override
@@ -132,7 +155,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                     ),
                     onPressed: () async {
                       //Once approved
-                      _billingBottomsheet(context);
+                      getAdvisoryDialog(context, changeOwnershipModel.timebank);
+
                       // showProgressDialog(context, 'Accepting Invitation');
 //                      approveInvitation(
 //                        model: changeOwnershipModel,
@@ -161,17 +185,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
-                      // request declined
-                      //   showProgressDialog(context, 'Rejecting Invitation');
-
-                      declineInvitationbRequest(
-                        model: changeOwnershipModel,
-                        notificationId: widget.notificationId,
-                      );
-
-                      if (progressContext != null) {
-                        Navigator.pop(progressContext);
-                      }
+                      await FirestoreManager.readUserNotification(
+                          notificationId, loggedInUser.email);
                       Navigator.of(context).pop();
                     },
                   ),
@@ -184,9 +199,201 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
     );
   }
 
+  void cardsHeadingWidget() {
+    String planName = '';
+    print('curr ${loggedInUser.currentCommunity}');
+    print('curr plan ${communityModel.payment["planId"]}');
+    if (communityModel.payment["planId"] != null &&
+        communityModel.payment["planId"] == 'community_plan') {
+      showProgressDialog(AppLocalizations.of(context)
+          .translate('createtimebank', 'updating_details'));
+      changeOwnership(
+              primaryTimebank: communityModel.primary_timebank,
+              adminId: loggedInUser.sevaUserID,
+              communityId: communityModel.id,
+              adminEmail: loggedInUser.email,
+              notificaitonId: notificationId)
+          .commit()
+          .then((onValue) {
+        if (progressContext != null) {
+          Navigator.pop(progressContext);
+        }
+        getSuccessDialog();
+      });
+    } else {
+      Firestore.instance
+          .collection('cards')
+          .document(loggedInUser.currentCommunity)
+          .get()
+          .then((value) {
+        print("value ${value.data}");
+        if (value.data != null) {
+          planName = value.data['currentplan'];
+          print('planname $planName');
+          if (planName == '' && !communityModel.payment.containsKey("planId")) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => BillingPlanDetails(
+                  user: loggedInUser,
+                  isPlanActive: false,
+                  autoImplyLeading: true,
+                  isPrivateTimebank: communityModel.private,
+                ),
+              ),
+            );
+          } else {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => BillingView(
+                  loggedInUser.currentCommunity,
+                  planName,
+                  user: loggedInUser,
+                  notificationId: notificationId,
+                  isFromChangeOwnership: true,
+                  changeOwnershipModel: changeOwnershipModel,
+                  communityModel: communityModel,
+                ),
+              ),
+            );
+          }
+        } else {
+          print('no plan ');
+        }
+      });
+    }
+  }
+
+  void resetAndLoad() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) =>
+              SevaCore(loggedInUser: loggedInUser, child: HomePageRouter())),
+    );
+  }
+
+  getSuccessDialog() {
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          content: new Text(AppLocalizations.of(context)
+              .translate('change_ownership', 'ownership_suceess')),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text(
+                  AppLocalizations.of(context).translate('homepage', 'ok')),
+              onPressed: () {
+                resetAndLoad();
+                // Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  getAdvisoryDialog(BuildContext mContext, String timebankName) {
+    showDialog(
+      context: mContext,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              new Text(AppLocalizations.of(context)
+                      .translate('change_ownership', 'change_message') +
+                  timebankName +
+                  AppLocalizations.of(context)
+                      .translate('change_ownership', 'change_advisory')),
+              SizedBox(height: 15),
+              Row(
+                children: [
+                  Spacer(),
+                  FlatButton(
+                    child: new Text(
+                        AppLocalizations.of(context)
+                            .translate('shared', 'cancel'),
+                        style: TextStyle(
+                            fontSize: dialogButtonSize, color: Colors.red)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  FlatButton(
+                    color: Theme.of(context).accentColor,
+                    textColor: FlavorConfig.values.buttonTextColor,
+                    child: new Text(
+                      AppLocalizations.of(context).translate('homepage', 'ok'),
+                      style: TextStyle(
+                        fontSize: dialogButtonSize,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+
+                      _billingBottomsheet(
+                        mContext,
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+          ],
+        );
+      },
+    );
+  }
+
+  WriteBatch changeOwnership({
+    String primaryTimebank,
+    String adminId,
+    String communityId,
+    String adminEmail,
+    String notificaitonId,
+  }) {
+    //add to timebank members
+
+    WriteBatch batch = Firestore.instance.batch();
+    var timebankRef =
+        Firestore.instance.collection('timebanknew').document(primaryTimebank);
+
+    var personalNotifications = Firestore.instance
+        .collection('users')
+        .document(adminEmail)
+        .collection("notifications")
+        .document(notificaitonId);
+
+    var addToCommunityRef =
+        Firestore.instance.collection('communities').document(communityId);
+
+    batch.updateData(addToCommunityRef, {
+      'created_by': adminId,
+      'primary_email': adminEmail,
+      'billing_address': communityModel.billing_address.toMap()
+    });
+
+    batch.updateData(timebankRef, {
+      "creator_id": adminId,
+      "email_id": adminEmail,
+    });
+
+    batch.updateData(personalNotifications, {'isRead': true});
+
+    return batch;
+  }
+
   BuildContext dialogContext;
 
-  void showProgressDialog(BuildContext context, String message) {
+  void showProgressDialog(String message) {
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -234,19 +441,27 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
   }) {
 //    FirestoreManager.readUserNotification(notificationId, user.email);
   }
-  void _billingBottomsheet(BuildContext mcontext) {
+  void _billingBottomsheet(
+    BuildContext mcontext,
+  ) {
     showModalBottomSheet(
         context: mcontext,
         builder: (BuildContext bc) {
           return Container(
-            child: _scrollingList(focusNodes, bc),
+            child: _scrollingList(
+              focusNodes,
+              bc,
+            ),
           );
         });
   }
 
-  Widget _scrollingList(List<FocusNode> focusNodes, BuildContext bc) {
+  Widget _scrollingList(
+    List<FocusNode> focusNodes,
+    BuildContext bc,
+  ) {
     print(focusNodes);
-    Widget _cityWidget(String city) {
+    Widget _cityWidget() {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
@@ -261,7 +476,6 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             communityModel.billing_address.city = value;
           },
           focusNode: focusNodes[0],
-          initialValue: city != null ? city : '',
           validator: (value) {
             return value.isEmpty
                 ? AppLocalizations.of(context)
@@ -275,7 +489,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
       );
     }
 
-    Widget _stateWidget(String state) {
+    Widget _stateWidget() {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
@@ -288,7 +502,6 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           onChanged: (value) {
             communityModel.billing_address.state = value;
           },
-          initialValue: state != null ? state : '',
           validator: (value) {
             return value.isEmpty
                 ? AppLocalizations.of(context)
@@ -303,7 +516,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
       );
     }
 
-    Widget _pinCodeWidget(int pinCode) {
+    Widget _pinCodeWidget() {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
@@ -316,7 +529,6 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             print(value);
             communityModel.billing_address.pincode = int.parse(value);
           },
-          initialValue: pinCode != null ? pinCode.toString() : '',
           validator: (value) {
             return value.isEmpty
                 ? AppLocalizations.of(context)
@@ -333,7 +545,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
       );
     }
 
-    Widget _additionalNotesWidget(String notes) {
+    Widget _additionalNotesWidget() {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
@@ -344,7 +556,6 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           onChanged: (value) {
             communityModel.billing_address.additionalnotes = value;
           },
-          initialValue: notes != null ? notes : '',
           focusNode: focusNodes[7],
           textInputAction: TextInputAction.done,
           decoration: getInputDecoration(
@@ -354,7 +565,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
       );
     }
 
-    Widget _streetAddressWidget(String street_address1) {
+    Widget _streetAddressWidget() {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
@@ -373,7 +584,6 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           },
           focusNode: focusNodes[4],
           textInputAction: TextInputAction.done,
-          initialValue: street_address1 != null ? street_address1 : '',
           decoration: getInputDecoration(
               fieldTitle: AppLocalizations.of(context)
                   .translate('createtimebank', 'street_add1')),
@@ -381,7 +591,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
       );
     }
 
-    Widget _streetAddressTwoWidget(String street_address2) {
+    Widget _streetAddressTwoWidget() {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
@@ -395,7 +605,6 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             },
             focusNode: focusNodes[5],
             textInputAction: TextInputAction.done,
-            initialValue: street_address2 != null ? street_address2 : '',
             decoration: getInputDecoration(
               fieldTitle: AppLocalizations.of(context)
                   .translate('createtimebank', 'street_add2'),
@@ -403,7 +612,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
       );
     }
 
-    Widget _countryNameWidget(String country) {
+    Widget _countryNameWidget() {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
@@ -416,7 +625,6 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           onChanged: (value) {
             communityModel.billing_address.country = value;
           },
-          initialValue: country != null ? country : '',
           validator: (value) {
             return value.isEmpty
                 ? AppLocalizations.of(context)
@@ -432,7 +640,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
       );
     }
 
-    Widget _companyNameWidget(String companyname) {
+    Widget _companyNameWidget() {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
@@ -445,7 +653,6 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           onChanged: (value) {
             communityModel.billing_address.companyname = value;
           },
-          initialValue: companyname != null ? companyname : '',
           // validator: (value) {
           //   return value.isEmpty ? 'Field cannot be left blank*' : null;
           // },
@@ -459,7 +666,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
       );
     }
 
-    Widget _continueBtn(controller) {
+    Widget _continueBtn() {
       return Padding(
         padding: const EdgeInsets.fromLTRB(100, 10, 100, 20),
         child: RaisedButton(
@@ -475,15 +682,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                 scrollToTop();
               } else {
                 print("All Good");
-//                showProgressDialog(
-//                    bc,
-//                    AppLocalizations.of(context)
-//                        .translate('createtimebank', 'updating_details'));
-//
-//                if (progressContext != null) {
-//                  Navigator.pop(progressContext);
-//                }
-                Navigator.pop(context);
+                cardsHeadingWidget();
+                //  Navigator.pop(context);
                 // _pc.close();
                 //scrollIsOpen = false;
               }
@@ -505,18 +705,15 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           controller: scollContainer,
           children: <Widget>[
             _billingDetailsTitle,
-            _cityWidget(communityModel.billing_address.city),
-            _stateWidget(communityModel.billing_address.state),
-            _countryNameWidget(communityModel.billing_address.country),
-            _pinCodeWidget(communityModel.billing_address.pincode),
-            _streetAddressWidget(
-                communityModel.billing_address.street_address1),
-            _streetAddressTwoWidget(
-                communityModel.billing_address.street_address2),
-            _companyNameWidget(communityModel.billing_address.companyname),
-            _additionalNotesWidget(
-                communityModel.billing_address.additionalnotes),
-            _continueBtn(communityModel),
+            _cityWidget(),
+            _stateWidget(),
+            _countryNameWidget(),
+            _pinCodeWidget(),
+            _streetAddressWidget(),
+            _streetAddressTwoWidget(),
+            _companyNameWidget(),
+            _additionalNotesWidget(),
+            _continueBtn(),
           ],
         ),
       ),

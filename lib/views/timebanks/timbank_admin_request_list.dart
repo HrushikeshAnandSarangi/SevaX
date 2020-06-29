@@ -836,9 +836,17 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                               setState(() {
                                 isProgressBarActive = true;
                               });
+
                               List<String> admins =
                                   timebankModel.admins.map((s) => s).toList();
                               admins.add(user.sevaUserID);
+                              Firestore.instance
+                                  .collection('communities')
+                                  .document(timebankModel.communityId)
+                                  .updateData({
+                                'admins':
+                                    FieldValue.arrayUnion([user.sevaUserID]),
+                              });
                               _updateTimebank(timebankModel, admins: admins);
                             },
                           ),
@@ -854,6 +862,14 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                               });
                               List<String> admins =
                                   timebankModel.admins.map((s) => s).toList();
+
+                              Firestore.instance
+                                  .collection('communities')
+                                  .document(timebankModel.communityId)
+                                  .updateData({
+                                'admins':
+                                    FieldValue.arrayRemove([user.sevaUserID]),
+                              });
                               admins.remove(user.sevaUserID);
                               _updateTimebank(timebankModel, admins: admins);
                             },
@@ -923,6 +939,15 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                               List<String> admins =
                                   timebankModel.admins.map((s) => s).toList();
                               admins.add(user.sevaUserID);
+
+                              Firestore.instance
+                                  .collection('communities')
+                                  .document(timebankModel.communityId)
+                                  .updateData({
+                                'admins':
+                                    FieldValue.arrayUnion([user.sevaUserID]),
+                              });
+
                               _updateTimebank(timebankModel, admins: admins);
                             },
                           ),
@@ -939,6 +964,13 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                               List<String> admins =
                                   timebankModel.admins.map((s) => s).toList();
                               admins.remove(user.sevaUserID);
+                              Firestore.instance
+                                  .collection('communities')
+                                  .document(timebankModel.communityId)
+                                  .updateData({
+                                'admins':
+                                    FieldValue.arrayRemove([user.sevaUserID]),
+                              });
                               _updateTimebank(timebankModel, admins: admins);
                             },
                           ),

@@ -193,7 +193,8 @@
     "with_timebank_id": "с идентификатором Timebank как",
     "edit_profile_info": "Изменить информацию профиля",
     "profile_information": "информация профиля",
-    "updating_details": "Обновление деталей"
+    "updating_details": "Обновление деталей",
+    "private_timebank": "Частный Timebank"
   },
   "billing_plans": {
     "remote_config": "billing_plans",
@@ -554,7 +555,8 @@
     "enter_bio": "Введите био",
     "please_enter_bio": "Пожалуйста, введите био для обновления",
     "bio_50": "Пожалуйста, введите минимум 50 символов",
-    "sure_logout": "Вы действительно хотите выйти?"
+    "sure_logout": "Вы действительно хотите выйти?",
+    "notifications": "Уведомления оповещения"
   },
   "help": {
     "about_sevax": "О SevaX",

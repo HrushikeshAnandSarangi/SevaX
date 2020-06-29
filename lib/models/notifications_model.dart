@@ -109,6 +109,7 @@ class NotificationsModel extends DataModel {
 }
 
 enum NotificationType {
+  RecurringRequestUpdated,
   RequestAccept,
   RequestApprove,
   RequestInvite,
@@ -202,4 +203,30 @@ class ClearNotificationModel {
         notificationType: List<NotificationType>.from(
             json["notificationType"].map((x) => typeMapper[x])),
       );
+}
+
+
+class ReccuringRequestUpdated {
+  String eventName;
+  String eventDate;
+  String photoUrl;
+  String requestId;
+
+  ReccuringRequestUpdated.fromMap(Map<String, dynamic> map) {
+    if (map.containsKey('eventName')) {
+      this.eventName = map['eventName'];
+    }
+
+    if (map.containsKey('eventDate')) {
+      this.eventDate = map['eventDate'];
+    }
+
+    if (map.containsKey('photoUrl')) {
+      this.photoUrl = map['photoUrl'];
+    }
+
+    if (map.containsKey('requestId')) {
+      this.requestId = map['requestId'];
+    }
+  }
 }

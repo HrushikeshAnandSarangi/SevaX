@@ -34,10 +34,10 @@ class AppLanguage extends ChangeNotifier {
       _appLocale = Locale("fr");
       await prefs.setString('language_code', 'fr');
       await prefs.setString('countryCode', 'FR');
-    } else if (type == Locale("zh-CN")) {
-      _appLocale = Locale("zh-CN");
-      await prefs.setString('language_code', 'zh-CN');
-      await prefs.setString('countryCode', 'zh-CN');
+    } else if (type == Locale("zh")) {
+      _appLocale = Locale("zh");
+      await prefs.setString('language_code', 'zh');
+      await prefs.setString('countryCode', 'CN');
     } else {
       _appLocale = Locale("en");
       await prefs.setString('language_code', 'en');

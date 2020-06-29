@@ -1,12 +1,17 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/user_cards_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/payment_bloc.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/credit_card/utils/card_background.dart';
 import 'package:stripe_payment/stripe_payment.dart';
@@ -16,10 +21,21 @@ import '../../../main_seva_dev.dart' as dev;
 import '../../../widgets/credit_card/credit_card.dart';
 
 class BillingView extends StatefulWidget {
-  BillingView(this.timebankid, this.planId, {this.user});
   final timebankid;
   final String planId;
   final UserModel user;
+  final bool isFromChangeOwnership;
+  final String notificationId;
+  final ChangeOwnershipModel changeOwnershipModel;
+  final CommunityModel communityModel;
+
+  BillingView(this.timebankid, this.planId,
+      {this.user,
+      this.isFromChangeOwnership,
+      this.notificationId,
+      this.changeOwnershipModel,
+      this.communityModel});
+
   @override
   State<StatefulWidget> createState() {
     return BillingViewState();
@@ -30,6 +46,8 @@ class BillingViewState extends State<BillingView> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   Future<UserCardsModel> userCardDetails;
+
+  BuildContext dialogContext;
   @override
   void initState() {
     print(widget.planId);
@@ -64,8 +82,132 @@ class BillingViewState extends State<BillingView> {
       paymentbloc.storeNewCard(paymentMethod.id, widget.timebankid,
           widget.user ?? SevaCore.of(context).loggedInUser, widget.planId);
 
-      _cardSuccessMessage();
+      if (widget.isFromChangeOwnership) {
+        showProgressDialog(AppLocalizations.of(context)
+            .translate('createtimebank', 'updating_details'));
+        setDefaultCard(
+                token: paymentMethod.id,
+                communityId: widget.user.currentCommunity)
+            .then((_) {
+          userCardDetails = getUserCard(widget.timebankid);
+          changeOwnership(
+                  primaryTimebank: widget.communityModel.primary_timebank,
+                  adminId: widget.user.sevaUserID,
+                  communityId: widget.communityModel.id,
+                  adminEmail: widget.user.email,
+                  notificaitonId: widget.notificationId)
+              .commit()
+              .then((onValue) {
+            updateCustomer();
+          });
+          setState(() {});
+        });
+      } else {
+        _cardSuccessMessage();
+      }
     }
+  }
+
+  void updateCustomer() async {
+    String response = await updateChangeOwnerDetails(
+        communityId: widget.communityModel.id,
+        email: widget.user.email,
+        city: widget.communityModel.billing_address.city,
+        country: widget.communityModel.billing_address.country,
+        pinCode: widget.communityModel.billing_address.pincode.toString(),
+        state: widget.communityModel.billing_address.state,
+        streetAddress1: widget.communityModel.billing_address.street_address1,
+        streetAddress2: widget.communityModel.billing_address.street_address2);
+    if (response == "200") {
+      if (dialogContext != null) {
+        Navigator.pop(dialogContext);
+      }
+      getSuccessDialog();
+    }
+  }
+
+  void resetAndLoad() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) =>
+              SevaCore(loggedInUser: widget.user, child: HomePageRouter())),
+    );
+  }
+
+  void showProgressDialog(String message) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          dialogContext = createDialogContext;
+          return AlertDialog(
+            title: Text(message),
+            content: LinearProgressIndicator(),
+          );
+        });
+  }
+
+  getSuccessDialog() {
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          content: new Text(AppLocalizations.of(context)
+              .translate('change_ownership', 'ownership_suceess')),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text(
+                  AppLocalizations.of(context).translate('homepage', 'ok')),
+              onPressed: () {
+                resetAndLoad();
+                // Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  WriteBatch changeOwnership({
+    String primaryTimebank,
+    String adminId,
+    String communityId,
+    String adminEmail,
+    String notificaitonId,
+  }) {
+    //add to timebank members
+
+    WriteBatch batch = Firestore.instance.batch();
+    var timebankRef =
+        Firestore.instance.collection('timebanknew').document(primaryTimebank);
+
+    var personalNotifications = Firestore.instance
+        .collection('users')
+        .document(adminEmail)
+        .collection("notifications")
+        .document(notificaitonId);
+
+    var addToCommunityRef =
+        Firestore.instance.collection('communities').document(communityId);
+
+    batch.updateData(addToCommunityRef, {
+      'created_by': adminId,
+      'primary_email': adminEmail,
+      'billing_address': widget.communityModel.billing_address.toMap()
+    });
+
+    batch.updateData(timebankRef, {
+      "creator_id": adminId,
+      "email_id": adminEmail,
+    });
+
+    batch.updateData(personalNotifications, {'isRead': true});
+
+    return batch;
   }
 
   @override

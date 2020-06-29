@@ -3,15 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/models/models.dart';
 
-class RepeatWidget extends StatefulWidget {
-  RepeatWidget();
+class EditRepeatWidget extends StatefulWidget {
+  final RequestModel requestModel;
+  EditRepeatWidget({this.requestModel});
 
   @override
-  RepeatWidgetState createState() => RepeatWidgetState();
+  EditRepeatWidgetState createState() => EditRepeatWidgetState();
 }
 
-class RepeatWidgetState extends State<RepeatWidget> {
+class EditRepeatWidgetState extends State<EditRepeatWidget> {
+  RequestModel requestModel ;
   List<String> dayNameList = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
   List<String> daysName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   List<String> occurenccesList = [
@@ -29,20 +32,26 @@ class RepeatWidgetState extends State<RepeatWidget> {
 
   static List<bool> _selected;
   static List<int> recurringDays = [];
-
+  static DateTime selectedDate = DateTime.now();
+  static int endType = 0;
+  static String after = "";
   @override
   void initState() {
     super.initState();
-    _selected = List.generate(dayNameList.length, (i) => false);
-//    _selected[1] = true;
+    requestModel = widget.requestModel;
+    print("request mode recurring data ${widget.requestModel.isRecurring}");
+    _selected = List.generate(dayNameList.length, (i) =>requestModel.recurringDays.contains(i) ? true : false);
+    endType = requestModel.end.endType=="on"? 0 : 1;
+    selectedDate = requestModel.end.endType=="on"?new DateTime.fromMillisecondsSinceEpoch(requestModel.end.on*1000) : DateTime.now();
+    after = requestModel.end.endType=="on"?"1":requestModel.end.after.toString();
 //    recurringDays = new List(7);
   }
 
   static bool isRecurring = true;
   bool viewVisible = false;
   bool titleCheck = true;
-  static int endType = 0;
-  static String after = '1';
+
+
   static String selectedDays = 'Monday';
 
   double _result = 0.0;
@@ -95,7 +104,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
     });
   }
 
-  static DateTime selectedDate = DateTime.now();
+
   DateFormat dateFormat = new DateFormat.yMMMd();
 
 //  var now = new DateTime.now();
@@ -203,7 +212,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                       margin: EdgeInsets.all(2.0),
                                       decoration: BoxDecoration(
                                         borderRadius:
-                                            BorderRadius.circular(40.0),
+                                        BorderRadius.circular(40.0),
                                         color: _selected[index]
                                             ? Theme.of(context).primaryColor
                                             : Colors.black12,
@@ -226,11 +235,11 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                         }), // reverse bool value
                                       ))
 //                            children: getDayList(),
-                              )),
+                          )),
                       Container(
                         alignment: Alignment.topLeft,
                         padding:
-                            const EdgeInsets.fromLTRB(12.0, 12.0, 8.0, 8.0),
+                        const EdgeInsets.fromLTRB(12.0, 12.0, 8.0, 8.0),
                         child: Text("${AppLocalizations.of(context).translate('create_request', 'ends')}",
                             textAlign: TextAlign.start,
                             style: TextStyle(
@@ -259,7 +268,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                           Container(
                             width: 160.0,
                             alignment: Alignment.topLeft,
-                            margin: EdgeInsets.fromLTRB(34.0, 8.0, 8.0, 8.0),
+                            margin: EdgeInsets.fromLTRB(38.0, 8.0, 8.0, 8.0),
                             padding: const EdgeInsets.fromLTRB(
                                 12.0, 15.0, 12.0, 15.0),
                             decoration: BoxDecoration(
@@ -269,16 +278,16 @@ class RepeatWidgetState extends State<RepeatWidget> {
                             child: new InkWell(
                                 onTap: () async => await _selectDate(context),
                                 child:
-                                    Text("${dateFormat.format(selectedDate)}",
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Europa',
-                                          color: endType == 0
-                                              ? Colors.black54
-                                              : Colors.black12,
-                                        ))),
+                                Text("${dateFormat.format(selectedDate)}",
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Europa',
+                                      color: endType == 0
+                                          ? Colors.black54
+                                          : Colors.black12,
+                                    ))),
                           )
                         ],
                       ),
@@ -303,51 +312,51 @@ class RepeatWidgetState extends State<RepeatWidget> {
                             alignment: Alignment.topLeft,
                             margin: EdgeInsets.fromLTRB(20.0, 8.0, 8.0, 8.0),
                             padding:
-                                const EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 0.0),
+                            const EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 0.0),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(2.0),
                               color: Colors.black12,
                             ),
                             child: InkWell(
                                 child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Container(
-                                  child: DropdownButton(
-                                    value: after,
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        after = newValue;
-                                      });
-                                    },
-                                    items: occurenccesList
-                                        .map<DropdownMenuItem<String>>(
-                                            (String number) {
-                                      return DropdownMenuItem(
-                                        value: number,
-                                        child: new Text(number, style: TextStyle(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(
+                                      child: DropdownButton(
+                                        value: after,
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            after = newValue;
+                                          });
+                                        },
+                                        items: occurenccesList
+                                            .map<DropdownMenuItem<String>>(
+                                                (String number) {
+                                              return DropdownMenuItem(
+                                                value: number,
+                                                child: new Text(number, style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: 'Europa',
+                                                  color: endType == 1
+                                                      ? Colors.black54
+                                                      : Colors.black12,),),
+                                              );
+                                            }).toList(),
+                                      ),
+                                    ),
+                                    Text("${AppLocalizations.of(context).translate('create_request', 'occurences')}",
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                           fontFamily: 'Europa',
                                           color: endType == 1
                                               ? Colors.black54
-                                              : Colors.black12,),),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                                Text("${AppLocalizations.of(context).translate('create_request', 'occurences')}",
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Europa',
-                                      color: endType == 1
-                                          ? Colors.black54
-                                          : Colors.black12,
-                                    ))
-                              ],
-                            )),
+                                              : Colors.black12,
+                                        ))
+                                  ],
+                                )),
                           )
                         ],
                       ),
@@ -394,6 +403,4 @@ class RepeatWidgetState extends State<RepeatWidget> {
       ),
     );
   }
-
-  openCalender() {}
 }

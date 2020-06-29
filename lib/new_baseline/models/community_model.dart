@@ -133,6 +133,7 @@ class CommunityModel extends DataModel {
   int transactionCount;
   GeoFirePoint location;
   bool softDelete;
+  bool billMe;
 
   Map<String, dynamic> billingQuota;
   Map<String, dynamic> payment;
@@ -177,6 +178,7 @@ class CommunityModel extends DataModel {
         map.containsKey('members') ? List.castFrom(map['members']) : [];
     this.location = getLocation(map);
     this.softDelete = map.containsKey('softDelete') ? map['softDelete'] : false;
+    this.billMe = map.containsKey('billMe') ? map['billMe'] : false;
   }
   GeoFirePoint getLocation(map) {
     GeoFirePoint geoFirePoint;
@@ -240,6 +242,10 @@ class CommunityModel extends DataModel {
     }
     if (key == 'private') {
       this.private = value;
+    }
+
+    if (key == 'billMe') {
+      this.billMe = value;
     }
     if (key == 'created_by') {
       this.created_by = value;
@@ -319,6 +325,12 @@ class CommunityModel extends DataModel {
       object['location'] = this.location.data;
     }
 
+    if (this.billMe != null) {
+      object['billMe'] = this.billMe;
+    } else {
+      object['billMe'] = false;
+    }
+
     object['softDelete'] = this.softDelete;
     return object;
   }
@@ -344,7 +356,8 @@ class CommunityModel extends DataModel {
         ' members: $members, '
 //        'transactionCount: $transactionCount}'
         'taxPercentage: $taxPercentage},'
-        'private: $private}';
+        'private: $private},'
+        'billMe: $billMe}';
   }
 }
 

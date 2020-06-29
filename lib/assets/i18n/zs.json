@@ -36,7 +36,6 @@
     "enter_password_warn": "输入密码",
     "password_warn_6char": "密码必须为6个字符长",
     "reset_link_message": "我们已将重置链接发送到您的电子邮件地址",
-    "reset_dynamic_link_message": "请检查您的电子邮件以设置密码。然后在此处输入该密码",
     "terms_of_service_link": "服务条款",
     "privacy_policy_link": "隐私政策",
     "payment_policy_link": "付款政策"
@@ -194,8 +193,7 @@
     "with_timebank_id": " 时间银行编号",
     "edit_profile_info": "编辑个人资料信息",
     "profile_information": "档案信息",
-    "updating_details": "更新细节",
-    "private_timebank": "私人的 Timebank"
+    "updating_details": "更新细节"
   },
   "billing_plans": {
     "remote_config": "付款安排",
@@ -209,10 +207,7 @@
     "contact": "请联系SevaX支持以更改计划",
     "close": "关",
     "billing_plans": "您正在参加的付款计划",
-    "progress": "带您进入新的时间银行...",
-    "bill_me": "比尔我",
-    "bill_me_info": "这仅适用于事先与Seva Exchange达成协议的用户。请发送电子邮件至billme@sevaexchange.com了解详细信息",
-    "bill_me_info_two": "只有获得先验批准的用户才能选中“向我收费”框。如果您想这样做，请发送电子邮件至billme@sevaexchange.com"
+    "progress": "带您进入新的时间银行..."
   },
   "explore": {
     "title": "探索",
@@ -398,8 +393,7 @@
     "title_about": "标题",
     "mission_statement": "使命宣言",
     "organizer": "组织者",
-    "delete_project": "删除专案",
-    "new_project": "新项目"
+    "delete_project": "删除专案"
   },
   "tasks": {
     "error": "错误: ",
@@ -465,9 +459,6 @@
     "are_you_sure_feed": "您确定要删除此新闻提要吗？"
   },
   "notifications": {
-    "you_signed_up_for": "您已注册",
-    "on": "上",
-    "owner_changes": ". 事件所有者已修改此事件。确保所做的更改适合您并再次应用",
     "title": "通知事项",
     "no_notifications": "没有通知",
     "clear_all": "清除所有通知",
@@ -530,9 +521,7 @@
     "timebank_exit": "离开定时银行",
     "exited_from": "已从退出",
     "tap_to_view": "点按可查看详细信息",
-    "group_invite": "群组加入邀请",
-    "notification_alert": "通知事项",
-    "turn_on_notification": "允许个人通知"
+    "group_invite": "群组加入邀请"
   },
   "profile": {
     "image_hint": "图片提示",
@@ -565,8 +554,7 @@
     "enter_bio": "进入个人资料",
     "please_enter_bio": "请输入个人资料以更新",
     "bio_50": "请输入至少50个字符",
-    "sure_logout": "你确定要离开？",
-    "notifications": "通知警报"
+    "sure_logout": "你确定要离开？"
   },
   "help": {
     "about_sevax": "关于SevaX",
@@ -720,14 +708,7 @@
     "tap_to_remove": "项目（TAP若要删除）",
     "tap_to_delete": "点击删除此项目",
     "assign_err_hint": "请分配到一个项目",
-    "tap_to_select": "点击选择一个或更多...",
-    "repeat": "重复",
-    "repeat_on": "重复上",
-    "ends": "完结",
-    "on": "上",
-    "after": "后",
-    "repeat_cancel": "取消",
-    "repeat_done": "完成"
+    "tap_to_select": "点击选择一个或更多..."
   },
   "edit_group": {
     "add_members": "添加成员",
@@ -1003,10 +984,10 @@
     "could_not_delete": " 无法删除！",
     "deleted_successfully": " 您要求删除已成功删除！",
     "could_not_deleted": "因为你已经挂起的事务不能被删除！",
-    "incomplete_transaction": "我们无法处理您的***删除请求，你仍然有它的开放交易：\n",
-    "one_to_many_offers": "一对多报价\n",
-    "projects": "项目\n",
-    "open_requests": "打开请求\n"
+    "incomplete_transaction": "我们无法处理您的***删除请求，你仍然有它的开放交易：\\ n",
+    "one_to_many_offers": "一对多报价\\ n",
+    "projects": "项目\\ n",
+    "open_requests": "打开请求\\ n"
   },
   "accidental_delete": {
     "accidental_delete_enabled_title": "启用意外删除",
@@ -1040,9 +1021,8 @@
     "failed": "未能报告员！再试一次",
     "reported_users": "报告用户",
     "detail": "点击此处查看该时间银行的用户报告",
-    "reported_members": "报告成员",
+    "members": "报道员",
     "no_data": "没有数据",
-    "reported_by": "Reported by",
     "by": "通过报道",
     "user": "用户",
     "users": "用户",
@@ -1063,28 +1043,28 @@
     "settings": "设置",
     "about": "关于",
     "view_request": "查看请求",
-    "reported_members": "报告成员",
+    "members": "报道员",
     "delete_group": "删除组",
     "manage": "管理"
   },
   "messages": {
-    "messages_title": "消息",
+    "messages_title": " 消息 ",
     "personal_messages": "个人",
     "admin_messages": "管理员",
     "new_chat": "新聊天",
-    "multi_user": "多用户留言室",
+    "multi_user": "多用户消息传递室",
     "frequently_contacted": "频繁接触",
-    "groups": "团体",
-    "timebank_members": "定时银行会员",
+    "groups": " 团体",
+    "timebank_members": "TIMEBANK成员",
     "add_participants": "添加参与者",
-    "new_multi_user_messaging": "新的多用户留言室",
-    "multi_user_messaging_name": "多用户留言室名称",
-    "note": "请提供多用户消息室主题和可选的组图标",
-    "participants": "参加者",
-    "creating_multi_user_messaging": "创建多用户留言室...",
+    "new_multi_user_messaging": "新的多用户消息室",
+    "multi_user_messaging_name": "多用户消息传递室名称",
+    "note": "请提供多用户消息传递室主题和可选的组图标",
+    "参与者": "参与者",
+    "creating_multi_user_messaging": "正在创建多用户消息室...",
     "cancel": "取消",
     "next": "下一个",
-    "create": "创造"
+    "创建": "创建"
   },
   "add_location": {
     "confirm_location_label": "确认位置下"
@@ -1097,54 +1077,20 @@
   },
   "notifications_card": {
     "delete_notification_title": "删除通知",
-    "sure_to_delete": "您确定要删除此通知吗?",
+    "sure_to_delete": "您确定要删除此通知吗？",
     "cancel": "取消",
     "delete": "删除"
   },
   "transfer_ownership": {
-    "exit_user": "退出用户",
+    "exit_user": "用户注销",
     "remove_user": "删除用户",
-    "transfer_hint": "将此用户数据的所有权转让给另一个用户，例如组所有权.",
-    "transfer_hint_two": "转移至",
-    "search_user": "搜索用户",
-    "transfer_hint_three": "所有未传输的数据将被删除。",
-    "removed_success": "用户已成功从时区中删除",
-    "transfer_error": "错误发生！请稍后回来再试一次。",
+    "transfer_hint": "将此用户的数据所有权转移到另一个用户，例如组的所有权。",
+    "transfer_hint_two": "翻译成",
+    "search_user": "用户搜索",
+    "transfer_hint_three": "所有尚未传输的数据将被删除。",
+    "removed_success": "用户已成功从临时银行中删除",
+    "transfer_error": "发生了错误！请稍后再试，然后重试。",
     "empty_user": "未找到相应的用户"
-  },
-  "private_timebank": {
-    "private_timebank": "私人时间银行",
-    "alert_title": "私人时区提醒",
-    "alert_hint": "请注意，私人时间银行没有免费选项。您需要提供您的结算明细，才能继续创建此Timebank"
-  },
-  "upload_csv": {
-    "csv_hint_one": "将CSV模板下载到",
-    "csv_hint_two": "填写您要添加的用户",
-    "csv_hint_three": "然后上传CSV。",
-    "download_csv": "下载示例CSV文件",
-    "csv_title": "通过CSV批量邀请用户",
-    "upload": "上载",
-    "choose_csv": "选择CSV文件批量邀请会员",
-    "csv_error": "请先选择一个CSV文件，然后再上传",
-    "download_progress": "正在下载",
-    "download_success": "下载完成。",
-    "csv_file_alert": "不允许大于1 MB的文件",
-    "csv_size_limit": "注意：最大文件大小为1 MB",
-    "csv_progress": "上载CSV文件",
-    "upload_success": "上传成功"
-  },
-  "project_template": {
-    "save_as_template": "另存为模板",
-    "template_title": "为模板提供唯一的名称",
-    "template_hint": "模板名称",
-    "name_error": "模板名称不能为空",
-    "already_exists": "模板名称已被使用。请提供另一个名字",
-    "search_template_hint": "输入项目模板的名称",
-    "create_project_template": "从模板创建项目",
-    "create_new_project": "建立新专案",
-    "no_templates": "找不到模板",
-    "empty_template": "请从可用模板列表中选择一个模板",
-    "template_alert": "模板警报"
   },
   "external_notifications": {
     "notification_title": "通知",
@@ -1157,28 +1103,5 @@
     "credit_request": "一对多报价收到的信用额",
     "timebank": "时间银行",
     "group": "小组"
-  },
-  "change_ownership": {
-    "change_ownership_title": "Change Ownership",
-    "change": "Change",
-    "change_hint": "Changing ownership of this ",
-    "change_hint_three": " to another admin.",
-    "change_hint_two": "Change to",
-    "invitation_sent": "We have sent your transfer of ownership invitation. You will remain to be the owner of Timebank ",
-    "invitation_sent_two": " until ",
-    "invitation_sent_three": " accepts the invitation and provides their new billing information.",
-    "notification_msg": "has invited you to be the new owner of the Timebank",
-    "accept": "Accept",
-    "change_alert": "By accepting, you will become owner of the timebank",
-    "users_empty": "Please select a user",
-    "pending_task": "You have pending tasks. Please complete tasks before ownership can be transferred",
-    "pending_payment": "You have payment pending of ",
-    "pending_payment_two": ". Please complete these payment before ownership can be transferred",
-    "search_admin": "Search Admin",
-    "change_message": "You are the new owner of Timebank ",
-    "change_message_two": " You need to accept it to complete the process",
-    "change_advisory": " You are required to provide billing details for this Timebank - including the new billing address. The transfer of ownership will not be completed until this is done.",
-    "ownership_suceess": "Congratulations! You are now the new owner of the Timebank ",
-    "already_invited": " already invited."
   }
 }
