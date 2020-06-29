@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -52,9 +52,9 @@ class ChatAppBar extends PreferredSize {
         child: Row(
           children: <Widget>[
             photoUrl != null
-                ? CircleAvatar(
-                    radius: 18,
-                    backgroundImage: CachedNetworkImageProvider(photoUrl),
+                ? CustomNetworkImage(
+                    photoUrl,
+                    size: 36,
                   )
                 : CustomAvatar(
                     name: name,

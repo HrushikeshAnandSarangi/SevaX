@@ -213,7 +213,6 @@
     "bill_me": "me fature",
     "bill_me_info": "Isso está disponível apenas para usuários que têm acordos prévios com o Seva Exchange. Envie um email para billme@sevaexchange.com para obter detalhes.",
     "bill_me_info_two": "Somente usuários que foram aprovados a priori podem marcar a caixa \"Bill Me\". Se você quiser fazer isso, envie um email para billme@sevaexchange.com."
-
   },
   "explore": {
     "title": "Explorar",
@@ -535,7 +534,7 @@
     "tap_to_view": "Toca para ver los detalles",
     "added_you": "te ha agregado a",
     "timebank_join": "Timebank Join",
-    "group_invite": "Invitación para unirse al grupo"
+    "group_invite": "Invitación para unirse al grupo",
     "exited_from": "saiu de",
     "tap_to_view": "Toque para ver os detalhes",
     "added_you": "adicionou você a",
@@ -969,8 +968,7 @@
     "taxInfo": " Marque esta opção se desejar desativar as transações entre usuários. Ou seja, as \"Solicitações \" podem ser originadas apenas pelos administradores designados deste Banco de Tempo. Os bancos de horas protegidas são geralmente usados para campanhas políticas e certas organizações sem fins lucrativos.",
     "protectedTimebankInfo": " Marque esta opção se desejar que seu banco de tempo não seja descoberto por qualquer pessoa que esteja navegando, seja pelo nome do banco de tempo ou pelo local do banco. Observe que todos sempre precisarão de um código para ingressar em seu banco de tempo. Um \"Banco privado de tempo \" fornece um nível adicional de privacidade. ",
     "privateTimebankInfo": "Marque esta caixa se desejar que seu banco de horas não seja descoberto por qualquer pessoa que esteja navegando, seja pelo nome do banco de horas ou pela localização do banco de horas. Observe que todos sempre precisam de um código para ingressar no seu banco de tempo. Um \"Banco privado de tempo \" fornece um nível adicional de privacidade. ",
-    "privateGroupInfo": "No momento em que um usuário recebe créditos Seva por preencher as solicitações do aplicativo (para o Banco de tempo), o administrador do banco de tempo pode especificar um imposto no banco de horas. Estipule o valor do imposto ".
-
+    "privateGroupInfo": "No momento em que um usuário recebe créditos Seva por preencher as solicitações do aplicativo (para o Banco de tempo), o administrador do banco de tempo pode especificar um imposto no banco de horas. Estipule o valor do imposto "
   },
   "switching_timebank": {
     "switch_timebank": "Troca de banco de tempo",
@@ -1025,7 +1023,7 @@
     "delete": "Eliminar",
     "cancel": "Cancelar",
     "success_title": "Solicitações enviadas",
-    "failure_title":  "falha na solicitação!",
+    "failure_title": "falha na solicitação!",
     "failure_message": "A solicitação de envio falhou de alguma maneira, tente mais tarde!",
     "dismiss": "Descartar"
   },
@@ -1077,16 +1075,19 @@
     "personal_messages": "Pessoal",
     "admin_messages": "Admin",
     "new_chat": "Novo bate-papo",
-    "multi_user": "Sala de mensagens multiusuário",
+    "multi_user": "Multi-User quarto Messaging",
     "frequently_contacted": "CONTATO FREQUENTE",
     "groups": "GRUPOS",
     "timebank_members": "MEMBROS DO TIMEBANK",
     "add_participants": "Adicionar participantes",
-    "new_multi_user_messaging": "Nova sala de mensagens multiusuários",
-    "multi_user_messaging_name": "Nome da sala de mensagens multiusuários",
-    "note": "Forneça um assunto para a sala de mensagens multiusuários e um ícone de grupo opcional",
+    "new_multi_user_messaging": "New Multi-User quarto Messaging",
+    "multi_user_messaging_name": "Multi-User Messaging quarto Nome",
+    "note": "Por favor, forneça um nome de multi-utilizador sala de mensagens e um ícone opcional",
     "participants": "Participantes",
-    "creating_multi_user_messaging": "Criando sala de mensagens multiusuários ...",
+    "creating_multi_user_messaging": "Criando Multi-User quarto Messaging ...",
+    "updating_multi_user_messaging": "Atualizando Multi-User quarto Messaging ...",
+    "sending": "Enviando ...",
+    "loading": "Carregando...",
     "cancel": "Cancelar",
     "next": "Next",
     "create": "Criar"
@@ -1137,7 +1138,6 @@
     "csv_size_limit": "NOTA: O tamanho máximo do arquivo é 1 MB",
     "csv_progress": "Fazendo upload de arquivo CSV",
     "upload_success": "Carregado com sucesso"
-
   },
   "external_notifications": {
     "notification_title": "Notificações",
@@ -1186,6 +1186,5 @@
     "change_advisory": " Você precisa fornecer detalhes de cobrança para este Timebank, incluindo o novo endereço de cobrança. A transferência de propriedade não será concluída até que isso seja feito.",
     "ownership_suceess": "Parabéns! Agora você é o novo proprietário do Timebank ",
     "already_invited": " já convidado."
-
   }
 }

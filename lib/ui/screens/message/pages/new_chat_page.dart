@@ -24,20 +24,15 @@ class NewChatPage extends StatefulWidget {
   _NewChatPageState createState() => _NewChatPageState();
 }
 
-class _NewChatPageState extends State<NewChatPage>
-    with SingleTickerProviderStateMixin {
+class _NewChatPageState extends State<NewChatPage> {
   int currentIndex = 0;
   ScrollController _scrollController;
   bool showQuickScroll = false;
-  AnimationController _controller;
 
   @override
   void initState() {
     _scrollController = ScrollController();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 300),
-    );
+
     _scrollController.addListener(() {
       print(
           "${_scrollController.offset}  ${widget.frequentContacts.length * 50 + 30 * 2 + 50}");
@@ -55,6 +50,12 @@ class _NewChatPageState extends State<NewChatPage>
       }
     });
     super.initState();
+  }
+
+  @override
+  dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override

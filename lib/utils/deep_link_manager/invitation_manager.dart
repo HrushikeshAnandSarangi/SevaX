@@ -93,8 +93,6 @@ class InvitationManager {
     BuildContext context,
   }) async {
     return await createDynamicLinkFor(
-    // print("=========================================");
-    // return await createDynamicLinkFromAPI(
       communityId: invitation.communityId,
       inviteeEmail: invitation.inviteeEmail,
       primaryTimebankId: invitation.timebankId,
