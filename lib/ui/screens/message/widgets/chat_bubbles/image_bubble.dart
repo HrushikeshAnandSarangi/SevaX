@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
@@ -92,7 +93,12 @@ class ImageUploading extends StatelessWidget {
       children: <Widget>[
         CircularProgressIndicator(),
         SizedBox(height: 4),
-        Text(isSending ? "Sending..." : "Loading..."),
+        Text(
+          AppLocalizations.of(context).translate(
+            'messages',
+            isSending ? "sending" : "loading",
+          ),
+        ),
       ],
     );
   }
