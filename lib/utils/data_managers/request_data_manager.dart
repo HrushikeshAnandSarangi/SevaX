@@ -36,21 +36,24 @@ Future<void> createRecurringEvents(
     {@required RequestModel requestModel}) async {
   var batch = Firestore.instance.batch();
   var db = Firestore.instance;
-  int occurenceCount = 2, sevaCreditsCount = 0;
+//  int occurenceCount = 2;
+  double sevaCreditsCount = 0;
   bool lastRound = false;
   DateTime eventStartDate =
           DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart),
       eventEndDate =
           DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd);
-  log("before while");
+  log("before for- ");
   if (requestModel.end.endType == "on") {
     //end type is on
-    while (lastRound == false) {
-      log("in while");
-      eventStartDate.add(Duration(days: 1));
-      eventEndDate.add(Duration(days: 1));
+    int occurenceCount=2;
+    while (lastRound==false) {
+      eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day+1, eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
+      eventEndDate = DateTime(eventEndDate.year, eventEndDate.month, eventEndDate.day+1, eventEndDate.hour, eventEndDate.minute, eventEndDate.second);
+      log("in for 1-   " + eventStartDate.toString());
       if (eventStartDate.millisecondsSinceEpoch <= requestModel.end.on) {
         if (requestModel.recurringDays.contains(eventStartDate.weekday % 7)) {
+          log("in if -   " + eventStartDate.toString());
           RequestModel temp = requestModel;
           temp.requestStart = eventStartDate.millisecondsSinceEpoch;
           temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
@@ -66,16 +69,19 @@ Future<void> createRecurringEvents(
           occurenceCount++;
         }
       } else {
-        lastRound = true;
+        lastRound=true;
+        break;
       }
     }
-  } else {
+  }
+  else {
     //end type is after
-    while (occurenceCount <= (requestModel.end.after)) {
-      log("before while 2");
-      eventStartDate.add(Duration(days: 1));
-      eventEndDate.add(Duration(days: 1));
+    for (int occurenceCount = 2 ; occurenceCount <= requestModel.end.after ; ) {
+      eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day+1, eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
+      eventEndDate = DateTime(eventEndDate.year, eventEndDate.month, eventEndDate.day+1, eventEndDate.hour, eventEndDate.minute, eventEndDate.second);
+      log("in for 2-   " + eventStartDate.toString());
       if (requestModel.recurringDays.contains(eventStartDate.weekday % 7)) {
+        log("inside if with day "+eventStartDate.weekday.toString());
         RequestModel temp = requestModel;
         temp.requestStart = eventStartDate.millisecondsSinceEpoch;
         temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
@@ -89,7 +95,8 @@ Future<void> createRecurringEvents(
         batch.setData(
             db.collection("requests").document(temp.id), temp.toMap());
         occurenceCount++;
-      } else {
+      }
+      if(occurenceCount > requestModel.end.after) {
         break;
       }
     }
@@ -97,7 +104,7 @@ Future<void> createRecurringEvents(
 //  DocumentSnapshot timebankDoc = await db.collection("timebanknew").document(requestModel.timebankId).get();
 //  int balance = timebankDoc.data['balance'] + sevaCreditsCount;
 //  batch.updateData(db.collection("timebanknew").document(timebankDoc.documentID), {"balance": balance});
-  batch.commit();
+  await batch.commit();
 }
 
 Stream<List<RequestModel>> getRequestStreamCreatedByUser({
