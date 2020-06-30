@@ -107,6 +107,17 @@ Future<void> createRecurringEvents(
   await batch.commit();
 }
 
+Future<void> updateRecurrenceRequests(String requestId) async {
+  final response = await http.post(
+      '${FlavorConfig.values.cloudFunctionBaseURL}/updateRecurrenceRequests',
+//      headers: {"Content-Type": "application/json"},
+//      body: json.encode({"updatedRequestModel": requestModel.toMap()}));
+
+      body: {"updatedRequestModelId": requestId});
+
+  print("recurrence updation statusCode === " + response.statusCode.toString());
+}
+
 Stream<List<RequestModel>> getRequestStreamCreatedByUser({
   @required String sevaUserID,
 }) async* {
@@ -986,17 +997,6 @@ Stream<RequestModel> getRequestStreamById({
       },
     ),
   );
-}
-
-Future<void> updateRecurrenceRequests(String requestId) async {
-  final response = await http.post(
-      '${FlavorConfig.values.cloudFunctionBaseURL}/updateRecurrenceRequests',
-//      headers: {"Content-Type": "application/json"},
-//      body: json.encode({"updatedRequestModel": requestModel.toMap()}));
-
-      body: {"updatedRequestModelId": requestId});
-
-  print("recurrence updation statusCode === " + response.toString());
 }
 
 Stream<ProjectModel> getProjectStream({
