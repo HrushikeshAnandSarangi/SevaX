@@ -209,7 +209,7 @@ class ClearNotificationModel {
 
 class ReccuringRequestUpdated {
   String eventName;
-  String eventDate;
+  int eventDate;
   String photoUrl;
   String requestId;
 

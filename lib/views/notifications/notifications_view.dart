@@ -144,7 +144,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                             .replaceFirst(
                             '***eventName', eventData.eventName)
                             .replaceFirst(
-                            '***eventDate', eventData.eventDate),
+                            '***eventDate', DateTime.fromMillisecondsSinceEpoch(eventData.eventDate).toString()),
                         entityName: "Request Updated",
                         photoUrl: eventData.photoUrl,
                         onDismissed: onDismissed,
