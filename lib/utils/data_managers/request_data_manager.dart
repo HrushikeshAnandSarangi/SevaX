@@ -263,9 +263,9 @@ Future<void> updateRecurrenceRequestsFrontEnd({
     var futuresResult = await Future.wait(futures);
     futuresResult.forEach((docUser) {
       upcomingEventsArr.forEach((RequestModel upcomingEvent) {
-        if (upcomingEvent.approvedUsers.contains(docUser.id)) {
+        if (upcomingEvent.approvedUsers.contains(docUser.documentID)) {
           uuidvar = Uuid().generateV4();
-          batch.setData(db.collection("users").document(docUser.id).collection("notifications").document(uuidvar),
+          batch.setData(db.collection("users").document(docUser.documentID).collection("notifications").document(uuidvar),
               {
                 'communityId': timebankDoc.data['community_id'],
                 'data': {
