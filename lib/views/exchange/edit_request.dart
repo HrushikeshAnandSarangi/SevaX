@@ -422,7 +422,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                                         Navigator.pop(viewContext);
                                         linearProgressForCreatingRequest();
                                         await updateRequest(requestModel: widget.requestModel);
-                                        await RequestManager.updateRecurrenceRequests(widget.requestModel.id);
+//                                        await RequestManager.updateRecurrenceRequests(widget.requestModel.id);
+                                        await RequestManager.updateRecurrenceRequestsFrontEnd(updatedRequestModel: widget.requestModel);
                                         Navigator.pop(dialogContext);
                                         Navigator.pop(context);
 
@@ -445,15 +446,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                                 )
                               );
                             });
-
-//                            linearProgressForCreatingRequest();
-
-//                              await updateRequest(requestModel: widget.requestModel);
-//
-//                              if(editType==1){
-//                                await RequestManager.updateRecurrenceRequests(widget.requestModel);
-//                              }
-
 
                           } else {
 
