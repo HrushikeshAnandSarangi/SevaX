@@ -148,6 +148,7 @@ NotificationType stringToNotificationType(String str) {
 }
 
 Map<String, NotificationType> typeMapper = {
+  "RecurringRequestUpdated":NotificationType.RecurringRequestUpdated,
   "RequestAccept": NotificationType.RequestAccept,
   "RequestApprove": NotificationType.RequestApprove,
   "RequestInvite": NotificationType.RequestInvite,
