@@ -101,9 +101,9 @@ Future<void> createRecurringEvents(
       }
     }
   }
-//  DocumentSnapshot timebankDoc = await db.collection("timebanknew").document(requestModel.timebankId).get();
-//  int balance = timebankDoc.data['balance'] + sevaCreditsCount;
-//  batch.updateData(db.collection("timebanknew").document(timebankDoc.documentID), {"balance": balance});
+  DocumentSnapshot timebankDoc = await db.collection("timebanknew").document(requestModel.timebankId).get();
+  int balance = timebankDoc.data['balance'] + sevaCreditsCount;
+  batch.updateData(db.collection("timebanknew").document(timebankDoc.documentID), {"balance": balance});
   await batch.commit();
 }
 

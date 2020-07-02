@@ -116,7 +116,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     this.location = widget.requestModel.location;
     this.selectedAddress = widget.requestModel.address;
     this.oldHours = widget.requestModel.numberOfHours;
-    this.oldTotalRecurrences = widget.requestModel.end.endType=="after"? widget.requestModel.end.after : 0;
+//    this.oldTotalRecurrences = widget.requestModel.end.endType=="after"? widget.requestModel.end.after : 0;
     //this.selectedUsers = widget.requestModel.approvedUsers;
   }
 
