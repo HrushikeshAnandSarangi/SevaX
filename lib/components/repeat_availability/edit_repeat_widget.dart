@@ -42,7 +42,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
     print("request mode recurring data ${widget.requestModel.isRecurring}");
     _selected = List.generate(dayNameList.length, (i) =>requestModel.recurringDays.contains(i) ? true : false);
     endType = requestModel.end.endType=="on"? 0 : 1;
-    selectedDate = requestModel.end.endType=="on"?new DateTime.fromMillisecondsSinceEpoch(requestModel.end.on*1000) : DateTime.now();
+    selectedDate = requestModel.end.endType=="on"?new DateTime.fromMillisecondsSinceEpoch(requestModel.end.on) : DateTime.now();
     after = requestModel.end.endType=="on"?"1":requestModel.end.after.toString();
 //    recurringDays = new List(7);
   }

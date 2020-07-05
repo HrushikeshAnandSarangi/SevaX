@@ -865,6 +865,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         requestModel.id,
         requestModel.timebankId);
     await FirestoreManager.createRequest(requestModel: requestModel);
+
+    if(requestModel.isRecurring){
+      await FirestoreManager.createRecurringEvents(requestModel: requestModel);
+    }
+
   }
 
   Future _updateProjectModel() async {

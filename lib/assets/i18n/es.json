@@ -468,7 +468,10 @@
     "delete_feed_progress": "Eliminar feed",
     "are_you_sure_feed": "¿Estás seguro de que deseas eliminar esta fuente de noticias?"
   },
-  "notications": {
+  "notifications": {
+    "you_signed_up_for": "Te habías registrado para",
+    "on": "en",
+    "owner_changes": ". El propietario del evento ha modificado este evento. Asegúrese de que los cambios realizados sean adecuados para usted y solicite nuevamente",
     "title": "Notificaciones",
     "no_notifications": "No Notificaciones",
     "clear_all": "Borrar todas las notificaciones",
@@ -721,7 +724,15 @@
     "tap_to_remove": "Itens (toque para remover)",
     "tap_to_delete": "Toque para excluir este item",
     "assign_err_hint": "Atribua a um projeto",
-    "tap_to_select": "Toque para selecionar um ou mais..."
+    "tap_to_select": "Toque para selecionar um ou mais...",
+    "repeat": "Repetir",
+    "repeat_on": "Repetir en",
+    "ends": "Termina",
+    "on": "en",
+    "after": "después",
+    "occurences": "ocurrencias",
+    "repeat_cancel": "cancelar",
+    "repeat_done": "hecho"
   },
   "edit_group": {
     "add_members": "Adicionar membros",

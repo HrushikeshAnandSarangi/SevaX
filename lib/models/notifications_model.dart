@@ -148,6 +148,7 @@ NotificationType stringToNotificationType(String str) {
 }
 
 Map<String, NotificationType> typeMapper = {
+  "RecurringRequestUpdated":NotificationType.RecurringRequestUpdated,
   "RequestAccept": NotificationType.RequestAccept,
   "RequestApprove": NotificationType.RequestApprove,
   "RequestInvite": NotificationType.RequestInvite,
@@ -208,7 +209,7 @@ class ClearNotificationModel {
 
 class ReccuringRequestUpdated {
   String eventName;
-  String eventDate;
+  int eventDate;
   String photoUrl;
   String requestId;
 

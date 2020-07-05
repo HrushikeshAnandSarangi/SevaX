@@ -98,7 +98,7 @@ class RequestsState extends State<RequestsModule> {
                               type: InfoType.REQUESTS,
                             ),
                           ),
-                        ],
+                         ],
                       ),
                     ),
                     widget.isFromSettings
