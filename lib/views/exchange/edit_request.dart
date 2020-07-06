@@ -381,71 +381,75 @@ class RequestEditFormState extends State<RequestEditForm> {
                             print("end model is = ${end.toMap()}");
                             widget.requestModel.end = end;
                             print("request model is = ${requestModel.toMap()}");
+                            if(widget.requestModel.recurringDays.length==0){
 
-                            showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (BuildContext viewContext) {
-                              return WillPopScope(
-                                onWillPop: () {},
-                                child:AlertDialog(
-                                  title:Text("This is a repeating event"),
-                                  actions:[
-                                    FlatButton(
-                                      child: Text(
-                                        "Edit this event only",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.red,
-                                            fontFamily: 'Europa'),
+                            }
+                            else{
+                              showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (BuildContext viewContext) {
+                                return WillPopScope(
+                                  onWillPop: () {},
+                                  child:AlertDialog(
+                                    title:Text("This is a repeating event"),
+                                    actions:[
+                                      FlatButton(
+                                        child: Text(
+                                          "Edit this event only",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.red,
+                                              fontFamily: 'Europa'),
+                                        ),
+                                        onPressed: () async {
+                                          editType = 0;
+                                          Navigator.pop(viewContext);
+                                          linearProgressForCreatingRequest();
+                                          await updateRequest(requestModel: widget.requestModel);
+                                          Navigator.pop(dialogContext);
+                                          Navigator.pop(context);
+
+                                        },
                                       ),
-                                      onPressed: () async {
-                                        editType = 0;
-                                        Navigator.pop(viewContext);
-                                        linearProgressForCreatingRequest();
-                                        await updateRequest(requestModel: widget.requestModel);
-                                        Navigator.pop(dialogContext);
-                                        Navigator.pop(context);
+                                      FlatButton(
+                                        child: Text(
+                                          "Edit subsequent events",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.red,
+                                              fontFamily: 'Europa'),
+                                        ),
+                                        onPressed: () async {
+                                          editType=1;
+                                          Navigator.pop(viewContext);
+                                          linearProgressForCreatingRequest();
+                                          await updateRequest(requestModel: widget.requestModel);
+  //                                        await RequestManager.updateRecurrenceRequests(widget.requestModel.id);
+                                          await RequestManager.updateRecurrenceRequestsFrontEnd(updatedRequestModel: widget.requestModel);
+                                          Navigator.pop(dialogContext);
+                                          Navigator.pop(context);
 
-                                      },
-                                    ),
-                                    FlatButton(
-                                      child: Text(
-                                        "Edit subsequent events",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.red,
-                                            fontFamily: 'Europa'),
+                                        },
                                       ),
-                                      onPressed: () async {
-                                        editType=1;
-                                        Navigator.pop(viewContext);
-                                        linearProgressForCreatingRequest();
-                                        await updateRequest(requestModel: widget.requestModel);
-//                                        await RequestManager.updateRecurrenceRequests(widget.requestModel.id);
-                                        await RequestManager.updateRecurrenceRequestsFrontEnd(updatedRequestModel: widget.requestModel);
-                                        Navigator.pop(dialogContext);
-                                        Navigator.pop(context);
-
-                                      },
-                                    ),
-                                    FlatButton(
-                                      child: Text(
-                                        "cancel",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.red,
-                                            fontFamily: 'Europa'),
+                                      FlatButton(
+                                        child: Text(
+                                          "cancel",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.red,
+                                              fontFamily: 'Europa'),
+                                        ),
+                                        onPressed: () async {
+                                          Navigator.pop(viewContext);
+                                        },
                                       ),
-                                      onPressed: () async {
-                                        Navigator.pop(viewContext);
-                                      },
-                                    ),
-                                  ]
+                                    ]
 
-                                )
-                              );
-                            });
+                                  )
+                                );
+                              });
+                            }
 
                           } else {
 
