@@ -494,6 +494,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
       children: <Widget>[
         item,
         Spacer(),
+
       ],
     );
   }
@@ -696,7 +697,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                         case ConnectionState.waiting:
                           return getProjectRequestWidget(
                             model: requestModelList.elementAt(index),
-                            loggedintimezone: widget.userModel.timezone,
+                            loggedintimezone: SevaCore.of(context).loggedInUser.timezone,
                             mContext: context,
                             address: AppLocalizations.of(context)
                                 .translate('projects', 'fetching_loc'),
@@ -704,7 +705,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                         default:
                           return getProjectRequestWidget(
                             model: requestModelList.elementAt(index),
-                            loggedintimezone: widget.userModel.timezone,
+                            loggedintimezone: SevaCore.of(context).loggedInUser.timezone,
                             mContext: context,
                             address: address,
                           );
@@ -884,6 +885,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                                   ),
                                 ),
                               ),
+
                             ],
                           ),
                         ),
