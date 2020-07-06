@@ -18,6 +18,7 @@ import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
+import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
 
 import '../../flavor_config.dart';
 import '../../new_baseline/models/project_model.dart';
@@ -489,12 +490,12 @@ class ProjectRequestListState extends State<ProjectRequestList> {
     );
   }
 
-  Widget getSpacerItem(Widget item) {
+  Widget getSpacerItem(Widget item, item2) {
     return Row(
       children: <Widget>[
         item,
         Spacer(),
-
+        item2,
       ],
     );
   }
@@ -772,14 +773,24 @@ class ProjectRequestListState extends State<ProjectRequestList> {
               timeBankBloc.setSelectedRequest(model);
               timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
               timeBankBloc.setIsAdmin(isAdmin);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (mContext) => RequestTabHolder(
-                    isAdmin: true,
+              if(model.isRecurring){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RecurringRequestList(model: model),
                   ),
-                ),
-              );
+                );
+              }else{
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (mContext) => RequestTabHolder(
+                      isAdmin: true,
+                    ),
+                  ),
+                );
+              }
+
             } else {
               Navigator.push(
                 context,
@@ -862,19 +873,21 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                                     fontSize: 20,
                                   ),
                                 ),
+                                model.isRecurring?Icon(Icons.navigate_next, size: 20):Container(),
                               ),
                               getSpacerItem(
                                 Text(
-                                  '${getTimeFormattedString(model.requestStart, loggedintimezone) + '-' + getTimeFormattedString(model.requestEnd, loggedintimezone)}',
+                                    !model.isRecurring?'${getTimeFormattedString(model.requestStart, loggedintimezone) + '-' + getTimeFormattedString(model.requestEnd, loggedintimezone)}':'',
                                   style: TextStyle(
                                     color: Colors.black38,
-                                    fontSize: 13,
+                                    fontSize: 12,
                                   ),
                                 ),
+                                Container(),
                               ),
                               getSpacerItem(
                                 Flexible(
-                                  flex: 10,
+                                  flex: 8,
                                   child: Text(
                                     '${model.description}',
                                     style: TextStyle(
@@ -884,8 +897,25 @@ class ProjectRequestListState extends State<ProjectRequestList> {
 //                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
+                                Container(),
                               ),
+                              getSpacerItem(
+                                Visibility(
+                                  visible: model.isRecurring,
+                                  child: Wrap(
+                                    crossAxisAlignment: WrapCrossAlignment.start,
+                                    children: <Widget>[
 
+                                      Padding(
+                                        padding: const EdgeInsets.only(top:5.0),
+                                        child: Text("Recurring",
+                                          style: TextStyle(fontSize: 16.0,color:Theme.of(context).primaryColor,fontWeight:FontWeight.bold),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(),
+                              ),
                             ],
                           ),
                         ),
