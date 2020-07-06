@@ -195,7 +195,7 @@ Future<void> updateRecurrenceRequestsFrontEnd({
     //end type is after
     for (int occurenceCount = updatedRequestModel.occurenceCount + 1;occurenceCount <= updatedRequestModel.end.after;) {
       eventStartDate = DateTime(eventStartDate.year,eventStartDate.month,eventStartDate.day + 1,eventStartDate.hour,eventStartDate.minute,eventStartDate.second);
-      eventStartDate = DateTime(eventEndDate.year,eventEndDate.month,eventEndDate.day + 1,eventEndDate.hour,eventEndDate.minute,eventEndDate.second);
+      eventEndDate = DateTime(eventEndDate.year,eventEndDate.month,eventEndDate.day + 1,eventEndDate.hour,eventEndDate.minute,eventEndDate.second);
       log("inside for after mode");
       if (updatedRequestModel.recurringDays.contains(eventStartDate.weekday % 7)) {
         RequestModel temp = updatedRequestModel;
