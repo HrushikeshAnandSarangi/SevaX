@@ -381,10 +381,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                             print("end model is = ${end.toMap()}");
                             widget.requestModel.end = end;
                             print("request model is = ${requestModel.toMap()}");
-                            if(widget.requestModel.recurringDays.length==0){
 
-                            }
-                            else{
                               showDialog(
                               barrierDismissible: false,
                               context: context,
@@ -449,7 +446,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                                   )
                                 );
                               });
-                            }
 
                           } else {
 

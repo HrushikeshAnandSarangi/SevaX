@@ -622,11 +622,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         requestModel.occurenceCount = 1;
         end.endType = RepeatWidgetState.endType == 0 ? "on" : "after";
         end.on = end.endType=="on" ? RepeatWidgetState.selectedDate.millisecondsSinceEpoch:null;
-        end.after = (end.endType =="after" ? int.parse(RepeatWidgetState.after) : 1);
+        end.after = (end.endType =="after" ? int.parse(RepeatWidgetState.after) : null);
         print("end model is = ${end.toMap()} ${end.endType}");
         requestModel.end = end;
         print("request model is = ${requestModel.toMap()}");
-
     }
 
     if (_formKey.currentState.validate()) {
@@ -655,6 +654,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         requestModel.approvedUsers = approvedUsers;
       }
       requestModel.softDelete = false;
+
+      if(requestModel.isRecurring){
+        showDialogForTitle(
+            dialogTitle: AppLocalizations.of(context)
+                .translate('create_request', 'recurringDays_err'));
+        return;
+      }
+
       //Form and date is valid
       switch (requestModel.requestMode) {
         case RequestMode.PERSONAL_REQUEST:

@@ -721,7 +721,8 @@
     "after": "후",
     "occurences": "발생",
     "repeat_cancel": "취소",
-    "repeat_done": "끝난"
+    "repeat_done": "끝난",
+    "recurringDays_err": "되풀이 날짜는 비워 둘 수 없습니다"
   },
   "edit_group": {
     "add_members": "회원 추가",
