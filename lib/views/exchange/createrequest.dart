@@ -656,10 +656,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       requestModel.softDelete = false;
 
       if(requestModel.isRecurring){
-        showDialogForTitle(
+
+        if(requestModel.recurringDays.length!=0){
+          showDialogForTitle(
             dialogTitle: AppLocalizations.of(context)
                 .translate('create_request', 'recurringDays_err'));
-        return;
+          return;
+        }
       }
 
       //Form and date is valid
