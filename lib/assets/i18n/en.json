@@ -728,7 +728,7 @@
     "occurences": "Occurences",
     "repeat_cancel": "Cancel",
     "repeat_done": "Done",
-    "recurringDays_err": "recurring days cannot be empty"
+    "recurringDays_err": "Recurring days cannot be empty"
   },
   "edit_group": {
     "add_members": "Add Members",

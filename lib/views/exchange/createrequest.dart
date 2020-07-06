@@ -657,7 +657,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
       if(requestModel.isRecurring){
 
-        if(requestModel.recurringDays.length!=0){
+        if(requestModel.recurringDays.length==0){
           showDialogForTitle(
             dialogTitle: AppLocalizations.of(context)
                 .translate('create_request', 'recurringDays_err'));

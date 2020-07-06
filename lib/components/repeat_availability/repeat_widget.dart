@@ -81,7 +81,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
           days = days+" "+daysName[i];
         }
       }
-      selectedDays = days;
+      selectedDays = days.trim();
     });
   }
   void _cancelOnAfter() {
