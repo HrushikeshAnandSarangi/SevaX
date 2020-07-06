@@ -42,6 +42,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
     requestModel = widget.requestModel;
     isRecurring = widget.requestModel.isRecurring;
     _selected = List.generate(dayNameList.length, (i) =>requestModel.recurringDays.contains(i) ? true : false);
+    _selectOnAfter();
     endType = requestModel.end.endType=="on"? 0 : 1;
     selectedDate = requestModel.end.endType=="on"?new DateTime.fromMillisecondsSinceEpoch(requestModel.end.on) : DateTime.now();
     after = requestModel.end.endType=="on"?"1":requestModel.end.after.toString();
