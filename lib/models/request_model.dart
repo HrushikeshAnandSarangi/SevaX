@@ -226,7 +226,7 @@ class RequestModel extends DataModel {
     if (map.containsKey('id')) {
       this.id = map['id'];
     }
-    if(map.containsKey('id')){
+    if(map.containsKey('softDelete')){
       this.softDelete = map['softDelete'];
     }
 
@@ -347,7 +347,6 @@ class RequestModel extends DataModel {
       this.occurenceCount = map['occurenceCount'];
     }
     if (map.containsKey('end')) {
-
       this.end = End.fromMap(Map<String, dynamic>.from(map['end']));
     }
     if (map.containsKey('parent_request_id')) {
@@ -473,7 +472,8 @@ class RequestModel extends DataModel {
       this.isRecurring = map['isRecurring'];
     }
     if (map.containsKey('recurringDays')) {
-      this.recurringDays = map['recurringDays'];
+      List<int> recurringDaysList = List.castFrom(map['recurringDays']);
+      this.recurringDays = recurringDaysList;
     }
 
     if (map.containsKey('occurenceCount')) {
