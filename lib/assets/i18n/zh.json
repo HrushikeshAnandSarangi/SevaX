@@ -728,7 +728,8 @@
     "after": "后",
     "occurences": "发生",
     "repeat_cancel": "取消",
-    "repeat_done": "完成"
+    "repeat_done": "完成",
+    "recurringDays_err": "重复天数不能为空"
   },
   "edit_group": {
     "add_members": "添加成员",

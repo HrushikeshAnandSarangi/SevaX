@@ -38,7 +38,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
 //    recurringDays = new List(7);
   }
 
-  static bool isRecurring = true;
+  static bool isRecurring = false;
   bool viewVisible = false;
   bool titleCheck = true;
   static int endType = 0;
@@ -81,7 +81,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
           days = days+" "+daysName[i];
         }
       }
-      selectedDays = days;
+      selectedDays = days.trim();
     });
   }
   void _cancelOnAfter() {

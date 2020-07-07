@@ -732,7 +732,8 @@
     "after": "Après",
     "occurences": "Occurrences",
     "repeat_cancel": "Annuler",
-    "repeat_done": "Terminé"
+    "repeat_done": "Terminé",
+    "recurringDays_err": "les jours récurrents ne peuvent pas être vides"
   },
   "edit_group": {
     "add_members": "Añadir miembros",

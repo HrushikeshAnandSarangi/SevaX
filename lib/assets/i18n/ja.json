@@ -721,7 +721,8 @@
     "after": "後",
     "occurences": "発生",
     "repeat_cancel": "キャンセル",
-    "repeat_done": "終わった"
+    "repeat_done": "終わった",
+    "recurringDays_err": "繰り返し日を空にすることはできません"
   },
   "edit_group": {
     "add_members": "メンバーを追加",

@@ -735,7 +735,8 @@
     "after": "Depois de",
     "occurences": "Ocorrências",
     "repeat_cancel": "Cancelar",
-    "repeat_done": "feito"
+    "repeat_done": "feito",
+    "recurringDays_err": "dias recorrentes não podem estar vazios"
   },
   "edit_group": {
     "add_members": "Adicionar membros",
