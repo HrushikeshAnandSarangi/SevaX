@@ -267,7 +267,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                               color: Colors.black12,
                             ),
                             child: new InkWell(
-                                onTap: () async => await _selectDate(context),
+                                onTap: endType == 0 ? () async => await _selectDate(context) : null,
                                 child:
                                     Text("${dateFormat.format(selectedDate)}",
                                         textAlign: TextAlign.start,
@@ -300,6 +300,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                               )),
                           Container(
                             width: 160.0,
+                            height: 44,
                             alignment: Alignment.topLeft,
                             margin: EdgeInsets.fromLTRB(20.0, 8.0, 8.0, 8.0),
                             padding:
@@ -315,11 +316,11 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                 Container(
                                   child: DropdownButton(
                                     value: after,
-                                    onChanged: (newValue) {
+                                    onChanged:  endType == 1 ? (newValue) {
                                       setState(() {
                                         after = newValue;
                                       });
-                                    },
+                                    } : null,
                                     items: occurenccesList
                                         .map<DropdownMenuItem<String>>(
                                             (String number) {
@@ -339,7 +340,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                 Text("${AppLocalizations.of(context).translate('create_request', 'occurences')}",
                                     textAlign: TextAlign.end,
                                     style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'Europa',
                                       color: endType == 1
