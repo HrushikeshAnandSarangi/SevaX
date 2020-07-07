@@ -777,6 +777,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         }
                         _formKey.currentState.reset();
                         Navigator.of(context).pop();
+                        Navigator.of(context).pop();
                       }
                     }
                   },
