@@ -535,7 +535,7 @@
     "added_you": "te ha agregado a",
     "timebank_join": "Timebank Join",
     "group_invite": "Invitación para unirse al grupo",
-    "notification_alert": "Notifications"
+    "notification_alert": "notificações"
   },
   "profile": {
     "image_hint": "Imagem de perfil",
@@ -1087,7 +1087,12 @@
     "loading": "Carregando...",
     "cancel": "Cancelar",
     "next": "Next",
-    "create": "Criar"
+    "create": "Criar",
+    "edit": "Editar",
+    "save": "Salve ",
+    "type_message": "Digite uma mensagem",
+    "add_caption": "Adicionar uma legenda",
+    "tap_for_photo": "Tap para a foto"
   },
   "add_location": {
     "confirm_location_label": "CONFIRMAR localização"

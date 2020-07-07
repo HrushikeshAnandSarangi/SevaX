@@ -67,7 +67,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
             TabBar(
               indicatorColor: Colors.black,
               labelColor: Colors.black,
-              isScrollable: false,
+              isScrollable: true,
               tabs: <Widget>[
                 Tab(
                     text: AppLocalizations.of(context)
@@ -775,7 +775,7 @@ class _NotificationManagerForAminsState
                         );
                       },
                     ),
-                  lineDivider
+                    lineDivider
                   ],
                 ),
               );
