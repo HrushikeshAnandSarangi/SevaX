@@ -565,7 +565,8 @@
     "enter_bio": "Enter bio",
     "please_enter_bio": "Please enter bio to update",
     "bio_50": "Please enter min 50 char",
-    "sure_logout": "Are you sure you want to logout?"
+    "sure_logout": "Are you sure you want to logout?",
+    "notifications": "Notification alerts"
   },
   "help": {
     "about_sevax": "About SevaX",
