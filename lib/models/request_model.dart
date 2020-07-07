@@ -375,7 +375,7 @@ class RequestModel extends DataModel {
       this.id = map['id'];
     }
 
-    if(map.containsKey('id')){
+    if(map.containsKey('softDelete')){
       this.softDelete = map['softDelete'];
     }
 
@@ -481,7 +481,8 @@ class RequestModel extends DataModel {
     }
 
     if (map.containsKey('end')) {
-      this.end = map['end'];
+//      this.end = map['end'];
+      this.end = End.fromMap(Map<String, dynamic>.from(map['end']));
     }
     if (map.containsKey('parent_request_id')) {
       this.parent_request_id = map['parent_request_id'];

@@ -145,7 +145,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                         color: Colors.black,
                       )),
                   Visibility(
-                    visible: titleCheck,
+                    visible: isRecurring,
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(20.0, 8.0, 8.0, 8.0),
                       child: Container(
@@ -158,7 +158,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                         ),
                         child: InkWell(
                             onTap: _selectOnAfter,
-                            child: Text("Weekly on $selectedDays",
+                            child: Text("Weekly on ${selectedDays==""||selectedDays==" "? "...":selectedDays }",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: 14,
