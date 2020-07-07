@@ -1091,7 +1091,12 @@
     "loading": "Carregando...",
     "cancel": "Cancelar",
     "next": "Next",
-    "create": "Criar"
+    "create": "Criar",
+    "edit": "Editar",
+    "save": "Salve ",
+    "type_message": "Digite uma mensagem",
+    "add_caption": "Adicionar uma legenda",
+    "tap_for_photo": "Tap para a foto"
   },
   "add_location": {
     "confirm_location_label": "CONFIRMAR localização"

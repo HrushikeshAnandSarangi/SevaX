@@ -1087,7 +1087,13 @@
     "loading": "Loading ...",
     "cancel": "Cancel",
     "next": "Next",
-    "create": "Create"
+
+    "create": "Create",
+    "edit": "Edit",
+    "save": "Save",
+    "type_message": "Type a message",
+    "add_caption": "Add a caption",
+    "tap_for_photo": "Tap for photo"
   },
   "add_location": {
     "confirm_location_label": "CONFIRM LOCATION"
