@@ -1102,7 +1102,12 @@
     "loading": "Chargement...",
     "cancel": "Annuler",
     "next": "Suivant",
-    "create": "Créer"
+    "create": "Créer",
+    "edit": "Éditer",
+    "save": "sauver",
+    "type_message": "Tapez un message",
+    "add_caption": "Ajouter une légende",
+    "tap_for_photo": "Tap pour la photo"
   },
   "add_location": {
     "confirm_location_label": "CONFIRMER L'EMPLACEMENT"

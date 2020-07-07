@@ -71,9 +71,7 @@ class MessageCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      isAdminMessage ||
-                              info.type == ChatType.TYPE_PERSONAL ||
-                              info.type == ChatType.TYPE_MULTI_USER_MESSAGING
+                      isAdminMessage || info.type == ChatType.TYPE_PERSONAL
                           ? Container()
                           : Container(
                               decoration: BoxDecoration(
@@ -158,13 +156,13 @@ class MessageCard extends StatelessWidget {
         return "Personal";
         break;
       case ChatType.TYPE_TIMEBANK:
-        return "Timebank";
+        return AppLocalizations.of(context).translate("members", "timebank");
         break;
       case ChatType.TYPE_GROUP:
-        return "Group";
+        return AppLocalizations.of(context).translate("members", "group");
         break;
       case ChatType.TYPE_MULTI_USER_MESSAGING:
-        return "Multi-User Messaging";
+        return AppLocalizations.of(context).translate("messages", "multi_user");
         break;
     }
     return "";
@@ -182,7 +180,7 @@ class MessageCard extends StatelessWidget {
         return Theme.of(context).primaryColor;
         break;
       case ChatType.TYPE_MULTI_USER_MESSAGING:
-        return Theme.of(context).accentColor;
+        return Theme.of(context).primaryColor;
         break;
     }
     return Colors.grey;

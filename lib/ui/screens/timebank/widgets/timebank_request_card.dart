@@ -4,6 +4,7 @@ import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 
 class TimebankRequestCard extends StatelessWidget {
+  final bool isRecurring;
   final String title;
   final String subtitle;
   final String photoUrl;
@@ -13,6 +14,7 @@ class TimebankRequestCard extends StatelessWidget {
 
   const TimebankRequestCard({
     Key key,
+    this.isRecurring,
     this.title,
     this.subtitle,
     this.photoUrl,
@@ -46,11 +48,19 @@ class TimebankRequestCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      title,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: Theme.of(context).textTheme.subhead,
+                    Row(
+                      children: [
+                        Text(
+                          title,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: Theme.of(context).textTheme.subhead,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left:140),
+                          child: Icon(Icons.navigate_next, size: 20,),
+                        ),
+                      ],
                     ),
                     Text(
                       subtitle,
@@ -59,25 +69,38 @@ class TimebankRequestCard extends StatelessWidget {
                       style: Theme.of(context).textTheme.subtitle,
                     ),
                     SizedBox(height: 8),
-                    Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          getTimeFormattedString(startTime),
-                        ),
-                        SizedBox(width: 2),
-                        Icon(Icons.arrow_forward, size: 14),
-                        SizedBox(width: 4),
-                        Text(
-                          getTimeFormattedString(endTime),
-                        ),
-                      ],
+                    Visibility(
+                      visible: !isRecurring,
+                      child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            getTimeFormattedString(startTime),
+                          ),
+                          SizedBox(width: 2),
+                          Icon(Icons.arrow_forward, size: 14),
+                          SizedBox(width: 4),
+                          Text(
+                            getTimeFormattedString(endTime),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: isRecurring,
+                      child: Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: <Widget>[
+                          Text("Recurring",
+                            style: TextStyle(fontSize: 16.0,color:Theme.of(context).primaryColor,fontWeight:FontWeight.bold),),
+                        ],
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
-                        isApplied
+                        isApplied && !isRecurring
                             ? Container(
                                 margin: EdgeInsets.only(top: 10, bottom: 10),
                                 width: 100,
@@ -104,16 +127,6 @@ class TimebankRequestCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Offstage(
-            //   offstage: !isApplied,
-            //   child: RotatedBox(
-            //     quarterTurns: 3,
-            //     child: Container(
-            //       color: Colors.green,
-            //       child: Text("Applied"),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),

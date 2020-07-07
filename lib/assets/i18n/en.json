@@ -565,7 +565,8 @@
     "enter_bio": "Enter bio",
     "please_enter_bio": "Please enter bio to update",
     "bio_50": "Please enter min 50 char",
-    "sure_logout": "Are you sure you want to logout?"
+    "sure_logout": "Are you sure you want to logout?",
+    "notifications": "Notification alerts"
   },
   "help": {
     "about_sevax": "About SevaX",
@@ -1102,7 +1103,13 @@
     "loading": "Loading ...",
     "cancel": "Cancel",
     "next": "Next",
-    "create": "Create"
+
+    "create": "Create",
+    "edit": "Edit",
+    "save": "Save",
+    "type_message": "Type a message",
+    "add_caption": "Add a caption",
+    "tap_for_photo": "Tap for photo"
   },
   "add_location": {
     "confirm_location_label": "CONFIRM LOCATION"
@@ -1194,7 +1201,6 @@
     "pending_payment": "You have payment pending of ",
     "pending_payment_two": ". Please complete these payment before ownership can be transferred",
     "search_admin": "Search Admin",
-
     "change_message": "You are the new owner of Timebank ",
     "change_message_two": " You need to accept it to complete the process",
     "change_advisory": " You are required to provide billing details for this Timebank - including the new billing address. The transfer of ownership will not be completed until this is done.",

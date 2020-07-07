@@ -169,9 +169,10 @@ class ChatAppBar extends PreferredSize {
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID))
               ? [
                   PopupMenuItem(
-                    child: Text("Edit"
-                        // AppLocalizations.of(context).translate('chat', 'block'),
-                        ),
+                    child: Text(
+                      AppLocalizations.of(context)
+                          .translate('messages', 'edit'),
+                    ),
                     value: MessageMenu.EDIT_GROUP,
                   )
                 ]

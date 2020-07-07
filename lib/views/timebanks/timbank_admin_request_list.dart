@@ -718,7 +718,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 //                      List<String> members =
 //                          timebankModel.members.map((s) => s).toList();
 //                      members.remove(user.sevaUserID);
-//
                       if (widget.isCommunity != null && widget.isCommunity) {
                         print("user ${user.sevaUserID}");
                         removeMemberTimebankFn(
@@ -726,35 +725,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                             userModel: user,
                             isFromExit: true,
                             timebankModel: model);
-//                        CommunityModel communityModel =
-//                            await getCommunityDetailsByCommunityId(
-//                                communityId: SevaCore.of(context)
-//                                    .loggedInUser
-//                                    .currentCommunity);
-//
-//                        await _exitFromTimebank(
-//                                model: timebankModel,
-//                                userId: user.sevaUserID,
-//                                communityModel: communityModel)
-//                            .commit();
                       } else {
                         removeMemberGroupFn(
                             context: parentContext,
                             userModel: user,
                             isFromExit: true,
                             timebankModel: model);
-//                        model.members = members;
-//
-//                        print(" time id ${model.id}");
-//                        print(" members  ${model.members}");
-//                        print(" reason  ${reason}");
-//
-//                        sendNotificationToAdmin(
-//                            user: user,
-//                            timebank: model,
-//                            communityId: SevaCore.of(context)
-//                                .loggedInUser
-//                                .currentCommunity);
 //                        // TODO this is temporory fix a full fetched refreshing scienario is needed
 //                        Navigator.of(parentContext).pushAndRemoveUntil(
 //                            MaterialPageRoute(
@@ -1713,15 +1689,11 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       UserModel userModel,
       TimebankModel timebankModel,
       bool isFromExit}) async {
-    print("  user id ${userModel.sevaUserID}" +
-        " exiting member ongoing " +
-        timebankModel.id);
     Map<String, dynamic> responseData = await removeMemberFromTimebank(
         sevauserid: userModel.sevaUserID, timebankId: timebankModel.id);
-    print("reported members removal response is --- " +
-        responseData['ownerGroupsArr'].toString());
     if (responseData['deletable'] == true) {
       if (isFromExit) {
+        print("im about to exit");
         await sendNotificationToAdmin(
             user: userModel,
             timebank: timebankModel,
@@ -1735,24 +1707,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       } else {
         resetAndLoad();
       }
-//      showDialog(
-//        context: context,
-//        builder: (BuildContext context) {
-//          // return object of type Dialog
-//          return AlertDialog(
-//            content: new Text("User is successfully removed from the timebank"),
-//            actions: <Widget>[
-//              // usually buttons at the bottom of the dialog
-//              new FlatButton(
-//                child: new Text("Close"),
-//                onPressed: () {
-//                  Navigator.of(context).pop();
-//                },
-//              ),
-//            ],
-//          );
-//        },
-//      );
     } else {
       if (responseData['softDeleteCheck'] == false &&
           responseData['groupOwnershipCheck'] == false) {

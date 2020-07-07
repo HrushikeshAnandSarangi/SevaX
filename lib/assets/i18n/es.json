@@ -1102,7 +1102,12 @@
     "loading": "Cargando...",
     "cancel": "Cancelar",
     "next": "Próximo",
-    "create": "Crear"
+    "create": "Crear",
+    "edit": "Editar",
+    "save": "Salvar",
+    "type_message": "Escribir un mensaje",
+    "add_caption": "Agrega un subtítulo",
+    "tap_for_photo": "Toque para la foto"
   },
   "add_location": {
     "confirm_location_label": "CONFIRMAR LOCAL"
