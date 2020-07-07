@@ -18,6 +18,7 @@ import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/reported_members/widgets/reported_member_navigator_widget.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
@@ -819,104 +820,13 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       print((widget.isUserAdmin &&
           (SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID ||
               user.sevaUserID == timebankModel.creatorId)));
+
       if (!widget.isUserAdmin) {
         return widget.isUserAdmin &&
                 (SevaCore.of(context).loggedInUser.sevaUserID ==
                         user.sevaUserID ||
                     user.sevaUserID == timebankModel.creatorId)
-            ? Row(
-                children: <Widget>[
-                  isPromoteBottonVisible == true
-                      ? Padding(
-                          padding: EdgeInsets.only(left: 2, right: 2),
-                          child: CustomRaisedButton(
-                            debouncer: debounceValue,
-                            action: Actions.Promote,
-                            onTap: () async {
-                              setState(() {
-                                isProgressBarActive = true;
-                              });
-
-                              List<String> admins =
-                                  timebankModel.admins.map((s) => s).toList();
-                              admins.add(user.sevaUserID);
-                              Firestore.instance
-                                  .collection('communities')
-                                  .document(timebankModel.communityId)
-                                  .updateData({
-                                'admins':
-                                    FieldValue.arrayUnion([user.sevaUserID]),
-                              });
-                              _updateTimebank(timebankModel, admins: admins);
-                            },
-                          ),
-                        )
-                      : Padding(
-                          padding: EdgeInsets.only(left: 2, right: 2),
-                          child: CustomRaisedButton(
-                            debouncer: debounceValue,
-                            action: Actions.Demote,
-                            onTap: () async {
-                              setState(() {
-                                isProgressBarActive = true;
-                              });
-                              List<String> admins =
-                                  timebankModel.admins.map((s) => s).toList();
-
-                              Firestore.instance
-                                  .collection('communities')
-                                  .document(timebankModel.communityId)
-                                  .updateData({
-                                'admins':
-                                    FieldValue.arrayRemove([user.sevaUserID]),
-                              });
-                              admins.remove(user.sevaUserID);
-                              _updateTimebank(timebankModel, admins: admins);
-                            },
-                          ),
-                        ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 2, right: 2),
-                    child: CustomRaisedButton(
-                      debouncer: debounceValue,
-                      action: Actions.Remove,
-                      onTap: () async {
-                        //Here we need to put dialog
-                        Map<String, bool> onActivityResult = await showAdvisory(
-                            dialogTitle:
-                                "${AppLocalizations.of(context).translate('members', 'are_you_sure')} ${user.fullname}?");
-                        if (onActivityResult['PROCEED']) {
-                          setState(() {
-                            isProgressBarActive = true;
-                          });
-                          if (widget.isCommunity != null &&
-                              widget.isCommunity) {
-                            await removeMemberTimebankFn(
-                                context: parentContext,
-                                userModel: user,
-                                isFromExit: false,
-                                timebankModel: model);
-                            setState(() {
-                              isProgressBarActive = false;
-                            });
-                          } else {
-                            await removeMemberGroupFn(
-                                context: parentContext,
-                                userModel: user,
-                                isFromExit: false,
-                                timebankModel: model);
-                            setState(() {
-                              isProgressBarActive = false;
-                            });
-                          }
-                        } else {
-                          return;
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              )
+            ? actionButtonsUser(user, model, isPromoteBottonVisible)
             : Offstage();
       } else {
         return widget.isUserAdmin &&
@@ -924,100 +834,298 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                         user.sevaUserID ||
                     user.sevaUserID == timebankModel.creatorId)
             ? Offstage()
-            : Row(
-                children: <Widget>[
-                  isPromoteBottonVisible == true
-                      ? Padding(
-                          padding: EdgeInsets.only(left: 2, right: 2),
-                          child: CustomRaisedButton(
-                            debouncer: debounceValue,
-                            action: Actions.Promote,
-                            onTap: () async {
-                              setState(() {
-                                isProgressBarActive = true;
-                              });
-                              List<String> admins =
-                                  timebankModel.admins.map((s) => s).toList();
-                              admins.add(user.sevaUserID);
-
-                              Firestore.instance
-                                  .collection('communities')
-                                  .document(timebankModel.communityId)
-                                  .updateData({
-                                'admins':
-                                    FieldValue.arrayUnion([user.sevaUserID]),
-                              });
-
-                              _updateTimebank(timebankModel, admins: admins);
-                            },
-                          ),
-                        )
-                      : Padding(
-                          padding: EdgeInsets.only(left: 2, right: 2),
-                          child: CustomRaisedButton(
-                            debouncer: debounceValue,
-                            action: Actions.Demote,
-                            onTap: () async {
-                              setState(() {
-                                isProgressBarActive = true;
-                              });
-                              List<String> admins =
-                                  timebankModel.admins.map((s) => s).toList();
-                              admins.remove(user.sevaUserID);
-                              Firestore.instance
-                                  .collection('communities')
-                                  .document(timebankModel.communityId)
-                                  .updateData({
-                                'admins':
-                                    FieldValue.arrayRemove([user.sevaUserID]),
-                              });
-                              _updateTimebank(timebankModel, admins: admins);
-                            },
-                          ),
-                        ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 2, right: 2),
-                    child: CustomRaisedButton(
-                      debouncer: debounceValue,
-                      action: Actions.Remove,
-                      onTap: () async {
-                        //Here we need to put dialog
-                        Map<String, bool> onActivityResult = await showAdvisory(
-                            dialogTitle:
-                                "${AppLocalizations.of(context).translate('members', 'are_you_sure')} ${user.fullname}?");
-                        if (onActivityResult['PROCEED']) {
-                          setState(() {
-                            isProgressBarActive = true;
-                          });
-                          if (widget.isCommunity != null &&
-                              widget.isCommunity) {
-                            await removeMemberTimebankFn(
-                                context: parentContext,
-                                userModel: user,
-                                isFromExit: false,
-                                timebankModel: model);
-                            setState(() {
-                              isProgressBarActive = false;
-                            });
-                          } else {
-                            await removeMemberGroupFn(
-                                context: parentContext,
-                                userModel: user,
-                                isFromExit: false,
-                                timebankModel: model);
-                            setState(() {
-                              isProgressBarActive = false;
-                            });
-                          }
-                        } else {
-                          return;
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              );
+            : actionButtonsAdmin(user, model, isPromoteBottonVisible);
       }
+    }
+  }
+  Widget actionButtonsAdmin(user, model, isPromoteBottonVisible) => PopupMenuButton(
+    itemBuilder: (context) {
+      var list = List<PopupMenuEntry<Object>>();
+      if (isPromoteBottonVisible == true) {
+        list.add(
+          PopupMenuItem(
+            value: 1,
+            child: CustomRaisedButton(
+              debouncer: debounceValue,
+              action: Actions.Promote,
+              onTap: () async {
+                setState(() {
+                  isProgressBarActive = true;
+                });
+                List<String> admins =
+                timebankModel.admins.map((s) => s).toList();
+                admins.add(user.sevaUserID);
+
+                Firestore.instance
+                    .collection('communities')
+                    .document(timebankModel.communityId)
+                    .updateData({
+                  'admins':
+                  FieldValue.arrayUnion([user.sevaUserID]),
+                });
+
+                _updateTimebank(timebankModel, admins: admins);
+              },
+            ),
+          ),
+        );
+      } else {
+        list.add(
+          PopupMenuItem(
+            value: 2,
+            child: CustomRaisedButton(
+              debouncer: debounceValue,
+              action: Actions.Demote,
+              onTap: () async {
+                setState(() {
+                  isProgressBarActive = true;
+                });
+                List<String> admins =
+                timebankModel.admins.map((s) => s).toList();
+                admins.remove(user.sevaUserID);
+                Firestore.instance
+                    .collection('communities')
+                    .document(timebankModel.communityId)
+                    .updateData({
+                  'admins':
+                  FieldValue.arrayRemove([user.sevaUserID]),
+                });
+                _updateTimebank(timebankModel, admins: admins);
+              },
+            ),
+          ),
+        );
+      }
+      list.add(
+        PopupMenuItem(
+          value: 3,
+          child: CustomRaisedButton(
+            debouncer: debounceValue,
+            action: Actions.Remove,
+            onTap: () async {
+              //Here we need to put dialog
+              Map<String, bool> onActivityResult = await showAdvisory(
+                  dialogTitle:
+                  "${AppLocalizations.of(context).translate('members', 'are_you_sure')} ${user.fullname}?");
+              if (onActivityResult['PROCEED']) {
+                setState(() {
+                  isProgressBarActive = true;
+                });
+                if (widget.isCommunity != null &&
+                    widget.isCommunity) {
+                  await removeMemberTimebankFn(
+                      context: parentContext,
+                      userModel: user,
+                      isFromExit: false,
+                      timebankModel: model);
+                  setState(() {
+                    isProgressBarActive = false;
+                  });
+                } else {
+                  await removeMemberGroupFn(
+                      context: parentContext,
+                      userModel: user,
+                      isFromExit: false,
+                      timebankModel: model);
+                  setState(() {
+                    isProgressBarActive = false;
+                  });
+                }
+              } else {
+                return;
+              }
+            },
+          ),
+        ),
+      );
+
+      list.add(
+        PopupMenuItem(
+          value: 4,
+          child: CustomRaisedButton(
+            debouncer: debounceValue,
+            action: Actions.Loan,
+            onTap: () => {
+              _showFontSizePickerDialog(user, model)
+            }
+          ),
+        ),
+      );
+      return list;
+    },
+    elevation: 4,
+    padding: EdgeInsets.symmetric(horizontal: 10),
+  );
+  Widget actionButtonsUser(user, model, isPromoteBottonVisible) => PopupMenuButton(
+    itemBuilder: (context) {
+      var list = List<PopupMenuEntry<Object>>();
+      if (isPromoteBottonVisible == true) {
+        list.add(
+          PopupMenuItem(
+            value: 1,
+            child: CustomRaisedButton(
+              debouncer: debounceValue,
+              action: Actions.Promote,
+              onTap: () async {
+                setState(() {
+                  isProgressBarActive = true;
+                });
+
+                List<String> admins =
+                timebankModel.admins.map((s) => s).toList();
+                admins.add(user.sevaUserID);
+                Firestore.instance
+                    .collection('communities')
+                    .document(timebankModel.communityId)
+                    .updateData({
+                  'admins':
+                  FieldValue.arrayUnion([user.sevaUserID]),
+                });
+                _updateTimebank(timebankModel, admins: admins);
+              },
+            ),
+          ),
+        );
+      } else {
+        list.add(
+          PopupMenuItem(
+            value: 2,
+            child: CustomRaisedButton(
+              debouncer: debounceValue,
+              action: Actions.Demote,
+              onTap: () async {
+                setState(() {
+                  isProgressBarActive = true;
+                });
+                List<String> admins =
+                timebankModel.admins.map((s) => s).toList();
+
+                Firestore.instance
+                    .collection('communities')
+                    .document(timebankModel.communityId)
+                    .updateData({
+                  'admins':
+                  FieldValue.arrayRemove([user.sevaUserID]),
+                });
+                admins.remove(user.sevaUserID);
+                _updateTimebank(timebankModel, admins: admins);
+              },
+            ),
+          ),
+        );
+      }
+      list.add(
+        PopupMenuItem(
+          value: 3,
+          child: CustomRaisedButton(
+            debouncer: debounceValue,
+            action: Actions.Remove,
+            onTap: () async {
+              //Here we need to put dialog
+              Map<String, bool> onActivityResult = await showAdvisory(
+                  dialogTitle:
+                  "${AppLocalizations.of(context).translate('members', 'are_you_sure')} ${user.fullname}?");
+              if (onActivityResult['PROCEED']) {
+                setState(() {
+                  isProgressBarActive = true;
+                });
+                if (widget.isCommunity != null &&
+                    widget.isCommunity) {
+                  await removeMemberTimebankFn(
+                      context: parentContext,
+                      userModel: user,
+                      isFromExit: false,
+                      timebankModel: model);
+                  setState(() {
+                    isProgressBarActive = false;
+                  });
+                } else {
+                  await removeMemberGroupFn(
+                      context: parentContext,
+                      userModel: user,
+                      isFromExit: false,
+                      timebankModel: model);
+                  setState(() {
+                    isProgressBarActive = false;
+                  });
+                }
+              } else {
+                return;
+              }
+            },
+          ),
+        ),
+      );
+      return list;
+    },
+    elevation: 4,
+    padding: EdgeInsets.symmetric(horizontal: 10),
+  );
+  void _showFontSizePickerDialog(UserModel user,model) async {
+    var connResult = await Connectivity().checkConnectivity();
+    if (connResult == ConnectivityResult.none) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)
+              .translate('shared', 'check_internet')),
+          action: SnackBarAction(
+            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+          ),
+        ),
+      );
+      return;
+    }
+
+
+    if (timebankModel.balance <= 0) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              AppLocalizations.of(context).translate('loan', 'not_enough')),
+          action: SnackBarAction(
+            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+          ),
+        ),
+      );
+      return;
+    }
+
+    // <-- note the async keyword here
+    double donateAmount = 0;
+//     this will contain the result from Navigator.pop(context, result)
+    final donateAmount_Received = await showDialog<double>(
+      context: context,
+      builder: (context) => InputDonateDialog(
+          donateAmount: donateAmount,
+          maxAmount: timebankModel.balance.toDouble()),
+    );
+
+    // execution of this code continues when the dialog was closed (popped)
+
+    // note that the result can also be null, so check it
+    // (back button or pressed outside of the dialog)
+    if (donateAmount_Received != null) {
+      setState(() {
+        donateAmount = donateAmount_Received;
+        timebankModel.balance = timebankModel.balance - donateAmount_Received;
+      });
+      //from, to, timestamp, credits, isApproved, type, typeid, timebankid
+      await TransactionBloc().createNewTransaction(
+          model.id,
+          user.sevaUserID,
+          DateTime.now().millisecondsSinceEpoch,
+          donateAmount,
+          true,
+          "ADMIN_DONATE_TOUSER",
+          null,
+          model.id);
+      await showDialog<double>(
+        context: context,
+        builder: (context) => InputDonateSuccessDialog(
+            onComplete: () => {Navigator.pop(context)}),
+      );
     }
   }
 
@@ -1706,6 +1814,7 @@ enum Actions {
   Promote,
   Demote,
   Exit,
+  Loan
 }
 
 class Debouncer {
@@ -1740,7 +1849,7 @@ class CustomRaisedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     var btn = RaisedButton(
       padding: EdgeInsets.all(0),
-      color: (action == Actions.Approve || action == Actions.Promote)
+      color: (action == Actions.Approve || action == Actions.Promote || action == Actions.Loan)
           ? null
           : Colors.red,
       child: Text(
@@ -1756,6 +1865,156 @@ class CustomRaisedButton extends StatelessWidget {
       width: 70,
       height: 30,
       child: btn,
+    );
+  }
+}
+
+// move the dialog into it's own stateful widget.
+// It's completely independent from your page
+// this is good practice
+class InputDonateDialog extends StatefulWidget {
+  /// initial selection for the slider
+  final double donateAmount;
+  final double maxAmount;
+
+  const InputDonateDialog({Key key, this.donateAmount, this.maxAmount})
+      : super(key: key);
+
+  @override
+  _InputDonateDialogState createState() => _InputDonateDialogState();
+}
+
+class _InputDonateDialogState extends State<InputDonateDialog> {
+  /// current selection of the slider
+  double _donateAmount;
+  bool donatezeroerror = false;
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _donateAmount = widget.donateAmount;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title:
+      Text(AppLocalizations.of(context).translate('loan', 'donate_coins')),
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+                '${AppLocalizations.of(context).translate('loan', 'current_coins')} ' +
+                    widget.maxAmount.toStringAsFixed(2).toString()),
+            TextFormField(
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)
+                    .translate('loan', 'coins_hint'),
+              ),
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value.isEmpty) {
+                  return AppLocalizations.of(context)
+                      .translate('loan', 'empty_error');
+                } else if (int.parse(value) > widget.maxAmount) {
+                  return AppLocalizations.of(context)
+                      .translate('loan', 'not_enough');
+                } else if (int.parse(value) == 0) {
+                  return AppLocalizations.of(context)
+                      .translate('loan', 'zero_err');
+                } else if (int.parse(value) <= 0) {
+                  return AppLocalizations.of(context)
+                      .translate('loan', 'less_zero_err');
+                } else {
+                  _donateAmount = double.parse(value);
+                  return null;
+                }
+              },
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(AppLocalizations.of(context).translate('loan', 'hint')),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        RaisedButton(
+          padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+          color: Theme.of(context).accentColor,
+          textColor: FlavorConfig.values.buttonTextColor,
+          child: Text(
+            AppLocalizations.of(context).translate('loan', 'donate'),
+            style: TextStyle(
+              fontSize: dialogButtonSize,
+            ),
+          ),
+          onPressed: () {
+            if (_formKey.currentState.validate()) {
+//              if (_donateAmount == 0) {
+//                setState(() {
+//                  donatezeroerror = true;
+//                });
+//                return;
+//              }
+              setState(() {
+                donatezeroerror = false;
+              });
+              Navigator.pop(context, _donateAmount);
+            }
+          },
+        ),
+        FlatButton(
+          child: Text(
+            AppLocalizations.of(context).translate('shared', 'cancel'),
+            style: TextStyle(color: Colors.red, fontSize: dialogButtonSize),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        )
+      ],
+    );
+  }
+}
+
+class InputDonateSuccessDialog extends StatefulWidget {
+  /// initial selection for the slider
+  final VoidCallback onComplete;
+
+  const InputDonateSuccessDialog({Key key, this.onComplete}) : super(key: key);
+
+  @override
+  _InputDonateSuccessDialogState createState() =>
+      _InputDonateSuccessDialogState();
+}
+
+class _InputDonateSuccessDialogState extends State<InputDonateSuccessDialog> {
+  VoidCallback onComplete;
+
+  /// current selection of the slider
+  @override
+  void initState() {
+    super.initState();
+    onComplete = widget.onComplete;
+    var _duration = new Duration(milliseconds: 2000);
+    new Timer(_duration, () => {Navigator.pop(context)});
+  }
+
+//  Text('Coins successfully donated to timebank')
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(
+          AppLocalizations.of(context).translate('loan', 'donate_totimebank')),
+      content: Container(
+          height: MediaQuery.of(context).size.height / 10,
+          width: MediaQuery.of(context).size.width / 12,
+          child: Text(AppLocalizations.of(context)
+              .translate('loan', 'donate_success'))),
     );
   }
 }

@@ -822,6 +822,20 @@
     "empty_error": "Doe alguns créditos",
     "coins_hint": "No. de créditos Seva "
   },
+  "loan": {
+    "donate": "Empréstimo",
+    "donate_totimebank": "Empréstimos seva créditos ao usuário",
+    "not_enough": "Você não tem créditos suficientes para doar!",
+    "donate_coins": "Empréstimos seva créditos ao usuário",
+    "current_coins": "Seus créditos do timebank seva são",
+    "coins": "Créditos",
+    "hint": "Ao clicar em Aprovar, o saldo do Timebank será ajustado",
+    "zero_err": "Você não pode emprestar 0 créditos",
+    "less_zero_err": "Você não pode emprestar menos de 0 créditos",
+    "empty_error": "Emprestar alguns créditos",
+    "coins_hint": "Nenhum de seus créditos",
+    "donate_success": "Você emprestou créditos com sucesso"
+  },
   "earnings": {
     "title": "Revisar ganhos",
     "none": "Você ainda não possui nenhuma transação",

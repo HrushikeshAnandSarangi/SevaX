@@ -819,6 +819,20 @@
     "empty_error": "Donate some credits",
     "coins_hint": "Nº de seva créditos"
   },
+  "loan": {
+    "donate": "Préstamo",
+    "donate_totimebank": "Préstamo de créditos seva al usuario",
+    "not_enough": "¡No tienes suficientes créditos para donar!",
+    "donate_coins": "Préstamo de créditos seva al usuario",
+    "current_coins": "Sus créditos de banco de tiempo seva son",
+    "coins": "Créditos",
+    "hint": "Al hacer clic en Aprobar, se ajustará el saldo del banco de tiempo",
+    "zero_err": "No puedes prestar 0 créditos",
+    "less_zero_err": "No puede prestar menos de 0 créditos",
+    "empty_error": "Préstamo de algunos créditos",
+    "coins_hint": "No of su créditos",
+    "donate_success": "Has prestado créditos con éxito"
+  },
   "earnings": {
     "title": "Revisar ganancias",
     "none": "Aún no tienes ninguna transacción",

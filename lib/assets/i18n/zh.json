@@ -815,6 +815,20 @@
     "coins_hint": "没有Seva积分",
     "donate_success": "您已成功捐献积分"
   },
+  "loan": {
+    "donate": "贷款",
+    "donate_totimebank": "向用户的贷款节省额",
+    "not_enough": "您没有足够的信用来捐款！",
+    "donate_coins": "向用户的贷款节省额",
+    "current_coins": "您的时间银行seva积分是",
+    "coins": "学分",
+    "hint": "单击“批准”后，将调整“时光银行”余额",
+    "zero_err": "您不能贷出0个学分",
+    "less_zero_err": "您的贷款不能少于0个学分",
+    "empty_error": "贷款一些学分",
+    "coins_hint": "没有他的学分",
+    "donate_success": "您已成功贷出贷项"
+  },
   "earnings": {
     "title": "回顾收益",
     "none": "您尚未有任何交易",

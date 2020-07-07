@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/claimedRequestStatus.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 
 Future<bool> fetchProtectedStatus(String timebankId) async {
@@ -235,6 +237,72 @@ Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
       break;
   }
 }
+
+
+Future<void> processLoans({
+  String timebankId, String userId, String to, num credits
+}) async {
+  print('processing loands');
+  // get all previous loans of this user with in the timebank;
+  var loans =  await Firestore.instance
+      .collection("transactions")
+      .where('timebankid', isEqualTo: timebankId)
+      .where('type', isEqualTo: "ADMIN_DONATE_TOUSER")
+      .where('to', isEqualTo: to)
+      .getDocuments()
+      .then(
+        (onValue) {
+      return onValue.documents;
+    },
+  ).catchError((onError) {
+    return null;
+  });
+  var loanamount = 0;
+  if (loans != null) {
+    for (var i = 0; i < loans.length; i++) {
+      TransactionModel temp = TransactionModel.fromMap(loans[i].data);
+      loanamount += temp.credits.toInt();
+    }
+  }
+
+  // get all paid loans of this user with in the timebank;
+  var paidloans =  await Firestore.instance
+      .collection("transactions")
+      .where('timebankid', isEqualTo: timebankId)
+      .where('type', isEqualTo: "USER_PAYLOAN_TOTIMEBANK")
+      .where('from', isEqualTo: to)
+      .getDocuments()
+      .then(
+        (onValue) {
+      return onValue.documents;
+    },
+  ).catchError((onError) {
+    return null;
+  });
+  var paidamount = 0;
+  if (paidloans != null) {
+    for (var i = 0; i < paidloans.length; i++) {
+      TransactionModel temp = TransactionModel.fromMap(loans[i].data);
+      paidamount += temp.credits.toInt();
+    }
+  }
+  // pay the pending loan amount
+  if (loanamount > paidamount) {
+    var tobepaid = loanamount - paidamount;
+    var paying = tobepaid > credits ?  credits: tobepaid;
+    print('paying' + paying.toString());
+    await transactionBloc.createNewTransaction(
+        to,
+        timebankId,
+        DateTime.now().millisecondsSinceEpoch,
+        paidamount,
+        true,
+        "USER_PAYLOAN_TOTIMEBANK",
+        null,
+        timebankId);
+  }
+}
+
 
 Future<void> createTaskCompletedApprovedNotification({
   NotificationsModel model,

@@ -814,6 +814,20 @@
     "coins_hint": "No of seva credits",
     "donate_success": "You have donated credits successfully"
   },
+  "loan": {
+    "donate": "Loan",
+    "donate_totimebank": "Loan seva credits to user",
+    "not_enough": "You do not have sufficient credits to donate!",
+    "donate_coins": "Loan seva credits to user",
+    "current_coins": "Your timebank seva credits is",
+    "coins": "Credits",
+    "hint": "On click of Approve, Timebank balance will be adjusted",
+    "zero_err": "You cannot loan 0 credits",
+    "less_zero_err": "You cannot loan lesser than 0 credits",
+    "empty_error": "Loan some credits",
+    "coins_hint": "No of seva credits",
+    "donate_success": "You have loaned credits successfully"
+  },
   "earnings": {
     "title": "Review Earnings",
     "none": "You do not have any transaction yet",
@@ -920,6 +934,7 @@
     "Promote": "Promote",
     "Demote": "Demote",
     "Exit": "Exit",
+    "Loan": "Loan",
     "admins": "Admins",
     "coordinators": "Coordinators",
     "coordinator": "Coordinator",

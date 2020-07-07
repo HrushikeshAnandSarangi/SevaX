@@ -819,6 +819,20 @@
     "empty_error": "Done algunos crédits",
     "less_zero_err": "No puedes donar menos de 0 crédits"
   },
+  "loan": {
+    "donate": "Prêt",
+    "donate_totimebank": "Emprunter des crédits seva à l'utilisateur",
+    "not_enough": "Vous n'avez pas suffisamment de crédits pour faire un don!",
+    "donate_coins": "Emprunter des crédits seva à l'utilisateur",
+    "current_coins": "Vos crédits SEVA de banque de temps sont",
+    "coins": "Crédits",
+    "hint": "En cliquant sur Approuver, le solde de Timebank sera ajusté",
+    "zero_err": "Vous ne pouvez pas prêter 0 crédit",
+    "less_zero_err": "Vous ne pouvez pas prêter moins de 0 crédits",
+    "empty_error": "Prêt de crédits",
+    "coins_hint": "Aucun de ses crédits",
+    "donate_success": "Vous avez prêté des crédits avec succès"
+  },
   "earnings": {
     "title": "Voir vos gains",
     "none": "Vous n'avez pas encore de transaction",
