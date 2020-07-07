@@ -539,7 +539,8 @@
     "tap_to_view": "Toque para ver os detalhes",
     "added_you": "adicionou você a",
     "timebank_join": "Junte-se ao banco de tempo ",
-    "group_invite": "Convite para participar do grupo"
+    "group_invite": "Convite para participar do grupo",
+    "notification_alert": "notificações"
   },
   "profile": {
     "image_hint": "Imagem de perfil",
