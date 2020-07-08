@@ -36,13 +36,15 @@ String getOfferLocation({String selectedAddress}) {
       return selectedAddress;
     }
   } else {
-    return "Anonymous";
+    return null;
   }
 }
 
 String getFormatedTimeFromTimeStamp(
     {int timeStamp, String timeZone, String format = "EEEEEEE, MMMM dd"}) {
-  return DateFormat(format, Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+  return DateFormat(format,
+          Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
+      .format(
     getDateTimeAccToUserTimezone(
         dateTime: DateTime.fromMillisecondsSinceEpoch(timeStamp),
         timezoneAbb: timeZone),

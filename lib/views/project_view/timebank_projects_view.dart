@@ -181,6 +181,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                             ? project.pendingRequests.length +
                                 project.completedRequests.length
                             : 0;
+
                         return ProjectsCard(
                           timestamp: project.createdAt,
                           startTime: project.startTime,

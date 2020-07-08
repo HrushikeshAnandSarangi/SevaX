@@ -773,6 +773,8 @@ class DiscussionListState extends State<DiscussionList> {
 
   Widget newFeedsCard({NewsModel news, bool isFromMessage}) {
     String loggedinemail = SevaCore.of(context).loggedInUser.email;
+    var feedAddress = getLocation(news.placeAddress);
+    print((feedAddress == null).toString() + "<<<<<<<");
 
     return InkWell(
       onTap: () {
@@ -801,16 +803,21 @@ class DiscussionListState extends State<DiscussionList> {
                 padding: const EdgeInsets.only(left: 10.0, right: 12),
                 child: Row(
                   children: <Widget>[
-                    Icon(
-                      Icons.location_on,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    Text(getLocation(news.placeAddress)),
+                    feedAddress != null
+                        ? Icon(
+                            Icons.location_on,
+                            color: Theme.of(context).primaryColor,
+                          )
+                        : Container(),
+                    feedAddress != null ? Text(feedAddress) : Container(),
                     Spacer(),
                     Text(
                       timeAgo.format(
-                        DateTime.fromMillisecondsSinceEpoch(news.postTimestamp),locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
-                      ),
+                          DateTime.fromMillisecondsSinceEpoch(
+                              news.postTimestamp),
+                          locale:
+                              Locale(AppConfig.prefs.getString('language_code'))
+                                  .toLanguageTag()),
                       style: TextStyle(color: Colors.grey),
                     ),
                   ],
@@ -1338,10 +1345,14 @@ class DiscussionListState extends State<DiscussionList> {
                                     children: <Widget>[
                                       Text(
                                           timeAgo.format(
-                                            DateTime.fromMillisecondsSinceEpoch(
-                                              news.postTimestamp,
-                                            ),locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
-                                          ),
+                                              DateTime
+                                                  .fromMillisecondsSinceEpoch(
+                                                news.postTimestamp,
+                                              ),
+                                              locale: Locale(AppConfig.prefs
+                                                      .getString(
+                                                          'language_code'))
+                                                  .toLanguageTag()),
                                           style: TextStyle(fontSize: 12)),
                                     ],
                                   ),
@@ -1757,12 +1768,10 @@ class DiscussionListState extends State<DiscussionList> {
       } else if (l.length >= 1) {
         return "${l[0]}";
       } else {
-        print("elasticsearch pjs location result is");
-        return "Unknown";
+        return null;
       }
     } else {
-      print("elasticsearch pjs location result isggggg");
-      return "Unknown";
+      return null;
     }
   }
 

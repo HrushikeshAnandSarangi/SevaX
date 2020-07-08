@@ -689,6 +689,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                     height: 65,
                   );
                 }
+                // return requestModelList.elementAt(index).address != null
+
                 return FutureBuilder<String>(
                     future: _getLocation(
                         requestModelList.elementAt(index).location),
@@ -698,7 +700,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                         case ConnectionState.waiting:
                           return getProjectRequestWidget(
                             model: requestModelList.elementAt(index),
-                            loggedintimezone: SevaCore.of(context).loggedInUser.timezone,
+                            loggedintimezone:
+                                SevaCore.of(context).loggedInUser.timezone,
                             mContext: context,
                             address: AppLocalizations.of(context)
                                 .translate('projects', 'fetching_loc'),
@@ -706,7 +709,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                         default:
                           return getProjectRequestWidget(
                             model: requestModelList.elementAt(index),
-                            loggedintimezone: SevaCore.of(context).loggedInUser.timezone,
+                            loggedintimezone:
+                                SevaCore.of(context).loggedInUser.timezone,
                             mContext: context,
                             address: address,
                           );
@@ -773,14 +777,14 @@ class ProjectRequestListState extends State<ProjectRequestList> {
               timeBankBloc.setSelectedRequest(model);
               timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
               timeBankBloc.setIsAdmin(isAdmin);
-              if(model.isRecurring){
+              if (model.isRecurring) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => RecurringRequestList(model: model),
                   ),
                 );
-              }else{
+              } else {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -790,7 +794,6 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                   ),
                 );
               }
-
             } else {
               Navigator.push(
                 context,
@@ -809,42 +812,45 @@ class ProjectRequestListState extends State<ProjectRequestList> {
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
             child: Column(
               children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          FlatButton.icon(
-                            icon: Icon(
-                              Icons.add_location,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            label: Container(
-                              width: MediaQuery.of(context).size.width - 170,
-                              child: Text(
-                                model.address ?? address,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 17,
+                model.address != null
+                    ? Container(
+                        margin: EdgeInsets.only(right: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                FlatButton.icon(
+                                  icon: Icon(
+                                    Icons.add_location,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  label: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width - 170,
+                                    child: Text(
+                                      model.address ?? address,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                                 ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
+                            Spacer(),
 //                      Text(
 //                        '${model.postTimestamp}',
 //                        style: TextStyle(
 //                          color: Colors.black38,
 //                        ),
 //                      )
-                    ],
-                  ),
-                ),
+                          ],
+                        ),
+                      )
+                    : Container(),
                 Container(
                   margin: EdgeInsets.only(right: 10, left: 10),
                   child: Row(
@@ -873,11 +879,15 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                                     fontSize: 20,
                                   ),
                                 ),
-                                model.isRecurring?Icon(Icons.navigate_next, size: 20):Container(),
+                                model.isRecurring
+                                    ? Icon(Icons.navigate_next, size: 20)
+                                    : Container(),
                               ),
                               getSpacerItem(
                                 Text(
-                                    !model.isRecurring?'${getTimeFormattedString(model.requestStart, loggedintimezone) + '-' + getTimeFormattedString(model.requestEnd, loggedintimezone)}':'',
+                                  !model.isRecurring
+                                      ? '${getTimeFormattedString(model.requestStart, loggedintimezone) + '-' + getTimeFormattedString(model.requestEnd, loggedintimezone)}'
+                                      : '',
                                   style: TextStyle(
                                     color: Colors.black38,
                                     fontSize: 12,
@@ -903,13 +913,20 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                                 Visibility(
                                   visible: model.isRecurring,
                                   child: Wrap(
-                                    crossAxisAlignment: WrapCrossAlignment.start,
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.start,
                                     children: <Widget>[
-
                                       Padding(
-                                        padding: const EdgeInsets.only(top:5.0),
-                                        child: Text("Recurring",
-                                          style: TextStyle(fontSize: 16.0,color:Theme.of(context).primaryColor,fontWeight:FontWeight.bold),),
+                                        padding:
+                                            const EdgeInsets.only(top: 5.0),
+                                        child: Text(
+                                          "Recurring",
+                                          style: TextStyle(
+                                              fontSize: 16.0,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                     ],
                                   ),

@@ -47,8 +47,20 @@ Future<void> createRecurringEvents(
     //end type is on
     int occurenceCount = 2;
     while (lastRound == false) {
-      eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1, eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
-      eventEndDate = DateTime(eventEndDate.year, eventEndDate.month, eventEndDate.day + 1, eventEndDate.hour, eventEndDate.minute, eventEndDate.second);
+      eventStartDate = DateTime(
+          eventStartDate.year,
+          eventStartDate.month,
+          eventStartDate.day + 1,
+          eventStartDate.hour,
+          eventStartDate.minute,
+          eventStartDate.second);
+      eventEndDate = DateTime(
+          eventEndDate.year,
+          eventEndDate.month,
+          eventEndDate.day + 1,
+          eventEndDate.hour,
+          eventEndDate.minute,
+          eventEndDate.second);
       if (eventStartDate.millisecondsSinceEpoch <= requestModel.end.on) {
         if (requestModel.recurringDays.contains(eventStartDate.weekday % 7)) {
           RequestModel temp = requestModel;
@@ -70,8 +82,7 @@ Future<void> createRecurringEvents(
         break;
       }
     }
-  }
-  else {
+  } else {
     //end type is after
     for (int occurenceCount = 2; occurenceCount <= requestModel.end.after;) {
       eventStartDate = DateTime(
@@ -121,9 +132,8 @@ Future<void> createRecurringEvents(
   await batch.commit();
 }
 
-
-Future<void> updateRecurrenceRequestsFrontEnd({
-   @required RequestModel updatedRequestModel}) async {
+Future<void> updateRecurrenceRequestsFrontEnd(
+    {@required RequestModel updatedRequestModel}) async {
   var batch = Firestore.instance.batch();
   var db = Firestore.instance;
   double newCredits = 0, oldCredits = 0;
@@ -163,10 +173,23 @@ Future<void> updateRecurrenceRequestsFrontEnd({
     int occurenceCount = updatedRequestModel.occurenceCount + 1;
     while (lastRound == false) {
       log("inside while on mode");
-      eventStartDate = DateTime(eventStartDate.year,eventStartDate.month,eventStartDate.day + 1,eventStartDate.hour,eventStartDate.minute,eventStartDate.second);
-      eventEndDate = DateTime(eventEndDate.year,eventEndDate.month,eventEndDate.day + 1,eventEndDate.hour,eventEndDate.minute,eventEndDate.second);
+      eventStartDate = DateTime(
+          eventStartDate.year,
+          eventStartDate.month,
+          eventStartDate.day + 1,
+          eventStartDate.hour,
+          eventStartDate.minute,
+          eventStartDate.second);
+      eventEndDate = DateTime(
+          eventEndDate.year,
+          eventEndDate.month,
+          eventEndDate.day + 1,
+          eventEndDate.hour,
+          eventEndDate.minute,
+          eventEndDate.second);
       if (eventStartDate.millisecondsSinceEpoch <= updatedRequestModel.end.on) {
-        if (updatedRequestModel.recurringDays.contains(eventStartDate.weekday % 7)) {
+        if (updatedRequestModel.recurringDays
+            .contains(eventStartDate.weekday % 7)) {
           RequestModel temp = updatedRequestModel;
           temp.requestStart = eventStartDate.millisecondsSinceEpoch;
           temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
@@ -190,14 +213,27 @@ Future<void> updateRecurrenceRequestsFrontEnd({
         break;
       }
     }
-  }
-  else {
+  } else {
     //end type is after
-    for (int occurenceCount = updatedRequestModel.occurenceCount + 1;occurenceCount <= updatedRequestModel.end.after;) {
-      eventStartDate = DateTime(eventStartDate.year,eventStartDate.month,eventStartDate.day + 1,eventStartDate.hour,eventStartDate.minute,eventStartDate.second);
-      eventEndDate = DateTime(eventEndDate.year,eventEndDate.month,eventEndDate.day + 1,eventEndDate.hour,eventEndDate.minute,eventEndDate.second);
+    for (int occurenceCount = updatedRequestModel.occurenceCount + 1;
+        occurenceCount <= updatedRequestModel.end.after;) {
+      eventStartDate = DateTime(
+          eventStartDate.year,
+          eventStartDate.month,
+          eventStartDate.day + 1,
+          eventStartDate.hour,
+          eventStartDate.minute,
+          eventStartDate.second);
+      eventEndDate = DateTime(
+          eventEndDate.year,
+          eventEndDate.month,
+          eventEndDate.day + 1,
+          eventEndDate.hour,
+          eventEndDate.minute,
+          eventEndDate.second);
       log("inside for after mode");
-      if (updatedRequestModel.recurringDays.contains(eventStartDate.weekday % 7)) {
+      if (updatedRequestModel.recurringDays
+          .contains(eventStartDate.weekday % 7)) {
         RequestModel temp = updatedRequestModel;
         temp.requestStart = eventStartDate.millisecondsSinceEpoch;
         temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
@@ -223,7 +259,8 @@ Future<void> updateRecurrenceRequestsFrontEnd({
 
   // s2 ---------- update parent request and previous events with end data of updated event model
 
-  batch.updateData(db.collection("requests").document(updatedRequestModel.parent_request_id),
+  batch.updateData(
+      db.collection("requests").document(updatedRequestModel.parent_request_id),
       {
         "end": updatedRequestModel.end.toMap(),
         "recurringDays": updatedRequestModel.recurringDays
@@ -235,15 +272,22 @@ Future<void> updateRecurrenceRequestsFrontEnd({
     upcomingEventsArr.forEach((upcomingEvent) {
       oldCredits = oldCredits +
           (upcomingEvent.numberOfHours * upcomingEvent.numberOfApprovals);
-      batch.delete(db.collection("requests").document(upcomingEvent.id)); // delete old upcoming recurrence-events
+      batch.delete(db
+          .collection("requests")
+          .document(upcomingEvent.id)); // delete old upcoming recurrence-events
     });
   }
 
   // s4 ---------- subtract old credits and add new credits to timebank
 
-  DocumentSnapshot timebankDoc = await db.collection("timebanknew").document(updatedRequestModel.timebankId).get();
+  DocumentSnapshot timebankDoc = await db
+      .collection("timebanknew")
+      .document(updatedRequestModel.timebankId)
+      .get();
   double balance = timebankDoc.data['balance'] - oldCredits + newCredits;
-  batch.updateData(db.collection("timebanknew").document(updatedRequestModel.timebankId),{'balance': balance});
+  batch.updateData(
+      db.collection("timebanknew").document(updatedRequestModel.timebankId),
+      {'balance': balance});
 
   // s5 ---------- send notifications in case users have part of members
 
@@ -265,7 +309,12 @@ Future<void> updateRecurrenceRequestsFrontEnd({
       upcomingEventsArr.forEach((RequestModel upcomingEvent) {
         if (upcomingEvent.approvedUsers.contains(docUser.documentID)) {
           uuidvar = Uuid().generateV4();
-          batch.setData(db.collection("users").document(docUser.documentID).collection("notifications").document(uuidvar),
+          batch.setData(
+              db
+                  .collection("users")
+                  .document(docUser.documentID)
+                  .collection("notifications")
+                  .document(uuidvar),
               {
                 'communityId': timebankDoc.data['community_id'],
                 'data': {
@@ -292,7 +341,6 @@ Future<void> updateRecurrenceRequestsFrontEnd({
   await batch.commit();
 }
 
-
 Future<void> updateRecurrenceRequests(String requestId) async {
   final response = await http.post(
       '${FlavorConfig.values.cloudFunctionBaseURL}/updateRecurrenceRequests',
@@ -304,7 +352,6 @@ Future<void> updateRecurrenceRequests(String requestId) async {
   print("recurrence updation statusCode === " + response.statusCode.toString());
 //  return response.statusCode;
 }
-
 
 Stream<List<RequestModel>> getRequestStreamCreatedByUser({
   @required String sevaUserID,
@@ -539,8 +586,8 @@ Stream<List<RequestModel>> getProjectRequestsStream(
       .collection('requests')
       .where('projectId', isEqualTo: project_id)
       .where('accepted', isEqualTo: false)
-      .where('autoGenerated',isEqualTo: false)
-      .where('softDelete',isEqualTo: false);
+      .where('autoGenerated', isEqualTo: false)
+      .where('softDelete', isEqualTo: false);
 
   var data = query.snapshots();
 
@@ -788,7 +835,6 @@ Future<void> approveRequestCompletion({
   TimeBankBalanceTransactionModel balanceTransactionModel;
   var updatedRequestModel = model;
 
-  print("========================================================== Step1");
   if (model.requestMode == RequestMode.TIMEBANK_REQUEST) {
     double taxPercentage;
 
@@ -912,9 +958,14 @@ Future<void> approveRequestCompletion({
     data: transactionData,
   );
 
-  print("========================================================== Step7 processing loans");
+  print(
+      "========================================================== Step7 processing loans");
   // processing loans from the user who gets credits to timebank (both for personal and timebank approvals if users loans are pending just return it
-  await utils.processLoans(timebankId: model.timebankId, userId: userId, to: editedTransaction.to, credits: editedTransaction.credits);
+  await utils.processLoans(
+      timebankId: model.timebankId,
+      userId: userId,
+      to: editedTransaction.to,
+      credits: editedTransaction.credits);
   print("========================================================== Step8");
 
   await utils.createTaskCompletedApprovedNotification(model: notification);
