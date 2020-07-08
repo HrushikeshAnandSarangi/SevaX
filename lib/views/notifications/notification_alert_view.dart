@@ -18,8 +18,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)
-              .translate('notifications', 'notification_alert'),
+          AppLocalizations.of(context).translate('profile', 'notifications'),
           style: TextStyle(fontFamily: 'Europa', fontSize: 18),
         ),
       ),

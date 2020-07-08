@@ -4,7 +4,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 
 String getTimeFormattedString(int timeInMilliseconds) {
-  DateFormat dateFormat = DateFormat('d MMM h:m a ',
+  DateFormat dateFormat = DateFormat('d MMM h:mm a ',
       Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
   String dateOfTransaction = dateFormat.format(
     DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds),

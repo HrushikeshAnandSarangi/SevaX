@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -54,6 +55,7 @@ class RequestsTabView extends StatelessWidget {
                       requestModel: request,
                     ),
                     child: TimebankRequestCard(
+                      isRecurring:request.isRecurring,
                       photoUrl: request.photoUrl,
                       title: request.title,
                       subtitle: request.description,
@@ -85,34 +87,45 @@ class RequestsTabView extends StatelessWidget {
             .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
       isAdmin = true;
     }
-    print("navigating");
-    if (requestModel.sevaUserId ==
-            SevaCore.of(context).loggedInUser.sevaUserID ||
-        timebankModel.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-      timeBankBloc.setSelectedRequest(requestModel);
-      timeBankBloc.setSelectedTimeBankDetails(timebankModel);
-      timeBankBloc.setIsAdmin(isAdmin);
+
+    if(requestModel.isRecurring){
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => RequestTabHolder(
-            isAdmin: true,
-          ),
+          builder: (context) => RecurringRequestList(model: requestModel),
         ),
       );
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => RequestDetailsAboutPage(
-            requestItem: requestModel,
-            timebankModel: timebankModel,
-            isAdmin: false,
-            //  project_id: '',
+    }else{
+      if (requestModel.sevaUserId ==
+          SevaCore.of(context).loggedInUser.sevaUserID ||
+          timebankModel.admins
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+        timeBankBloc.setSelectedRequest(requestModel);
+        timeBankBloc.setSelectedTimeBankDetails(timebankModel);
+        timeBankBloc.setIsAdmin(isAdmin);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RequestTabHolder(
+              isAdmin: true,
+            ),
           ),
-        ),
-      );
+        );
+      }
+      else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RequestDetailsAboutPage(
+              requestItem: requestModel,
+              timebankModel: timebankModel,
+              isAdmin: false,
+              //  project_id: '',
+            ),
+          ),
+        );
+      }
     }
+
   }
 }

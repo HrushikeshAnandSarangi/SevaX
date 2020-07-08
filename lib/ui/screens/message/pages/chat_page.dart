@@ -254,7 +254,8 @@ class _ChatPageState extends State<ChatPage> {
               handleChange: (String value) {
                 messageContent = value;
               },
-              hintText: "Type a message",
+              hintText: AppLocalizations.of(context)
+                  .translate('messages', 'type_message'),
               onCameraPressed: () async {
                 List<CameraDescription> cameras = await availableCameras();
                 Navigator.of(context)

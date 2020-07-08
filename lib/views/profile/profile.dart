@@ -31,8 +31,6 @@ import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
 import 'edit_profile.dart';
 import 'timezone.dart';
 
-//TODO fetch the communities from home dashboard
-
 class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -81,29 +79,6 @@ class _ProfilePageState extends State<ProfilePage>
         timebankModel = model;
       });
     });
-
-    // Future.delayed(Duration.zero, () {
-    //   user = SevaCore.of(context).loggedInUser;
-    //   setState(() {
-    //     isUserLoaded = true;
-    //   });
-    //   FirestoreManager.getCompletedRequestStream(
-    //           userEmail: SevaCore.of(context).loggedInUser.email,
-    //           userId: SevaCore.of(context).loggedInUser.sevaUserID)
-    //       .listen(
-    //     (requestList) {
-    //       if (!mounted) return;
-    //       requestList.forEach((requestObj) {
-    //         requestObj.transactions?.forEach((transaction) {
-    //           if (transaction.isApproved &&
-    //               transaction.to ==
-    //                   SevaCore.of(context).loggedInUser.sevaUserID)
-    //             sevaCoinsValue += transaction.credits;
-    //         });
-    //       });
-    //     },
-    //   );
-    // });
 
     _profileBloc.communityLoaded.listen((value) {
       isCommunityLoaded = value;
@@ -249,7 +224,7 @@ class _ProfilePageState extends State<ProfilePage>
                               Scaffold.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(AppLocalizations.of(context)
-                                        .translate('shared', 'check_internet')),
+                                      .translate('shared', 'check_internet')),
                                   action: SnackBarAction(
                                     label: AppLocalizations.of(context)
                                         .translate('shared', 'dismiss'),
@@ -576,7 +551,7 @@ class _ProfilePageState extends State<ProfilePage>
                     padding: const EdgeInsets.only(left: 15),
                     child: Text(
                       AppLocalizations.of(context)
-                          .translate('notifications', 'notification_alert'),
+                          .translate('profile', 'notifications'),
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         color: Colors.black,

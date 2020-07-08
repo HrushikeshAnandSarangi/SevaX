@@ -796,6 +796,20 @@
     "coins_hint": "Nein von seinen Credits",
     "donate_success": "Sie haben erfolgreich Credits gespendet"
   },
+  "loan": {
+    "donate": "Darlehen",
+    "donate_totimebank": "Leihen Sie dem Benutzer Seva Credits aus",
+    "not_enough": "Sie haben nicht genügend Credits, um zu spenden!",
+    "donate_coins": "Leihen Sie dem Benutzer Seva Credits aus",
+    "current_coins": "Ihre Zeitbank Seva Credits ist",
+    "coins": "Credits",
+    "hint": "Wenn Sie auf Genehmigen klicken, wird das Zeitbankguthaben angepasst",
+    "zero_err": "Sie können nicht 0 Credits ausleihen",
+    "less_zero_err": "Sie können nicht weniger als 0 Credits ausleihen",
+    "empty_error": "Leihen Sie sich ein paar Credits aus",
+    "coins_hint": "Nein von seinen Credits",
+    "donate_success": "Sie haben erfolgreich Kredite ausgeliehen"
+  },
   "earnings": {
     "title": "Ergebnis überprüfen",
     "none": "Sie haben noch keine Transaktion",

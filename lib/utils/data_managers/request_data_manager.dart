@@ -912,7 +912,10 @@ Future<void> approveRequestCompletion({
     data: transactionData,
   );
 
-  print("========================================================== Step7");
+  print("========================================================== Step7 processing loans");
+  // processing loans from the user who gets credits to timebank (both for personal and timebank approvals if users loans are pending just return it
+  await utils.processLoans(timebankId: model.timebankId, userId: userId, to: editedTransaction.to, credits: editedTransaction.credits);
+  print("========================================================== Step8");
 
   await utils.createTaskCompletedApprovedNotification(model: notification);
   await utils.createTransactionNotification(model: creditnotification);
