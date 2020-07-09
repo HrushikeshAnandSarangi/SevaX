@@ -794,6 +794,20 @@
     "coins_hint": "No dei suoi crediti",
     "donate_success": "Hai donato crediti con successo"
   },
+  "loan": {
+    "donate": "Prestito",
+    "donate_totimebank": "Prestito crediti seva all'utente",
+    "not_enough": "Non hai crediti sufficienti per donare!",
+    "donate_coins": "Prestito crediti seva all'utente",
+    "current_coins": "I crediti seva della banca del tempo sono",
+    "coins": "Crediti",
+    "hint": "Facendo clic su Approva, il saldo di Timebank verrà modificato",
+    "zero_err": "Non puoi prestare 0 crediti",
+    "less_zero_err": "Non è possibile prestare meno di 0 crediti",
+    "empty_error": "Prestare alcuni crediti",
+    "coins_hint": "No dei suoi crediti",
+    "donate_success": "Hai prestato crediti con successo"
+  },
   "earnings": {
     "title": "Esamina i guadagni",
     "none": "Non hai ancora alcuna transazione",

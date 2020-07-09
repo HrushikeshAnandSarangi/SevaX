@@ -34,20 +34,6 @@ import 'package:timeago/timeago.dart' as timeAgo;
 import '../flavor_config.dart';
 import 'core.dart';
 
-class TimebankTabsViewHolder extends StatelessWidget {
-  final String timebankId;
-  final TimebankModel timebankModel;
-  TimebankTabsViewHolder.of({this.timebankId, this.timebankModel});
-
-  @override
-  Widget build(BuildContext context) {
-    return TabarView(
-      timebankId: timebankId,
-      timebankModel: timebankModel,
-    );
-  }
-}
-
 enum AboutUserRole { ADMIN, JOINED_USER, NORMAL_USER }
 
 class TabarView extends StatefulWidget {
@@ -76,33 +62,15 @@ class _TabarViewState extends State<TabarView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder<TimebankModel>(
-        stream: FirestoreManager.getTimebankModelStream(
-          timebankId: widget.timebankId,
-        ),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          timebankModel = snapshot.data;
-          return getUserRole(
-            determineUserRoleInAbout(
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-              timeBankModel: timebankModel,
-            ),
-            context,
-            timebankModel,
-            widget.timebankId,
-            this,
-          );
-        },
+    return getUserRole(
+      determineUserRoleInAbout(
+        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        timeBankModel: timebankModel,
       ),
+      context,
+      timebankModel,
+      widget.timebankId,
+      this,
     );
   }
 }
@@ -773,6 +741,8 @@ class DiscussionListState extends State<DiscussionList> {
 
   Widget newFeedsCard({NewsModel news, bool isFromMessage}) {
     String loggedinemail = SevaCore.of(context).loggedInUser.email;
+    var feedAddress = getLocation(news.placeAddress);
+    print((feedAddress == null).toString() + "<<<<<<<");
 
     return InkWell(
       onTap: () {
@@ -801,16 +771,21 @@ class DiscussionListState extends State<DiscussionList> {
                 padding: const EdgeInsets.only(left: 10.0, right: 12),
                 child: Row(
                   children: <Widget>[
-                    Icon(
-                      Icons.location_on,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    Text(getLocation(news.placeAddress)),
+                    feedAddress != null
+                        ? Icon(
+                            Icons.location_on,
+                            color: Theme.of(context).primaryColor,
+                          )
+                        : Container(),
+                    feedAddress != null ? Text(feedAddress) : Container(),
                     Spacer(),
                     Text(
                       timeAgo.format(
-                        DateTime.fromMillisecondsSinceEpoch(news.postTimestamp),locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
-                      ),
+                          DateTime.fromMillisecondsSinceEpoch(
+                              news.postTimestamp),
+                          locale:
+                              Locale(AppConfig.prefs.getString('language_code'))
+                                  .toLanguageTag()),
                       style: TextStyle(color: Colors.grey),
                     ),
                   ],
@@ -1338,10 +1313,14 @@ class DiscussionListState extends State<DiscussionList> {
                                     children: <Widget>[
                                       Text(
                                           timeAgo.format(
-                                            DateTime.fromMillisecondsSinceEpoch(
-                                              news.postTimestamp,
-                                            ),locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
-                                          ),
+                                              DateTime
+                                                  .fromMillisecondsSinceEpoch(
+                                                news.postTimestamp,
+                                              ),
+                                              locale: Locale(AppConfig.prefs
+                                                      .getString(
+                                                          'language_code'))
+                                                  .toLanguageTag()),
                                           style: TextStyle(fontSize: 12)),
                                     ],
                                   ),
@@ -1757,12 +1736,10 @@ class DiscussionListState extends State<DiscussionList> {
       } else if (l.length >= 1) {
         return "${l[0]}";
       } else {
-        print("elasticsearch pjs location result is");
-        return "Unknown";
+        return null;
       }
     } else {
-      print("elasticsearch pjs location result isggggg");
-      return "Unknown";
+      return null;
     }
   }
 

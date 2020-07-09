@@ -535,11 +535,6 @@
     "added_you": "te ha agregado a",
     "timebank_join": "Timebank Join",
     "group_invite": "Invitación para unirse al grupo",
-    "exited_from": "saiu de",
-    "tap_to_view": "Toque para ver os detalhes",
-    "added_you": "adicionou você a",
-    "timebank_join": "Junte-se ao banco de tempo ",
-    "group_invite": "Convite para participar do grupo",
     "notification_alert": "notificações"
   },
   "profile": {
@@ -823,6 +818,20 @@
     "empty_error": "Doe alguns créditos",
     "coins_hint": "No. de créditos Seva "
   },
+  "loan": {
+    "donate": "Empréstimo",
+    "donate_totimebank": "Empréstimos seva créditos ao usuário",
+    "not_enough": "Você não tem créditos suficientes para doar!",
+    "donate_coins": "Empréstimos seva créditos ao usuário",
+    "current_coins": "Seus créditos do timebank seva são",
+    "coins": "Créditos",
+    "hint": "Ao clicar em Aprovar, o saldo do Timebank será ajustado",
+    "zero_err": "Você não pode emprestar 0 créditos",
+    "less_zero_err": "Você não pode emprestar menos de 0 créditos",
+    "empty_error": "Emprestar alguns créditos",
+    "coins_hint": "Nenhum de seus créditos",
+    "donate_success": "Você emprestou créditos com sucesso"
+  },
   "earnings": {
     "title": "Revisar ganhos",
     "none": "Você ainda não possui nenhuma transação",
@@ -1092,7 +1101,12 @@
     "loading": "Carregando...",
     "cancel": "Cancelar",
     "next": "Next",
-    "create": "Criar"
+    "create": "Criar",
+    "edit": "Editar",
+    "save": "Salve ",
+    "type_message": "Digite uma mensagem",
+    "add_caption": "Adicionar uma legenda",
+    "tap_for_photo": "Tap para a foto"
   },
   "add_location": {
     "confirm_location_label": "CONFIRMAR localização"

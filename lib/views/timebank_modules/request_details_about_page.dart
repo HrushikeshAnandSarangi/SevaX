@@ -99,7 +99,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ),
               centerTitle: true,
               title: Text(
-                AppLocalizations.of(context).translate('requests','my_requests'),
+                AppLocalizations.of(context)
+                    .translate('requests', 'my_requests'),
                 style: TextStyle(
                     fontFamily: "Europa", fontSize: 20, color: Colors.black),
               ),
@@ -129,7 +130,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         color: Colors.grey,
                       ),
                       title: Text(
-                        DateFormat('EEEEEEE, MMMM dd', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+                        DateFormat(
+                                'EEEEEEE, MMMM dd',
+                                Locale(AppConfig.prefs
+                                        .getString('language_code'))
+                                    .toLanguageTag())
+                            .format(
                           getDateTimeAccToUserTimezone(
                               dateTime: DateTime.fromMillisecondsSinceEpoch(
                                   widget.requestItem.requestStart),
@@ -141,7 +147,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       subtitle: Text(
-                        DateFormat('h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+                        DateFormat(
+                                    'h:mm a',
+                                    Locale(AppConfig.prefs
+                                            .getString('language_code'))
+                                        .toLanguageTag())
+                                .format(
                               getDateTimeAccToUserTimezone(
                                   dateTime: DateTime.fromMillisecondsSinceEpoch(
                                       widget.requestItem.requestStart),
@@ -150,7 +161,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                       .timezone),
                             ) +
                             ' - ' +
-                            DateFormat('h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+                            DateFormat(
+                                    'h:mm a',
+                                    Locale(AppConfig.prefs
+                                            .getString('language_code'))
+                                        .toLanguageTag())
+                                .format(
                               getDateTimeAccToUserTimezone(
                                 dateTime: DateTime.fromMillisecondsSinceEpoch(
                                     widget.requestItem.requestEnd),
@@ -173,7 +189,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                 ),
                                 color: Color.fromRGBO(44, 64, 140, 1),
                                 child: Text(
-                                  AppLocalizations.of(context).translate('requests','edit'),
+                                  AppLocalizations.of(context)
+                                      .translate('requests', 'edit'),
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 13),
                                 ),
@@ -194,40 +211,22 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               )
                             : Container(),
                       )),
-                  CustomListTile(
-                    leading: Icon(
-                      Icons.location_on,
-                      color: Colors.grey,
-                    ),
-                    title: Text(
-                      location,
-                      style: titleStyle,
-                      maxLines: 1,
-                    ),
-                    subtitle: widget.requestItem.address != null
-                        ? Text(widget.requestItem.address)
-                        : FutureBuilder<String>(
-                            future: _getLocation(
-                              widget.requestItem.location.latitude,
-                              widget.requestItem.location.longitude,
-                            ),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                return Text(AppLocalizations.of(context).translate('requests','un_named'));
-                              }
-
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Text(AppLocalizations.of(context).translate('requests','resolving_location'));
-                              }
-                              return Text(
-                                snapshot.data ?? '',
-                                style: subTitleStyle,
-                                maxLines: 1,
-                              );
-                            },
+                  widget.requestItem.address != null
+                      ? CustomListTile(
+                          leading: Icon(
+                            Icons.location_on,
+                            color: Colors.grey,
                           ),
-                  ),
+                          title: Text(
+                            location,
+                            style: titleStyle,
+                            maxLines: 1,
+                          ),
+                          subtitle: widget.requestItem.address != null
+                              ? Text(widget.requestItem.address)
+                              : Text(''),
+                        )
+                      : Container(),
                   CustomListTile(
                     // contentPadding: EdgeInsets.all(0),
 
@@ -236,7 +235,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       color: Colors.grey,
                     ),
                     title: Text(
-                      "${AppLocalizations.of(context).translate('requests','hosted_by')} ${widget.requestItem.fullName ?? ""}",
+                      "${AppLocalizations.of(context).translate('requests', 'hosted_by')} ${widget.requestItem.fullName ?? ""}",
                       style: titleStyle,
                       maxLines: 1,
                     ),
@@ -254,7 +253,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       builder:
                           (context, AsyncSnapshot<List<dynamic>> snapshot) {
                         if (snapshot.hasError)
-                          return new Text('${AppLocalizations.of(context).translate('requests','error')} ${snapshot.error}');
+                          return new Text(
+                              '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return Center(child: CircularProgressIndicator());
@@ -264,7 +264,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           return Container(
                             margin: EdgeInsets.only(left: 0, top: 10),
                             child: Text(
-                              AppLocalizations.of(context).translate('requests','none_approved_yet'),
+                              AppLocalizations.of(context)
+                                  .translate('requests', 'none_approved_yet'),
                             ),
                           );
                         }
@@ -287,7 +288,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               itemCount: snap.length,
                               itemBuilder: (context, index) {
                                 return Padding(
-                                  padding: const EdgeInsets.only(left: 3, right:3, top: 8),
+                                  padding: const EdgeInsets.only(
+                                      left: 3, right: 3, top: 8),
                                   child: Container(
                                     height: 40,
                                     width: 40,
@@ -359,6 +361,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
     return address;
   }
+
   bool isApplied = false;
   Widget getBottombar() {
     return Container(
@@ -378,10 +381,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     TextSpan(
                       text: widget.requestItem.sevaUserId ==
                               SevaCore.of(context).loggedInUser.sevaUserID
-                          ? AppLocalizations.of(context).translate('requests','creator_you')
+                          ? AppLocalizations.of(context)
+                              .translate('requests', 'creator_you')
                           : isApplied
-                              ? AppLocalizations.of(context).translate('requests','applied_you')
-                              : AppLocalizations.of(context).translate('requests','want_part'),
+                              ? AppLocalizations.of(context)
+                                  .translate('requests', 'applied_you')
+                              : AppLocalizations.of(context)
+                                  .translate('requests', 'want_part'),
                       style: TextStyle(
                         fontSize: 16,
                         fontFamily: 'Europa',
@@ -423,7 +429,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 //                      ),
                       Spacer(),
                       Text(
-                        isApplied ? AppLocalizations.of(context).translate('requests','withdraw_button') : AppLocalizations.of(context).translate('requests','apply'),
+                        isApplied
+                            ? AppLocalizations.of(context)
+                                .translate('requests', 'withdraw_button')
+                            : AppLocalizations.of(context)
+                                .translate('requests', 'apply'),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
@@ -465,15 +475,16 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context).translate('requests','protected_alert')),
-          content:
-              new Text(AppLocalizations.of(context).translate('requests','projected_alert_dialog')),
+          title: new Text(AppLocalizations.of(context)
+              .translate('requests', 'protected_alert')),
+          content: new Text(AppLocalizations.of(context)
+              .translate('requests', 'projected_alert_dialog')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
               textColor: Colors.red,
               child: new Text(
-                AppLocalizations.of(context).translate('shared','close'),
+                AppLocalizations.of(context).translate('shared', 'close'),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -535,13 +546,15 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context).translate('requests','already_approved')),
-          content:
-              new Text(AppLocalizations.of(context).translate('requests','cant_withdraw')),
+          title: new Text(AppLocalizations.of(context)
+              .translate('requests', 'already_approved')),
+          content: new Text(AppLocalizations.of(context)
+              .translate('requests', 'cant_withdraw')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text(AppLocalizations.of(context).translate('shared','close')),
+              child: new Text(
+                  AppLocalizations.of(context).translate('shared', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();
               },

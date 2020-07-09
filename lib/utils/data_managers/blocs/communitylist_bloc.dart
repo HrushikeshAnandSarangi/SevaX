@@ -301,6 +301,43 @@ class TransactionBloc {
             'currentBalance':
                 FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))
           }, merge: true);
+      } else if (type == "ADMIN_DONATE_TOUSER") {
+        print("came here");
+        // debit from timebank
+        Query query = Firestore.instance
+            .collection('timebanknew')
+            .where('id', isEqualTo: timebankid);
+        QuerySnapshot snapshot = await query.getDocuments();
+        DocumentSnapshot document =
+        snapshot.documents?.length > 0 && snapshot.documents != null
+            ? snapshot.documents.first
+            : null;
+        print(timebankid);
+        print(snapshot.documents);
+        if (document != null)
+          Firestore.instance
+              .collection('timebanknew')
+              .document(document.documentID)
+              .setData({
+            'balance':
+            FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))
+          }, merge: true);
+        // credit to user
+        query = Firestore.instance
+            .collection('users')
+            .where('sevauserid', isEqualTo: to);
+        snapshot = await query.getDocuments();
+        document = snapshot.documents?.length > 0 && snapshot.documents != null
+            ? snapshot.documents.first
+            : null;
+        if (document != null)
+          Firestore.instance
+              .collection('users')
+              .document(document.documentID)
+              .setData({
+            'currentBalance':
+            FieldValue.increment((num.parse(credits.toStringAsFixed(2))))
+          }, merge: true);
       }
     }
   }

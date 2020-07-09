@@ -49,7 +49,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
             offstage: !isAdmin,
             child: FlatButton(
               child: Text(
-                "Save",
+                AppLocalizations.of(context).translate('messages', 'save'),
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
               onPressed: () {
@@ -175,7 +175,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(left: 20),
               child: Text(
-                "PARTICIPANTS: ${chatModel.participants.length ?? 0} OF 256",
+                "${AppLocalizations.of(context).translate('messages', 'participants')}: ${chatModel.participants.length ?? 0} OF 256",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
@@ -239,7 +239,8 @@ class _GroupInfoState extends State<GroupInfoPage> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                "Add Participants",
+                                AppLocalizations.of(context)
+                                    .translate('messages', 'add_participants'),
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,

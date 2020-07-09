@@ -171,8 +171,8 @@ class _EarningListItemState extends State<EarningListItem> {
                   name: type == 'user'
                       ? snapshot.data.fullname == null
                           ? AppLocalizations.of(context).translate('earnings','anonymous')
-                          : snapshot.data.fullname
-                      : snapshot.data.name + " (Timebank)",
+                          : widget.model.type == "USER_PAYLOAN_TOTIMEBANK" ? snapshot.data.fullname + ' - Loan Repayment' : snapshot.data.fullname
+                      : widget.model.type == "ADMIN_DONATE_TOUSER" ? snapshot.data.name + " (Timebank) Loan" : snapshot.data.name + " (Timebank)",
                   timestamp: widget.model.timestamp,
                   usertimezone: widget.usertimezone));
         });

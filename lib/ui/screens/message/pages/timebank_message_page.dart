@@ -42,7 +42,7 @@ class _TimebankMessagePageState extends State<TimebankMessagePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "${widget.adminMessageWrapperModel.name} message",
+          "${widget.adminMessageWrapperModel.name}",
           style: TextStyle(fontSize: 18),
         ),
       ),
