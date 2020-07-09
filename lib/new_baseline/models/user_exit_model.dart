@@ -5,7 +5,6 @@ class UserExitModel extends DataModel {
   String reason;
   String timebank;
   String userPhotoUrl;
-
   UserExitModel(
       {this.userName,
       this.reason,
