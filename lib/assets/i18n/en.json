@@ -585,6 +585,7 @@
     "select_request": "Select Request",
     "protected_timebank": "Protected Timebank",
     "cannot_post": "You cannot post requests in a protected Timebank",
+    "cannot_create_group": "You cannot create groups in a protected Timebank",
     "requests_help": "Requests Help",
     "delete_request_confirm": "Are you sure you want to delete this request?",
     "dont_delete": "No",

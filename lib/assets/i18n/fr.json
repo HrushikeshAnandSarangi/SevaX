@@ -589,6 +589,7 @@
     "select_request": "Sélectionnez demande",
     "protected_timebank": "Banque de temps protégée",
     "cannot_post": "Vous ne pouvez pas publier de demandes dans une banque de temps protégée",
+    "cannot_create_group": "Vous ne pouvez pas créer de groupes dans une banque de temps protégée",
     "requests_help": "Demande d'aide",
     "delete_request_confirm": "Voulez-vous vraiment supprimer cette demande?",
     "dont_delete": "Non",

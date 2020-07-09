@@ -588,6 +588,7 @@
     "select_request": "Selecione Solicitação",
     "protected_timebank": "Banco de tempo protegido",
     "cannot_post": "Você não pode postar solicitações em um Banco de tempo protegido",
+    "cannot_create_group": "Você não pode criar grupos em um Timebank protegido",
     "requests_help": "Solicita Ajuda",
     "delete_request_confirm": "Tem certeza de que deseja excluir esta solicitação?",
     "dont_delete": "Não",
