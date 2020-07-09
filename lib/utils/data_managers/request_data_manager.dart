@@ -109,21 +109,6 @@ Future<void> createRecurringEvents(
     }
   }
 
-//  asyncOne(temparr) async {
-//    log("asyncOne start");
-//    await Future.forEach(temparr, (tempobj) async {
-//      await db.collection("requests").document(tempobj['id']).setData(tempobj);
-//    });
-//    log("asyncOne end");
-//  }
-
-//  try{
-//    await asyncOne(temparr);
-//  }catch(e){
-//    log(e);
-//  }
-
-
   temparr.forEach((tempobj){
 //    batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
     batch.setData(db.collection("requests").document(tempobj['id'] +"*"+ tempobj['request_start'].toString()), tempobj);
@@ -200,7 +185,8 @@ Future<void> updateRecurrenceRequestsFrontEnd({
           newCredits += temp.numberOfHours;
 //          batch.setData(db.collection("requests").document(temp.id), temp.toMap());
           temparr.add(temp.toMap());
-          log("on mode inside if with day ${eventStartDate.toString()} with occurence count of ${temp.occurenceCount}");
+          print("on mode inside if with day ${eventStartDate.toString()} with occurence count of ${temp.occurenceCount}");
+          print("id is ${temp.id}");
         }
       } else {
         lastRound = true;
@@ -239,9 +225,9 @@ Future<void> updateRecurrenceRequestsFrontEnd({
     }
   }
 
-  temparr.forEach((tempobj)async{
+  temparr.forEach((tempobj){
 //    batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
-    await db.collection("requests").document(tempobj['id']).setData(tempobj);
+    batch.setData(db.collection("requests").document(tempobj['id'] +"*"+ tempobj['request_start'].toString()), tempobj);
     log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['request_start']).toString()} with occurence count of ${tempobj['occurenceCount']}");
   });
 
