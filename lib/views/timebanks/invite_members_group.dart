@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/invitation_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -88,7 +89,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Invite Members",
+          AppLocalizations.of(context).translate('members', 'invite_members'),
           style: TextStyle(
             fontSize: 18,
           ),
@@ -138,7 +139,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
                         borderRadius: new BorderRadius.circular(25.7)),
-                    hintText: 'Search members via email,name',
+                    hintText: AppLocalizations.of(context).translate('members', 'searchby_email'),
                     hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
               ),
             ),
@@ -147,7 +148,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
               child: Container(
                 height: 25,
                 child: Text(
-                  "Members",
+                  AppLocalizations.of(context).translate('members', 'members'),
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -178,7 +179,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
             validItems: parentTimebankMembersList),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text('Please try again later');
+            return Text(AppLocalizations.of(context).translate('members', 'please_try_later'));
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -192,7 +193,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
             return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Center(
-                  child: Text("No Member found"),
+                  child: Text(AppLocalizations.of(context).translate('members', 'no_member_found')),
                 ));
           }
           return Padding(
@@ -237,7 +238,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
             groupInviteStatus = GroupInviteStatus.DECLINED;
             return userWidget(
                 user: userModel,
-                status: "Declined",
+                status: AppLocalizations.of(context).translate('members', 'declined'),
                 groupInviteUserModel: groupInviteUserModel,
                 groupInviteStatus: groupInviteStatus);
           }
@@ -246,14 +247,14 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
               groupInviteStatus: groupInviteStatus,
               user: userModel,
               groupInviteUserModel: groupInviteUserModel,
-              status: 'Invited');
+              status: AppLocalizations.of(context).translate('members', 'invited'));
         } else {
           print("----------------- no data");
 
           groupInviteStatus = GroupInviteStatus.INVITE;
           return userWidget(
               user: userModel,
-              status: "Invite",
+              status: AppLocalizations.of(context).translate('members', 'invite'),
               groupInviteStatus: groupInviteStatus);
         }
       },
@@ -429,7 +430,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
           }
         },
         child:
-            Text("Resend Invitation", style: TextStyle(fontFamily: 'Europa')),
+            Text(AppLocalizations.of(context).translate('members', 'resend_invite'), style: TextStyle(fontFamily: 'Europa')),
         color: FlavorConfig.values.theme.primaryColor,
         textColor: Colors.white,
         shape: StadiumBorder(),
@@ -441,7 +442,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
             sendInvitationNotification(userModel: user);
           });
         },
-        child: Text('Invite', style: TextStyle(fontFamily: 'Europa')),
+        child: Text(AppLocalizations.of(context).translate('members', 'invite'), style: TextStyle(fontFamily: 'Europa')),
         color: FlavorConfig.values.theme.primaryColor,
         textColor: Colors.white,
         shape: StadiumBorder(),
