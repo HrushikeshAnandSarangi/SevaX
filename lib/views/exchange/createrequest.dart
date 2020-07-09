@@ -405,51 +405,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                 : Container(),
                             SizedBox(height: 20),
                             Text(
-                              AppLocalizations.of(context)
-                                  .translate('create_request', 'total_hours'),
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Europa',
-                                color: Colors.black,
-                              ),
-                            ),
-                            TextFormField(
-                                focusNode: focusNodes[1],
-                                onFieldSubmitted: (v) {
-                                  FocusScope.of(context)
-                                      .requestFocus(focusNodes[2]);
-                                },
-                                textInputAction: TextInputAction.next,
-                                decoration: InputDecoration(
-                                  hintText: AppLocalizations.of(context)
-                                      .translate(
-                                          'create_request', 'hours_required'),
-                                  hintStyle: hintTextStyle,
-                                  // labelText: 'No. of volunteers',
-                                ),
-                                keyboardType: TextInputType.number,
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return AppLocalizations.of(context)
-                                        .translate('create_request',
-                                            'hours_required_err');
-                                  } else if (int.parse(value) < 0) {
-                                    return AppLocalizations.of(context)
-                                        .translate('create_request',
-                                            'hours_required_zero');
-                                  } else if (int.parse(value) == 0) {
-                                    return AppLocalizations.of(context)
-                                        .translate('create_request',
-                                            'hours_required_not_zero');
-                                  } else {
-                                    requestModel.numberOfHours =
-                                        int.parse(value);
-                                    return null;
-                                  }
-                                }),
-                            SizedBox(height: 20),
-                            Text(
                               AppLocalizations.of(context).translate(
                                   'create_request', 'no_of_volunteers'),
                               style: TextStyle(
@@ -463,6 +418,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                               focusNode: focusNodes[2],
                               onFieldSubmitted: (v) {
                                 FocusScope.of(context).unfocus();
+                              },
+                              onChanged: (v) {
+                                if (v.isNotEmpty && int.parse(v) >= 0) {
+                                  requestModel.numberOfApprovals =
+                                      int.parse(v);
+                                  setState(() {});
+                                }
                               },
                               decoration: InputDecoration(
                                 hintText: AppLocalizations.of(context)
@@ -488,10 +450,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                 } else {
                                   requestModel.numberOfApprovals =
                                       int.parse(value);
+                                  setState(() {});
                                   return null;
                                 }
                               },
                             ),
+                            TotalCredits(requestModel, OfferDurationWidgetState.starttimestamp, OfferDurationWidgetState.endtimestamp),
                             SizedBox(height: 40),
                             Center(
                               child: LocationPickerWidget(
@@ -948,6 +912,33 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           );
         });
   }
+}
+
+Widget TotalCredits(requestModel, int starttimestamp,int endtimestamp) {
+  var label;
+  var totalhours = DateTime.fromMillisecondsSinceEpoch(endtimestamp).difference( DateTime.fromMillisecondsSinceEpoch(starttimestamp)).inHours;
+  var totalminutes = DateTime.fromMillisecondsSinceEpoch(endtimestamp).difference( DateTime.fromMillisecondsSinceEpoch(starttimestamp)).inMinutes;
+  var totalallowedhours = (totalhours + ((totalminutes/60)/100).ceil());
+  var totalCredits = requestModel.numberOfApprovals * totalallowedhours;
+  requestModel.numberOfHours = totalCredits;
+  if (totalallowedhours > 0 && totalCredits > 0) {
+    if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
+      label = totalCredits.toString() + " Credits will be added to timebank, per participant you can allocate maximum of " + totalallowedhours.toString() + " credits";
+    } else {
+      label = totalCredits.toString() + " Credits will be needed for the request, per participant you can allocate maximum of " + totalallowedhours.toString() + " credits";
+    }
+  } else {
+    label = "";
+  }
+
+  return Text(label,
+    style: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      fontFamily: 'Europa',
+      color: Colors.black54,
+    ),
+  );
 }
 
 class ProjectSelection extends StatefulWidget {
