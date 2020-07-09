@@ -637,7 +637,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       if (requestModel.requestStart == 0 || requestModel.requestEnd == 0) {
         showDialogForTitle(
             dialogTitle: AppLocalizations.of(context)
-                .translate('create_request', 'start_date_error'));
+                .translate('create_request', 'start_date_err'));
         return;
       }
 
