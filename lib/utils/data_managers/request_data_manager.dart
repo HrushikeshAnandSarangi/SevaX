@@ -53,7 +53,7 @@ Future<void> createRecurringEvents(
     while (lastRound == false ) {
       eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1, eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
       eventEndDate = DateTime(eventEndDate.year, eventEndDate.month, eventEndDate.day + 1, eventEndDate.hour, eventEndDate.minute, eventEndDate.second);
-      if (eventStartDate.millisecondsSinceEpoch <= requestModel.end.on || occurenceCount<11) {
+      if (eventStartDate.millisecondsSinceEpoch <= requestModel.end.on && occurenceCount < 11) {
         numTemp = eventStartDate.weekday % 7;
         if (requestModel.recurringDays.contains(numTemp)) {
           RequestModel temp = requestModel;
@@ -69,7 +69,8 @@ Future<void> createRecurringEvents(
           sevaCreditsCount += temp.numberOfHours;
 //          batch.setData(db.collection("requests").document(temp.id), temp.toMap());
           temparr.add(temp.toMap());
-          log("on mode inside if with day ${eventStartDate.toString()} with occurence count of ${temp.occurenceCount}");
+          print("on mode inside if with day ${eventStartDate.toString()} with occurence count of ${temp.occurenceCount}");
+          print("id is ${temp.id}");
         }
       } else {
         lastRound = true;
@@ -108,11 +109,27 @@ Future<void> createRecurringEvents(
     }
   }
 
-  temparr.forEach((tempobj)async{
+//  asyncOne(temparr) async {
+//    log("asyncOne start");
+//    await Future.forEach(temparr, (tempobj) async {
+//      await db.collection("requests").document(tempobj['id']).setData(tempobj);
+//    });
+//    log("asyncOne end");
+//  }
+
+//  try{
+//    await asyncOne(temparr);
+//  }catch(e){
+//    log(e);
+//  }
+
+
+  temparr.forEach((tempobj){
 //    batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
-    await db.collection("requests").document(tempobj['id']).setData(tempobj);
+    batch.setData(db.collection("requests").document(tempobj['id'] +"*"+ tempobj['request_start'].toString()), tempobj);
     log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['request_start']).toString()} with occurence count of ${tempobj['occurenceCount']}");
   });
+
   DocumentSnapshot timebankDoc = await db.collection("timebanknew").document(requestModel.timebankId).get();
   double balance = timebankDoc.data['balance'] + sevaCreditsCount;
   batch.updateData(
@@ -167,7 +184,7 @@ Future<void> updateRecurrenceRequestsFrontEnd({
     while (lastRound == false ) {
       eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1, eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
       eventEndDate = DateTime(eventEndDate.year, eventEndDate.month, eventEndDate.day + 1, eventEndDate.hour, eventEndDate.minute, eventEndDate.second);
-      if (eventStartDate.millisecondsSinceEpoch <= updatedRequestModel.end.on || occurenceCount<11) {
+      if (eventStartDate.millisecondsSinceEpoch <= updatedRequestModel.end.on && occurenceCount < 11) {
         numTemp = eventStartDate.weekday % 7;
         if (updatedRequestModel.recurringDays.contains(numTemp)) {
           RequestModel temp = updatedRequestModel;
