@@ -56,16 +56,15 @@ class OneToManyOfferBloc extends BlocBase {
         OfferModel offerModel = OfferModel(
           id: id,
           email: user.email,
-          softDelete:false,
+          softDelete: false,
           fullName: user.fullname,
           sevaUserId: user.sevaUserID,
           timebankId: timebankId,
           communityId: user.currentCommunity,
-          selectedAdrress: _location.value.address,
+          selectedAdrress:
+              _location.value == null ? null : _location.value.address,
           timestamp: timestamp,
-          location: _location.value == null
-              ? GeoFirePoint(40.754387, -73.984291)
-              : _location.value.location,
+          location: _location.value == null ? null : _location.value.location,
           groupOfferDataModel: GroupOfferDataModel()
             ..classTitle = _title.value
             ..startDate = startTime
@@ -176,10 +175,10 @@ class OneToManyOfferBloc extends BlocBase {
       );
       flag = true;
     }
-    if (_location.value == null) {
-      _location.addError(ValidationErrors.genericError);
-      flag = true;
-    }
+    // if (_location.value == null) {
+    //   _location.addError(ValidationErrors.genericError);
+    //   flag = true;
+    // }
     return flag;
   }
 

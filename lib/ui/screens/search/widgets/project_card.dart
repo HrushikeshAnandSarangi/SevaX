@@ -39,6 +39,7 @@ class ProjectsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var projectLocation = getLocation(location);
     return InkWell(
       onTap: onTap,
       child: Card(
@@ -53,16 +54,20 @@ class ProjectsCard extends StatelessWidget {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Icon(
-                    Icons.location_on,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  Text(getLocation(location)),
+                  projectLocation != null
+                      ? Icon(
+                          Icons.location_on,
+                          color: Theme.of(context).primaryColor,
+                        )
+                      : Container(),
+                  projectLocation != null ? Text(projectLocation) : Container(),
                   Spacer(),
                   Text(
                     timeago.format(
-                      DateTime.fromMillisecondsSinceEpoch(timestamp), locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
-                    ),
+                        DateTime.fromMillisecondsSinceEpoch(timestamp),
+                        locale:
+                            Locale(AppConfig.prefs.getString('language_code'))
+                                .toLanguageTag()),
                     style: TextStyle(color: Colors.grey),
                   ),
                 ],
@@ -74,9 +79,8 @@ class ProjectsCard extends StatelessWidget {
                   CircleAvatar(
                     radius: 38,
                     backgroundColor: Theme.of(context).primaryColor,
-                    backgroundImage: NetworkImage(
-                      photoUrl ?? defaultProjectImageURL
-                    ),
+                    backgroundImage:
+                        NetworkImage(photoUrl ?? defaultProjectImageURL),
                   ),
                   SizedBox(width: 12),
                   Expanded(
@@ -129,13 +133,16 @@ class ProjectsCard extends StatelessWidget {
                             ),
                             children: [
                               TextSpan(
-                                text: "$tasks ${AppLocalizations.of(context).translate('projects','tasks')}",
+                                text:
+                                    "$tasks ${AppLocalizations.of(context).translate('projects', 'tasks')}",
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                 ),
                               ),
                               TextSpan(text: "     "),
-                              TextSpan(text: "$pendingTask ${AppLocalizations.of(context).translate('projects','pending')}"),
+                              TextSpan(
+                                  text:
+                                      "$pendingTask ${AppLocalizations.of(context).translate('projects', 'pending')}"),
                             ],
                           ),
                         ),
@@ -153,7 +160,7 @@ class ProjectsCard extends StatelessWidget {
   }
 
   String getLocation(String location) {
-    if (location != null) {
+    if (location != null && location.length > 1) {
       List<String> l = location.split(',');
       l = l.reversed.toList();
       if (l.length >= 2) {
@@ -162,11 +169,11 @@ class ProjectsCard extends StatelessWidget {
         return "${l[0]}";
       } else {
         print("elasticsearch pjs location result is");
-        return "Unknown";
+        return null;
       }
     } else {
       print("elasticsearch pjs location result isggggg");
-      return "Unknown";
+      return null;
     }
   }
 }

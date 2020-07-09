@@ -43,17 +43,16 @@ class IndividualOfferBloc extends BlocBase with Validators {
       OfferModel offerModel = OfferModel(
         id: id,
         email: user.email,
-        softDelete:false,
+        softDelete: false,
         fullName: user.fullname,
         sevaUserId: user.sevaUserID,
         timebankId: timebankId,
         communityId: user.currentCommunity,
         timestamp: DateTime.now().millisecondsSinceEpoch,
-        location: _location.value == null
-            ? GeoFirePoint(40.754387, -73.984291)
-            : _location.value.location,
+        location: _location.value == null ? null : _location.value.location,
         groupOfferDataModel: GroupOfferDataModel(),
-        selectedAdrress: _location.value.address,
+        selectedAdrress:
+            _location.value == null ? null : _location.value.address,
         individualOfferDataModel: IndividualOfferDataModel()
           ..title = _title.value
           ..description = _offerDescription.value
@@ -118,10 +117,12 @@ class IndividualOfferBloc extends BlocBase with Validators {
       _availabilty.addError(ValidationErrors.genericError);
       flag = true;
     }
-    if (_location.value == null) {
-      _location.addError(ValidationErrors.genericError);
-      flag = true;
-    }
+
+    // if (_location.value == null) {
+    //   _location.addError(ValidationErrors.genericError);
+    //   flag = true;
+    // }
+
     return flag;
   }
 
@@ -134,5 +135,3 @@ class IndividualOfferBloc extends BlocBase with Validators {
     _status.close();
   }
 }
-
-

@@ -53,13 +53,18 @@ class OfferDetails extends StatelessWidget {
                       color: Colors.grey,
                     ),
                     title: Text(
-                      AppLocalizations.of(context).translate('offers','posted_on'),
+                      AppLocalizations.of(context)
+                          .translate('offers', 'posted_on'),
                       style: titleStyle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     subtitle: Text(
-                      DateFormat('EEEEEEE, MMMM dd h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+                      DateFormat(
+                              'EEEEEEE, MMMM dd h:mm a',
+                              Locale(AppConfig.prefs.getString('language_code'))
+                                  .toLanguageTag())
+                          .format(
                         getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
                             offerModel.timestamp,
@@ -87,7 +92,8 @@ class OfferDetails extends StatelessWidget {
                           ),
                           color: Color.fromRGBO(44, 64, 140, 1),
                           child: Text(
-                            AppLocalizations.of(context).translate('offers','edit'),
+                            AppLocalizations.of(context)
+                                .translate('offers', 'edit'),
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () => _onEdit(context),
@@ -95,29 +101,32 @@ class OfferDetails extends StatelessWidget {
                       ),
                     ),
                   ),
-                  CustomListTile(
-                    leading: Icon(
-                      Icons.location_on,
-                      color: Colors.grey,
-                    ),
-                    title: Text(
-                      AppLocalizations.of(context).translate('offers','location'),
-                      style: titleStyle,
-                      maxLines: 1,
-                    ),
-                    subtitle: Text(
-                      offerModel.selectedAdrress,
-                      style: subTitleStyle,
-                      maxLines: 1,
-                    ),
-                  ),
+                  offerModel.selectedAdrress != null
+                      ? CustomListTile(
+                          leading: Icon(
+                            Icons.location_on,
+                            color: Colors.grey,
+                          ),
+                          title: Text(
+                            AppLocalizations.of(context)
+                                .translate('offers', 'location'),
+                            style: titleStyle,
+                            maxLines: 1,
+                          ),
+                          subtitle: Text(
+                            offerModel.selectedAdrress,
+                            style: subTitleStyle,
+                            maxLines: 1,
+                          ),
+                        )
+                      : Container(),
                   CustomListTile(
                     leading: Icon(
                       Icons.person,
                       color: Colors.grey,
                     ),
                     title: Text(
-                      "${AppLocalizations.of(context).translate('offers','offered_by')} ${offerModel.fullName}",
+                      "${AppLocalizations.of(context).translate('offers', 'offered_by')} ${offerModel.fullName}",
                       style: titleStyle,
                       maxLines: 1,
                     ),
@@ -197,8 +206,9 @@ class OfferDetails extends StatelessWidget {
                     children: [
                       TextSpan(
                         text: isCreator
-                            ? AppLocalizations.of(context).translate('offers','created_this_offer')
-                            : '${AppLocalizations.of(context).translate('offers','you_have')} ${isAccepted ? '' : " ${AppLocalizations.of(context).translate('offers','not_yet')}"} ${offerModel.offerType == OfferType.GROUP_OFFER ? AppLocalizations.of(context).translate('offers','signed_upfor') : AppLocalizations.of(context).translate('offers','bookmarked')} ${AppLocalizations.of(context).translate('offers','thisoffer')}.',
+                            ? AppLocalizations.of(context)
+                                .translate('offers', 'created_this_offer')
+                            : '${AppLocalizations.of(context).translate('offers', 'you_have')} ${isAccepted ? '' : " ${AppLocalizations.of(context).translate('offers', 'not_yet')}"} ${offerModel.offerType == OfferType.GROUP_OFFER ? AppLocalizations.of(context).translate('offers', 'signed_upfor') : AppLocalizations.of(context).translate('offers', 'bookmarked')} ${AppLocalizations.of(context).translate('offers', 'thisoffer')}.',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

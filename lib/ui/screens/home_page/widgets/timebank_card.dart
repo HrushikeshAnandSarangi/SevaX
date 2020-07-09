@@ -22,7 +22,7 @@ class TimeBankCard extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => BlocProvider(
               bloc: _user,
-              child: TimebankTabsViewHolder.of(
+              child: TabarView(
                 timebankId: timebank.id,
                 timebankModel: timebank,
               ),

@@ -347,7 +347,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               return;
             }
             _requestDownload(
-               "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/csv_files%2Ftemplate.csv?alt=media&token=df33b937-1cb7-425a-862d-acafe4b93d53");
+                "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/csv_files%2Ftemplate.csv?alt=media&token=df33b937-1cb7-425a-862d-acafe4b93d53");
           },
           child: Text(
             AppLocalizations.of(context)
@@ -1067,6 +1067,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           content: new Row(
             children: <Widget>[
               Text(timebankCode +
+                  " " +
                   AppLocalizations.of(context).translate('members', 'is_code')),
             ],
           ),
@@ -1113,7 +1114,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   static String createCryptoRandomString([int length = 10]) {
     final Random _random = Random.secure();
     var values = List<int>.generate(length, (i) => _random.nextInt(100));
-    return base64Url.encode(values).substring(0, 6).toLowerCase();
+    var code = base64Url.encode(values).substring(0, 6).toLowerCase();
+    return code;
   }
 
   Future<void> registerTimebankCode({

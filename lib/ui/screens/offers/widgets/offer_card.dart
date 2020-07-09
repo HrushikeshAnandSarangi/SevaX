@@ -131,9 +131,11 @@ class OfferCard extends StatelessWidget {
                   ),
                   icon: Icons.access_time)
               : Offstage(),
-          getStatsIcon(
-              label: getOfferLocation(selectedAddress: selectedAddress),
-              icon: Icons.location_on),
+          getOfferLocation(selectedAddress: selectedAddress) != null
+              ? getStatsIcon(
+                  label: getOfferLocation(selectedAddress: selectedAddress),
+                  icon: Icons.location_on)
+              : Container(),
         ],
       ),
     );

@@ -472,7 +472,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               maxLength: 15,
               initialValue: widget.isCreateProject
                   ? ""
-                  : projectModel.phoneNumber.replaceAll('+', '') ?? "",
+                  : projectModel.phoneNumber != null
+                      ? projectModel.phoneNumber.replaceAll('+', '') ?? ""
+                      : '',
               decoration: InputDecoration(
 //                icon: Icon(
 //                  Icons.add,
@@ -663,12 +665,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                                   .translate('projects', 'start_end_date_err'));
                           return;
                         }
-                        if (!hasRegisteredLocation()) {
-                          showDialogForTitle(
-                              dialogTitle: AppLocalizations.of(context)
-                                  .translate('projects', 'add_location_err'));
-                          return;
-                        }
+                        // if (!hasRegisteredLocation()) {
+                        //   showDialogForTitle(
+                        //       dialogTitle: AppLocalizations.of(context)
+                        //           .translate('projects', 'add_location_err'));
+                        //   return;
+                        // }
                         projectModel.communityId =
                             SevaCore.of(context).loggedInUser.currentCommunity;
                         projectModel.completedRequests = [];
