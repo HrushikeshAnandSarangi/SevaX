@@ -103,14 +103,10 @@ class ChatAppBar extends PreferredSize {
             );
             showCustomDialog(
               context,
-              "Exit Multi-User Messaging",
+              AppLocalizations.of(context).translate('messages', 'exitroom'),
               isCreator
-                  ? "You are admin of this multi-user messaging, are you sure you want to exit the Multi-User Messaging ${groupDetails.name}"
-                  : "Are you sure you want to exit the Multi-User Messaging ${groupDetails.name}",
-              "Exit",
-              // AppLocalizations.of(context).translate('chat', 'delete_title'),
-              // AppLocalizations.of(context).translate('chat', 'delete_desc'),
-              // AppLocalizations.of(context).translate('chat', 'delete_title'),
+                  ? AppLocalizations.of(context).translate('messages', 'admin_confirm') +  groupDetails.name : AppLocalizations.of(context).translate('profile', 'user_confirm') + groupDetails.name,
+              AppLocalizations.of(context).translate('members', 'exit'),
               AppLocalizations.of(context).translate('shared', 'cancel'),
             ).then((value) {
               if (value != "CANCEL") {
