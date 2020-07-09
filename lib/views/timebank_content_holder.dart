@@ -34,20 +34,6 @@ import 'package:timeago/timeago.dart' as timeAgo;
 import '../flavor_config.dart';
 import 'core.dart';
 
-class TimebankTabsViewHolder extends StatelessWidget {
-  final String timebankId;
-  final TimebankModel timebankModel;
-  TimebankTabsViewHolder.of({this.timebankId, this.timebankModel});
-
-  @override
-  Widget build(BuildContext context) {
-    return TabarView(
-      timebankId: timebankId,
-      timebankModel: timebankModel,
-    );
-  }
-}
-
 enum AboutUserRole { ADMIN, JOINED_USER, NORMAL_USER }
 
 class TabarView extends StatefulWidget {
@@ -76,33 +62,15 @@ class _TabarViewState extends State<TabarView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder<TimebankModel>(
-        stream: FirestoreManager.getTimebankModelStream(
-          timebankId: widget.timebankId,
-        ),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          timebankModel = snapshot.data;
-          return getUserRole(
-            determineUserRoleInAbout(
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-              timeBankModel: timebankModel,
-            ),
-            context,
-            timebankModel,
-            widget.timebankId,
-            this,
-          );
-        },
+    return getUserRole(
+      determineUserRoleInAbout(
+        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        timeBankModel: timebankModel,
       ),
+      context,
+      timebankModel,
+      widget.timebankId,
+      this,
     );
   }
 }
