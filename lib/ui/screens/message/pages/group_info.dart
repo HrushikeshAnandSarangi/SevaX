@@ -151,7 +151,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
                               disabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
                               errorText: snapshot.error,
-                              hintText: "Multi-User Messaging Name",
+                              hintText: AppLocalizations.of(context).translate('messages', 'multi_user_messaging_name'),
                               hintStyle: TextStyle(
                                 fontSize: 18,
                                 color: Colors.grey,

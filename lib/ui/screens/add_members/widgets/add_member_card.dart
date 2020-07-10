@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 
 class AddMemberCard extends StatefulWidget {
   final String userId;
@@ -37,7 +38,8 @@ class _AddMemberCardState extends State<AddMemberCard> {
         color: isSelected ? Colors.green : Colors.white,
         child: ListTile(
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(widget.photoUrl),
+            backgroundImage:
+                NetworkImage(widget.photoUrl ?? defaultUserImageURL),
           ),
           title: Text(
             widget.fullName,

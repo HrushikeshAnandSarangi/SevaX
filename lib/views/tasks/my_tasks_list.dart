@@ -51,7 +51,8 @@ class MyTasksList extends StatelessWidget {
             sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return new Text('${AppLocalizations.of(context).translate('tasks','error')} ${snapshot.error}');
+            return new Text(
+                '${AppLocalizations.of(context).translate('tasks', 'error')} ${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -79,7 +80,8 @@ class MyTasksList extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(top: 58.0),
                   child: Text(
-                    AppLocalizations.of(context).translate('tasks','no_pending'),
+                    AppLocalizations.of(context)
+                        .translate('tasks', 'no_pending'),
                     textAlign: TextAlign.center,
                   ),
                 );
@@ -147,7 +149,10 @@ class MyTasksList extends StatelessWidget {
 
           UserModel user = snapshot.data;
 
-          DateFormat format = DateFormat('dd/MM/yy hh:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
+          DateFormat format = DateFormat(
+              'dd/MM/yy hh:mm a',
+              Locale(AppConfig.prefs.getString('language_code'))
+                  .toLanguageTag());
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -285,7 +290,8 @@ class MyTasksList extends StatelessWidget {
   }
 
   String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
-    DateFormat dateFormat = DateFormat('d MMM hh:mm a ', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
+    DateFormat dateFormat = DateFormat('d MMM hh:mm a ',
+        Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
     DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
     DateTime localtime = getDateTimeAccToUserTimezone(
         dateTime: datetime, timezoneAbb: timezoneAbb);
@@ -436,8 +442,13 @@ class TaskCardViewState extends State<TaskCardView> {
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
-                        '${AppLocalizations.of(context).translate('tasks','from')}  ' +
-                            DateFormat('MMMM dd, yyyy @ h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+                        '${AppLocalizations.of(context).translate('tasks', 'from')}  ' +
+                            DateFormat(
+                                    'MMMM dd, yyyy @ h:mm a',
+                                    Locale(AppConfig.prefs
+                                            .getString('language_code'))
+                                        .toLanguageTag())
+                                .format(
                               getDateTimeAccToUserTimezone(
                                   dateTime: DateTime.fromMillisecondsSinceEpoch(
                                       requestModel.requestStart),
@@ -449,8 +460,13 @@ class TaskCardViewState extends State<TaskCardView> {
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
-                        '${AppLocalizations.of(context).translate('tasks','untill')}  ' +
-                            DateFormat('MMMM dd, yyyy @ h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+                        '${AppLocalizations.of(context).translate('tasks', 'untill')}  ' +
+                            DateFormat(
+                                    'MMMM dd, yyyy @ h:mm a',
+                                    Locale(AppConfig.prefs
+                                            .getString('language_code'))
+                                        .toLanguageTag())
+                                .format(
                               getDateTimeAccToUserTimezone(
                                   dateTime: DateTime.fromMillisecondsSinceEpoch(
                                       requestModel.requestEnd),
@@ -461,14 +477,21 @@ class TaskCardViewState extends State<TaskCardView> {
                     Container(
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
-                      child: Text('${AppLocalizations.of(context).translate('tasks','posted_by')} ' + requestModel.fullName),
+                      child: Text(
+                          '${AppLocalizations.of(context).translate('tasks', 'posted_by')} ' +
+                              requestModel.fullName),
                     ),
                     Container(
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
-                        '${AppLocalizations.of(context).translate('tasks','posted_date')}  ' +
-                            DateFormat('MMMM dd, yyyy @ h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+                        '${AppLocalizations.of(context).translate('tasks', 'posted_date')}  ' +
+                            DateFormat(
+                                    'MMMM dd, yyyy @ h:mm a',
+                                    Locale(AppConfig.prefs
+                                            .getString('language_code'))
+                                        .toLanguageTag())
+                                .format(
                               getDateTimeAccToUserTimezone(
                                   dateTime: DateTime.fromMillisecondsSinceEpoch(
                                       requestModel.postTimestamp),
@@ -502,15 +525,18 @@ class TaskCardViewState extends State<TaskCardView> {
                                           EdgeInsets.only(bottom: 20)),
                                   validator: (value) {
                                     if (value == null) {
-                                      return AppLocalizations.of(context).translate('tasks','enterhours');
+                                      return AppLocalizations.of(context)
+                                          .translate('tasks', 'enterhours');
                                     }
                                     if (value.isEmpty) {
-                                      return AppLocalizations.of(context).translate('tasks','selecthours');
+                                      return AppLocalizations.of(context)
+                                          .translate('tasks', 'selecthours');
                                     }
                                     this.selectedHourValue = value;
                                   },
                                 ),
-                                Text(AppLocalizations.of(context).translate('tasks','hours')),
+                                Text(AppLocalizations.of(context)
+                                    .translate('tasks', 'hours')),
                               ],
                             ),
                           ),
@@ -534,10 +560,12 @@ class TaskCardViewState extends State<TaskCardView> {
                                 DropdownButtonFormField<String>(
                                   validator: (value) {
                                     if (value == null) {
-                                      return AppLocalizations.of(context).translate('tasks','minutes_null');
+                                      return AppLocalizations.of(context)
+                                          .translate('tasks', 'minutes_null');
                                     }
                                     if (value.isEmpty) {
-                                      return AppLocalizations.of(context).translate('tasks','minutes_empty');
+                                      return AppLocalizations.of(context)
+                                          .translate('tasks', 'minutes_empty');
                                     }
                                     selectedMinuteValue = value;
                                   },
@@ -552,7 +580,8 @@ class TaskCardViewState extends State<TaskCardView> {
                                   },
                                   value: selectedMinuteValue,
                                 ),
-                                Text(AppLocalizations.of(context).translate('tasks','minutes')),
+                                Text(AppLocalizations.of(context)
+                                    .translate('tasks', 'minutes')),
                               ],
                             ),
                           ),
@@ -568,7 +597,8 @@ class TaskCardViewState extends State<TaskCardView> {
                           subject.add(0);
                         },
                         child: Text(
-                          AppLocalizations.of(context).translate('tasks','completed'),
+                          AppLocalizations.of(context)
+                              .translate('tasks', 'completed'),
                           style: Theme.of(context).primaryTextTheme.button,
                         ),
                       ),
@@ -592,7 +622,8 @@ class TaskCardViewState extends State<TaskCardView> {
             content: Text(content),
             actions: <Widget>[
               FlatButton(
-                child: Text(AppLocalizations.of(context).translate('homepage','close')),
+                child: Text(AppLocalizations.of(context)
+                    .translate('homepage', 'close')),
                 onPressed: () {
                   Navigator.of(buildContext).pop();
                 },
@@ -615,16 +646,18 @@ class TaskCardViewState extends State<TaskCardView> {
 
     if (creditRequest > maxClaim) {
       showDialogFoInfo(
-        title: AppLocalizations.of(context).translate('tasks','limit_exceeded'),
+        title:
+            AppLocalizations.of(context).translate('tasks', 'limit_exceeded'),
         content:
-            "${AppLocalizations.of(context).translate('tasks','only_request')} $maxClaim ${AppLocalizations.of(context).translate('tasks','hours_of_credit')}",
+            "${AppLocalizations.of(context).translate('tasks', 'only_request')} $maxClaim ${AppLocalizations.of(context).translate('tasks', 'hours_of_credit')}",
       );
       return;
       //show dialog
     } else if (creditRequest == 0) {
       showDialogFoInfo(
-        title: AppLocalizations.of(context).translate('tasks','enter_hours'),
-        content: AppLocalizations.of(context).translate('tasks','enter_valid_hours'),
+        title: AppLocalizations.of(context).translate('tasks', 'enter_hours'),
+        content: AppLocalizations.of(context)
+            .translate('tasks', 'enter_valid_hours'),
       );
       return;
     }
@@ -651,12 +684,12 @@ class TaskCardViewState extends State<TaskCardView> {
         builder: (BuildContext context) {
           creditRequestDialogContext = context;
           return AlertDialog(
-            title: Text(AppLocalizations.of(context).translate('tasks','wait')),
+            title:
+                Text(AppLocalizations.of(context).translate('tasks', 'wait')),
             content: LinearProgressIndicator(),
           );
         });
   }
-
 
   Future<void> onActivityResult(Map results) async {
     // adds review to firestore

@@ -39,7 +39,7 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 print("===>> ${snapshot.data}");
                 return Center(
-                  child: Text("No data found !"),
+                  child: Text(AppLocalizations.of(context).translate('search', 'no_data')),
                 );
               }
 

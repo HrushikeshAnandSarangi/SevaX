@@ -89,35 +89,42 @@ class ProjectModel extends DataModel {
             : new List<String>.from(json["completedRequests"].map((x) => x)),
       );
 
-  Map<String, dynamic> toMap() => {
-        "id": id == null ? null : id,
-        "name": name == null ? null : name,
-        "timebank_id": timebankId == null ? null : timebankId,
-        "description": description == null ? null : description,
-        "email_id": emailId == null ? null : emailId,
-        "phone_number": phoneNumber == null ? null : phoneNumber,
-        "creator_id": creatorId == null ? null : creatorId,
-        "address": address == null ? null : address,
-        "photo_url": photoUrl == null ? null : photoUrl,
-        "mode": mode == null ? null : mode,
-        "created_at": createdAt == null ? null : createdAt,
-        "start_time": startTime == null ? null : startTime,
-        "end_time": endTime == null ? null : endTime,
-        "softDelete": softDelete ?? false,
-        "requestedSoftDelete": requestedSoftDelete ?? false,
-        "location": location?.data,
-        "members": members == null
-            ? null
-            : new List<dynamic>.from(members.map((x) => x)),
-        "pendingRequests": pendingRequests == null
-            ? null
-            : new List<dynamic>.from(pendingRequests.map((x) => x)),
-        "completedRequests": completedRequests == null
-            ? null
-            : new List<dynamic>.from(
-                completedRequests.map((x) => x),
-              ),
-      };
+  Map<String, dynamic> toMap() {
+    var projectDetails = Map<String, dynamic>();
+
+    projectDetails = {
+      "id": id == null ? null : id,
+      "name": name == null ? null : name,
+      "timebank_id": timebankId == null ? null : timebankId,
+      "description": description == null ? null : description,
+      "email_id": emailId == null ? null : emailId,
+      "phone_number": phoneNumber == null ? null : phoneNumber,
+      "creator_id": creatorId == null ? null : creatorId,
+      "address": address == null ? null : address,
+      "photo_url": photoUrl == null ? null : photoUrl,
+      "mode": mode == null ? null : mode,
+      "created_at": createdAt == null ? null : createdAt,
+      "start_time": startTime == null ? null : startTime,
+      "end_time": endTime == null ? null : endTime,
+      "softDelete": softDelete ?? false,
+      "requestedSoftDelete": requestedSoftDelete ?? false,
+      "members": members == null
+          ? null
+          : new List<dynamic>.from(members.map((x) => x)),
+      "pendingRequests": pendingRequests == null
+          ? null
+          : new List<dynamic>.from(pendingRequests.map((x) => x)),
+      "completedRequests": completedRequests == null
+          ? null
+          : new List<dynamic>.from(
+              completedRequests.map((x) => x),
+            ),
+    };
+    if (location != null) {
+      projectDetails['location'] = location?.data;
+    }
+    return projectDetails;
+  }
 
   @override
   String toString() {

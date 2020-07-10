@@ -122,8 +122,8 @@ class _TimebankAvatarState extends State<TimebankAvatar>
                           //   imageUrl: avatarURL,
                           //   placeholder: CircularProgressIndicator(),
                           // ),
-                          backgroundImage:
-                              NetworkImage(globals.timebankAvatarURL),
+                          backgroundImage: NetworkImage(
+                              globals.timebankAvatarURL ?? defaultUserImageURL),
                           backgroundColor: const Color(0xFF778899),
                         ),
                       ),

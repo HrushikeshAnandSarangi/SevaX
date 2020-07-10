@@ -136,15 +136,18 @@ class NotificationsView extends State<NotificationViewHolder> {
                   switch (notification.type) {
                     case NotificationType.RecurringRequestUpdated:
                       ReccuringRequestUpdated eventData =
-                      ReccuringRequestUpdated.fromMap(notification.data);
+                          ReccuringRequestUpdated.fromMap(notification.data);
                       return NotificationCard(
                         title: "Request Updated",
                         subTitle:
-                        "${AppLocalizations.of(context).translate('notifications', 'you_signed_up_for')} ***eventName ${AppLocalizations.of(context).translate('notifications', 'on')} ***eventDate. ${AppLocalizations.of(context).translate('notifications', 'owner_changes')}"
-                            .replaceFirst(
-                            '***eventName', eventData.eventName)
-                            .replaceFirst(
-                            '***eventDate', DateTime.fromMillisecondsSinceEpoch(eventData.eventDate).toString()),
+                            "${AppLocalizations.of(context).translate('notifications', 'you_signed_up_for')} ***eventName ${AppLocalizations.of(context).translate('notifications', 'on')} ***eventDate. ${AppLocalizations.of(context).translate('notifications', 'owner_changes')}"
+                                .replaceFirst(
+                                    '***eventName', eventData.eventName)
+                                .replaceFirst(
+                                    '***eventDate',
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                            eventData.eventDate)
+                                        .toString()),
                         entityName: "Request Updated",
                         photoUrl: eventData.photoUrl,
                         onDismissed: onDismissed,
@@ -1032,8 +1035,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                 decoration: notificationDecoration,
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: NetworkImage(user.photoURL),
-                  ),
+                      backgroundImage:
+                          NetworkImage(user.photoURL ?? defaultUserImageURL)),
                   title: Text(model.title),
                   subtitle: RichText(
                     text: TextSpan(
@@ -1817,7 +1820,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
+                      backgroundImage: NetworkImage(
+                          userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(
