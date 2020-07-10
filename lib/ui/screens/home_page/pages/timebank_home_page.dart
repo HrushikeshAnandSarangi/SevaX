@@ -260,7 +260,14 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                           child: IconButton(
                             icon: Icon(Icons.add_circle),
                             color: FlavorConfig.values.theme.primaryColor,
-                            onPressed: navigateToCreateGroup,
+                            onPressed: widget.primaryTimebankModel.protected
+                                ? widget.primaryTimebankModel.admins.contains(
+                                        SevaCore.of(context)
+                                            .loggedInUser
+                                            .sevaUserID)
+                                    ? navigateToCreateGroup
+                                    : showProtctedTImebankDialog
+                                : navigateToCreateGroup,
                           ),
                         ),
                         Spacer(),
@@ -366,6 +373,31 @@ class _TimebankHomePageState extends State<TimebankHomePage>
           ],
         ),
       ),
+    );
+  }
+
+  void showProtctedTImebankDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext _context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text(AppLocalizations.of(context)
+              .translate('requests', 'protected_timebank')),
+          content: new Text(AppLocalizations.of(context)
+              .translate('requests', 'cannot_create_group')),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text(
+                  AppLocalizations.of(context).translate('homepage', 'close')),
+              onPressed: () {
+                Navigator.of(_context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

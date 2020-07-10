@@ -29,15 +29,19 @@ class LocationConfimationCard extends StatelessWidget {
               Row(
                 children: <Widget>[
                   Icon(Icons.location_on),
-                  Text(
-                    isReverseGeoEncoded
-                        ? locationDataModel.location.split('*')[0]
-                        : locationDataModel.location.contains(',')
-                            ? locationDataModel.location.split(',')[0]
-                            : locationDataModel.location,
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Text(
+                      isReverseGeoEncoded
+                          ? locationDataModel.location.split('*')[0]
+                          : locationDataModel.location.contains(',')
+                              ? locationDataModel.location.split(',')[0]
+                              : locationDataModel.location,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -60,7 +64,8 @@ class LocationConfimationCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    AppLocalizations.of(context).translate('add_location', 'confirm_location_label'),
+                    AppLocalizations.of(context)
+                        .translate('add_location', 'confirm_location_label'),
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   onPressed: () {

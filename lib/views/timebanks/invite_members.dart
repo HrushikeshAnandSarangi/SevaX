@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -30,6 +31,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class InviteAddMembers extends StatefulWidget {
   final String communityId;
@@ -54,18 +56,18 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   var validItems = List<String>();
   InvitationManager inivitationManager = InvitationManager();
   bool _isDocumentBeingUploaded = false;
-  File _file;
-  List<File> _files;
+
   String _fileName;
   String _path;
   final int oneMegaBytes = 1048576;
   BuildContext parentContext;
   CsvFileModel csvFileModel = CsvFileModel();
   String csvFileError = '';
-  bool _isLoading;
-  bool _permissionReady;
+  String sampleCSVLink =
+      "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/csv_files%2Ftemplate.csv?alt=media&token=df33b937-1cb7-425a-862d-acafe4b93d53";
   String _localPath;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  PermissionStatus _permissionStatus = PermissionStatus.undetermined;
 
   @override
   void initState() {
@@ -94,18 +96,12 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
   Future<Null> setup() async {
     //_permissionReady = await _checkPermission();
-
     _localPath = (await _findLocalPath()) + Platform.pathSeparator + 'Download';
-
     final savedDir = Directory(_localPath);
     bool hasExisted = await savedDir.exists();
     if (!hasExisted) {
       savedDir.create();
     }
-
-    setState(() {
-      _isLoading = false;
-    });
   }
 //  Future<String> _findLocalPath() async {
 //    final directory = widget.platform == TargetPlatform.android
@@ -115,10 +111,14 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 //  }
 
   Future<String> _findLocalPath() async {
-    final directory = widget.platform == TargetPlatform.android
-        ? await getExternalStorageDirectory()
-        : await getApplicationDocumentsDirectory();
-    return directory.path;
+    Directory directory;
+    if (Platform.isAndroid) {
+      directory = await getExternalStorageDirectory();
+      return directory.parent.parent.parent.parent.path;
+    } else {
+      directory = await getApplicationDocumentsDirectory();
+      return directory.path;
+    }
   }
 
   void _setTimebankModel() async {
@@ -130,12 +130,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   void _requestDownload(String link) async {
     try {
       final taskId = await FlutterDownloader.enqueue(
-          url: link,
-          headers: {"auth": "test_for_sql_encoding"},
-          savedDir: _localPath,
-          fileName: 'template.csv',
-          showNotification: true,
-          openFileFromNotification: true);
+        url: link,
+        headers: {"auth": "test_for_sql_encoding"},
+        savedDir: _localPath,
+        fileName: 'template.csv',
+        showNotification: true,
+        openFileFromNotification: true,
+      );
       print("task id ${taskId}");
 
       if (taskId == null) {
@@ -346,8 +347,10 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               );
               return;
             }
-            _requestDownload(
-               "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/csv_files%2Ftemplate.csv?alt=media&token=df33b937-1cb7-425a-862d-acafe4b93d53");
+            if (await canLaunch(sampleCSVLink)) {
+              launch(sampleCSVLink);
+            }
+            // requestPermission();
           },
           child: Text(
             AppLocalizations.of(context)
@@ -693,6 +696,51 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     if (emailPattern.hasMatch(value)) return true;
     return false;
   }
+/*
+  void requestPermission() async {
+    _permissionStatus = await Permission.storage.status;
+    if (_permissionStatus.isUndetermined) {
+      // You can request multiple permissions at once.
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.storage,
+      ].request();
+      print(statuses[Permission.storage]);
+      // it should print PermissionStatus.granted
+
+      setState(() {
+        _permissionStatus = statuses[Permission.storage];
+        requestPermission();
+      });
+    } else if (_permissionStatus.isGranted) {
+      _requestDownload(sampleCSVLink);
+    } else if (_permissionStatus.isDenied) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)
+                .translate('upload_csv', 'upload_success'),
+          ),
+          action: SnackBarAction(
+            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+          ),
+        ),
+      );
+    } else if (_permissionStatus.isPermanentlyDenied) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)
+                .translate('upload_csv', 'upload_success'),
+          ),
+          action: SnackBarAction(
+            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+          ),
+        ),
+      );
+    }
+  }*/
 
   Widget userInviteWidget({
     String email,
@@ -1067,6 +1115,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           content: new Row(
             children: <Widget>[
               Text(timebankCode +
+                  " " +
                   AppLocalizations.of(context).translate('members', 'is_code')),
             ],
           ),
@@ -1113,7 +1162,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   static String createCryptoRandomString([int length = 10]) {
     final Random _random = Random.secure();
     var values = List<int>.generate(length, (i) => _random.nextInt(100));
-    return base64Url.encode(values).substring(0, 6).toLowerCase();
+    var code = base64Url.encode(values).substring(0, 6).toLowerCase();
+    return code;
   }
 
   Future<void> registerTimebankCode({

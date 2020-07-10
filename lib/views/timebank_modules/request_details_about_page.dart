@@ -521,22 +521,30 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   void _withdrawRequest() {
-    if (widget.requestItem.approvedUsers
-        .contains(SevaCore.of(context).loggedInUser.email)) {
-      _showAlreadyApprovedMessage();
-    } else {
-      Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
-      acceptorList.remove(SevaCore.of(context).loggedInUser.email);
-      widget.requestItem.acceptors = acceptorList.toList();
-      acceptRequest(
-        requestModel: widget.requestItem,
-        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-        isWithdrawal: true,
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-        directToMember: !widget.timebankModel.protected,
-      );
-      Navigator.pop(context);
+    var assosciatedEmail = SevaCore.of(context).loggedInUser.email;
+    // if (widget.requestItem.approvedUsers
+    //     .contains(SevaCore.of(context).loggedInUser.email)) {
+    //   _showAlreadyApprovedMessage();
+    // } else {}
+
+    Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
+    acceptorList.remove(assosciatedEmail);
+    widget.requestItem.acceptors = acceptorList.toList();
+
+    if (widget.requestItem.approvedUsers.contains(assosciatedEmail)) {
+      Set<String> approvedUsers = Set.from(widget.requestItem.approvedUsers);
+      approvedUsers.remove(SevaCore.of(context).loggedInUser.email);
+      widget.requestItem.approvedUsers = approvedUsers.toList();
     }
+
+    acceptRequest(
+      requestModel: widget.requestItem,
+      senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      isWithdrawal: true,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      directToMember: !widget.timebankModel.protected,
+    );
+    Navigator.pop(context);
   }
 
   void _showAlreadyApprovedMessage() {

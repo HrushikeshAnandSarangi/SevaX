@@ -158,7 +158,7 @@ class _NewChatPageState extends State<NewChatPage> {
                     : Center(
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
-                          child: Text("No Frequent Contacts"),
+                          child: Text(AppLocalizations.of(context).translate('messages', 'nofrequent')),
                         ),
                       ),
                 StreamBuilder<List<TimebankModel>>(

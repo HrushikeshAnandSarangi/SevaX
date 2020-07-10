@@ -98,7 +98,7 @@ class RequestsState extends State<RequestsModule> {
                               type: InfoType.REQUESTS,
                             ),
                           ),
-                         ],
+                        ],
                       ),
                     ),
                     widget.isFromSettings
@@ -108,12 +108,12 @@ class RequestsState extends State<RequestsModule> {
                                 widget.timebankModel.requestedSoftDelete,
                             child: GestureDetector(
                               child: Container(
-                                  margin: EdgeInsets.only(left: 0),
-                                  child: Icon(
-                                    Icons.add_circle,
-                                    color:
-                                        FlavorConfig.values.theme.primaryColor,
-                                  )),
+                                margin: EdgeInsets.only(left: 0),
+                                child: Icon(
+                                  Icons.add_circle,
+                                  color: FlavorConfig.values.theme.primaryColor,
+                                ),
+                              ),
                               onTap: () {
                                 if (widget.timebankModel.protected) {
                                   if (widget.timebankModel.admins.contains(
@@ -243,7 +243,7 @@ class RequestsState extends State<RequestsModule> {
     // flutter defined function
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext _context) {
         // return object of type Dialog
         return AlertDialog(
           title: new Text(AppLocalizations.of(context)
@@ -254,9 +254,9 @@ class RequestsState extends State<RequestsModule> {
             // usually buttons at the bottom of the dialog
             new FlatButton(
               child: new Text(
-                  AppLocalizations.of(context).translate('shared', 'close')),
+                  AppLocalizations.of(context).translate('homepage', 'close')),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(_context).pop();
               },
             ),
           ],
@@ -1164,34 +1164,39 @@ class RequestListItemsState extends State<RequestListItems> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          model.title,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: Theme.of(widget.parentContext).textTheme.subhead,
-                        ),
-                        Container(
-                          margin: EdgeInsets.fromLTRB(16.0,0.0,16.0,0.0),
-                          child:Center(
-                            child: Visibility(
-                              visible : model.isRecurring,
-                              child:  InkWell(
-                                onTap: (){
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => RecurringRequestList(model: model),
-                                    ),
-                                  );
-                                },
-                                child: Icon(Icons.navigate_next),
-                              ),
-                            ),
-                          )
-                        )
-                      ],),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            model.title,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: Theme.of(widget.parentContext)
+                                .textTheme
+                                .subhead,
+                          ),
+                          Container(
+                              margin: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                              child: Center(
+                                child: Visibility(
+                                  visible: model.isRecurring,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              RecurringRequestList(
+                                                  model: model),
+                                        ),
+                                      );
+                                    },
+                                    child: Icon(Icons.navigate_next),
+                                  ),
+                                ),
+                              ))
+                        ],
+                      ),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.7,
                         child: Text(
@@ -1229,8 +1234,13 @@ class RequestListItemsState extends State<RequestListItems> {
                         child: Wrap(
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: <Widget>[
-                            Text("Recurring",
-                            style: TextStyle(fontSize: 16.0,color:Theme.of(context).primaryColor,fontWeight:FontWeight.bold),),
+                            Text(
+                              "Recurring",
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: Theme.of(context).primaryColor,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ],
                         ),
                       ),
@@ -1295,12 +1305,17 @@ class RequestListItemsState extends State<RequestListItems> {
             : false;
     timeBankBloc.setIsAdmin(widget.isAdmin);
 
-    if(model.isRecurring){
-    print("is recurring ===== ${model.isRecurring}");
-    Navigator.push(widget.parentContext, MaterialPageRoute(
-    builder: (context)=> RecurringRequestList(model: model,timebankModel: widget.timebankModel,)
-    ));
-    }else if (model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
+    if (model.isRecurring) {
+      print("is recurring ===== ${model.isRecurring}");
+      Navigator.push(
+          widget.parentContext,
+          MaterialPageRoute(
+              builder: (context) => RecurringRequestList(
+                    model: model,
+                    timebankModel: widget.timebankModel,
+                  )));
+    } else if (model.sevaUserId ==
+            SevaCore.of(context).loggedInUser.sevaUserID ||
         widget.timebankModel.admins
             .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
       Navigator.push(

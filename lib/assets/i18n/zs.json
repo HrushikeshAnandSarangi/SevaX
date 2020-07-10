@@ -573,6 +573,7 @@
     "select_request": "选择申请",
     "protected_timebank": "受保护的时间银行",
     "cannot_post": "您不能向受保护的时间银行请求",
+    "cannot_create_group":"您无法在受保护的时间银行中创建组",
     "requests_help": "请求帮助",
     "delete_request_confirm": "你确定要删除这个要求吗？",
     "dont_delete": "没有",
