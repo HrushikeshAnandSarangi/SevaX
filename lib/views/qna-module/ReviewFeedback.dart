@@ -97,8 +97,10 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 
       case 'es':
         return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_ES;
+
       case 'zh':
         return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_ZH_CN;
+
       default:
         return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN_EN;
     }
