@@ -54,16 +54,14 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   var validItems = List<String>();
   InvitationManager inivitationManager = InvitationManager();
   bool _isDocumentBeingUploaded = false;
-  File _file;
-  List<File> _files;
+
   String _fileName;
   String _path;
   final int oneMegaBytes = 1048576;
   BuildContext parentContext;
   CsvFileModel csvFileModel = CsvFileModel();
   String csvFileError = '';
-  bool _isLoading;
-  bool _permissionReady;
+
   String _localPath;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -94,18 +92,12 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
   Future<Null> setup() async {
     //_permissionReady = await _checkPermission();
-
     _localPath = (await _findLocalPath()) + Platform.pathSeparator + 'Download';
-
     final savedDir = Directory(_localPath);
     bool hasExisted = await savedDir.exists();
     if (!hasExisted) {
       savedDir.create();
     }
-
-    setState(() {
-      _isLoading = false;
-    });
   }
 //  Future<String> _findLocalPath() async {
 //    final directory = widget.platform == TargetPlatform.android
@@ -115,10 +107,14 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 //  }
 
   Future<String> _findLocalPath() async {
-    final directory = widget.platform == TargetPlatform.android
-        ? await getExternalStorageDirectory()
-        : await getApplicationDocumentsDirectory();
-    return directory.path;
+    Directory directory;
+    if (Platform.isAndroid) {
+      directory = await getExternalStorageDirectory();
+      return directory.parent.parent.parent.parent.path;
+    } else {
+      directory = await getApplicationDocumentsDirectory();
+      return directory.path;
+    }
   }
 
   void _setTimebankModel() async {
@@ -130,12 +126,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   void _requestDownload(String link) async {
     try {
       final taskId = await FlutterDownloader.enqueue(
-          url: link,
-          headers: {"auth": "test_for_sql_encoding"},
-          savedDir: _localPath,
-          fileName: 'template.csv',
-          showNotification: true,
-          openFileFromNotification: true);
+        url: link,
+        headers: {"auth": "test_for_sql_encoding"},
+        savedDir: _localPath,
+        fileName: 'template.csv',
+        showNotification: true,
+        openFileFromNotification: true,
+      );
       print("task id ${taskId}");
 
       if (taskId == null) {
