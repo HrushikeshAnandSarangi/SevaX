@@ -163,8 +163,10 @@ Future<void> updateRecurrenceRequestsFrontEnd({
   bool lastRound = false;
   String uuidvar = "";
   RequestModel eventData, parentEvent;
+
   List<RequestModel> upcomingEventsArr = [], prevEventsArr = [];
   var futures = <Future>[];
+  double balanceVar = await getMemberBalance(updatedRequestModel.sevaUserId);
   Set<String> usersIds = new Set();
   DateTime eventStartDate =DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestStart),
       eventEndDate =DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestEnd);
@@ -263,7 +265,6 @@ Future<void> updateRecurrenceRequestsFrontEnd({
   }
 
   temparr.forEach((tempobj){
-//    batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
     batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
     log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['request_start']).toString()} with occurence count of ${tempobj['occurenceCount']}");
   });
@@ -1404,10 +1405,8 @@ Future<bool> hasSufficientCredits({
 
 Future<bool> hasSufficientCreditsIncludingRecurring(
     {String userId, double credits, int recurrences, bool isRecurring}) async {
-  var sevaCoinsBalance = await getMemberBalance(
-    userId,
-  );
-
+  var sevaCoinsBalance = await getMemberBalance(userId);
+  log("on mode recurrence count isss $recurrences");
   var lowerLimit = 50;
   try {
     lowerLimit =
