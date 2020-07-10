@@ -9,20 +9,20 @@ final searchScaffoldKey = GlobalKey<ScaffoldState>();
 const kGoogleApiKey = "AIzaSyCfJs1RFK22W-KvpPWkTmJ3lhrGEKoJ-Gc";
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
-class CustomSearchScaffold1 extends PlacesAutocompleteWidget {
-  CustomSearchScaffold1()
+class CustomSearchScaffold extends PlacesAutocompleteWidget {
+  CustomSearchScaffold()
       : super(
           apiKey: kGoogleApiKey,
-          sessionToken: Uuid1().generateV4(),
+          sessionToken: Uuid().generateV4(),
           language: "en",
           components: [],
         );
 
   @override
-  _CustomSearchScaffoldState1 createState() => _CustomSearchScaffoldState1();
+  _CustomSearchScaffoldState createState() => _CustomSearchScaffoldState();
 }
 
-class Uuid1 {
+class Uuid {
   final Random _random = Random();
 
   String generateV4() {
@@ -45,7 +45,7 @@ class Uuid1 {
       value.toRadixString(16).padLeft(count, '0');
 }
 
-class _CustomSearchScaffoldState1 extends PlacesAutocompleteState {
+class _CustomSearchScaffoldState extends PlacesAutocompleteState {
   String locationText;
   @override
   Widget build(BuildContext context) {
@@ -56,21 +56,21 @@ class _CustomSearchScaffoldState1 extends PlacesAutocompleteState {
     );
     final body = PlacesAutocompleteResult(
       onTap: (p) {
-        displayPrediction(p, searchScaffoldKey.currentState);
+        displayPrediction(p);
       },
-//      logo: Row(
-//        children: [FlutterLogo()],
-//        mainAxisAlignment: MainAxisAlignment.center,
-//      ),
+      // logo: Row(
+      //   children: [FlutterLogo()],
+      //   mainAxisAlignment: MainAxisAlignment.center,
+      // ),
     );
     return Scaffold(key: searchScaffoldKey, appBar: appBar, body: body);
   }
 
-  Future<Null> displayPrediction(Prediction p, ScaffoldState scaffold) async {
+  Future<Null> displayPrediction(Prediction p) async {
     if (p != null) {
       // get detail (lat/lng)
       PlacesDetailsResponse detail =
-          await _places.getDetailsByPlaceId(p.placeId);
+          await _places.getDetailsByPlaceId(p.placeId, fields: ["geometry"]);
       final lat = detail.result.geometry.location.lat;
       final lng = detail.result.geometry.location.lng;
       LocationDataModel data = LocationDataModel(
@@ -79,9 +79,6 @@ class _CustomSearchScaffoldState1 extends PlacesAutocompleteState {
         lng,
       );
       Navigator.pop(context, data);
-      scaffold.showSnackBar(
-        SnackBar(content: Text("${p.description} - $lat/$lng")),
-      );
     }
   }
 
