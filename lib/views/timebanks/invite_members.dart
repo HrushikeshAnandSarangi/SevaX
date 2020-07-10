@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -30,6 +31,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class InviteAddMembers extends StatefulWidget {
   final String communityId;
@@ -61,9 +63,11 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   BuildContext parentContext;
   CsvFileModel csvFileModel = CsvFileModel();
   String csvFileError = '';
-
+  String sampleCSVLink =
+      "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/csv_files%2Ftemplate.csv?alt=media&token=df33b937-1cb7-425a-862d-acafe4b93d53";
   String _localPath;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  PermissionStatus _permissionStatus = PermissionStatus.undetermined;
 
   @override
   void initState() {
@@ -343,8 +347,10 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               );
               return;
             }
-            _requestDownload(
-                "https://firebasestorage.googleapis.com/v0/b/sevax-dev-project-for-sevax.appspot.com/o/csv_files%2Ftemplate.csv?alt=media&token=df33b937-1cb7-425a-862d-acafe4b93d53");
+            if (await canLaunch(sampleCSVLink)) {
+              launch(sampleCSVLink);
+            }
+            // requestPermission();
           },
           child: Text(
             AppLocalizations.of(context)
@@ -690,6 +696,51 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     if (emailPattern.hasMatch(value)) return true;
     return false;
   }
+/*
+  void requestPermission() async {
+    _permissionStatus = await Permission.storage.status;
+    if (_permissionStatus.isUndetermined) {
+      // You can request multiple permissions at once.
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.storage,
+      ].request();
+      print(statuses[Permission.storage]);
+      // it should print PermissionStatus.granted
+
+      setState(() {
+        _permissionStatus = statuses[Permission.storage];
+        requestPermission();
+      });
+    } else if (_permissionStatus.isGranted) {
+      _requestDownload(sampleCSVLink);
+    } else if (_permissionStatus.isDenied) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)
+                .translate('upload_csv', 'upload_success'),
+          ),
+          action: SnackBarAction(
+            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+          ),
+        ),
+      );
+    } else if (_permissionStatus.isPermanentlyDenied) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)
+                .translate('upload_csv', 'upload_success'),
+          ),
+          action: SnackBarAction(
+            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+          ),
+        ),
+      );
+    }
+  }*/
 
   Widget userInviteWidget({
     String email,
