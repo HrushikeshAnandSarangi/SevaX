@@ -102,12 +102,39 @@ class RepeatWidgetState extends State<RepeatWidget> {
 //  var formatter = new DateFormat('yyyy-MM-dd');
 //  String formatted = formatter.format(now);
 
+//  Future<Null> _selectDate(BuildContext context) async {
+//    final DateTime picked = await showDatePicker(
+//        context: context,
+//        initialDate: selectedDate,
+//        firstDate: DateTime(2015, 1),
+//        lastDate: DateTime(2101));
+//    if (picked != null && picked != selectedDate)
+//      setState(() {
+//        selectedDate = picked;
+//      });
+//  }
+
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
         firstDate: DateTime(2015, 1),
-        lastDate: DateTime(2101));
+        lastDate: DateTime(2101),
+        builder: (BuildContext context, Widget child){
+          return Theme(
+            data: ThemeData.light().copyWith(
+                primaryColor: Colors.purple,//Head background
+                accentColor: Colors.purple,//selection color
+                colorScheme: ColorScheme.light(primary: Theme.of(context).primaryColor),
+                buttonTheme: ButtonThemeData(
+                  textTheme: ButtonTextTheme.primary
+                ),
+              //dialogBackgroundColor: Colors.white,//Background color
+            ),
+            child: child,
+          );
+        }
+    );
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;

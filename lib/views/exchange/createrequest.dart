@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -673,7 +674,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           var myDetails = SevaCore.of(context).loggedInUser;
           this.requestModel.fullName = myDetails.fullname;
           this.requestModel.photoUrl = myDetails.photoURL;
-
           var onBalanceCheckResult = await hasSufficientCredits(
             credits: requestModel.numberOfHours.toDouble(),
             userId: myDetails.sevaUserID,
@@ -691,16 +691,20 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           break;
       }
       linearProgressForCreatingRequest();
-      await _writeToDB();
+      int resVar = await _writeToDB();
       await _updateProjectModel();
+      Navigator.pop(dialogContext);
+
 
       if (widget.isOfferRequest == true && widget.userModel != null) {
-        Navigator.pop(dialogContext);
         Navigator.pop(context, {'response': 'ACCEPTED'});
       } else {
-        Navigator.pop(dialogContext);
+        if(resVar==0){
+          showInsufficientBalance();
+        }
         Navigator.pop(context);
       }
+
     }
   }
 
@@ -738,7 +742,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     fontSize: 16,
                   ),
                 ),
-                onPressed: () {
+                onPressed: () async{
                   Navigator.of(viewContext).pop();
                 },
               ),
@@ -846,7 +850,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     return requestCoins <= finalbalance;
   }
 
-  Future _writeToDB() async {
+  Future<int> _writeToDB() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     requestModel.id = '${requestModel.email}*$timestampString';
@@ -863,7 +867,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.location = location;
     requestModel.root_timebank_id = FlavorConfig.values.timebankId;
     requestModel.softDelete = false;
-    if (requestModel.id == null) return;
+    if (requestModel.id == null) return 0;
 
     // credit the timebank the required credits before the request creation
     await TransactionBloc().createNewTransaction(
@@ -875,15 +879,19 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
         requestModel.id,
         requestModel.timebankId);
-    await FirestoreManager.createRequest(requestModel: requestModel);
-
-    if (requestModel.isRecurring) {
-      await FirestoreManager.createRecurringEvents(requestModel: requestModel);
+    if(!requestModel.isRecurring){
+      await FirestoreManager.createRequest(requestModel: requestModel);
     }
+    int resultVar = 1;
+    if (requestModel.isRecurring) {
+      resultVar = await FirestoreManager.createRecurringEvents(requestModel: requestModel);
+      return resultVar;
+    }
+    return resultVar;
   }
 
   Future _updateProjectModel() async {
-    if (widget.projectId.isNotEmpty) {
+    if (widget.projectId.isNotEmpty && !requestModel.isRecurring) {
       ProjectModel projectModel = widget.projectModel;
 //      var userSevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
 //      if (!projectModel.members.contains(userSevaUserId)) {

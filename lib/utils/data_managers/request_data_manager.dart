@@ -33,7 +33,7 @@ Future<void> createRequest({@required RequestModel requestModel}) async {
       .setData(requestModel.toMap());
 }
 
-Future<void> createRecurringEvents(
+Future<int> createRecurringEvents(
     {@required RequestModel requestModel}) async {
   var batch = Firestore.instance.batch();
   var db = Firestore.instance;
@@ -43,8 +43,17 @@ Future<void> createRecurringEvents(
           DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart),
       eventEndDate =
           DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd);
-
+  double balanceVar = await getMemberBalance(requestModel.sevaUserId);
   List<Map<String,dynamic>> temparr = [];
+  DocumentSnapshot projectDoc = null;
+  ProjectModel projectData = null;
+
+  if(requestModel.projectId!=null && requestModel.projectId!=""){
+    projectDoc = await db.collection("projects").document(requestModel.projectId).get();
+    projectData = ProjectModel.fromMap(projectDoc.data);
+  }
+
+  batch.setData(db.collection("requests").document(requestModel.id), requestModel.toMap());
 
   if (requestModel.end.endType == "on") {
     //end type is on
@@ -60,7 +69,7 @@ Future<void> createRecurringEvents(
           temp.requestStart = eventStartDate.millisecondsSinceEpoch;
           temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
           temp.postTimestamp = DateTime.now().millisecondsSinceEpoch;
-          temp.id = temp.email + "*" + temp.postTimestamp.toString();
+          temp.id = temp.email + "*" + temp.postTimestamp.toString() + "*" + temp.requestStart.toString();
           temp.occurenceCount = occurenceCount;
           occurenceCount++;
           temp.softDelete = false;
@@ -69,7 +78,7 @@ Future<void> createRecurringEvents(
           sevaCreditsCount += temp.numberOfHours;
 //          batch.setData(db.collection("requests").document(temp.id), temp.toMap());
           temparr.add(temp.toMap());
-          print("on mode inside if with day ${eventStartDate.toString()} with occurence count of ${temp.occurenceCount}");
+          log("on mode inside if with day ${eventStartDate.toString()} with occurence count of ${temp.occurenceCount}");
           print("id is ${temp.id}");
         }
       } else {
@@ -92,7 +101,7 @@ Future<void> createRecurringEvents(
         temp.requestStart = eventStartDate.millisecondsSinceEpoch;
         temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
         temp.postTimestamp = DateTime.now().millisecondsSinceEpoch;
-        temp.id = temp.email + "*" + temp.postTimestamp.toString();
+        temp.id = temp.email + "*" + temp.postTimestamp.toString() + "*" + temp.requestStart.toString();
         temp.occurenceCount = occurenceCount;
         occurenceCount++;
         temp.softDelete = false;
@@ -109,18 +118,40 @@ Future<void> createRecurringEvents(
     }
   }
 
-  temparr.forEach((tempobj){
-//    batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
-    batch.setData(db.collection("requests").document(tempobj['id'] +"*"+ tempobj['request_start'].toString()), tempobj);
-    log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['request_start']).toString()} with occurence count of ${tempobj['occurenceCount']}");
-  });
+  if(requestModel.requestMode == RequestMode.PERSONAL_REQUEST){
+    log("inside personal req check");
+    if(balanceVar - sevaCreditsCount >= 0){
+      log("yup balance");
+      temparr.forEach((tempobj){
+        batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
+        log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['request_start']).toString()} with occurence count of ${tempobj['occurenceCount']}");
+      });
+    }else{
+      log("oops no balance");
+      return 0;
+    }
+  }else{
+    log("inside timebank req " + requestModel.requestMode.toString());
+    temparr.forEach((tempobj){
+      batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
+      log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['request_start']).toString()} with occurence count of ${tempobj['occurenceCount']}");
+    });
+  }
 
   DocumentSnapshot timebankDoc = await db.collection("timebanknew").document(requestModel.timebankId).get();
   double balance = timebankDoc.data['balance'] + sevaCreditsCount;
-  batch.updateData(
-      db.collection("timebanknew").document(timebankDoc.documentID),
-      {"balance": balance});
+  batch.updateData(db.collection("timebanknew").document(timebankDoc.documentID), {"balance": balance});
+
+  if(requestModel.projectId!=null && requestModel.projectId!=""){
+    projectData.pendingRequests.add(requestModel.id);
+    temparr.forEach((tempobj){
+      projectData.pendingRequests.add(tempobj['id']);
+    });
+    batch.updateData(db.collection("projects").document(projectData.id), projectData.toMap());
+  }
+
   await batch.commit();
+  return 1;
 }
 
 
@@ -135,16 +166,16 @@ Future<void> updateRecurrenceRequestsFrontEnd({
   List<RequestModel> upcomingEventsArr = [], prevEventsArr = [];
   var futures = <Future>[];
   Set<String> usersIds = new Set();
-  DateTime eventStartDate =
-          DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestStart),
-      eventEndDate =
-          DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestEnd);
+  DateTime eventStartDate =DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestStart),
+      eventEndDate =DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestEnd);
 
-  QuerySnapshot snapEvents = await db
-      .collection("requests")
-      .where("parent_request_id",
-          isEqualTo: updatedRequestModel.parent_request_id)
-      .getDocuments();
+  QuerySnapshot snapEvents = await db.collection("requests").where("parent_request_id",isEqualTo: updatedRequestModel.parent_request_id).getDocuments();
+  DocumentSnapshot projectDoc = null;
+  ProjectModel projectData = null;
+  if(updatedRequestModel.projectId!=null && updatedRequestModel.projectId!=""){
+    projectDoc = await db.collection("projects").document(updatedRequestModel.projectId).get();
+    projectData = ProjectModel.fromMap(projectDoc.data);
+  }
 
   snapEvents.documents.forEach((eventDoc) {
     eventData = RequestModel.fromMap(eventDoc.data);
@@ -176,7 +207,7 @@ Future<void> updateRecurrenceRequestsFrontEnd({
           temp.requestStart = eventStartDate.millisecondsSinceEpoch;
           temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
           temp.postTimestamp = DateTime.now().millisecondsSinceEpoch;
-          temp.id = temp.email + "*" + temp.postTimestamp.toString();
+          temp.id = temp.email + "*" + temp.postTimestamp.toString() + "*" + temp.requestStart.toString();
           temp.occurenceCount = occurenceCount;
           occurenceCount++;
           temp.softDelete = false;
@@ -185,8 +216,11 @@ Future<void> updateRecurrenceRequestsFrontEnd({
           newCredits += temp.numberOfHours;
 //          batch.setData(db.collection("requests").document(temp.id), temp.toMap());
           temparr.add(temp.toMap());
+          if(projectData!=null){
+            projectData.pendingRequests.add(temp.id);
+          }
+
           print("on mode inside if with day ${eventStartDate.toString()} with occurence count of ${temp.occurenceCount}");
-          print("id is ${temp.id}");
         }
       } else {
         lastRound = true;
@@ -208,7 +242,7 @@ Future<void> updateRecurrenceRequestsFrontEnd({
         temp.requestStart = eventStartDate.millisecondsSinceEpoch;
         temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
         temp.postTimestamp = DateTime.now().millisecondsSinceEpoch;
-        temp.id = temp.email + "*" + temp.postTimestamp.toString();
+        temp.id = temp.email + "*" + temp.postTimestamp.toString() + "*" + temp.requestStart.toString();
         temp.occurenceCount = occurenceCount;
         occurenceCount++;
         temp.softDelete = false;
@@ -217,6 +251,9 @@ Future<void> updateRecurrenceRequestsFrontEnd({
         newCredits += temp.numberOfHours;
 //        batch.setData(db.collection("requests").document(temp.id), temp.toMap());
         temparr.add(temp.toMap());
+        if(projectData!=null){
+          projectData.pendingRequests.add(temp.id);
+        }
         log("after mode inside if with day ${eventStartDate.toString()} with occurence count of ${temp.occurenceCount}");
       }
       if (occurenceCount > updatedRequestModel.end.after) {
@@ -227,7 +264,7 @@ Future<void> updateRecurrenceRequestsFrontEnd({
 
   temparr.forEach((tempobj){
 //    batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
-    batch.setData(db.collection("requests").document(tempobj['id'] +"*"+ tempobj['request_start'].toString()), tempobj);
+    batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
     log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['request_start']).toString()} with occurence count of ${tempobj['occurenceCount']}");
   });
 
@@ -243,8 +280,10 @@ Future<void> updateRecurrenceRequestsFrontEnd({
 
   if (upcomingEventsArr.length != 0) {
     upcomingEventsArr.forEach((upcomingEvent) {
-      oldCredits = oldCredits +
-          (upcomingEvent.numberOfHours * upcomingEvent.numberOfApprovals);
+      if(projectData!=null){
+        projectData.pendingRequests.remove(upcomingEvent.id);
+      }
+      oldCredits = oldCredits + (upcomingEvent.numberOfHours * upcomingEvent.numberOfApprovals);
       batch.delete(db.collection("requests").document(upcomingEvent.id)); // delete old upcoming recurrence-events
     });
   }
@@ -297,21 +336,11 @@ Future<void> updateRecurrenceRequestsFrontEnd({
     });
   }
 
-  // s6 ---------- put it all into a batch and commit them
-
+  // s6 ---------- change in projects pendingrequests, and put it all into a batch and commit them
+  if(projectData!=null){
+    batch.updateData(db.collection("projects").document(projectData.id),projectData.toMap());
+  }
   await batch.commit();
-}
-
-Future<void> updateRecurrenceRequests(String requestId) async {
-  final response = await http.post(
-      '${FlavorConfig.values.cloudFunctionBaseURL}/updateRecurrenceRequests',
-//      headers: {"Content-Type": "application/json"},
-//      body: json.encode({"updatedRequestModel": requestModel.toMap()}));
-
-      body: {"updatedRequestModelId": requestId});
-
-  print("recurrence updation statusCode === " + response.statusCode.toString());
-//  return response.statusCode;
 }
 
 Stream<List<RequestModel>> getRequestStreamCreatedByUser({
