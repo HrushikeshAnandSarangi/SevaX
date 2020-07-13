@@ -1133,7 +1133,9 @@
     "save": "sauver",
     "type_message": "Tapez un message",
     "add_caption": "Ajouter une légende",
-    "tap_for_photo": "Tap pour la photo"
+    "tap_for_photo": "Tap pour la photo",
+    "name_error": "Le nom ne peut pas être vide"
+
   },
   "add_location": {
     "confirm_location_label": "CONFIRMER L'EMPLACEMENT"

@@ -69,56 +69,9 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            _bloc.community.payment.containsKey("planId")
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      headingText(AppLocalizations.of(context)
-                          .translate('billing_admin', 'plan_details')),
-                      _bloc.community.payment["planId"] == "community_plan"
-                          ? Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
-                              child: RichText(
-                                text: TextSpan(
-                                  style: TextStyle(color: Colors.black),
-                                  children: [
-                                    TextSpan(
-                                        text:
-                                            "${AppLocalizations.of(context).translate('billing_admin', 'community_plan')}  "),
-                                    TextSpan(
-                                      text: AppLocalizations.of(context)
-                                          .translate(
-                                              'billing_admin', 'change_plan'),
-                                      style: TextStyle(
-                                          color: Theme.of(context).primaryColor,
-                                          fontSize: 16,
-                                          fontFamily: 'Europa',
-                                          decoration: TextDecoration.underline),
-                                      recognizer: new TapGestureRecognizer()
-                                        ..onTap = () => Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BillingPlanDetails(
-                                                  user: SevaCore.of(context)
-                                                      .loggedInUser,
-                                                  planName: _bloc.community
-                                                      .payment["planId"],
-                                                  isPlanActive: true,
-                                                  autoImplyLeading: true,
-                                                  isPrivateTimebank:
-                                                      communityModel.private,
-                                                ),
-                                              ),
-                                            ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          : emptyText(),
-                    ],
-                  )
+            _bloc.community.payment.containsKey("planId") ||
+                    _bloc.community.billMe == true
+                ? planCard(_bloc)
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -188,6 +141,52 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget planCard(UserDataBloc _bloc) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        headingText(AppLocalizations.of(context)
+            .translate('billing_admin', 'plan_details')),
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(color: Colors.black),
+              children: [
+                TextSpan(
+                    text: _bloc.community.payment["planId"] == "community_plan"
+                        ? "${AppLocalizations.of(context).translate('billing_admin', 'community_plan')}  "
+                        : "${AppLocalizations.of(context).translate('billing_admin', 'on_the')} ${_bloc.community.payment['message']}  "),
+                TextSpan(
+                  text: AppLocalizations.of(context)
+                      .translate('billing_admin', 'change_plan'),
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 16,
+                      fontFamily: 'Europa',
+                      decoration: TextDecoration.underline),
+                  recognizer: new TapGestureRecognizer()
+                    ..onTap = () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BillingPlanDetails(
+                              user: SevaCore.of(context).loggedInUser,
+                              planName: _bloc.community.payment["planId"],
+                              isPlanActive: true,
+                              autoImplyLeading: true,
+                              isPrivateTimebank: communityModel.private,
+                            ),
+                          ),
+                        ),
+                ),
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 

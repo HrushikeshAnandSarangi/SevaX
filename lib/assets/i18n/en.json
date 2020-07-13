@@ -1134,7 +1134,8 @@
     "save": "Save",
     "type_message": "Type a message",
     "add_caption": "Add a caption",
-    "tap_for_photo": "Tap for photo"
+    "tap_for_photo": "Tap for photo",
+    "name_error": "Name can't be empty"
   },
   "add_location": {
     "confirm_location_label": "CONFIRM LOCATION"
