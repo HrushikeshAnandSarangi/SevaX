@@ -912,7 +912,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         builder: (BuildContext viewContext) {
           return Dialog(
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+                // borderRadius: BorderRadius.all(
+                //   Radius.circular(25.0),
+                // ),
+                ),
             child: Form(
               key: _formDialogKey,
               child: Column(
@@ -923,8 +926,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     height: 50,
                     width: double.infinity,
                     color: FlavorConfig.values.theme.primaryColor,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
+                    child: Center(
                       child: Text(
                         AppLocalizations.of(context)
                             .translate('project_template', 'template_title'),
@@ -942,13 +944,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   Padding(
                     padding: const EdgeInsets.only(left: 10, right: 10),
                     child: Container(
-//                      decoration: new BoxDecoration(
-//                        shape: BoxShape.rectangle,
-//                        border: new Border.all(
-//                          color: Colors.grey,
-//                          width: 1.0,
-//                        ),
-//                      ),
                       child: TextFormField(
                         controller: searchTextController,
                         decoration: InputDecoration(
@@ -964,9 +959,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             ),
                             contentPadding:
                                 EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-//                            enabledBorder: UnderlineInputBorder(
-//                              borderSide: BorderSide(color: Colors.grey),
-//                            ),
                             hintText: AppLocalizations.of(context).translate(
                                 'project_template', 'template_hint')),
                         keyboardType: TextInputType.text,
@@ -992,9 +984,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   ),
                   SizedBox(
                     height: 25,
-                  ),
-                  Divider(
-                    color: Colors.black12,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
