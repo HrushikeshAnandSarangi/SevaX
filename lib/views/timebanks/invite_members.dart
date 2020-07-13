@@ -349,6 +349,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             }
             if (await canLaunch(sampleCSVLink)) {
               launch(sampleCSVLink);
+            } else {
+              print('could not launch url');
             }
             // requestPermission();
           },

@@ -422,8 +422,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                               },
                               onChanged: (v) {
                                 if (v.isNotEmpty && int.parse(v) >= 0) {
-                                  requestModel.numberOfApprovals =
-                                      int.parse(v);
+                                  requestModel.numberOfApprovals = int.parse(v);
                                   setState(() {});
                                 }
                               },
@@ -456,7 +455,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                 }
                               },
                             ),
-                            TotalCredits(requestModel, OfferDurationWidgetState.starttimestamp, OfferDurationWidgetState.endtimestamp),
+                            TotalCredits(
+                                requestModel,
+                                OfferDurationWidgetState.starttimestamp,
+                                OfferDurationWidgetState.endtimestamp),
                             SizedBox(height: 40),
                             Center(
                               child: LocationPickerWidget(
@@ -562,6 +564,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   BuildContext dialogContext;
 
   void createRequest() async {
+    // verify f the start and end date time is not same
+
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
       Scaffold.of(context).showSnackBar(
@@ -603,6 +607,15 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         showDialogForTitle(
             dialogTitle: AppLocalizations.of(context)
                 .translate('create_request', 'start_date_err'));
+        return;
+      }
+
+      /// TODO take language from Prakash
+      if (OfferDurationWidgetState.starttimestamp ==
+          OfferDurationWidgetState.endtimestamp) {
+        showDialogForTitle(
+            dialogTitle: AppLocalizations.of(context)
+                .translate('create_request', 'sam_date_time'));
         return;
       }
 
@@ -921,24 +934,35 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 }
 
-Widget TotalCredits(requestModel, int starttimestamp,int endtimestamp) {
+Widget TotalCredits(requestModel, int starttimestamp, int endtimestamp) {
   var label;
-  var totalhours = DateTime.fromMillisecondsSinceEpoch(endtimestamp).difference( DateTime.fromMillisecondsSinceEpoch(starttimestamp)).inHours;
-  var totalminutes = DateTime.fromMillisecondsSinceEpoch(endtimestamp).difference( DateTime.fromMillisecondsSinceEpoch(starttimestamp)).inMinutes;
-  var totalallowedhours = (totalhours + ((totalminutes/60)/100).ceil());
+  var totalhours = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
+      .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
+      .inHours;
+  var totalminutes = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
+      .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
+      .inMinutes;
+  var totalallowedhours = (totalhours + ((totalminutes / 60) / 100).ceil());
   var totalCredits = requestModel.numberOfApprovals * totalallowedhours;
   requestModel.numberOfHours = totalCredits;
   if (totalallowedhours > 0 && totalCredits > 0) {
     if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
-      label = totalCredits.toString() + " Credits will be added to timebank, per participant you can allocate maximum of " + totalallowedhours.toString() + " credits";
+      label = totalCredits.toString() +
+          " Credits will be added to timebank, per participant you can allocate maximum of " +
+          totalallowedhours.toString() +
+          " credits";
     } else {
-      label = totalCredits.toString() + " Credits will be needed for the request, per participant you can allocate maximum of " + totalallowedhours.toString() + " credits";
+      label = totalCredits.toString() +
+          " Credits will be needed for the request, per participant you can allocate maximum of " +
+          totalallowedhours.toString() +
+          " credits";
     }
   } else {
     label = "";
   }
 
-  return Text(label,
+  return Text(
+    label,
     style: TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.normal,

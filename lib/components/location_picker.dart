@@ -137,7 +137,9 @@ class _LocationPickerState extends State<LocationPicker> {
               LocationDataModel model = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => new CustomSearchScaffold(),
+                  builder: (BuildContext context) => new CustomSearchScaffold(
+                      AppLocalizations.of(context)
+                          .translate('interests', 'search')),
                   fullscreenDialog: true,
                 ),
               );

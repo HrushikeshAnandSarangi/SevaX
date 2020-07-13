@@ -28,8 +28,6 @@ Map<InfoType, String> infoKeyMapper = {
   InfoType.TAX_CONFIGURATION: "taxInfo",
 };
 
-
-
 Widget infoButton({
   @required BuildContext context,
   @required GlobalKey key,
@@ -38,7 +36,7 @@ Widget infoButton({
   assert(context != null);
   assert(key != null);
   assert(type != null);
-  var temp = AppLocalizations.of(context).translate('info_window','mapper');
+  var temp = AppLocalizations.of(context).translate('info_window', 'mapper');
   Map<String, dynamic> details =
       json.decode(AppConfig.remoteConfig.getString(temp));
   return IconButton(
@@ -55,24 +53,24 @@ Widget infoButton({
       Offset buttonPosition = renderBox.localToGlobal(Offset.zero);
       showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (BuildContext _context) {
           Map<InfoType, String> infoDescriptionMapper = {
             InfoType.GROUPS:
-            AppLocalizations.of(context).translate('info_window','groups'),
-            InfoType.PROJECTS:
-            AppLocalizations.of(context).translate('info_window','projects'),
-            InfoType.REQUESTS:
-            AppLocalizations.of(context).translate('info_window','requests'),
+                AppLocalizations.of(context).translate('info_window', 'groups'),
+            InfoType.PROJECTS: AppLocalizations.of(context)
+                .translate('info_window', 'projects'),
+            InfoType.REQUESTS: AppLocalizations.of(context)
+                .translate('info_window', 'requests'),
             InfoType.OFFERS:
-            AppLocalizations.of(context).translate('info_window','offers'),
-            InfoType.PROTECTED_TIMEBANK:
-            AppLocalizations.of(context).translate('info_window','protected_timebank'),
-            InfoType.PRIVATE_TIMEBANK:
-            AppLocalizations.of(context).translate('info_window','private_timebank'),
-            InfoType.PRIVATE_GROUP:
-            AppLocalizations.of(context).translate('info_window','private_group'),
-            InfoType.TAX_CONFIGURATION:
-            AppLocalizations.of(context).translate('info_window','tax_configuration'),
+                AppLocalizations.of(context).translate('info_window', 'offers'),
+            InfoType.PROTECTED_TIMEBANK: AppLocalizations.of(context)
+                .translate('info_window', 'protected_timebank'),
+            InfoType.PRIVATE_TIMEBANK: AppLocalizations.of(context)
+                .translate('info_window', 'private_timebank'),
+            InfoType.PRIVATE_GROUP: AppLocalizations.of(context)
+                .translate('info_window', 'private_group'),
+            InfoType.TAX_CONFIGURATION: AppLocalizations.of(context)
+                .translate('info_window', 'tax_configuration'),
           };
           bool _isDialogBottom = buttonPosition.dy >
               (MediaQuery.of(context).size.height / 2) + 100;
@@ -127,9 +125,10 @@ Widget infoButton({
                         Align(
                           alignment: Alignment.bottomRight,
                           child: FlatButton(
-                            child: Text("OK"),
+                            child: Text(AppLocalizations.of(context)
+                                .translate('notifications', 'ok')),
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              Navigator.of(_context).pop();
                             },
                           ),
                         ),

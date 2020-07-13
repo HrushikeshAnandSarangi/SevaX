@@ -483,7 +483,7 @@
     "debited": "Débité",
     "signup_for_class": "Inscrit en classe",
     "feedback_request": "Demande de feedback",
-    "congrats": "Félicitations,",
+    "congrats": "Félicitations",
     "bucks_Yang_Bucks": "The Bucks",
     "bucks_Tulsi_Tokens": "Jetons Tulsi",
     "bucks_Seva_Credits": "Vos Seva crédits",
@@ -682,6 +682,7 @@
     "others": "Autres"
   },
   "create_request": {
+    "sam_date_time" : "Start and end date cannot be same",
     "humanity_first_create": "Crear solicitud de pandilla Yang",
     "create": "crear",
     "edit": "Modifier la demande",
@@ -1133,7 +1134,9 @@
     "save": "sauver",
     "type_message": "Tapez un message",
     "add_caption": "Ajouter une légende",
-    "tap_for_photo": "Tap pour la photo"
+    "tap_for_photo": "Tap pour la photo",
+    "name_error": "Le nom ne peut pas être vide"
+
   },
   "add_location": {
     "confirm_location_label": "CONFIRMER L'EMPLACEMENT"
@@ -1164,7 +1167,7 @@
   "private_timebank": {
     "private_timebank": "Timebank Privé ",
     "alert_title": "Alerte privée Timebank",
-    "alert_hint": "Please be informed that Private Timebanks do not have a free option. You will need to provide your billing details to continue to create this Timebank"
+    "alert_hint": "Veuillez noter que les banques de temps privées n'ont pas d'option gratuite. Vous devrez fournir vos informations de facturation pour continuer à créer cette banque de temps"
   },
   "upload_csv": {
     "csv_hint_one": "Téléchargez le modèle CSV sur",

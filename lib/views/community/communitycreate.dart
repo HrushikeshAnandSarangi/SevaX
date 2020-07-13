@@ -1023,7 +1023,7 @@ class CreateEditCommunityViewFormState
   Future<String> _showPrivateTimebankAdvisory() {
     return showDialog<String>(
         context: context,
-        builder: (BuildContext context) {
+        builder: (BuildContext _context) {
           return AlertDialog(
             title: Text(AppLocalizations.of(context)
                 .translate('private_timebank', 'alert_title')),
@@ -1041,7 +1041,7 @@ class CreateEditCommunityViewFormState
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pop(context, 'Proceed');
+                  Navigator.pop(_context, 'Proceed');
                 },
               ),
               FlatButton(
@@ -1051,7 +1051,7 @@ class CreateEditCommunityViewFormState
                       TextStyle(color: Colors.red, fontSize: dialogButtonSize),
                 ),
                 onPressed: () {
-                  Navigator.pop(context, 'Cancel');
+                  Navigator.pop(_context, 'Cancel');
                 },
               )
             ],

@@ -133,7 +133,10 @@ class CreateGroupPage extends StatelessWidget {
                               enabledBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
-                              errorText: snapshot.error,
+                              errorText: AppLocalizations.of(context).translate(
+                                'messages',
+                                snapshot.error,
+                              ),
                               hintText: AppLocalizations.of(context).translate(
                                 'messages',
                                 'multi_user_messaging_name',
