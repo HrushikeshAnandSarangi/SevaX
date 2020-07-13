@@ -39,7 +39,7 @@ class _RecurringRequestListState extends State<RecurringRequestList> {
         body: Container(
           child: StreamBuilder(
               stream: RecurringListDataManager.getRecurringRequestListStream(
-                parentRequestId: widget.model.id,
+                parentRequestId: widget.model.parent_request_id,
               ),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.data != null) {
