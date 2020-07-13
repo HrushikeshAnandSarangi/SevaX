@@ -10,8 +10,11 @@ const kGoogleApiKey = "AIzaSyCfJs1RFK22W-KvpPWkTmJ3lhrGEKoJ-Gc";
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
 class CustomSearchScaffold extends PlacesAutocompleteWidget {
-  CustomSearchScaffold()
+  final String hint;
+
+  CustomSearchScaffold(this.hint)
       : super(
+          hint: hint,
           apiKey: kGoogleApiKey,
           sessionToken: Uuid().generateV4(),
           language: "en",
