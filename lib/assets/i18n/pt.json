@@ -1165,7 +1165,7 @@
   "private_timebank": {
     "private_timebank": "Private banco de tempo",
     "alert_title": "Alerta privado do banco de tempo",
-    "alert_hint": "Please be informed that Private Timebanks do not have a free option. You will need to provide your billing details to continue to create this Timebank"
+    "alert_hint": "Por favor, informe que Private Timebanks não tem uma opção gratuita. Você precisará fornecer seus detalhes de cobrança para continuar a criar este Timebank"
   },
   "upload_csv": {
     "csv_hint_one": "Faça o download do modelo CSV para",

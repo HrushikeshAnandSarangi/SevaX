@@ -53,7 +53,7 @@ Widget infoButton({
       Offset buttonPosition = renderBox.localToGlobal(Offset.zero);
       showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (BuildContext _context) {
           Map<InfoType, String> infoDescriptionMapper = {
             InfoType.GROUPS:
                 AppLocalizations.of(context).translate('info_window', 'groups'),
@@ -128,7 +128,7 @@ Widget infoButton({
                             child: Text(AppLocalizations.of(context)
                                 .translate('notifications', 'ok')),
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              Navigator.of(_context).pop();
                             },
                           ),
                         ),

@@ -1167,7 +1167,7 @@
   "private_timebank": {
     "private_timebank": "私人时间银行",
     "alert_title": "私人时区提醒",
-    "alert_hint": "请注意，私人时间银行没有免费选项。您需要提供您的结算明细，才能继续创建此Timebank"
+    "alert_hint": "请注意，私人时间银行没有免费选项。您需要提供您的结算明细，才能继续创建此 时间银行"
   },
   "upload_csv": {
     "csv_hint_one": "将CSV模板下载到",
