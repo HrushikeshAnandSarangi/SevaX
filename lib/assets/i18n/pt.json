@@ -1132,7 +1132,9 @@
     "save": "Salve ",
     "type_message": "Digite uma mensagem",
     "add_caption": "Adicionar uma legenda",
-    "tap_for_photo": "Tap para a foto"
+    "tap_for_photo": "Tap para a foto",
+    "name_error": "O nome não pode estar vazio"
+
   },
   "add_location": {
     "confirm_location_label": "CONFIRMAR localização"

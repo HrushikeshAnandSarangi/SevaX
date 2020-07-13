@@ -1133,7 +1133,9 @@
     "save": "Salvar",
     "type_message": "Escribir un mensaje",
     "add_caption": "Agrega un subtítulo",
-    "tap_for_photo": "Toque para la foto"
+    "tap_for_photo": "Toque para la foto",
+    "name_error": "El nombre no puede estar vacío"
+
   },
   "add_location": {
     "confirm_location_label": "CONFIRMAR LOCAL"
