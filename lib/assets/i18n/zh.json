@@ -477,7 +477,7 @@
     "debited": "借方",
     "signup_for_class": "报名上课",
     "feedback_request": "反馈要求",
-    "congrats": "恭喜,",
+    "congrats": "恭喜",
     "bucks_Yang_Bucks": "雄鹿队",
     "bucks_Tulsi_Tokens": "Tulsi代币",
     "bucks_Seva_Credits": "Seva 学分",
@@ -677,6 +677,7 @@
     "others": "其他"
   },
   "create_request": {
+    "sam_date_time" : "Start and end date cannot be same",
     "humanity_first_create": "创建humanity_first请求",
     "create": "创建请求",
     "edit": "编辑请求",

@@ -481,7 +481,7 @@
     "debited": "debitado",
     "signup_for_class": "Inscreveu-se na aula",
     "feedback_request": "Solicitação de feedback",
-    "congrats": "Parabéns,",
+    "congrats": "Parabéns",
     "bucks_Yang_Bucks": "The Bucks",
     "bucks_Tulsi_Tokens": "Tulsi Tokens",
     "bucks_Seva_Credits": "Seus Créditos Seva",
@@ -681,6 +681,7 @@
     "others": "Otros"
   },
   "create_request": {
+    "sam_date_time" : "Start and end date cannot be same",
     "humanity_first_create": "Criar solicitações da gang de Yang",
     "create": "criar",
     "edit": "Editar solicitações",

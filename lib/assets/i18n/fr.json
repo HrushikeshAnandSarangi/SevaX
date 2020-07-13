@@ -483,7 +483,7 @@
     "debited": "Débité",
     "signup_for_class": "Inscrit en classe",
     "feedback_request": "Demande de feedback",
-    "congrats": "Félicitations,",
+    "congrats": "Félicitations",
     "bucks_Yang_Bucks": "The Bucks",
     "bucks_Tulsi_Tokens": "Jetons Tulsi",
     "bucks_Seva_Credits": "Vos Seva crédits",
@@ -682,6 +682,7 @@
     "others": "Autres"
   },
   "create_request": {
+    "sam_date_time" : "Start and end date cannot be same",
     "humanity_first_create": "Crear solicitud de pandilla Yang",
     "create": "crear",
     "edit": "Modifier la demande",

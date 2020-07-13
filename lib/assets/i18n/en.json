@@ -477,7 +477,7 @@
     "debited": "Debited",
     "signup_for_class": "Signed up for class",
     "feedback_request": "Feedback request",
-    "congrats": "Congrats,",
+    "congrats": "Congrats",
     "bucks_Yang_Bucks": "Yang Bucks",
     "bucks_Tulsi_Tokens": "Tulsi Tokens",
     "bucks_Seva_Credits": "Seva Credits",
@@ -678,6 +678,7 @@
     "others": "Others"
   },
   "create_request": {
+    "sam_date_time" : "Start and end date cannot be same",
     "humanity_first_create": "Create Yang Gang Request",
     "create": "Create Request",
     "edit": "Edit Request",
