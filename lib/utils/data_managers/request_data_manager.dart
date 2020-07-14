@@ -197,7 +197,7 @@ Future<void> updateRecurrenceRequestsFrontEnd({
 
   if (updatedRequestModel.end.endType == "on") {
     //end type is on
-    int occurenceCount = updatedRequestModel.occurenceCount;
+    int occurenceCount = updatedRequestModel.occurenceCount + 1;
     var numTemp=0;
     while (lastRound == false ) {
       eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1, eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
@@ -234,7 +234,7 @@ Future<void> updateRecurrenceRequestsFrontEnd({
   else {
     //end type is after
     var numTemp=0;
-    int occurenceCount = updatedRequestModel.occurenceCount;
+    int occurenceCount = updatedRequestModel.occurenceCount + 1;
     while (occurenceCount <= updatedRequestModel.end.after) {
       eventStartDate = DateTime(eventStartDate.year,eventStartDate.month,eventStartDate.day + 1,eventStartDate.hour,eventStartDate.minute, eventStartDate.second);
       eventEndDate = DateTime(eventEndDate.year,eventEndDate.month,eventEndDate.day + 1,eventEndDate.hour,eventEndDate.minute,eventEndDate.second);
@@ -284,7 +284,7 @@ Future<void> updateRecurrenceRequestsFrontEnd({
       if(projectData!=null){
         projectData.pendingRequests.remove(upcomingEvent.id);
       }
-      oldCredits = oldCredits + (upcomingEvent.numberOfHours * upcomingEvent.numberOfApprovals);
+      oldCredits = oldCredits + (upcomingEvent.numberOfHours);
       batch.delete(db.collection("requests").document(upcomingEvent.id)); // delete old upcoming recurrence-events
     });
   }
