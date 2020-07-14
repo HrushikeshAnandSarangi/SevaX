@@ -748,7 +748,11 @@
     "occurences": "Occurences",
     "repeat_cancel": "Cancel",
     "repeat_done": "Done",
-    "recurringDays_err": "Recurring days cannot be empty"
+    "recurringDays_err": "Recurring days cannot be empty",
+    "request_total_credits_timebank": " Seva Credits will be credited to the Timebank for this request. Note that each participant will receive a maximum of ",
+    "request_total_credits_timebank_add": " credits for completing this request.",
+    "request_total_credits_personal": " Seva Credits are required for this request. It will be debited from your balance. Note that each participant will receive a maximum of ",
+    "request_total_credits_personal_add": " credits for completing this request."
   },
   "edit_group": {
     "add_members": "Add Members",

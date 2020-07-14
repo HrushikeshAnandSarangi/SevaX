@@ -752,7 +752,11 @@
     "occurences": "Occurrences",
     "repeat_cancel": "Annuler",
     "repeat_done": "Terminé",
-    "recurringDays_err": "les jours récurrents ne peuvent pas être vides"
+    "recurringDays_err": "les jours récurrents ne peuvent pas être vides",
+    "request_total_credits_timebank": "Les crédits Seva seront crédités à la banque de temps pour cette demande. Notez que chaque participant recevra un maximum de",
+    "request_total_credits_timebank_add": "crédits pour avoir rempli cette demande.",
+    "request_total_credits_personal": "Des crédits Seva sont requis pour cette demande. Elle sera débitée de votre solde. Notez que chaque participant recevra un maximum de",
+    "request_total_credits_personal_add": "crédits pour avoir répondu à cette demande."
   },
   "edit_group": {
     "add_members": "Añadir miembros",

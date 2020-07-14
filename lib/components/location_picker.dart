@@ -94,6 +94,15 @@ class _LocationPickerState extends State<LocationPicker> {
 
     loadInitialLocation();
   }
+  GeoFirePoint point(markers) {
+    if (markers == null || markers.isEmpty) return null;
+    Marker marker = markers.first;
+    if (marker.position == null) return null;
+    return widget.geo.point(
+      latitude: marker.position.latitude,
+      longitude: marker.position.longitude,
+    );
+  }
 
   Future<void> loadInitialAddress(marker) async {
     address = await _getAddressFromLatLng(target);
@@ -119,6 +128,21 @@ class _LocationPickerState extends State<LocationPicker> {
 
   @override
   Widget build(context) {
+    var temp = point(markers);
+    var render;
+    if (temp != null) {
+      render = LocationConfimationCard(
+        locationDataModel: locationDataFromSearch.location == null
+            ? LocationDataModel(
+          address == null ? "" : address,
+          temp.latitude,
+          temp.longitude,
+        )
+            : locationDataFromSearch,
+      );
+    } else {
+      render = Text("");
+    }
     return Scaffold(
       appBar: AppBar(
         // iconTheme: IconThemeData(color: Colors.black),
@@ -147,6 +171,17 @@ class _LocationPickerState extends State<LocationPicker> {
                 locationDataFromSearch = model;
                 target = LatLng(
                     locationDataFromSearch.lat, locationDataFromSearch.lng);
+                _addMarker(latLng: target);
+                var temp = point(markers);
+                if (locationDataFromSearch.lat != null &&
+                    locationDataFromSearch.lng != null && temp != null) {
+                  if (point(markers).distance(
+                      lat: locationDataFromSearch.lat,
+                      lng: locationDataFromSearch.lng) >
+                      0.005) {
+                    locationDataFromSearch.location = null;
+                  }
+                }
                 animateToLocation(
                   _mapController,
                   location: target,
@@ -166,15 +201,7 @@ class _LocationPickerState extends State<LocationPicker> {
             ],
           ),
         ),
-        LocationConfimationCard(
-          locationDataModel: locationDataFromSearch.location == null
-              ? LocationDataModel(
-                  address == null ? "" : address,
-                  point?.latitude,
-                  point?.longitude,
-                )
-              : locationDataFromSearch,
-        ),
+        render,
       ]),
     );
   }
@@ -257,6 +284,8 @@ class _LocationPickerState extends State<LocationPicker> {
   }
 
   Positioned get mapWidget {
+    bool _zoomControlsEnabled = false;
+    bool _zoomGesturesEnabled = true;
     return Positioned.fill(
       child: GoogleMap(
         initialCameraPosition: widget.selectedLocation != null
@@ -272,23 +301,26 @@ class _LocationPickerState extends State<LocationPicker> {
         myLocationEnabled: true,
         mapType: MapType.normal,
         compassEnabled: true,
+        zoomGesturesEnabled: _zoomGesturesEnabled,
+        zoomControlsEnabled: _zoomControlsEnabled,
         markers: markers,
         onCameraMove: (position) {
           // setState(() {
+          print(position);
           target = position.target;
           // });
         },
         onCameraIdle: () {
+          print("came here");
           _addMarker();
-          log(point
-              .distance(
-                lat: locationDataFromSearch.lat,
-                lng: locationDataFromSearch.lng,
-              )
-              .toString());
+          var temp = point(markers);
           if (locationDataFromSearch.lat != null &&
-              locationDataFromSearch.lng != null) {
-            if (point.distance(
+              locationDataFromSearch.lng != null && temp != null) {
+            log(point(markers).distance(
+              lat: locationDataFromSearch.lat,
+              lng: locationDataFromSearch.lng,
+            ).toString());
+            if (point(markers).distance(
                     lat: locationDataFromSearch.lat,
                     lng: locationDataFromSearch.lng) >
                 0.005) {
@@ -327,16 +359,6 @@ class _LocationPickerState extends State<LocationPicker> {
     } else {
       return address;
     }
-  }
-
-  GeoFirePoint get point {
-    if (markers == null || markers.isEmpty) return null;
-    Marker marker = markers.first;
-    if (marker.position == null) return null;
-    return widget.geo.point(
-      latitude: marker.position.latitude,
-      longitude: marker.position.longitude,
-    );
   }
 
   void _onMapCreated(GoogleMapController controller) {

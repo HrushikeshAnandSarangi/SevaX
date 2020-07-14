@@ -456,6 +456,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                               },
                             ),
                             TotalCredits(
+                                context,
                                 requestModel,
                                 OfferDurationWidgetState.starttimestamp,
                                 OfferDurationWidgetState.endtimestamp),
@@ -934,7 +935,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 }
 
-Widget TotalCredits(requestModel, int starttimestamp, int endtimestamp) {
+Widget TotalCredits(context, requestModel, int starttimestamp, int endtimestamp) {
   var label;
   var totalhours = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
       .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
@@ -942,20 +943,26 @@ Widget TotalCredits(requestModel, int starttimestamp, int endtimestamp) {
   var totalminutes = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
       .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
       .inMinutes;
-  var totalallowedhours = (totalhours + ((totalminutes / 60) / 100).ceil());
+  var totalallowedhours;
+  if (totalhours == 0) {
+    totalallowedhours = (totalhours + ((totalminutes / 60) / 100).ceil());
+  } else {
+    totalallowedhours = (totalhours + ((totalminutes / 60) / 100).round());
+  }
+
   var totalCredits = requestModel.numberOfApprovals * totalallowedhours;
   requestModel.numberOfHours = totalCredits;
   if (totalallowedhours > 0 && totalCredits > 0) {
     if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
       label = totalCredits.toString() +
-          " Credits will be added to timebank, per participant you can allocate maximum of " +
+          AppLocalizations.of(context).translate('create_request', 'request_total_credits_timebank') +
           totalallowedhours.toString() +
-          " credits";
+          AppLocalizations.of(context).translate('create_request', 'request_total_credits_timebank_add');
     } else {
       label = totalCredits.toString() +
-          " Credits will be needed for the request, per participant you can allocate maximum of " +
+          AppLocalizations.of(context).translate('create_request', 'request_total_credits_personal') +
           totalallowedhours.toString() +
-          " credits";
+          AppLocalizations.of(context).translate('create_request', 'request_total_credits_personal_add');
     }
   } else {
     label = "";

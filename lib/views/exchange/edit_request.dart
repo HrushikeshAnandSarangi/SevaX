@@ -15,6 +15,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
@@ -241,47 +242,6 @@ class RequestEditFormState extends State<RequestEditForm> {
               Padding(
                 padding: EdgeInsets.all(10.0),
               ),
-
-              // SizedBox(height: 40),
-              Text(
-                AppLocalizations.of(context)
-                    .translate('create_request', 'total_hours'),
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Europa',
-                  color: Colors.grey,
-                ),
-              ),
-              TextFormField(
-                  initialValue: "${widget.requestModel.numberOfHours ?? 0}",
-                  decoration: InputDecoration(
-                    hintText: AppLocalizations.of(context)
-                        .translate('create_request', 'hours_required'),
-                    hintStyle: hintTextStyle,
-                    // labelText: 'No. of volunteers',
-                  ),
-                  onChanged: (value) {
-                    widget.requestModel.numberOfHours = int.parse(value);
-                  },
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return AppLocalizations.of(context)
-                          .translate('create_request', 'hours_required_err');
-                    } else if (int.parse(value) < 0) {
-                      return AppLocalizations.of(context)
-                          .translate('create_request', 'hours_required_zero');
-                    } else if (int.parse(value) == 0) {
-                      return AppLocalizations.of(context).translate(
-                          'create_request', 'hours_required_not_zero');
-                    } else {
-                      widget.requestModel.numberOfHours = int.parse(value);
-                      return null;
-                    }
-                  }),
-              SizedBox(height: 20),
-
               Text(
                 AppLocalizations.of(context)
                     .translate('create_request', 'no_of_volunteers'),
@@ -314,11 +274,18 @@ class RequestEditFormState extends State<RequestEditForm> {
                     return AppLocalizations.of(context).translate(
                         'create_request', 'no_of_volunteers_zero_err1');
                   } else {
-                    requestModel.numberOfApprovals = int.parse(value);
+                    requestModel.numberOfApprovals =
+                        int.parse(value);
+                    setState(() {});
                     return null;
                   }
                 },
               ),
+              TotalCredits(
+                  context,
+                  requestModel,
+                  OfferDurationWidgetState.starttimestamp,
+                  OfferDurationWidgetState.endtimestamp),
 //              if (FlavorConfig.appFlavor != Flavor.APP)
               //addVolunteersForAdmin(),
               SizedBox(height: 20),
