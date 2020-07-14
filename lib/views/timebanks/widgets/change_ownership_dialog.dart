@@ -272,11 +272,11 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
   }
 
   void resetAndLoad() async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-          builder: (context) =>
-              SevaCore(loggedInUser: loggedInUser, child: HomePageRouter())),
-    );
+    await Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+            builder: (context) =>
+                SevaCore(loggedInUser: loggedInUser, child: HomePageRouter())),
+        (Route<dynamic> route) => false);
   }
 
   getSuccessDialog() {
