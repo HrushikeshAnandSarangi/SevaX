@@ -198,7 +198,7 @@
     "private_timebank": "Privado Timebank"
   },
   "billing_plans": {
-    "remote_config": "billing_plans",
+    "remote_config": "billing_plans_pt",
     "title": "Escolha um plano ",
     "info_click": "Clique aqui para mais informações",
     "choose": "Escolher",

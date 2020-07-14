@@ -198,7 +198,7 @@
     "private_timebank": "私人的 Timebank"
   },
   "billing_plans": {
-    "remote_config": "付款安排",
+    "remote_config": "billing_plans_zh",
     "title": "选择合适的付款方式",
     "info_click": "点击这里查看更多信息",
     "choose": "选择",
