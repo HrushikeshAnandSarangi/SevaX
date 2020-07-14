@@ -650,7 +650,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       onPressed: () {
         showDialog(
             context: context,
-            builder: (context) {
+            builder: (mContext) {
               return ChangeOwnershipDialog(
                 changeOwnershipModel: changeOwnershipModel,
                 timeBankId: timebankId,

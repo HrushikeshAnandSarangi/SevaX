@@ -124,10 +124,10 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                AppLocalizations.of(context)
+                AppLocalizations.of(widget.parentContext)
                         .translate('change_ownership', 'change_message') +
                     changeOwnershipModel.timebank +
-                    AppLocalizations.of(context)
+                    AppLocalizations.of(widget.parentContext)
                         .translate('change_ownership', 'change_message_two'),
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
@@ -161,8 +161,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                     ),
                     onPressed: () async {
                       //Once approved
-                      getAdvisoryDialog(
-                          widget.parentContext, changeOwnershipModel.timebank);
+                      getAdvisoryDialog(context, changeOwnershipModel.timebank);
 
                       // showProgressDialog(context, 'Accepting Invitation');
 //                      approveInvitation(
@@ -286,13 +285,13 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: new Text(AppLocalizations.of(context)
+          content: new Text(AppLocalizations.of(widget.parentContext)
               .translate('change_ownership', 'ownership_suceess')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text(
-                  AppLocalizations.of(context).translate('homepage', 'ok')),
+              child: new Text(AppLocalizations.of(widget.parentContext)
+                  .translate('homepage', 'ok')),
               onPressed: () {
                 resetAndLoad();
                 // Navigator.of(context).pop();
@@ -345,9 +344,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                     onPressed: () {
                       Navigator.of(context).pop();
 
-                      _billingBottomsheet(
-                        widget.parentContext,
-                      );
+                      _billingBottomsheet(mContext);
                     },
                   ),
                 ],
@@ -454,7 +451,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
     BuildContext mcontext,
   ) {
     showModalBottomSheet(
-        context: widget.parentContext,
+        context: mcontext,
         builder: (BuildContext bc) {
           return Container(
             child: _scrollingList(
@@ -487,12 +484,12 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           focusNode: focusNodes[0],
           validator: (value) {
             return value.isEmpty
-                ? AppLocalizations.of(context)
+                ? AppLocalizations.of(widget.parentContext)
                     .translate('createtimebank', 'err_empty')
                 : null;
           },
           decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(context)
+              fieldTitle: AppLocalizations.of(widget.parentContext)
                   .translate('createtimebank', 'city')),
         ),
       );
@@ -513,13 +510,13 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           },
           validator: (value) {
             return value.isEmpty
-                ? AppLocalizations.of(context)
+                ? AppLocalizations.of(widget.parentContext)
                     .translate('createtimebank', 'err_empty')
                 : null;
           },
           focusNode: focusNodes[1],
           decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(context)
+              fieldTitle: AppLocalizations.of(widget.parentContext)
                   .translate('createtimebank', 'state')),
         ),
       );
@@ -540,7 +537,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           },
           validator: (value) {
             return value.isEmpty
-                ? AppLocalizations.of(context)
+                ? AppLocalizations.of(widget.parentContext)
                     .translate('createtimebank', 'err_empty')
                 : null;
           },
@@ -548,7 +545,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           keyboardType: TextInputType.number,
           maxLength: 15,
           decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(context)
+              fieldTitle: AppLocalizations.of(widget.parentContext)
                   .translate('createtimebank', 'zip')),
         ),
       );
@@ -568,7 +565,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           focusNode: focusNodes[7],
           textInputAction: TextInputAction.done,
           decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(context)
+              fieldTitle: AppLocalizations.of(widget.parentContext)
                   .translate('createtimebank', 'additional_notes')),
         ),
       );
@@ -587,14 +584,14 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           },
           validator: (value) {
             return value.isEmpty
-                ? AppLocalizations.of(context)
+                ? AppLocalizations.of(widget.parentContext)
                     .translate('createtimebank', 'err_empty')
                 : null;
           },
           focusNode: focusNodes[4],
           textInputAction: TextInputAction.done,
           decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(context)
+              fieldTitle: AppLocalizations.of(widget.parentContext)
                   .translate('createtimebank', 'street_add1')),
         ),
       );
@@ -615,7 +612,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             focusNode: focusNodes[5],
             textInputAction: TextInputAction.done,
             decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(context)
+              fieldTitle: AppLocalizations.of(widget.parentContext)
                   .translate('createtimebank', 'street_add2'),
             )),
       );
@@ -636,13 +633,13 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           },
           validator: (value) {
             return value.isEmpty
-                ? AppLocalizations.of(context)
+                ? AppLocalizations.of(widget.parentContext)
                     .translate('createtimebank', 'err_empty')
                 : null;
           },
           focusNode: focusNodes[2],
           decoration: getInputDecoration(
-            fieldTitle: AppLocalizations.of(context)
+            fieldTitle: AppLocalizations.of(widget.parentContext)
                 .translate('createtimebank', 'country_name'),
           ),
         ),
@@ -668,7 +665,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           focusNode: focusNodes[6],
           textInputAction: TextInputAction.done,
           decoration: getInputDecoration(
-            fieldTitle: AppLocalizations.of(context)
+            fieldTitle: AppLocalizations.of(widget.parentContext)
                 .translate('createtimebank', 'company_name'),
           ),
         ),
@@ -680,7 +677,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
         padding: const EdgeInsets.fromLTRB(100, 10, 100, 20),
         child: RaisedButton(
           child: Text(
-            AppLocalizations.of(context)
+            AppLocalizations.of(widget.parentContext)
                 .translate('createtimebank', 'continue'),
             style: Theme.of(bc).primaryTextTheme.button,
           ),
@@ -724,7 +721,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             _additionalNotesWidget(),
             _continueBtn(),
             SizedBox(
-              height: 200,
+              height: 220,
             ),
           ],
         ),
@@ -742,7 +739,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             Column(
               children: <Widget>[
                 Text(
-                  AppLocalizations.of(context)
+                  AppLocalizations.of(widget.parentContext)
                       .translate('createtimebank', 'profile_info_title'),
                   style: TextStyle(
                       color: FlavorConfig.values.theme.primaryColor,
