@@ -682,7 +682,7 @@
     "others": "Autres"
   },
   "create_request": {
-    "sam_date_time" : "Start and end date cannot be same",
+    "sam_date_time" : "Vous avez fourni une date et une heure identiques pour le début et la fin. Veuillez indiquer une heure de fin postérieure à l'heure de début.",
     "humanity_first_create": "Crear solicitud de pandilla Yang",
     "create": "crear",
     "edit": "Modifier la demande",

@@ -682,7 +682,7 @@
     "others": "Outros"
   },
   "create_request": {
-    "sam_date_time" : "Start and end date cannot be same",
+    "sam_date_time" : "Ha proporcionado una fecha y hora idénticas para el inicio y el final. Proporcione una hora de finalización posterior a la hora de inicio.",
     "humanity_first_create": "Criar solicitação de gangue Yang",
     "create": "Crio",
     "edit": "Editar solicitação",
