@@ -673,16 +673,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       await _updateProjectModel();
       Navigator.pop(dialogContext);
 
-
       if (widget.isOfferRequest == true && widget.userModel != null) {
         Navigator.pop(context, {'response': 'ACCEPTED'});
       } else {
-        if(resVar==0){
+        if (resVar == 0) {
           showInsufficientBalance();
         }
         Navigator.pop(context);
       }
-
     }
   }
 
@@ -720,7 +718,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     fontSize: 16,
                   ),
                 ),
-                onPressed: () async{
+                onPressed: () async {
                   Navigator.of(viewContext).pop();
                 },
               ),
@@ -857,12 +855,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
         requestModel.id,
         requestModel.timebankId);
-    if(!requestModel.isRecurring){
+    if (!requestModel.isRecurring) {
       await FirestoreManager.createRequest(requestModel: requestModel);
     }
     int resultVar = 1;
     if (requestModel.isRecurring) {
-      resultVar = await FirestoreManager.createRecurringEvents(requestModel: requestModel);
+      resultVar = await FirestoreManager.createRecurringEvents(
+          requestModel: requestModel);
       return resultVar;
     }
     return resultVar;
@@ -935,7 +934,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 }
 
-Widget TotalCredits(context, requestModel, int starttimestamp, int endtimestamp) {
+Widget TotalCredits(
+    context, requestModel, int starttimestamp, int endtimestamp) {
   var label;
   var totalhours = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
       .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
@@ -955,14 +955,18 @@ Widget TotalCredits(context, requestModel, int starttimestamp, int endtimestamp)
   if (totalallowedhours > 0 && totalCredits > 0) {
     if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
       label = totalCredits.toString() +
-          AppLocalizations.of(context).translate('create_request', 'request_total_credits_timebank') +
+          AppLocalizations.of(context)
+              .translate('create_request', 'request_total_credits_timebank') +
           totalallowedhours.toString() +
-          AppLocalizations.of(context).translate('create_request', 'request_total_credits_timebank_add');
+          AppLocalizations.of(context).translate(
+              'create_request', 'request_total_credits_timebank_add');
     } else {
       label = totalCredits.toString() +
-          AppLocalizations.of(context).translate('create_request', 'request_total_credits_personal') +
+          AppLocalizations.of(context)
+              .translate('create_request', 'request_total_credits_personal') +
           totalallowedhours.toString() +
-          AppLocalizations.of(context).translate('create_request', 'request_total_credits_personal_add');
+          AppLocalizations.of(context).translate(
+              'create_request', 'request_total_credits_personal_add');
     }
   } else {
     label = "";
