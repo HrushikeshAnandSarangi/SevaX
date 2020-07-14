@@ -284,7 +284,7 @@ Future<void> updateRecurrenceRequestsFrontEnd({
       if(projectData!=null){
         projectData.pendingRequests.remove(upcomingEvent.id);
       }
-      oldCredits = oldCredits + (upcomingEvent.numberOfHours * upcomingEvent.numberOfApprovals);
+      oldCredits = oldCredits + (upcomingEvent.numberOfHours);
       batch.delete(db.collection("requests").document(upcomingEvent.id)); // delete old upcoming recurrence-events
     });
   }
