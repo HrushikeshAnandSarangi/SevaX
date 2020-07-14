@@ -472,7 +472,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           textCapitalization: TextCapitalization.sentences,
-          textInputAction: TextInputAction.done,
+          textInputAction: TextInputAction.next,
           onFieldSubmitted: (input) {
             // FocusScope.of(bc).requestFocus(focusNodes[0]);
             FocusScope.of(bc).unfocus();
@@ -500,7 +500,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           textCapitalization: TextCapitalization.sentences,
-          textInputAction: TextInputAction.done,
+          textInputAction: TextInputAction.next,
           onFieldSubmitted: (input) {
             // FocusScope.of(bc).requestFocus(focusNodes[1]);
             FocusScope.of(bc).unfocus();
@@ -526,7 +526,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
-          textInputAction: TextInputAction.done,
+          textInputAction: TextInputAction.next,
           onFieldSubmitted: (input) {
             // FocusScope.of(bc).requestFocus(focusNodes[3]);
             FocusScope.of(bc).unfocus();
@@ -589,7 +589,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                 : null;
           },
           focusNode: focusNodes[4],
-          textInputAction: TextInputAction.done,
+          textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
               fieldTitle: AppLocalizations.of(widget.parentContext)
                   .translate('createtimebank', 'street_add1')),
@@ -610,7 +610,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
               communityModel.billing_address.street_address2 = value;
             },
             focusNode: focusNodes[5],
-            textInputAction: TextInputAction.done,
+            textInputAction: TextInputAction.next,
             decoration: getInputDecoration(
               fieldTitle: AppLocalizations.of(widget.parentContext)
                   .translate('createtimebank', 'street_add2'),
@@ -623,7 +623,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           textCapitalization: TextCapitalization.sentences,
-          textInputAction: TextInputAction.done,
+          textInputAction: TextInputAction.next,
           onFieldSubmitted: (input) {
             // FocusScope.of(bc).requestFocus(focusNodes[2]);
             FocusScope.of(bc).unfocus();
@@ -663,7 +663,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           //   return value.isEmpty ? 'Field cannot be left blank*' : null;
           // },
           focusNode: focusNodes[6],
-          textInputAction: TextInputAction.done,
+          textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: AppLocalizations.of(widget.parentContext)
                 .translate('createtimebank', 'company_name'),
