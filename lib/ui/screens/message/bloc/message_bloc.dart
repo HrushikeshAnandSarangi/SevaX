@@ -116,7 +116,6 @@ class MessageBloc extends BlocBase {
     _personalMessageCount.close();
     _adminMessageCount.close();
     _frequentContacts.close();
-    ChatModelSync().dispose();
   }
 }
 
