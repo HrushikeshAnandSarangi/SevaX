@@ -657,6 +657,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                 notificationId: notificationId,
                 notificationModel: notificationsModel,
                 loggedInUser: user,
+                parentContext: context,
               );
             });
       },

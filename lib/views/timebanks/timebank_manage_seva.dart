@@ -504,13 +504,22 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           getTitle,
+
           SizedBox(
-            height: 30,
+            height: 20,
           ),
           viewRequests(context: context),
           SizedBox(
             height: 20,
           ),
+          widget.timebankModel.creatorId ==
+                  SevaCore.of(context).loggedInUser.sevaUserID
+              ? changeOwnerShip
+              : Container(),
+          SizedBox(
+            height: 20,
+          ),
+
           viewReportedMembers(context: context),
           SizedBox(
             height: 20,
@@ -520,13 +529,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                   SevaCore.of(context).loggedInUser.sevaUserID
               ? deleteTimebank
               : Container(),
-          SizedBox(
-            height: 20,
-          ),
-          widget.timebankModel.creatorId ==
-                  SevaCore.of(context).loggedInUser.sevaUserID
-              ? changeOwnerShip
-              : Container(),
+
           // viewAcceptedOffers(context: context),
           // manageTimebankCodes(context: context),
 //          billingView(context: context),
