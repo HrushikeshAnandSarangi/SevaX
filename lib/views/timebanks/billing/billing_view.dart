@@ -377,7 +377,7 @@ class BillingViewState extends State<BillingView> {
     // flutter defined function
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext _context) {
         // return object of type Dialog
         return AlertDialog(
           title: new Text(AppLocalizations.of(context)
@@ -388,9 +388,9 @@ class BillingViewState extends State<BillingView> {
             // usually buttons at the bottom of the dialog
             new FlatButton(
               child: new Text(
-                  AppLocalizations.of(context).translate('shared', 'close')),
+                  AppLocalizations.of(context).translate('help', 'close')),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(_context).pop();
               },
             ),
           ],
