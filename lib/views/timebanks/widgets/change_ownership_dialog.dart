@@ -124,7 +124,11 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                changeOwnershipModel.message ?? "Description not yet updated",
+                AppLocalizations.of(context)
+                        .translate('change_ownership', 'change_message') +
+                    changeOwnershipModel.timebank +
+                    AppLocalizations.of(context)
+                        .translate('change_ownership', 'change_message_two'),
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
@@ -719,6 +723,9 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             _companyNameWidget(),
             _additionalNotesWidget(),
             _continueBtn(),
+            SizedBox(
+              height: 200,
+            ),
           ],
         ),
       ),
