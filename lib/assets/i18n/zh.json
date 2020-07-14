@@ -677,7 +677,7 @@
     "others": "其他"
   },
   "create_request": {
-    "sam_date_time" : "Start and end date cannot be same",
+    "sam_date_time" : "您已為開始和結束提供了相同的日期和時間。請提供一個比開始時間晚的結束時間。",
     "humanity_first_create": "创建humanity_first请求",
     "create": "创建请求",
     "edit": "编辑请求",

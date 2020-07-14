@@ -681,7 +681,7 @@
     "others": "Otros"
   },
   "create_request": {
-    "sam_date_time" : "Start and end date cannot be same",
+    "sam_date_time" : "Você forneceu data e hora idênticas para o início e o fim. Forneça um horário de término posterior ao horário de início.",
     "humanity_first_create": "Criar solicitações da gang de Yang",
     "create": "criar",
     "edit": "Editar solicitações",
