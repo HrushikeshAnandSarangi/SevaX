@@ -19,12 +19,14 @@ class ChangeOwnershipDialog extends StatefulWidget {
   final String notificationId;
   final NotificationsModel notificationModel;
   final UserModel loggedInUser;
+  final BuildContext parentContext;
   ChangeOwnershipDialog({
     this.changeOwnershipModel,
     this.timeBankId,
     this.notificationId,
     this.notificationModel,
     this.loggedInUser,
+    this.parentContext,
   });
 
   @override
@@ -97,7 +99,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                AppLocalizations.of(context)
+                AppLocalizations.of(widget.parentContext)
                     .translate('change_ownership', 'change_ownership_title'),
                 style: TextStyle(
                   fontSize: 18,
@@ -130,7 +132,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             ),
             Center(
               child: Text(
-                  AppLocalizations.of(context)
+                  AppLocalizations.of(widget.parentContext)
                       .translate('change_ownership', 'change_alert'),
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
@@ -148,14 +150,15 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                   child: RaisedButton(
                     color: FlavorConfig.values.theme.primaryColor,
                     child: Text(
-                      AppLocalizations.of(context)
+                      AppLocalizations.of(widget.parentContext)
                           .translate('change_ownership', 'accept'),
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
                       //Once approved
-                      getAdvisoryDialog(context, changeOwnershipModel.timebank);
+                      getAdvisoryDialog(
+                          widget.parentContext, changeOwnershipModel.timebank);
 
                       // showProgressDialog(context, 'Accepting Invitation');
 //                      approveInvitation(
@@ -179,7 +182,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                   child: RaisedButton(
                     color: Theme.of(context).accentColor,
                     child: Text(
-                      AppLocalizations.of(context)
+                      AppLocalizations.of(widget.parentContext)
                           .translate('notifications', 'decline'),
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
@@ -306,10 +309,10 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              new Text(AppLocalizations.of(context)
+              new Text(AppLocalizations.of(widget.parentContext)
                       .translate('change_ownership', 'change_message') +
                   timebankName +
-                  AppLocalizations.of(context)
+                  AppLocalizations.of(widget.parentContext)
                       .translate('change_ownership', 'change_advisory')),
               SizedBox(height: 15),
               Row(
@@ -317,7 +320,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                   Spacer(),
                   FlatButton(
                     child: new Text(
-                        AppLocalizations.of(context)
+                        AppLocalizations.of(widget.parentContext)
                             .translate('shared', 'cancel'),
                         style: TextStyle(
                             fontSize: dialogButtonSize, color: Colors.red)),
@@ -326,10 +329,11 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                     },
                   ),
                   FlatButton(
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(mContext).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: new Text(
-                      AppLocalizations.of(context).translate('homepage', 'ok'),
+                      AppLocalizations.of(widget.parentContext)
+                          .translate('homepage', 'ok'),
                       style: TextStyle(
                         fontSize: dialogButtonSize,
                       ),
@@ -338,7 +342,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                       Navigator.of(context).pop();
 
                       _billingBottomsheet(
-                        mContext,
+                        widget.parentContext,
                       );
                     },
                   ),
@@ -446,7 +450,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
     BuildContext mcontext,
   ) {
     showModalBottomSheet(
-        context: mcontext,
+        context: widget.parentContext,
         builder: (BuildContext bc) {
           return Container(
             child: _scrollingList(
