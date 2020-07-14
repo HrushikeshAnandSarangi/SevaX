@@ -198,7 +198,7 @@
     "private_timebank": "Privado Timebank"
   },
   "billing_plans": {
-    "remote_config": "billing_plans",
+    "remote_config": "billing_plans_pt",
     "title": "Escolha um plano ",
     "info_click": "Clique aqui para mais informações",
     "choose": "Escolher",
@@ -681,7 +681,7 @@
     "others": "Otros"
   },
   "create_request": {
-    "sam_date_time" : "Start and end date cannot be same",
+    "sam_date_time" : "Você forneceu data e hora idênticas para o início e o fim. Forneça um horário de término posterior ao horário de início.",
     "humanity_first_create": "Criar solicitações da gang de Yang",
     "create": "criar",
     "edit": "Editar solicitações",
@@ -751,7 +751,11 @@
     "occurences": "Ocorrências",
     "repeat_cancel": "Cancelar",
     "repeat_done": "feito",
-    "recurringDays_err": "dias recorrentes não podem estar vazios"
+    "recurringDays_err": "dias recorrentes não podem estar vazios",
+    "request_total_credits_timebank": "Os créditos Seva serão creditados no Timebank para esta solicitação. Observe que cada participante receberá no máximo",
+    "request_total_credits_timebank_add": "créditos para concluir esta solicitação.",
+    "request_total_credits_personal": "São necessários créditos Seva para esta solicitação. Ele será debitado do seu saldo. Observe que cada participante receberá no máximo",
+    "request_total_credits_personal_add": "créditos para concluir esta solicitação."
   },
   "edit_group": {
     "add_members": "Adicionar membros",

@@ -198,7 +198,7 @@
     "private_timebank": "Privé Timebank"
   },
   "billing_plans": {
-    "remote_config": "billing_plans",
+    "remote_config": "billing_plans_fr",
     "title": "Choisissez un plan adapté",
     "info_click": "Cliquez ici pour plus d'informations",
     "choose": "Choisir",
@@ -682,7 +682,7 @@
     "others": "Autres"
   },
   "create_request": {
-    "sam_date_time" : "Start and end date cannot be same",
+    "sam_date_time" : "Vous avez fourni une date et une heure identiques pour le début et la fin. Veuillez indiquer une heure de fin postérieure à l'heure de début.",
     "humanity_first_create": "Crear solicitud de pandilla Yang",
     "create": "crear",
     "edit": "Modifier la demande",
@@ -752,7 +752,11 @@
     "occurences": "Occurrences",
     "repeat_cancel": "Annuler",
     "repeat_done": "Terminé",
-    "recurringDays_err": "les jours récurrents ne peuvent pas être vides"
+    "recurringDays_err": "les jours récurrents ne peuvent pas être vides",
+    "request_total_credits_timebank": "Les crédits Seva seront crédités à la banque de temps pour cette demande. Notez que chaque participant recevra un maximum de",
+    "request_total_credits_timebank_add": "crédits pour avoir rempli cette demande.",
+    "request_total_credits_personal": "Des crédits Seva sont requis pour cette demande. Elle sera débitée de votre solde. Notez que chaque participant recevra un maximum de",
+    "request_total_credits_personal_add": "crédits pour avoir répondu à cette demande."
   },
   "edit_group": {
     "add_members": "Añadir miembros",

@@ -198,7 +198,7 @@
     "private_timebank": "私人的 Timebank"
   },
   "billing_plans": {
-    "remote_config": "付款安排",
+    "remote_config": "billing_plans_zh",
     "title": "选择合适的付款方式",
     "info_click": "点击这里查看更多信息",
     "choose": "选择",
@@ -677,7 +677,7 @@
     "others": "其他"
   },
   "create_request": {
-    "sam_date_time" : "Start and end date cannot be same",
+    "sam_date_time" : "您已為開始和結束提供了相同的日期和時間。請提供一個比開始時間晚的結束時間。",
     "humanity_first_create": "创建humanity_first请求",
     "create": "创建请求",
     "edit": "编辑请求",
@@ -747,7 +747,11 @@
     "occurences": "发生",
     "repeat_cancel": "取消",
     "repeat_done": "完成",
-    "recurringDays_err": "重复天数不能为空"
+    "recurringDays_err": "重复天数不能为空",
+    "request_total_credits_timebank":"对于此请求，Seva积分将记入时间银行。请注意，每个参与者最多将获得",
+    "request_total_credits_timebank_add":"完成此请求所获得的积分。",
+    "request_total_credits_personal":"此请求需要Seva点数。将从您的余额中扣除。请注意，每个参与者最多可以收到",
+    "request_total_credits_personal_add": "用于完成此请求的积分"
   },
   "edit_group": {
     "add_members": "添加成员",

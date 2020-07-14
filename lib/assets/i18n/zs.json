@@ -196,7 +196,7 @@
     "updating_details": "更新细节"
   },
   "billing_plans": {
-    "remote_config": "付款安排",
+    "remote_config": "billing_plans_zs",
     "title": "选择合适的付款方式",
     "info_click": "点击这里查看更多信息",
     "choose": "选择",
@@ -649,7 +649,7 @@
     "others": "其他"
   },
   "create_request": {
-    "sam_date_time" : "Start and end date cannot be same",
+    "sam_date_time" : "您已为开始和结束提供了相同的日期和时间。请提供一个比开始时间晚的结束时间。",
     "humanity_first_create": "创建humanity_first请求",
     "create": "创建请求",
     "edit": "编辑请求",
