@@ -318,6 +318,8 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   }
 
   Widget getUserWidget(UserModel user, BuildContext context) {
+    print("${widget.selectionMode} ---------- ");
+
     return GestureDetector(
       onTap: () async {
         switch (widget.selectionMode) {

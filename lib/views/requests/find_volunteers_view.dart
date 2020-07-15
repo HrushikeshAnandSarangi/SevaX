@@ -125,7 +125,8 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
                   enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white),
                       borderRadius: new BorderRadius.circular(15.7)),
-                  hintText: AppLocalizations.of(context).translate('requests','type_team_member_name'),
+                  hintText: AppLocalizations.of(context)
+                      .translate('requests', 'type_team_member_name'),
                   hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
             ),
           ),
@@ -218,19 +219,19 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
     if (widget.controller.text.trim().isEmpty) {
       return Center(
         child: ClipOval(
-          child: FadeInImage.assetNetwork(
-              placeholder: 'lib/assets/images/search.png',
-              image: 'lib/assets/images/search.png'),
+          child: ClipOval(
+            child: Image.asset('lib/assets/images/search.png'),
+          ),
         ),
       );
     } else if (widget.controller.text.trim().length < 3) {
-      return getEmptyWidget('Users', AppLocalizations.of(context).translate('requests','min_search_err'));
+      return getEmptyWidget('Users',
+          AppLocalizations.of(context).translate('requests', 'min_search_err'));
     }
     return StreamBuilder<List<UserModel>>(
       stream: SearchManager.searchForUserWithTimebankId(
           queryString: widget.controller.text, validItems: widget.validItems),
       builder: (context, snapshot) {
-
         if (snapshot.hasError) {
           Text(snapshot.error.toString());
         }
@@ -248,7 +249,8 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
 
         if (userList.length == 0) {
-          return getEmptyWidget('Users', AppLocalizations.of(context).translate('requests','no_users'));
+          return getEmptyWidget('Users',
+              AppLocalizations.of(context).translate('requests', 'no_users'));
         }
         return ListView.builder(
           itemCount: userList.length,
@@ -270,11 +272,10 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
                   ? timeBankIds.contains(requestModel.timebankId)
                   : memberId.contains(widget.sevaUserId),
               reqStatus: getRequestUserStatus(
-                requestModel: requestModel,
-                userId: user.sevaUserID,
-                email: user.email,
-                context: context
-              ),
+                  requestModel: requestModel,
+                  userId: user.sevaUserID,
+                  email: user.email,
+                  context: context),
             );
           },
         );
@@ -290,7 +291,9 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         .listen((reqModel) {
       requestModel = RequestModel.fromMap(reqModel.data);
       try {
-        setState(() {buildWidget();});
+        setState(() {
+          buildWidget();
+        });
       } on Exception {}
     });
   }

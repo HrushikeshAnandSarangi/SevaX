@@ -1078,7 +1078,6 @@ class DiscussionListState extends State<DiscussionList> {
                               // );
 
                               // SHARE ICON ON TAP
-
                               if (SevaCore.of(context)
                                       .loggedInUser
                                       .associatedWithTimebanks >
@@ -1100,10 +1099,10 @@ class DiscussionListState extends State<DiscussionList> {
                                       timebankId: SevaCore.of(context)
                                           .loggedInUser
                                           .currentTimebank,
-                                      newsModel: NewsModel(),
-                                      isFromShare: false,
+                                      newsModel: news,
+                                      isFromShare: true,
                                       selectionMode:
-                                          MEMBER_SELECTION_MODE.NEW_CHAT,
+                                          MEMBER_SELECTION_MODE.SHARE_FEED,
                                       userSelected: HashMap(),
                                     ),
                                   ),

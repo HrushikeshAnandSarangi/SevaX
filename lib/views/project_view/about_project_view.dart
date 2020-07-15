@@ -192,7 +192,10 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                       )
                     ],
                   ),
-                  deleteProject,
+                  projectModel.creatorId ==
+                          SevaCore.of(context).loggedInUser.sevaUserID
+                      ? deleteProject
+                      : Container(),
                 ],
               ),
             )
