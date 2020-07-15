@@ -25,8 +25,6 @@ Future<void> fetchRemoteConfig() async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await FlutterDownloader.initialize();
-
   FlavorConfig.appFlavor = Flavor.APP;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   _firebaseMessaging.requestNotificationPermissions(
