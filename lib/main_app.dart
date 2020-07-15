@@ -75,7 +75,7 @@ Future<void> main() async {
     (_) {
       Crashlytics.instance.enableInDevMode = true;
       FlutterError.onError = Crashlytics.instance.recordFlutterError;
-      runApp(MainApplication(appLanguage: appLanguage));
+      runApp(MainApplication());
       // runZoned(() {
 
       // }, onError: Crashlytics.instance.recordError);
@@ -85,9 +85,8 @@ Future<void> main() async {
 
 class MainApplication extends StatelessWidget {
   final bool skipToHomePage;
-  final AppLanguage appLanguage;
-  MainApplication({Key key, this.skipToHomePage = false, this.appLanguage})
-      : super(key: key);
+  final AppLanguage appLanguage = AppLanguage()..fetchLocale();
+  MainApplication({Key key, this.skipToHomePage = false}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppLanguage>(
