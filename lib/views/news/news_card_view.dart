@@ -132,8 +132,13 @@ class NewsCardViewState extends State<NewsCardView> {
           child: Wrap(
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
+<<<<<<< HEAD
             children: widget.newsModel.hashTags.map((hash) {
               // final _random = new Random();
+=======
+            children: newsModel.hashTags.map((hash) {
+              // final _random = Random();
+>>>>>>> 372dd456672108f1c7d90dbe7cb62abcbef315c0
               // var element = colorList[_random.nextInt(colorList.length)];
               return chip(hash, false);
             }).toList(),
@@ -209,8 +214,13 @@ class NewsCardViewState extends State<NewsCardView> {
           child: Wrap(
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
+<<<<<<< HEAD
             children: widget.newsModel.urlsFromPost.map((link) {
               // final _random = new Random();
+=======
+            children: newsModel.urlsFromPost.map((link) {
+              // final _random = Random();
+>>>>>>> 372dd456672108f1c7d90dbe7cb62abcbef315c0
               // var element = colorList[_random.nextInt(colorList.length)];
               return chipForLinks(link, false);
             }).toList(),
@@ -434,7 +444,7 @@ class NewsCardViewState extends State<NewsCardView> {
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);
     String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = new File('$dir/$filename');
+    File file = File('$dir/$filename');
     await file.writeAsBytes(bytes);
     return file;
   }

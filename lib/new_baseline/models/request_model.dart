@@ -35,7 +35,7 @@
 //    this.transactionModel,
 //  });
 //
-//  factory RequestModel.fromMap(Map<String, dynamic> json) => new RequestModel(
+//  factory RequestModel.fromMap(Map<String, dynamic> json) =>   RequestModel(
 //        id: json["id"] == null ? null : json["id"],
 //        title: json["title"] == null ? null : json["title"],
 //        description: json["description"] == null ? null : json["description"],
@@ -50,17 +50,17 @@
 //        projectId: json["project_id"] == null ? null : json["project_id"],
 //        acceptors: json["acceptors"] == null
 //            ? null
-//            : new List<String>.from(json["acceptors"].map((x) => x)),
+//            :   List<String>.from(json["acceptors"].map((x) => x)),
 //        numberOfVolunteers: json["number_of_volunteers"] == null
 //            ? null
 //            : json["number_of_volunteers"],
 //        approvedUsers: json["approved_users"] == null
 //            ? null
-//            : new List<String>.from(json["approved_users"].map((x) => x)),
+//            :   List<String>.from(json["approved_users"].map((x) => x)),
 //        isAccepted: json["is_accepted"] == null ? null : json["is_accepted"],
 //        transactionModel: json["transaction_model"] == null
 //            ? null
-//            : new List<TransactionModel>.from(json["transaction_model"].map((x) => TransactionModel.fromMap(x))),
+//            :   List<TransactionModel>.from(json["transaction_model"].map((x) => TransactionModel.fromMap(x))),
 //      );
 //
 //  Map<String, dynamic> toMap() => {
@@ -77,16 +77,16 @@
 //        "project_id": projectId == null ? null : projectId,
 //        "acceptors": acceptors == null
 //            ? null
-//            : new List<dynamic>.from(acceptors.map((x) => x)),
+//            :   List<dynamic>.from(acceptors.map((x) => x)),
 //        "number_of_volunteers":
 //            numberOfVolunteers == null ? null : numberOfVolunteers,
 //        "approved_users": approvedUsers == null
 //            ? null
-//            : new List<dynamic>.from(approvedUsers.map((x) => x)),
+//            :   List<dynamic>.from(approvedUsers.map((x) => x)),
 //        "is_accepted": isAccepted == null ? null : isAccepted,
 //        "transaction_model": transactionModel == null
 //            ? null
-//            : new List<dynamic>.from(transactionModel.map((x) => x.toMap())),
+//            :   List<dynamic>.from(transactionModel.map((x) => x.toMap())),
 //      };
 //}
 //
@@ -108,7 +108,7 @@
 //  });
 //
 //  factory TransactionModel.fromMap(Map<String, dynamic> json) =>
-//      new TransactionModel(
+//        TransactionModel(
 //        id: json["id"] == null ? null : json["id"],
 //        fromUserId: json["from_user_id"] == null ? null : json["from_user_id"],
 //        toUserId: json["to_user_id"] == null ? null : json["to_user_id"],

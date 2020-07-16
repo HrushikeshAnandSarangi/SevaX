@@ -16,20 +16,20 @@ class ImagePickerDialog extends StatelessWidget {
   Animation<Offset> _drawerDetailsPosition;
 
   void initState() {
-    _drawerContentsOpacity = new CurvedAnimation(
-      parent: new ReverseAnimation(_controller),
+    _drawerContentsOpacity = CurvedAnimation(
+      parent: ReverseAnimation(_controller),
       curve: Curves.fastOutSlowIn,
     );
-    _drawerDetailsPosition = new Tween<Offset>(
+    _drawerDetailsPosition = Tween<Offset>(
       begin: const Offset(0.0, 1.0),
       end: Offset.zero,
-    ).animate(new CurvedAnimation(
+    ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.fastOutSlowIn,
     ));
   }
 
-  getImage(BuildContext context) {
+  void getImage(BuildContext context) {
     this.context = context;
     if (_controller == null ||
         _drawerDetailsPosition == null ||
@@ -39,10 +39,10 @@ class ImagePickerDialog extends StatelessWidget {
     _controller.forward();
     showDialog(
       context: context,
-      builder: (BuildContext context) => new SlideTransition(
+      builder: (BuildContext context) => SlideTransition(
         position: _drawerDetailsPosition,
-        child: new FadeTransition(
-          opacity: new ReverseAnimation(_drawerContentsOpacity),
+        child: FadeTransition(
+          opacity: ReverseAnimation(_drawerContentsOpacity),
           child: this,
         ),
       ),
@@ -53,37 +53,36 @@ class ImagePickerDialog extends StatelessWidget {
     _controller.dispose();
   }
 
-  startTime() async {
-    var _duration = new Duration(milliseconds: 200);
-    return new Timer(_duration, navigationPage);
+  Future<Timer> startTime() async {
+    var _duration = Duration(milliseconds: 200);
+    return Timer(_duration, navigationPage);
   }
 
   void navigationPage() {
     Navigator.pop(dialogContext);
   }
 
-  dismissDialog() {
+  void dismissDialog() {
     _controller.reverse();
     startTime();
   }
 
-
-BuildContext dialogContext;
+  BuildContext dialogContext;
   @override
   Widget build(BuildContext _context) {
-   //context; 
-   this.dialogContext = _context;
-    return new Material(
+    //context;
+    this.dialogContext = _context;
+    return Material(
         type: MaterialType.transparency,
-        child: new Opacity(
+        child: Opacity(
           opacity: 1.0,
-          child: new Container(
+          child: Container(
             padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 20.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                new GestureDetector(
+                GestureDetector(
                   onTap: () => _listener.openCamera(),
                   child: roundedButton(
                       AppLocalizations.of(context)
@@ -92,7 +91,7 @@ BuildContext dialogContext;
                       const Color(0xFF673AB7),
                       const Color(0xFFFFFFFF)),
                 ),
-                new GestureDetector(
+                GestureDetector(
                   onTap: () => _listener.openGallery(),
                   child: roundedButton(
                       AppLocalizations.of(context)
@@ -102,9 +101,9 @@ BuildContext dialogContext;
                       const Color(0xFFFFFFFF)),
                 ),
                 const SizedBox(height: 15.0),
-                new GestureDetector(
+                GestureDetector(
                   onTap: () => dismissDialog(),
-                  child: new Padding(
+                  child: Padding(
                     padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
                     child: roundedButton(
                         AppLocalizations.of(context)
@@ -122,17 +121,17 @@ BuildContext dialogContext;
 
   Widget roundedButton(
       String buttonLabel, EdgeInsets margin, Color bgColor, Color textColor) {
-    var loginBtn = new Container(
+    var loginBtn = Container(
       margin: margin,
       padding: EdgeInsets.all(15.0),
       alignment: FractionalOffset.center,
-      decoration: new BoxDecoration(
+      decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: new BorderRadius.all(const Radius.circular(10.0)),
+        borderRadius: BorderRadius.all(const Radius.circular(10.0)),
       ),
       child: Text(
         buttonLabel,
-        style: new TextStyle(
+        style: TextStyle(
             color: textColor, fontSize: 15.0, fontWeight: FontWeight.w500),
       ),
     );

@@ -23,7 +23,7 @@ class JoinRequestViewState extends State<JoinRequestView>
 
   @override
   void initState() {
-    _tabController = new TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
 
@@ -78,7 +78,7 @@ class TimebankRequests extends StatelessWidget {
         stream: getTimebankJoinRequest(timebankID: timebankId),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return new Text('Error: ${snapshot.error}');
+            return Text('Error: ${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -98,7 +98,7 @@ class TimebankRequests extends StatelessWidget {
                     future: getTimeBankForId(timebankId: model.entityId),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
-                        return new Text('Error: ${snapshot.error}');
+                        return Text('Error: ${snapshot.error}');
                       }
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
@@ -112,7 +112,7 @@ class TimebankRequests extends StatelessWidget {
                             future: getUserForId(sevaUserId: model.userId),
                             builder: (context, snapshot) {
                               if (snapshot.hasError) {
-                                return new Text('Error: ${snapshot.error}');
+                                return Text('Error: ${snapshot.error}');
                               }
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {

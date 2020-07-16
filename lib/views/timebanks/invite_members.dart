@@ -47,8 +47,7 @@ class InviteAddMembers extends StatefulWidget {
 
 class InviteAddMembersState extends State<InviteAddMembers> {
   TimebankCodeModel codeModel = TimebankCodeModel();
-  final TextEditingController searchTextController =
-      new TextEditingController();
+  final TextEditingController searchTextController = TextEditingController();
   Future<TimebankModel> getTimebankDetails;
   TimebankModel timebankModel;
   final _firestore = Firestore.instance;
@@ -220,12 +219,12 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                 filled: true,
                 fillColor: Colors.grey[300],
                 focusedBorder: OutlineInputBorder(
-                  borderSide: new BorderSide(color: Colors.white),
-                  borderRadius: new BorderRadius.circular(25.7),
+                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(25.7),
                 ),
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
-                    borderRadius: new BorderRadius.circular(25.7)),
+                    borderRadius: BorderRadius.circular(25.7)),
                 hintText: AppLocalizations.of(context)
                     .translate('members', 'invite_via_email'),
                 hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
@@ -609,21 +608,21 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     }
   }
 
-  getAlertDialog(BuildContext context) {
-    return showDialog(
+  void getAlertDialog(BuildContext context) {
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
           title: Text(AppLocalizations.of(context)
               .translate('create_feed', 'size_alert_title')),
-          content: new Text(AppLocalizations.of(context)
+          content: Text(AppLocalizations.of(context)
               .translate('upload_csv', 'csv_file_alert')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(
-                  AppLocalizations.of(context).translate('help', 'close')),
+            FlatButton(
+              child:
+                  Text(AppLocalizations.of(context).translate('help', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -1114,7 +1113,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         return AlertDialog(
           title: Text(AppLocalizations.of(context)
               .translate('members', 'code_generated')),
-          content: new Row(
+          content: Row(
             children: <Widget>[
               Text(timebankCode +
                   " " +
@@ -1134,9 +1133,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                 ),
               ),
               onPressed: () {
-                var today = new DateTime.now();
+                var today = DateTime.now();
                 var oneDayFromToday =
-                    today.add(new Duration(days: 30)).millisecondsSinceEpoch;
+                    today.add(Duration(days: 30)).millisecondsSinceEpoch;
                 registerTimebankCode(
                   timebankCode: timebankCode,
                   timebankId: widget.timebankId,

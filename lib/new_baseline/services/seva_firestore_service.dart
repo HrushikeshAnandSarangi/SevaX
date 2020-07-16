@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../models/news_model.dart';
 
 final CollectionReference newsCollection =
     Firestore.instance.collection('news');
 
 class SevaFirestoreService {
-  static final SevaFirestoreService _instance =
-      new SevaFirestoreService.internal();
+  static final SevaFirestoreService _instance = SevaFirestoreService.internal();
 
   factory SevaFirestoreService() => _instance;
 

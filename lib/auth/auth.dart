@@ -59,7 +59,7 @@ class Auth {
         case AuthorizationStatus.authorized:
           final AppleIdCredential _auth = result.credential;
           final OAuthProvider oAuthProvider =
-              new OAuthProvider(providerId: "apple.com");
+              OAuthProvider(providerId: "apple.com");
           final AuthCredential credential = oAuthProvider.getCredential(
             idToken: String.fromCharCodes(_auth.identityToken),
             accessToken: String.fromCharCodes(_auth.authorizationCode),
@@ -75,8 +75,7 @@ class Auth {
         default:
           break;
       }
-    } else {
-    }
+    } else {}
   }
 
   /// SignIn a User with his [email] and [password]
@@ -111,8 +110,7 @@ class Auth {
       );
       return _processEmailPasswordUser(result.user, displayName);
     } on PlatformException catch (error) {
-      if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-      }
+      if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {}
       throw error;
     } catch (error) {
       log('createUserWithEmailAndPassword: error: ${error.toString()}');

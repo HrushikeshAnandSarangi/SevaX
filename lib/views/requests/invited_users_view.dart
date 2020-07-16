@@ -154,7 +154,8 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
         //print("length ${userList.length}");
 
         if (userList.length == 0) {
-          return getEmptyWidget('Users', AppLocalizations.of(context).translate('requests','no_users'));
+          return getEmptyWidget('Users',
+              AppLocalizations.of(context).translate('requests', 'no_users'));
         }
 
         return ListView.builder(
@@ -177,7 +178,8 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
                 isFavorite: isAdmin
                     ? timeBankIds.contains(widget.timebankId)
                     : memberId.contains(widget.sevaUserId),
-                reqStatus: AppLocalizations.of(context).translate('requests','invited'),
+                reqStatus: AppLocalizations.of(context)
+                    .translate('requests', 'invited'),
               );
             });
         //return
@@ -204,7 +206,7 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
     );
   }
 
-  refresh() {
+  void refresh() {
     setState(() {
       timeBankBloc.setInvitedUsersData(widget.requestModel.id);
 
@@ -251,15 +253,15 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
       child: Container(
         height: 200,
         width: 500,
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.rectangle,
-          borderRadius: new BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(8.0),
           boxShadow: <BoxShadow>[
             new BoxShadow(
               color: Colors.black12,
               blurRadius: 10.0,
-              offset: new Offset(0.0, 10.0),
+              offset: Offset(0.0, 10.0),
             ),
           ],
         ),

@@ -23,7 +23,7 @@ class ViewRequestStatusState extends State<ViewRequestStatus>
 
   @override
   void initState() {
-    _tabController = new TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
 
@@ -95,7 +95,7 @@ class TimebankRequestsState extends State<TimebankRequests> {
         future: Future.wait(futures),
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasError) {
-            return new Text('Error: ${snapshot.error}');
+            return Text('Error: ${snapshot.error}');
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -126,7 +126,8 @@ class TimebankRequestsState extends State<TimebankRequests> {
                   child: ListTile(
                     title: Text(userModel.fullname),
                     leading: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
+                      backgroundImage: NetworkImage(
+                          userModel.photoURL ?? defaultUserImageURL),
                     ),
                     subtitle: Text(
                       'Pending approval',
@@ -177,7 +178,8 @@ class TimebankRequestsState extends State<TimebankRequests> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
+                      backgroundImage: NetworkImage(
+                          userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(
@@ -477,7 +479,7 @@ class ApprovedMembers extends StatelessWidget {
         future: Future.wait(futures),
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasError) {
-            return new Text('Error: ${snapshot.error}');
+            return Text('Error: ${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -507,7 +509,8 @@ class ApprovedMembers extends StatelessWidget {
                   child: ListTile(
                     title: Text(userModel.fullname),
                     leading: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
+                      backgroundImage: NetworkImage(
+                          userModel.photoURL ?? defaultUserImageURL),
                     ),
                     subtitle: Text(
                       'Approved Member',
@@ -547,7 +550,8 @@ class ApprovedMembers extends StatelessWidget {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL ?? defaultUserImageURL),
+                      backgroundImage: NetworkImage(
+                          userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(

@@ -11,7 +11,7 @@ import '../../flavor_config.dart';
 
 @deprecated
 
-///use interests view new ////
+///use interests view ////
 class EditSkills extends StatefulWidget {
   @override
   _EditSkillsState createState() => _EditSkillsState();
@@ -175,7 +175,7 @@ class _EditSkillsState extends State<EditSkills> {
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: selectedSkills.map((skill) {
-            final _random = new Random();
+            final _random = Random();
             var element = colorList[_random.nextInt(colorList.length)];
             return chip(skill, false, element);
           }).toList(),

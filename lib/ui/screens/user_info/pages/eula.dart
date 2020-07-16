@@ -36,7 +36,7 @@ class EulaAgreementState extends State<EulaPage> {
               _signOut(context);
             },
           ),
-          title: new Text(
+          title: Text(
             'EULA Agreement',
             style: TextStyle(
               fontSize: 18,

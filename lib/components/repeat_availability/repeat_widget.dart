@@ -13,7 +13,15 @@ class RepeatWidget extends StatefulWidget {
 
 class RepeatWidgetState extends State<RepeatWidget> {
   List<String> dayNameList = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-  List<String> daysName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  List<String> daysName = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday'
+  ];
   List<String> occurenccesList = [
     '1',
     '2',
@@ -35,7 +43,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
     super.initState();
     _selected = List.generate(dayNameList.length, (i) => false);
 //    _selected[1] = true;
-//    recurringDays = new List(7);
+//    recurringDays =  List(7);
   }
 
   static bool isRecurring = false;
@@ -53,7 +61,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
     });
   }
 
-  static getRecurringdays() {
+  static List<int> getRecurringdays() {
     var x = 0;
     recurringDays.clear();
     for (var i = 0; i < _selected.length; i++) {
@@ -76,14 +84,15 @@ class RepeatWidgetState extends State<RepeatWidget> {
       }
       titleCheck = !viewVisible;
       String days = "";
-      for(int i=0;i<7;i++){
-        if(_selected[i]){
-          days = days+" "+daysName[i];
+      for (int i = 0; i < 7; i++) {
+        if (_selected[i]) {
+          days = days + " " + daysName[i];
         }
       }
       selectedDays = days.trim();
     });
   }
+
   void _cancelOnAfter() {
     setState(() {
       if (viewVisible) {
@@ -96,10 +105,10 @@ class RepeatWidgetState extends State<RepeatWidget> {
   }
 
   static DateTime selectedDate = DateTime.now();
-  DateFormat dateFormat = new DateFormat.yMMMd();
+  DateFormat dateFormat = DateFormat.yMMMd();
 
-//  var now = new DateTime.now();
-//  var formatter = new DateFormat('yyyy-MM-dd');
+//  var now =  DateTime.now();
+//  var formatter =  DateFormat('yyyy-MM-dd');
 //  String formatted = formatter.format(now);
 
 //  Future<Null> _selectDate(BuildContext context) async {
@@ -120,21 +129,19 @@ class RepeatWidgetState extends State<RepeatWidget> {
         initialDate: selectedDate,
         firstDate: DateTime(2015, 1),
         lastDate: DateTime(2101),
-        builder: (BuildContext context, Widget child){
+        builder: (BuildContext context, Widget child) {
           return Theme(
             data: ThemeData.light().copyWith(
-                primaryColor: Colors.purple,//Head background
-                accentColor: Colors.purple,//selection color
-                colorScheme: ColorScheme.light(primary: Theme.of(context).primaryColor),
-                buttonTheme: ButtonThemeData(
-                  textTheme: ButtonTextTheme.primary
-                ),
+              primaryColor: Colors.purple, //Head background
+              accentColor: Colors.purple, //selection color
+              colorScheme:
+                  ColorScheme.light(primary: Theme.of(context).primaryColor),
+              buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
               //dialogBackgroundColor: Colors.white,//Background color
             ),
             child: child,
           );
-        }
-    );
+        });
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
@@ -154,17 +161,18 @@ class RepeatWidgetState extends State<RepeatWidget> {
                 children: [
                   Checkbox(
                     value: isRecurring,
-                    onChanged: (newValue) {
+                    onChanged: (Value) {
                       setState(() {
-                        isRecurring = newValue;
+                        isRecurring = Value;
                         if (viewVisible) {
-                          viewVisible = newValue;
+                          viewVisible = Value;
                         }
-                        titleCheck = newValue;
+                        titleCheck = Value;
                       });
                     },
                   ),
-                  Text("${AppLocalizations.of(context).translate('create_request', 'repeat')}",
+                  Text(
+                      "${AppLocalizations.of(context).translate('create_request', 'repeat')}",
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -185,7 +193,8 @@ class RepeatWidgetState extends State<RepeatWidget> {
                         ),
                         child: InkWell(
                             onTap: _selectOnAfter,
-                            child: Text("Weekly on ${selectedDays==""||selectedDays==" "? "...":selectedDays }",
+                            child: Text(
+                                "Weekly on ${selectedDays == "" || selectedDays == " " ? "..." : selectedDays}",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: 14,
@@ -205,7 +214,8 @@ class RepeatWidgetState extends State<RepeatWidget> {
                       Container(
                         alignment: Alignment.topLeft,
                         padding: const EdgeInsets.fromLTRB(12.0, 8.0, 8.0, 8.0),
-                        child: Text("${AppLocalizations.of(context).translate('create_request', 'repeat_on')}",
+                        child: Text(
+                            "${AppLocalizations.of(context).translate('create_request', 'repeat_on')}",
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 16,
@@ -218,7 +228,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                           height: 45.0,
                           margin: EdgeInsets.fromLTRB(8.0, 8.0, 0.0, 0.0),
                           alignment: Alignment.center,
-                          child: new ListView.builder(
+                          child: ListView.builder(
                               shrinkWrap: true,
                               itemCount: 7,
                               scrollDirection: Axis.horizontal,
@@ -258,7 +268,8 @@ class RepeatWidgetState extends State<RepeatWidget> {
                         alignment: Alignment.topLeft,
                         padding:
                             const EdgeInsets.fromLTRB(12.0, 12.0, 8.0, 8.0),
-                        child: Text("${AppLocalizations.of(context).translate('create_request', 'ends')}",
+                        child: Text(
+                            "${AppLocalizations.of(context).translate('create_request', 'ends')}",
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 16,
@@ -274,7 +285,8 @@ class RepeatWidgetState extends State<RepeatWidget> {
                             groupValue: endType,
                             onChanged: _handleRadioValueChange,
                           ),
-                          Text("${AppLocalizations.of(context).translate('create_request', 'on')}",
+                          Text(
+                              "${AppLocalizations.of(context).translate('create_request', 'on')}",
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -293,8 +305,10 @@ class RepeatWidgetState extends State<RepeatWidget> {
                               borderRadius: BorderRadius.circular(2.0),
                               color: Colors.black12,
                             ),
-                            child: new InkWell(
-                                onTap: endType == 0 ? () async => await _selectDate(context) : null,
+                            child: InkWell(
+                                onTap: endType == 0
+                                    ? () async => await _selectDate(context)
+                                    : null,
                                 child:
                                     Text("${dateFormat.format(selectedDate)}",
                                         textAlign: TextAlign.start,
@@ -316,7 +330,8 @@ class RepeatWidgetState extends State<RepeatWidget> {
                             groupValue: endType,
                             onChanged: _handleRadioValueChange,
                           ),
-                          Text("${AppLocalizations.of(context).translate('create_request', 'after')}",
+                          Text(
+                              "${AppLocalizations.of(context).translate('create_request', 'after')}",
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -343,28 +358,36 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                 Container(
                                   child: DropdownButton(
                                     value: after,
-                                    onChanged:  endType == 1 ? (newValue) {
-                                      setState(() {
-                                        after = newValue;
-                                      });
-                                    } : null,
+                                    onChanged: endType == 1
+                                        ? (Value) {
+                                            setState(() {
+                                              after = Value;
+                                            });
+                                            });
+                                          }
+                                        : null,
                                     items: occurenccesList
                                         .map<DropdownMenuItem<String>>(
                                             (String number) {
                                       return DropdownMenuItem(
                                         value: number,
-                                        child: new Text(number, style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Europa',
-                                          color: endType == 1
-                                              ? Colors.black54
-                                              : Colors.black12,),),
+                                        child: Text(
+                                          number,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Europa',
+                                            color: endType == 1
+                                                ? Colors.black54
+                                                : Colors.black12,
+                                          ),
+                                        ),
                                       );
                                     }).toList(),
                                   ),
                                 ),
-                                Text("${AppLocalizations.of(context).translate('create_request', 'occurences')}",
+                                Text(
+                                    "${AppLocalizations.of(context).translate('create_request', 'occurences')}",
                                     textAlign: TextAlign.end,
                                     style: TextStyle(
                                       fontSize: 16,
@@ -388,7 +411,8 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                 margin: EdgeInsets.all(8.0),
                                 child: InkWell(
                                   onTap: _cancelOnAfter,
-                                  child: Text("${AppLocalizations.of(context).translate('create_request', 'repeat_cancel')}",
+                                  child: Text(
+                                      "${AppLocalizations.of(context).translate('create_request', 'repeat_cancel')}",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -400,7 +424,8 @@ class RepeatWidgetState extends State<RepeatWidget> {
                               margin: EdgeInsets.all(8.0),
                               child: InkWell(
                                 onTap: _selectOnAfter,
-                                child: Text("${AppLocalizations.of(context).translate('create_request', 'repeat_done')}",
+                                child: Text(
+                                    "${AppLocalizations.of(context).translate('create_request', 'repeat_done')}",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -422,6 +447,4 @@ class RepeatWidgetState extends State<RepeatWidget> {
       ),
     );
   }
-
-  openCalender() {}
 }

@@ -189,12 +189,12 @@ class ReportedMemberCard extends StatelessWidget {
         builder: (BuildContext context) {
           // return object of type Dialog
           return AlertDialog(
-            content: new Text(AppLocalizations.of(context)
+            content: Text(AppLocalizations.of(context)
                 .translate('reported_members', 'removed')),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
-              new FlatButton(
-                child: new Text(AppLocalizations.of(context)
+              FlatButton(
+                child: Text(AppLocalizations.of(context)
                     .translate('reported_members', 'close')),
                 textColor: Colors.red,
                 onPressed: () async {
@@ -217,9 +217,9 @@ class ReportedMemberCard extends StatelessWidget {
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              title: new Text(AppLocalizations.of(context)
+              title: Text(AppLocalizations.of(context)
                   .translate('reported_members', 'cannot_group')),
-              content: new Text(
+              content: Text(
                   "${AppLocalizations.of(context).translate('reported_members', 'userhas')} \n"
                   "${responseData['pendingProjects']['unfinishedProjects']} ${AppLocalizations.of(context).translate('reported_members', 'pending_projects')},\n"
                   "${responseData['pendingRequests']['unfinishedRequests']} ${AppLocalizations.of(context).translate('reported_members', 'pending_requests')},\n"
@@ -227,8 +227,8 @@ class ReportedMemberCard extends StatelessWidget {
                   "${AppLocalizations.of(context).translate('reported_members', 'clear_trans')} "),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
-                new FlatButton(
-                  child: new Text(AppLocalizations.of(context)
+                FlatButton(
+                  child: Text(AppLocalizations.of(context)
                       .translate('reported_members', 'close')),
                   textColor: Colors.red,
                   onPressed: () {
@@ -246,12 +246,12 @@ class ReportedMemberCard extends StatelessWidget {
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              content: new Text(AppLocalizations.of(context)
+              content: Text(AppLocalizations.of(context)
                   .translate('reported_members', 'cannot_remove')),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
-                new FlatButton(
-                  child: new Text(AppLocalizations.of(context)
+                FlatButton(
+                  child: Text(AppLocalizations.of(context)
                       .translate('reported_members', 'close')),
                   textColor: Colors.red,
                   onPressed: () {
@@ -277,12 +277,12 @@ class ReportedMemberCard extends StatelessWidget {
         builder: (BuildContext context) {
           // return object of type Dialog
           return AlertDialog(
-            content: new Text(AppLocalizations.of(context)
+            content: Text(AppLocalizations.of(context)
                 .translate('reported_members', 'remove_success')),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
-              new FlatButton(
-                child: new Text(AppLocalizations.of(context)
+              FlatButton(
+                child: Text(AppLocalizations.of(context)
                     .translate('reported_members', 'close')),
                 onPressed: () async {
                   await Firestore.instance
@@ -305,9 +305,9 @@ class ReportedMemberCard extends StatelessWidget {
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              title: new Text(AppLocalizations.of(context)
+              title: Text(AppLocalizations.of(context)
                   .translate('reported_members', 'cannot_timebank')),
-              content: new Text(
+              content: Text(
                   "${AppLocalizations.of(context).translate('reported_members', 'userhas')} \n"
                   "${responseData['pendingProjects']['unfinishedProjects']} ${AppLocalizations.of(context).translate('reported_members', 'pending_projects')},\n"
                   "${responseData['pendingRequests']['unfinishedRequests']} ${AppLocalizations.of(context).translate('reported_members', 'pending_requests')},\n"
@@ -315,8 +315,8 @@ class ReportedMemberCard extends StatelessWidget {
                   "${AppLocalizations.of(context).translate('reported_members', 'clear_trans')} "),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
-                new FlatButton(
-                  child: new Text(AppLocalizations.of(context)
+                FlatButton(
+                  child: Text(AppLocalizations.of(context)
                       .translate('reported_members', 'close')),
                   textColor: Colors.red,
                   onPressed: () {

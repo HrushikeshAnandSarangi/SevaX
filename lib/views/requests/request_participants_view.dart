@@ -149,15 +149,15 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
       child: Container(
         height: 200,
         width: 500,
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.rectangle,
-          borderRadius: new BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(8.0),
           boxShadow: <BoxShadow>[
-            new BoxShadow(
+            BoxShadow(
               color: Colors.black12,
               blurRadius: 10.0,
-              offset: new Offset(0.0, 10.0),
+              offset: Offset(0.0, 10.0),
             ),
           ],
         ),

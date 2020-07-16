@@ -31,7 +31,7 @@ class OfferModel {
     this.approvedRequests,
   });
 
-  factory OfferModel.fromMap(Map<String, dynamic> json) => new OfferModel(
+  factory OfferModel.fromMap(Map<String, dynamic> json) => OfferModel(
         id: json["id"] == null ? null : json["id"],
         title: json["title"] == null ? null : json["title"],
         description: json["description"] == null ? null : json["description"],
@@ -46,13 +46,13 @@ class OfferModel {
         projectId: json["project_id"] == null ? null : json["project_id"],
         requestId: json["request_id"] == null
             ? null
-            : new List<String>.from(json["request_id"].map((x) => x)),
+            : List<String>.from(json["request_id"].map((x) => x)),
         numberOfRequestees: json["number_of_requestees"] == null
             ? null
             : json["number_of_requestees"],
         approvedRequests: json["approved_requests"] == null
             ? null
-            : new List<String>.from(json["approved_requests"].map((x) => x)),
+            : List<String>.from(json["approved_requests"].map((x) => x)),
       );
 
   Map<String, dynamic> toMap() => {
@@ -69,11 +69,11 @@ class OfferModel {
         "project_id": projectId == null ? null : projectId,
         "request_id": requestId == null
             ? null
-            : new List<dynamic>.from(requestId.map((x) => x)),
+            : List<dynamic>.from(requestId.map((x) => x)),
         "number_of_requestees":
             numberOfRequestees == null ? null : numberOfRequestees,
         "approved_requests": approvedRequests == null
             ? null
-            : new List<dynamic>.from(approvedRequests.map((x) => x)),
+            : List<dynamic>.from(approvedRequests.map((x) => x)),
       };
 }

@@ -98,14 +98,14 @@ class TimeBankList extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Request to join"),
-          content: new Text("Do you want to join $name timebank?"),
+          title: Text("Request to join"),
+          content: Text("Do you want to join $name timebank?"),
           actions: <Widget>[
-            new FlatButton(
+            FlatButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
-              child: new Text(
+              child: Text(
                 "Join",
                 style: TextStyle(
                   fontSize: dialogButtonSize,
@@ -121,8 +121,8 @@ class TimeBankList extends StatelessWidget {
                 );
               },
             ),
-            new FlatButton(
-              child: new Text(
+            FlatButton(
+              child: Text(
                 "Close",
                 style: TextStyle(
                   fontSize: dialogButtonSize,

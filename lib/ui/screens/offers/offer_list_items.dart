@@ -28,7 +28,7 @@ class OfferListItems extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
           if (snapshot.hasError)
-            return new Text(
+            return Text(
                 '${AppLocalizations.of(context).translate('requests', 'error')}: ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
@@ -61,7 +61,7 @@ class OfferListItems extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
           if (snapshot.hasError)
-            return new Text(
+            return Text(
                 '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
@@ -159,7 +159,7 @@ class OfferListItems extends StatelessWidget {
     }
   }
 
-  _navigateToOfferDetails(OfferModel model) {
+  void _navigateToOfferDetails(OfferModel model) {
     Navigator.push(
       parentContext,
       MaterialPageRoute(
@@ -219,7 +219,7 @@ class NearOfferListItems extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
           if (snapshot.hasError)
-            return new Text(
+            return Text(
                 '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
@@ -260,7 +260,7 @@ class NearOfferListItems extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
           if (snapshot.hasError)
-            return new Text(
+            return Text(
                 '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
@@ -351,7 +351,7 @@ class NearOfferListItems extends StatelessWidget {
     );
   }
 
-  _navigateToOfferDetails(OfferModel model) {
+  void _navigateToOfferDetails(OfferModel model) {
     Navigator.push(
       parentContext,
       MaterialPageRoute(

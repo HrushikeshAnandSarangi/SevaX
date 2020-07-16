@@ -17,7 +17,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
-import 'package:sevaexchange/views/qna-module/ReviewLandingPage.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -51,7 +50,7 @@ class MyTasksList extends StatelessWidget {
             sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return new Text(
+            return Text(
                 '${AppLocalizations.of(context).translate('tasks', 'error')} ${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -337,7 +336,7 @@ class MyTasksList extends StatelessWidget {
   }
 
   String _getPostItColor(RequestModel model) {
-    final _random = new Random();
+    final _random = Random();
     int next(int min, int max) => min + _random.nextInt(max - min);
 
     switch (next(1, 4)) {
@@ -383,7 +382,7 @@ class TaskCardViewState extends State<TaskCardView> {
   String selectedHourValue;
 
   RequestModel requestModel;
-  final subject = new ReplaySubject<int>();
+  final subject = ReplaySubject<int>();
 
   @override
   void initState() {
@@ -412,7 +411,7 @@ class TaskCardViewState extends State<TaskCardView> {
       ),
       body: GestureDetector(
         onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
         },
         child: SingleChildScrollView(
           child: ConstrainedBox(
@@ -517,7 +516,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                   keyboardType: TextInputType.number,
                                   inputFormatters: [
                                     BlacklistingTextInputFormatter(
-                                      new RegExp('[\\.|\\,|\\ |\\-]'),
+                                      RegExp('[\\.|\\,|\\ |\\-]'),
                                     ),
                                   ],
                                   decoration: InputDecoration(

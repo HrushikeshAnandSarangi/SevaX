@@ -27,11 +27,11 @@ class _RequestInviteUserCardState extends State<RequestInviteUserCard> {
       margin: EdgeInsets.only(top: 20, right: 15),
       width: 60.0,
       height: 60.0,
-      decoration: new BoxDecoration(
+      decoration: BoxDecoration(
         shape: BoxShape.circle,
-        image: new DecorationImage(
+        image: DecorationImage(
           fit: BoxFit.fill,
-          image: new NetworkImage(
+          image: NetworkImage(
               "https://www.itl.cat/pngfile/big/43-430987_cute-profile-images-pic-for-whatsapp-for-boys.jpg"),
         ),
       ),
@@ -44,15 +44,15 @@ class _RequestInviteUserCardState extends State<RequestInviteUserCard> {
       child: Container(
         height: 250,
         width: 500,
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.rectangle,
-          borderRadius: new BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(8.0),
           boxShadow: <BoxShadow>[
-            new BoxShadow(
+            BoxShadow(
               color: Colors.black12,
               blurRadius: 10.0,
-              offset: new Offset(0.0, 10.0),
+              offset: Offset(0.0, 10.0),
             ),
           ],
         ),

@@ -294,12 +294,12 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
           filled: true,
           fillColor: Colors.grey[300],
           focusedBorder: OutlineInputBorder(
-            borderSide: new BorderSide(color: Colors.white),
-            borderRadius: new BorderRadius.circular(25.7),
+            borderSide: BorderSide(color: Colors.white),
+            borderRadius: BorderRadius.circular(25.7),
           ),
           enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.white),
-              borderRadius: new BorderRadius.circular(25.7)),
+              borderRadius: BorderRadius.circular(25.7)),
           contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
           prefixIcon: Icon(
             Icons.search,
@@ -399,18 +399,18 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
         });
   }
 
-  getSuccessDialog(BuildContext context) {
-    return showDialog(
+  void getSuccessDialog(BuildContext context) {
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: new Text(AppLocalizations.of(context)
+          content: Text(AppLocalizations.of(context)
               .translate('transfer_ownership', 'removed_success')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(AppLocalizations.of(context)
+            FlatButton(
+              child: Text(AppLocalizations.of(context)
                   .translate('billing_plans', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -422,18 +422,18 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
     );
   }
 
-  getErrorDialog(BuildContext context) {
+  void getErrorDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: new Text(AppLocalizations.of(context)
+          content: Text(AppLocalizations.of(context)
               .translate('transfer_ownership', 'transfer_error')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(AppLocalizations.of(context)
+            FlatButton(
+              child: Text(AppLocalizations.of(context)
                   .translate('billing_plans', 'close')),
               textColor: Colors.red,
               onPressed: () {

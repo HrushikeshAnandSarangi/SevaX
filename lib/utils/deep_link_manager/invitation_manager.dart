@@ -15,7 +15,7 @@ class InvitationManager {
   BuildContext finalConfirmationContext;
 
   InvitationManager() {
-    cacheList = new HashMap();
+    cacheList = HashMap();
   }
 
   void initDialogForProgress({BuildContext context}) {

@@ -108,7 +108,10 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
           //print("length ${userList.length}");
           if (userList.length == 0) {
             return Center(
-              child: getEmptyWidget('Users', AppLocalizations.of(context).translate('requests','no_users')),
+              child: getEmptyWidget(
+                  'Users',
+                  AppLocalizations.of(context)
+                      .translate('requests', 'no_users')),
             );
           }
           return ListView.builder(
@@ -125,16 +128,15 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
                 isAdmin: isAdmin,
                 currentCommunity: loggedinUser.currentCommunity,
                 loggedUserId: loggedinUser.sevaUserID,
-                refresh: refresh,
+                refresh: () {},
                 isFavorite: isAdmin ?? false
                     ? timeBankIds.contains(widget.timebankId)
                     : memberId.contains(widget.sevaUserId),
                 reqStatus: getRequestUserStatus(
-                  requestModel: requestModel,
-                  userId: user.sevaUserID,
-                  email: user.email,
-                  context: context
-                ),
+                    requestModel: requestModel,
+                    userId: user.sevaUserID,
+                    email: user.email,
+                    context: context),
               );
             },
           );
@@ -144,7 +146,6 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
     );
   }
 
-  refresh() {}
   /*Widget getUserWidget(List<UserModel> favoriteUsers, UserModel user){
 
 

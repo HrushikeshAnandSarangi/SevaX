@@ -11,7 +11,7 @@ class UserModel extends DataModel {
   String fullname;
   List<String> interests;
   List<String> skills;
-  List<String> communities = new List();
+  List<String> communities = List();
   String currentCommunity;
   String calendar;
   List<String> membershipTimebanks;
@@ -132,7 +132,7 @@ class UserModel extends DataModel {
       List<String> communities = List.castFrom(map['communities']);
       this.communities = communities;
     } else {
-      this.communities = new List();
+      this.communities = List();
       this.communities.add('asdfadf');
     }
 
@@ -250,7 +250,7 @@ class UserModel extends DataModel {
   }
 
   UserModel setBlockedMembers(List<String> blockedMembers) {
-    var tempOutput = new List<String>.from(blockedMembers);
+    var tempOutput = List<String>.from(blockedMembers);
     this.blockedMembers = tempOutput;
     return this;
   }
@@ -395,11 +395,11 @@ class UserListModel {
   bool loading = false;
   UserListModel();
 
-  add(user) {
+  void add(user) {
     this.users.add(user);
   }
 
-  removeall() {
+  void removeall() {
     this.users = [];
   }
 

@@ -152,7 +152,7 @@ class TimebankEditFormState extends State<TimebankEditForm> {
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(20.0),
                     ),
-                    borderSide: new BorderSide(
+                    borderSide: BorderSide(
                       color: Colors.black,
                       width: 1.0,
                     ),
@@ -181,7 +181,7 @@ class TimebankEditFormState extends State<TimebankEditForm> {
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(20.0),
                     ),
-                    borderSide: new BorderSide(
+                    borderSide: BorderSide(
                       color: Colors.black,
                       width: 1.0,
                     ),
@@ -209,7 +209,7 @@ class TimebankEditFormState extends State<TimebankEditForm> {
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(20.0),
                     ),
-                    borderSide: new BorderSide(
+                    borderSide: BorderSide(
                       color: Colors.black,
                       width: 1.0,
                     ),
@@ -237,7 +237,7 @@ class TimebankEditFormState extends State<TimebankEditForm> {
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(20.0),
                     ),
-                    borderSide: new BorderSide(
+                    borderSide: BorderSide(
                       color: Colors.black,
                       width: 1.0,
                     ),
@@ -266,7 +266,7 @@ class TimebankEditFormState extends State<TimebankEditForm> {
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(20.0),
                     ),
-                    borderSide: new BorderSide(
+                    borderSide: BorderSide(
                       color: Colors.black,
                       width: 1.0,
                     ),

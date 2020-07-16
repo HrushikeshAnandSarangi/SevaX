@@ -202,7 +202,7 @@ class _GroupTabViewState extends State<GroupTabView> {
     String subTimebankLabel,
     String subtimebankId,
   }) {
-    return new JoinRequestModel(
+    return JoinRequestModel(
       timebankTitle: subTimebankLabel,
       accepted: false,
       entityId: subtimebankId,
@@ -223,7 +223,7 @@ class _GroupTabViewState extends State<GroupTabView> {
     String subTimebankId,
     String creatorId,
   }) {
-    return new NotificationsModel(
+    return NotificationsModel(
       timebankId: subTimebankId,
       id: joinRequestModel.notificationId,
       targetUserId: creatorId,

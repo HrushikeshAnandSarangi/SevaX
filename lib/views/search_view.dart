@@ -22,7 +22,7 @@ class SearchView extends StatefulWidget {
 class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
   TabController controller;
   final TextEditingController searchTextController = TextEditingController();
-  final searchOnChange = new BehaviorSubject<String>();
+  final searchOnChange = BehaviorSubject<String>();
   @override
   void initState() {
     super.initState();

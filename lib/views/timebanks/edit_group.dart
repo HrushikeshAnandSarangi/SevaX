@@ -65,7 +65,7 @@ class EditGroupFormState extends State<EditGroupForm> {
       selectedAddress = widget.timebankModel.address;
     }
     searchTextController =
-        new TextEditingController(text: widget.timebankModel.name);
+        TextEditingController(text: widget.timebankModel.name);
 
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));

@@ -15,7 +15,8 @@ class CalendarPicker extends StatefulWidget {
   final String selectedstartorend;
   //final void Function(DateTime dateTime) onDateSelected;
 
-  CalendarPicker(this.title, Key key, this.startDate, this.endDate, this.selectedstartorend)
+  CalendarPicker(this.title, Key key, this.startDate, this.endDate,
+      this.selectedstartorend)
       : super(key: key);
 
   @override
@@ -37,7 +38,9 @@ class CalendarPickerState extends State<CalendarPicker> {
     super.initState();
     startDate = widget.startDate;
     endDate = widget.endDate;
-    selectionType = widget.selectedstartorend == 'start' ? SelectionType.START_DATE: SelectionType.END_DATE;
+    selectionType = widget.selectedstartorend == 'start'
+        ? SelectionType.START_DATE
+        : SelectionType.END_DATE;
   }
 
   @override
@@ -65,10 +68,10 @@ class CalendarPickerState extends State<CalendarPicker> {
             children: <Widget>[
               Expanded(
                 child: DateTimeSelector(
-                  title: AppLocalizations.of(context).translate('create_request','start'),
+                  title: AppLocalizations.of(context)
+                      .translate('create_request', 'start'),
                   onPressed: () {
-                    setState(() => {
-                    selectionType = SelectionType.START_DATE});
+                    setState(() => {selectionType = SelectionType.START_DATE});
                     log("start date : $startDate");
                   },
                   dateTime: startDate,
@@ -77,7 +80,8 @@ class CalendarPickerState extends State<CalendarPicker> {
               ),
               Expanded(
                 child: DateTimeSelector(
-                  title: AppLocalizations.of(context).translate('create_request','end'),
+                  title: AppLocalizations.of(context)
+                      .translate('create_request', 'end'),
                   onPressed: () {
                     setState(() => {selectionType = SelectionType.END_DATE});
                     log("end date : $endDate");
@@ -98,15 +102,17 @@ class CalendarPickerState extends State<CalendarPicker> {
                     // selectionType = callbackSelectionType;
                     if (selectionType == SelectionType.START_DATE) {
                       startDate = DateTime(
-                          callbackDate.year, callbackDate.month, callbackDate.day,
-                          startDate.hour, startDate.minute);
-                      if (endDate.millisecondsSinceEpoch <  startDate.millisecondsSinceEpoch) {
-                        endDate = DateTime(
-                            startDate.year, startDate.month, startDate.day,
-                            endDate.hour + 1, endDate.minute);
+                          callbackDate.year,
+                          callbackDate.month,
+                          callbackDate.day,
+                          startDate.hour,
+                          startDate.minute);
+                      if (endDate.millisecondsSinceEpoch <
+                          startDate.millisecondsSinceEpoch) {
+                        endDate = DateTime(startDate.year, startDate.month,
+                            startDate.day, endDate.hour + 1, endDate.minute);
                       }
-                    }
-                    else
+                    } else
                       endDate = callbackDate;
                   });
                 }),
@@ -114,7 +120,8 @@ class CalendarPickerState extends State<CalendarPicker> {
                   padding: EdgeInsets.fromLTRB(16, 8, 8, 8),
                   color: Color(0xfff2f2f2),
                   child: Text(
-                    AppLocalizations.of(context).translate('create_request','time'),
+                    AppLocalizations.of(context)
+                        .translate('create_request', 'time'),
                     style: TextStyle(
                         fontFamily: 'Europa',
                         fontSize: 14,
@@ -128,19 +135,36 @@ class CalendarPickerState extends State<CalendarPicker> {
                       Expanded(child: Container()),
                       Expanded(
                         child: TimePicker(
-                          hour: selectionType == SelectionType.START_DATE ?  startDate.hour == 12 ?  startDate.hour : startDate.hour % 12 : startDate.millisecondsSinceEpoch < endDate.millisecondsSinceEpoch ? endDate.hour % 12: startDate.hour %12,
-                          minute: selectionType == SelectionType.START_DATE ? (((startDate.minute/15).round() * 15) % 60) : startDate.millisecondsSinceEpoch < endDate.millisecondsSinceEpoch ? ((endDate.minute/15).round() * 15) % 60: ((startDate.minute/15).round() * 15) % 60 ,
-                          ispm: selectionType == SelectionType.START_DATE ?  startDate.hour >= 12 ? "PM": "AM" : startDate.millisecondsSinceEpoch < endDate.millisecondsSinceEpoch ? endDate.hour >= 12 ? "PM": "AM": startDate.hour >= 12 ? "PM": "AM",
+                          hour: selectionType == SelectionType.START_DATE
+                              ? startDate.hour == 12
+                                  ? startDate.hour
+                                  : startDate.hour % 12
+                              : startDate.millisecondsSinceEpoch <
+                                      endDate.millisecondsSinceEpoch
+                                  ? endDate.hour % 12
+                                  : startDate.hour % 12,
+                          minute: selectionType == SelectionType.START_DATE
+                              ? (((startDate.minute / 15).round() * 15) % 60)
+                              : startDate.millisecondsSinceEpoch <
+                                      endDate.millisecondsSinceEpoch
+                                  ? ((endDate.minute / 15).round() * 15) % 60
+                                  : ((startDate.minute / 15).round() * 15) % 60,
+                          ispm: selectionType == SelectionType.START_DATE
+                              ? startDate.hour >= 12 ? "PM" : "AM"
+                              : startDate.millisecondsSinceEpoch <
+                                      endDate.millisecondsSinceEpoch
+                                  ? endDate.hour >= 12 ? "PM" : "AM"
+                                  : startDate.hour >= 12 ? "PM" : "AM",
                           onTimeSelected: (hour, minute, ispm) {
                             setState(() {
                               if (selectionType == SelectionType.START_DATE) {
                                 DateTime d1 = startDate;
-                                startDate = DateTime(d1.year, d1.month, d1.day,
-                                    hour, minute);
+                                startDate = DateTime(
+                                    d1.year, d1.month, d1.day, hour, minute);
                               } else {
                                 DateTime d1 = endDate;
-                                endDate = DateTime(d1.year, d1.month, d1.day,
-                                    hour, minute);
+                                endDate = DateTime(
+                                    d1.year, d1.month, d1.day, hour, minute);
                               }
                             });
                           },
@@ -155,28 +179,33 @@ class CalendarPickerState extends State<CalendarPicker> {
             ),
           ),
           getBottomButton(context, () {
-            if (endDate.millisecondsSinceEpoch <  startDate.millisecondsSinceEpoch) {
+            if (endDate.millisecondsSinceEpoch <
+                startDate.millisecondsSinceEpoch) {
               _dateInvalidAlert(context);
             } else {
               Navigator.pop(context, [startDate, endDate]);
             }
-          }, AppLocalizations.of(context).translate('create_request','done')),
+          }, AppLocalizations.of(context).translate('create_request', 'done')),
         ],
       ),
     );
   }
+
   void _dateInvalidAlert(context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context).translate('create_request','date_selection_issue')),
+          title: Text(AppLocalizations.of(context)
+              .translate('create_request', 'date_selection_issue')),
           content: Container(
-            child: Text(AppLocalizations.of(context).translate('create_request','end_date_start_date')),
+            child: Text(AppLocalizations.of(context)
+                .translate('create_request', 'end_date_start_date')),
           ),
           actions: <Widget>[
-            new FlatButton(
-              child: new Text(AppLocalizations.of(context).translate('create_request','close')),
+            FlatButton(
+              child: Text(AppLocalizations.of(context)
+                  .translate('create_request', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();
               },

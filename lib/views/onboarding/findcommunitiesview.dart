@@ -41,8 +41,7 @@ class FindCommunitiesView extends StatefulWidget {
 enum CompareUserStatus { JOINED, REQUESTED, REJECTED, JOIN }
 
 class FindCommunitiesViewState extends State<FindCommunitiesView> {
-  final TextEditingController searchTextController =
-      new TextEditingController();
+  final TextEditingController searchTextController = TextEditingController();
   static String JOIN;
   static String JOINED;
   bool showAppbar = false;
@@ -135,8 +134,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(
-              AppLocalizations.of(context).translate('shared', 'logout')),
+          title:
+              Text(AppLocalizations.of(context).translate('shared', 'logout')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -150,7 +149,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
-                    child: new Text(
+                    child: Text(
                       AppLocalizations.of(context)
                           .translate('shared', 'logout'),
                       style: TextStyle(fontFamily: 'Europa'),
@@ -172,8 +171,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                       _signOut(context);
                     },
                   ),
-                  new FlatButton(
-                    child: new Text(
+                  FlatButton(
+                    child: Text(
                       AppLocalizations.of(context)
                           .translate('shared', 'cancel'),
                       style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
@@ -251,12 +250,12 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               filled: true,
               fillColor: Colors.grey[300],
               focusedBorder: OutlineInputBorder(
-                borderSide: new BorderSide(color: Colors.white),
-                borderRadius: new BorderRadius.circular(25.7),
+                borderSide: BorderSide(color: Colors.white),
+                borderRadius: BorderRadius.circular(25.7),
               ),
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
-                  borderRadius: new BorderRadius.circular(25.7)),
+                  borderRadius: BorderRadius.circular(25.7)),
               hintText: AppLocalizations.of(context)
                   .translate('findtimebank', 'help_text'),
               hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
@@ -420,7 +419,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   void gpsCheck() async {
     try {
-      Location templocation = new Location();
+      Location templocation = Location();
       bool _serviceEnabled;
       PermissionStatus _permissionGranted;
 
@@ -671,9 +670,5 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             ],
           );
         });
-  }
-
-  goToNext(data) {
-    print(data);
   }
 }

@@ -256,19 +256,19 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
     );
   }
 
-  getSuccessDialogtwo() {
-    return showDialog(
+  void getSuccessDialogtwo() {
+    showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: new Text(AppLocalizations.of(context)
+          content: Text(AppLocalizations.of(context)
               .translate('change_ownership', 'ownership_suceess')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(
+            FlatButton(
+              child: Text(
                   AppLocalizations.of(context).translate('homepage', 'ok')),
               onPressed: () {
                 //  resetAndLoad();
@@ -301,11 +301,11 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: new Text(message),
+          content: Text(message),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(AppLocalizations.of(context)
+            FlatButton(
+              child: Text(AppLocalizations.of(context)
                   .translate('billing_plans', 'close')),
               textColor: Colors.red,
               onPressed: () {
@@ -331,12 +331,12 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
           filled: true,
           fillColor: Colors.grey[300],
           focusedBorder: OutlineInputBorder(
-            borderSide: new BorderSide(color: Colors.white),
-            borderRadius: new BorderRadius.circular(25.7),
+            borderSide: BorderSide(color: Colors.white),
+            borderRadius: BorderRadius.circular(25.7),
           ),
           enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.white),
-              borderRadius: new BorderRadius.circular(25.7)),
+              borderRadius: BorderRadius.circular(25.7)),
           contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
           prefixIcon: Icon(
             Icons.search,
@@ -437,13 +437,14 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
 //        });
 //  }
 
-  getSuccessDialog({BuildContext context, String timebankName, String admin}) {
-    return showDialog(
+  void getSuccessDialog(
+      {BuildContext context, String timebankName, String admin}) {
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: new Text(AppLocalizations.of(context)
+          content: Text(AppLocalizations.of(context)
                   .translate('change_ownership', 'invitation_sent') +
               timebankName +
               AppLocalizations.of(context)
@@ -453,8 +454,8 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
                   .translate('change_ownership', 'invitation_sent_three')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(AppLocalizations.of(context)
+            FlatButton(
+              child: Text(AppLocalizations.of(context)
                   .translate('billing_plans', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -467,18 +468,18 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
     );
   }
 
-  getErrorDialog(BuildContext context) {
+  void getErrorDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: new Text(AppLocalizations.of(context)
+          content: Text(AppLocalizations.of(context)
               .translate('transfer_ownership', 'transfer_error')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(AppLocalizations.of(context)
+            FlatButton(
+              child: Text(AppLocalizations.of(context)
                   .translate('billing_plans', 'close')),
               textColor: Colors.red,
               onPressed: () {

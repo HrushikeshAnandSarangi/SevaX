@@ -25,7 +25,7 @@ class UserModel {
     this.wallet,
   });
 
-  factory UserModel.fromMap(Map<String, dynamic> json) => new UserModel(
+  factory UserModel.fromMap(Map<String, dynamic> json) => UserModel(
         id: json["id"] == null ? null : json["id"],
         fullName: json["full_name"] == null ? null : json["full_name"],
         emailId: json["email_id"] == null ? null : json["email_id"],
@@ -33,21 +33,20 @@ class UserModel {
         timezone: json["timezone"] == null ? null : json["timezone"],
         skills: json["skills"] == null
             ? null
-            : new List<String>.from(json["skills"].map((x) => x)),
+            : List<String>.from(json["skills"].map((x) => x)),
         interests: json["interests"] == null
             ? null
-            : new List<String>.from(json["interests"].map((x) => x)),
+            : List<String>.from(json["interests"].map((x) => x)),
         timebanks: json["timebanks"] == null
             ? null
-            : new List<String>.from(json["timebanks"].map((x) => x)),
+            : List<String>.from(json["timebanks"].map((x) => x)),
         projects: json["projects"] == null
             ? null
-            : new List<String>.from(json["projects"].map((x) => x)),
+            : List<String>.from(json["projects"].map((x) => x)),
         photoUrl: json["photo_url"] == null ? null : json["photo_url"],
         wallet: json["wallet"] == null
             ? null
-            : new List<Wallet>.from(
-                json["wallet"].map((x) => Wallet.fromMap(x))),
+            : List<Wallet>.from(json["wallet"].map((x) => Wallet.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
@@ -56,22 +55,21 @@ class UserModel {
         "email_id": emailId == null ? null : emailId,
         "bio": bio == null ? null : bio,
         "timezone": timezone == null ? null : timezone,
-        "skills": skills == null
-            ? null
-            : new List<dynamic>.from(skills.map((x) => x)),
+        "skills":
+            skills == null ? null : List<dynamic>.from(skills.map((x) => x)),
         "interests": interests == null
             ? null
-            : new List<dynamic>.from(interests.map((x) => x)),
+            : List<dynamic>.from(interests.map((x) => x)),
         "timebanks": timebanks == null
             ? null
-            : new List<dynamic>.from(timebanks.map((x) => x)),
+            : List<dynamic>.from(timebanks.map((x) => x)),
         "projects": projects == null
             ? null
-            : new List<dynamic>.from(projects.map((x) => x)),
+            : List<dynamic>.from(projects.map((x) => x)),
         "photo_url": photoUrl == null ? null : photoUrl,
         "wallet": wallet == null
             ? null
-            : new List<dynamic>.from(wallet.map((x) => x.toMap())),
+            : List<dynamic>.from(wallet.map((x) => x.toMap())),
       };
 }
 
@@ -84,7 +82,7 @@ class Wallet {
     this.balance,
   });
 
-  factory Wallet.fromMap(Map<String, dynamic> json) => new Wallet(
+  factory Wallet.fromMap(Map<String, dynamic> json) => Wallet(
         rootTimebankId:
             json["root_timebank_id"] == null ? null : json["root_timebank_id"],
         balance: json["balance"] == null ? null : json["balance"].toDouble(),

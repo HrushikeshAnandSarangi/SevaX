@@ -17,7 +17,7 @@ class AppLocalizations {
 
   // Static member to have a simple access to the delegate from the MaterialApp
   static const LocalizationsDelegate<AppLocalizations> delegate =
-  _AppLocalizationsDelegate();
+      _AppLocalizationsDelegate();
 
   Map<String, dynamic> _localizedStrings;
 //  Map<String, dynamic> _localizedValues;
@@ -25,7 +25,8 @@ class AppLocalizations {
   Future<bool> load() async {
     // Load the language JSON file from the "lang" folder
     print('hey' + locale.languageCode);
-    String jsonString = await rootBundle.loadString('lib/assets/i18n/${locale.languageCode}.json');
+    String jsonString = await rootBundle
+        .loadString('lib/assets/i18n/${locale.languageCode}.json');
     Map<String, dynamic> jsonMap = json.decode(jsonString);
 
     _localizedStrings = jsonMap.map((key, value) {
@@ -57,7 +58,7 @@ class _AppLocalizationsDelegate
   @override
   Future<AppLocalizations> load(Locale locale) async {
     // AppLocalizations class is where the JSON loading actually runs
-    AppLocalizations localizations = new AppLocalizations(locale);
+    AppLocalizations localizations = AppLocalizations(locale);
     await localizations.load();
     return localizations;
   }

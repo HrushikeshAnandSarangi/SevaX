@@ -15,19 +15,19 @@ class NewsImagePickerHandler {
 
   NewsImagePickerHandler(this._listener, this._controller);
 
-  openCamera() async {
+  void openCamera() async {
     imagePicker.dismissDialog();
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
     cropImage(image);
   }
 
-  openGallery() async {
+  void openGallery() async {
     imagePicker.dismissDialog();
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     cropImage(image);
   }
 
-  openDocument() async {
+  void openDocument() async {
     imagePicker.dismissDialog();
     _openFileExplorer();
   }
@@ -76,7 +76,7 @@ class NewsImagePickerHandler {
   }
 
   void init() {
-    imagePicker = new NewsImagePickerDialog(this, _controller);
+    imagePicker = NewsImagePickerDialog(this, _controller);
     imagePicker.initState();
   }
 
@@ -96,12 +96,12 @@ class NewsImagePickerHandler {
     });
   }
 
-  showDialog(BuildContext context) {
+  void showDialog(BuildContext context) {
     imagePicker.getImage(context);
   }
 }
 
 abstract class NewsImagePickerListener {
-  userImage(File _image);
-  userDoc(String _doc, String fileName);
+  void userImage(File _image);
+  void userDoc(String _doc, String fileName);
 }

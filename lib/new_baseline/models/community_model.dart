@@ -25,7 +25,7 @@ class BillingAddress {
     this.additionalnotes =
         map.containsKey('additionalnotes') ? map['additionalnotes'] : '';
   }
-  updateValueByKey(String key, dynamic value) {
+  void updateValueByKey(String key, dynamic value) {
     if (key == 'companyname') {
       this.companyname = value;
     }
@@ -201,7 +201,7 @@ class CommunityModel extends DataModel {
     return geoFirePoint;
   }
 
-  updateValueByKey(String key, dynamic value) {
+  void updateValueByKey(String key, dynamic value) {
     if (key == 'id') {
       this.id = value;
     }
@@ -223,7 +223,7 @@ class CommunityModel extends DataModel {
     }
 
     if (key == 'billing_address') {
-      this.billing_address = new BillingAddress(value);
+      this.billing_address = BillingAddress(value);
     }
 
     if (key == 'payment_records') {
@@ -366,11 +366,11 @@ class CommunityListModel {
   bool loading = false;
   CommunityListModel();
 
-  add(community) {
+  void add(community) {
     this.communities.add(community);
   }
 
-  removeall() {
+  void removeall() {
     this.communities = [];
   }
 

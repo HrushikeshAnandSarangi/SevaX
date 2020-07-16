@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -70,7 +69,7 @@ class _CreateRequestState extends State<CreateRequest> {
             stream: userBloc.getLoggedInUser,
             builder: (context, snapshot) {
               if (snapshot.hasError)
-                return new Text(
+                return Text(
                     '${AppLocalizations.of(context).translate('shared', 'error')}: ${snapshot.error}');
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -170,7 +169,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
   void get _fetchCurrentlocation async {
     try {
-      Location templocation = new Location();
+      Location templocation = Location();
       bool _serviceEnabled;
       PermissionStatus _permissionGranted;
 
@@ -247,7 +246,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     this.requestModel.email = loggedInUser.email;
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
-    headerContainer(snapshot) {
+
+    Widget headerContainer(snapshot) {
       if (snapshot.hasError) return Text(snapshot.error.toString());
       if (snapshot.connectionState == ConnectionState.waiting) {
         return Container();
@@ -262,7 +262,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       }
     }
 
-    addToProjectContainer(snapshot, projectModelList, requestModel) {
+    Widget addToProjectContainer(snapshot, projectModelList, requestModel) {
       if (snapshot.hasError) return Text(snapshot.error.toString());
       if (snapshot.connectionState == ConnectionState.waiting) {
         return Container();
@@ -1020,7 +1020,7 @@ class ProjectSelectionState extends State<ProjectSelection> {
         "timebankproject": widget.projectModelList[i].mode == 'Timebank'
       });
     }
-    return new MultiSelect(
+    return MultiSelect(
       autovalidate: true,
       initialValue: ['None'],
       titleText: AppLocalizations.of(context)

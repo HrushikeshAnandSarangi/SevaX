@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/views/core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileEdit extends StatelessWidget {
   @override
@@ -39,7 +39,7 @@ class ProfileFormState extends State<ProfileForm> {
     SevaCore.of(context).loggedInUser.sevaUserID = sevaUID;
   }
 
-  _setPreferences() async {
+  Future<void> _setPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     // await prefs.setString('fullname', globals.fullname);
     await prefs.setString('bio', SevaCore.of(context).loggedInUser.bio);
@@ -95,7 +95,7 @@ class ProfileFormState extends State<ProfileForm> {
               //       borderRadius: const BorderRadius.all(
               //         const Radius.circular(20.0),
               //       ),
-              //       borderSide: new BorderSide(
+              //       borderSide: BorderSide(
               //         color: Colors.black,
               //         width: 1.0,
               //       ),
@@ -118,7 +118,7 @@ class ProfileFormState extends State<ProfileForm> {
               //       borderRadius: const BorderRadius.all(
               //         const Radius.circular(20.0),
               //       ),
-              //       borderSide: new BorderSide(
+              //       borderSide: BorderSide(
               //         color: Colors.black,
               //         width: 1.0,
               //       ),
@@ -141,7 +141,7 @@ class ProfileFormState extends State<ProfileForm> {
               //       borderRadius: const BorderRadius.all(
               //         const Radius.circular(20.0),
               //       ),
-              //       borderSide: new BorderSide(
+              //       borderSide: BorderSide(
               //         color: Colors.black,
               //         width: 1.0,
               //       ),
@@ -164,7 +164,7 @@ class ProfileFormState extends State<ProfileForm> {
               //       borderRadius: const BorderRadius.all(
               //         const Radius.circular(20.0),
               //       ),
-              //       borderSide: new BorderSide(
+              //       borderSide: BorderSide(
               //         color: Colors.black,
               //         width: 1.0,
               //       ),
@@ -187,7 +187,7 @@ class ProfileFormState extends State<ProfileForm> {
                   onPressed: () {
                     // Validate will return true if the form is valid, or false if
                     // the form is invalid.
-                    FocusScope.of(context).requestFocus(new FocusNode());
+                    FocusScope.of(context).requestFocus(FocusNode());
                     if (_formKey.currentState.validate()) {
                       // If the form is valid, we want to show a Snackbar
                       Scaffold.of(context).showSnackBar(SnackBar(

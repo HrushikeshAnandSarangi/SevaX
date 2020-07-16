@@ -77,7 +77,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 onPressed: widget.onBacked,
               ),
         title: Text(
-          AppLocalizations.of(context).translate('interests','title'),
+          AppLocalizations.of(context).translate('interests', 'title'),
           style: TextStyle(
             fontSize: 18,
           ),
@@ -90,7 +90,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
           children: <Widget>[
             SizedBox(height: 20),
             Text(
-              AppLocalizations.of(context).translate('interests','title_desc'),
+              AppLocalizations.of(context).translate('interests', 'title_desc'),
               style: TextStyle(
                 color: Colors.black54,
                 fontSize: 16,
@@ -105,16 +105,17 @@ class _InterestViewNewState extends State<InterestViewNew> {
               textFieldConfiguration: TextFieldConfiguration(
                 controller: _textEditingController,
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context).translate('interests','search'),
+                  hintText: AppLocalizations.of(context)
+                      .translate('interests', 'search'),
                   filled: true,
                   fillColor: Colors.grey[300],
                   focusedBorder: OutlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.white),
-                    borderRadius: new BorderRadius.circular(25.7),
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(25.7),
                   ),
                   enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white),
-                      borderRadius: new BorderRadius.circular(25.7)),
+                      borderRadius: BorderRadius.circular(25.7)),
                   contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
                   prefixIcon: Icon(
                     Icons.search,
@@ -160,7 +161,8 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    AppLocalizations.of(context).translate('interests','no_match'),
+                    AppLocalizations.of(context)
+                        .translate('interests', 'no_match'),
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 );
@@ -215,9 +217,11 @@ class _InterestViewNewState extends State<InterestViewNew> {
                   if (connResult == ConnectivityResult.none) {
                     _scaffoldKey.currentState.showSnackBar(
                       SnackBar(
-                        content: Text(AppLocalizations.of(context).translate('shared','check_internet')),
+                        content: Text(AppLocalizations.of(context)
+                            .translate('shared', 'check_internet')),
                         action: SnackBarAction(
-                          label: AppLocalizations.of(context).translate('shared','dismiss'),
+                          label: AppLocalizations.of(context)
+                              .translate('shared', 'dismiss'),
                           onPressed: () =>
                               _scaffoldKey.currentState.hideCurrentSnackBar(),
                         ),
@@ -230,7 +234,11 @@ class _InterestViewNewState extends State<InterestViewNew> {
                   widget.onSelectedInterests(selectedID);
                 },
                 child: Text(
-                  widget.isFromProfile ? AppLocalizations.of(context).translate('interests','update') : AppLocalizations.of(context).translate('shared','next'),
+                  widget.isFromProfile
+                      ? AppLocalizations.of(context)
+                          .translate('interests', 'update')
+                      : AppLocalizations.of(context)
+                          .translate('shared', 'next'),
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),
@@ -256,8 +264,9 @@ class _InterestViewNewState extends State<InterestViewNew> {
               },
               child: Text(
                 AppConfig.prefs.getBool(AppConfig.skip_interest) == null
-                    ? AppLocalizations.of(context).translate('shared','skip')
-                    : AppLocalizations.of(context).translate('shared','cancel'),
+                    ? AppLocalizations.of(context).translate('shared', 'skip')
+                    : AppLocalizations.of(context)
+                        .translate('shared', 'cancel'),
                 style: TextStyle(
                   color: Theme.of(context).accentColor,
                 ),

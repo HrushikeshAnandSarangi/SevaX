@@ -160,7 +160,7 @@ class _LoginSignupScreenState extends State<PinView> {
                             this._checkFields();
                           },
                           shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(30.0))),
+                              borderRadius: BorderRadius.circular(30.0))),
                     ),
                     Padding(
                       padding: EdgeInsets.all(10.0),

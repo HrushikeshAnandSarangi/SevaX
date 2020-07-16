@@ -63,7 +63,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
     focusNodes = List.generate(8, (_) => FocusNode());
   }
 
-  getCommunityDetails() async {
+  void getCommunityDetails() async {
     await FirestoreManager.getCommunityDetailsByCommunityId(
             communityId: widget.loggedInUser.currentCommunity)
         .then((value) {
@@ -278,19 +278,19 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
         (Route<dynamic> route) => false);
   }
 
-  getSuccessDialog() {
-    return showDialog(
+  void getSuccessDialog() {
+    showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: new Text(AppLocalizations.of(widget.parentContext)
+          content: Text(AppLocalizations.of(widget.parentContext)
               .translate('change_ownership', 'ownership_suceess')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(AppLocalizations.of(widget.parentContext)
+            FlatButton(
+              child: Text(AppLocalizations.of(widget.parentContext)
                   .translate('homepage', 'ok')),
               onPressed: () {
                 resetAndLoad();
@@ -303,7 +303,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
     );
   }
 
-  getAdvisoryDialog(BuildContext mContext, String timebankName) {
+  void getAdvisoryDialog(BuildContext mContext, String timebankName) {
     showDialog(
       context: mContext,
       builder: (BuildContext context) {
@@ -312,7 +312,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              new Text(AppLocalizations.of(widget.parentContext)
+              Text(AppLocalizations.of(widget.parentContext)
                       .translate('change_ownership', 'change_message') +
                   timebankName +
                   AppLocalizations.of(widget.parentContext)
@@ -322,7 +322,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                 children: [
                   Spacer(),
                   FlatButton(
-                    child: new Text(
+                    child: Text(
                         AppLocalizations.of(widget.parentContext)
                             .translate('shared', 'cancel'),
                         style: TextStyle(
@@ -334,7 +334,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                   FlatButton(
                     color: Theme.of(mContext).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
-                    child: new Text(
+                    child: Text(
                       AppLocalizations.of(widget.parentContext)
                           .translate('homepage', 'ok'),
                       style: TextStyle(
@@ -682,7 +682,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             style: Theme.of(bc).primaryTextTheme.button,
           ),
           onPressed: () async {
-            FocusScope.of(bc).requestFocus(new FocusNode());
+            FocusScope.of(bc).requestFocus(FocusNode());
             if (_billingInformationKey.currentState.validate()) {
               if (communityModel.billing_address.country == null) {
                 scrollToTop();

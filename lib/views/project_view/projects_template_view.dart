@@ -22,7 +22,7 @@ class ProjectTemplateView extends StatefulWidget {
 
 class _ProjectTemplateViewState extends State<ProjectTemplateView> {
   int _groupValue = 0;
-  TextEditingController searchTextController = new TextEditingController();
+  TextEditingController searchTextController = TextEditingController();
   final _textUpdates = StreamController<String>();
   Color primaryColor = FlavorConfig.values.theme.primaryColor;
   int value;
@@ -311,7 +311,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
               .translate('project_template', 'empty_template')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
+            FlatButton(
               child: Text(AppLocalizations.of(context)
                   .translate('billing_plans', 'close')),
               onPressed: () {

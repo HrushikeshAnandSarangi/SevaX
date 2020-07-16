@@ -1,14 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 
 import '../splash_view.dart';
-import 'timebank_congratsView.dart';
 
 class TimebankJoinRequest extends StatefulWidget {
   final Widget child;
@@ -99,7 +96,7 @@ class _TimebankJoinRequestState extends State<TimebankJoinRequest> {
                         borderRadius: const BorderRadius.all(
                           const Radius.circular(20.0),
                         ),
-                        borderSide: new BorderSide(
+                        borderSide: BorderSide(
                           color: Colors.black,
                           width: 1.0,
                         ),

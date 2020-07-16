@@ -13,7 +13,7 @@ import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import '../app_config.dart';
 import '../location_utility.dart';
 
-Location locations = new Location();
+Location locations = Location();
 Geoflutterfire geos = Geoflutterfire();
 
 Future<void> createNews({@required NewsModel newsObject}) async {

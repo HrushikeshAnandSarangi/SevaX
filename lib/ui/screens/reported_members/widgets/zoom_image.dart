@@ -32,7 +32,7 @@ class ZoomableImage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ZoomableImageState createState() => new _ZoomableImageState();
+  _ZoomableImageState createState() => _ZoomableImageState();
 }
 
 // See /flutter/examples/layers/widgets/gestures.dart
@@ -54,7 +54,7 @@ class _ZoomableImageState extends State<ZoomableImage> {
   Size _canvasSize;
 
   void _centerAndScaleImage() {
-    _imageSize = new Size(
+    _imageSize = Size(
       _image.width.toDouble(),
       _image.height.toDouble(),
     );
@@ -63,7 +63,7 @@ class _ZoomableImageState extends State<ZoomableImage> {
       _canvasSize.width / _imageSize.width,
       _canvasSize.height / _imageSize.height,
     );
-    Size fitted = new Size(
+    Size fitted = Size(
       _imageSize.width * _scale,
       _imageSize.height * _scale,
     );
@@ -84,7 +84,7 @@ class _ZoomableImageState extends State<ZoomableImage> {
       }
 
       // We want to zoom in on the center of the screen.
-      // Since we're zooming by a factor of 2, we want the new offset to be twice
+      // Since we're zooming by a factor of 2, we want the offset to be twice
       // as far from the center in both width and height than it is now.
       Offset center = ctx.size.center(Offset.zero);
       Offset newOffset = _offset - (center - _offset);
@@ -123,9 +123,9 @@ class _ZoomableImageState extends State<ZoomableImage> {
   @override
   Widget build(BuildContext ctx) {
     Widget paintWidget() {
-      return new CustomPaint(
-        child: new Container(color: widget.backgroundColor),
-        foregroundPainter: new _ZoomableImagePainter(
+      return CustomPaint(
+        child: Container(color: widget.backgroundColor),
+        foregroundPainter: _ZoomableImagePainter(
           image: _image,
           offset: _offset,
           scale: _scale,
@@ -137,7 +137,7 @@ class _ZoomableImageState extends State<ZoomableImage> {
       return widget.placeholder ?? Center(child: CircularProgressIndicator());
     }
 
-    return new LayoutBuilder(builder: (ctx, constraints) {
+    return LayoutBuilder(builder: (ctx, constraints) {
       Orientation orientation = MediaQuery.of(ctx).orientation;
       if (orientation != _previousOrientation) {
         _previousOrientation = orientation;
@@ -145,7 +145,7 @@ class _ZoomableImageState extends State<ZoomableImage> {
         _centerAndScaleImage();
       }
 
-      return new GestureDetector(
+      return GestureDetector(
         child: paintWidget(),
         onTap: widget.onTap,
         onDoubleTap: _handleDoubleTap(ctx),
@@ -195,7 +195,7 @@ class _ZoomableImagePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size canvasSize) {
-    Size imageSize = new Size(image.width.toDouble(), image.height.toDouble());
+    Size imageSize = Size(image.width.toDouble(), image.height.toDouble());
     Size targetSize = imageSize * scale;
 
     paintImage(

@@ -74,7 +74,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   bool protectedVal = false;
   GeoFirePoint location;
   String selectedAddress;
-  TextEditingController searchTextController = new TextEditingController();
+  TextEditingController searchTextController = TextEditingController();
   String errTxt;
   final nameNode = FocusNode();
   final aboutNode = FocusNode();
@@ -434,7 +434,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               borderRadius: const BorderRadius.all(
                 const Radius.circular(20.0),
               ),
-              borderSide: new BorderSide(
+              borderSide: BorderSide(
                 color: Colors.black,
                 width: 1.0,
               ),
@@ -462,7 +462,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               borderRadius: const BorderRadius.all(
                 const Radius.circular(20.0),
               ),
-              borderSide: new BorderSide(
+              borderSide: BorderSide(
                 color: Colors.black,
                 width: 1.0,
               ),
@@ -489,7 +489,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               borderRadius: const BorderRadius.all(
                 const Radius.circular(20.0),
               ),
-              borderSide: new BorderSide(
+              borderSide: BorderSide(
                 color: Colors.black,
                 width: 1.0,
               ),
@@ -524,7 +524,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               borderRadius: const BorderRadius.all(
                 const Radius.circular(20.0),
               ),
-              borderSide: new BorderSide(
+              borderSide: BorderSide(
                 color: Colors.black,
                 width: 1.0,
               ),
@@ -554,7 +554,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               borderRadius: const BorderRadius.all(
                 const Radius.circular(20.0),
               ),
-              borderSide: new BorderSide(
+              borderSide: BorderSide(
                 color: Colors.black,
                 width: 1.0,
               ),
@@ -803,7 +803,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   bool validateEmail(String value) {
     String pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     if (value.length == 0) {
       return false;
     } else if (!regExp.hasMatch(value)) {
@@ -841,25 +841,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 style: TextStyle(fontSize: 16.0, color: Colors.blue),
               ),
             ));
-  }
-
-  Future _getLocation() async {
-    String address = await LocationUtility().getFormattedAddress(
-      location.latitude,
-      location.longitude,
-    );
-    log('_getLocation: $address');
-    setState(() {
-      this.selectedAddress = address;
-    });
-  }
-
-  _showMembers() {
-    if (globals.addedMembersId == []) {
-      Text('');
-    } else {
-      Text(globals.addedMembersId.toString());
-    }
   }
 
   void fetchCurrentlocation() {

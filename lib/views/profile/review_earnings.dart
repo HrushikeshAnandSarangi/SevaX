@@ -17,7 +17,7 @@ class ReviewEarningsPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context).translate('earnings','title'),
+            AppLocalizations.of(context).translate('earnings', 'title'),
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -77,7 +77,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
   Widget build(BuildContext context) {
     if (requestList.length == 0) {
       return Center(
-        child: Text(AppLocalizations.of(context).translate('earnings','none')),
+        child: Text(AppLocalizations.of(context).translate('earnings', 'none')),
       );
     }
     return FutureBuilder<Object>(
@@ -85,7 +85,8 @@ class _ReviewEarningState extends State<ReviewEarning> {
             sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return new Text(AppLocalizations.of(context).translate('earnings','wrong'));
+            return Text(
+                AppLocalizations.of(context).translate('earnings', 'wrong'));
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -158,7 +159,9 @@ class _EarningListItemState extends State<EarningListItem> {
                           fontSize: 17,
                           fontWeight: FontWeight.w500,
                         )),
-                    Text(AppLocalizations.of(context).translate('earnings','credits'),
+                    Text(
+                        AppLocalizations.of(context)
+                            .translate('earnings', 'credits'),
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w600,
@@ -170,9 +173,14 @@ class _EarningListItemState extends State<EarningListItem> {
               subtitle: EarningItem(
                   name: type == 'user'
                       ? snapshot.data.fullname == null
-                          ? AppLocalizations.of(context).translate('earnings','anonymous')
-                          : widget.model.type == "USER_PAYLOAN_TOTIMEBANK" ? snapshot.data.fullname + ' - Loan Repayment' : snapshot.data.fullname
-                      : widget.model.type == "ADMIN_DONATE_TOUSER" ? snapshot.data.name + " (Timebank) Loan" : snapshot.data.name + " (Timebank)",
+                          ? AppLocalizations.of(context)
+                              .translate('earnings', 'anonymous')
+                          : widget.model.type == "USER_PAYLOAN_TOTIMEBANK"
+                              ? snapshot.data.fullname + ' - Loan Repayment'
+                              : snapshot.data.fullname
+                      : widget.model.type == "ADMIN_DONATE_TOUSER"
+                          ? snapshot.data.name + " (Timebank) Loan"
+                          : snapshot.data.name + " (Timebank)",
                   timestamp: widget.model.timestamp,
                   usertimezone: widget.usertimezone));
         });
@@ -200,8 +208,12 @@ class EarningItem extends StatelessWidget {
           height: 2,
         ),
         Text(
-          '${AppLocalizations.of(context).translate('earnings','date')}  ' +
-              DateFormat('MMMM dd, yyyy @ h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()).format(
+          '${AppLocalizations.of(context).translate('earnings', 'date')}  ' +
+              DateFormat(
+                      'MMMM dd, yyyy @ h:mm a',
+                      Locale(AppConfig.prefs.getString('language_code'))
+                          .toLanguageTag())
+                  .format(
                 getDateTimeAccToUserTimezone(
                     dateTime: DateTime.fromMillisecondsSinceEpoch(timestamp),
                     timezoneAbb: usertimezone),
@@ -244,14 +256,16 @@ class EarningImageItem extends StatelessWidget {
     } else {
       TimebankModel timebanktemp = snapshot.data;
       return CircleAvatar(
-        backgroundImage: NetworkImage(timebanktemp.photoUrl ?? defaultUserImageURL),
+        backgroundImage:
+            NetworkImage(timebanktemp.photoUrl ?? defaultUserImageURL),
       );
     }
   }
 }
 
 String getTimeFormattedString(int timeInMilliseconds) {
-  DateFormat dateFormat = DateFormat('d MMM h:m a ', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
+  DateFormat dateFormat = DateFormat('d MMM h:m a ',
+      Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
   String dateOfTransaction = dateFormat.format(
     DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds),
   );

@@ -22,61 +22,72 @@ class TimebankModel extends DataModel {
   List<String> members;
 
   TimebankModel(Map<String, dynamic> map) {
-    this.id = map.containsKey('id') ? map['id']: '';
-    this.name = map.containsKey('name') ? map['name']: '';
-    this.missionStatement = map.containsKey('missionStatement') ? map['missionStatement']: '';
-    this.postTimestamp = map.containsKey('postTimestamp') ? map['postTimestamp']: 0;
-    this.address = map.containsKey('address') ? map['address']: '';
-    this.creatorEmail = map.containsKey('creatorEmail') ? map['creatorEmail']: '';
-    this.protected = map.containsKey('protected') ? map['protected']: false;
-    this.locationAddress = map.containsKey('locationAddress') ? map['locationAddress']: '';
-    this.members = map.containsKey('members') ? List.castFrom(map['members']): [];
-    this.admins = map.containsKey('admins') ? List.castFrom(map['admins']): [];
-    this.coordinators = map.containsKey('coordinators') ? List.castFrom(map['coordinators']): [];
-    this.ownerSevaUserId = map.containsKey('ownerSevaUserId') ? map['ownerSevaUserId']: '';
-    this.primaryEmail = map.containsKey('primaryEmail') ? map['primaryEmail']: '';
-    this.primaryNumber = map.containsKey('primaryNumber') ? map['primaryNumber']: '';
-    this.avatarUrl = map.containsKey('avatarUrl') ? map['avatarUrl']: '';
+    this.id = map.containsKey('id') ? map['id'] : '';
+    this.name = map.containsKey('name') ? map['name'] : '';
+    this.missionStatement =
+        map.containsKey('missionStatement') ? map['missionStatement'] : '';
+    this.postTimestamp =
+        map.containsKey('postTimestamp') ? map['postTimestamp'] : 0;
+    this.address = map.containsKey('address') ? map['address'] : '';
+    this.creatorEmail =
+        map.containsKey('creatorEmail') ? map['creatorEmail'] : '';
+    this.protected = map.containsKey('protected') ? map['protected'] : false;
+    this.locationAddress =
+        map.containsKey('locationAddress') ? map['locationAddress'] : '';
+    this.members =
+        map.containsKey('members') ? List.castFrom(map['members']) : [];
+    this.admins = map.containsKey('admins') ? List.castFrom(map['admins']) : [];
+    this.coordinators = map.containsKey('coordinators')
+        ? List.castFrom(map['coordinators'])
+        : [];
+    this.ownerSevaUserId =
+        map.containsKey('ownerSevaUserId') ? map['ownerSevaUserId'] : '';
+    this.primaryEmail =
+        map.containsKey('primaryEmail') ? map['primaryEmail'] : '';
+    this.primaryNumber =
+        map.containsKey('primaryNumber') ? map['primaryNumber'] : '';
+    this.avatarUrl = map.containsKey('avatarUrl') ? map['avatarUrl'] : '';
   }
 
-  updateValueByKey(String key, dynamic value) {
-    if (key =='id') {
-      this.id= value;
+  void updateValueByKey(String key, dynamic value) {
+    if (key == 'id') {
+      this.id = value;
     }
-    if (key =='name') {
-      this.name= value;
+    if (key == 'name') {
+      this.name = value;
     }
-    if (key =='missionStatement') {
-      this.missionStatement= value;
+    if (key == 'missionStatement') {
+      this.missionStatement = value;
     }
-    if (key =='postTimestamp') {
-      this.postTimestamp= value;
+    if (key == 'postTimestamp') {
+      this.postTimestamp = value;
     }
-    if (key =='address') {
-      this.address= value;
+    if (key == 'address') {
+      this.address = value;
     }
-    if (key =='creatorEmail') {
-      this.creatorEmail= value;
+    if (key == 'creatorEmail') {
+      this.creatorEmail = value;
     }
     if (key == 'protected') {
       this.protected = value;
     }
-    if (key =='ownerSevaUserId') {
-      this.ownerSevaUserId= value;
+    if (key == 'ownerSevaUserId') {
+      this.ownerSevaUserId = value;
     }
-    if (key =='primaryEmail') {
-      this.primaryEmail= value;
+    if (key == 'primaryEmail') {
+      this.primaryEmail = value;
     }
-    if (key =='primaryNumber') {
-      this.primaryNumber= value;
+    if (key == 'primaryNumber') {
+      this.primaryNumber = value;
     }
-    if (key =='avatarUrl') {
-      this.avatarUrl= value;
+    if (key == 'avatarUrl') {
+      this.avatarUrl = value;
     }
     if (key == 'locationAddress') {
       this.locationAddress = value;
     }
   }
+
   Map<String, dynamic> toMap() {
     Map<String, dynamic> object = {};
     if (this.name != null && this.name.isNotEmpty) {

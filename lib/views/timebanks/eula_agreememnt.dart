@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
-import 'package:sevaexchange/main_app.dart';
 
 import 'EULAgreement.dart';
 
@@ -35,8 +33,8 @@ class EulaAgreementState extends State<EulaAgreement> {
                 return true;
               },
             ),
-            title: new Text(
-              AppLocalizations.of(context).translate('eula','eula_title'),
+            title: Text(
+              AppLocalizations.of(context).translate('eula', 'eula_title'),
               style: TextStyle(
                 fontSize: 18,
               ),
@@ -79,7 +77,8 @@ class EulaAgreementState extends State<EulaAgreement> {
                           ),
                           Expanded(
                             child: Text(
-                                AppLocalizations.of(context).translate('eula','i_agree'),
+                              AppLocalizations.of(context)
+                                  .translate('eula', 'i_agree'),
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 fontSize: 15.0,
@@ -102,7 +101,8 @@ class EulaAgreementState extends State<EulaAgreement> {
                                   }
                                 : null,
                             child: Text(
-                                AppLocalizations.of(context).translate('eula','proceed'),
+                              AppLocalizations.of(context)
+                                  .translate('eula', 'proceed'),
                               style: Theme.of(context).primaryTextTheme.button,
                             ),
                             // color: Theme.of(context).accentColor,

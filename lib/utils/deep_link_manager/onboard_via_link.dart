@@ -160,8 +160,8 @@ Future<void> resetPassword(String email, BuildContext mContext) async {
           ),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(
+            FlatButton(
+              child: Text(
                   AppLocalizations.of(mContext).translate('shared', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();

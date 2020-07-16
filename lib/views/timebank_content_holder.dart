@@ -286,9 +286,9 @@ Widget unreadMessages(int unreadCount) {
 Widget badge(int count) => Positioned(
       right: 0,
       top: 0,
-      child: new Container(
+      child: Container(
         padding: EdgeInsets.all(1),
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           color: Colors.red,
           borderRadius: BorderRadius.circular(7.5),
         ),
@@ -298,7 +298,7 @@ Widget badge(int count) => Positioned(
         ),
         child: Text(
           count.toString(),
-          style: new TextStyle(
+          style: TextStyle(
             color: Colors.white,
             fontSize: 10,
           ),
@@ -542,7 +542,7 @@ class DiscussionListState extends State<DiscussionList> {
                   child: Container(
                     height: 40,
                     decoration: BoxDecoration(
-                      borderRadius: new BorderRadius.circular(10.7),
+                      borderRadius: BorderRadius.circular(10.7),
                       color: Colors.grey[200],
                     ),
                     child: Padding(
@@ -674,14 +674,14 @@ class DiscussionListState extends State<DiscussionList> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context)
+          title: Text(AppLocalizations.of(context)
               .translate('homepage', 'access_denied')),
-          content: new Text(
+          content: Text(
               AppLocalizations.of(context).translate('homepage', 'not_auth')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(
+            FlatButton(
+              child: Text(
                   AppLocalizations.of(context).translate('homepage', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -720,7 +720,7 @@ class DiscussionListState extends State<DiscussionList> {
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);
     String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = new File('$dir/$filename');
+    File file = File('$dir/$filename');
     await file.writeAsBytes(bytes);
     return file;
   }
@@ -1670,7 +1670,7 @@ class DiscussionListState extends State<DiscussionList> {
               height: 30,
               width: 150,
               decoration: BoxDecoration(
-                borderRadius: new BorderRadius.circular(15.7),
+                borderRadius: BorderRadius.circular(15.7),
                 color: Colors.grey[200],
               ),
               child: Padding(

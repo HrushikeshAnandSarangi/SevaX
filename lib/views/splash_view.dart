@@ -42,7 +42,7 @@ class UserData {
 
   static UserData get shared => _singleton;
 
-  UserModel user = new UserModel();
+  UserModel user = UserModel();
   String userId;
   String locationStr;
 

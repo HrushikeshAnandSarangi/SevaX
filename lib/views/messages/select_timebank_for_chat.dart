@@ -42,7 +42,7 @@ Widget getTimebanks(BuildContext context) {
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       ),
       builder: (context, snapshot) {
-        if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         }

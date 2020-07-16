@@ -14,20 +14,20 @@ class ImagePickerHandler {
 
   ImagePickerHandler(this._listener, this._controller);
 
-  openCamera() async {
+  void openCamera() async {
     imagePicker.dismissDialog();
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
     cropImage(image);
   }
 
-  openGallery() async {
+  void openGallery() async {
     imagePicker.dismissDialog();
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     cropImage(image);
   }
 
   void init() {
-    imagePicker = new ImagePickerDialog(this, _controller);
+    imagePicker = ImagePickerDialog(this, _controller);
     imagePicker.initState();
   }
 
@@ -47,11 +47,11 @@ class ImagePickerHandler {
     });
   }
 
-  showDialog(BuildContext context) {
+  void showDialog(BuildContext context) {
     imagePicker.getImage(context);
   }
 }
 
 abstract class ImagePickerListener {
-  userImage(File _image);
+  void userImage(File _image);
 }

@@ -79,7 +79,7 @@ class DateTimeSelector extends StatelessWidget {
         ),
       );
     } else {
-      String _forDate = new DateFormat(
+      String _forDate = DateFormat(
               'dd MMM yyyy, hh:mm a',
               Locale(
                 AppConfig.prefs.getString('language_code'),

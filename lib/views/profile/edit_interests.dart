@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -10,7 +9,8 @@ import '../../flavor_config.dart';
 import '../core.dart';
 
 @deprecated
-///use interests view new ////
+
+///use interests view ////
 class EditInterests extends StatefulWidget {
   @override
   _EditInterestsState createState() => _EditInterestsState();
@@ -123,7 +123,7 @@ class _EditInterestsState extends State<EditInterests> {
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: selectedInterests.map((interest) {
-              final _random = new Random();
+              final _random = Random();
               var element = colorList[_random.nextInt(colorList.length)];
               return chip(interest, false, element);
             }).toList(),

@@ -253,7 +253,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       builder:
                           (context, AsyncSnapshot<List<dynamic>> snapshot) {
                         if (snapshot.hasError)
-                          return new Text(
+                          return Text(
                               '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -475,15 +475,15 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context)
+          title: Text(AppLocalizations.of(context)
               .translate('requests', 'protected_alert')),
-          content: new Text(AppLocalizations.of(context)
+          content: Text(AppLocalizations.of(context)
               .translate('requests', 'projected_alert_dialog')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
+            FlatButton(
               textColor: Colors.red,
-              child: new Text(
+              child: Text(
                 AppLocalizations.of(context).translate('shared', 'close'),
               ),
               onPressed: () {
@@ -554,14 +554,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context)
+          title: Text(AppLocalizations.of(context)
               .translate('requests', 'already_approved')),
-          content: new Text(AppLocalizations.of(context)
+          content: Text(AppLocalizations.of(context)
               .translate('requests', 'cant_withdraw')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(
+            FlatButton(
+              child: Text(
                   AppLocalizations.of(context).translate('shared', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();

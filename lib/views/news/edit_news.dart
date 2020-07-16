@@ -285,7 +285,7 @@ class NewsEditFormState extends State<NewsEditForm> {
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(10.0),
                                 ),
-                                borderSide: new BorderSide(
+                                borderSide: BorderSide(
                                   color: Colors.black,
                                   width: 0.5,
                                 ),
@@ -315,7 +315,7 @@ class NewsEditFormState extends State<NewsEditForm> {
                                   borderRadius: const BorderRadius.all(
                                     const Radius.circular(10.0),
                                   ),
-                                  borderSide: new BorderSide(
+                                  borderSide: BorderSide(
                                     color: Colors.black,
                                     width: 0.5,
                                   ),
@@ -343,7 +343,7 @@ class NewsEditFormState extends State<NewsEditForm> {
                               borderRadius: const BorderRadius.all(
                                 const Radius.circular(10.0),
                               ),
-                              borderSide: new BorderSide(
+                              borderSide: BorderSide(
                                 color: Colors.black,
                                 width: 0.5,
                               ),

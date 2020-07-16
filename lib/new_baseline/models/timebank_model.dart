@@ -1,9 +1,7 @@
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:sevaexchange/globals.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 //import 'package:collection/ lib\views\timebank_content_holder.dart';
@@ -88,11 +86,10 @@ class TimebankModel extends DataModel {
     this.unreadMessageCount =
         map.containsKey("unreadMessages") ? map["unreadMessages"].length : -1;
 
-    Map<String, Map<dynamic, dynamic>> temp =
-        map.containsKey("notificationSetting")
-            ? new Map<String, Map<dynamic, dynamic>>.from(
-                map["notificationSetting"])
-            : Map();
+    Map<String, Map<dynamic, dynamic>> temp = map
+            .containsKey("notificationSetting")
+        ? Map<String, Map<dynamic, dynamic>>.from(map["notificationSetting"])
+        : Map();
     notificationSetting = HashMap();
     temp.forEach((key, value) {
       notificationSetting[key] = NotificationSetting.fromMap(value);
@@ -119,7 +116,7 @@ class TimebankModel extends DataModel {
     return geoFirePoint;
   }
 
-  updateValueByKey(String key, dynamic value) {
+  void updateValueByKey(String key, dynamic value) {
     if (key == 'id') {
       this.id = value;
     }
@@ -184,7 +181,7 @@ class TimebankModel extends DataModel {
   }
 
   factory TimebankModel.fromMap(Map<String, dynamic> json) {
-    TimebankModel timebankModel = new TimebankModel(json);
+    TimebankModel timebankModel = TimebankModel(json);
     if (json.containsKey('location')) {
       if (json['location']['geopoint'] is GeoPoint) {
         GeoPoint geoPoint = json['location']['geopoint'];
@@ -201,14 +198,14 @@ class TimebankModel extends DataModel {
       }
     }
 
-    Map<String, Map<dynamic, dynamic>> temp =
-        json.containsKey("notificationSetting")
-            ? new Map<String, Map<dynamic, dynamic>>.from(
-                json["notificationSetting"])
-            : Map();
+    Map<String, Map<dynamic, dynamic>> temp = json
+            .containsKey("notificationSetting")
+        ? Map<String, Map<dynamic, dynamic>>.from(json["notificationSetting"])
+        : Map();
     timebankModel.notificationSetting = HashMap();
     temp.forEach((key, value) {
-      timebankModel.notificationSetting[key] = NotificationSetting.fromMap(value);
+      timebankModel.notificationSetting[key] =
+          NotificationSetting.fromMap(value);
     });
 
     return timebankModel;
@@ -226,21 +223,19 @@ class TimebankModel extends DataModel {
       "photo_url": photoUrl == null ? null : photoUrl,
       "created_at": createdAt == null ? null : createdAt,
       "admins":
-          admins == null ? null : new List<dynamic>.from(admins.map((x) => x)),
+          admins == null ? null : List<dynamic>.from(admins.map((x) => x)),
       "coordinators": coordinators == null
           ? null
-          : new List<dynamic>.from(coordinators.map((x) => x)),
-      "members": members == null
-          ? null
-          : new List<dynamic>.from(members.map((x) => x)),
+          : List<dynamic>.from(coordinators.map((x) => x)),
+      "members":
+          members == null ? null : List<dynamic>.from(members.map((x) => x)),
       "protected": protected == null ? null : protected,
       "private": private == null ? null : private,
       "parent_timebank_id": parentTimebankId == null ? null : parentTimebankId,
       "community_id": communityId == null ? null : communityId,
       "root_timebank_id": rootTimebankId == null ? null : rootTimebankId,
-      "children": children == null
-          ? null
-          : new List<dynamic>.from(children.map((x) => x)),
+      "children":
+          children == null ? null : List<dynamic>.from(children.map((x) => x)),
       "balance": balance == null ? null : balance,
       'softDelete': false,
       "lastMessageTimestamp": null,

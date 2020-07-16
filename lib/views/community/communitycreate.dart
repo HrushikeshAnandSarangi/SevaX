@@ -110,7 +110,7 @@ class CreateEditCommunityViewFormState
   CommunityModel communityModel = CommunityModel({});
   CommunityModel editCommunityModel = CommunityModel({});
   final _formKey = GlobalKey<FormState>();
-  TextEditingController searchTextController = new TextEditingController();
+  TextEditingController searchTextController = TextEditingController();
   TimebankModel timebankModel = TimebankModel({});
   TimebankModel editTimebankModel = TimebankModel({});
   String memberAssignment = "+ Add Members";
@@ -128,7 +128,7 @@ class CreateEditCommunityViewFormState
   FirebaseUser firebaseUser;
 
   var scollContainer = ScrollController();
-  PanelController _pc = new PanelController();
+  PanelController _pc = PanelController();
   GlobalKey<FormState> _stateSelectorKey = GlobalKey();
   final nameFocus = FocusNode();
 
@@ -198,7 +198,7 @@ class CreateEditCommunityViewFormState
   }
 
   void get _fetchCurrentlocation async {
-    Location templocation = new Location();
+    Location templocation = Location();
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
 
@@ -267,7 +267,7 @@ class CreateEditCommunityViewFormState
     return Form(key: _formKey, child: createSevaX, autovalidate: false);
   }
 
-  moveToTop() {
+  void moveToTop() {
     print("move to top");
     // _controller.jumpTo(0.0);
     _controller.animateTo(
@@ -293,7 +293,7 @@ class CreateEditCommunityViewFormState
             }
             // print("  snapshots data   ${snapshot.data.timebanks}");
 
-            return new Builder(builder: (BuildContext context) {
+            return Builder(builder: (BuildContext context) {
               return SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
                 controller: _controller,
@@ -1146,7 +1146,7 @@ class CreateEditCommunityViewFormState
   Widget get tappableAddBillingDetails {
     return GestureDetector(
       onTap: () {
-        FocusScope.of(parentContext).requestFocus(new FocusNode());
+        FocusScope.of(parentContext).requestFocus(FocusNode());
         _billingBottomsheet(parentContext);
       },
       child: Column(children: <Widget>[
@@ -1258,7 +1258,7 @@ class CreateEditCommunityViewFormState
   }
 
   InputDecoration getData(String fieldValue) {
-    return new InputDecoration(
+    return InputDecoration(
       errorStyle: TextStyle(
         color: Colors.red,
         wordSpacing: 5.0,
@@ -1606,7 +1606,7 @@ class CreateEditCommunityViewFormState
             style: Theme.of(context).primaryTextTheme.button,
           ),
           onPressed: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
+            FocusScope.of(context).requestFocus(FocusNode());
             if (_billingInformationKey.currentState.validate()) {
               if (controller.community.billing_address.country == null) {
                 scrollToTop();

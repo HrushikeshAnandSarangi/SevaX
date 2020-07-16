@@ -24,7 +24,7 @@ class TimeBankSevaCoin extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return new TimeBankSevaCoinState();
+    return TimeBankSevaCoinState();
   }
 }
 
@@ -300,8 +300,8 @@ class _InputDonateSuccessDialogState extends State<InputDonateSuccessDialog> {
   void initState() {
     super.initState();
     onComplete = widget.onComplete;
-    var _duration = new Duration(milliseconds: 2000);
-    new Timer(_duration, () => {Navigator.pop(context)});
+    var _duration = Duration(milliseconds: 2000);
+    Timer(_duration, () => {Navigator.pop(context)});
   }
 
 //  Text('Coins successfully donated to timebank')

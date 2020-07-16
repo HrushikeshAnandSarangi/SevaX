@@ -7,7 +7,6 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
@@ -31,8 +30,7 @@ class InviteMembersGroup extends StatefulWidget {
 }
 
 class _InviteMembersGroupState extends State<InviteMembersGroup> {
-  final TextEditingController searchTextController =
-      new TextEditingController();
+  final TextEditingController searchTextController = TextEditingController();
   Future<TimebankModel> getTimebankDetails;
   TimebankModel parenttimebankModel;
   var parentTimebankMembersList = List<String>();
@@ -133,13 +131,14 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                     filled: true,
                     fillColor: Colors.grey[300],
                     focusedBorder: OutlineInputBorder(
-                      borderSide: new BorderSide(color: Colors.white),
-                      borderRadius: new BorderRadius.circular(25.7),
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7),
                     ),
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
-                        borderRadius: new BorderRadius.circular(25.7)),
-                    hintText: AppLocalizations.of(context).translate('members', 'searchby_email'),
+                        borderRadius: BorderRadius.circular(25.7)),
+                    hintText: AppLocalizations.of(context)
+                        .translate('members', 'searchby_email'),
                     hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
               ),
             ),
@@ -179,7 +178,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
             validItems: parentTimebankMembersList),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text(AppLocalizations.of(context).translate('members', 'please_try_later'));
+            return Text(AppLocalizations.of(context)
+                .translate('members', 'please_try_later'));
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -193,7 +193,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
             return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Center(
-                  child: Text(AppLocalizations.of(context).translate('members', 'no_member_found')),
+                  child: Text(AppLocalizations.of(context)
+                      .translate('members', 'no_member_found')),
                 ));
           }
           return Padding(
@@ -238,7 +239,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
             groupInviteStatus = GroupInviteStatus.DECLINED;
             return userWidget(
                 user: userModel,
-                status: AppLocalizations.of(context).translate('members', 'declined'),
+                status: AppLocalizations.of(context)
+                    .translate('members', 'declined'),
                 groupInviteUserModel: groupInviteUserModel,
                 groupInviteStatus: groupInviteStatus);
           }
@@ -247,14 +249,16 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
               groupInviteStatus: groupInviteStatus,
               user: userModel,
               groupInviteUserModel: groupInviteUserModel,
-              status: AppLocalizations.of(context).translate('members', 'invited'));
+              status:
+                  AppLocalizations.of(context).translate('members', 'invited'));
         } else {
           print("----------------- no data");
 
           groupInviteStatus = GroupInviteStatus.INVITE;
           return userWidget(
               user: userModel,
-              status: AppLocalizations.of(context).translate('members', 'invite'),
+              status:
+                  AppLocalizations.of(context).translate('members', 'invite'),
               groupInviteStatus: groupInviteStatus);
         }
       },
@@ -429,8 +433,9 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
             });
           }
         },
-        child:
-            Text(AppLocalizations.of(context).translate('members', 'resend_invite'), style: TextStyle(fontFamily: 'Europa')),
+        child: Text(
+            AppLocalizations.of(context).translate('members', 'resend_invite'),
+            style: TextStyle(fontFamily: 'Europa')),
         color: FlavorConfig.values.theme.primaryColor,
         textColor: Colors.white,
         shape: StadiumBorder(),
@@ -442,7 +447,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
             sendInvitationNotification(userModel: user);
           });
         },
-        child: Text(AppLocalizations.of(context).translate('members', 'invite'), style: TextStyle(fontFamily: 'Europa')),
+        child: Text(AppLocalizations.of(context).translate('members', 'invite'),
+            style: TextStyle(fontFamily: 'Europa')),
         color: FlavorConfig.values.theme.primaryColor,
         textColor: Colors.white,
         shape: StadiumBorder(),

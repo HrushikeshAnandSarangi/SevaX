@@ -72,7 +72,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     super.dispose();
   }
 
-  _scrollListener() {
+  void _scrollListener() {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
         !_controller.position.outOfRange &&
         !_isLoading &&
@@ -91,7 +91,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     var finalWidget = Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate('groups','select_vol'),
+          AppLocalizations.of(context).translate('groups', 'select_vol'),
           style: TextStyle(fontSize: 20),
         ),
         elevation: 0,
@@ -109,7 +109,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               child: Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Text(
-                  AppLocalizations.of(context).translate('groups','save'),
+                  AppLocalizations.of(context).translate('groups', 'save'),
                   style: prefix0.TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
@@ -172,11 +172,11 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     }
     if (_avtars.length == 0) {
       return Center(
-        child: Text(AppLocalizations.of(context).translate('groups','none')),
+        child: Text(AppLocalizations.of(context).translate('groups', 'none')),
       );
     }
     return Center(
-      child: Text(AppLocalizations.of(context).translate('groups','none')),
+      child: Text(AppLocalizations.of(context).translate('groups', 'none')),
     );
   }
 
@@ -240,7 +240,8 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               }
               if (userModelList.length == 1 && user.email == widget.userEmail) {
                 return Center(
-                  child: Text(AppLocalizations.of(context).translate('groups','none')),
+                  child: Text(
+                      AppLocalizations.of(context).translate('groups', 'none')),
                 );
               }
               if (user.email == widget.userEmail) {

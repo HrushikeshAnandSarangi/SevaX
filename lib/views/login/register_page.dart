@@ -1,12 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:ui' as ui;
+
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
@@ -21,7 +21,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 import 'package:sevaexchange/views/splash_view.dart' as DefaultSplashView;
-import 'dart:ui' as ui;
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -74,7 +73,7 @@ class _RegisterPageState extends State<RegisterPage>
       appBar: AppBar(
         centerTitle: true,
         elevation: 0.5,
-        title: new Text(
+        title: Text(
           AppLocalizations.of(context).translate('signup', 'your_details'),
           style: TextStyle(
             fontSize: 18,
@@ -441,14 +440,15 @@ class _RegisterPageState extends State<RegisterPage>
 
   BuildContext dialogContext;
 
-  showDialogForAccountCreation() async {
+  void showDialogForAccountCreation() async {
     showDialog(
         barrierDismissible: false,
         context: context,
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text(AppLocalizations.of(context).translate('signup','create_account')),
+            title: Text(AppLocalizations.of(context)
+                .translate('signup', 'create_account')),
             content: LinearProgressIndicator(),
           );
         });
@@ -477,10 +477,11 @@ class _RegisterPageState extends State<RegisterPage>
       } else {
         user.photoURL = defaultUserImageURL;
       }
-      user.timezone = new TimezoneListData()
-          .getTimeZoneByCodeData(DateTime.now().timeZoneName);
+      user.timezone =
+          TimezoneListData().getTimeZoneByCodeData(DateTime.now().timeZoneName);
       var _sysLng = ui.window.locale.languageCode;
-      var language = new LanguageListData().getLanguageSupported(_sysLng.toString());
+      var language =
+          LanguageListData().getLanguageSupported(_sysLng.toString());
       appLanguage.changeLanguage(Locale(language.code));
       user.language = language.code;
       await FirestoreManager.updateUser(user: user);
@@ -574,8 +575,7 @@ class _RegisterPageState extends State<RegisterPage>
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             horizontalLine(),
-            Text(AppLocalizations.of(context)
-                .translate('signup', 'or')),
+            Text(AppLocalizations.of(context).translate('signup', 'or')),
             horizontalLine()
           ],
         ),

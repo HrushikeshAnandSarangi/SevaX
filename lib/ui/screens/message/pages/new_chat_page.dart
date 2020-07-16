@@ -53,7 +53,7 @@ class _NewChatPageState extends State<NewChatPage> {
   }
 
   @override
-  dispose() {
+  void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
@@ -158,7 +158,8 @@ class _NewChatPageState extends State<NewChatPage> {
                     : Center(
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
-                          child: Text(AppLocalizations.of(context).translate('messages', 'nofrequent')),
+                          child: Text(AppLocalizations.of(context)
+                              .translate('messages', 'nofrequent')),
                         ),
                       ),
                 StreamBuilder<List<TimebankModel>>(

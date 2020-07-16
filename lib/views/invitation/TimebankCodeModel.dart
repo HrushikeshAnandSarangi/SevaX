@@ -27,7 +27,7 @@ class TimebankCodeModel extends DataModel {
 
     this.usersOnBoarded = data['usersOnboarded'] == null
         ? null
-        : new List<String>.from(data['usersOnboarded'].map((u) => u));
+        : List<String>.from(data['usersOnboarded'].map((u) => u));
   }
 
   @override

@@ -97,16 +97,13 @@ class NewsImageState extends State<NewsImage>
   }
 
   @override
-  userDoc(String _doc, String fileName) {
-    // TODO: implement userDoc
+  void userDoc(String _doc, String fileName) {
     setState(() {
       this._path = _doc;
       this._fileName = fileName;
       this._isDocumentBeingUploaded = true;
     });
     checkPdfSize();
-
-    return null;
   }
 
   void checkPdfSize() async {
@@ -122,7 +119,7 @@ class NewsImageState extends State<NewsImage>
     }
   }
 
-  getAlertDialog(BuildContext context) {
+  Future<dynamic> getAlertDialog(BuildContext context) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -130,13 +127,13 @@ class NewsImageState extends State<NewsImage>
         return AlertDialog(
           title: Text(AppLocalizations.of(context)
               .translate('create_feed', 'size_alert_title')),
-          content: new Text(AppLocalizations.of(context)
+          content: Text(AppLocalizations.of(context)
               .translate('create_feed', 'size_alert')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(
-                  AppLocalizations.of(context).translate('help', 'close')),
+            FlatButton(
+              child:
+                  Text(AppLocalizations.of(context).translate('help', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -325,7 +322,7 @@ class NewsImageState extends State<NewsImage>
 
   void get _fetchCurrentlocation async {
     try {
-      Location templocation = new Location();
+      Location templocation = Location();
       bool _serviceEnabled;
       PermissionStatus _permissionGranted;
 

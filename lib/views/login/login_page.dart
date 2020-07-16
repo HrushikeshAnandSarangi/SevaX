@@ -74,8 +74,7 @@ class _LoginPageState extends State<LoginPage> {
     parentContext = context;
     var appLanguage = Provider.of<AppLanguage>(context);
     var _sysLng = ui.window.locale.languageCode;
-    var language =
-        new LanguageListData().getLanguageSupported(_sysLng.toString());
+    var language = LanguageListData().getLanguageSupported(_sysLng.toString());
     appLanguage.changeLanguage(Locale(language.code));
     UserData.shared.isFromLogin = true;
     //Todo check this line
@@ -464,7 +463,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget get content {
     return FadeAnimation(
       1.5,
-      new Container(
+      Container(
         width: double.infinity,
         decoration: BoxDecoration(color: Colors.white),
         child: Padding(
@@ -537,7 +536,7 @@ class _LoginPageState extends State<LoginPage> {
   bool validateEmail(String value) {
     String pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regExp = new RegExp(pattern);
+    RegExp regExp = RegExp(pattern);
     if (value.length == 0) {
       return false;
     } else if (!regExp.hasMatch(value)) {
@@ -1023,8 +1022,8 @@ class _LoginPageState extends State<LoginPage> {
             ),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
-              new FlatButton(
-                child: new Text(AppLocalizations.of(context)
+              FlatButton(
+                child: Text(AppLocalizations.of(context)
                     .translate('billing_plans', 'close')),
                 onPressed: () {
                   Navigator.of(context).pop();

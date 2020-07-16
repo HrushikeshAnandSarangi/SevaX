@@ -493,12 +493,12 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context)
+          title: Text(AppLocalizations.of(context)
               .translate('timebank_about', 'admin_cannot')),
-          // content: new Text("Khud he ko message kyu kar rha hai?"),
+          // content:  Text("Khud he ko message kyu kar rha hai?"),
           actions: <Widget>[
-            new FlatButton(
-              child: new Text(
+            FlatButton(
+              child: Text(
                 AppLocalizations.of(context).translate('homepage', 'close'),
                 style: TextStyle(
                   color: Colors.red,

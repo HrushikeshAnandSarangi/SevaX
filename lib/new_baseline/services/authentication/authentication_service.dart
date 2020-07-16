@@ -74,7 +74,7 @@
 //     }
 //   }
 
-//   /// Register a new user with [emailId], [password], [fullName] and [photoUrl]
+//   /// Register a   user with [emailId], [password], [fullName] and [photoUrl]
 //   Future<UserModel> registerNewUser({
 //     @required String emailId,
 //     @required String password,

@@ -9,7 +9,7 @@ class LinkTextSpan extends TextSpan {
       : super(
             style: style,
             text: text ?? url,
-            recognizer: new TapGestureRecognizer()
+            recognizer: TapGestureRecognizer()
               ..onTap = () => launcher.launch(url));
 }
 
@@ -21,7 +21,7 @@ class RichTextView extends StatelessWidget {
   RichTextView({@required this.text});
 
   bool _isLink(String input) {
-    final matcher = new RegExp(
+    final matcher = RegExp(
         r"(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)");
     return matcher.hasMatch(input);
   }

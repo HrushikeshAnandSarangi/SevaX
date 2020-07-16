@@ -47,8 +47,8 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   MessageModel messageModel = MessageModel();
   String loggedInEmail;
-  final TextEditingController textcontroller = new TextEditingController();
-  ScrollController _scrollController = new ScrollController();
+  final TextEditingController textcontroller = TextEditingController();
+  ScrollController _scrollController = ScrollController();
   String messageContent;
   String recieverId;
   final ChatBloc _bloc = ChatBloc();
@@ -294,7 +294,7 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  _scrollToBottom() {
+  void _scrollToBottom() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
@@ -306,7 +306,7 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-  pushNewMessage({
+  void pushNewMessage({
     String messageContent,
     MessageType type,
     File file,

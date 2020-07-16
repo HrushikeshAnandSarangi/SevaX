@@ -33,8 +33,9 @@ class NotificationCard extends StatelessWidget {
       child: Slidable(
         actionExtentRatio: 0.25,
         actions: <Widget>[
-          new IconSlideAction(
-            caption: AppLocalizations.of(context).translate('notifications_card', 'delete'),
+          IconSlideAction(
+            caption: AppLocalizations.of(context)
+                .translate('notifications_card', 'delete'),
             color: Colors.red,
             icon: Icons.delete,
             onTap: () {
@@ -65,7 +66,8 @@ class NotificationCard extends StatelessWidget {
                           Navigator.of(dialogContext).pop();
                         },
                         child: Text(
-                          AppLocalizations.of(context).translate('notifications_card', 'delete'),
+                          AppLocalizations.of(context)
+                              .translate('notifications_card', 'delete'),
                         ),
                       ),
                     ],
@@ -75,7 +77,7 @@ class NotificationCard extends StatelessWidget {
             },
           ),
         ],
-        delegate: new SlidableDrawerDelegate(),
+        delegate: SlidableDrawerDelegate(),
         child: Container(
           margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
           decoration: ShapeDecoration(

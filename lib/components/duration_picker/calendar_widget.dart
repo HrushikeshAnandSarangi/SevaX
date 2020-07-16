@@ -252,9 +252,9 @@ class CalendarWidgetState extends State<CalendarWidget> {
   void goToPreviousMonth() {
     setState(() {
       if (_currentDate.month == DateTime.january)
-        _currentDate = new DateTime(_currentDate.year - 1, DateTime.december);
+        _currentDate = DateTime(_currentDate.year - 1, DateTime.december);
       else
-        _currentDate = new DateTime(_currentDate.year, _currentDate.month - 1);
+        _currentDate = DateTime(_currentDate.year, _currentDate.month - 1);
 
       setMonthPadding();
     });
@@ -263,9 +263,9 @@ class CalendarWidgetState extends State<CalendarWidget> {
   void goToNextMonth() {
     setState(() {
       if (_currentDate.month == DateTime.december)
-        _currentDate = new DateTime(_currentDate.year + 1, DateTime.january);
+        _currentDate = DateTime(_currentDate.year + 1, DateTime.january);
       else
-        _currentDate = new DateTime(_currentDate.year, _currentDate.month + 1);
+        _currentDate = DateTime(_currentDate.year, _currentDate.month + 1);
 
       setMonthPadding();
     });
