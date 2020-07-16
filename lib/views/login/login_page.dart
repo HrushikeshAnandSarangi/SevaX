@@ -724,7 +724,9 @@ class _LoginPageState extends State<LoginPage> {
       print("User apple:$user");
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
-    } on Exception catch (error) {}
+    } on Exception catch (error) {
+      print(error);
+    }
     isLoading = false;
     _processLogin(user);
   }
@@ -773,7 +775,9 @@ class _LoginPageState extends State<LoginPage> {
       user = await auth.handleGoogleSignIn();
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
-    } on Exception catch (error) {}
+    } on Exception catch (error) {
+      print(error);
+    }
     isLoading = false;
     _processLogin(user);
   }
@@ -792,7 +796,9 @@ class _LoginPageState extends State<LoginPage> {
       );
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
-    } on Exception catch (error) {}
+    } on Exception catch (error) {
+      print(error);
+    }
     isLoading = false;
     if (user == null) {
       return;

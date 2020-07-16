@@ -612,7 +612,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                       // ));
                       try {
                         Navigator.of(_context).pop();
-                      } catch (e) {}
+                      } catch (e) {
+                        print(e);
+                      }
 
                       _signOut(
                           _context, SevaCore.of(context).loggedInUser.email);

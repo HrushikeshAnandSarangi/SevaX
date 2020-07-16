@@ -46,7 +46,9 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
       widget.requestModel = _requestModel;
       try {
         setState(() {});
-      } on Exception {}
+      } on Exception catch (error) {
+        print(error);
+      }
     });
   }
 

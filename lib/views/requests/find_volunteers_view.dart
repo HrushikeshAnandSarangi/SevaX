@@ -198,7 +198,9 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
       requestModel = RequestModel.fromMap(reqModel.data);
       try {
         setState(() {});
-      } on Exception {}
+      } on Exception catch (error) {
+        print(error);
+      }
     });
   }
 
@@ -293,7 +295,9 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         setState(() {
           buildWidget();
         });
-      } on Exception {}
+      } on Exception catch (error) {
+        print(error);
+      }
     });
   }
 
