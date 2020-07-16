@@ -20,18 +20,11 @@ class JoinRejectDialogView extends StatefulWidget {
       this.userModel});
 
   @override
-  _JoinRejectDialogViewState createState() => _JoinRejectDialogViewState(
-      requestInvitationModel, timeBankId, notificationId, userModel);
+  _JoinRejectDialogViewState createState() => _JoinRejectDialogViewState();
 }
 
 class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
-  final RequestInvitationModel requestInvitationModel;
-  final String timeBankId;
-  final String notificationId;
-  final UserModel userModel;
-
-  _JoinRejectDialogViewState(this.requestInvitationModel, this.timeBankId,
-      this.notificationId, this.userModel);
+  _JoinRejectDialogViewState();
 
   BuildContext progressContext;
 
@@ -51,7 +44,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               width: 70,
               child: CircleAvatar(
                 backgroundImage: NetworkImage(
-                    requestInvitationModel.timebankImage ??
+                    widget.requestInvitationModel.timebankImage ??
                         defaultUserImageURL),
               ),
             ),
@@ -61,7 +54,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                requestInvitationModel.requestTitle ?? "Anonymous",
+                widget.requestInvitationModel.requestTitle ?? "Anonymous",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -71,7 +64,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
-                requestInvitationModel.timebankName ??
+                widget.requestInvitationModel.timebankName ??
                     "Timebank name not updated",
               ),
             ),
@@ -86,7 +79,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                requestInvitationModel.requestDesc ??
+                widget.requestInvitationModel.requestDesc ??
                     "Description not yet updated",
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
@@ -95,7 +88,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             ),
             Center(
               child: Text(
-                  "By accepting, ${requestInvitationModel.requestTitle} will be added to the tasks.",
+                  "By accepting, ${widget.requestInvitationModel.requestTitle} will be added to the tasks.",
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                   ),
@@ -122,9 +115,9 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
 
                       // showProgressDialog(context, 'Accepting Invitation');
                       approveInvitationForVolunteerRequest(
-                          model: requestInvitationModel,
+                          model: widget.requestInvitationModel,
                           notificationId: widget.notificationId,
-                          user: userModel);
+                          user: widget.userModel);
 
                       if (progressContext != null) {
                         Navigator.pop(progressContext);
@@ -152,9 +145,9 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                       //   showProgressDialog(context, 'Rejecting Invitation');
 
                       declineInvitationbRequest(
-                          model: requestInvitationModel,
+                          model: widget.requestInvitationModel,
                           notificationId: widget.notificationId,
-                          userModel: userModel);
+                          userModel: widget.userModel);
 
                       if (progressContext != null) {
                         Navigator.pop(progressContext);

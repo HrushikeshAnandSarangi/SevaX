@@ -24,7 +24,7 @@ class NewsCardView extends StatefulWidget {
   @override
   NewsCardViewState createState() {
     // TODO: implement createState
-    return NewsCardViewState(newsModel: newsModel);
+    return NewsCardViewState();
   }
 }
 
@@ -32,9 +32,9 @@ class NewsCardViewState extends State<NewsCardView> {
   // assert(newsModel.title != null, 'News title cannot be null');
   // assert(newsModel.description != null, 'News description cannot be null');
   // assert(newsModel.fullName != null, 'Full name cannot be null');
-  final NewsModel newsModel;
+  // final NewsModel newsModel;
 
-  NewsCardViewState({this.newsModel});
+  // NewsCardViewState({this.newsModel});
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +43,14 @@ class NewsCardViewState extends State<NewsCardView> {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          newsModel.title == null ? newsModel.fullName : newsModel.title.trim(),
+          widget.newsModel.title == null
+              ? widget.newsModel.fullName
+              : widget.newsModel.title.trim(),
           style: TextStyle(fontSize: 16.0, color: Colors.white),
         ),
         actions: <Widget>[
-          newsModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+          widget.newsModel.sevaUserId ==
+                  SevaCore.of(context).loggedInUser.sevaUserID
               ? IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
@@ -60,7 +63,8 @@ class NewsCardViewState extends State<NewsCardView> {
           //   onPressed: () => _shareNews(context),
           // ),
           //shadowing for now as edit feed is not yet completed
-          newsModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+          widget.newsModel.sevaUserId ==
+                  SevaCore.of(context).loggedInUser.sevaUserID
               ? IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {
@@ -68,7 +72,7 @@ class NewsCardViewState extends State<NewsCardView> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => UpdateNewsFeed(
-                          newsMmodel: newsModel,
+                          newsMmodel: widget.newsModel,
                           timebankId:
                               SevaCore.of(context).loggedInUser.currentTimebank,
                         ),
@@ -86,7 +90,8 @@ class NewsCardViewState extends State<NewsCardView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               newsAuthorAndDate,
-              newsModel.title == null || newsModel.title == "NoData"
+              widget.newsModel.title == null ||
+                      widget.newsModel.title == "NoData"
                   ? Offstage()
                   : newsTitle,
               newsImage,
@@ -106,28 +111,34 @@ class NewsCardViewState extends State<NewsCardView> {
   Widget get newsTitle {
     return Container(
       padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 20.0),
-      child: newsModel.title == null || newsModel.title == "NoData"
-          ? Offstage()
-          : Text(
-              newsModel.title.trim(),
-              style: TextStyle(
-                  fontSize: 28.0,
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.bold),
-            ),
+      child:
+          widget.newsModel.title == null || widget.newsModel.title == "NoData"
+              ? Offstage()
+              : Text(
+                  widget.newsModel.title.trim(),
+                  style: TextStyle(
+                      fontSize: 28.0,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.bold),
+                ),
     );
   }
 
   Widget get listOfHashTags {
-    if (newsModel.hashTags.length > 0) {
+    if (widget.newsModel.hashTags.length > 0) {
       return SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(5.0),
           child: Wrap(
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
+<<<<<<< HEAD
+            children: widget.newsModel.hashTags.map((hash) {
+              // final _random = new Random();
+=======
             children: newsModel.hashTags.map((hash) {
               // final _random = Random();
+>>>>>>> 372dd456672108f1c7d90dbe7cb62abcbef315c0
               // var element = colorList[_random.nextInt(colorList.length)];
               return chip(hash, false);
             }).toList(),
@@ -196,15 +207,20 @@ class NewsCardViewState extends State<NewsCardView> {
   }
 
   Widget get listOfLinks {
-    if (newsModel.urlsFromPost.length > 0) {
+    if (widget.newsModel.urlsFromPost.length > 0) {
       return SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(5.0),
           child: Wrap(
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
+<<<<<<< HEAD
+            children: widget.newsModel.urlsFromPost.map((link) {
+              // final _random = new Random();
+=======
             children: newsModel.urlsFromPost.map((link) {
               // final _random = Random();
+>>>>>>> 372dd456672108f1c7d90dbe7cb62abcbef315c0
               // var element = colorList[_random.nextInt(colorList.length)];
               return chipForLinks(link, false);
             }).toList(),
@@ -289,8 +305,8 @@ class NewsCardViewState extends State<NewsCardView> {
             height: 40,
             width: 40,
             child: CircleAvatar(
-              backgroundImage:
-                  NetworkImage(newsModel.userPhotoURL ?? defaultUserImageURL),
+              backgroundImage: NetworkImage(
+                  widget.newsModel.userPhotoURL ?? defaultUserImageURL),
               minRadius: 40.0,
             ),
           ),
@@ -300,7 +316,7 @@ class NewsCardViewState extends State<NewsCardView> {
               Container(
                 margin: EdgeInsets.only(top: 5, left: 5),
                 child: Text(
-                  newsModel.fullName.trim(),
+                  widget.newsModel.fullName.trim(),
                   style: TextStyle(
                     fontSize: 18.0,
                   ),
@@ -309,7 +325,7 @@ class NewsCardViewState extends State<NewsCardView> {
               Container(
                 margin: EdgeInsets.only(left: 5),
                 child: Text(
-                  _getFormattedTime(newsModel.postTimestamp),
+                  _getFormattedTime(widget.newsModel.postTimestamp),
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.w500,
@@ -325,17 +341,20 @@ class NewsCardViewState extends State<NewsCardView> {
   }
 
   Widget get newsImage {
-    return newsModel.newsImageUrl == null
+    return widget.newsModel.newsImageUrl == null
         ? Offstage()
-        : getImageView(url: newsModel.newsImageUrl, imageId: newsModel.id);
+        : getImageView(
+            url: widget.newsModel.newsImageUrl, imageId: widget.newsModel.id);
   }
 
   Widget get scrappedImage {
-    return newsModel.imageScraped == null || newsModel.imageScraped == "NoData"
+    return widget.newsModel.imageScraped == null ||
+            widget.newsModel.imageScraped == "NoData"
         ? Offstage()
         //change tag to avoid hero widget issue
         : getImageView(
-            url: newsModel.imageScraped, imageId: newsModel.id + "*");
+            url: widget.newsModel.imageScraped,
+            imageId: widget.newsModel.id + "*");
   }
 
   Widget getImageView({
@@ -359,12 +378,13 @@ class NewsCardViewState extends State<NewsCardView> {
   }
 
   Widget get photoCredits {
-    return newsModel.photoCredits != null && newsModel.photoCredits.isNotEmpty
+    return widget.newsModel.photoCredits != null &&
+            widget.newsModel.photoCredits.isNotEmpty
         ? Center(
             child: Container(
               child: Text(
-                newsModel.photoCredits != null
-                    ? 'Credits: ${newsModel.photoCredits}'
+                widget.newsModel.photoCredits != null
+                    ? 'Credits: ${widget.newsModel.photoCredits}'
                     : '',
                 style: TextStyle(
                   fontSize: 15.0,
@@ -377,7 +397,7 @@ class NewsCardViewState extends State<NewsCardView> {
   }
 
   Widget get tags {
-    return newsModel.description == null
+    return widget.newsModel.description == null
         ? Offstage()
         : Container(
             padding: EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
@@ -385,7 +405,7 @@ class NewsCardViewState extends State<NewsCardView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  newsModel.description.trim(),
+                  widget.newsModel.description.trim(),
                   style: TextStyle(fontSize: 18.0, height: 1.4),
                 )
               ],
@@ -395,31 +415,31 @@ class NewsCardViewState extends State<NewsCardView> {
 
   Widget get document {
     return Container(
-      child:
-          newsModel.newsDocumentUrl == null || newsModel.newsDocumentUrl == ''
-              ? Offstage()
-              : GestureDetector(
-                  onTap: () => openPdfViewer(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      color: Colors.grey[100],
-                      child: ListTile(
-                        leading: Icon(Icons.attachment),
-                        title: Text(
-                          newsModel.newsDocumentName ?? "Document.pdf",
-                          //overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
+      child: widget.newsModel.newsDocumentUrl == null ||
+              widget.newsModel.newsDocumentUrl == ''
+          ? Offstage()
+          : GestureDetector(
+              onTap: () => openPdfViewer(),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  color: Colors.grey[100],
+                  child: ListTile(
+                    leading: Icon(Icons.attachment),
+                    title: Text(
+                      widget.newsModel.newsDocumentName ?? "Document.pdf",
+                      //overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
+              ),
+            ),
     );
   }
 
   Future<File> createFileOfPdfUrl(String documentUrl) async {
     final url = documentUrl;
-    final filename = newsModel.newsDocumentName;
+    final filename = widget.newsModel.newsDocumentName;
     var request = await HttpClient().getUrl(Uri.parse(url));
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);
@@ -430,12 +450,12 @@ class NewsCardViewState extends State<NewsCardView> {
   }
 
   void openPdfViewer() {
-    createFileOfPdfUrl(newsModel.newsDocumentUrl).then((f) {
+    createFileOfPdfUrl(widget.newsModel.newsDocumentUrl).then((f) {
       Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => PDFScreen(
-                  docName: newsModel.newsDocumentName,
+                  docName: widget.newsModel.newsDocumentName,
                   pathPDF: f.path,
                   pdf: f,
                 )),
@@ -444,7 +464,7 @@ class NewsCardViewState extends State<NewsCardView> {
   }
 
   Widget get subHeadings {
-    return newsModel.subheading == null
+    return widget.newsModel.subheading == null
         ? Offstage()
         : Container(
             padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 10.0),
@@ -452,7 +472,7 @@ class NewsCardViewState extends State<NewsCardView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  newsModel.subheading.trim(),
+                  widget.newsModel.subheading.trim(),
                   style: TextStyle(fontSize: 18.0, height: 1.4),
                 ),
                 Center(
@@ -544,7 +564,7 @@ class NewsCardViewState extends State<NewsCardView> {
   }
 
   void _deleteNews(BuildContext context) async {
-    await deleteNews(newsModel);
+    await deleteNews(widget.newsModel);
     if (dialogContext != null) {
       Navigator.pop(dialogContext);
     }
