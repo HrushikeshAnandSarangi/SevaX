@@ -206,7 +206,7 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
     );
   }
 
-  refresh() {
+  void refresh() {
     setState(() {
       timeBankBloc.setInvitedUsersData(widget.requestModel.id);
 

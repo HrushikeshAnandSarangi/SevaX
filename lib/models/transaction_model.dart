@@ -11,17 +11,16 @@ class TransactionModel extends DataModel {
   String timebankid;
   List<String> transactionbetween;
 
-  TransactionModel({
-    this.from,
-    this.timestamp,
-    this.credits,
-    this.to,
-    this.isApproved = false,
-    this.type,
-    this.typeid,
-    this.timebankid,
-    this.transactionbetween
-  });
+  TransactionModel(
+      {this.from,
+      this.timestamp,
+      this.credits,
+      this.to,
+      this.isApproved = false,
+      this.type,
+      this.typeid,
+      this.timebankid,
+      this.transactionbetween});
 
   TransactionModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('from')) {
@@ -49,10 +48,10 @@ class TransactionModel extends DataModel {
       this.timebankid = map['timebankid'];
     }
     if (map.containsKey('transactionbetween')) {
-      List<String> transactionbetween = List.castFrom(map['transactionbetween']);
+      List<String> transactionbetween =
+          List.castFrom(map['transactionbetween']);
       this.transactionbetween = transactionbetween;
     }
-
   }
 
   @override
@@ -82,13 +81,13 @@ class TransactionModel extends DataModel {
     if (this.timebankid != null) {
       map['timebankid'] = this.timebankid;
     }
-    if (this.transactionbetween != null &&
-        this.transactionbetween.isNotEmpty) {
+    if (this.transactionbetween != null && this.transactionbetween.isNotEmpty) {
       map['transactionbetween'] = this.transactionbetween;
     }
     return map;
   }
-  debitCreditSymbol(id, timebankid, viewtype) {
+
+  String debitCreditSymbol(id, timebankid, viewtype) {
     if (this.type == 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS') {
       return "+";
     } else if (viewtype == 'user') {

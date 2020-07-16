@@ -440,7 +440,7 @@ class _RegisterPageState extends State<RegisterPage>
 
   BuildContext dialogContext;
 
-  showDialogForAccountCreation() async {
+  void showDialogForAccountCreation() async {
     showDialog(
         barrierDismissible: false,
         context: context,

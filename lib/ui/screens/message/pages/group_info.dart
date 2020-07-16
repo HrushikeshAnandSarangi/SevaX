@@ -26,7 +26,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
   ChatModel chatModel;
 
   @override
-  initState() {
+  void initState() {
     chatModel = widget.chatModel;
     _bloc.onGroupNameChanged(chatModel.groupDetails.name);
     _bloc.addParticipants(chatModel.participantInfo);
@@ -151,7 +151,8 @@ class _GroupInfoState extends State<GroupInfoPage> {
                               disabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
                               errorText: snapshot.error,
-                              hintText: AppLocalizations.of(context).translate('messages', 'multi_user_messaging_name'),
+                              hintText: AppLocalizations.of(context).translate(
+                                  'messages', 'multi_user_messaging_name'),
                               hintStyle: TextStyle(
                                 fontSize: 18,
                                 color: Colors.grey,

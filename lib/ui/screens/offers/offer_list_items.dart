@@ -159,7 +159,7 @@ class OfferListItems extends StatelessWidget {
     }
   }
 
-  _navigateToOfferDetails(OfferModel model) {
+  void _navigateToOfferDetails(OfferModel model) {
     Navigator.push(
       parentContext,
       MaterialPageRoute(
@@ -351,7 +351,7 @@ class NearOfferListItems extends StatelessWidget {
     );
   }
 
-  _navigateToOfferDetails(OfferModel model) {
+  void _navigateToOfferDetails(OfferModel model) {
     Navigator.push(
       parentContext,
       MaterialPageRoute(

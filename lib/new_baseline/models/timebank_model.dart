@@ -116,7 +116,7 @@ class TimebankModel extends DataModel {
     return geoFirePoint;
   }
 
-  updateValueByKey(String key, dynamic value) {
+  void updateValueByKey(String key, dynamic value) {
     if (key == 'id') {
       this.id = value;
     }

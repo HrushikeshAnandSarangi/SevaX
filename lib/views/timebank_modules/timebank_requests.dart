@@ -44,7 +44,7 @@ class RequestsModule extends StatefulWidget {
 class RequestsState extends State<RequestsModule> {
   String timebankId;
 
-  _setORValue() {
+  void _setORValue() {
     globals.orCreateSelector = 0;
   }
 

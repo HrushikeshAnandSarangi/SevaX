@@ -15,37 +15,6 @@ import 'package:shimmer/shimmer.dart';
 
 import 'search_timebank_manager_page.dart';
 
-// class SevaCore extends InheritedWidget {
-//   UserModel loggedInUser;
-
-//   SevaCore({
-//     @required this.loggedInUser,
-//     @required Widget child,
-//     Key key,
-//   })  : assert(loggedInUser != null),
-//         assert(child != null),
-//         super(key: key, child: child);
-
-//   @override
-//   bool updateShouldNotify(SevaCore oldWidget) {
-//     return loggedInUser != oldWidget.loggedInUser;
-//   }
-
-//   static SevaCore of(BuildContext context) {
-//     return context.inheritFromWidgetOfExactType(SevaCore) as SevaCore;
-//   }
-
-// //  Future<bool> check() async {
-// //    var connectivityResult = await (Connectivity().checkConnectivity());
-// //    if (connectivityResult == ConnectivityResult.mobile) {
-// //      return true;
-// //    } else if (connectivityResult == ConnectivityResult.wifi) {
-// //      return true;
-// //    }
-// //    return false;
-// //  }
-// }
-
 enum MEMBER_SELECTION_MODE { SHARE_FEED, NEW_CHAT }
 
 class SelectMembersFromTimebank extends StatefulWidget {
@@ -107,7 +76,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
     super.dispose();
   }
 
-  _scrollListener() {
+  void _scrollListener() {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
         !_controller.position.outOfRange &&
         !_isLoading) {

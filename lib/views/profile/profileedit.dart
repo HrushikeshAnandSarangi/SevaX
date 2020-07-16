@@ -39,7 +39,7 @@ class ProfileFormState extends State<ProfileForm> {
     SevaCore.of(context).loggedInUser.sevaUserID = sevaUID;
   }
 
-  _setPreferences() async {
+  Future<void> _setPreferences() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     // await prefs.setString('fullname', globals.fullname);
     await prefs.setString('bio', SevaCore.of(context).loggedInUser.bio);

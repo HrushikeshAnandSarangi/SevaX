@@ -330,8 +330,8 @@ class _EditProfilePageState extends State<EditProfilePage>
     });
   }
 
-  _updateName() {
-    return showDialog(
+  void _updateName() {
+    showDialog(
       context: context,
       builder: (BuildContext viewContext) {
         return AlertDialog(
@@ -427,8 +427,8 @@ class _EditProfilePageState extends State<EditProfilePage>
     );
   }
 
-  _updateBio() {
-    return showDialog(
+  void _updateBio() {
+    showDialog(
       context: context,
       builder: (BuildContext viewContext) {
         // return object of type Dialog

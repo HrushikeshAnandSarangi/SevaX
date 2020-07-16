@@ -670,7 +670,7 @@ class TimezoneListData {
 
   TimezoneListData();
 
-  getTimezoneData(timezoneName) {
+  List<int> getTimezoneData(timezoneName) {
     for (var i = 0; i < timezonelist.length; i++) {
       if (timezonelist[i].timezoneName == timezoneName) {
         return [
@@ -682,7 +682,7 @@ class TimezoneListData {
     return [-5, 0];
   }
 
-  getTimeZoneByCodeData(timezoneCode) {
+  String getTimeZoneByCodeData(timezoneCode) {
     for (var i = 0; i < timezonelist.length; i++) {
       if (timezonelist[i].timezoneAbb == timezoneCode) {
         return timezonelist[i].timezoneName;
@@ -691,7 +691,7 @@ class TimezoneListData {
     return "Pacific Standard Time";
   }
 
-  getData() {
+  List<TimeZoneModel> getData() {
     return timezonelist;
   }
 }

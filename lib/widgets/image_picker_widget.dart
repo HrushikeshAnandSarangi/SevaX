@@ -48,16 +48,14 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {
-        FocusScope.of(context).unfocus(),
-        imagePicker.showDialog(context)
-      },
+      onTap: () =>
+          {FocusScope.of(context).unfocus(), imagePicker.showDialog(context)},
       child: widget.child,
     );
   }
 
   @override
-  userImage(File _image) {
+  void userImage(File _image) {
     widget.onChanged(_image);
   }
 }

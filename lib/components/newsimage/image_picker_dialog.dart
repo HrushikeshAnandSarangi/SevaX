@@ -29,31 +29,31 @@ class ImagePickerDialog extends StatelessWidget {
     ));
   }
 
-  getImage(BuildContext context) {
+  void getImage(BuildContext context) {
     this.context = context;
     if (_controller == null ||
         _drawerDetailsPosition == null ||
         _drawerContentsOpacity == null) {
-      return;
-    }
-    _controller.forward();
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => SlideTransition(
-        position: _drawerDetailsPosition,
-        child: FadeTransition(
-          opacity: ReverseAnimation(_drawerContentsOpacity),
-          child: this,
+    } else {
+      _controller.forward();
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => SlideTransition(
+          position: _drawerDetailsPosition,
+          child: FadeTransition(
+            opacity: ReverseAnimation(_drawerContentsOpacity),
+            child: this,
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   void dispose() {
     _controller.dispose();
   }
 
-  startTime() async {
+  Future<Timer> startTime() async {
     var _duration = Duration(milliseconds: 200);
     return Timer(_duration, navigationPage);
   }
@@ -62,7 +62,7 @@ class ImagePickerDialog extends StatelessWidget {
     Navigator.pop(dialogContext);
   }
 
-  dismissDialog() {
+  void dismissDialog() {
     _controller.reverse();
     startTime();
   }

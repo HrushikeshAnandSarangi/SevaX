@@ -68,16 +68,14 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
 
   static String selectedDays = 'Monday';
 
-  double _result = 0.0;
-
   void _handleRadioValueChange(int value) {
     setState(() {
       endType = value;
     });
   }
 
-  static getRecurringdays() {
-    var x = 0;
+  static List<int> getRecurringdays() {
+    int x = 0;
     recurringDays.clear();
     for (var i = 0; i < _selected.length; i++) {
       if (_selected[i]) {
@@ -85,7 +83,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
         x++;
       }
     }
-//    recurringDays.removeWhere((value) => value == null);
+
     print("list of data $recurringDays");
     return recurringDays;
   }
@@ -377,6 +375,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                                         ? (Value) {
                                             setState(() {
                                               after = Value;
+                                            });
                                             });
                                           }
                                         : null,

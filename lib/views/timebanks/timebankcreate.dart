@@ -843,25 +843,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             ));
   }
 
-  Future _getLocation() async {
-    String address = await LocationUtility().getFormattedAddress(
-      location.latitude,
-      location.longitude,
-    );
-    log('_getLocation: $address');
-    setState(() {
-      this.selectedAddress = address;
-    });
-  }
-
-  _showMembers() {
-    if (globals.addedMembersId == []) {
-      Text('');
-    } else {
-      Text(globals.addedMembersId.toString());
-    }
-  }
-
   void fetchCurrentlocation() {
     Location().getLocation().then((onValue) {
       print("Location1:$onValue");

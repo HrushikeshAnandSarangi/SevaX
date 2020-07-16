@@ -43,7 +43,7 @@ class ProfileViewerState extends State<ProfileViewer> {
   bool isBlocked;
 
   @override
-  initState() {
+  void initState() {
     super.initState();
   }
 
@@ -593,7 +593,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
     super.initState();
   }
 
-  viewMore() {
+  void viewMore() {
     setState(() {
       viewFullDetails = !viewFullDetails;
     });

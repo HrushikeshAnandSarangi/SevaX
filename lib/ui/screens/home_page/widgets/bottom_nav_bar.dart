@@ -22,7 +22,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
       : super(key: key);
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     final _messageBloc = BlocProvider.of<MessageBloc>(context);
     return StreamBuilder<NavBarBadgeModel>(
       stream: CombineLatestStream.combine2(

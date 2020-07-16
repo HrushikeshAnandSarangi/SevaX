@@ -18,6 +18,7 @@ import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/reported_members/widgets/reported_member_navigator_widget.dart';
+import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -111,7 +112,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     super.dispose();
   }
 
-  _scrollListener() {
+  void _scrollListener() {
     if (_listController.position.viewportDimension >=
             _listController.position.maxScrollExtent &&
         !_listController.position.outOfRange &&
@@ -633,13 +634,13 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     );
   }
 
-  _exitTimebankOrGroup({
+  void _exitTimebankOrGroup({
     UserModel user,
     BuildContext context,
     TimebankModel model,
     bool isAdmin,
   }) {
-    return showDialog(
+    showDialog(
       context: context,
       builder: (BuildContext viewContext) {
         return AlertDialog(
@@ -1765,22 +1766,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 }
 
 enum Actions { Approve, Reject, Remove, Promote, Demote, Exit, Loan }
-
-class Debouncer {
-  final int milliseconds;
-  VoidCallback action;
-  Timer _timer;
-
-  Debouncer({this.milliseconds});
-
-  run(VoidCallback action) {
-    if (_timer != null) {
-      _timer.cancel();
-    }
-
-    _timer = Timer(Duration(milliseconds: milliseconds), action);
-  }
-}
 
 class CustomRaisedButton extends StatelessWidget {
   final Actions action;

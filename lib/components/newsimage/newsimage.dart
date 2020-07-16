@@ -98,16 +98,13 @@ class NewsImageState extends State<NewsImage>
   }
 
   @override
-  userDoc(String _doc, String fileName) {
-    // TODO: implement userDoc
+  void userDoc(String _doc, String fileName) {
     setState(() {
       this._path = _doc;
       this._fileName = fileName;
       this._isDocumentBeingUploaded = true;
     });
     checkPdfSize();
-
-    return null;
   }
 
   void checkPdfSize() async {
@@ -123,7 +120,7 @@ class NewsImageState extends State<NewsImage>
     }
   }
 
-  getAlertDialog(BuildContext context) {
+  Future<dynamic> getAlertDialog(BuildContext context) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {

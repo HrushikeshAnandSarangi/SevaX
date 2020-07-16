@@ -6,7 +6,7 @@ class AppLanguage extends ChangeNotifier {
   static Locale _appLocale;
 
   Locale get appLocal => _appLocale ?? Locale("en");
-  fetchLocale() {
+  Locale fetchLocale() {
     if (AppConfig.prefs.getString('language_code') == null) {
       _appLocale = Locale('en');
       return _appLocale;

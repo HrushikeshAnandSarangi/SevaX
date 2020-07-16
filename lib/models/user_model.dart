@@ -395,11 +395,11 @@ class UserListModel {
   bool loading = false;
   UserListModel();
 
-  add(user) {
+  void add(user) {
     this.users.add(user);
   }
 
-  removeall() {
+  void removeall() {
     this.users = [];
   }
 

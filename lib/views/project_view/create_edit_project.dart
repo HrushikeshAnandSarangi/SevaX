@@ -810,7 +810,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     );
   }
 
-  moveToTop() {
+  void moveToTop() {
     print("move to top");
     // _controller.jumpTo(0.0);
     _controller.animateTo(

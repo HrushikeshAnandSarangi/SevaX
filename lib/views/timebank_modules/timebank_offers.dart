@@ -25,7 +25,7 @@ class OffersModule extends StatefulWidget {
 
 class OffersState extends State<OffersModule> {
   String timebankId;
-  _setORValue() {
+  void _setORValue() {
     globals.orCreateSelector = 1;
   }
 

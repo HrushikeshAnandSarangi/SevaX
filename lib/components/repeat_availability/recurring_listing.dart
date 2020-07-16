@@ -17,7 +17,7 @@ class RecurringRequestList extends StatefulWidget {
   RecurringRequestList({Key key, @required this.model, this.timebankModel})
       : super(key: key);
 
-  getRequestModel() {
+  RequestModel getRequestModel() {
 //    print("model url is == ${model.id}");
     return model;
   }

@@ -24,7 +24,9 @@ class _OffersTabViewState extends State<OffersTabView> {
         stream: _bloc.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
-            return Center(child: Text(AppLocalizations.of(context).translate('search','search_something')));
+            return Center(
+                child: Text(AppLocalizations.of(context)
+                    .translate('search', 'search_something')));
           }
           return StreamBuilder<List<OfferModel>>(
             stream: Searches.searchOffers(
@@ -41,7 +43,8 @@ class _OffersTabViewState extends State<OffersTabView> {
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 print("===>> ${snapshot.data}");
                 return Center(
-                  child: Text(AppLocalizations.of(context).translate('search','no_data')),
+                  child: Text(AppLocalizations.of(context)
+                      .translate('search', 'no_data')),
                 );
               }
 
@@ -78,7 +81,7 @@ class _OffersTabViewState extends State<OffersTabView> {
     );
   }
 
-  _navigateToOfferDetails(OfferModel model) {
+  void _navigateToOfferDetails(OfferModel model) {
     print(model);
     Navigator.push(
       context,

@@ -19,7 +19,7 @@ import 'package:sevaexchange/ui/screens/location/widgets/location_confirmation_c
 import 'get_location.dart';
 
 extension StringExtension on String {
-  get notNullLocation {
+  String get notNullLocation {
     return this != '' ? ',' + this : '';
   }
 }

@@ -27,10 +27,6 @@ class SearchBloc extends BlocBase {
 
   Stream<String> get searchText => _searchText.stream;
 
-  void searchAfterDelay() {
-    _searchText.onAdd(_debouncer.run(() => print("hello")));
-  }
-
   @override
   void dispose() {
     _searchText.close();

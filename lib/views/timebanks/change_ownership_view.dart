@@ -256,8 +256,8 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
     );
   }
 
-  getSuccessDialogtwo() {
-    return showDialog(
+  void getSuccessDialogtwo() {
+    showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
@@ -437,8 +437,9 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
 //        });
 //  }
 
-  getSuccessDialog({BuildContext context, String timebankName, String admin}) {
-    return showDialog(
+  void getSuccessDialog(
+      {BuildContext context, String timebankName, String admin}) {
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
@@ -467,7 +468,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
     );
   }
 
-  getErrorDialog(BuildContext context) {
+  void getErrorDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

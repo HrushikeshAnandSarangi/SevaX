@@ -61,7 +61,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
     });
   }
 
-  static getRecurringdays() {
+  static List<int> getRecurringdays() {
     var x = 0;
     recurringDays.clear();
     for (var i = 0; i < _selected.length; i++) {
@@ -363,6 +363,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                             setState(() {
                                               after = Value;
                                             });
+                                            });
                                           }
                                         : null,
                                     items: occurenccesList
@@ -446,6 +447,4 @@ class RepeatWidgetState extends State<RepeatWidget> {
       ),
     );
   }
-
-  openCalender() {}
 }
