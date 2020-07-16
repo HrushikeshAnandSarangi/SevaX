@@ -32,15 +32,14 @@ class NewsImage extends StatefulWidget {
     this.selectedAddress,
   });
 
-  NewsImageState createState() => NewsImageState(onLocationDataModelUpdate);
+  NewsImageState createState() => NewsImageState();
 }
 
 @override
 class NewsImageState extends State<NewsImage>
     with TickerProviderStateMixin, NewsImagePickerListener {
   bool _isImageBeingUploaded = false;
-  Function(LocationDataModel) onLocationDataModelUpdate;
-  NewsImageState(this.onLocationDataModelUpdate);
+  // Function(LocationDataModel) onLocationDataModelUpdate;
   String selectedAddress;
 
   NewsImagePickerHandler imagePicker;
@@ -315,7 +314,7 @@ class NewsImageState extends State<NewsImage>
             selectedAddress: selectedAddress,
             onChanged: (LocationDataModel dataModel) {
               selectedAddress = dataModel.location;
-              onLocationDataModelUpdate(dataModel);
+              widget.onLocationDataModelUpdate(dataModel);
               setState(() {});
             },
           ),
@@ -355,7 +354,7 @@ class NewsImageState extends State<NewsImage>
           location.longitude,
         )
             .then((address) {
-          onLocationDataModelUpdate(LocationDataModel(
+          widget.onLocationDataModelUpdate(LocationDataModel(
             address,
             location.latitude,
             location.longitude,

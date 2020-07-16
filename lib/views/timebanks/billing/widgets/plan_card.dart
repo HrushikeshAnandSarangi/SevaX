@@ -29,12 +29,13 @@ class BillingPlanCard extends StatefulWidget {
   @override
   BillingPlanCardState createState() {
     return BillingPlanCardState(
-        user: user,
-        billMeVisibility: billMeVisibility,
-        canBillMe: canBillMe,
-        isPlanActive: isPlanActive,
-        isSelected: isSelected,
-        plan: plan);
+        // user: user,
+        // billMeVisibility: billMeVisibility,
+        // canBillMe: canBillMe,
+        // isPlanActive: isPlanActive,
+        // isSelected: isSelected,
+        // plan: plan,
+        );
   }
 }
 
@@ -48,13 +49,14 @@ class BillingPlanCardState extends State<BillingPlanCard> {
   final bool billMeVisibility;
   bool isBillMe = false;
 
-  BillingPlanCardState(
-      {this.isSelected,
-      this.isPlanActive,
-      this.user,
-      this.plan,
-      this.canBillMe,
-      this.billMeVisibility});
+  BillingPlanCardState({
+    this.isSelected,
+    this.isPlanActive,
+    this.user,
+    this.plan,
+    this.canBillMe,
+    this.billMeVisibility,
+  });
 
   @override
   Widget build(BuildContext context) {

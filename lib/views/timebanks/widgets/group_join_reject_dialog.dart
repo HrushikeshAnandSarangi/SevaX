@@ -21,20 +21,10 @@ class GroupJoinRejectDialogView extends StatefulWidget {
 
   @override
   _GroupJoinRejectDialogViewState createState() =>
-      _GroupJoinRejectDialogViewState(groupInviteUserModel, timeBankId,
-          notificationId, userModel, invitationId);
+      _GroupJoinRejectDialogViewState();
 }
 
 class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
-  final GroupInviteUserModel groupInviteUserModel;
-  final String timeBankId;
-  final String notificationId;
-  final UserModel userModel;
-  final String invitationId;
-
-  _GroupJoinRejectDialogViewState(this.groupInviteUserModel, this.timeBankId,
-      this.notificationId, this.userModel, this.invitationId);
-
   BuildContext progressContext;
 
   @override
@@ -53,7 +43,8 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
               width: 70,
               child: CircleAvatar(
                 backgroundImage: NetworkImage(
-                    groupInviteUserModel.timebankImage ?? defaultUserImageURL),
+                    widget.groupInviteUserModel.timebankImage ??
+                        defaultUserImageURL),
               ),
             ),
             Padding(
@@ -72,22 +63,14 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
-                groupInviteUserModel.timebankName ??
+                widget.groupInviteUserModel.timebankName ??
                     "Timebank name not updated",
               ),
             ),
-//              Padding(
-//                padding: EdgeInsets.all(0.0),
-//                child: Text(
-//                  "About ${requestInvitationModel.}",
-//                  style: TextStyle(
-//                      fontSize: 13, fontWeight: FontWeight.bold),
-//                ),
-//              ),
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                groupInviteUserModel.aboutTimebank ??
+                widget.groupInviteUserModel.aboutTimebank ??
                     "Description not yet updated",
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
@@ -96,7 +79,7 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
             ),
             Center(
               child: Text(
-                  "By accepting, you will be added to ${groupInviteUserModel.timebankName}.",
+                  "By accepting, you will be added to ${widget.groupInviteUserModel.timebankName}.",
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                   ),
@@ -141,8 +124,8 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
                     ),
                     onPressed: () {
                       declineInvitationRequest(
-                          userEmail: userModel.email,
-                          notificationId: notificationId);
+                          userEmail: widget.userModel.email,
+                          notificationId: widget.notificationId);
 
                       if (progressContext != null) {
                         Navigator.pop(progressContext);
@@ -163,16 +146,16 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
     WriteBatch batch = Firestore.instance.batch();
     var timebankRef = Firestore.instance
         .collection('timebanknew')
-        .document(groupInviteUserModel.groupId);
+        .document(widget.groupInviteUserModel.groupId);
 
     var userNotificationReference = Firestore.instance
         .collection('users')
-        .document(userModel.email)
+        .document(widget.userModel.email)
         .collection("notifications")
-        .document(notificationId);
+        .document(widget.notificationId);
 
     batch.updateData(timebankRef, {
-      'members': FieldValue.arrayUnion([userModel.sevaUserID]),
+      'members': FieldValue.arrayUnion([widget.userModel.sevaUserID]),
     });
     batch.updateData(userNotificationReference, {'isRead': true});
     return batch;
@@ -198,7 +181,7 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     await Firestore.instance
         .collection('invitations')
-        .document(invitationId)
+        .document(widget.invitationId)
         .updateData(
             {'data.declined': true, 'data.declinedTimestamp': timestamp});
     await Firestore.instance

@@ -14,14 +14,11 @@ class SelectTimeBankNewsShare extends StatefulWidget {
 
   @override
   SelectTimeBankForNewsShareState createState() =>
-      SelectTimeBankForNewsShareState(newsModel);
+      SelectTimeBankForNewsShareState();
 }
 
 class SelectTimeBankForNewsShareState extends State<SelectTimeBankNewsShare> {
-  NewsModel newsModel;
-  SelectTimeBankForNewsShareState(NewsModel newsModel) {
-    this.newsModel = newsModel;
-  }
+  SelectTimeBankForNewsShareState() {}
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +30,7 @@ class SelectTimeBankForNewsShareState extends State<SelectTimeBankNewsShare> {
           style: TextStyle(fontSize: 18),
         ),
       ),
-      body: getTimebanks(context, newsModel),
+      body: getTimebanks(context, widget.newsModel),
     );
   }
 }

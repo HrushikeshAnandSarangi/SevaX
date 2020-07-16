@@ -2,36 +2,36 @@ include: package:pedantic/analysis_options.yaml
 
 linter:
   rules:
-    - parameter_assignments
-    - always_declare_return_types
-    - avoid_empty_else
+    # - parameter_assignments
+    # - always_declare_return_types
+    # - avoid_empty_else
     - no_logic_in_create_state
-    - no_duplicate_case_values
+    # - no_duplicate_case_values
     # - always_specify_types
-    - avoid_shadowing_type_parameters
-    - avoid_unnecessary_containers
-    - avoid_unused_constructor_parameters
-    - camel_case_extensions
-    - empty_catches
-    - file_names
-    - provide_deprecation_message
+    # - avoid_shadowing_type_parameters
+    # - avoid_unnecessary_containers
+    # - avoid_unused_constructor_parameters
+    # - camel_case_extensions
+    # - empty_catches
+    # - file_names
+    # - provide_deprecation_message
 
 analyzer:
   errors:
-    close_sinks: error
-    missing_return: error
-    missing_required_param: error
-    parameter_assignments: error
-    avoid_empty_else: error
+    # close_sinks: error
+    # missing_return: error
+    # missing_required_param: error
+    # parameter_assignments: error
+    # avoid_empty_else: error
     no_logic_in_create_state: error
-    no_duplicate_case_values: error
-    unnecessary_statements: error
-    avoid_shadowing_type_parameters: warning
-    avoid_unnecessary_containers: warning
-    avoid_unused_constructor_parameters: error
-    camel_case_extensions: error
-    camel_case_types: error
-    empty_catches: error
-    file_names: error
-    provide_deprecation_message: warning
+    # no_duplicate_case_values: error
+    # unnecessary_statements: error
+    # avoid_shadowing_type_parameters: warning
+    # avoid_unnecessary_containers: warning
+    # avoid_unused_constructor_parameters: error
+    # camel_case_extensions: error
+    # camel_case_types: error
+    # empty_catches: error
+    # file_names: error
+    # provide_deprecation_message: warning
     # always_specify_types: error
