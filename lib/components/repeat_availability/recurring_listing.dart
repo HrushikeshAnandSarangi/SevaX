@@ -14,9 +14,10 @@ class RecurringRequestList extends StatefulWidget {
   final RequestModel model;
   final TimebankModel timebankModel;
 
-  RecurringRequestList({Key key, @required this.model,this.timebankModel}) : super(key: key);
+  RecurringRequestList({Key key, @required this.model, this.timebankModel})
+      : super(key: key);
 
-  getRequestModel() {
+  RequestModel getRequestModel() {
 //    print("model url is == ${model.id}");
     return model;
   }
@@ -44,12 +45,12 @@ class _RecurringRequestListState extends State<RecurringRequestList> {
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.data != null) {
                   List<RequestModel> requestModelList = snapshot.data;
-                    print("snapshot data is ==== ${snapshot.data.length}");
-                  requestModelList.forEach((k) => print('snapshot id is ==> ${k.id}'));
-                  return RecurringList(requestModelList,widget.timebankModel);
+                  print("snapshot data is ==== ${snapshot.data.length}");
+                  requestModelList
+                      .forEach((k) => print('snapshot id is ==> ${k.id}'));
+                  return RecurringList(requestModelList, widget.timebankModel);
                 } else {
                   return Center(child: CircularProgressIndicator());
-
                 }
               }),
         ));
@@ -60,7 +61,7 @@ class RecurringList extends StatefulWidget {
   List<RequestModel> model;
   TimebankModel timebankModel;
 
-  RecurringList(this.model,this.timebankModel);
+  RecurringList(this.model, this.timebankModel);
 
   @override
   _RecurringListState createState() => _RecurringListState();
@@ -76,87 +77,88 @@ class _RecurringListState extends State<RecurringList> {
   Widget build(BuildContext context) {
     return new ListView.builder(
         itemCount: widget.model.length,
-        itemBuilder: (BuildContext context, int index){
-          print("occurenceCounttt===>${widget.model[index].occurenceCount} ${widget.model[index].requestStart}");
+        itemBuilder: (BuildContext context, int index) {
+          print(
+              "occurenceCounttt===>${widget.model[index].occurenceCount} ${widget.model[index].requestStart}");
           return Container(
-              margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
-              child: Card(
-                color: Colors.white,
-                elevation: 2,
-                child: InkWell(
-                  onTap: () =>editRequest(model: widget.model[index],timebankModel: widget.timebankModel),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        ClipOval(
-                          child: SizedBox(
-                            height: 45,
-                            width: 45,
-                            child: FadeInImage.assetNetwork(
-                              fit: BoxFit.cover,
-                              placeholder: 'lib/assets/images/profile.png',
-                              image: widget.model[index].photoUrl == null
-                                  ? defaultUserImageURL
-                                  : widget.model[index].photoUrl,
+            margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+            child: Card(
+              color: Colors.white,
+              elevation: 2,
+              child: InkWell(
+                onTap: () => editRequest(
+                    model: widget.model[index],
+                    timebankModel: widget.timebankModel),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      ClipOval(
+                        child: SizedBox(
+                          height: 45,
+                          width: 45,
+                          child: FadeInImage.assetNetwork(
+                            fit: BoxFit.cover,
+                            placeholder: 'lib/assets/images/profile.png',
+                            image: widget.model[index].photoUrl == null
+                                ? defaultUserImageURL
+                                : widget.model[index].photoUrl,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              widget.model[index].title,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: Theme.of(context).textTheme.subhead,
                             ),
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.7,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(widget.model[index].title,
-                                overflow: TextOverflow.ellipsis,
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              child: Text(
+                                widget.model[index].description,
                                 maxLines: 1,
-                                style: Theme.of(context).textTheme.subhead,
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.subtitle,
                               ),
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.7,
-                                child: Text(
-                                  widget.model[index].description,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.subtitle,
+                            ),
+                            SizedBox(height: 8),
+                            Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  getTimeFormattedString(
+                                      widget.model[index].requestStart),
                                 ),
-                              ),
-                              SizedBox(height: 8),
-                              Wrap(
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    getTimeFormattedString(
-                                        widget.model[index].requestStart)
-                                    ,
-                                  ),
-                                  SizedBox(width: 2),
-                                  Icon(Icons.arrow_forward, size: 14),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    getTimeFormattedString(
-                                        widget.model[index].requestEnd
-
-                                    )
-                                    ,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                SizedBox(width: 2),
+                                Icon(Icons.arrow_forward, size: 14),
+                                SizedBox(width: 4),
+                                Text(
+                                  getTimeFormattedString(
+                                      widget.model[index].requestEnd),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            );});
+            ),
+          );
+        });
   }
 
-  void editRequest({RequestModel model,TimebankModel timebankModel}) {
+  void editRequest({RequestModel model, TimebankModel timebankModel}) {
     timeBankBloc.setSelectedRequest(model);
     if (model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
         widget.timebankModel.admins
@@ -181,7 +183,7 @@ class _RecurringListState extends State<RecurringList> {
         ),
       );
     }
-     /* Navigator.push(
+    /* Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => RequestDetailsAboutPage(
@@ -191,7 +193,6 @@ class _RecurringListState extends State<RecurringList> {
           ),
         ),
       );*/
-
   }
 
   String getTimeFormattedString(int timeInMilliseconds) {

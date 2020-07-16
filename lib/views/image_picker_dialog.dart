@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
 import './image_picker_handler.dart';
 
 class ImagePickerDialog extends StatelessWidget {
@@ -27,7 +28,7 @@ class ImagePickerDialog extends StatelessWidget {
     ));
   }
 
-  getImage(BuildContext context) {
+  void getImage(BuildContext context) {
     if (_controller == null ||
         _drawerDetailsPosition == null ||
         _drawerContentsOpacity == null) {
@@ -50,7 +51,7 @@ class ImagePickerDialog extends StatelessWidget {
     _controller.dispose();
   }
 
-  startTime() async {
+  Future<Timer> startTime() async {
     var _duration = new Duration(milliseconds: 200);
     return new Timer(_duration, navigationPage);
   }
@@ -59,7 +60,7 @@ class ImagePickerDialog extends StatelessWidget {
     Navigator.pop(context);
   }
 
-  dismissDialog() {
+  void dismissDialog() {
     _controller.reverse();
     startTime();
   }

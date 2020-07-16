@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import './image_picker_dialog.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+
+import './image_picker_dialog.dart';
 
 class ImagePickerHandler {
   ImagePickerDialog imagePicker;
@@ -13,13 +14,13 @@ class ImagePickerHandler {
 
   ImagePickerHandler(this._listener, this._controller);
 
-  openCamera() async {
+  void openCamera() async {
     imagePicker.dismissDialog();
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
     cropImage(image);
   }
 
-  openGallery() async {
+  void openGallery() async {
     imagePicker.dismissDialog();
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     cropImage(image);
@@ -41,11 +42,11 @@ class ImagePickerHandler {
     _listener.userImage(croppedFile);
   }
 
-  showDialog(BuildContext context) {
+  void showDialog(BuildContext context) {
     imagePicker.getImage(context);
   }
 }
 
 abstract class ImagePickerListener {
-  userImage(File _image);
+  void userImage(File _image);
 }

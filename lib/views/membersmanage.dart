@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -10,7 +10,7 @@ class MembersManage extends StatefulWidget {
 
   MembersManage({Key key, @required this.timebankModel}) : super(key: key);
 
-  createState() => MembersManageState();
+  State<StatefulWidget> createState() => MembersManageState();
 }
 
 class MembersManageState extends State<MembersManage> {

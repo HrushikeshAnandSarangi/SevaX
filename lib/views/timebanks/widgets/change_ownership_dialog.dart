@@ -63,7 +63,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
     focusNodes = List.generate(8, (_) => FocusNode());
   }
 
-  getCommunityDetails() async {
+  void getCommunityDetails() async {
     await FirestoreManager.getCommunityDetailsByCommunityId(
             communityId: widget.loggedInUser.currentCommunity)
         .then((value) {
@@ -278,8 +278,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
         (Route<dynamic> route) => false);
   }
 
-  getSuccessDialog() {
-    return showDialog(
+  void getSuccessDialog() {
+    showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
@@ -303,7 +303,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
     );
   }
 
-  getAdvisoryDialog(BuildContext mContext, String timebankName) {
+  void getAdvisoryDialog(BuildContext mContext, String timebankName) {
     showDialog(
       context: mContext,
       builder: (BuildContext context) {

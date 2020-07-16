@@ -283,7 +283,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
     );
   }
 
-  refresh() {
+  void refresh() {
     _firestore
         .collection('requests')
         .document(widget.requestModelId)

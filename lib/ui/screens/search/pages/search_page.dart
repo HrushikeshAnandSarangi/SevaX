@@ -48,7 +48,7 @@ class _SearchPageState extends State<SearchPage>
       timebank: widget.timebank,
       community: widget.community,
     );
-    _bloc.searchAfterDelay();
+
     _tabController = TabController(
       length: SearchPageLabels.tabContent.length,
       initialIndex: 0,

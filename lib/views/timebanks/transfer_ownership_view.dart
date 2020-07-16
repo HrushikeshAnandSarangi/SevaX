@@ -399,8 +399,8 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
         });
   }
 
-  getSuccessDialog(BuildContext context) {
-    return showDialog(
+  void getSuccessDialog(BuildContext context) {
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
@@ -422,7 +422,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
     );
   }
 
-  getErrorDialog(BuildContext context) {
+  void getErrorDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

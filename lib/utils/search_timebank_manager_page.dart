@@ -29,7 +29,7 @@ class SearchTimebankMemberElastic extends StatefulWidget {
     this.selectionMode = selectionMode;
   }
 
-  createState() => _SearchTimebankMemberElastic();
+  State<StatefulWidget> createState() => _SearchTimebankMemberElastic();
 }
 
 class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {

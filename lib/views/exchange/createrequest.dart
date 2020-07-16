@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -247,7 +246,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     this.requestModel.email = loggedInUser.email;
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
-    headerContainer(snapshot) {
+
+    Widget headerContainer(snapshot) {
       if (snapshot.hasError) return Text(snapshot.error.toString());
       if (snapshot.connectionState == ConnectionState.waiting) {
         return Container();
@@ -262,7 +262,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       }
     }
 
-    addToProjectContainer(snapshot, projectModelList, requestModel) {
+    Widget addToProjectContainer(snapshot, projectModelList, requestModel) {
       if (snapshot.hasError) return Text(snapshot.error.toString());
       if (snapshot.connectionState == ConnectionState.waiting) {
         return Container();

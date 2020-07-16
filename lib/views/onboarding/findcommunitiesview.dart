@@ -672,8 +672,4 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           );
         });
   }
-
-  goToNext(data) {
-    print(data);
-  }
 }

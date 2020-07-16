@@ -147,8 +147,8 @@ class BillingViewState extends State<BillingView> {
         });
   }
 
-  getSuccessDialog() {
-    return showDialog(
+  void getSuccessDialog() {
+    showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {

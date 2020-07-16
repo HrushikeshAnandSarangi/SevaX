@@ -1,14 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/internationalization/applanguage.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-import 'package:provider/provider.dart';
-import 'package:sevaexchange/internationalization/applanguage.dart';
 
 class LanguageListData {
   final languagelist = [
@@ -19,7 +16,7 @@ class LanguageListData {
     LanguageModel(languageName: 'Chinese Simplified', code: 'zh')
   ];
   LanguageListData();
-  getData() {
+  List<LanguageModel> getData() {
     return languagelist;
   }
 

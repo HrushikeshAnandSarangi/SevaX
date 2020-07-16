@@ -52,7 +52,7 @@ class _QuickScrollBarState extends State<QuickScrollBar> {
     });
   }
 
-  getBubble() {
+  Widget getBubble() {
     if (!scrollBarBubbleVisibility) {
       return Container();
     }
@@ -74,7 +74,7 @@ class _QuickScrollBarState extends State<QuickScrollBar> {
     );
   }
 
-  _getAlphabetItem(int index) {
+  Widget _getAlphabetItem(int index) {
     return Expanded(
       child: Container(
         width: 40,

@@ -609,8 +609,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     }
   }
 
-  getAlertDialog(BuildContext context) {
-    return showDialog(
+  void getAlertDialog(BuildContext context) {
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog

@@ -51,7 +51,7 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
   }
 
   @override
-  userImage(File _image) {
+  void userImage(File _image) {
     setState(() {
       this._image = _image;
       this._isImageBeingUploaded = true;

@@ -29,7 +29,7 @@ class _CreateNewChatPageState extends State<CreateNewChatPage> {
   TextEditingController textController = TextEditingController();
 
   @override
-  initState() {
+  void initState() {
     _bloc = CreateChatBloc(widget.isSelectionEnabled);
 
     super.initState();
@@ -48,7 +48,7 @@ class _CreateNewChatPageState extends State<CreateNewChatPage> {
   }
 
   @override
-  dispose() {
+  void dispose() {
     super.dispose();
     _bloc.dispose();
   }

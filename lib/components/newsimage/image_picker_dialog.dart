@@ -29,40 +29,40 @@ class ImagePickerDialog extends StatelessWidget {
     ));
   }
 
-  getImage(BuildContext context) {
+  void getImage(BuildContext context) {
     this.context = context;
     if (_controller == null ||
         _drawerDetailsPosition == null ||
         _drawerContentsOpacity == null) {
-      return;
-    }
-    _controller.forward();
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => new SlideTransition(
-        position: _drawerDetailsPosition,
-        child: new FadeTransition(
-          opacity: new ReverseAnimation(_drawerContentsOpacity),
-          child: this,
+    } else {
+      _controller.forward();
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => new SlideTransition(
+          position: _drawerDetailsPosition,
+          child: new FadeTransition(
+            opacity: new ReverseAnimation(_drawerContentsOpacity),
+            child: this,
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   void dispose() {
     _controller.dispose();
   }
 
-  startTime() async {
-    var _duration = new Duration(milliseconds: 200);
-    return new Timer(_duration, navigationPage);
+  Future<Timer> startTime() async {
+    var _duration = Duration(milliseconds: 200);
+    return Timer(_duration, navigationPage);
   }
 
   void navigationPage() {
     Navigator.pop(dialogContext);
   }
 
-  dismissDialog() {
+  void dismissDialog() {
     _controller.reverse();
     startTime();
   }

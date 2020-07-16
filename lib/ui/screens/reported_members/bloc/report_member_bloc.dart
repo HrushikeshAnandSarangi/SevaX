@@ -100,7 +100,7 @@ class ReportMemberBloc {
     _file.add(null);
   }
 
-  dispose() {
+  void dispose() {
     _file.close();
     _message.close();
     _buttonStatus.close();

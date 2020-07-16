@@ -294,7 +294,7 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  _scrollToBottom() {
+  void _scrollToBottom() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
@@ -306,7 +306,7 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-  pushNewMessage({
+  void pushNewMessage({
     String messageContent,
     MessageType type,
     File file,

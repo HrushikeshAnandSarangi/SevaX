@@ -1,9 +1,7 @@
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:sevaexchange/globals.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 //import 'package:collection/ lib\views\timebank_content_holder.dart';
@@ -119,7 +117,7 @@ class TimebankModel extends DataModel {
     return geoFirePoint;
   }
 
-  updateValueByKey(String key, dynamic value) {
+  void updateValueByKey(String key, dynamic value) {
     if (key == 'id') {
       this.id = value;
     }
@@ -208,7 +206,8 @@ class TimebankModel extends DataModel {
             : Map();
     timebankModel.notificationSetting = HashMap();
     temp.forEach((key, value) {
-      timebankModel.notificationSetting[key] = NotificationSetting.fromMap(value);
+      timebankModel.notificationSetting[key] =
+          NotificationSetting.fromMap(value);
     });
 
     return timebankModel;

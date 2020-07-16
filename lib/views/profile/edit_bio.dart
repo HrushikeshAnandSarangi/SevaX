@@ -16,7 +16,7 @@ class _EditBioState extends State<EditBio> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var bioController = TextEditingController();
   String bio = '';
-  initState() {
+  void initState() {
     super.initState();
     // Add listeners to this class
     print('Bio default value --> ${widget.existingBio}');

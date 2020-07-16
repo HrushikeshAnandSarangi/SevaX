@@ -267,7 +267,7 @@ class CreateEditCommunityViewFormState
     return Form(key: _formKey, child: createSevaX, autovalidate: false);
   }
 
-  moveToTop() {
+  void moveToTop() {
     print("move to top");
     // _controller.jumpTo(0.0);
     _controller.animateTo(

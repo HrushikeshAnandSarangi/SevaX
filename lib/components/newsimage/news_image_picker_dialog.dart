@@ -29,7 +29,7 @@ class NewsImagePickerDialog extends StatelessWidget {
     ));
   }
 
-  getImage(BuildContext context) {
+  void getImage(BuildContext context) {
     this.context = context;
     if (_controller == null ||
         _drawerDetailsPosition == null ||
@@ -53,7 +53,7 @@ class NewsImagePickerDialog extends StatelessWidget {
     _controller.dispose();
   }
 
-  startTime() async {
+  Future<Timer> startTime() async {
     var _duration = new Duration(milliseconds: 200);
     return new Timer(_duration, navigationPage);
   }
@@ -62,7 +62,7 @@ class NewsImagePickerDialog extends StatelessWidget {
     Navigator.pop(dialogContext);
   }
 
-  dismissDialog() {
+  void dismissDialog() {
     _controller.reverse();
     startTime();
   }

@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
-import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -16,10 +15,10 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 
 import '../core.dart';
 
@@ -331,8 +330,8 @@ class _EditProfilePageState extends State<EditProfilePage>
     });
   }
 
-  _updateName() {
-    return showDialog(
+  void _updateName() {
+    showDialog(
       context: context,
       builder: (BuildContext viewContext) {
         return AlertDialog(
@@ -428,8 +427,8 @@ class _EditProfilePageState extends State<EditProfilePage>
     );
   }
 
-  _updateBio() {
-    return showDialog(
+  void _updateBio() {
+    showDialog(
       context: context,
       builder: (BuildContext viewContext) {
         // return object of type Dialog
@@ -613,8 +612,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                       // ));
                       try {
                         Navigator.of(_context).pop();
-                      } catch (e) {
-                      }
+                      } catch (e) {}
 
                       _signOut(
                           _context, SevaCore.of(context).loggedInUser.email);

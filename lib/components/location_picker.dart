@@ -19,7 +19,7 @@ import 'package:sevaexchange/ui/screens/location/widgets/location_confirmation_c
 import 'get_location.dart';
 
 extension StringExtension on String {
-  get notNullLocation {
+  String get notNullLocation {
     return this != '' ? ',' + this : '';
   }
 }
@@ -94,6 +94,7 @@ class _LocationPickerState extends State<LocationPicker> {
 
     loadInitialLocation();
   }
+
   GeoFirePoint point(markers) {
     if (markers == null || markers.isEmpty) return null;
     Marker marker = markers.first;
@@ -134,10 +135,10 @@ class _LocationPickerState extends State<LocationPicker> {
       render = LocationConfimationCard(
         locationDataModel: locationDataFromSearch.location == null
             ? LocationDataModel(
-          address == null ? "" : address,
-          temp.latitude,
-          temp.longitude,
-        )
+                address == null ? "" : address,
+                temp.latitude,
+                temp.longitude,
+              )
             : locationDataFromSearch,
       );
     } else {
@@ -174,10 +175,11 @@ class _LocationPickerState extends State<LocationPicker> {
                 _addMarker(latLng: target);
                 var temp = point(markers);
                 if (locationDataFromSearch.lat != null &&
-                    locationDataFromSearch.lng != null && temp != null) {
+                    locationDataFromSearch.lng != null &&
+                    temp != null) {
                   if (point(markers).distance(
-                      lat: locationDataFromSearch.lat,
-                      lng: locationDataFromSearch.lng) >
+                          lat: locationDataFromSearch.lat,
+                          lng: locationDataFromSearch.lng) >
                       0.005) {
                     locationDataFromSearch.location = null;
                   }
@@ -315,11 +317,14 @@ class _LocationPickerState extends State<LocationPicker> {
           _addMarker();
           var temp = point(markers);
           if (locationDataFromSearch.lat != null &&
-              locationDataFromSearch.lng != null && temp != null) {
-            log(point(markers).distance(
-              lat: locationDataFromSearch.lat,
-              lng: locationDataFromSearch.lng,
-            ).toString());
+              locationDataFromSearch.lng != null &&
+              temp != null) {
+            log(point(markers)
+                .distance(
+                  lat: locationDataFromSearch.lat,
+                  lng: locationDataFromSearch.lng,
+                )
+                .toString());
             if (point(markers).distance(
                     lat: locationDataFromSearch.lat,
                     lng: locationDataFromSearch.lng) >
