@@ -376,7 +376,6 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                                             setState(() {
                                               after = Value;
                                             });
-                                            });
                                           }
                                         : null,
                                     items: occurenccesList

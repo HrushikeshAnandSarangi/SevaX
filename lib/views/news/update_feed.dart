@@ -56,7 +56,7 @@ class NewsCreateForm extends StatefulWidget {
   NewsCreateForm({Key key, this.timebankId, this.newsModel}) : super(key: key);
   @override
   NewsCreateFormState createState() {
-    return NewsCreateFormState(newsObject: newsModel);
+    return NewsCreateFormState();
   }
 }
 

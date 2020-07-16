@@ -363,7 +363,6 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                             setState(() {
                                               after = Value;
                                             });
-                                            });
                                           }
                                         : null,
                                     items: occurenccesList

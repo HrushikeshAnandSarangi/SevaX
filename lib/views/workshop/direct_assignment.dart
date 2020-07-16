@@ -33,9 +33,7 @@ class SelectMembersInGroup extends StatefulWidget {
   }
 
   @override
-  State<StatefulWidget> createState() {
-    return _SelectMembersInGroupState(timebankId);
-  }
+  State<StatefulWidget> createState() => _SelectMembersInGroupState();
 }
 
 class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
@@ -53,14 +51,9 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   HashMap<String, int> emailIndexMap = HashMap();
   HashMap<int, UserModel> indexToModelMap = HashMap();
 
-  _SelectMembersInGroupState(String timebankId) {
-    _timebankId = FlavorConfig.values.timebankName == "Yang 2020"
-        ? FlavorConfig.values.timebankId
-        : timebankId;
-  }
-
   @override
   void initState() {
+    _timebankId = widget.timebankId;
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
     super.initState();

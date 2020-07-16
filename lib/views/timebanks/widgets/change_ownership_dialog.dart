@@ -31,34 +31,30 @@ class ChangeOwnershipDialog extends StatefulWidget {
 
   @override
   _ChangeOwnershipDialogViewState createState() =>
-      _ChangeOwnershipDialogViewState(changeOwnershipModel, timeBankId,
-          notificationId, notificationModel, loggedInUser);
+      _ChangeOwnershipDialogViewState();
 }
 
 class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
-  final ChangeOwnershipModel changeOwnershipModel;
-  final String timeBankId;
-  final String notificationId;
-  final NotificationsModel notificationModel;
-  final UserModel loggedInUser;
+  ChangeOwnershipModel changeOwnershipModel;
+  String timeBankId;
+  String notificationId;
+  NotificationsModel notificationModel;
+  UserModel loggedInUser;
 
-  _ChangeOwnershipDialogViewState(
-    this.changeOwnershipModel,
-    this.timeBankId,
-    this.notificationId,
-    this.notificationModel,
-    this.loggedInUser,
-  );
   List<FocusNode> focusNodes;
   CommunityModel communityModel = CommunityModel({});
-  GlobalKey<FormState> _billingInformationKey = GlobalKey();
+  final GlobalKey<FormState> _billingInformationKey = GlobalKey();
   BuildContext progressContext;
   var scollContainer = ScrollController();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    changeOwnershipModel = widget.changeOwnershipModel;
+    timeBankId = widget.timeBankId;
+    notificationId = widget.notificationId;
+    notificationModel = widget.notificationModel;
+    loggedInUser = widget.loggedInUser;
     getCommunityDetails();
     focusNodes = List.generate(8, (_) => FocusNode());
   }
@@ -68,7 +64,6 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             communityId: widget.loggedInUser.currentCommunity)
         .then((value) {
       communityModel = value;
-      print("community ${communityModel.payment.toString()}");
     });
     setState(() {});
   }

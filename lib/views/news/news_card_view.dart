@@ -125,20 +125,15 @@ class NewsCardViewState extends State<NewsCardView> {
   }
 
   Widget get listOfHashTags {
-    if (widget.newsModel.hashTags.length > 0) {
+    if (widget.newsModel.hashTags.isNotEmpty) {
       return SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(5.0),
           child: Wrap(
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
-<<<<<<< HEAD
             children: widget.newsModel.hashTags.map((hash) {
               // final _random = new Random();
-=======
-            children: newsModel.hashTags.map((hash) {
-              // final _random = Random();
->>>>>>> 372dd456672108f1c7d90dbe7cb62abcbef315c0
               // var element = colorList[_random.nextInt(colorList.length)];
               return chip(hash, false);
             }).toList(),
@@ -214,13 +209,8 @@ class NewsCardViewState extends State<NewsCardView> {
           child: Wrap(
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
-<<<<<<< HEAD
             children: widget.newsModel.urlsFromPost.map((link) {
               // final _random = new Random();
-=======
-            children: newsModel.urlsFromPost.map((link) {
-              // final _random = Random();
->>>>>>> 372dd456672108f1c7d90dbe7cb62abcbef315c0
               // var element = colorList[_random.nextInt(colorList.length)];
               return chipForLinks(link, false);
             }).toList(),
