@@ -271,9 +271,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
     if (widget.controller.text.trim().isEmpty) {
       return Center(
         child: ClipOval(
-          child: FadeInImage.assetNetwork(
-              placeholder: 'lib/assets/images/search.png',
-              image: 'lib/assets/images/search.png'),
+          child: Image.asset('lib/assets/images/search.png'),
         ),
       );
     } else if (widget.controller.text.trim().length < 3) {

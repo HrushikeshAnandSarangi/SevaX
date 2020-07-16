@@ -11,12 +11,14 @@ import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 
 import 'core.dart';
+
 class SearchView extends StatefulWidget {
   final TabController controller;
   SearchView(this.controller);
   @override
   SearchViewState createState() => SearchViewState();
 }
+
 class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
   TabController controller;
   final TextEditingController searchTextController = TextEditingController();
@@ -36,6 +38,7 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
       });
     });
   }
+
   void _search(String queryString) {
     if (queryString.length == 1) {
       setState(() {
@@ -45,6 +48,7 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
       searchOnChange.add(queryString);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -72,7 +76,8 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
                     ),
                     image: DecorationImage(
                       image: NetworkImage(
-                          SevaCore.of(context).loggedInUser.photoURL ?? defaultUserImageURL),
+                          SevaCore.of(context).loggedInUser.photoURL ??
+                              defaultUserImageURL),
                     ),
                   ),
                 ),
@@ -140,6 +145,7 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
     );
   }
 }
+
 class ResultView extends StatefulWidget {
   final SearchType type;
   final TextEditingController controller;
@@ -147,10 +153,12 @@ class ResultView extends StatefulWidget {
   @override
   _ResultViewState createState() => _ResultViewState();
 }
+
 class _ResultViewState extends State<ResultView> {
   bool checkValidSting(String str) {
     return str != null && str.trim().length != 0;
   }
+
   Widget getTitleForCard(String str, String fullName) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,6 +181,7 @@ class _ResultViewState extends State<ResultView> {
       ],
     );
   }
+
   Widget fetchHeadingFromNewsModel(NewsModel newsModel) {
     if (checkValidSting(newsModel.title)) {
       return getTitleForCard(newsModel.title, newsModel.fullName);
@@ -185,6 +194,7 @@ class _ResultViewState extends State<ResultView> {
     }
     return getTitleForCard('No content', newsModel.fullName);
   }
+
   Widget build(BuildContext context) {
     if (widget == null ||
         widget.controller == null ||
@@ -194,9 +204,9 @@ class _ResultViewState extends State<ResultView> {
     if (widget.controller.text.trim().isEmpty) {
       return Center(
           child: ClipOval(
-        child: FadeInImage.assetNetwork(
-            placeholder: 'lib/assets/images/search.png',
-            image: 'lib/assets/images/search.png'),
+        child: ClipOval(
+          child: Image.asset('lib/assets/images/search.png'),
+        ),
       ));
     } else if (widget.controller.text.trim().length < 3) {
       return getEmptyWidget('Users', 'Search requires minimum 3 characters');
@@ -557,6 +567,7 @@ class _ResultViewState extends State<ResultView> {
         );
     }
   }
+
   Widget getEmptyWidget(String title, String notFoundValue) {
     return Center(
       child: Text(
@@ -566,6 +577,7 @@ class _ResultViewState extends State<ResultView> {
       ),
     );
   }
+
   TextStyle get sectionHeadingStyle {
     return TextStyle(
       fontWeight: FontWeight.w600,
@@ -573,6 +585,7 @@ class _ResultViewState extends State<ResultView> {
       color: Colors.black,
     );
   }
+
   TextStyle get sectionTextStyle {
     return TextStyle(
       fontWeight: FontWeight.w600,
@@ -581,6 +594,7 @@ class _ResultViewState extends State<ResultView> {
     );
   }
 }
+
 enum SearchType {
   USER,
   NEWS,

@@ -76,10 +76,13 @@ class _ChatPageState extends State<ChatPage> {
           '${AppLocalizations.of(context).translate('chat', 'rejecting_becz')} ';
 
     if (widget.isFromShare) {
+      print("Pushing new message from share");
       pushNewMessage(
         messageContent: widget.feedId,
         type: MessageType.FEED,
       );
+    } else {
+      print("NOT Pushing new message from share");
     }
 
     if (widget.chatModel.isGroupMessage) {

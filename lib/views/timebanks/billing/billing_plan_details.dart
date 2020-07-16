@@ -113,8 +113,7 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
                             isSelected: _billingPlanDetailsModels[index].id ==
                                 widget.planName,
                             isPlanActive: widget.isPlanActive,
-                            canBillMe: billMeEmails.contains(
-                                SevaCore.of(context).loggedInUser.email),
+                            canBillMe: billMeEmails.contains(widget.user.email),
                           ),
                         );
                       },

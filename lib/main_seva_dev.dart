@@ -25,11 +25,6 @@ Future<void> fetchRemoteConfig() async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  try {
-    await FlutterDownloader.initialize();
-  } catch (e) {
-    print("FlutterDownloader.initialize crashed");
-  }
   FlavorConfig.appFlavor = Flavor.SEVA_DEV;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   _firebaseMessaging.requestNotificationPermissions(

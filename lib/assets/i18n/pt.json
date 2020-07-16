@@ -956,6 +956,7 @@
     "Remove": "Eliminar",
     "Promote": "Promover",
     "Demote": "Rebaixar",
+    "Loan" : "Empréstimo",
     "Exit": "Saída",
     "admins": "Administradores",
     "coordinators": "Coordenadores",
@@ -1070,7 +1071,7 @@
     "select_volunteer": "Selecionar voluntária"
   },
   "links": {
-    "linkToWeb": "links_es"
+    "linkToWeb": "links_pt"
   },
   "reported_members": {
     "reported_member": "denunciar membro",
