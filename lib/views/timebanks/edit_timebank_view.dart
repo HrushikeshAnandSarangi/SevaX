@@ -111,8 +111,7 @@ class _EditTimebankViewState extends State<EditTimebankView>
                   ),
                   Stack(
                     children: <Widget>[
-                      new Container(
-                          padding: EdgeInsets.zero, child: _imagePicker),
+                      Container(padding: EdgeInsets.zero, child: _imagePicker),
                       Positioned(
                           width: 50,
                           height: 50,

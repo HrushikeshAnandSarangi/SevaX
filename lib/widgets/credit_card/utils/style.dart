@@ -54,7 +54,7 @@ class CardFrontLayout {
               Expanded(
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: new Image.asset(
+                  child: Image.asset(
                     'images/contactless_icon.png',
                     fit: BoxFit.fitHeight,
                     width: 30.0,

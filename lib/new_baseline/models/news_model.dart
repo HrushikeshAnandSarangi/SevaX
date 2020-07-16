@@ -23,7 +23,7 @@ class NewsModel {
     this.entityModel,
   });
 
-  factory NewsModel.fromMap(Map<String, dynamic> json) => new NewsModel(
+  factory NewsModel.fromMap(Map<String, dynamic> json) => NewsModel(
         id: json["id"] == null ? null : json["id"],
         title: json["title"] == null ? null : json["title"],
         subHeading: json["sub_heading"] == null ? null : json["sub_heading"],
@@ -35,7 +35,7 @@ class NewsModel {
         createdAt: json["created_at"] == null ? null : json["created_at"],
         likes: json["likes"] == null
             ? null
-            : new List<String>.from(json["likes"].map((x) => x)),
+            : List<String>.from(json["likes"].map((x) => x)),
         entityModel: json["entity_model"] == null
             ? null
             : EntityModel.fromMap(json["entity_model"]),
@@ -50,8 +50,7 @@ class NewsModel {
         "photo_url": photoUrl == null ? null : photoUrl,
         "photo_credits": photoCredits == null ? null : photoCredits,
         "created_at": createdAt == null ? null : createdAt,
-        "likes":
-            likes == null ? null : new List<dynamic>.from(likes.map((x) => x)),
+        "likes": likes == null ? null : List<dynamic>.from(likes.map((x) => x)),
         "entity_model": entityModel == null ? null : entityModel.toMap(),
       };
 }

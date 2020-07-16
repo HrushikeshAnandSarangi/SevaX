@@ -55,12 +55,12 @@ class GroupRequestCommons {
 
   static HashMap<String, List<RequestModel>> getListHashed(
       {List<RequestModel> requestModelList, String sevaUserId}) {
-    HashMap<String, List<RequestModel>> hashMap = new HashMap();
+    HashMap<String, List<RequestModel>> hashMap = HashMap();
 
     for (var req in requestModelList) {
       if (req.sevaUserId == sevaUserId) {
         if (hashMap["MyPost"] == null) {
-          //create new list
+          //create list
           hashMap["MyPost"] = List();
           hashMap["MyPost"].add(req);
         } else {
@@ -69,7 +69,7 @@ class GroupRequestCommons {
         }
       } else {
         if (hashMap["Others"] == null) {
-          //create new list
+          //create list
           hashMap["Others"] = List();
           hashMap["Others"].add(req);
         } else {
@@ -151,14 +151,14 @@ class GroupOfferCommons {
 
   static SplayTreeMap<String, List<OfferModel>> getListHashed(
       {List<OfferModel> offerModelList, String sevaUserId}) {
-    SplayTreeMap<String, List<OfferModel>> hashMap = new SplayTreeMap();
+    SplayTreeMap<String, List<OfferModel>> hashMap = SplayTreeMap();
 
     // offerModelList.sort();
 
     for (var offer in offerModelList) {
       if (offer.sevaUserId == sevaUserId) {
         if (hashMap["MyOffers"] == null) {
-          //create new list
+          //create list
           hashMap["MyOffers"] = List();
           hashMap["MyOffers"].add(offer);
         } else {
@@ -167,7 +167,7 @@ class GroupOfferCommons {
         }
       } else {
         if (hashMap["Others"] == null) {
-          //create new list
+          //create list
           hashMap["Others"] = List();
           hashMap["Others"].add(offer);
         } else {

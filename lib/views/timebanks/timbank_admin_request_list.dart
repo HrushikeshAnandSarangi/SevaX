@@ -1610,11 +1610,11 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 //        builder: (BuildContext context) {
 //          // return object of type Dialog
 //          return AlertDialog(
-//            content: new Text("User is successfully removed from the group"),
+//            content:  Text("User is successfully removed from the group"),
 //            actions: <Widget>[
 //              // usually buttons at the bottom of the dialog
-//              new FlatButton(
-//                child: new Text("Close"),
+//               FlatButton(
+//                child:  Text("Close"),
 //                textColor: Colors.red,
 //                onPressed: () {
 //                  Navigator.of(context).pop();
@@ -1637,16 +1637,16 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              title: new Text("You cannot exit from this group"),
-              content: new Text("You have \n"
+              title: Text("You cannot exit from this group"),
+              content: Text("You have \n"
                   "${responseData['pendingProjects']['unfinishedProjects']} pending projects,\n"
                   "${responseData['pendingRequests']['unfinishedRequests']} pending requests,\n"
                   "${responseData['pendingOffers']['unfinishedOffers']} pending offers.\n "
                   "Please clear the transactions and try again. "),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
-                new FlatButton(
-                  child: new Text(AppLocalizations.of(context)
+                FlatButton(
+                  child: Text(AppLocalizations.of(context)
                       .translate('billing_plans', 'close')),
                   textColor: Colors.red,
                   onPressed: () {
@@ -1667,12 +1667,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              content: new Text(
+              content: Text(
                   "Cannot remove yourself from the group. Instead, please try deleting the group."),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
-                new FlatButton(
-                  child: new Text(AppLocalizations.of(context)
+                FlatButton(
+                  child: Text(AppLocalizations.of(context)
                       .translate('billing_plans', 'close')),
                   textColor: Colors.red,
                   onPressed: () {
@@ -1721,17 +1721,17 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              title: new Text(
+              title: Text(
                   " ${isFromExit ? "You" : "User"} cannot exit from this timebank"),
-              content: new Text("${isFromExit ? "You" : "User"} have \n"
+              content: Text("${isFromExit ? "You" : "User"} have \n"
                   "${responseData['pendingProjects']['unfinishedProjects']} pending projects,\n"
                   "${responseData['pendingRequests']['unfinishedRequests']} pending requests,\n"
                   "${responseData['pendingOffers']['unfinishedOffers']} pending offers.\n "
                   "Please clear the transactions and try again. "),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
-                new FlatButton(
-                  child: new Text("Close"),
+                FlatButton(
+                  child: Text("Close"),
                   textColor: Colors.red,
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -1951,8 +1951,8 @@ class _InputDonateSuccessDialogState extends State<InputDonateSuccessDialog> {
   void initState() {
     super.initState();
     onComplete = widget.onComplete;
-    var _duration = new Duration(milliseconds: 2000);
-    new Timer(_duration, () => {Navigator.pop(context)});
+    var _duration = Duration(milliseconds: 2000);
+    Timer(_duration, () => {Navigator.pop(context)});
   }
 
 //  Text('Coins successfully donated to timebank')

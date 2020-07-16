@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -18,7 +19,6 @@ import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
-import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
 
 import '../../flavor_config.dart';
 import '../../new_baseline/models/project_model.dart';
@@ -48,7 +48,7 @@ class RequestsState extends State<ProjectRequests>
   @override
   void initState() {
     super.initState();
-    tabController = new TabController(length: 2, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     projectModel = widget.projectModel;
   }
 
@@ -471,14 +471,14 @@ class ProjectRequestListState extends State<ProjectRequestList> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context)
+          title: Text(AppLocalizations.of(context)
               .translate('projects', 'access_denied')),
-          content: new Text(
+          content: Text(
               AppLocalizations.of(context).translate('projects', 'not_auth')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(
+            FlatButton(
+              child: Text(
                   AppLocalizations.of(context).translate('homepage', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -638,7 +638,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
       builder: (BuildContext context,
           AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
         if (requestListSnapshot.hasError) {
-          return new Text(
+          return Text(
               '${AppLocalizations.of(context).translate('shared', 'error')}: ${requestListSnapshot.error}');
         }
         switch (requestListSnapshot.connectionState) {

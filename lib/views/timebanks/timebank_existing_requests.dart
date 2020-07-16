@@ -63,7 +63,7 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return new Text('Error: ${snapshot.error}');
+              return Text('Error: ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -74,7 +74,7 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
               builder: (BuildContext context,
                   AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
                 if (requestListSnapshot.hasError) {
-                  return new Text('Error: ${requestListSnapshot.error}');
+                  return Text('Error: ${requestListSnapshot.error}');
                 }
                 switch (requestListSnapshot.connectionState) {
                   case ConnectionState.waiting:
@@ -390,7 +390,8 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
   }
 
   String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
-    DateFormat dateFormat = DateFormat('d MMM hh:mm a ', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
+    DateFormat dateFormat = DateFormat('d MMM hh:mm a ',
+        Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
     DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
     DateTime localtime = getDateTimeAccToUserTimezone(
         dateTime: datetime, timezoneAbb: timezoneAbb);

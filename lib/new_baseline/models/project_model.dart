@@ -48,7 +48,7 @@ class ProjectModel extends DataModel {
     this.requestedSoftDelete,
   });
 
-  factory ProjectModel.fromMap(Map<String, dynamic> json) => new ProjectModel(
+  factory ProjectModel.fromMap(Map<String, dynamic> json) => ProjectModel(
         id: json["id"] == null ? null : json["id"],
         name: json["name"] == null ? null : json["name"],
         timebankId: json["timebank_id"] == null ? null : json["timebank_id"],
@@ -80,13 +80,13 @@ class ProjectModel extends DataModel {
             : null,
         members: json["members"] == null
             ? null
-            : new List<String>.from(json["members"].map((x) => x)),
+            : List<String>.from(json["members"].map((x) => x)),
         pendingRequests: json["pendingRequests"] == null
             ? null
-            : new List<String>.from(json["pendingRequests"].map((x) => x)),
+            : List<String>.from(json["pendingRequests"].map((x) => x)),
         completedRequests: json["completedRequests"] == null
             ? null
-            : new List<String>.from(json["completedRequests"].map((x) => x)),
+            : List<String>.from(json["completedRequests"].map((x) => x)),
       );
 
   Map<String, dynamic> toMap() {
@@ -108,15 +108,14 @@ class ProjectModel extends DataModel {
       "end_time": endTime == null ? null : endTime,
       "softDelete": softDelete ?? false,
       "requestedSoftDelete": requestedSoftDelete ?? false,
-      "members": members == null
-          ? null
-          : new List<dynamic>.from(members.map((x) => x)),
+      "members":
+          members == null ? null : List<dynamic>.from(members.map((x) => x)),
       "pendingRequests": pendingRequests == null
           ? null
-          : new List<dynamic>.from(pendingRequests.map((x) => x)),
+          : List<dynamic>.from(pendingRequests.map((x) => x)),
       "completedRequests": completedRequests == null
           ? null
-          : new List<dynamic>.from(
+          : List<dynamic>.from(
               completedRequests.map((x) => x),
             ),
     };

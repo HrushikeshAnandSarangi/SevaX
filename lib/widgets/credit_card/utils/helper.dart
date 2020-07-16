@@ -86,16 +86,16 @@ CardType getCardType(String brand) {
 }
 
 // CardType getCardType(String cardNumber) {
-//   RegExp rAmericanExpress = new RegExp(r"^3[47][0-9]{0,}$");
-//   RegExp rDinersClub = new RegExp(r"^3(?:0[0-59]{1}|[689])[0-9]{0,}$");
-//   RegExp rDiscover = new RegExp(
+//   RegExp rAmericanExpress = RegExp(r"^3[47][0-9]{0,}$");
+//   RegExp rDinersClub = RegExp(r"^3(?:0[0-59]{1}|[689])[0-9]{0,}$");
+//   RegExp rDiscover = RegExp(
 //       r"^(6011|65|64[4-9]|62212[6-9]|6221[3-9]|622[2-8]|6229[01]|62292[0-5])[0-9]{0,}$");
-//   RegExp rJcb = new RegExp(r"^(?:2131|1800|35)[0-9]{0,}$");
+//   RegExp rJcb = RegExp(r"^(?:2131|1800|35)[0-9]{0,}$");
 //   RegExp rMasterCard =
 //       new RegExp(r"^(5[1-5]|222[1-9]|22[3-9]|2[3-6]|27[01]|2720)[0-9]{0,}$");
-//   RegExp rMaestro = new RegExp(r"^(5[06789]|6)[0-9]{0,}$");
-//   RegExp rRupay = new RegExp(r"^(6522|6521|60)[0-9]{0,}$");
-//   RegExp rVisa = new RegExp(r"^4[0-9]{0,}$");
+//   RegExp rMaestro = RegExp(r"^(5[06789]|6)[0-9]{0,}$");
+//   RegExp rRupay = RegExp(r"^(6522|6521|60)[0-9]{0,}$");
+//   RegExp rVisa = RegExp(r"^4[0-9]{0,}$");
 
 //   // Remove all the spaces from the card number
 //   cardNumber = cardNumber.trim().replaceAll(" ", "");

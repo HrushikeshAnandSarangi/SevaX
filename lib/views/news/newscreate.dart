@@ -1,7 +1,6 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:html/parser.dart';
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -196,7 +195,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(12.0),
                                 ),
-                                borderSide: new BorderSide(
+                                borderSide: BorderSide(
                                   color: Colors.black,
                                   width: 0.5,
                                 ),
@@ -205,7 +204,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(12.0),
                                 ),
-                                borderSide: new BorderSide(
+                                borderSide: BorderSide(
                                   color: Colors.black,
                                   width: 0.5,
                                 ),
@@ -214,7 +213,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(12.0),
                                 ),
-                                borderSide: new BorderSide(
+                                borderSide: BorderSide(
                                   color: Colors.black,
                                   width: 0.5,
                                 ),
@@ -223,7 +222,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(0.0),
                                 ),
-                                borderSide: new BorderSide(
+                                borderSide: BorderSide(
                                   color: Colors.black,
                                   width: 0.5,
                                 ),
@@ -370,7 +369,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     // HashTag Extraction
     List<String> hashTags = List();
 
-    RegExp exp = new RegExp(r"([#,@][^\s#\@]*)");
+    RegExp exp = RegExp(r"([#,@][^\s#\@]*)");
     Iterable<RegExpMatch> matches = exp.allMatches(subHeadings);
     matches.map((x) => x[0]).forEach((m) => hashTags.add(m));
 

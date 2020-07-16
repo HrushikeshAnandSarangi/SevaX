@@ -133,7 +133,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
               builder: (BuildContext context,
                   AsyncSnapshot<List<ProjectModel>> projectListSnapshot) {
                 if (projectListSnapshot.hasError) {
-                  return new Text(
+                  return Text(
                       '${AppLocalizations.of(context).translate('tasks', 'error')} ${projectListSnapshot.error}');
                 }
                 switch (projectListSnapshot.connectionState) {
@@ -219,13 +219,13 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
   //     context: context,
   //     builder: (BuildContext context) {
   //       return AlertDialog(
-  //         title: new Text(
+  //         title: Text(
   //             AppLocalizations.of(context).translate('projects', 'alert')),
-  //         content: new Text(
+  //         content: Text(
   //             AppLocalizations.of(context).translate('projects', 'admin_can')),
   //         actions: <Widget>[
-  //           new FlatButton(
-  //             child: new Text(
+  //           FlatButton(
+  //             child: Text(
   //                 AppLocalizations.of(context).translate('shared', 'close')),
   //             onPressed: () {
   //               Navigator.of(context).pop();

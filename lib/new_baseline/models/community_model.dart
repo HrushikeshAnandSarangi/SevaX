@@ -223,7 +223,7 @@ class CommunityModel extends DataModel {
     }
 
     if (key == 'billing_address') {
-      this.billing_address = new BillingAddress(value);
+      this.billing_address = BillingAddress(value);
     }
 
     if (key == 'payment_records') {

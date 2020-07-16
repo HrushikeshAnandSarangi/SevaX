@@ -76,7 +76,7 @@ class NewsImagePickerHandler {
   }
 
   void init() {
-    imagePicker = new NewsImagePickerDialog(this, _controller);
+    imagePicker = NewsImagePickerDialog(this, _controller);
     imagePicker.initState();
   }
 

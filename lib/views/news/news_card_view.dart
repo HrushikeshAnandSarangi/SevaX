@@ -127,7 +127,7 @@ class NewsCardViewState extends State<NewsCardView> {
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: newsModel.hashTags.map((hash) {
-              // final _random = new Random();
+              // final _random = Random();
               // var element = colorList[_random.nextInt(colorList.length)];
               return chip(hash, false);
             }).toList(),
@@ -204,7 +204,7 @@ class NewsCardViewState extends State<NewsCardView> {
             alignment: WrapAlignment.center,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: newsModel.urlsFromPost.map((link) {
-              // final _random = new Random();
+              // final _random = Random();
               // var element = colorList[_random.nextInt(colorList.length)];
               return chipForLinks(link, false);
             }).toList(),
@@ -363,7 +363,9 @@ class NewsCardViewState extends State<NewsCardView> {
         ? Center(
             child: Container(
               child: Text(
-                newsModel.photoCredits != null ? 'Credits: ${newsModel.photoCredits}' : '',
+                newsModel.photoCredits != null
+                    ? 'Credits: ${newsModel.photoCredits}'
+                    : '',
                 style: TextStyle(
                   fontSize: 15.0,
                   fontStyle: FontStyle.italic,
@@ -422,7 +424,7 @@ class NewsCardViewState extends State<NewsCardView> {
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);
     String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = new File('$dir/$filename');
+    File file = File('$dir/$filename');
     await file.writeAsBytes(bytes);
     return file;
   }
@@ -536,9 +538,9 @@ class NewsCardViewState extends State<NewsCardView> {
   }
 
   String _getFormattedTime(int timestamp) {
-    return timeAgo.format(
-      DateTime.fromMillisecondsSinceEpoch(timestamp), locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
-    );
+    return timeAgo.format(DateTime.fromMillisecondsSinceEpoch(timestamp),
+        locale:
+            Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
   }
 
   void _deleteNews(BuildContext context) async {

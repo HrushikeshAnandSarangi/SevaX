@@ -5,7 +5,6 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -23,7 +22,7 @@ import 'package:usage/uuid/uuid.dart';
 import '../app_config.dart';
 import 'notifications_data_manager.dart';
 
-Location location = new Location();
+Location location = Location();
 Geoflutterfire geo = Geoflutterfire();
 
 Future<void> createRequest({@required RequestModel requestModel}) async {
@@ -33,8 +32,7 @@ Future<void> createRequest({@required RequestModel requestModel}) async {
       .setData(requestModel.toMap());
 }
 
-Future<int> createRecurringEvents(
-    {@required RequestModel requestModel}) async {
+Future<int> createRecurringEvents({@required RequestModel requestModel}) async {
   var batch = Firestore.instance.batch();
   var db = Firestore.instance;
   double sevaCreditsCount = 0;
@@ -44,32 +42,51 @@ Future<int> createRecurringEvents(
       eventEndDate =
           DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd);
   double balanceVar = await getMemberBalance(requestModel.sevaUserId);
-  List<Map<String,dynamic>> temparr = [];
+  List<Map<String, dynamic>> temparr = [];
   DocumentSnapshot projectDoc = null;
   ProjectModel projectData = null;
 
-  if(requestModel.projectId!=null && requestModel.projectId!=""){
-    projectDoc = await db.collection("projects").document(requestModel.projectId).get();
+  if (requestModel.projectId != null && requestModel.projectId != "") {
+    projectDoc =
+        await db.collection("projects").document(requestModel.projectId).get();
     projectData = ProjectModel.fromMap(projectDoc.data);
   }
 
-  batch.setData(db.collection("requests").document(requestModel.id), requestModel.toMap());
+  batch.setData(db.collection("requests").document(requestModel.id),
+      requestModel.toMap());
 
   if (requestModel.end.endType == "on") {
     //end type is on
     int occurenceCount = 2;
-    var numTemp=0;
-    while (lastRound == false ) {
-      eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1, eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
-      eventEndDate = DateTime(eventEndDate.year, eventEndDate.month, eventEndDate.day + 1, eventEndDate.hour, eventEndDate.minute, eventEndDate.second);
-      if (eventStartDate.millisecondsSinceEpoch <= requestModel.end.on && occurenceCount < 11) {
+    var numTemp = 0;
+    while (lastRound == false) {
+      eventStartDate = DateTime(
+          eventStartDate.year,
+          eventStartDate.month,
+          eventStartDate.day + 1,
+          eventStartDate.hour,
+          eventStartDate.minute,
+          eventStartDate.second);
+      eventEndDate = DateTime(
+          eventEndDate.year,
+          eventEndDate.month,
+          eventEndDate.day + 1,
+          eventEndDate.hour,
+          eventEndDate.minute,
+          eventEndDate.second);
+      if (eventStartDate.millisecondsSinceEpoch <= requestModel.end.on &&
+          occurenceCount < 11) {
         numTemp = eventStartDate.weekday % 7;
         if (requestModel.recurringDays.contains(numTemp)) {
           RequestModel temp = requestModel;
           temp.requestStart = eventStartDate.millisecondsSinceEpoch;
           temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
           temp.postTimestamp = DateTime.now().millisecondsSinceEpoch;
-          temp.id = temp.email + "*" + temp.postTimestamp.toString() + "*" + temp.requestStart.toString();
+          temp.id = temp.email +
+              "*" +
+              temp.postTimestamp.toString() +
+              "*" +
+              temp.requestStart.toString();
           temp.occurenceCount = occurenceCount;
           occurenceCount++;
           temp.softDelete = false;
@@ -86,22 +103,36 @@ Future<int> createRecurringEvents(
         break;
       }
     }
-  }
-
-  else {
+  } else {
     //end type is after
-    var numTemp=0;
+    var numTemp = 0;
     int occurenceCount = 2;
     while (occurenceCount <= requestModel.end.after) {
-      eventStartDate = DateTime(eventStartDate.year,eventStartDate.month,eventStartDate.day + 1,eventStartDate.hour,eventStartDate.minute, eventStartDate.second);
-      eventEndDate = DateTime(eventEndDate.year,eventEndDate.month,eventEndDate.day + 1,eventEndDate.hour,eventEndDate.minute,eventEndDate.second);
+      eventStartDate = DateTime(
+          eventStartDate.year,
+          eventStartDate.month,
+          eventStartDate.day + 1,
+          eventStartDate.hour,
+          eventStartDate.minute,
+          eventStartDate.second);
+      eventEndDate = DateTime(
+          eventEndDate.year,
+          eventEndDate.month,
+          eventEndDate.day + 1,
+          eventEndDate.hour,
+          eventEndDate.minute,
+          eventEndDate.second);
       numTemp = eventStartDate.weekday % 7;
       if (requestModel.recurringDays.contains(numTemp)) {
         RequestModel temp = requestModel;
         temp.requestStart = eventStartDate.millisecondsSinceEpoch;
         temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
         temp.postTimestamp = DateTime.now().millisecondsSinceEpoch;
-        temp.id = temp.email + "*" + temp.postTimestamp.toString() + "*" + temp.requestStart.toString();
+        temp.id = temp.email +
+            "*" +
+            temp.postTimestamp.toString() +
+            "*" +
+            temp.requestStart.toString();
         temp.occurenceCount = occurenceCount;
         occurenceCount++;
         temp.softDelete = false;
@@ -118,45 +149,51 @@ Future<int> createRecurringEvents(
     }
   }
 
-  if(requestModel.requestMode == RequestMode.PERSONAL_REQUEST){
+  if (requestModel.requestMode == RequestMode.PERSONAL_REQUEST) {
     log("inside personal req check");
-    if(balanceVar - sevaCreditsCount >= 0){
+    if (balanceVar - sevaCreditsCount >= 0) {
       log("yup balance");
-      temparr.forEach((tempobj){
-        batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
+      temparr.forEach((tempobj) {
+        batch.setData(
+            db.collection("requests").document(tempobj['id']), tempobj);
         log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['request_start']).toString()} with occurence count of ${tempobj['occurenceCount']}");
       });
-    }else{
+    } else {
       log("oops no balance");
       return 0;
     }
-  }else{
+  } else {
     log("inside timebank req " + requestModel.requestMode.toString());
-    temparr.forEach((tempobj){
+    temparr.forEach((tempobj) {
       batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
       log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['request_start']).toString()} with occurence count of ${tempobj['occurenceCount']}");
     });
   }
 
-  DocumentSnapshot timebankDoc = await db.collection("timebanknew").document(requestModel.timebankId).get();
+  DocumentSnapshot timebankDoc = await db
+      .collection("timebanknew")
+      .document(requestModel.timebankId)
+      .get();
   double balance = timebankDoc.data['balance'] + sevaCreditsCount;
-  batch.updateData(db.collection("timebanknew").document(timebankDoc.documentID), {"balance": balance});
+  batch.updateData(
+      db.collection("timebanknew").document(timebankDoc.documentID),
+      {"balance": balance});
 
-  if(requestModel.projectId!=null && requestModel.projectId!=""){
+  if (requestModel.projectId != null && requestModel.projectId != "") {
     projectData.pendingRequests.add(requestModel.id);
-    temparr.forEach((tempobj){
+    temparr.forEach((tempobj) {
       projectData.pendingRequests.add(tempobj['id']);
     });
-    batch.updateData(db.collection("projects").document(projectData.id), projectData.toMap());
+    batch.updateData(db.collection("projects").document(projectData.id),
+        projectData.toMap());
   }
 
   await batch.commit();
   return 1;
 }
 
-
-Future<void> updateRecurrenceRequestsFrontEnd({
-   @required RequestModel updatedRequestModel}) async {
+Future<void> updateRecurrenceRequestsFrontEnd(
+    {@required RequestModel updatedRequestModel}) async {
   var batch = Firestore.instance.batch();
   var db = Firestore.instance;
   double newCredits = 0, oldCredits = 0;
@@ -167,15 +204,25 @@ Future<void> updateRecurrenceRequestsFrontEnd({
   List<RequestModel> upcomingEventsArr = [], prevEventsArr = [];
   var futures = <Future>[];
   double balanceVar = await getMemberBalance(updatedRequestModel.sevaUserId);
-  Set<String> usersIds = new Set();
-  DateTime eventStartDate =DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestStart),
-      eventEndDate =DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestEnd);
+  Set<String> usersIds = Set();
+  DateTime eventStartDate =
+          DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestStart),
+      eventEndDate =
+          DateTime.fromMillisecondsSinceEpoch(updatedRequestModel.requestEnd);
 
-  QuerySnapshot snapEvents = await db.collection("requests").where("parent_request_id",isEqualTo: updatedRequestModel.parent_request_id).getDocuments();
+  QuerySnapshot snapEvents = await db
+      .collection("requests")
+      .where("parent_request_id",
+          isEqualTo: updatedRequestModel.parent_request_id)
+      .getDocuments();
   DocumentSnapshot projectDoc = null;
   ProjectModel projectData = null;
-  if(updatedRequestModel.projectId!=null && updatedRequestModel.projectId!=""){
-    projectDoc = await db.collection("projects").document(updatedRequestModel.projectId).get();
+  if (updatedRequestModel.projectId != null &&
+      updatedRequestModel.projectId != "") {
+    projectDoc = await db
+        .collection("projects")
+        .document(updatedRequestModel.projectId)
+        .get();
     projectData = ProjectModel.fromMap(projectDoc.data);
   }
 
@@ -191,25 +238,42 @@ Future<void> updateRecurrenceRequestsFrontEnd({
       prevEventsArr.add(eventData);
     }
   });
-  // s1 ---------- create new set of events with updated data
+  // s1 ---------- create set of events with updated data
 
-  List<Map<String,dynamic>> temparr = [];
+  List<Map<String, dynamic>> temparr = [];
 
   if (updatedRequestModel.end.endType == "on") {
     //end type is on
     int occurenceCount = updatedRequestModel.occurenceCount + 1;
-    var numTemp=0;
-    while (lastRound == false ) {
-      eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1, eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
-      eventEndDate = DateTime(eventEndDate.year, eventEndDate.month, eventEndDate.day + 1, eventEndDate.hour, eventEndDate.minute, eventEndDate.second);
-      if (eventStartDate.millisecondsSinceEpoch <= updatedRequestModel.end.on && occurenceCount < 11) {
+    var numTemp = 0;
+    while (lastRound == false) {
+      eventStartDate = DateTime(
+          eventStartDate.year,
+          eventStartDate.month,
+          eventStartDate.day + 1,
+          eventStartDate.hour,
+          eventStartDate.minute,
+          eventStartDate.second);
+      eventEndDate = DateTime(
+          eventEndDate.year,
+          eventEndDate.month,
+          eventEndDate.day + 1,
+          eventEndDate.hour,
+          eventEndDate.minute,
+          eventEndDate.second);
+      if (eventStartDate.millisecondsSinceEpoch <= updatedRequestModel.end.on &&
+          occurenceCount < 11) {
         numTemp = eventStartDate.weekday % 7;
         if (updatedRequestModel.recurringDays.contains(numTemp)) {
           RequestModel temp = updatedRequestModel;
           temp.requestStart = eventStartDate.millisecondsSinceEpoch;
           temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
           temp.postTimestamp = DateTime.now().millisecondsSinceEpoch;
-          temp.id = temp.email + "*" + temp.postTimestamp.toString() + "*" + temp.requestStart.toString();
+          temp.id = temp.email +
+              "*" +
+              temp.postTimestamp.toString() +
+              "*" +
+              temp.requestStart.toString();
           temp.occurenceCount = occurenceCount;
           occurenceCount++;
           temp.softDelete = false;
@@ -218,33 +282,48 @@ Future<void> updateRecurrenceRequestsFrontEnd({
           newCredits += temp.numberOfHours;
 //          batch.setData(db.collection("requests").document(temp.id), temp.toMap());
           temparr.add(temp.toMap());
-          if(projectData!=null){
+          if (projectData != null) {
             projectData.pendingRequests.add(temp.id);
           }
 
-          print("on mode inside if with day ${eventStartDate.toString()} with occurence count of ${temp.occurenceCount}");
+          print(
+              "on mode inside if with day ${eventStartDate.toString()} with occurence count of ${temp.occurenceCount}");
         }
       } else {
         lastRound = true;
         break;
       }
     }
-  }
-
-  else {
+  } else {
     //end type is after
-    var numTemp=0;
+    var numTemp = 0;
     int occurenceCount = updatedRequestModel.occurenceCount + 1;
     while (occurenceCount <= updatedRequestModel.end.after) {
-      eventStartDate = DateTime(eventStartDate.year,eventStartDate.month,eventStartDate.day + 1,eventStartDate.hour,eventStartDate.minute, eventStartDate.second);
-      eventEndDate = DateTime(eventEndDate.year,eventEndDate.month,eventEndDate.day + 1,eventEndDate.hour,eventEndDate.minute,eventEndDate.second);
+      eventStartDate = DateTime(
+          eventStartDate.year,
+          eventStartDate.month,
+          eventStartDate.day + 1,
+          eventStartDate.hour,
+          eventStartDate.minute,
+          eventStartDate.second);
+      eventEndDate = DateTime(
+          eventEndDate.year,
+          eventEndDate.month,
+          eventEndDate.day + 1,
+          eventEndDate.hour,
+          eventEndDate.minute,
+          eventEndDate.second);
       numTemp = eventStartDate.weekday % 7;
       if (updatedRequestModel.recurringDays.contains(numTemp)) {
         RequestModel temp = updatedRequestModel;
         temp.requestStart = eventStartDate.millisecondsSinceEpoch;
         temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
         temp.postTimestamp = DateTime.now().millisecondsSinceEpoch;
-        temp.id = temp.email + "*" + temp.postTimestamp.toString() + "*" + temp.requestStart.toString();
+        temp.id = temp.email +
+            "*" +
+            temp.postTimestamp.toString() +
+            "*" +
+            temp.requestStart.toString();
         temp.occurenceCount = occurenceCount;
         occurenceCount++;
         temp.softDelete = false;
@@ -253,7 +332,7 @@ Future<void> updateRecurrenceRequestsFrontEnd({
         newCredits += temp.numberOfHours;
 //        batch.setData(db.collection("requests").document(temp.id), temp.toMap());
         temparr.add(temp.toMap());
-        if(projectData!=null){
+        if (projectData != null) {
           projectData.pendingRequests.add(temp.id);
         }
         log("after mode inside if with day ${eventStartDate.toString()} with occurence count of ${temp.occurenceCount}");
@@ -264,14 +343,15 @@ Future<void> updateRecurrenceRequestsFrontEnd({
     }
   }
 
-  temparr.forEach((tempobj){
+  temparr.forEach((tempobj) {
     batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
     log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['request_start']).toString()} with occurence count of ${tempobj['occurenceCount']}");
   });
 
   // s2 ---------- update parent request and previous events with end data of updated event model
 
-  batch.updateData(db.collection("requests").document(updatedRequestModel.parent_request_id),
+  batch.updateData(
+      db.collection("requests").document(updatedRequestModel.parent_request_id),
       {
         "end": updatedRequestModel.end.toMap(),
         "recurringDays": updatedRequestModel.recurringDays
@@ -281,19 +361,26 @@ Future<void> updateRecurrenceRequestsFrontEnd({
 
   if (upcomingEventsArr.length != 0) {
     upcomingEventsArr.forEach((upcomingEvent) {
-      if(projectData!=null){
+      if (projectData != null) {
         projectData.pendingRequests.remove(upcomingEvent.id);
       }
       oldCredits = oldCredits + (upcomingEvent.numberOfHours);
-      batch.delete(db.collection("requests").document(upcomingEvent.id)); // delete old upcoming recurrence-events
+      batch.delete(db
+          .collection("requests")
+          .document(upcomingEvent.id)); // delete old upcoming recurrence-events
     });
   }
 
-  // s4 ---------- subtract old credits and add new credits to timebank
+  // s4 ---------- subtract old credits and add credits to timebank
 
-  DocumentSnapshot timebankDoc = await db.collection("timebanknew").document(updatedRequestModel.timebankId).get();
+  DocumentSnapshot timebankDoc = await db
+      .collection("timebanknew")
+      .document(updatedRequestModel.timebankId)
+      .get();
   double balance = timebankDoc.data['balance'] - oldCredits + newCredits;
-  batch.updateData(db.collection("timebanknew").document(updatedRequestModel.timebankId),{'balance': balance});
+  batch.updateData(
+      db.collection("timebanknew").document(updatedRequestModel.timebankId),
+      {'balance': balance});
 
   // s5 ---------- send notifications in case users have part of members
 
@@ -315,7 +402,12 @@ Future<void> updateRecurrenceRequestsFrontEnd({
       upcomingEventsArr.forEach((RequestModel upcomingEvent) {
         if (upcomingEvent.approvedUsers.contains(docUser.documentID)) {
           uuidvar = Uuid().generateV4();
-          batch.setData(db.collection("users").document(docUser.documentID).collection("notifications").document(uuidvar),
+          batch.setData(
+              db
+                  .collection("users")
+                  .document(docUser.documentID)
+                  .collection("notifications")
+                  .document(uuidvar),
               {
                 'communityId': timebankDoc.data['community_id'],
                 'data': {
@@ -328,7 +420,7 @@ Future<void> updateRecurrenceRequestsFrontEnd({
                 'isRead': false,
                 'senderUserId': upcomingEvent.sevaUserId,
                 'timebankId': upcomingEvent.timebankId,
-                'timestamp': new DateTime.now().millisecondsSinceEpoch,
+                'timestamp': DateTime.now().millisecondsSinceEpoch,
                 'type': "RecurringRequestUpdated",
                 'userId': docUser.data['sevauserid']
               });
@@ -338,19 +430,12 @@ Future<void> updateRecurrenceRequestsFrontEnd({
   }
 
   // s6 ---------- change in projects pendingrequests, and put it all into a batch and commit them
-  if(projectData!=null){
-    batch.updateData(db.collection("projects").document(projectData.id),projectData.toMap());
+  if (projectData != null) {
+    batch.updateData(db.collection("projects").document(projectData.id),
+        projectData.toMap());
   }
   await batch.commit();
 }
-
-
-
-
-
-
-
-
 
 Stream<List<RequestModel>> getRequestStreamCreatedByUser({
   @required String sevaUserID,

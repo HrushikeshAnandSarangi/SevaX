@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 
@@ -264,7 +264,7 @@ class AboutApp extends StatelessWidget {
         builder: (BuildContext dialogContext) {
           // return object of type Dialog
           return AlertDialog(
-            title: new Text(
+            title: Text(
                 AppLocalizations.of(context).translate('help', 'alert_text')),
             content: Form(
               key: formkey,
@@ -278,7 +278,7 @@ class AboutApp extends StatelessWidget {
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(20.0),
                     ),
-                    borderSide: new BorderSide(
+                    borderSide: BorderSide(
                       color: Colors.black,
                       width: 1.0,
                     ),
@@ -297,11 +297,11 @@ class AboutApp extends StatelessWidget {
             ),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
-              new FlatButton(
+              FlatButton(
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                 color: Theme.of(context).accentColor,
                 textColor: FlavorConfig.values.buttonTextColor,
-                child: new Text(
+                child: Text(
                   AppLocalizations.of(context)
                       .translate('help', 'send_feedback'),
                   style: TextStyle(
@@ -329,8 +329,8 @@ class AboutApp extends StatelessWidget {
                   }
                 },
               ),
-              new FlatButton(
-                child: new Text(
+              FlatButton(
+                child: Text(
                   AppLocalizations.of(context).translate('help', 'close'),
                   style: TextStyle(
                       fontSize: dialogButtonSize,

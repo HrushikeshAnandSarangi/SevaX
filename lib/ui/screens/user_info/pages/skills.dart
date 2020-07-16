@@ -96,12 +96,12 @@ class _SkillViewNewState extends State<SkillsPage> {
                     filled: true,
                     fillColor: Colors.grey[300],
                     focusedBorder: OutlineInputBorder(
-                      borderSide: new BorderSide(color: Colors.white),
-                      borderRadius: new BorderRadius.circular(25.7),
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7),
                     ),
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
-                        borderRadius: new BorderRadius.circular(25.7)),
+                        borderRadius: BorderRadius.circular(25.7)),
                     contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
                     prefixIcon: Icon(
                       Icons.search,

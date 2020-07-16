@@ -723,11 +723,11 @@ class TimezoneList extends StatefulWidget {
 class TimezoneListState extends State<TimezoneList> {
   List<TimeZoneModel> timezonelist = [];
   String isSelected;
-//  ScrollController _scrollController = new ScrollController();
+//  ScrollController _scrollController =   ScrollController();
 
   @override
   void initState() {
-    timezonelist = new TimezoneListData().getData();
+    timezonelist = TimezoneListData().getData();
     timezonelist.sort((a, b) {
       return a.timezoneName
           .toLowerCase()
@@ -743,7 +743,7 @@ class TimezoneListState extends State<TimezoneList> {
             sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return new Text('Error: ${snapshot.error}');
+            return Text('Error: ${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -755,8 +755,11 @@ class TimezoneListState extends State<TimezoneList> {
 //            controller: _scrollController,
             itemBuilder: (context, index) {
               TimeZoneModel model = timezonelist.elementAt(index);
-              DateFormat format = DateFormat('dd/MMM/yyyy HH:mm', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
-              DateTime timeInUtc = new DateTime.now().toUtc();
+              DateFormat format = DateFormat(
+                  'dd/MMM/yyyy HH:mm',
+                  Locale(AppConfig.prefs.getString('language_code'))
+                      .toLanguageTag());
+              DateTime timeInUtc = DateTime.now().toUtc();
 
               DateTime localtime = timeInUtc.add(Duration(
                   hours: model.offsetFromUtc, minutes: model.offsetFromUtcMin));

@@ -11,7 +11,7 @@ import 'package:sevaexchange/models/request_model.dart';
 
 import '../app_config.dart';
 
-Location loc = new Location();
+Location loc = Location();
 Geoflutterfire geoflutterfire = Geoflutterfire();
 
 Stream<List<OfferModel>> getOffersStream({String timebankId}) async* {
@@ -97,7 +97,8 @@ Stream<List<OfferModel>> getNearOffersStream({String timebankId}) async* {
   } on Exception {
     print("Exception raised while getting user minimum balance ");
   }
-  print("radius is fetched from remote config near offers ${radius.toDouble()}");
+  print(
+      "radius is fetched from remote config near offers ${radius.toDouble()}");
 
   var data = geoflutterfire.collection(collectionRef: query).within(
       center: center,

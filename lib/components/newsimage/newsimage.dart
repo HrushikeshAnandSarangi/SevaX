@@ -131,13 +131,13 @@ class NewsImageState extends State<NewsImage>
         return AlertDialog(
           title: Text(AppLocalizations.of(context)
               .translate('create_feed', 'size_alert_title')),
-          content: new Text(AppLocalizations.of(context)
+          content: Text(AppLocalizations.of(context)
               .translate('create_feed', 'size_alert')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(
-                  AppLocalizations.of(context).translate('help', 'close')),
+            FlatButton(
+              child:
+                  Text(AppLocalizations.of(context).translate('help', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -326,7 +326,7 @@ class NewsImageState extends State<NewsImage>
 
   void get _fetchCurrentlocation async {
     try {
-      Location templocation = new Location();
+      Location templocation = Location();
       bool _serviceEnabled;
       PermissionStatus _permissionGranted;
 

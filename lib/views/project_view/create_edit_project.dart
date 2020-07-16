@@ -47,7 +47,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   final _formKey = GlobalKey<FormState>();
   final _formDialogKey = GlobalKey<FormState>();
   String communityImageError = '';
-  TextEditingController searchTextController = new TextEditingController();
+  TextEditingController searchTextController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   String errTxt;
   ProjectModel projectModel = ProjectModel();
@@ -458,7 +458,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 projectModel.phoneNumber = '+' + value;
               },
               inputFormatters: [
-                new WhitelistingTextInputFormatter(RegExp("[0-9]")),
+                WhitelistingTextInputFormatter(RegExp("[0-9]")),
               ],
 
               validator: (value) {
@@ -640,7 +640,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     }
 
                     print('project mode ${projectModel.mode}');
-                    FocusScope.of(context).requestFocus(new FocusNode());
+                    FocusScope.of(context).requestFocus(FocusNode());
                     // show a dialog
                     projectModel.startTime =
                         OfferDurationWidgetState.starttimestamp;
@@ -948,11 +948,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         controller: searchTextController,
                         decoration: InputDecoration(
                             hintMaxLines: 2,
-                            border: new OutlineInputBorder(
+                            border: OutlineInputBorder(
                               borderRadius: const BorderRadius.all(
                                 const Radius.circular(0.0),
                               ),
-                              borderSide: new BorderSide(
+                              borderSide: BorderSide(
                                 color: Colors.black,
                                 width: 1.0,
                               ),

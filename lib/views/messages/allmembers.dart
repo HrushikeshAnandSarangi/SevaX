@@ -64,7 +64,7 @@ class AllMembersChatState extends State<AllMembersChat>
               //   child: Icon(Icons.search),
               // ),
               enabledBorder: UnderlineInputBorder(
-                  borderSide: new BorderSide(color: Colors.white)),
+                  borderSide: BorderSide(color: Colors.white)),
               hintText: 'Search',
               hintStyle: TextStyle(color: Colors.white),
             ),
@@ -135,7 +135,7 @@ class _ResultViewState extends State<ResultView> {
             getTimebankModelStream(timebankId: FlavorConfig.values.timebankId),
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasError) {
-            return new Text('Error: ${snapshot.error}');
+            return Text('Error: ${snapshot.error}');
           }
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
@@ -278,7 +278,7 @@ class _ResultViewState extends State<ResultView> {
         stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return new Text('Error: ${snapshot.error}');
+            return Text('Error: ${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return taskShimmer;

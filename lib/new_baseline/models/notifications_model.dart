@@ -16,7 +16,7 @@
 //   });
 
 //   factory NotificationModel.fromMap(Map<String, dynamic> json) {
-//     NotificationModel notificationModel = new NotificationModel(
+//     NotificationModel notificationModel =   NotificationModel(
 //       id: json["id"] == null ? null : json["id"],
 //       dataId: json["data_id"] == null ? null : json["data_id"],
 //       targetUserId:

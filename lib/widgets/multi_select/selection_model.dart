@@ -75,8 +75,8 @@ class SelectionModal extends StatefulWidget {
 class _SelectionModalState extends State<SelectionModal> {
   RequestModel requestModel = RequestModel();
   int sharedValue = 0;
-  final globalKey = new GlobalKey<ScaffoldState>();
-  final TextEditingController _controller = new TextEditingController();
+  final globalKey = GlobalKey<ScaffoldState>();
+  final TextEditingController _controller = TextEditingController();
   bool _isSearching;
 
   List _localDataSourceWithState = [];
@@ -174,7 +174,7 @@ class _SelectionModalState extends State<SelectionModal> {
     return SafeArea(
       child: Column(
         children: <Widget>[
-          widget.filterable ? _buildSearchText() : new SizedBox(),
+          widget.filterable ? _buildSearchText() : SizedBox(),
           Expanded(
             child: _optionsList(),
           ),
@@ -246,8 +246,8 @@ class _SelectionModalState extends State<SelectionModal> {
       var existingItem = _localDataSourceWithState
           .singleWhere((itm) => itm['value'] == item, orElse: () => null);
       selectedOptions.add(Chip(
-        label: new Container(
-          constraints: new BoxConstraints(
+        label: Container(
+          constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width - 80.0),
           child: Text(existingItem['text'], overflow: TextOverflow.ellipsis),
         ),
@@ -270,7 +270,7 @@ class _SelectionModalState extends State<SelectionModal> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                new Text(
+                Text(
                   widget.selectedOptionsInfoText ??
                       '${AppLocalizations.of(context).translate('create_request', 'selected_hint')} ${selectedOptions.length}  ${AppLocalizations.of(context).translate('create_request', 'tap_to_remove')}', // use languageService here
                   style: TextStyle(
@@ -279,7 +279,7 @@ class _SelectionModalState extends State<SelectionModal> {
                       fontWeight: FontWeight.bold),
                 ),
                 ConstrainedBox(
-                    constraints: new BoxConstraints(
+                    constraints: BoxConstraints(
                       maxHeight: MediaQuery.of(context).size.height / 8,
                     ),
                     child: Scrollbar(
@@ -294,7 +294,7 @@ class _SelectionModalState extends State<SelectionModal> {
               ],
             ),
           )
-        : new Container();
+        : Container();
   }
 
   ListView _optionsList() {
@@ -315,7 +315,7 @@ class _SelectionModalState extends State<SelectionModal> {
             item['checked'] = !item['checked'];
             setState(() {});
           }));
-      options.add(new Divider(height: 1.0));
+      options.add(Divider(height: 1.0));
     });
     return ListView(children: options);
   }
@@ -382,10 +382,10 @@ class _SelectionModalState extends State<SelectionModal> {
                 controller: _controller,
                 keyboardAppearance: Brightness.light,
                 onChanged: searchOperation,
-                decoration: new InputDecoration(
+                decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.only(left: 8.0, right: 8.0, bottom: 10.0),
-                    border: new OutlineInputBorder(
+                    border: OutlineInputBorder(
                       borderRadius: const BorderRadius.all(
                         const Radius.circular(6.0),
                       ),
@@ -417,7 +417,7 @@ class _SelectionModalState extends State<SelectionModal> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: globalKey,
       appBar: _buildAppBar(context),
       body: _buildBody(context),

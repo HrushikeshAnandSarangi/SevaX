@@ -943,12 +943,12 @@ class _ProfilePageState extends State<ProfilePage>
   //             builder: (BuildContext context) {
   //               // return object of type Dialog
   //               return AlertDialog(
-  //                 title: new Text("Log Out"),
-  //                 content: new Text("Are you sure you want to logout?"),
+  //                 title: Text("Log Out"),
+  //                 content: Text("Are you sure you want to logout?"),
   //                 actions: <Widget>[
   //                   // usually buttons at the bottom of the dialog
   //                   new FlatButton(
-  //                     child: new Text("Log Out"),
+  //                     child: Text("Log Out"),
   //                     onPressed: () {
   //                       Navigator.of(context).pop();
   //                       _signOut(context);
@@ -959,7 +959,7 @@ class _ProfilePageState extends State<ProfilePage>
   //                     elevation: 5,
   //                     color: Theme.of(context).accentColor,
   //                     textColor: FlavorConfig.values.buttonTextColor,
-  //                     child: new Text("Cancel"),
+  //                     child: Text("Cancel"),
   //                     onPressed: () {
   //                       Navigator.of(context).pop();
   //                     },

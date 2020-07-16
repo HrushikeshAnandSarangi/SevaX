@@ -41,8 +41,8 @@ class TimebankView extends StatefulWidget {
 class _TimebankViewState extends State<TimebankView> {
   TimebankModel timebankModel;
 
-  JoinRequestModel joinRequestModel = new JoinRequestModel();
-  JoinRequestModel getRequestData = new JoinRequestModel();
+  JoinRequestModel joinRequestModel = JoinRequestModel();
+  JoinRequestModel getRequestData = JoinRequestModel();
   UserModel ownerModel;
   String title = 'Loading';
   String loggedInUser;
@@ -178,7 +178,7 @@ class _TimebankViewState extends State<TimebankView> {
                                         context: context,
                                         builder: (BuildContext dialogContext) {
                                           return AlertDialog(
-                                            title: new Text(
+                                            title: Text(
                                                 "Why do you want to join the ${FlavorConfig.values.timebankTitle}? "),
                                             content: Column(
                                               children: <Widget>[
@@ -199,8 +199,7 @@ class _TimebankViewState extends State<TimebankView> {
                                                           const Radius.circular(
                                                               20.0),
                                                         ),
-                                                        borderSide:
-                                                            new BorderSide(
+                                                        borderSide: BorderSide(
                                                           color: Colors.black,
                                                           width: 1.0,
                                                         ),
@@ -221,14 +220,14 @@ class _TimebankViewState extends State<TimebankView> {
                                                 SizedBox(
                                                   height: 15,
                                                 ),
-                                                new FlatButton(
+                                                FlatButton(
                                                   padding: EdgeInsets.fromLTRB(
                                                       10, 5, 5, 5),
                                                   color: Theme.of(context)
                                                       .accentColor,
                                                   textColor: FlavorConfig
                                                       .values.buttonTextColor,
-                                                  child: new Text(
+                                                  child: Text(
                                                     "Send Join Request",
                                                     style: TextStyle(
                                                       fontSize:
@@ -323,8 +322,8 @@ class _TimebankViewState extends State<TimebankView> {
                                                     }
                                                   },
                                                 ),
-                                                new FlatButton(
-                                                  child: new Text(
+                                                FlatButton(
+                                                  child: Text(
                                                     "Cancel",
                                                     style: TextStyle(
                                                         fontSize: 15,

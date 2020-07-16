@@ -71,7 +71,7 @@ class _CongratsState extends State<Congrats> {
                               Navigator.pop(context);
                             },
                             shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(10.0)),
+                                borderRadius: BorderRadius.circular(10.0)),
                           ),
                         ),
                       ),

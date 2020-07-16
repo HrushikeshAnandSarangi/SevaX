@@ -53,7 +53,7 @@ class NewsModel extends DataModel {
       this.softDelete});
 
   Map<String, dynamic> toMap() {
-    var map = new Map<String, dynamic>();
+    var map = Map<String, dynamic>();
 
     if (this.title != null && this.title.isNotEmpty) {
       map['title'] = this.title;

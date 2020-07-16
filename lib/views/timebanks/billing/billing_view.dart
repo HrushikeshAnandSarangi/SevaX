@@ -154,12 +154,12 @@ class BillingViewState extends State<BillingView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: new Text(AppLocalizations.of(context)
+          content: Text(AppLocalizations.of(context)
               .translate('change_ownership', 'ownership_suceess')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(
+            FlatButton(
+              child: Text(
                   AppLocalizations.of(context).translate('homepage', 'ok')),
               onPressed: () {
                 resetAndLoad();
@@ -183,7 +183,7 @@ class BillingViewState extends State<BillingView> {
 
     WriteBatch batch = Firestore.instance.batch();
     var timebankRef =
-        Firestore.instance.collection('timebanknew').document(primaryTimebank);
+        Firestore.instance.collection('timebank').document(primaryTimebank);
 
     var personalNotifications = Firestore.instance
         .collection('users')
@@ -380,15 +380,15 @@ class BillingViewState extends State<BillingView> {
       builder: (BuildContext _context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context)
+          title: Text(AppLocalizations.of(context)
               .translate('billing_admin', 'default')),
-          content: new Text(AppLocalizations.of(context)
+          content: Text(AppLocalizations.of(context)
               .translate('billing_admin', 'default_card_desc')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(
-                  AppLocalizations.of(context).translate('help', 'close')),
+            FlatButton(
+              child:
+                  Text(AppLocalizations.of(context).translate('help', 'close')),
               onPressed: () {
                 Navigator.of(_context).pop();
               },

@@ -36,8 +36,8 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
   TimebankModel timebankModel;
 
   //TimebankModel superAdminModel;
-  JoinRequestModel joinRequestModel = new JoinRequestModel();
-  JoinRequestModel getRequestData = new JoinRequestModel();
+  JoinRequestModel joinRequestModel = JoinRequestModel();
+  JoinRequestModel getRequestData = JoinRequestModel();
   UserModel ownerModel;
   String title = 'Loading';
   String loggedInUser;
@@ -47,11 +47,11 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
   void initState() {
     //SevaCore.of(context).loggedInUser = UserData.shared.user;
     super.initState();
-    //this.getRequestData = new JoinRequestModel();
+    //this.getRequestData =  JoinRequestModel();
   }
 
   Future getJoinRequestData() async {
-    this.getRequestData = new JoinRequestModel();
+    this.getRequestData = JoinRequestModel();
     this.getRequestData = await getRequestStatusForId(
         timebankId: SevaCore.of(context).loggedInUser.currentTimebank);
   }
@@ -291,7 +291,7 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
 //                              builder: (BuildContext dialogContext) {
 //                                // return object of type Dialog
 //                                return AlertDialog(
-//                                  title: new Text(
+//                                  title:  Text(
 //                                      "Why do you want to join the ${FlavorConfig.values.timebankTitle}? "),
 //                                  content: Form(
 //                                    key: formkey,
@@ -308,7 +308,7 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
 //                                            const Radius.circular(
 //                                                20.0),
 //                                          ),
-//                                          borderSide: new BorderSide(
+//                                          borderSide:  BorderSide(
 //                                            color: Colors.black,
 //                                            width: 1.0,
 //                                          ),
@@ -327,16 +327,16 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
 //                                    ),
 //                                  ),
 //                                  actions: <Widget>[
-//                                    new FlatButton(
-//                                      child: new Text("Cancel"),
+//                                     FlatButton(
+//                                      child:  Text("Cancel"),
 //                                      onPressed: () {
 //                                        Navigator.of(dialogContext)
 //                                            .pop();
 //                                      },
 //                                    ),
 //                                    // usually buttons at the bottom of the dialog
-//                                    new FlatButton(
-//                                      child: new Text(
+//                                     FlatButton(
+//                                      child:  Text(
 //                                        "Send Join Request",
 //                                        style: TextStyle(
 //                                            color: Theme.of(context)

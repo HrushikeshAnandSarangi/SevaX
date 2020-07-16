@@ -27,7 +27,7 @@ extension StringExtension on String {
 class LocationPicker extends StatefulWidget {
   final GeoFirePoint selectedLocation;
   final String selectedAddress;
-  final Location location = new Location();
+  final Location location = Location();
   final Geoflutterfire geo = Geoflutterfire();
   final Firestore firestore = Firestore.instance;
   final LatLng defaultLocation;
@@ -94,6 +94,7 @@ class _LocationPickerState extends State<LocationPicker> {
 
     loadInitialLocation();
   }
+
   GeoFirePoint point(markers) {
     if (markers == null || markers.isEmpty) return null;
     Marker marker = markers.first;
@@ -134,10 +135,10 @@ class _LocationPickerState extends State<LocationPicker> {
       render = LocationConfimationCard(
         locationDataModel: locationDataFromSearch.location == null
             ? LocationDataModel(
-          address == null ? "" : address,
-          temp.latitude,
-          temp.longitude,
-        )
+                address == null ? "" : address,
+                temp.latitude,
+                temp.longitude,
+              )
             : locationDataFromSearch,
       );
     } else {
@@ -161,7 +162,7 @@ class _LocationPickerState extends State<LocationPicker> {
               LocationDataModel model = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => new CustomSearchScaffold(
+                  builder: (BuildContext context) => CustomSearchScaffold(
                       AppLocalizations.of(context)
                           .translate('interests', 'search')),
                   fullscreenDialog: true,
@@ -174,10 +175,11 @@ class _LocationPickerState extends State<LocationPicker> {
                 _addMarker(latLng: target);
                 var temp = point(markers);
                 if (locationDataFromSearch.lat != null &&
-                    locationDataFromSearch.lng != null && temp != null) {
+                    locationDataFromSearch.lng != null &&
+                    temp != null) {
                   if (point(markers).distance(
-                      lat: locationDataFromSearch.lat,
-                      lng: locationDataFromSearch.lng) >
+                          lat: locationDataFromSearch.lat,
+                          lng: locationDataFromSearch.lng) >
                       0.005) {
                     locationDataFromSearch.location = null;
                   }
@@ -315,11 +317,14 @@ class _LocationPickerState extends State<LocationPicker> {
           _addMarker();
           var temp = point(markers);
           if (locationDataFromSearch.lat != null &&
-              locationDataFromSearch.lng != null && temp != null) {
-            log(point(markers).distance(
-              lat: locationDataFromSearch.lat,
-              lng: locationDataFromSearch.lng,
-            ).toString());
+              locationDataFromSearch.lng != null &&
+              temp != null) {
+            log(point(markers)
+                .distance(
+                  lat: locationDataFromSearch.lat,
+                  lng: locationDataFromSearch.lng,
+                )
+                .toString());
             if (point(markers).distance(
                     lat: locationDataFromSearch.lat,
                     lng: locationDataFromSearch.lng) >

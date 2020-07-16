@@ -53,15 +53,14 @@ class RequestStatusViewState extends State<RequestStatusView> {
                 builder: (BuildContext viewcontext) {
                   // return object of type Dialog
                   return AlertDialog(
-                    title:
-                        new Text(this.isSent == true ? "Success" : "Failure"),
-                    content: new Text(this.isSent == true
+                    title: Text(this.isSent == true ? "Success" : "Failure"),
+                    content: Text(this.isSent == true
                         ? "CSV file sent successfully to ${SevaCore.of(context).loggedInUser.email}."
                         : "Something went wrong please try again later"),
                     actions: <Widget>[
                       // usually buttons at the bottom of the dialog
-                      new FlatButton(
-                        child: new Text("OK"),
+                      FlatButton(
+                        child: Text("OK"),
                         onPressed: () {
                           Navigator.of(viewcontext).pop();
                         },
@@ -108,7 +107,8 @@ class RequestStatusViewState extends State<RequestStatusView> {
       child: Card(
         child: ListTile(
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(userSelected.photourl ?? defaultUserImageURL),
+            backgroundImage:
+                NetworkImage(userSelected.photourl ?? defaultUserImageURL),
           ),
           title: Text(
             userSelected.fullname,
@@ -157,7 +157,7 @@ class RequestStatusViewState extends State<RequestStatusView> {
 //  }
 
 //  void downloadFile() {
-//    new HttpClient().getUrl(Uri.parse('https://us-central1-sevaexchange.cloudfunctions.net/requests_members?requestId=${widget.requestId}&receiver=${SevaCore.of(context).loggedInUser.email}'))
+//    HttpClient().getUrl(Uri.parse('https://us-central1-sevaexchange.cloudfunctions.net/requests_members?requestId=${widget.requestId}&receiver=${SevaCore.of(context).loggedInUser.email}'))
 //        .then((HttpClientRequest request) => request.close())
 //        .then((HttpClientResponse response)  {
 //          print(response);
@@ -167,7 +167,6 @@ class RequestStatusViewState extends State<RequestStatusView> {
 //  }
 
   Future sendMail() async {
-
     final response1 = await http.get(
         '${FlavorConfig.values.cloudFunctionBaseURL}/requests_membersSevax?requestId=${widget.requestId}&receiver=${SevaCore.of(context).loggedInUser.email}');
 

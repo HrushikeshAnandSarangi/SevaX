@@ -193,7 +193,7 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
   // LocationData pos = await location.getLocation();
   // double lat = pos.latitude;
   // double lng = pos.longitude;
-  // Location location = new Location();
+  // Location location = Location();
   Geoflutterfire geo = Geoflutterfire();
   Geolocator geolocator = Geolocator();
   Position userLocation;

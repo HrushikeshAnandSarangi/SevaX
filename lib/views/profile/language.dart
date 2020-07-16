@@ -1,14 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/internationalization/applanguage.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-import 'package:provider/provider.dart';
-import 'package:sevaexchange/internationalization/applanguage.dart';
 
 class LanguageListData {
   final languagelist = [
@@ -67,11 +64,11 @@ class LanguageList extends StatefulWidget {
 class LanguageListState extends State<LanguageList> {
   List<LanguageModel> languagelist = [];
   String isSelected;
-//  ScrollController _scrollController = new ScrollController();
+//  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
-    languagelist = new LanguageListData().getData();
+    languagelist = LanguageListData().getData();
     languagelist.sort((a, b) {
       return a.languageName
           .toLowerCase()
@@ -88,7 +85,7 @@ class LanguageListState extends State<LanguageList> {
             sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return new Text('Error: ${snapshot.error}');
+            return Text('Error: ${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());

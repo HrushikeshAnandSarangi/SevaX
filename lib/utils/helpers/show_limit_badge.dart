@@ -117,7 +117,7 @@ class TransactionLimitCheck extends StatelessWidget {
                     !isAdmin || (isSoftDeleteRequested && !isBillingFailed),
                 child: FlatButton(
                   color: Theme.of(context).accentColor,
-                  child: new Text(
+                  child: Text(
                     AppLocalizations.of(context)
                         .translate('homepage', 'configure'),
                     style: TextStyle(color: Colors.white),
@@ -141,7 +141,7 @@ class TransactionLimitCheck extends StatelessWidget {
               SizedBox(width: 10),
               FlatButton(
                 color: Theme.of(context).accentColor,
-                child: new Text(
+                child: Text(
                   AppLocalizations.of(context)
                       .translate('billing_plans', 'close'),
                   style: TextStyle(color: Colors.white),

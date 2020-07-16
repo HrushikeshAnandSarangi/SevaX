@@ -17,7 +17,7 @@ import '../resources/repository.dart';
 class CommunityFindBloc {
   final _repository = Repository();
   final _communitiesFetcher = PublishSubject<CommunityListModel>();
-  final searchOnChange = new BehaviorSubject<String>();
+  final searchOnChange = BehaviorSubject<String>();
 
   Observable<CommunityListModel> get allCommunities =>
       _communitiesFetcher.stream;
@@ -42,7 +42,7 @@ class CommunityFindBloc {
 class VolunteerFindBloc {
   final _repository = Repository();
   final _usersFetcher = PublishSubject<UserListModel>();
-  final searchOnChange = new BehaviorSubject<String>();
+  final searchOnChange = BehaviorSubject<String>();
 
   Observable<UserListModel> get allUsers => _usersFetcher.stream;
 
@@ -64,7 +64,7 @@ class VolunteerFindBloc {
 
 class CommunityCreateEditController {
   CommunityModel community = CommunityModel({});
-  TimebankModel timebank = new TimebankModel({});
+  TimebankModel timebank = TimebankModel({});
   UserModel loggedinuser;
   List<TimebankModel> timebanks = [];
   String selectedAddress;
@@ -309,9 +309,9 @@ class TransactionBloc {
             .where('id', isEqualTo: timebankid);
         QuerySnapshot snapshot = await query.getDocuments();
         DocumentSnapshot document =
-        snapshot.documents?.length > 0 && snapshot.documents != null
-            ? snapshot.documents.first
-            : null;
+            snapshot.documents?.length > 0 && snapshot.documents != null
+                ? snapshot.documents.first
+                : null;
         print(timebankid);
         print(snapshot.documents);
         if (document != null)
@@ -320,7 +320,7 @@ class TransactionBloc {
               .document(document.documentID)
               .setData({
             'balance':
-            FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))
+                FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))
           }, merge: true);
         // credit to user
         query = Firestore.instance
@@ -336,7 +336,7 @@ class TransactionBloc {
               .document(document.documentID)
               .setData({
             'currentBalance':
-            FieldValue.increment((num.parse(credits.toStringAsFixed(2))))
+                FieldValue.increment((num.parse(credits.toStringAsFixed(2))))
           }, merge: true);
       }
     }
@@ -344,7 +344,7 @@ class TransactionBloc {
 
   createNewTransaction(from, to, timestamp, credits, isApproved, type, typeid,
       timebankid) async {
-    TransactionModel transactionModel = new TransactionModel(
+    TransactionModel transactionModel = TransactionModel(
         from: from,
         to: to,
         timestamp: timestamp,
@@ -365,7 +365,7 @@ class TransactionBloc {
   updateNewTransaction(from, to, timestamp, credits, isApproved, type, typeid,
       timebankid, id) async {
     TransactionModel prevtransactionModel;
-    TransactionModel transactionModel = new TransactionModel(
+    TransactionModel transactionModel = TransactionModel(
         from: from,
         to: to,
         timestamp: timestamp,
@@ -380,7 +380,7 @@ class TransactionBloc {
           .collection('transactions')
           .document(id)
           .get();
-      prevtransactionModel = new TransactionModel.fromMap(document.data);
+      prevtransactionModel = TransactionModel.fromMap(document.data);
       if (document.data != null) {
         await Firestore.instance
             .collection('transactions')
@@ -404,7 +404,7 @@ class TransactionBloc {
               ? snapshot.documents.first
               : null;
       if (document != null)
-        prevtransactionModel = new TransactionModel.fromMap(document.data);
+        prevtransactionModel = TransactionModel.fromMap(document.data);
       if (!prevtransactionModel.isApproved && isApproved) {
         print("handle final approval transaction to user and tiembnak sdf");
         await handleApprovedTransaction(isApproved, from, to, timebankid, type,

@@ -105,7 +105,12 @@ class ChatAppBar extends PreferredSize {
               context,
               AppLocalizations.of(context).translate('messages', 'exitroom'),
               isCreator
-                  ? AppLocalizations.of(context).translate('messages', 'admin_confirm') +  groupDetails.name : AppLocalizations.of(context).translate('profile', 'user_confirm') + groupDetails.name,
+                  ? AppLocalizations.of(context)
+                          .translate('messages', 'admin_confirm') +
+                      groupDetails.name
+                  : AppLocalizations.of(context)
+                          .translate('profile', 'user_confirm') +
+                      groupDetails.name,
               AppLocalizations.of(context).translate('members', 'exit'),
               AppLocalizations.of(context).translate('shared', 'cancel'),
             ).then((value) {
@@ -185,13 +190,13 @@ class ChatAppBar extends PreferredSize {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(title),
-          content: new Text(content),
+          content: Text(content),
           actions: <Widget>[
-            new FlatButton(
+            FlatButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               textColor: Colors.white,
-              child: new Text(
+              child: Text(
                 buttonLabel,
                 style: TextStyle(
                   fontSize: dialogButtonSize,
@@ -201,8 +206,8 @@ class ChatAppBar extends PreferredSize {
                 Navigator.of(context).pop("SUCCESS");
               },
             ),
-            new FlatButton(
-              child: new Text(
+            FlatButton(
+              child: Text(
                 cancelLabel,
                 style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
               ),

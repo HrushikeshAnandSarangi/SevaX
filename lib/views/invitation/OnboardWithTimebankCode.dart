@@ -54,7 +54,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   String reasonToJoin;
 
   //TimebankModel superAdminModel;
-//  JoinRequestModel getRequestData = new JoinRequestModel();
+//  JoinRequestModel getRequestData = JoinRequestModel();
   UserModel ownerModel;
   String title = 'Loading';
   //String loggedInUser;
@@ -324,7 +324,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                               this._checkFields();
                             },
                             shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(30.0))),
+                                borderRadius: BorderRadius.circular(30.0))),
                       ),
                       Padding(
                         padding: EdgeInsets.all(10.0),
@@ -346,7 +346,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     String communityLabel,
     String communityPrimaryTimebankId,
   }) {
-    return new JoinRequestModel(
+    return JoinRequestModel(
       timebankTitle: communityLabel,
       accepted: false,
       entityId: communityPrimaryTimebankId,
@@ -366,7 +366,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     String communityLabel,
     String communityPrimaryTimebankId,
   }) {
-    return new NotificationsModel(
+    return NotificationsModel(
       timebankId: timebankModel.id,
       id: joinRequestModel.notificationId,
       targetUserId: timebankModel.creatorId,
@@ -384,7 +384,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       builder: (BuildContext dialogContext) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context)
+          title: Text(AppLocalizations.of(context)
                   .translate('jointimebankcode', 'alert_desc') +
               " ${FlavorConfig.values.timebankTitle}? "),
           content: Column(
@@ -403,7 +403,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                       borderRadius: const BorderRadius.all(
                         const Radius.circular(20.0),
                       ),
-                      borderSide: new BorderSide(
+                      borderSide: BorderSide(
                         color: Colors.black,
                         width: 1.0,
                       ),
@@ -425,11 +425,11 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
               ),
               Row(
                 children: <Widget>[
-                  new FlatButton(
+                  FlatButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
-                    child: new Text(
+                    child: Text(
                       AppLocalizations.of(context)
                           .translate('jointimebankcode', 'send_request'),
                       style: TextStyle(
@@ -452,8 +452,8 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                       }
                     },
                   ),
-                  new FlatButton(
-                    child: new Text(
+                  FlatButton(
+                    child: Text(
                       AppLocalizations.of(context)
                           .translate('shared', 'cancel'),
                       style: TextStyle(
@@ -664,12 +664,12 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
 
         print("init dialog");
         return AlertDialog(
-          title: new Text(dialogTitle),
-          content: new Text(dialogSubTitle),
+          title: Text(dialogTitle),
+          content: Text(dialogSubTitle),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(
+            FlatButton(
+              child: Text(
                 AppLocalizations.of(context).translate('shared', 'dismiss'),
                 style: TextStyle(
                   fontSize: dialogButtonSize,

@@ -40,7 +40,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   // TRUE: register page, FALSE: login page
   TextEditingController controller = TextEditingController();
   TimebankModel timebankModel;
-  JoinRequestModel joinRequestModel = new JoinRequestModel();
+  JoinRequestModel joinRequestModel = JoinRequestModel();
   UserModel ownerModel;
   String title;
   String loggedInUser;
@@ -143,7 +143,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
         builder: (context, snapshot) {
           //    print('timee ${snapshot.data}');
           if (snapshot.hasError)
-            return new Text(
+            return Text(
                 '${AppLocalizations.of(context).translate('jointimebank_sub', 'error_text')} ${snapshot.error}');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -423,7 +423,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
     String subTimebankLabel,
     String subtimebankId,
   }) {
-    return new JoinRequestModel(
+    return JoinRequestModel(
         timebankTitle: subTimebankLabel,
         accepted: false,
         entityId: subtimebankId,
@@ -443,7 +443,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
     String subTimebankId,
     String creatorId,
   }) {
-    return new NotificationsModel(
+    return NotificationsModel(
       timebankId: subTimebankId,
       id: joinRequestModel.notificationId,
       targetUserId: creatorId,

@@ -49,7 +49,8 @@ class _SkillViewNewState extends State<SkillViewNew> {
 
         // ids[data['name']] = data.documentID;
       });
-      if (widget.userModel.skills != null && widget.userModel.skills.length > 0) {
+      if (widget.userModel.skills != null &&
+          widget.userModel.skills.length > 0) {
         widget.userModel.skills.forEach((id) {
           _selectedSkills[id] = skills[id];
           // selectedChips.add(buildChip(id: id, value: skills[id]));
@@ -71,7 +72,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
       appBar: AppBar(
         automaticallyImplyLeading: widget.automaticallyImplyLeading,
         title: Text(
-          AppLocalizations.of(context).translate('skills','title'),
+          AppLocalizations.of(context).translate('skills', 'title'),
           style: TextStyle(
             fontSize: 18,
           ),
@@ -84,7 +85,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
           children: <Widget>[
             SizedBox(height: 20),
             Text(
-                AppLocalizations.of(context).translate('skills','title_desc'),
+              AppLocalizations.of(context).translate('skills', 'title_desc'),
               style: TextStyle(
                   color: Colors.black54,
                   fontSize: 16,
@@ -101,16 +102,17 @@ class _SkillViewNewState extends State<SkillViewNew> {
               textFieldConfiguration: TextFieldConfiguration(
                 controller: _textEditingController,
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context).translate('skills','search'),
+                  hintText: AppLocalizations.of(context)
+                      .translate('skills', 'search'),
                   filled: true,
                   fillColor: Colors.grey[300],
                   focusedBorder: OutlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.white),
-                    borderRadius: new BorderRadius.circular(25.7),
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(25.7),
                   ),
                   enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white),
-                      borderRadius: new BorderRadius.circular(25.7)),
+                      borderRadius: BorderRadius.circular(25.7)),
                   contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
                   prefixIcon: Icon(
                     Icons.search,
@@ -156,7 +158,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                      AppLocalizations.of(context).translate('skills','nomatch'),
+                    AppLocalizations.of(context).translate('skills', 'nomatch'),
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 );
@@ -220,9 +222,11 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   if (connResult == ConnectivityResult.none) {
                     _scaffoldKey.currentState.showSnackBar(
                       SnackBar(
-                        content: Text(AppLocalizations.of(context).translate('shared','check_internet')),
+                        content: Text(AppLocalizations.of(context)
+                            .translate('shared', 'check_internet')),
                         action: SnackBarAction(
-                          label: AppLocalizations.of(context).translate('shared','dismiss'),
+                          label: AppLocalizations.of(context)
+                              .translate('shared', 'dismiss'),
                           onPressed: () =>
                               _scaffoldKey.currentState.hideCurrentSnackBar(),
                         ),
@@ -236,7 +240,11 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   widget.onSelectedSkills(selectedID);
                 },
                 child: Text(
-                  widget.isFromProfile ? AppLocalizations.of(context).translate('skills','update') : AppLocalizations.of(context).translate('shared','next'),
+                  widget.isFromProfile
+                      ? AppLocalizations.of(context)
+                          .translate('skills', 'update')
+                      : AppLocalizations.of(context)
+                          .translate('shared', 'next'),
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),
@@ -262,8 +270,9 @@ class _SkillViewNewState extends State<SkillViewNew> {
               },
               child: Text(
                 AppConfig.prefs.getBool(AppConfig.skip_skill) == null
-                    ? AppLocalizations.of(context).translate('shared','skip')
-                    : AppLocalizations.of(context).translate('shared','cancel'),
+                    ? AppLocalizations.of(context).translate('shared', 'skip')
+                    : AppLocalizations.of(context)
+                        .translate('shared', 'cancel'),
                 style: TextStyle(
                   color: Theme.of(context).accentColor,
                 ),

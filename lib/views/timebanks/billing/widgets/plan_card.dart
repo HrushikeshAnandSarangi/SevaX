@@ -293,7 +293,7 @@ class BillingPlanCardState extends State<BillingPlanCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context)
+          title: Text(AppLocalizations.of(context)
               .translate('billing_plans', 'billable_transactions')),
           content: Container(
             height: 300,
@@ -308,8 +308,8 @@ class BillingPlanCardState extends State<BillingPlanCard> {
             ),
           ),
           actions: <Widget>[
-            new FlatButton(
-              child: new Text(
+            FlatButton(
+              child: Text(
                   AppLocalizations.of(context).translate('homepage', 'ok')),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -326,12 +326,12 @@ class BillingPlanCardState extends State<BillingPlanCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context)
+          title: Text(AppLocalizations.of(context)
               .translate('billing_plans', 'billable_transactions')),
           content: Text(msg),
           actions: <Widget>[
-            new FlatButton(
-              child: new Text(
+            FlatButton(
+              child: Text(
                   AppLocalizations.of(context).translate('homepage', 'ok')),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -348,15 +348,15 @@ class BillingPlanCardState extends State<BillingPlanCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context)
+          title: Text(AppLocalizations.of(context)
               .translate('billing_plans', 'alert_title')),
           content: Container(
             child: Text(AppLocalizations.of(context)
                 .translate('billing_plans', 'contact')),
           ),
           actions: <Widget>[
-            new FlatButton(
-              child: new Text(AppLocalizations.of(context)
+            FlatButton(
+              child: Text(AppLocalizations.of(context)
                   .translate('billing_plans', 'close')),
               onPressed: () {
                 Navigator.of(context).pop();

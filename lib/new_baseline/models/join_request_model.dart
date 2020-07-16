@@ -30,7 +30,7 @@ class JoinRequestModel extends DataModel {
   }
 
   factory JoinRequestModel.fromMap(Map<String, dynamic> json) {
-    JoinRequestModel joinRequestModel = new JoinRequestModel(
+    JoinRequestModel joinRequestModel = JoinRequestModel(
       userId: json["user_id"] == null ? null : json["user_id"],
       accepted: json["accepted"] == null ? null : json["accepted"],
       reason: json["reason"] == null ? null : json["reason"],

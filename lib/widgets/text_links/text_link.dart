@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 
 final RegExp linkRegExp =
-    new RegExp(r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
+    RegExp(r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+');
 
 class TextLink extends StatelessWidget {
   final String text;

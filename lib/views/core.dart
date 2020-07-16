@@ -73,7 +73,7 @@ class SevaCore extends InheritedWidget {
           SizedBox(width: 10),
           FlatButton(
             color: Colors.yellow,
-            child: new Text(
+            child: Text(
               "OK",
               style: TextStyle(color: Colors.white),
             ),
@@ -414,7 +414,7 @@ class SevaCore extends InheritedWidget {
 //                       return Container(
 //                         width: 50.0,
 //                         height: 50.0,
-//                         child: new Stack(
+//                         child: Stack(
 //                           children: <Widget>[
 //                             Center(
 //                               child: IconButton(
@@ -447,7 +447,7 @@ class SevaCore extends InheritedWidget {
 //                                 },
 //                               ),
 //                             ),
-//                             new Align(
+//                             Align(
 //                               alignment: Alignment.topRight,
 //                               child: Container(
 //                                 margin: EdgeInsets.all(7),
@@ -510,7 +510,7 @@ class SevaCore extends InheritedWidget {
 //                       );
 //                     }
 //                     if (chatListSnapshot.hasError) {
-//                       return new Text('Error: ${chatListSnapshot.error}');
+//                       return Text('Error: ${chatListSnapshot.error}');
 //                     }
 
 //                     switch (chatListSnapshot.connectionState) {
@@ -570,7 +570,7 @@ class SevaCore extends InheritedWidget {
 //                         return Container(
 //                           width: 50.0,
 //                           height: 50.0,
-//                           child: new Stack(
+//                           child: Stack(
 //                             children: <Widget>[
 //                               Center(
 //                                 child: IconButton(
@@ -585,7 +585,7 @@ class SevaCore extends InheritedWidget {
 //                                   },
 //                                 ),
 //                               ),
-//                               new Align(
+//                               Align(
 //                                 alignment: Alignment.topRight,
 //                                 child: Container(
 //                                   margin: EdgeInsets.all(7),
@@ -1016,12 +1016,12 @@ class SevaCore extends InheritedWidget {
 //                     topLeft: Radius.circular(10),
 //                     topRight: Radius.circular(10)),
 //               ),
-//               child: new Wrap(
+//               child: Wrap(
 //                 children: <Widget>[
-//                   new ListTile(
-//                       leading: new Icon(Icons.description,
+//                   ListTile(
+//                       leading: Icon(Icons.description,
 //                           color: Theme.of(context).primaryColor),
-//                       title: new Text(
+//                       title: Text(
 //                         'Create Feed',
 //                         style: TextStyle(fontWeight: FontWeight.w500),
 //                       ),
@@ -1079,10 +1079,10 @@ class SevaCore extends InheritedWidget {
 //                     height: 1,
 //                     color: Colors.grey,
 //                   ),
-//                   new ListTile(
-//                     leading: new Icon(Icons.swap_horizontal_circle,
+//                   ListTile(
+//                     leading: Icon(Icons.swap_horizontal_circle,
 //                         color: Theme.of(context).primaryColor),
-//                     title: new Text(
+//                     title: Text(
 //                       'Create ${FlavorConfig.values.requestTitle}',
 //                       style: TextStyle(fontWeight: FontWeight.w500),
 //                     ),
@@ -1140,13 +1140,13 @@ class SevaCore extends InheritedWidget {
 // //                            builder: (BuildContext context) {
 // //                              // return object of type Dialog
 // //                              return AlertDialog(
-// //                                title: new Text("Permission Denied"),
-// //                                content: new Text(
+// //                                title: Text("Permission Denied"),
+// //                                content: Text(
 // //                                    "You need to be an Admin or Coordinator to have permission to create campaigns"),
 // //                                actions: <Widget>[
 // //                                  // usually buttons at the bottom of the dialog
-// //                                  new FlatButton(
-// //                                    child: new Text("Close"),
+// //                                  FlatButton(
+// //                                    child: Text("Close"),
 // //                                    onPressed: () {
 // //                                      Navigator.of(context).pop();
 // //                                    },
@@ -1163,12 +1163,12 @@ class SevaCore extends InheritedWidget {
 //                     height: 1,
 //                     color: Colors.grey,
 //                   ),
-//                   new ListTile(
-//                     leading: new Icon(
+//                   ListTile(
+//                     leading: Icon(
 //                       Icons.local_offer,
 //                       color: Theme.of(context).primaryColor,
 //                     ),
-//                     title: new Text(
+//                     title: Text(
 //                       'Create ${FlavorConfig.values.offertitle}',
 //                       style: TextStyle(fontWeight: FontWeight.w500),
 //                     ),
@@ -1206,10 +1206,10 @@ class SevaCore extends InheritedWidget {
 //                     height: 1,
 //                     color: Colors.grey,
 //                   ),
-//                   new ListTile(
-//                     leading: new Icon(Icons.timeline,
+//                   ListTile(
+//                     leading: Icon(Icons.timeline,
 //                         color: Theme.of(context).primaryColor),
-//                     title: new Text(
+//                     title: Text(
 //                       'Create a ${FlavorConfig.values.timebankTitle}',
 //                       style: TextStyle(fontWeight: FontWeight.w500),
 //                     ),
@@ -1227,13 +1227,13 @@ class SevaCore extends InheritedWidget {
 //                                 builder: (BuildContext context) {
 //                                   // return object of type Dialog
 //                                   return AlertDialog(
-//                                     title: new Text("Permission Denied"),
-//                                     content: new Text(
+//                                     title: Text("Permission Denied"),
+//                                     content: Text(
 //                                         "You need to be an Admin or Coordinator to have permission to create timebanks"),
 //                                     actions: <Widget>[
 //                                       // usually buttons at the bottom of the dialog
-//                                       new FlatButton(
-//                                         child: new Text(
+//                                       FlatButton(
+//                                         child: Text(
 //                                           "Close",
 //                                           style: TextStyle(
 //                                             fontSize: dialogButtonSize,
@@ -1255,10 +1255,10 @@ class SevaCore extends InheritedWidget {
 //                     height: 1,
 //                     color: Colors.grey,
 //                   ),
-//                   new ListTile(
-//                     leading: new Icon(Icons.link,
+//                   ListTile(
+//                     leading: Icon(Icons.link,
 //                         color: Theme.of(context).primaryColor),
-//                     title: new Text(
+//                     title: Text(
 //                       'Invite members via code',
 //                       style: TextStyle(fontWeight: FontWeight.w500),
 //                     ),
@@ -1317,13 +1317,13 @@ class SevaCore extends InheritedWidget {
 //                       //     //   builder: (BuildContext context) {
 //                       //     //     // return object of type Dialog
 //                       //     //     return AlertDialog(
-//                       //     //       title: new Text("Permission Denied"),
-//                       //     //       content: new Text(
+//                       //     //       title: Text("Permission Denied"),
+//                       //     //       content: Text(
 //                       //     //           "You need to be an Admin or Coordinator to have permission to invite users"),
 //                       //     //       actions: <Widget>[
 //                       //     //         // usually buttons at the bottom of the dialog
-//                       //     //         new FlatButton(
-//                       //     //           child: new Text("Close"),
+//                       //     //         FlatButton(
+//                       //     //           child: Text("Close"),
 //                       //     //           onPressed: () {
 //                       //     //             Navigator.of(context).pop();
 //                       //     //           },

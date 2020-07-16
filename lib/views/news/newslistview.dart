@@ -159,8 +159,7 @@ class NewsListState extends State<NewsList> {
                     stream: FirestoreManager.getAllNewsStream(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError)
-                        return new Text(
-                            'Please make sure you have GPS turned on.');
+                        return Text('Please make sure you have GPS turned on.');
                       switch (snapshot.connectionState) {
                         case ConnectionState.waiting:
                           return Center(child: CircularProgressIndicator());
@@ -401,10 +400,12 @@ class NewsListState extends State<NewsList> {
                         children: <Widget>[
                           Text(
                               timeAgo.format(
-                                DateTime.fromMillisecondsSinceEpoch(
-                                  news.postTimestamp,
-                                ), locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
-                              ),
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                    news.postTimestamp,
+                                  ),
+                                  locale: Locale(AppConfig.prefs
+                                          .getString('language_code'))
+                                      .toLanguageTag()),
                               style: TextStyle(fontSize: 12)),
                         ],
                       ),
@@ -466,8 +467,16 @@ class NewsListState extends State<NewsList> {
                                               builder:
                                                   (BuildContext viewContext) {
                                                 return AlertDialog(
-                                                  title: Text(AppLocalizations.of(context).translate('homepage', 'report')),
-                                                  content: Text(AppLocalizations.of(context).translate('homepage', 'want_report')),
+                                                  title: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .translate('homepage',
+                                                              'report')),
+                                                  content: Text(
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .translate('homepage',
+                                                              'want_report')),
                                                   actions: <Widget>[
                                                     FlatButton(
                                                       padding:
@@ -479,7 +488,11 @@ class NewsListState extends State<NewsList> {
                                                           .values
                                                           .buttonTextColor,
                                                       child: Text(
-                                                        AppLocalizations.of(context).translate('homepage', 'report_feed'),
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .translate(
+                                                                'homepage',
+                                                                'report_feed'),
                                                         style: TextStyle(
                                                           fontSize:
                                                               dialogButtonSize,
@@ -520,7 +533,10 @@ class NewsListState extends State<NewsList> {
                                                     ),
                                                     FlatButton(
                                                       child: Text(
-                                                        AppLocalizations.of(context).translate('shared', 'cancel'),
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .translate('shared',
+                                                                'cancel'),
                                                         style: TextStyle(
                                                             color: Colors.red),
                                                       ),

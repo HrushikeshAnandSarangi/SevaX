@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/availability.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 
 enum SingingCharacter { Never, On, After }
 
@@ -19,7 +17,7 @@ class Availability extends StatefulWidget {
 
 class AvailabilityState extends State<Availability> {
   bool _canSave = false;
-  AvailabilityModel _data = new AvailabilityModel.empty();
+  AvailabilityModel _data = AvailabilityModel.empty();
   TextEditingController locationController = TextEditingController();
   TextEditingController myCommentsController = TextEditingController();
   void _setCanSave(bool save) {
@@ -48,7 +46,7 @@ class AvailabilityState extends State<Availability> {
   List<MaterialColor> colorList;
   Set<String> selectedInterests = <String>[].toSet();
   SingingCharacter _character = SingingCharacter.Never;
-  DateTime _dateTime = new DateTime.now();
+  DateTime _dateTime = DateTime.now();
   double _weight;
   String _note;
 
@@ -70,12 +68,12 @@ class AvailabilityState extends State<Availability> {
       appBar: AppBar(
         title: Text("Availability"),
         actions: <Widget>[
-          new FlatButton(
-              child: new Text('SAVE',
+          FlatButton(
+              child: Text('SAVE',
                   style: theme.textTheme.body1.copyWith(
                       color: _canSave
                           ? Colors.white
-                          : new Color.fromRGBO(255, 255, 255, 0.5))),
+                          : Color.fromRGBO(255, 255, 255, 0.5))),
               onPressed: _canSave
                   ? () {
                       //_data.weekArray = this.selectedInterests;

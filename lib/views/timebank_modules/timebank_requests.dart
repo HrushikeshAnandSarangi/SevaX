@@ -246,14 +246,14 @@ class RequestsState extends State<RequestsModule> {
       builder: (BuildContext _context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(AppLocalizations.of(context)
+          title: Text(AppLocalizations.of(context)
               .translate('requests', 'protected_timebank')),
-          content: new Text(AppLocalizations.of(context)
+          content: Text(AppLocalizations.of(context)
               .translate('requests', 'cannot_post')),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(
+            FlatButton(
+              child: Text(
                   AppLocalizations.of(context).translate('homepage', 'close')),
               onPressed: () {
                 Navigator.of(_context).pop();
@@ -415,7 +415,7 @@ class _RequestCardViewState extends State<RequestCardView> {
           ),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return new Text(
+              return Text(
                   '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -634,7 +634,7 @@ class NearRequestListItems extends StatelessWidget {
         ),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return new Text(AppLocalizations.of(context)
+            return Text(AppLocalizations.of(context)
                 .translate('requests', 'something_wrong'));
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -654,7 +654,7 @@ class NearRequestListItems extends StatelessWidget {
             builder: (BuildContext context,
                 AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
               if (requestListSnapshot.hasError) {
-                return new Text(
+                return Text(
                     '${AppLocalizations.of(context).translate('requests', 'error')} ${requestListSnapshot.error}');
               }
               switch (requestListSnapshot.connectionState) {
@@ -914,7 +914,7 @@ class RequestListItemsState extends State<RequestListItems> {
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return new Text(
+              return Text(
                   '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -928,7 +928,7 @@ class RequestListItemsState extends State<RequestListItems> {
                   builder:
                       (context, AsyncSnapshot<TimebankController> snapshot) {
                     if (snapshot.hasError) {
-                      return new Text(
+                      return Text(
                           '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
                     }
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -971,7 +971,7 @@ class RequestListItemsState extends State<RequestListItems> {
                 builder: (BuildContext context,
                     AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
                   if (requestListSnapshot.hasError) {
-                    return new Text(
+                    return Text(
                         '${AppLocalizations.of(context).translate('requests', 'error')} ${requestListSnapshot.error}');
                   }
                   switch (requestListSnapshot.connectionState) {
@@ -1007,7 +1007,7 @@ class RequestListItemsState extends State<RequestListItems> {
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return new Text(
+              return Text(
                   '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -1018,7 +1018,7 @@ class RequestListItemsState extends State<RequestListItems> {
               builder: (BuildContext context,
                   AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
                 if (requestListSnapshot.hasError) {
-                  return new Text(
+                  return Text(
                       '${AppLocalizations.of(context).translate('requests', 'error')} ${requestListSnapshot.error}');
                 }
                 switch (requestListSnapshot.connectionState) {

@@ -70,8 +70,10 @@ class NewsCard extends StatelessWidget {
                   Spacer(),
                   Text(
                     timeago.format(
-                      DateTime.fromMillisecondsSinceEpoch(timestamp), locale: Locale(AppConfig.prefs.getString('language_code')).toLanguageTag()
-                    ),
+                        DateTime.fromMillisecondsSinceEpoch(timestamp),
+                        locale:
+                            Locale(AppConfig.prefs.getString('language_code'))
+                                .toLanguageTag()),
                     style: TextStyle(color: Colors.grey),
                   ),
                 ],
@@ -320,7 +322,7 @@ class NewsCard extends StatelessWidget {
             height: 30,
             width: 150,
             decoration: BoxDecoration(
-              borderRadius: new BorderRadius.circular(15.7),
+              borderRadius: BorderRadius.circular(15.7),
               color: Colors.grey[200],
             ),
             child: Padding(

@@ -27,15 +27,14 @@ class FindVolunteersView extends StatefulWidget {
 }
 
 class _FindVolunteersViewState extends State<FindVolunteersView> {
-  final TextEditingController searchTextController =
-      new TextEditingController();
+  final TextEditingController searchTextController = TextEditingController();
   final _firestore = Firestore.instance;
   bool isAdmin = false;
   final _textUpdates = StreamController<String>();
 
   TimeBankModelSingleton timebankModel = TimeBankModelSingleton();
 
-  final searchOnChange = new BehaviorSubject<String>();
+  final searchOnChange = BehaviorSubject<String>();
   var validItems = List<String>();
   List<UserModel> users = [];
 
@@ -119,12 +118,12 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
                   filled: true,
                   fillColor: Colors.grey[200],
                   focusedBorder: OutlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.white),
-                    borderRadius: new BorderRadius.circular(15.7),
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(15.7),
                   ),
                   enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white),
-                      borderRadius: new BorderRadius.circular(15.7)),
+                      borderRadius: BorderRadius.circular(15.7)),
                   hintText: AppLocalizations.of(context)
                       .translate('requests', 'type_team_member_name'),
                   hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),

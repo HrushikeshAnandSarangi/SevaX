@@ -35,7 +35,7 @@ class SearchTimebankMemberElastic extends StatefulWidget {
 class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
   final TextEditingController searchTextController = TextEditingController();
 
-  final searchOnChange = new BehaviorSubject<String>();
+  final searchOnChange = BehaviorSubject<String>();
   var validItems = List<String>();
 
   @override
@@ -55,8 +55,8 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
-        leading: new IconButton(
-          icon: new Icon(Icons.arrow_back, color: Colors.white),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Container(

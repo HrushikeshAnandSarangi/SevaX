@@ -137,7 +137,7 @@ class OfferCardViewState extends State<OfferCardView> {
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return new Text('Error: ${snapshot.error}');
+              return Text('Error: ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -191,7 +191,11 @@ class OfferCardViewState extends State<OfferCardView> {
                                             ),
                                             subtitle: Text(
                                               DateFormat(
-                                                      'EEEEEEE, MMMM dd h:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
+                                                      'EEEEEEE, MMMM dd h:mm a',
+                                                      Locale(AppConfig.prefs
+                                                              .getString(
+                                                                  'language_code'))
+                                                          .toLanguageTag())
                                                   .format(
                                                 getDateTimeAccToUserTimezone(
                                                     dateTime: DateTime
@@ -530,7 +534,7 @@ class OfferCardViewState extends State<OfferCardView> {
                       //           [SevaCore.of(context).loggedInUser.sevaUserID])
                       // });
                       // widget.sevaUserIdOffer = widget.offerModel.sevaUserId;
-                      // var tempOutput = new List<String>.from(
+                      // var tempOutput =   List<String>.from(
                       //   getOfferParticipants(offerDataModel: widget.offerModel),
                       // );
                       // tempOutput
@@ -564,12 +568,12 @@ class OfferCardViewState extends State<OfferCardView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Protected Timebank"),
-          content: new Text(
+          title: Text("Protected Timebank"),
+          content: Text(
               "Admins or Co-Ordinators can only accept offers in a protected timebank"),
           actions: <Widget>[
-            new FlatButton(
-              child: new Text("Close"),
+            FlatButton(
+              child: Text("Close"),
               onPressed: () {
                 Navigator.of(context).pop();
               },

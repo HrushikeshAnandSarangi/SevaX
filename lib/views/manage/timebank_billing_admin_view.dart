@@ -28,7 +28,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   final _formKey = GlobalKey<FormState>();
 
   var scollContainer = ScrollController();
-  PanelController _pc = new PanelController();
+  PanelController _pc = PanelController();
   var scrollIsOpen = false;
   List<FocusNode> focusNodes;
   GlobalKey<FormState> _billingInformationKey = GlobalKey();
@@ -59,7 +59,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
 
   @override
   Widget build(BuildContext context) {
-    // FocusScope.of(context).requestFocus(new FocusNode());
+    // FocusScope.of(context).requestFocus(FocusNode());
 
     final _bloc = BlocProvider.of<UserDataBloc>(context);
     //  print("---->community model ${_bloc.community}");
@@ -168,7 +168,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                       fontSize: 16,
                       fontFamily: 'Europa',
                       decoration: TextDecoration.underline),
-                  recognizer: new TapGestureRecognizer()
+                  recognizer: TapGestureRecognizer()
                     ..onTap = () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -225,7 +225,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                   fontSize: 16,
                   fontFamily: 'Europa',
                   decoration: TextDecoration.underline),
-              recognizer: new TapGestureRecognizer()
+              recognizer: TapGestureRecognizer()
                 ..onTap = () => Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -260,7 +260,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   }
 
   Widget statusWidget() {
-    var now = new DateTime.now();
+    var now = DateTime.now();
     var month = now.month - 1 == 0 ? 12 : now.month - 1;
     var year = now.year;
     var pastPlans = [];
@@ -400,7 +400,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             ),
             onPressed: () {
               print("clicked");
-              FocusScope.of(buildContext).requestFocus(new FocusNode());
+              FocusScope.of(buildContext).requestFocus(FocusNode());
               _billingBottomsheet(buildContext);
 
 //              _pc.open();
@@ -795,7 +795,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             style: Theme.of(parentContext).primaryTextTheme.button,
           ),
           onPressed: () async {
-            FocusScope.of(bc).requestFocus(new FocusNode());
+            FocusScope.of(bc).requestFocus(FocusNode());
             if (_billingInformationKey.currentState.validate()) {
               if (communityModel.billing_address.country == null) {
                 scrollToTop();

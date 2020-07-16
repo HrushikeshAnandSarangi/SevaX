@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
-import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -16,10 +15,10 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 
 import '../core.dart';
 
@@ -88,7 +87,7 @@ class _EditProfilePageState extends State<EditProfilePage>
 
                   Stack(
                     children: <Widget>[
-                      new Container(
+                      Container(
                         padding: EdgeInsets.zero,
                         child: _imagePicker,
                       ),
@@ -566,8 +565,8 @@ class _EditProfilePageState extends State<EditProfilePage>
       builder: (BuildContext _context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text(
-              AppLocalizations.of(context).translate('profile', 'logout')),
+          title:
+              Text(AppLocalizations.of(context).translate('profile', 'logout')),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -581,7 +580,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
-                    child: new Text(
+                    child: Text(
                       AppLocalizations.of(context)
                           .translate('profile', 'logout'),
                       style: TextStyle(fontFamily: 'Europa'),
@@ -613,15 +612,14 @@ class _EditProfilePageState extends State<EditProfilePage>
                       // ));
                       try {
                         Navigator.of(_context).pop();
-                      } catch (e) {
-                      }
+                      } catch (e) {}
 
                       _signOut(
                           _context, SevaCore.of(context).loggedInUser.email);
                     },
                   ),
-                  new FlatButton(
-                    child: new Text(
+                  FlatButton(
+                    child: Text(
                       AppLocalizations.of(context)
                           .translate('shared', 'cancel'),
                       style: TextStyle(color: Colors.red, fontFamily: 'Europa'),

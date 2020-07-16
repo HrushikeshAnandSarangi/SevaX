@@ -27,7 +27,7 @@ class ImagePickerHandler {
   }
 
   void init() {
-    imagePicker = new ImagePickerDialog(this, _controller);
+    imagePicker = ImagePickerDialog(this, _controller);
     imagePicker.initState();
   }
 

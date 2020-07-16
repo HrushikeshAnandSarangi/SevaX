@@ -28,7 +28,7 @@ class ProjectTemplateModel extends DataModel {
       this.softDelete});
 
   factory ProjectTemplateModel.fromMap(Map<String, dynamic> json) =>
-      new ProjectTemplateModel(
+      ProjectTemplateModel(
         id: json["id"] == null ? null : json["id"],
         name: json["name"] == null ? null : json["name"],
         templateName:

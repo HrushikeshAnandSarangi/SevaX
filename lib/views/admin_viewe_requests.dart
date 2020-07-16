@@ -40,7 +40,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
                     sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
-                    return new Text('Error: ${snapshot.error}');
+                    return Text('Error: ${snapshot.error}');
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
@@ -55,7 +55,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
                       if (requestListSnapshot.hasError) {
-                        return new Text('Error: ${requestListSnapshot.error}');
+                        return Text('Error: ${requestListSnapshot.error}');
                       }
 
                       switch (requestListSnapshot.connectionState) {
@@ -103,7 +103,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return new Text('Error: ${snapshot.error}');
+              return Text('Error: ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -116,7 +116,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
               builder: (BuildContext context,
                   AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
                 if (requestListSnapshot.hasError) {
-                  return new Text('Error: ${requestListSnapshot.error}');
+                  return Text('Error: ${requestListSnapshot.error}');
                 }
                 switch (requestListSnapshot.connectionState) {
                   case ConnectionState.waiting:

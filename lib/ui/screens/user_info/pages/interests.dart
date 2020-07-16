@@ -15,7 +15,7 @@ class InterestPage extends StatefulWidget {
 
   InterestPage({
     this.user,
-     this.isFromProfile = false,
+    this.isFromProfile = false,
   });
   @override
   _InterestPageState createState() => _InterestPageState();
@@ -55,7 +55,7 @@ class _InterestPageState extends State<InterestPage> {
         print("skill");
         await Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => SkillsPage(user:user),
+            builder: (context) => SkillsPage(user: user),
           ),
         );
         return false;
@@ -95,12 +95,12 @@ class _InterestPageState extends State<InterestPage> {
                     filled: true,
                     fillColor: Colors.grey[300],
                     focusedBorder: OutlineInputBorder(
-                      borderSide: new BorderSide(color: Colors.white),
-                      borderRadius: new BorderRadius.circular(25.7),
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7),
                     ),
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
-                        borderRadius: new BorderRadius.circular(25.7)),
+                        borderRadius: BorderRadius.circular(25.7)),
                     contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
                     prefixIcon: Icon(
                       Icons.search,
@@ -210,7 +210,6 @@ class _InterestPageState extends State<InterestPage> {
                       onPressed: () {
                         if (widget.isFromProfile) {
                           Navigator.pop(context);
-                          
                         } else {
                           AppConfig.prefs
                               .setBool(AppConfig.skip_interest, true);
