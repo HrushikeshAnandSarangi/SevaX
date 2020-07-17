@@ -15,7 +15,6 @@ import 'package:sevaexchange/utils/preference_manager.dart';
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final AppleSignIn _appleSignIn = AppleSignIn();
 
   /// Initiate the Google SignIn process and save the signed in user to
   /// the Shared Preferences
@@ -68,14 +67,14 @@ class Auth {
               await _firebaseAuth.signInWithCredential(credential);
 
           return _processGoogleUser(_result.user);
-        case AuthorizationStatus.error:
-          break;
-        case AuthorizationStatus.cancelled:
-          break;
+
         default:
+          return null;
           break;
       }
-    } else {}
+    } else {
+      return null;
+    }
   }
 
   /// SignIn a User with his [email] and [password]

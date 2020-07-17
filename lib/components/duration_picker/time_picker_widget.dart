@@ -16,7 +16,7 @@ class TimePicker extends StatefulWidget {
 class TimePickerState extends State<TimePicker> {
   int hour = 0, minute = 0;
   String ispm = 'AM';
-  PageController _pageController;
+
   @override
   void initState() {
     super.initState();

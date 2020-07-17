@@ -24,7 +24,6 @@ class CalendarPicker extends StatefulWidget {
 }
 
 class CalendarPickerState extends State<CalendarPicker> {
-  final GlobalKey<CalendarWidgetState> _calendarState = GlobalKey();
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
 //  int timehour = DateTime.now().hour, timeminute = DateTime.now().minute;
@@ -33,8 +32,6 @@ class CalendarPickerState extends State<CalendarPicker> {
 
   @override
   void initState() {
-    // TODO: implement initState
-
     super.initState();
     startDate = widget.startDate;
     endDate = widget.endDate;

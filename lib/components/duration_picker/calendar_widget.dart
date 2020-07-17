@@ -3,8 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
-import 'calendar_picker.dart';
-
 class CalendarWidget extends StatefulWidget {
   final DateTime dateTime;
   final DateTime startDate;
@@ -31,7 +29,7 @@ class CalendarWidget extends StatefulWidget {
 class CalendarWidgetState extends State<CalendarWidget> {
   DateTime _currentDate;
   int _beginMonthPadding = 0;
-  final GlobalKey<CalendarPickerState> _calendarState = GlobalKey();
+
   DateTime startDate;
   DateTime endDate;
   SelectionType selectionType;

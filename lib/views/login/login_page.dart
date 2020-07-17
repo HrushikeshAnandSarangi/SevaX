@@ -32,7 +32,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final Future<bool> _isAvailableFuture = AppleSignIn.isAvailable();
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<FormState> _formKeyDialog = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
