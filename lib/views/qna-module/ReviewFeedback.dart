@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
@@ -28,6 +31,35 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   var questionIndex = 0;
   var totalScore = 0;
   TextEditingController myCommentsController = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    getDeviceDetails();
+  }
+
+  void getDeviceDetails() async {
+    if (Platform.isAndroid) {
+      var androidInfo = await DeviceInfoPlugin().androidInfo;
+      var release = androidInfo.version.release;
+      var sdkInt = androidInfo.version.sdkInt;
+      var manufacturer = androidInfo.manufacturer;
+      var model = androidInfo.model;
+      print('Android $release (SDK $sdkInt), $manufacturer $model');
+      // Android 9 (SDK 28), Xiaomi Redmi Note 7
+    }
+
+    if (Platform.isIOS) {
+      var iosInfo = await DeviceInfoPlugin().iosInfo;
+      var systemName = iosInfo.systemName;
+      var version = iosInfo.systemVersion;
+      var name = iosInfo.name;
+      var model = iosInfo.model;
+      print('$systemName $version, $name $model');
+      // iOS 13.1, iPhone 11 Pro Max iPhone
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

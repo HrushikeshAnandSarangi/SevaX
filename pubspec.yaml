@@ -84,6 +84,7 @@ dependencies:
   flutter_downloader: ^1.4.4
   flutter_local_notifications: ^1.4.4+1
   permission_handler: ^5.0.1+1
+  device_info: ^0.4.2+4
 dev_dependencies:
   #  flutter_test:
   #    sdk: flutter

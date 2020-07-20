@@ -1237,5 +1237,9 @@
     "change_advisory": " 您需要提供此时间银行的帐单详细信息-包括新的帐单地址。在完成所有权转移之前，不会完成所有权转移。",
     "ownership_suceess": "恭喜你！您现在是该帐户的新所有者 时间银行 ",
     "already_invited": " 已受邀。"
+  },
+  "reason": {
+    "enter_reason": "输入删除原因",
+    "reason_err": "请输入删除原因"
   }
 }

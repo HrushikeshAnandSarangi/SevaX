@@ -1238,5 +1238,9 @@
     "change_advisory": " Debe proporcionar los detalles de facturación de este Timebank, incluida la nueva dirección de facturación. La transferencia de propiedad no se completará hasta que se haga esto.",
     "ownership_suceess": "¡Felicidades! Ahora eres el nuevo propietario del Banco de tiempo ",
     "already_invited": " Ya invitado."
+  },
+  "reason": {
+    "enter_reason": "Ingrese el motivo para eliminar",
+    "reason_err": "Por favor, introduzca el motivo para eliminar"
   }
 }

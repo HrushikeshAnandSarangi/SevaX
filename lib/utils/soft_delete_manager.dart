@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/data_model.dart';
@@ -13,6 +14,8 @@ String failureMessage =
 
 String successTitle = "Request submitted";
 String failureTitle = "Request failed!";
+String reason = "";
+final GlobalKey<FormState> _formKey = GlobalKey();
 
 ProgressDialog progressDialog;
 
@@ -91,7 +94,33 @@ Future<void> showAdvisoryBeforeDeletion({
               associatedContentTitle +
               "?",
         ),
-        content: Text(_getContentFromType(softDeleteType, context)),
+        content: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(_getContentFromType(softDeleteType, context)),
+                TextFormField(
+                  decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)
+                          .translate('reason', 'enter_reason')),
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.sentences,
+                  style: TextStyle(fontSize: 17.0),
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(50),
+                  ],
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return AppLocalizations.of(context)
+                          .translate('reason', 'reason_err');
+                    }
+                    reason = value;
+                    return null;
+                  },
+                ),
+              ],
+            )),
         actions: <Widget>[
           RaisedButton(
             onPressed: () {
@@ -105,6 +134,9 @@ Future<void> showAdvisoryBeforeDeletion({
           FlatButton(
             color: Colors.white,
             onPressed: () async {
+              if (!_formKey.currentState.validate()) {
+                return;
+              }
               Navigator.pop(contextDialog);
               progressDialog.show();
               try {
@@ -113,6 +145,7 @@ Future<void> showAdvisoryBeforeDeletion({
                   softDeleteRequest: SoftDeleteRequest.createRequest(
                     associatedId: associatedId,
                     requestType: _getModelType(softDeleteType),
+                    reason: reason,
                   ),
                   softDeleteType: softDeleteType,
                 ).commit();
@@ -185,14 +218,13 @@ class SoftDeleteRequest extends DataModel {
   String id;
   String timestamp;
   String requestStatus;
+  String reason;
 
   final String associatedId;
   final String requestType;
 
-  SoftDeleteRequest.createRequest({
-    this.associatedId,
-    this.requestType,
-  }) {
+  SoftDeleteRequest.createRequest(
+      {this.associatedId, this.requestType, this.reason}) {
     id = Utils.getUuid();
     requestStatus = "REQUESTED";
   }
@@ -204,6 +236,7 @@ class SoftDeleteRequest extends DataModel {
     map['requestStatus'] = this.requestStatus ?? "NA";
     map['requestType'] = this.requestType ?? "NA";
     map['id'] = this.id;
+    map['reason'] = this.reason;
     map['timestamp'] = DateTime.now().millisecondsSinceEpoch;
     return map;
   }
