@@ -3,12 +3,12 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 
 class UserApi {
+  static CollectionReference ref = Firestore.instance.collection("users");
+
   //Fetch user details
   static Future<UserModel> fetchUserById(String userId) async {
-    QuerySnapshot query = await Firestore.instance
-        .collection("users")
-        .where("sevauserid", isEqualTo: userId)
-        .getDocuments();
+    QuerySnapshot query =
+        await ref.where("sevauserid", isEqualTo: userId).getDocuments();
     if (query.documents.length == 0) {
       throw Exception("No user Found");
     }
@@ -16,10 +16,8 @@ class UserApi {
   }
 
   static Future<String> fetchUserEmailById(String userId) async {
-    QuerySnapshot query = await Firestore.instance
-        .collection("users")
-        .where("sevauserid", isEqualTo: userId)
-        .getDocuments();
+    QuerySnapshot query =
+        await ref.where("sevauserid", isEqualTo: userId).getDocuments();
     if (query.documents.length == 0) {
       throw Exception("No user Found");
     }
@@ -38,7 +36,7 @@ class UserApi {
         blockedUserEmail ?? await UserApi.fetchUserEmailById(blockedUserId);
     WriteBatch batch = Firestore.instance.batch();
     batch.setData(
-      Firestore.instance.collection("users").document(userToBeBlockedEmail),
+      ref.document(userToBeBlockedEmail),
       {
         'blockedBy': FieldValue.arrayUnion([userId])
       },
@@ -46,9 +44,37 @@ class UserApi {
     );
 
     batch.setData(
-      Firestore.instance.collection("users").document(loggedInUserEmail),
+      ref.document(loggedInUserEmail),
       {
         'blockedMembers': FieldValue.arrayUnion([blockedUserId])
+      },
+      merge: true,
+    );
+    batch.commit();
+  }
+
+  static Future<void> unblockUser({
+    String loggedInUserEmail,
+    String userId,
+    String unblockedUserId,
+    String unblockedUserEmail,
+  }) async {
+    String userToBeBlockedEmail;
+    userToBeBlockedEmail =
+        unblockedUserEmail ?? await UserApi.fetchUserEmailById(unblockedUserId);
+    WriteBatch batch = Firestore.instance.batch();
+    batch.setData(
+      ref.document(userToBeBlockedEmail),
+      {
+        'blockedBy': FieldValue.arrayRemove([userId])
+      },
+      merge: true,
+    );
+
+    batch.setData(
+      ref.document(loggedInUserEmail),
+      {
+        'blockedMembers': FieldValue.arrayRemove([unblockedUserId])
       },
       merge: true,
     );
@@ -58,8 +84,7 @@ class UserApi {
   static Future<List<ParticipantInfo>> getShortDetailsOfAllMembersOfCommunity(
       String communityId) async {
     List<ParticipantInfo> members = [];
-    QuerySnapshot querySnapshot = await Firestore.instance
-        .collection("users")
+    QuerySnapshot querySnapshot = await ref
         .where("communities", arrayContains: communityId)
         .orderBy("fullname")
         .getDocuments();
@@ -72,5 +97,9 @@ class UserApi {
       ));
     });
     return members;
+  }
+
+  static Stream<QuerySnapshot> getBlockedMembers(String userId) {
+    return ref.where("blockedBy", arrayContains: userId).snapshots();
   }
 }
