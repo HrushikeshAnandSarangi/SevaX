@@ -4,18 +4,16 @@ import 'dart:core';
 import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
-import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/blocked_members/pages/blocked_members_page.dart';
 import 'package:sevaexchange/utils/animations/fade_route.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
@@ -46,15 +44,10 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage>
-    with TickerProviderStateMixin {
+class _ProfilePageState extends State<ProfilePage> {
   UserModel user;
-  double titleOpacity = 0.0;
-  // ScrollController scrollController;
   TimebankModel timebankModel;
-  FirebaseUser firebaseUser;
   bool isAdminOrCoordinator = false;
-  bool isVerifyAccountPressed = false;
   bool isUserLoaded = false;
   bool isCommunityLoaded = false;
   int selected = 0;
@@ -63,7 +56,6 @@ class _ProfilePageState extends State<ProfilePage>
   UserProfileBloc _profileBloc;
 
   List<CommunityModel> communities = [];
-  Stream<List<RequestModel>> requestStream;
 
   @override
   void initState() {
@@ -71,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage>
     _profileBloc = UserProfileBloc(context);
     super.initState();
     _profileBloc.getAllCommunities(context, widget.userModel);
-    checkEmailVerified();
+
     FirestoreManager.getTimeBankForId(
             timebankId: FlavorConfig.values.timebankId)
         .then((model) {
@@ -110,7 +102,6 @@ class _ProfilePageState extends State<ProfilePage>
         print("userMOde ->>>>>    >>>> ${userModel.currentCommunity}");
         _profileBloc.getAllCommunities(context, userModel);
         this.user = userModel;
-//        setState(() {});
       });
     });
   }
@@ -123,8 +114,6 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   void dispose() {
     _profileBloc.dispose();
-    // appbarAnimationController.dispose();
-    // flexibleAnimationController.dispose();
     super.dispose();
   }
 
@@ -186,30 +175,9 @@ class _ProfilePageState extends State<ProfilePage>
                           ),
                         ),
                         SizedBox(height: 5),
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            text: user.email,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                            ),
-                            children: [
-                              !firebaseUser.isEmailVerified
-                                  ? TextSpan(
-                                      text:
-                                          '\n${AppLocalizations.of(context).translate('profile', 'verify_email')}',
-                                      style: TextStyle(
-                                        color: firebaseUser.isEmailVerified
-                                            ? Colors.black
-                                            : Colors.red,
-                                      ),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap =
-                                            _showVerificationAndLogoutDialogue)
-                                  : TextSpan(),
-                            ],
-                          ),
+                        Text(
+                          user.email,
+                          style: TextStyle(fontSize: 14, color: Colors.black),
                         ),
                         SizedBox(height: 20),
                         SevaCoinWidget(
@@ -316,11 +284,12 @@ class _ProfilePageState extends State<ProfilePage>
 
                               if (snapshot.hasError)
                                 return Center(
-                                    child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      12.0, 12.0, 12.0, 0),
-                                  child: Text(snapshot.error),
-                                ));
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        12.0, 12.0, 12.0, 0),
+                                    child: Text(snapshot.error),
+                                  ),
+                                );
                               return Container(
                                 height: 100,
                                 child: Center(
@@ -331,9 +300,45 @@ class _ProfilePageState extends State<ProfilePage>
                           ),
                         ),
                         SizedBox(height: 10),
-                        getHelpSection,
-                        getNotificationSection,
-                        InkWell(
+                        ProfileSettingsCard(
+                          title: AppLocalizations.of(context)
+                              .translate('profile', 'help'),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return AboutApp();
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                        ProfileSettingsCard(
+                          title: AppLocalizations.of(context)
+                              .translate('profile', 'notifications'),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => NotificationAlert(),
+                              ),
+                            );
+                          },
+                        ),
+                        ProfileSettingsCard(
+                          title: "Blocked Members",
+                          // title: AppLocalizations.of(context)
+                          //     .translate('profile', 'notifications'),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => BlockedMembersPage(),
+                              ),
+                            );
+                          },
+                        ),
+                        ProfileSettingsCard(
+                          title: AppLocalizations.of(context)
+                              .translate('profile', 'timezone'),
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -343,36 +348,10 @@ class _ProfilePageState extends State<ProfilePage>
                               ),
                             );
                           },
-                          child: Card(
-                            elevation: 2,
-                            child: Container(
-                              height: 60,
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 15),
-                                    child: Text(
-                                      AppLocalizations.of(context)
-                                          .translate('profile', 'timezone'),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Icon(Icons.navigate_next),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
                         ),
-                        SizedBox(height: 10),
-                        InkWell(
+                        ProfileSettingsCard(
+                          title: AppLocalizations.of(context)
+                              .translate('settings', 'language'),
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -382,33 +361,6 @@ class _ProfilePageState extends State<ProfilePage>
                               ),
                             );
                           },
-                          child: Card(
-                            elevation: 2,
-                            child: Container(
-                              height: 60,
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 15),
-                                    child: Text(
-                                      AppLocalizations.of(context)
-                                          .translate('settings', 'language'),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Icon(Icons.navigate_next),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
                         ),
                       ],
                     ),
@@ -484,105 +436,11 @@ class _ProfilePageState extends State<ProfilePage>
         });
   }
 
-  Widget get getHelpSection {
-    return Column(
-      children: <Widget>[
-        InkWell(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return AboutApp();
-                },
-              ),
-            );
-          },
-          child: Card(
-            elevation: 2,
-            child: Container(
-              height: 60,
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15),
-                    child: Text(
-                      AppLocalizations.of(context).translate('profile', 'help'),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  Icon(Icons.navigate_next),
-                  SizedBox(
-                    width: 10,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget get getNotificationSection {
-    return Column(
-      children: <Widget>[
-        InkWell(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return NotificationAlert();
-                },
-              ),
-            );
-          },
-          child: Card(
-            elevation: 2,
-            child: Container(
-              height: 60,
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15),
-                    child: Text(
-                      AppLocalizations.of(context)
-                          .translate('profile', 'notifications'),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  Icon(Icons.navigate_next),
-                  SizedBox(
-                    width: 10,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   AppBar getAppBar() {
     return AppBar(
       elevation: 0,
       automaticallyImplyLeading: false,
       backgroundColor: Colors.white,
-      // leading: IconButton(
-      //   color: Colors.black,
-      //   icon: Icon(Icons.arrow_back),
-      //   onPressed: () => Navigator.of(context).pop(),
-      // ),
       actions: <Widget>[
         IconButton(
           color: Colors.black,
@@ -590,329 +448,6 @@ class _ProfilePageState extends State<ProfilePage>
           onPressed: navigateToSettings,
         ),
       ],
-    );
-  }
-
-  // Widget get pageContent {
-  //   if (user == null) return Center(child: CircularProgressIndicator());
-  //   return NestedScrollView(
-  //     controller: scrollController,
-  //     headerSliverBuilder: (context, scrolled) {
-  //       return [
-  //         // sliverAppbar,
-  //       ];
-  //     },
-  //     body: SingleChildScrollView(
-  //       child: Column(
-  //         mainAxisSize: MainAxisSize.min,
-  //         children: <Widget>[
-  //           SizedBox(height: 60),
-  //           getSevaCreditsWidget(userModel: user),
-  //           // if (!firebaseUser.isEmailVerified)
-  //           //   verifyBtn,
-  //           //SizedBox(
-  //           //height: 32,
-  //           //),
-  //           // skillsAndInterest,
-  //           SizedBox(
-  //             height: 32,
-  //           ),
-  //           // dataWidgets,
-  //           SizedBox(
-  //             height: 16,
-  //           ),
-  //           timezonewidget,
-  //           SizedBox(
-  //             height: 32,
-  //           ),
-  //           logoutButton
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // Widget get skillsAndInterest {
-//    if (user.skills == null || user.skills.isEmpty) {
-//      if (user.interests == null || user.interests.isEmpty) return Container();
-//    }
-  //   return Container(
-  //     //padding: EdgeInsets.all(5),
-  //     margin: EdgeInsets.symmetric(horizontal: 16, vertical: 0.0),
-  //     decoration: getContainerDecoration(),
-  //     child: Column(
-  //       children: [
-  //         // editInterests,
-  //         // editSkills,
-  //         editBio,
-  //         editFullname,
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Parent getParentWidget({
-  //   @required ChildList childList,
-  //   @required String title,
-  // }) {
-  //   return Parent(
-  //     childList: childList,
-  //     parent: ListTile(
-  //       trailing: Icon(
-  //         Icons.navigate_next,
-  //         color: Colors.black,
-  //       ),
-  //       onTap: () {
-  //         //print("Tapped");
-  //         if (title == 'Edit Interests') {
-  //           this.navigateToeditInterests();
-  //         } else if (title == 'Edit Skills') {
-  //           this.navigateToeditskills();
-  //         }
-  //       },
-  //       title: Text(
-  //         title,
-  //         style: TextStyle(
-  //           color: Colors.black,
-  //           fontWeight: FontWeight.w500,
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // void navigateToeditskills() {
-  //   Navigator.of(context).push(
-  //     MaterialPageRoute(
-  //       builder: (context) {
-  //         return EditSkills();
-  //       },
-  //     ),
-  //   );
-  // }
-
-  // void navigateToeditInterests() {
-  //   Navigator.of(context).push(
-  //     MaterialPageRoute(
-  //       builder: (context) {
-  //         return EditInterests();
-  //       },
-  //     ),
-  //   );
-  // }
-
-  // Widget getDataChip(String value) {
-  //   assert(value != null);
-  //   return Chip(
-  //     label: Text(
-  //       value,
-  //       style: TextStyle(
-  //         color: FlavorConfig.values.buttonTextColor,
-  //       ),
-  //     ),
-  //     backgroundColor: Theme.of(context).accentColor,
-  //   );
-  // }
-
-  // Widget get sliverAppbar {
-  //   return SliverAppBar(
-  //     iconTheme: IconThemeData(color: Colors.white),
-  //     pinned: true,
-  //     centerTitle: true,
-  //     expandedHeight: 180,
-  //     backgroundColor: Theme.of(context).primaryColor,
-  //     actions: <Widget>[
-  //       IconButton(
-  //         icon: Icon(
-  //           Icons.settings,
-  //           color: Colors.white,
-  //         ),
-  //         onPressed: () {
-  //           Navigator.push(
-  //             context,
-  //             MaterialPageRoute(
-  //               builder: (context) => EditProfilePage(
-  //                 userModel: user,
-  //               ),
-  //             ),
-  //           );
-  //         },
-  //       ),
-  //     ],
-  //     title: Transform.scale(
-  //       scale: appbarScale,
-  //       child: AnimatedOpacity(
-  //         opacity: titleOpacity,
-  //         duration: titleOpacity == 1
-  //             ? Duration(milliseconds: 400)
-  //             : Duration(milliseconds: 100),
-  //         child: Row(
-  //           mainAxisAlignment: MainAxisAlignment.center,
-  //           children: <Widget>[
-  //             Hero(
-  //               tag: 'profilehero',
-  //               child: Container(
-  //                 height: 30,
-  //                 width: 30,
-  //                 decoration: ShapeDecoration(
-  //                   shape: CircleBorder(
-  //                     side: BorderSide(
-  //                       color: Colors.white,
-  //                       width: 1,
-  //                     ),
-  //                   ),
-  //                   image: DecorationImage(
-  //                     image: NetworkImage(user.photoURL),
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //             SizedBox(width: 8),
-  //             Text(
-  //               user.fullname,
-  //               style: TextStyle(color: Colors.white),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //     flexibleSpace: LayoutBuilder(
-  //       builder: (context, constraints) {
-  //         return Transform.scale(
-  //           scale: flexibleScale,
-  //           child: AnimatedOpacity(
-  //             duration: titleOpacity == 0
-  //                 ? Duration(milliseconds: 400)
-  //                 : Duration(milliseconds: 100),
-  //             opacity: 1 - titleOpacity,
-  //             child: FlexibleSpaceBar(
-  //               collapseMode: CollapseMode.pin,
-  //               background: Container(
-  //                 padding: EdgeInsets.only(bottom: 16),
-  //                 color: Theme.of(context).primaryColor,
-  //                 child: Align(
-  //                   alignment: Alignment.bottomCenter,
-  //                   child: Padding(
-  //                     padding: EdgeInsets.only(top: 50),
-  //                     child: Center(
-  //                       child: Column(
-  //                         mainAxisSize: MainAxisSize.min,
-  //                         mainAxisAlignment: MainAxisAlignment.center,
-  //                         children: <Widget>[
-  //                           GestureDetector(
-  //                             child: Container(
-  //                               height: 60,
-  //                               width: 60,
-  //                               decoration: ShapeDecoration(
-  //                                 shape: CircleBorder(
-  //                                   side: BorderSide(
-  //                                     color: Colors.white,
-  //                                     width: 2.0,
-  //                                   ),
-  //                                 ),
-  //                                 image: DecorationImage(
-  //                                   image: NetworkImage(user.photoURL),
-  //                                 ),
-  //                               ),
-  //                             ),
-  //                             onTap: () {
-  //                               print('Getsure Pressed');
-  //                               Navigator.push(
-  //                                 context,
-  //                                 MaterialPageRoute(
-  //                                   builder: (context) => EditProfilePage(
-  //                                     userModel: user,
-  //                                   ),
-  //                                 ),
-  //                               );
-  //                             },
-  //                           ),
-  //                           SizedBox(
-  //                             width: 16,
-  //                           ),
-  //                           Padding(
-  //                             padding: EdgeInsets.only(top: 5.0),
-  //                           ),
-  //                           Column(
-  //                             mainAxisAlignment: MainAxisAlignment.start,
-  //                             //crossAxisAlignment: CrossAxisAlignment.start,
-  //                             mainAxisSize: MainAxisSize.min,
-  //                             children: <Widget>[
-  //                               Text(
-  //                                 user.fullname,
-  //                                 textAlign: TextAlign.center,
-  //                                 overflow: TextOverflow.ellipsis,
-  //                                 style: TextStyle(
-  //                                   color: Colors.white,
-  //                                   fontSize: 22,
-  //                                 ),
-  //                               ),
-  //                               Text(
-  //                                 user.email,
-  //                                 overflow: TextOverflow.ellipsis,
-  //                                 style: TextStyle(
-  //                                   color: Colors.white,
-  //                                   fontSize: 12,
-  //                                 ),
-  //                               ),
-  //                               getSevaCreditsWidget(userModel: user),
-  //                             ],
-  //                           ),
-  //                         ],
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
-
-  void _showVerificationAndLogoutDialogue() {
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: Text(
-              AppLocalizations.of(context).translate('profile', 'sign_out')),
-          content: Text(
-              AppLocalizations.of(context).translate('profile', 'acknowledge')),
-          actions: <Widget>[
-            RaisedButton(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              elevation: 5,
-              color: Theme.of(context).accentColor,
-              textColor: FlavorConfig.values.buttonTextColor,
-              child: Text(
-                "",
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-              onPressed: () {
-                firebaseUser.sendEmailVerification().then((value) {
-                  _signOut(context);
-                  Navigator.of(context).pop();
-                });
-              },
-            ),
-            FlatButton(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: Text(
-                  AppLocalizations.of(context)
-                      .translate('profile', 'will_do_later'),
-                  style: TextStyle(fontSize: 16, color: Colors.red),
-                ),
-                onPressed: () => Navigator.of(context).pop()),
-          ],
-        );
-      },
     );
   }
 
@@ -927,321 +462,48 @@ class _ProfilePageState extends State<ProfilePage>
       ),
     );
   }
+}
 
-  // Widget get logoutButton {
-  //   return Container(
-  //     decoration: getContainerDecoration(color: Theme.of(context).accentColor),
-  //     margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-  //     child: Card(
-  //       color: Theme.of(context).accentColor,
-  //       elevation: 0,
-  //       child: InkWell(
-  //         splashColor: Theme.of(context).accentColor,
-  //         onTap: () {
-  //           showDialog(
-  //             context: context,
-  //             builder: (BuildContext context) {
-  //               // return object of type Dialog
-  //               return AlertDialog(
-  //                 title: Text("Log Out"),
-  //                 content: Text("Are you sure you want to logout?"),
-  //                 actions: <Widget>[
-  //                   // usually buttons at the bottom of the dialog
-  //                   new FlatButton(
-  //                     child: Text("Log Out"),
-  //                     onPressed: () {
-  //                       Navigator.of(context).pop();
-  //                       _signOut(context);
-  //                     },
-  //                   ),
-  //                   new RaisedButton(
-  //                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-  //                     elevation: 5,
-  //                     color: Theme.of(context).accentColor,
-  //                     textColor: FlavorConfig.values.buttonTextColor,
-  //                     child: Text("Cancel"),
-  //                     onPressed: () {
-  //                       Navigator.of(context).pop();
-  //                     },
-  //                   ),
-  //                 ],
-  //               );
-  //             },
-  //           );
-  //         },
-  //         child: Padding(
-  //           padding: const EdgeInsets.all(8.0),
-  //           child: Row(
-  //             children: <Widget>[
-  //               Spacer(),
-  //               Icon(Icons.exit_to_app,
-  //                   color: FlavorConfig.values.buttonTextColor),
-  //               SizedBox(
-  //                 width: 8,
-  //               ),
-  //               Text(
-  //                 'Log Out',
-  //                 style: Theme.of(context).textTheme.button.copyWith(
-  //                       color: FlavorConfig.values.buttonTextColor,
-  //                       fontWeight: FontWeight.w600,
-  //                     ),
-  //               ),
-  //               Spacer(),
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+class ProfileSettingsCard extends StatelessWidget {
+  final String title;
+  final VoidCallback onTap;
 
-  // Widget getSevaCreditsWidget({@required UserModel userModel}) {
-  //   return Container(
-  //     width: double.infinity,
-  //     margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-  //     padding: EdgeInsets.only(bottom: 8.0, left: 8.0, right: 8.0),
-  //     decoration: getContainerDecoration(),
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //       children: <Widget>[
-  //         Container(
-  //           margin: EdgeInsets.all(0),
-  //           padding: EdgeInsets.all(0),
-  //           alignment: Alignment.centerLeft,
-  //           child: FlatButton(
-  //             onPressed: () {
-  //               Navigator.of(context).push(
-  //                 MaterialPageRoute(
-  //                   builder: (context) {
-  //                     return ReviewEarningsPage();
-  //                   },
-  //                 ),
-  //               );
-  //             },
-  //             child: Text(
-  //               'Review Earnings >',
-  //               style: TextStyle(
-  //                 fontWeight: FontWeight.w500,
-  //                 color: Theme.of(context).accentColor,
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //         Spacer(),
-  //         // Column(
-  //         //   crossAxisAlignment: CrossAxisAlignment.end,
-  //         //   children: <Widget>[
-  //         //     coinCount(userModel),
-  //         //     Container(
-  //         //         alignment: Alignment.centerRight,
-  //         //         padding: EdgeInsets.only(left: 8.0),
-  //         //         child: coinType),
-  //         //   ],
-  //         // ),
-  //       ],
-  //     ),
-  //   );
-  // }
+  const ProfileSettingsCard({
+    Key key,
+    this.title,
+    this.onTap,
+  }) : super(key: key);
 
-  void checkEmailVerified() {
-    FirebaseAuth.instance.currentUser().then((FirebaseUser firebaseUser) {
-      if (this.firebaseUser != null && this.firebaseUser == firebaseUser) {
-        return;
-      }
-      setState(() {
-        print('Is email verified:${firebaseUser.isEmailVerified}');
-        this.firebaseUser = firebaseUser;
-      });
-    });
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Card(
+        elevation: 2,
+        child: Container(
+          height: 60,
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 15),
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              Spacer(),
+              Icon(Icons.navigate_next),
+              SizedBox(width: 10),
+            ],
+          ),
+        ),
+      ),
+    );
   }
-
-  // Widget get dataWidgets {
-  //   return Container(
-  //     margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-  //     width: double.infinity,
-  //     decoration: getContainerDecoration(),
-  //     child: Column(
-  //       children: <Widget>[
-  //         if (!firebaseUser.isEmailVerified) verifyBtn,
-  //         administerTimebanks,
-  //         timebankslist,
-  //         // joinViaCode,
-  //         // tasksWidget,
-  //         // reportsData,
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget get reportsData {
-  //   if (isAdminOrCoordinator) {
-  //     return getActionCards(
-  //       title: 'Reported users',
-  //       trailingIcon: Icons.navigate_next,
-  //       borderRadius: BorderRadius.only(
-  //         bottomRight: Radius.circular(12),
-  //         bottomLeft: Radius.circular(12),
-  //       ),
-  //       onTap: () {
-  //         Navigator.of(context).push(
-  //           MaterialPageRoute(
-  //             builder: (context) {
-  //               return ReportedUsersPage(
-  //                 timebankId: FlavorConfig.values.timebankId,
-  //               );
-  //             },
-  //           ),
-  //         );
-  //       },
-  //     );
-  //   } else {
-  //     return Offstage();
-  //   }
-  // }
-
-  // Widget get tasksWidget {
-  //   return getActionCards(
-  //     title: 'Completed Tasks',
-  //     trailingIcon: Icons.navigate_next,
-  //     borderRadius: BorderRadius.only(
-  //       bottomRight: Radius.circular(12),
-  //       bottomLeft: Radius.circular(12),
-  //     ),
-  //     onTap: () {
-  //       Navigator.of(context).push(
-  //         MaterialPageRoute(
-  //           builder: (context) {
-  //             return CompletedListPage();
-  //           },
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // Widget get editSkills {
-  //   return getActionCards(
-  //     title: 'Edit Skills',
-  //     trailingIcon: Icons.navigate_next,
-  //     borderRadius: BorderRadius.only(
-  //       bottomRight: Radius.circular(12),
-  //       bottomLeft: Radius.circular(12),
-  //     ),
-  //     onTap: () {
-  //       Navigator.of(context).push(
-  //         MaterialPageRoute(
-  //           builder: (context) {
-  //             return EditSkills();
-  //           },
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // Widget get editInterests {
-  //   return getActionCards(
-  //     title: 'Edit Interests',
-  //     trailingIcon: Icons.navigate_next,
-  //     borderRadius: BorderRadius.only(
-  //       topRight: Radius.circular(12),
-  //       topLeft: Radius.circular(12),
-  //     ),
-  //     onTap: () {
-  //       Navigator.of(context).push(
-  //         MaterialPageRoute(
-  //          builder: (context) {
-  //             return EditInterests("");
-  //           },
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // Widget get editBio {
-  //   return getActionCards(
-  //     title: 'Edit Bio',
-  //     trailingIcon: Icons.navigate_next,
-  //     borderRadius: BorderRadius.only(
-  //       topRight: Radius.circular(12),
-  //       topLeft: Radius.circular(12),
-  //     ),
-  //     onTap: () {
-  //       Navigator.of(context).push(
-  //         MaterialPageRoute(
-  //           builder: (context) {
-  //             return EditBio(SevaCore.of(context).loggedInUser.bio);
-  //           },
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // Widget get editFullname {
-  //   return getActionCards(
-  //     title: 'Edit name',
-  //     trailingIcon: Icons.navigate_next,
-  //     borderRadius: BorderRadius.only(
-  //       topRight: Radius.circular(12),
-  //       topLeft: Radius.circular(12),
-  //     ),
-  //     onTap: () {
-  //       Navigator.of(context).push(
-  //         MaterialPageRoute(
-  //           builder: (context) {
-  //             print(
-  //                 "------------------${SevaCore.of(context).loggedInUser.fullname}------------------");
-
-  //             return EditName(SevaCore.of(context).loggedInUser.fullname);
-  //           },
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // Widget get joinViaCode {
-  //   return getActionCards(
-  //     title: 'Join via ${FlavorConfig.values.timebankTitle} code',
-  //     trailingIcon: Icons.navigate_next,
-  //     borderRadius: BorderRadius.only(
-  //       bottomRight: Radius.circular(12),
-  //       bottomLeft: Radius.circular(12),
-  //     ),
-  //     onTap: () {
-  //       Navigator.of(context).push(
-  //         MaterialPageRoute(
-  //           builder: (context) {
-  //             return OnBoardWithTimebank();
-  //           },
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // Widget get verifyBtn {
-  //   return getActionCards(
-  //     title: 'Verify account',
-  //     borderRadius: BorderRadius.only(
-  //       topRight: Radius.circular(12),
-  //       topLeft: Radius.circular(12),
-  //     ),
-  //     isColorRed: true,
-  //     onTap: () {
-  //       ;
-  //     },
-  //   );
-  // }
-
-  // void launchTransactionHistory({@required UserModel user}) {
-  //   Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-  //     return TransactionHistoryView(userModel: user);
-  //   }));
-  // }
-
 }
 
 class CommunityCard extends StatelessWidget {

@@ -39,8 +39,9 @@ class UserDataBloc extends BlocBase {
           (u, c) =>
               HomeRouterModel(user: u, community: c)).listen(
           (HomeRouterModel model) {
-        _user.add(UserModel.fromMap(model.user.data));
-        _community.add(CommunityModel(model.community.data));
+        if (!_user.isClosed) _user.add(UserModel.fromMap(model.user.data));
+        if (!_community.isClosed)
+          _community.add(CommunityModel(model.community.data));
       });
   }
 
