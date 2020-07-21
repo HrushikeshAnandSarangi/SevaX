@@ -32,6 +32,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
   int selected = 2;
   UserDataBloc _userBloc = UserDataBloc();
   MessageBloc _messageBloc = MessageBloc();
+
   List<Widget> pages = [
     ExploreTabView(),
     NotificationsPage(),

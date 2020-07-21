@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
-import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -16,10 +16,10 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 
 import '../core.dart';
 
@@ -51,6 +51,14 @@ class _EditProfilePageState extends State<EditProfilePage>
   ImagePickerHandler imagePicker;
   UserModel usermodel;
   bool _saving = false;
+  bool _isDocumentBeingUploaded = false;
+  final int tenMegaBytes = 10485760;
+
+  String _fileName;
+  String _path;
+  String cvTitle = '';
+  String cvUrl = '';
+  BuildContext parentContext;
 
   @override
   void initState() {
@@ -68,6 +76,8 @@ class _EditProfilePageState extends State<EditProfilePage>
 
   @override
   Widget build(BuildContext context) {
+    parentContext = context;
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -141,6 +151,11 @@ class _EditProfilePageState extends State<EditProfilePage>
                   .translate('profile', 'add_skills'),
               onTap: () => _navigateToSkillsView(usermodel),
             ),
+            detailsBuilder(
+              title: AppLocalizations.of(context).translate('cv', 'cv'),
+              text: AppLocalizations.of(context).translate('cv', 'cv_info'),
+              onTap: () => _openFileExplorer(),
+            ),
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width / 3.5,
@@ -212,6 +227,77 @@ class _EditProfilePageState extends State<EditProfilePage>
         ),
       ),
     );
+  }
+
+  void _openFileExplorer() async {
+    //  bool _isDocumentBeingUploaded = false;
+    //File _file;
+    //List<File> _files;
+    String _fileName;
+    String _path;
+    Map<String, String> _paths;
+    try {
+      _paths = null;
+      _path = await FilePicker.getFilePath(
+          type: FileType.custom, allowedExtensions: ['pdf']);
+    } on PlatformException catch (e) {
+      print("Unsupported operation" + e.toString());
+    }
+    //   if (!mounted) return;
+    if (_path != null) {
+      _fileName = _path.split('/').last;
+      print("FIle  name $_fileName");
+
+      userDoc(_path, _fileName);
+    }
+  }
+
+  void userDoc(String _doc, String fileName) {
+    // TODO: implement userDoc
+    setState(() {
+      this._path = _doc;
+      this._fileName = fileName;
+      this._isDocumentBeingUploaded = true;
+    });
+    checkFileSize();
+    return null;
+  }
+
+  void checkFileSize() async {
+    var file = File(_path);
+    final bytes = await file.lengthSync();
+    if (bytes > tenMegaBytes) {
+      this._isDocumentBeingUploaded = false;
+      getAlertDialog(parentContext);
+    } else {
+      uploadDocument().then((_) {
+        setState(() => this._isDocumentBeingUploaded = false);
+      });
+    }
+  }
+
+  Future<String> uploadDocument() async {
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+    String timestampString = timestamp.toString();
+    String name =
+        SevaCore.of(context).loggedInUser.email + timestampString + _fileName;
+    StorageReference ref =
+        FirebaseStorage.instance.ref().child('cv_files').child(name);
+    StorageUploadTask uploadTask = ref.putFile(
+      File(_path),
+      StorageMetadata(
+        contentLanguage: 'en',
+        customMetadata: <String, String>{'activity': 'CV File'},
+      ),
+    );
+    String documentURL =
+        await (await uploadTask.onComplete).ref.getDownloadURL();
+
+    cvTitle = name;
+    cvUrl = documentURL;
+    // _setAvatarURL();
+    // _updateDB();
+    return documentURL;
   }
 
   Future _navigateToSkillsView(UserModel loggedInUser) async {
@@ -613,8 +699,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                       // ));
                       try {
                         Navigator.of(_context).pop();
-                      } catch (e) {
-                      }
+                      } catch (e) {}
 
                       _signOut(
                           _context, SevaCore.of(context).loggedInUser.email);
@@ -653,4 +738,29 @@ class _EditProfilePageState extends State<EditProfilePage>
       ),
     );
   }
+}
+
+getAlertDialog(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      // return object of type Dialog
+      return AlertDialog(
+        title: Text(AppLocalizations.of(context)
+            .translate('create_feed', 'size_alert_title')),
+        content: new Text(AppLocalizations.of(context)
+            .translate('create_feed', 'size_alert')),
+        actions: <Widget>[
+          // usually buttons at the bottom of the dialog
+          new FlatButton(
+            child: new Text(
+                AppLocalizations.of(context).translate('help', 'close')),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

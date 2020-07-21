@@ -29,6 +29,8 @@ class UserModel extends DataModel {
   String lat_lng;
   bool emailSent;
   String language;
+  String cvUrl;
+  String cvName;
 
   int notificationsRead;
   Map<dynamic, dynamic> notificationsReadCount;
@@ -84,7 +86,9 @@ class UserModel extends DataModel {
       this.communities,
       this.emailSent,
       this.language,
-      this.notificationAlerts});
+      this.notificationAlerts,
+      this.cvUrl,
+      this.cvName});
 
   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {
@@ -238,6 +242,16 @@ class UserModel extends DataModel {
     } else {
       this.notificationAlerts = true;
     }
+    if (map.containsKey('cvName')) {
+      this.cvName = map['cvName'];
+    }
+    if (map.containsKey('cvUrl')) {
+      this.cvUrl = map['cvUrl'];
+    }
+
+//    else{
+//      this.cvUrl='';
+//    }
   }
 
   UserModel.fromDynamic(dynamic user) {
@@ -354,6 +368,13 @@ class UserModel extends DataModel {
     // if (this.notificationAlerts != null) {
     //   this.notificationAlerts = object['notificationAlerts'];
     // }
+    if (this.cvUrl != null) {
+      this.cvUrl = object['cvUrl'];
+    }
+
+    if (this.cvName != null) {
+      this.cvName = object['cvName'];
+    }
     return object;
   }
 
@@ -385,6 +406,7 @@ class UserModel extends DataModel {
       ${this.acceptedEULA.toString()},
       ${this.currentTimebank.toString()},
       ${this.notificationAlerts.toString()},
+      ${this.cvUrl.toString()},
       Communities:${this.communities.toString()},
     ''';
   }

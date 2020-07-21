@@ -761,6 +761,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       "reviewer": reviewer,
       "reviewed": reviewed,
       "ratings": results['selection'],
+      "device_info": results['device_info'],
       "requestId": requestId,
       "comments": (results['didComment']
           ? results['comment']

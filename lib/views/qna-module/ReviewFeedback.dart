@@ -4,6 +4,7 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/new_baseline/models/device_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/qna-module/FeedbackConstants.dart';
 
@@ -31,6 +32,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   var questionIndex = 0;
   var totalScore = 0;
   TextEditingController myCommentsController = TextEditingController();
+  DeviceModel deviceModel = DeviceModel();
   @override
   void initState() {
     // TODO: implement initState
@@ -42,21 +44,21 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   void getDeviceDetails() async {
     if (Platform.isAndroid) {
       var androidInfo = await DeviceInfoPlugin().androidInfo;
-      var release = androidInfo.version.release;
-      var sdkInt = androidInfo.version.sdkInt;
-      var manufacturer = androidInfo.manufacturer;
-      var model = androidInfo.model;
-      print('Android $release (SDK $sdkInt), $manufacturer $model');
-      // Android 9 (SDK 28), Xiaomi Redmi Note 7
+
+      deviceModel.platform = 'Android';
+      deviceModel.osName = androidInfo.brand;
+      deviceModel.model = androidInfo.model;
+      deviceModel.version = androidInfo.version.release;
+      // print('Android  info ${deviceModel}');
     }
 
     if (Platform.isIOS) {
       var iosInfo = await DeviceInfoPlugin().iosInfo;
-      var systemName = iosInfo.systemName;
-      var version = iosInfo.systemVersion;
-      var name = iosInfo.name;
-      var model = iosInfo.model;
-      print('$systemName $version, $name $model');
+      deviceModel.platform = 'IOS';
+      deviceModel.version = iosInfo.systemVersion;
+      deviceModel.model = iosInfo.utsname.machine;
+      deviceModel.osName = iosInfo.systemName;
+      //  print('ios info $deviceModel  name ${iosInfo.name}');
       // iOS 13.1, iPhone 11 Pro Max iPhone
     }
   }
@@ -239,7 +241,8 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
     Navigator.of(context).pop({
       "selection": getRating(totalScore).toStringAsFixed(1),
       'didComment': myCommentsController.text.length > 0,
-      'comment': myCommentsController.text
+      'comment': myCommentsController.text,
+      'device_info': deviceModel.toMap(),
     });
   }
 

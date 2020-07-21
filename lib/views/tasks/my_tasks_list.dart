@@ -17,7 +17,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
-import 'package:sevaexchange/views/qna-module/ReviewLandingPage.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -693,10 +692,12 @@ class TaskCardViewState extends State<TaskCardView> {
 
   Future<void> onActivityResult(Map results) async {
     // adds review to firestore
+    ;
     await Firestore.instance.collection("reviews").add({
       "reviewer": SevaCore.of(context).loggedInUser.email,
       "reviewed": requestModel.email,
       "ratings": results['selection'],
+      "device_info": results['device_info'],
       "requestId": requestModel.id,
       "comments": (results['didComment'] ? results['comment'] : "No comments")
     });

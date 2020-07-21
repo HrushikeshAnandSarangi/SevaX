@@ -1,12 +1,13 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:ui' as ui;
+
 import 'package:connectivity/connectivity.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
@@ -18,10 +19,10 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/profile/edit_profile.dart';
 import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 import 'package:sevaexchange/views/splash_view.dart' as DefaultSplashView;
-import 'dart:ui' as ui;
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -42,7 +43,7 @@ class _RegisterPageState extends State<RegisterPage>
 
   String fullName;
   String password;
-  String email;
+  String email = '';
   String imageUrl;
   String confirmPassword;
   File selectedImage;
@@ -51,7 +52,14 @@ class _RegisterPageState extends State<RegisterPage>
   ImagePickerHandler imagePicker;
   bool isEmailVerified = false;
   bool sentOTP = false;
+  bool _isDocumentBeingUploaded = false;
+  final int tenMegaBytes = 10485760;
 
+  String _fileName;
+  String _path;
+  String cvTitle = '';
+  String cvUrl = '';
+  BuildContext parentContext;
   @override
   void initState() {
     super.initState();
@@ -448,7 +456,8 @@ class _RegisterPageState extends State<RegisterPage>
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text(AppLocalizations.of(context).translate('signup','create_account')),
+            title: Text(AppLocalizations.of(context)
+                .translate('signup', 'create_account')),
             content: LinearProgressIndicator(),
           );
         });
@@ -480,7 +489,8 @@ class _RegisterPageState extends State<RegisterPage>
       user.timezone = new TimezoneListData()
           .getTimeZoneByCodeData(DateTime.now().timeZoneName);
       var _sysLng = ui.window.locale.languageCode;
-      var language = new LanguageListData().getLanguageSupported(_sysLng.toString());
+      var language =
+          new LanguageListData().getLanguageSupported(_sysLng.toString());
       appLanguage.changeLanguage(Locale(language.code));
       user.language = language.code;
       await FirestoreManager.updateUser(user: user);
@@ -566,6 +576,76 @@ class _RegisterPageState extends State<RegisterPage>
     );
   }
 
+  void _openFileExplorer() async {
+    //  bool _isDocumentBeingUploaded = false;
+    //File _file;
+    //List<File> _files;
+    String _fileName;
+    String _path;
+    Map<String, String> _paths;
+    try {
+      _paths = null;
+      _path = await FilePicker.getFilePath(
+          type: FileType.custom, allowedExtensions: ['pdf']);
+    } on PlatformException catch (e) {
+      print("Unsupported operation" + e.toString());
+    }
+    //   if (!mounted) return;
+    if (_path != null) {
+      _fileName = _path.split('/').last;
+      print("FIle  name $_fileName");
+
+      userDoc(_path, _fileName);
+    }
+  }
+
+  void userDoc(String _doc, String fileName) {
+    // TODO: implement userDoc
+    setState(() {
+      this._path = _doc;
+      this._fileName = fileName;
+      this._isDocumentBeingUploaded = true;
+    });
+    checkFileSize();
+    return null;
+  }
+
+  void checkFileSize() async {
+    var file = File(_path);
+    final bytes = await file.lengthSync();
+    if (bytes > tenMegaBytes) {
+      this._isDocumentBeingUploaded = false;
+      getAlertDialog(parentContext);
+    } else {
+      uploadDocument().then((_) {
+        setState(() => this._isDocumentBeingUploaded = false);
+      });
+    }
+  }
+
+  Future<String> uploadDocument() async {
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+    String timestampString = timestamp.toString();
+    String name = email + timestampString + _fileName;
+    StorageReference ref =
+        FirebaseStorage.instance.ref().child('cv_files').child(name);
+    StorageUploadTask uploadTask = ref.putFile(
+      File(_path),
+      StorageMetadata(
+        contentLanguage: 'en',
+        customMetadata: <String, String>{'activity': 'CV File'},
+      ),
+    );
+    String documentURL =
+        await (await uploadTask.onComplete).ref.getDownloadURL();
+
+    cvTitle = name;
+    cvUrl = documentURL;
+    // _setAvatarURL();
+    // _updateDB();
+    return documentURL;
+  }
+
   Widget get signUpWithGoogle {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -574,8 +654,7 @@ class _RegisterPageState extends State<RegisterPage>
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             horizontalLine(),
-            Text(AppLocalizations.of(context)
-                .translate('signup', 'or')),
+            Text(AppLocalizations.of(context).translate('signup', 'or')),
             horizontalLine()
           ],
         ),

@@ -5,10 +5,13 @@ class DeviceModel extends DataModel {
   String osName;
   String version;
   String model;
-  String release;
 
-  DeviceModel(
-      {this.osName, this.platform, this.version, this.model, this.release});
+  DeviceModel({
+    this.osName,
+    this.platform,
+    this.version,
+    this.model,
+  });
 
   DeviceModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('platform')) {
@@ -26,10 +29,6 @@ class DeviceModel extends DataModel {
     if (map.containsKey('model')) {
       this.model = map['model'];
     }
-
-    if (map.containsKey('release')) {
-      this.release = map['release'];
-    }
   }
   @override
   Map<String, dynamic> toMap() {
@@ -46,13 +45,14 @@ class DeviceModel extends DataModel {
       object['version'] = this.version;
     }
 
-    if (this.release != null && this.release.isNotEmpty) {
-      object['release'] = this.release;
-    }
-
     if (this.model != null && this.model.isNotEmpty) {
       object['model'] = this.model;
     }
-    throw object;
+    return object;
+  }
+
+  @override
+  String toString() {
+    return 'DeviceModel{platform: $platform, osName: $osName, version: $version, model: $model,}';
   }
 }

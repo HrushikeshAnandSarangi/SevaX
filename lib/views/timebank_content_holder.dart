@@ -733,7 +733,7 @@ class DiscussionListState extends State<DiscussionList> {
             builder: (context) => PDFScreen(
                   docName: documentName,
                   pathPDF: f.path,
-                  pdf: f,
+                  isFromFeeds: true,
                 )),
       );
     });
@@ -883,7 +883,9 @@ class DiscussionListState extends State<DiscussionList> {
                           SizedBox(
                             height: 5,
                           ),
-                          document(newsModel: news),
+                          document(
+                              newsDocumentName: news.newsDocumentName,
+                              newsDocumentUrl: news.newsDocumentUrl),
                           //  SizedBox(height: 10),
                         ],
                       ),
@@ -1658,13 +1660,12 @@ class DiscussionListState extends State<DiscussionList> {
     );
   }
 
-  Widget document({NewsModel newsModel}) {
-    return newsModel.newsDocumentUrl == null
+  Widget document({String newsDocumentUrl, String newsDocumentName}) {
+    return newsDocumentUrl == null
         ? Offstage()
         : GestureDetector(
             onTap: () {
-              openPdfViewer(
-                  newsModel.newsDocumentUrl, newsModel.newsDocumentName);
+              openPdfViewer(newsDocumentUrl, newsDocumentName);
             },
             child: Container(
               height: 30,
@@ -1686,7 +1687,7 @@ class DiscussionListState extends State<DiscussionList> {
                     ),
                     Expanded(
                       child: Text(
-                        newsModel.newsDocumentName ?? "Document",
+                        newsDocumentName ?? "Document",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,

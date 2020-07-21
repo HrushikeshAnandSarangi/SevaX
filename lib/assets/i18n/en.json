@@ -1241,5 +1241,10 @@
   "reason": {
     "enter_reason": "Enter reason to delete",
     "reason_err": "Please enter reason to delete"
+  },
+
+  "cv": {
+    "cv": "CV",
+    "cv_info": "Click here to update your cv"
   }
 }

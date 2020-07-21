@@ -1,8 +1,12 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
@@ -141,13 +145,52 @@ class ProfileViewerState extends State<ProfileViewer> {
                         vertical: 20,
                       ),
                       child: UserProfileDetails(
-                        title: AppLocalizations.of(context).translate('profile', 'about') + ' ${snapshot.data['fullname']}',
+                        title: AppLocalizations.of(context)
+                                .translate('profile', 'about') +
+                            ' ${snapshot.data['fullname']}',
                         details: snapshot.data['bio'] ?? '',
                       ),
                     ),
                     SkillAndInterestBuilder(
                       skills: snapshot.data['skills'],
                       interests: snapshot.data['interests'],
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 25,
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context).translate('cv', 'cv'),
+                        style: TextStyle(
+                            fontSize: 16.0, fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        openPdfViewer(
+                            documentName: userData.cvName ?? "cv name",
+                            documentUrl: userData.cvUrl ?? "");
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 22.5,
+                          vertical: 5,
+                        ),
+                        child: Container(
+                          height: 40,
+                          color: Color(0xFFFa3ebff).withOpacity(0.3),
+                          alignment: Alignment.center,
+                          child: Text(
+                            userData.cvName ?? "CV Name",
+                            style: TextStyle(
+                              color: Color(0xFFF0ca5f2),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                     Padding(
                       padding:
@@ -187,13 +230,16 @@ class ProfileViewerState extends State<ProfileViewer> {
                         text: TextSpan(
                           children: <TextSpan>[
                             TextSpan(
-                              text:  AppLocalizations.of(context).translate('profile', 'availability') + '\n',
+                              text: AppLocalizations.of(context)
+                                      .translate('profile', 'availability') +
+                                  '\n',
                               style:
                                   TextStyle(fontSize: 18, color: Colors.black),
                             ),
                             // TextSpan(text: '', style: TextStyle(height: 10)),
                             TextSpan(
-                              text: AppLocalizations.of(context).translate('profile', 'availabilityas'),
+                              text: AppLocalizations.of(context)
+                                  .translate('profile', 'availabilityas'),
                               style: TextStyle(color: Colors.grey),
                             ),
                           ],
@@ -231,6 +277,34 @@ class ProfileViewerState extends State<ProfileViewer> {
       reciever: reciever,
       isFromRejectCompletion: false,
     );
+  }
+
+  Future<File> createFileOfPdfUrl(
+      String documentUrl, String documentName) async {
+    final url = documentUrl;
+    final filename = documentName;
+    var request = await HttpClient().getUrl(Uri.parse(url));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    File file = new File('$dir/$filename');
+    await file.writeAsBytes(bytes);
+    return file;
+  }
+
+  void openPdfViewer({String documentUrl, String documentName}) {
+    createFileOfPdfUrl(documentUrl, documentName).then((f) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PDFScreen(
+                  docName: documentName,
+                  pathPDF: f.path,
+                  isFromFeeds: false,
+                  pdfUrl: documentUrl,
+                )),
+      );
+    });
   }
 
   void onBlockClick() {
@@ -388,13 +462,18 @@ class ProfileViewerState extends State<ProfileViewer> {
         return AlertDialog(
           title: new Text(isBlocked
               ? AppLocalizations.of(context).translate('profile', 'unblock')
-              : AppLocalizations.of(context).translate('profile', 'block') + " ${user.fullname.split(' ')[0]}."),
+              : AppLocalizations.of(context).translate('profile', 'block') +
+                  " ${user.fullname.split(' ')[0]}."),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               new Text(isBlocked
-                  ? '${user.fullname.split(' ')[0]} ' + AppLocalizations.of(context).translate('profile', 'wouldbeunblocked')
-                  : "${user.fullname.split(' ')[0]} " + AppLocalizations.of(context).translate('profile', 'nolonger')),
+                  ? '${user.fullname.split(' ')[0]} ' +
+                      AppLocalizations.of(context)
+                          .translate('profile', 'wouldbeunblocked')
+                  : "${user.fullname.split(' ')[0]} " +
+                      AppLocalizations.of(context)
+                          .translate('profile', 'nolonger')),
               SizedBox(
                 height: 15,
               ),
@@ -406,7 +485,11 @@ class ProfileViewerState extends State<ProfileViewer> {
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: new Text(
-                      isBlocked ? AppLocalizations.of(context).translate('profile', 'unblock') : AppLocalizations.of(context).translate('profile', 'block'),
+                      isBlocked
+                          ? AppLocalizations.of(context)
+                              .translate('profile', 'unblock')
+                          : AppLocalizations.of(context)
+                              .translate('profile', 'block'),
                       style: TextStyle(
                           fontSize: dialogButtonSize, fontFamily: 'Europa'),
                     ),
@@ -418,7 +501,8 @@ class ProfileViewerState extends State<ProfileViewer> {
                   ),
                   new FlatButton(
                     child: new Text(
-                      AppLocalizations.of(context).translate('shared', 'cancel'),
+                      AppLocalizations.of(context)
+                          .translate('shared', 'cancel'),
                       style: TextStyle(
                           fontSize: dialogButtonSize,
                           fontFamily: 'Europa',
@@ -506,7 +590,8 @@ class JobsCounter extends StatelessWidget {
                       style: title,
                     ),
                     TextSpan(
-                      text: AppLocalizations.of(context).translate('profile', 'jobs'),
+                      text: AppLocalizations.of(context)
+                          .translate('profile', 'jobs'),
                       style: subTitle,
                     ),
                   ],
@@ -537,7 +622,8 @@ class JobsCounter extends StatelessWidget {
                       style: title,
                     ),
                     TextSpan(
-                      text: AppLocalizations.of(context).translate('profile', 'hoursworked'),
+                      text: AppLocalizations.of(context)
+                          .translate('profile', 'hoursworked'),
                       style: subTitle,
                     ),
                   ],
@@ -609,7 +695,13 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
               // TextSpan(text: ' ...'),
               TextSpan(
                 text: widget.details.length > maxLength
-                    ? viewFullDetails ? ' ' + AppLocalizations.of(context).translate('profile', 'less') : '  ' + AppLocalizations.of(context).translate('profile', 'more')
+                    ? viewFullDetails
+                        ? ' ' +
+                            AppLocalizations.of(context)
+                                .translate('profile', 'less')
+                        : '  ' +
+                            AppLocalizations.of(context)
+                                .translate('profile', 'more')
                     : '',
                 style: TextStyle(color: Colors.blue),
                 recognizer: TapGestureRecognizer()..onTap = viewMore,
@@ -671,8 +763,10 @@ class ProfileHeader extends StatelessWidget {
                     r != null
                         ? r > 0
                             ? '${(r / snapshot.data.documents.length).toStringAsFixed(1)}'
-                            : AppLocalizations.of(context).translate('profile', 'noratingyet')
-                        : AppLocalizations.of(context).translate('profile', 'loading_n'),
+                            : AppLocalizations.of(context)
+                                .translate('profile', 'noratingyet')
+                        : AppLocalizations.of(context)
+                            .translate('profile', 'loading_n'),
                     style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.bold,
@@ -723,7 +817,8 @@ class ProfileHeader extends StatelessWidget {
                   Icons.message,
                 ),
                 onPressed: message,
-                tooltip: AppLocalizations.of(context).translate('profile', 'message'),
+                tooltip: AppLocalizations.of(context)
+                    .translate('profile', 'message'),
                 color: Theme.of(context).accentColor,
               ),
               IconButton(
@@ -731,7 +826,11 @@ class ProfileHeader extends StatelessWidget {
                   Icons.block,
                 ),
                 onPressed: block,
-                tooltip: isBlocked ? AppLocalizations.of(context).translate('profile', 'unblock') : AppLocalizations.of(context).translate('profile', 'block'),
+                tooltip: isBlocked
+                    ? AppLocalizations.of(context)
+                        .translate('profile', 'unblock')
+                    : AppLocalizations.of(context)
+                        .translate('profile', 'block'),
                 color: isBlocked ? Colors.red : Theme.of(context).accentColor,
               ),
               FutureBuilder<bool>(
@@ -741,7 +840,8 @@ class ProfileHeader extends StatelessWidget {
                     return IconButton(
                       icon: Icon(Icons.flag),
                       onPressed: !(snapshot.data ?? true) ? report : null,
-                      tooltip: AppLocalizations.of(context).translate('profile', 'report_member'),
+                      tooltip: AppLocalizations.of(context)
+                          .translate('profile', 'report_member'),
                       color: !(snapshot.data ?? true)
                           ? Theme.of(context).accentColor
                           : Colors.grey,
@@ -773,7 +873,11 @@ class CompletedList extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.only(bottom: 8.0),
         child: Center(
-          child: Text(userModel.fullname + ' ' + AppLocalizations.of(context).translate('profile', 'not_completed'),
+          child: Text(
+              userModel.fullname +
+                  ' ' +
+                  AppLocalizations.of(context)
+                      .translate('profile', 'not_completed'),
               textAlign: TextAlign.center),
         ),
       );
@@ -805,7 +909,9 @@ class CompletedList extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Text('${transmodel.credits}'),
-                      Text(AppLocalizations.of(context).translate('profile', 'seva_credits_ad'),
+                      Text(
+                          AppLocalizations.of(context)
+                              .translate('profile', 'seva_credits_ad'),
                           style: TextStyle(
                             fontSize: 9,
                             fontWeight: FontWeight.w600,

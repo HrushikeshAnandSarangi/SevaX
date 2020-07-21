@@ -688,6 +688,7 @@ class NotificationsView extends State<NotificationViewHolder> {
           "reviewer": SevaCore.of(context).loggedInUser.email,
           "reviewed": data.classDetails.classTitle,
           "ratings": results['selection'],
+          "device_info": results['device_info'],
           "requestId": "testId",
           "comments":
               results['didComment'] ? results['comment'] : "No comments",
@@ -976,6 +977,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       "reviewer": reviewer,
       "reviewed": reviewed,
       "ratings": results['selection'],
+      "device_info": results['device_info'],
       "requestId": requestId,
       "comments": (results['didComment']
           ? results['comment']
