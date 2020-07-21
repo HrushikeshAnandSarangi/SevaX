@@ -678,7 +678,7 @@
     "others": "Others"
   },
   "create_request": {
-    "sam_date_time" : "You have provided identical date and time for the Start and End. Please provide an End time that is after the Start time.",
+    "sam_date_time": "You have provided identical date and time for the Start and End. Please provide an End time that is after the Start time.",
     "humanity_first_create": "Create Yang Gang Request",
     "create": "Create Request",
     "edit": "Edit Request",
@@ -1237,5 +1237,10 @@
     "change_advisory": " You are required to provide billing details for this Timebank - including the new billing address. The transfer of ownership will not be completed until this is done.",
     "ownership_suceess": "Congratulations! You are now the new owner of the Timebank ",
     "already_invited": " already invited."
+  },
+  "blocked_members": {
+    "blocked_members": "Blocked Members",
+    "no_blocked_members": "No blocked members",
+    "unblock": "Unblock"
   }
 }

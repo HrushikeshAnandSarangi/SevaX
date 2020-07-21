@@ -325,9 +325,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                         ),
                         ProfileSettingsCard(
-                          title: "Blocked Members",
-                          // title: AppLocalizations.of(context)
-                          //     .translate('profile', 'notifications'),
+                          title: AppLocalizations.of(context)
+                              .translate('blocked_members', 'blocked_members'),
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(

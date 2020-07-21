@@ -681,7 +681,7 @@
     "others": "Otros"
   },
   "create_request": {
-    "sam_date_time" : "Você forneceu data e hora idênticas para o início e o fim. Forneça um horário de término posterior ao horário de início.",
+    "sam_date_time": "Você forneceu data e hora idênticas para o início e o fim. Forneça um horário de término posterior ao horário de início.",
     "humanity_first_create": "Criar solicitações da gang de Yang",
     "create": "criar",
     "edit": "Editar solicitações",
@@ -956,7 +956,7 @@
     "Remove": "Eliminar",
     "Promote": "Promover",
     "Demote": "Rebaixar",
-    "Loan" : "Empréstimo",
+    "Loan": "Empréstimo",
     "Exit": "Saída",
     "admins": "Administradores",
     "coordinators": "Coordenadores",
@@ -1140,7 +1140,6 @@
     "add_caption": "Adicionar uma legenda",
     "tap_for_photo": "Tap para a foto",
     "name_error": "O nome não pode estar vazio"
-
   },
   "add_location": {
     "confirm_location_label": "CONFIRMAR localização"
@@ -1236,5 +1235,10 @@
     "change_advisory": " Você precisa fornecer detalhes de cobrança para este Timebank, incluindo o novo endereço de cobrança. A transferência de propriedade não será concluída até que isso seja feito.",
     "ownership_suceess": "Parabéns! Agora você é o novo proprietário do Timebank ",
     "already_invited": " já convidado."
+  },
+  "blocked_members": {
+    "blocked_members": "Membros bloqueados",
+    "no_blocked_members": "Nenhum membro bloqueados",
+    "unblock": "Desbloquear"
   }
 }

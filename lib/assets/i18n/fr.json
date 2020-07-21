@@ -682,7 +682,7 @@
     "others": "Autres"
   },
   "create_request": {
-    "sam_date_time" : "Vous avez fourni une date et une heure identiques pour le début et la fin. Veuillez indiquer une heure de fin postérieure à l'heure de début.",
+    "sam_date_time": "Vous avez fourni une date et une heure identiques pour le début et la fin. Veuillez indiquer une heure de fin postérieure à l'heure de début.",
     "humanity_first_create": "Crear solicitud de pandilla Yang",
     "create": "crear",
     "edit": "Modifier la demande",
@@ -956,7 +956,7 @@
     "Reject": "Rejeter",
     "Remove": "Retirer",
     "Promote": "Promouvoir",
-    "Loan" : "Prête",
+    "Loan": "Prête",
     "Demote": "Rétrograder",
     "Exit": "Sortie",
     "admins": "Administrateurs",
@@ -1141,7 +1141,6 @@
     "add_caption": "Ajouter une légende",
     "tap_for_photo": "Tap pour la photo",
     "name_error": "Le nom ne peut pas être vide"
-
   },
   "add_location": {
     "confirm_location_label": "CONFIRMER L'EMPLACEMENT"
@@ -1237,5 +1236,10 @@
     "change_advisory": " Vous devez fournir les détails de facturation de cette Timebank, y compris la nouvelle adresse de facturation. Le transfert de propriété ne sera pas achevé tant que cela ne sera pas fait.",
     "ownership_suceess": "Toutes nos félicitations! Vous êtes maintenant le nouveau propriétaire de la Timebank ",
     "already_invited": " déjà invité."
+  },
+  "blocked_members": {
+    "blocked_members": "Membres bloqués",
+    "no_blocked_members": "Aucun membre bloqués",
+    "unblock": "Débloquer"
   }
 }
