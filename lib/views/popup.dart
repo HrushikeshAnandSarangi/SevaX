@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/availability.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 
 enum SingingCharacter { Never, On, After }
 
@@ -26,7 +24,6 @@ class AvailabilityState extends State<Availability> {
     if (save != _canSave) setState(() => _canSave = save);
   }
 
-  bool _done = false;
   String finalValue = '';
 
   List<String> interests = const [

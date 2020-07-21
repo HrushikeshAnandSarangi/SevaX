@@ -1,7 +1,6 @@
 library flutter_multiselect;
 
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/widgets/multi_select/selection_model.dart';
 
 class MultiSelect extends FormField<dynamic> {
@@ -56,153 +55,156 @@ class MultiSelect extends FormField<dynamic> {
   final String searchBoxToolTipText;
   MultiSelect(
       {FormFieldSetter<dynamic> onSaved,
-        FormFieldValidator<dynamic> validator,
-        dynamic initialValue,
-        bool autovalidate = false,
-        this.titleText = 'Title',
-        this.titleTextColor,
-        this.hintText,
-        this.hintTextColor = Colors.grey,
-        this.required = false,
-        this.errorText,
-        this.value,
-        this.leading,
-        this.filterable = true,
-        this.dataSource,
-        this.admin,
-        this.textField,
-        this.valueField,
-        this.change,
-        this.open,
-        this.close,
-        this.trailing,
-        this.maxLength,
-        this.maxLengthText,
-        this.maxLengthIndicatorColor = Colors.red,
-        this.inputBoxFillColor = Colors.white,
-        this.errorBorderColor = Colors.red,
-        this.enabledBorderColor = Colors.grey,
-        this.selectIcon = Icons.arrow_downward,
-        this.selectIconColor,
-        this.buttonBarColor,
-        this.cancelButtonText,
-        this.cancelButtonIcon,
-        this.cancelButtonColor,
-        this.cancelButtonTextColor,
-        this.saveButtonText,
-        this.saveButtonIcon,
-        this.saveButtonColor,
-        this.saveButtonTextColor,
-        this.deleteButtonTooltipText,
-        this.deleteIcon,
-        this.deleteIconColor,
-        this.selectedOptionsBoxColor,
-        this.selectedOptionsInfoText,
-        this.selectedOptionsInfoTextColor,
-        this.checkedIcon,
-        this.uncheckedIcon,
-        this.checkBoxColor,
-        this.searchBoxColor,
-        this.searchBoxHintText,
-        this.searchBoxFillColor,
-        this.searchBoxIcon,
-        this.searchBoxToolTipText
-      }) : super(
-      onSaved: onSaved,
-      validator: validator,
-      initialValue: initialValue,
-      autovalidate: autovalidate,
-      builder: (FormFieldState<dynamic> state) {
-        List<Widget> _buildSelectedOptions(dynamic values, state) {
-          List<Widget> selectedOptions = [];
+      FormFieldValidator<dynamic> validator,
+      dynamic initialValue,
+      bool autovalidate = false,
+      this.titleText = 'Title',
+      this.titleTextColor,
+      this.hintText,
+      this.hintTextColor = Colors.grey,
+      this.required = false,
+      this.errorText,
+      this.value,
+      this.leading,
+      this.filterable = true,
+      this.dataSource,
+      this.admin,
+      this.textField,
+      this.valueField,
+      this.change,
+      this.open,
+      this.close,
+      this.trailing,
+      this.maxLength,
+      this.maxLengthText,
+      this.maxLengthIndicatorColor = Colors.red,
+      this.inputBoxFillColor = Colors.white,
+      this.errorBorderColor = Colors.red,
+      this.enabledBorderColor = Colors.grey,
+      this.selectIcon = Icons.arrow_downward,
+      this.selectIconColor,
+      this.buttonBarColor,
+      this.cancelButtonText,
+      this.cancelButtonIcon,
+      this.cancelButtonColor,
+      this.cancelButtonTextColor,
+      this.saveButtonText,
+      this.saveButtonIcon,
+      this.saveButtonColor,
+      this.saveButtonTextColor,
+      this.deleteButtonTooltipText,
+      this.deleteIcon,
+      this.deleteIconColor,
+      this.selectedOptionsBoxColor,
+      this.selectedOptionsInfoText,
+      this.selectedOptionsInfoTextColor,
+      this.checkedIcon,
+      this.uncheckedIcon,
+      this.checkBoxColor,
+      this.searchBoxColor,
+      this.searchBoxHintText,
+      this.searchBoxFillColor,
+      this.searchBoxIcon,
+      this.searchBoxToolTipText})
+      : super(
+            onSaved: onSaved,
+            validator: validator,
+            initialValue: initialValue,
+            autovalidate: autovalidate,
+            builder: (FormFieldState<dynamic> state) {
+              List<Widget> _buildSelectedOptions(dynamic values, state) {
+                List<Widget> selectedOptions = [];
 
-          if (values != null) {
-            values.forEach((item) {
-              var existingItem = dataSource.singleWhere(
-                      (itm) => itm[valueField] == item,
-                  orElse: () => null);
-              if (existingItem != null) {
-                selectedOptions.add(Chip(
-                  label: Text(existingItem[textField],
-                      overflow: TextOverflow.ellipsis),
-                ));
-              }
-            });
-          }
-          return selectedOptions;
-        }
-        return InkWell(
-            onTap: () async {
-              var results = await Navigator.push(
-                  state.context,
-                  MaterialPageRoute<dynamic>(
-                    builder: (BuildContext context) => SelectionModal(
-                        title: titleText,
-                        filterable: filterable,
-                        valueField: valueField,
-                        textField: textField,
-                        dataSource: dataSource,
-                        admin: admin,
-                        values: state.value ?? [],
-                        maxLength: maxLength ?? dataSource?.length,
-                        buttonBarColor: buttonBarColor,
-                        cancelButtonText: cancelButtonText,
-                        cancelButtonIcon: cancelButtonIcon,
-                        cancelButtonColor: cancelButtonColor,
-                        cancelButtonTextColor: cancelButtonTextColor,
-                        saveButtonText: saveButtonText,
-                        saveButtonIcon: saveButtonIcon,
-                        saveButtonColor: saveButtonColor,
-                        saveButtonTextColor: saveButtonTextColor,
-                        deleteButtonTooltipText: deleteButtonTooltipText,
-                        deleteIcon: deleteIcon,
-                        deleteIconColor: deleteIconColor,
-                        selectedOptionsBoxColor: selectedOptionsBoxColor,
-                        selectedOptionsInfoText: selectedOptionsInfoText,
-                        selectedOptionsInfoTextColor: selectedOptionsInfoTextColor,
-                        checkedIcon: checkedIcon,
-                        uncheckedIcon: uncheckedIcon,
-                        checkBoxColor: checkBoxColor,
-                        searchBoxColor: searchBoxColor,
-                        searchBoxHintText: searchBoxHintText,
-                        searchBoxFillColor: searchBoxFillColor,
-                        searchBoxIcon: searchBoxIcon,
-                        searchBoxToolTipText: searchBoxToolTipText
-                    ),
-                    fullscreenDialog: true,
-                  ));
-              if (results != null) {
-                print(results);
-                dynamic newValue;
-                if (results.length > 0) {
-                  newValue = results;
-                } else {
-                  newValue = ['None'];
+                if (values != null) {
+                  values.forEach((item) {
+                    var existingItem = dataSource.singleWhere(
+                        (itm) => itm[valueField] == item,
+                        orElse: () => null);
+                    if (existingItem != null) {
+                      selectedOptions.add(Chip(
+                        label: Text(existingItem[textField],
+                            overflow: TextOverflow.ellipsis),
+                      ));
+                    }
+                  });
                 }
-                state.didChange(newValue);
-                if (change != null) {
-                  change(newValue);
-                }
+                return selectedOptions;
               }
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 0.0),
-                  child: Row(
+
+              return InkWell(
+                  onTap: () async {
+                    var results = await Navigator.push(
+                        state.context,
+                        MaterialPageRoute<dynamic>(
+                          builder: (BuildContext context) => SelectionModal(
+                              title: titleText,
+                              filterable: filterable,
+                              valueField: valueField,
+                              textField: textField,
+                              dataSource: dataSource,
+                              admin: admin,
+                              values: state.value ?? [],
+                              maxLength: maxLength ?? dataSource?.length,
+                              buttonBarColor: buttonBarColor,
+                              cancelButtonText: cancelButtonText,
+                              cancelButtonIcon: cancelButtonIcon,
+                              cancelButtonColor: cancelButtonColor,
+                              cancelButtonTextColor: cancelButtonTextColor,
+                              saveButtonText: saveButtonText,
+                              saveButtonIcon: saveButtonIcon,
+                              saveButtonColor: saveButtonColor,
+                              saveButtonTextColor: saveButtonTextColor,
+                              deleteButtonTooltipText: deleteButtonTooltipText,
+                              deleteIcon: deleteIcon,
+                              deleteIconColor: deleteIconColor,
+                              selectedOptionsBoxColor: selectedOptionsBoxColor,
+                              selectedOptionsInfoText: selectedOptionsInfoText,
+                              selectedOptionsInfoTextColor:
+                                  selectedOptionsInfoTextColor,
+                              checkedIcon: checkedIcon,
+                              uncheckedIcon: uncheckedIcon,
+                              checkBoxColor: checkBoxColor,
+                              searchBoxColor: searchBoxColor,
+                              searchBoxHintText: searchBoxHintText,
+                              searchBoxFillColor: searchBoxFillColor,
+                              searchBoxIcon: searchBoxIcon,
+                              searchBoxToolTipText: searchBoxToolTipText),
+                          fullscreenDialog: true,
+                        ));
+                    if (results != null) {
+                      print(results);
+                      dynamic newValue;
+                      if (results.length > 0) {
+                        newValue = results;
+                      } else {
+                        newValue = ['None'];
+                      }
+                      state.didChange(newValue);
+                      if (change != null) {
+                        change(newValue);
+                      }
+                    }
+                  },
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Expanded(
-                        child: RichText(
-                          text: TextSpan(
-                              text: titleText,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Europa',
-                                  fontSize: 16.0, color: titleTextColor ?? Theme.of(state.context).primaryColor),
-                              children:
-                              [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 0.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Expanded(
+                              child: RichText(
+                                text: TextSpan(
+                                    text: titleText,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Europa',
+                                        fontSize: 16.0,
+                                        color: titleTextColor ??
+                                            Theme.of(state.context)
+                                                .primaryColor),
+                                    children: [
 //                                  TextSpan(
 //                                    text: required ? ' *' : '',
 //                                    style: TextStyle(

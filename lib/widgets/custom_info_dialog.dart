@@ -49,7 +49,6 @@ Widget infoButton({
     ),
     onPressed: () {
       RenderBox renderBox = key.currentContext.findRenderObject();
-      Size buttonSize = renderBox.size;
       Offset buttonPosition = renderBox.localToGlobal(Offset.zero);
       showDialog(
         context: context,

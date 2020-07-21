@@ -1,5 +1,3 @@
-import 'dart:convert' as prefix0;
-
 class MembersList {
   List<MemberForRequest> membersForList;
   MembersList({this.membersForList});
@@ -33,10 +31,9 @@ class MemberForRequest {
       this.bio});
 
   factory MemberForRequest.fromJson(Map<String, dynamic> json) {
-        print(json);
+    print(json);
 
     return MemberForRequest(
-        
         tokens: json['tokens'] == null ? '' : json['tokens'],
         photourl: json['photourl'] == null ? '' : json['photourl'],
         timezone: json['timezone'] == null ? '' : json['timezone'],
@@ -46,11 +43,8 @@ class MemberForRequest {
         bio: json['bio'] == null ? '' : json['bio']);
   }
 
-
   @override
   String toString() {
     return this.fullname;
   }
-
-
 }

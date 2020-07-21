@@ -21,7 +21,6 @@ class _DocumentUploadState extends State<DocumentUpload> {
   String _path;
   Map<String, String> _paths;
   String _extension;
-  bool _loadingPath = false;
   AnimationController _controller;
   bool _multiPick = false;
   FileType _pickingType = FileType.custom;
@@ -38,7 +37,6 @@ class _DocumentUploadState extends State<DocumentUpload> {
   }
 
   void _openFileExplorer() async {
-    setState(() => _loadingPath = true);
     try {
       if (_multiPick) {
         _path = null;
@@ -59,7 +57,6 @@ class _DocumentUploadState extends State<DocumentUpload> {
     setState(() {
       _isDocumentBeingUploaded = true;
 
-      _loadingPath = false;
       _fileName = _path != null
           ? _path.split('/').last
           : _paths != null ? _paths.keys.toString() : '...';
