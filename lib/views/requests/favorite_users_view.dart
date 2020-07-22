@@ -78,7 +78,8 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
 
           userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
           if (userList.length == 0) {
-            return getEmptyWidget('Users', AppLocalizations.of(context).translate('requests','no_users'));
+            return getEmptyWidget('Users',
+                AppLocalizations.of(context).translate('requests', 'no_users'));
           }
           return ListView.builder(
             itemCount: userList.length,
@@ -94,11 +95,10 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
                 isAdmin: isAdmin,
                 refresh: refresh,
                 reqStatus: getRequestUserStatus(
-                  requestModel: requestModel,
-                  userId: user.sevaUserID,
-                  email: user.email,
-                  context: context
-                ),
+                    requestModel: requestModel,
+                    userId: user.sevaUserID,
+                    email: user.email,
+                    context: context),
               );
             },
           );
