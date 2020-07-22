@@ -11,13 +11,14 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/bottom_nav_bar.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/message_page_router.dart';
+import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
+import 'package:sevaexchange/ui/screens/notifications/pages/combined_notification_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/notifications/notifications_page.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'package:sevaexchange/views/timebanks/explore_tabview.dart';
 
 import '../../../../flavor_config.dart';
 import 'home_dashboard.dart';
@@ -32,12 +33,13 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
   int selected = 2;
   UserDataBloc _userBloc = UserDataBloc();
   MessageBloc _messageBloc = MessageBloc();
+  NotificationsBloc _notificationsBloc = NotificationsBloc();
   List<Widget> pages = [
-    ExploreTabView(),
+    // ExploreTabView(),
+    CombinedNotificationsPage(),
     NotificationsPage(),
     HomeDashBoard(),
     MessagePageRouter(),
-    // ChatListView(),
     ProfilePage(),
   ];
 
@@ -53,12 +55,14 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
           email: SevaCore.of(context).loggedInUser.email,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         );
-        _userBloc.userStream.listen(
-          (UserModel user) => _messageBloc.fetchAllMessage(
+        _userBloc.userStream.listen((UserModel user) {
+          _messageBloc.fetchAllMessage(
             user.currentCommunity,
             user,
-          ),
-        );
+          );
+
+          _notificationsBloc.init(user.email, user.currentCommunity);
+        });
       },
     );
   }
@@ -67,6 +71,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
   void dispose() {
     _userBloc.dispose();
     _messageBloc.dispose();
+    _notificationsBloc.dispose();
     super.dispose();
   }
 
@@ -125,11 +130,14 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                       }
                       return Stack(
                         children: <Widget>[
-                          BlocProvider<MessageBloc>(
-                            bloc: _messageBloc,
-                            child: Container(
-                              height: MediaQuery.of(context).size.height - 65,
-                              child: pages[selected],
+                          BlocProvider<NotificationsBloc>(
+                            bloc: _notificationsBloc,
+                            child: BlocProvider<MessageBloc>(
+                              bloc: _messageBloc,
+                              child: Container(
+                                height: MediaQuery.of(context).size.height - 65,
+                                child: pages[selected],
+                              ),
                             ),
                           ),
                           Align(
@@ -148,7 +156,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                           ),
                           Align(
                             alignment: Alignment.bottomCenter,
-                            child: BlocProvider(
+                            child: BlocProvider<MessageBloc>(
                               bloc: _messageBloc,
                               child: CustomBottomNavigationBar(
                                 selected: selected,
