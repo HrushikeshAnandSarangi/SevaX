@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -59,7 +60,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   String cvTitle = '';
   String cvUrl = '';
   BuildContext parentContext;
-
+  final profanityDetector = ProfanityDetector();
   @override
   void initState() {
     super.initState();
@@ -532,6 +533,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                 key: _formKey,
                 child: TextFormField(
                   //key: _formKey,
+
                   decoration: InputDecoration(
                       hintText: AppLocalizations.of(context)
                           .translate('profile', 'enter_bio')),

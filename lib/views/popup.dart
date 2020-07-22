@@ -45,9 +45,6 @@ class AvailabilityState extends State<Availability> {
   List<MaterialColor> colorList;
   Set<String> selectedInterests = <String>[].toSet();
   SingingCharacter _character = SingingCharacter.Never;
-  DateTime _dateTime = new DateTime.now();
-  double _weight;
-  String _note;
 
   @override
   void initState() {
