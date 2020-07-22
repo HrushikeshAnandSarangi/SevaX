@@ -2,6 +2,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:html/parser.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -160,6 +161,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   @override
   Widget build(BuildContext context) {
     textStyle = Theme.of(context).textTheme.title;
+    var postNode = FocusNode();
     // Build a Form widget using the formKey we created above
     return Form(
       key: formKey,
@@ -181,7 +183,20 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       children: <Widget>[
                         Padding(
                           padding: EdgeInsets.only(bottom: 0.0),
-                          child: TextFormField(
+                          child: Container(
+                            height: 200,
+                            child: KeyboardActions(
+                              tapOutsideToDismiss: true,
+                              config: KeyboardActionsConfig(
+                                keyboardSeparatorColor: Color(0x0FF766FE0),
+                                actions: [
+                                  KeyboardActionsItem(
+                                    focusNode: postNode,
+                                  )
+                                ],
+                              ),
+                              child:TextFormField(
+                                focusNode: postNode,
                             textCapitalization: TextCapitalization.sentences,
                             controller: subheadingController,
                             textAlign: TextAlign.start,
@@ -239,7 +254,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                               newsObject.subheading = value;
                               // print("object");
                             },
-                          ),
+                          ))),
                         ),
                       ],
                     ),

@@ -167,21 +167,11 @@ class _LocationPickerState extends State<LocationPicker> {
                   fullscreenDialog: true,
                 ),
               );
+              print('came here');
               if (model?.lat != null && model?.lng != null) {
                 locationDataFromSearch = model;
                 target = LatLng(
                     locationDataFromSearch.lat, locationDataFromSearch.lng);
-                _addMarker(latLng: target);
-                var temp = point(markers);
-                if (locationDataFromSearch.lat != null &&
-                    locationDataFromSearch.lng != null && temp != null) {
-                  if (point(markers).distance(
-                      lat: locationDataFromSearch.lat,
-                      lng: locationDataFromSearch.lng) >
-                      0.005) {
-                    locationDataFromSearch.location = null;
-                  }
-                }
                 animateToLocation(
                   _mapController,
                   location: target,
@@ -407,10 +397,9 @@ class _LocationPickerState extends State<LocationPicker> {
       ),
       zoom: 15,
     );
-
-    await mapController.animateCamera(
-      CameraUpdate.newCameraPosition(newPosition),
-    );
     _addMarker(latLng: location);
+    Future.delayed(Duration(milliseconds: 100), () => {
+      mapController.animateCamera(CameraUpdate.newCameraPosition(newPosition))
+    });
   }
 }

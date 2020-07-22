@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-
+import  'package:keyboard_actions/keyboard_actions.dart';
 typedef StringCallback = void Function(String bio);
 
 class BioView extends StatefulWidget {
@@ -21,9 +23,11 @@ class _BioViewState extends State<BioView> {
     borderSide: BorderSide(color: Color(0x0FFC7C7CC)),
   );
   String bio = '';
+  final _focusNodeBio = FocusNode();
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -58,7 +62,8 @@ class _BioViewState extends State<BioView> {
                       padding: const EdgeInsets.only(
                           left: 0.0, top: 0.0, bottom: 10.0),
                       child: Text(
-                        'Please tell us a little about yourself in a few sentences. For example, what makes you unique.',
+                        AppLocalizations.of(context)
+                            .translate('bio', 'description'),
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 16,
@@ -70,38 +75,56 @@ class _BioViewState extends State<BioView> {
                     Form(
                       key: _formKey,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          TextFormField(
-                              textCapitalization: TextCapitalization.sentences,
-                              style: TextStyle(
-                                  fontSize: 16.0, color: Colors.black54),
-                              decoration: InputDecoration(
-                                fillColor: Colors.grey[300],
-                                filled: true,
-                                hintText: 'Tell us a little about yourself.',
-                                border: textFieldBorder,
-                                enabledBorder: textFieldBorder,
-                                focusedBorder: textFieldBorder,
-                              ),
-                              keyboardType: TextInputType.multiline,
-                              minLines: 6,
-                              maxLines: 50,
-                              maxLength: 150,
-                              validator: (value) {
-                                if (value.trim().isEmpty) {
-                                  return 'It\'s easy, please fill few words about you.';
-                                }
-                                if (value.length < 50) {
-                                  this.bio = value;
-                                  return 'Min 50 characters *';
-                                }
-                                this.bio = value;
-                              }),
-                          // Text(
-                          //   '*min 100 characters',
-                          //   style: TextStyle(color: Colors.red),
-                          // )
+                          Container(
+                              height: 250,
+                              child: KeyboardActions(
+                                  tapOutsideToDismiss: true,
+                                  config: KeyboardActionsConfig(
+                                    keyboardSeparatorColor: Color(0x0FF766FE0),
+                                    actions: [
+                                      KeyboardActionsItem(
+                                        focusNode: _focusNodeBio,
+                                      )
+                                    ],
+                                  ),
+                                  child: TextFormField(
+                                      focusNode: _focusNodeBio,
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                      style: TextStyle(
+                                          fontSize: 16.0,
+                                          color: Colors.black54),
+                                      decoration: InputDecoration(
+                                        fillColor: Colors.grey[300],
+                                        filled: true,
+                                        hintText: AppLocalizations.of(context)
+                                            .translate('bio', 'hint_biotext'),
+                                        border: textFieldBorder,
+                                        enabledBorder: textFieldBorder,
+                                        focusedBorder: textFieldBorder,
+                                      ),
+                                      keyboardType: TextInputType.multiline,
+                                      minLines: 6,
+                                      maxLines: 50,
+                                      maxLength: 150,
+                                      validator: (value) {
+                                        if (value.trim().isEmpty) {
+                                          return AppLocalizations.of(context)
+                                              .translate(
+                                                  'bio', 'motiviation_text');
+                                        }
+                                        if (value.length < 50) {
+                                          this.bio = value;
+                                          return AppLocalizations.of(context)
+                                              .translate(
+                                                  'bio', 'min_char_limit');
+                                        }
+                                        this.bio = value;
+                                      })
+                              )
+                          )
                         ],
                       ),
                     )
@@ -118,7 +141,7 @@ class _BioViewState extends State<BioView> {
                     }
                   },
                   child: Text(
-                    'Next',
+                    AppLocalizations.of(context).translate('shared', 'next'),
                     style: Theme.of(context).primaryTextTheme.button,
                   ),
                   // color: Theme.of(context).accentColor,
@@ -132,8 +155,9 @@ class _BioViewState extends State<BioView> {
                 },
                 child: Text(
                   AppConfig.prefs.getBool(AppConfig.skip_bio) == null
-                      ? 'Skip'
-                      : 'Cancel',
+                      ? AppLocalizations.of(context).translate('shared', 'skip')
+                      : AppLocalizations.of(context)
+                          .translate('shared', 'capital_cancel'),
                   style: TextStyle(color: Theme.of(context).accentColor),
                 ),
               ),

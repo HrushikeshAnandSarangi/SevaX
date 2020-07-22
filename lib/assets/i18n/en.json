@@ -1187,7 +1187,9 @@
     "csv_file_alert": "Files larger than 1 MB are not allowed",
     "csv_size_limit": "NOTE : Maximum file size is 1 MB",
     "csv_progress": "Uploading CSV File",
-    "upload_success": "Uploaded Successfully"
+    "upload_success": "Uploaded Successfully",
+    "extension_title": "Extension alert",
+    "extension_alert_messgae": "Only CSV files are allowed"
   },
   "project_template": {
     "save_as_template": "Save as Template",

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/interests.dart';
@@ -9,6 +10,7 @@ class BioPage extends StatefulWidget {
   final UserModel user;
 
   const BioPage({Key key, this.user}) : super(key: key);
+
   @override
   _BioViewState createState() => _BioViewState();
 }
@@ -21,6 +23,7 @@ class _BioViewState extends State<BioPage> {
   );
   String bio = '';
   UserModel user;
+  final FocusNode _nodeText1 = FocusNode();
 
   @override
   void initState() {
@@ -47,7 +50,7 @@ class _BioViewState extends State<BioPage> {
           appBar: AppBar(
             elevation: 0.5,
             title: Text(
-              AppLocalizations.of(context).translate('bio','title'),
+              AppLocalizations.of(context).translate('bio', 'title'),
               style: TextStyle(fontSize: 18),
             ),
             centerTitle: true,
@@ -63,7 +66,8 @@ class _BioViewState extends State<BioPage> {
                       padding: const EdgeInsets.only(
                           left: 0.0, top: 0.0, bottom: 10.0),
                       child: Text(
-                        AppLocalizations.of(context).translate('bio','description'),
+                        AppLocalizations.of(context)
+                            .translate('bio', 'description'),
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 16,
@@ -77,33 +81,48 @@ class _BioViewState extends State<BioPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
-                          TextFormField(
-                            style: TextStyle(
-                                fontSize: 16.0, color: Colors.black54),
-                            decoration: InputDecoration(
-                              fillColor: Colors.grey[300],
-                              filled: true,
-                              hintText: AppLocalizations.of(context).translate('bio','hint_biotext'),
-                              border: textFieldBorder,
-                              enabledBorder: textFieldBorder,
-                              focusedBorder: textFieldBorder,
-                            ),
-                            keyboardType: TextInputType.multiline,
-                            textCapitalization: TextCapitalization.sentences,
-                            minLines: 6,
-                            maxLines: 50,
-                            maxLength: 150,
-                            validator: (value) {
-                              if (value.trim().isEmpty) {
-                                return AppLocalizations.of(context).translate('bio','motiviation_text');
-                              }
-                              if (value.length < 50) {
-                                this.bio = value;
-                                return AppLocalizations.of(context).translate('bio','min_char_limit');
-                              }
-                              this.bio = value;
-                            },
-                          ),
+                          KeyboardActions(
+                              tapOutsideToDismiss: true,
+                              config: KeyboardActionsConfig(
+                                keyboardSeparatorColor: Colors.grey[300],
+                                actions: [
+                                  KeyboardActionsItem(
+                                    focusNode: _nodeText1,
+                                  )
+                                ],
+                              ),
+                              child: TextFormField(
+                                focusNode: _nodeText1,
+                                style: TextStyle(
+                                    fontSize: 16.0, color: Colors.black54),
+                                decoration: InputDecoration(
+                                  fillColor: Colors.grey[300],
+                                  filled: true,
+                                  hintText: AppLocalizations.of(context)
+                                      .translate('bio', 'hint_biotext'),
+                                  border: textFieldBorder,
+                                  enabledBorder: textFieldBorder,
+                                  focusedBorder: textFieldBorder,
+                                ),
+                                keyboardType: TextInputType.multiline,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
+                                minLines: 6,
+                                maxLines: 50,
+                                maxLength: 150,
+                                validator: (value) {
+                                  if (value.trim().isEmpty) {
+                                    return AppLocalizations.of(context)
+                                        .translate('bio', 'motiviation_text');
+                                  }
+                                  if (value.length < 50) {
+                                    this.bio = value;
+                                    return AppLocalizations.of(context)
+                                        .translate('bio', 'min_char_limit');
+                                  }
+                                  this.bio = value;
+                                },
+                              )),
                         ],
                       ),
                     )
@@ -123,7 +142,7 @@ class _BioViewState extends State<BioPage> {
                     }
                   },
                   child: Text(
-                    AppLocalizations.of(context).translate('shared','next'),
+                    AppLocalizations.of(context).translate('shared', 'next'),
                     style: Theme.of(context).primaryTextTheme.button,
                   ),
                 ),
@@ -135,8 +154,9 @@ class _BioViewState extends State<BioPage> {
                 },
                 child: Text(
                   AppConfig.prefs.getBool(AppConfig.skip_bio) == null
-                      ? AppLocalizations.of(context).translate('bio','skip')
-                      : AppLocalizations.of(context).translate('bio','capital_cancel'),
+                      ? AppLocalizations.of(context).translate('shared', 'skip')
+                      : AppLocalizations.of(context)
+                          .translate('shared', 'capital_cancel'),
                   style: TextStyle(color: Theme.of(context).accentColor),
                 ),
               ),
