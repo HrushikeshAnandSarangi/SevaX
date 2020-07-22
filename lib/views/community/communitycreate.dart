@@ -401,11 +401,11 @@ class CreateEditCommunityViewFormState
                             } else if (communityFound) {
                               return AppLocalizations.of(context).translate(
                                   'createtimebank', 'name_err_exists');
+                            } else if (profanityDetector
+                                .isProfaneString(value)) {
+                              print("this is bad word");
+                              return "this is bad word";
                             } else {
-                              if (profanityDetector.isProfaneString(value)) {
-                                print("this is bad word");
-                                return "this is bad word";
-                              }
                               enteredName =
                                   value.replaceAll("[^a-zA-Z0-9]", "");
                               snapshot.data.community.updateValueByKey(
@@ -444,7 +444,7 @@ class CreateEditCommunityViewFormState
                             communityModel.about = value;
                           },
                           validator: (value) {
-                            if (value.isEmpty) {
+                            if (value.trim().isEmpty) {
                               return AppLocalizations.of(context)
                                   .translate('createtimebank', 'tell_more');
                             }
