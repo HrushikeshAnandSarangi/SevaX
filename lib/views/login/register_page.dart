@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -60,6 +61,9 @@ class _RegisterPageState extends State<RegisterPage>
   String cvTitle = '';
   String cvUrl = '';
   BuildContext parentContext;
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
+
   @override
   void initState() {
     super.initState();
@@ -194,10 +198,16 @@ class _RegisterPageState extends State<RegisterPage>
             },
             shouldRestrictLength: true,
             hint: AppLocalizations.of(context).translate('signup', 'full_name'),
-            validator: (value) => value.isEmpty
-                ? AppLocalizations.of(context)
-                    .translate('signup', 'full_name_err')
-                : null,
+            validator: (value) {
+              if (value.isEmpty) {
+                return AppLocalizations.of(context)
+                    .translate('signup', 'full_name_err');
+              } else if (profanityDetector.isProfaneString(value)) {
+                return "this is bad word";
+              } else {
+                return null;
+              }
+            },
             capitalization: TextCapitalization.words,
             onSave: (value) => this.fullName = value,
           ),
@@ -308,9 +318,21 @@ class _RegisterPageState extends State<RegisterPage>
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: TextFormField(
+        autovalidate: autoValidateText,
         focusNode: focusNode,
         onFieldSubmitted: onFieldSubmittedCB,
         enabled: !isLoading,
+        onChanged: (value) {
+          if (value.length > 1) {
+            setState(() {
+              autoValidateText = true;
+            });
+          } else {
+            setState(() {
+              autoValidateText = false;
+            });
+          }
+        },
         decoration: InputDecoration(
           labelText: hint,
           suffix: suffix,

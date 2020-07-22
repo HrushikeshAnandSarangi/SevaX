@@ -1,7 +1,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:html/parser.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -89,7 +89,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   DataModel selectedEntity;
   GeoFirePoint location;
   String selectedAddress;
-
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
   Future<void> writeToDB() async {
     // print("Credit goes to ${}");
 
@@ -231,10 +232,25 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             ),
                             keyboardType: TextInputType.text,
                             maxLines: 5,
+                            autovalidate: autoValidateText,
+                            onChanged: (value) {
+                              if (value.length > 1) {
+                                setState(() {
+                                  autoValidateText = true;
+                                });
+                              } else {
+                                setState(() {
+                                  autoValidateText = false;
+                                });
+                              }
+                            },
                             validator: (value) {
                               if (value.isEmpty) {
                                 return AppLocalizations.of(context)
                                     .translate('create_feed', 'empty_err');
+                              }
+                              if (profanityDetector.isProfaneString(value)) {
+                                return "this is bad word";
                               }
                               newsObject.subheading = value;
                               // print("object");

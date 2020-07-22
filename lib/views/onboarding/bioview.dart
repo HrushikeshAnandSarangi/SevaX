@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 
 typedef StringCallback = void Function(String bio);
@@ -21,7 +22,8 @@ class _BioViewState extends State<BioView> {
     borderSide: BorderSide(color: Color(0x0FFC7C7CC)),
   );
   String bio = '';
-
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -85,9 +87,21 @@ class _BioViewState extends State<BioView> {
                                 focusedBorder: textFieldBorder,
                               ),
                               keyboardType: TextInputType.multiline,
+                              autovalidate: autoValidateText,
                               minLines: 6,
                               maxLines: 50,
                               maxLength: 150,
+                              onChanged: (value) {
+                                if (value.length > 1) {
+                                  setState(() {
+                                    autoValidateText = true;
+                                  });
+                                } else {
+                                  setState(() {
+                                    autoValidateText = false;
+                                  });
+                                }
+                              },
                               validator: (value) {
                                 if (value.trim().isEmpty) {
                                   return 'It\'s easy, please fill few words about you.';
@@ -95,6 +109,9 @@ class _BioViewState extends State<BioView> {
                                 if (value.length < 50) {
                                   this.bio = value;
                                   return 'Min 50 characters *';
+                                }
+                                if (profanityDetector.isProfaneString(value)) {
+                                  return "this is bad word";
                                 }
                                 this.bio = value;
                               }),

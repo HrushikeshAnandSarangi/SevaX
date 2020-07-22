@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/sevaavatar/projects_avtaar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -69,6 +70,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   final _textUpdates = StreamController<String>();
   bool templateFound = false;
   String templateError = '';
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -292,8 +295,18 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             headingText(
                 AppLocalizations.of(context).translate('projects', 'name')),
             TextFormField(
+              autovalidate: autoValidateText,
               onChanged: (value) {
                 print("name ------ $value");
+                if (value.length > 1) {
+                  setState(() {
+                    autoValidateText = true;
+                  });
+                } else {
+                  setState(() {
+                    autoValidateText = false;
+                  });
+                }
                 projectModel.name = value;
               },
               textCapitalization: TextCapitalization.sentences,
@@ -317,6 +330,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               onFieldSubmitted: (_) {
                 FocusScope.of(context).requestFocus(focusNodes[1]);
               },
+
               onSaved: (value) {
                 projectModel.name = value;
               },
@@ -325,6 +339,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 if (value.isEmpty) {
                   return AppLocalizations.of(context)
                       .translate('projects', 'name_empty_err');
+                } else if (profanityDetector.isProfaneString(value)) {
+                  return "this is bad word";
                 } else {
                   projectModel.name = value;
                 }
@@ -382,13 +398,26 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               textCapitalization: TextCapitalization.sentences,
 
               //  initialValue: timebankModel.missionStatement,
+              autovalidate: autoValidateText,
               onChanged: (value) {
+                if (value.length > 1) {
+                  setState(() {
+                    autoValidateText = true;
+                  });
+                } else {
+                  setState(() {
+                    autoValidateText = false;
+                  });
+                }
+
                 projectModel.description = value;
               },
               validator: (value) {
                 if (value.isEmpty) {
                   return AppLocalizations.of(context)
                       .translate('projects', 'statement_empty_err');
+                } else if (profanityDetector.isProfaneString(value)) {
+                  return "this is bad word";
                 } else {
                   projectModel.description = value;
                 }
