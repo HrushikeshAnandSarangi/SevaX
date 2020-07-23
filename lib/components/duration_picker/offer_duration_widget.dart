@@ -47,7 +47,7 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
             Row(
               children: <Widget>[
                 startWidget,
-                SizedBox(width: 16),
+                SizedBox(width: 10),
                 endWidget,
               ],
             ),
@@ -125,7 +125,7 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 6.0),
               // child: SvgPicture.asset('assets/icons/icon-calendar.svg'),
               child: Icon(Icons.calendar_today, color: Colors.black),
             ),
@@ -154,7 +154,7 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
       return '${type == DurationType.START ? AppLocalizations.of(context).translate('create_request', 'start') : AppLocalizations.of(context).translate('create_request', 'end')}\n${AppLocalizations.of(context).translate('create_request', 'start_end')}';
     }
     String dateTimeString = '';
-    DateFormat format = DateFormat('dd MMM,\nhh:mm a',
+    DateFormat format = DateFormat('dd MMM yyyy,\nhh:mm a',
         Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
     dateTimeString = format.format(dateTime);
     return dateTimeString;
