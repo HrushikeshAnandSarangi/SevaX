@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
+import '../../flavor_config.dart';
 import '../core.dart';
 
 String getOfferTitle({OfferModel offerDataModel}) {
@@ -94,6 +97,60 @@ void addBookMark(String offerId, String userId) {
   Firestore.instance.collection("offers").document(offerId).updateData({
     'individualOfferDataModel.offerAcceptors': FieldValue.arrayUnion([userId])
   });
+}
+
+Future<bool> deleteOffer(
+  BuildContext context,
+  String offerId,
+) async {
+  bool status = false;
+  await showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        title: Text(
+          AppLocalizations.of(context)
+              .translate('delete', 'delete_offer_title'),
+        ),
+        content: Text(
+          AppLocalizations.of(context)
+              .translate('delete', 'sure_to_delete_offer'),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+            },
+            child: Text(
+              AppLocalizations.of(context).translate(
+                'notifications_card',
+                'cancel',
+              ),
+              style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
+            ),
+          ),
+          FlatButton(
+            padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+            color: Theme.of(context).accentColor,
+            textColor: FlavorConfig.values.buttonTextColor,
+            onPressed: () async {
+              await Firestore.instance
+                  .collection("offers")
+                  .document(offerId)
+                  .updateData({'softDelete': true});
+              Navigator.of(dialogContext).pop();
+              Navigator.pop(context);
+            },
+            child: Text(
+              AppLocalizations.of(context)
+                  .translate('notifications_card', 'delete'),
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 bool isParticipant(BuildContext context, OfferModel model) {

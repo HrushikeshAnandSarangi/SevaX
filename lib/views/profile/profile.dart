@@ -1288,8 +1288,7 @@ class CommunityCard extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              community.name[0].toUpperCase() +
-                  community.name.substring(1).toLowerCase(),
+              community.name,
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 color: Colors.black,

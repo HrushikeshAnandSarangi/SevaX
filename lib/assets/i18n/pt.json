@@ -363,7 +363,7 @@
     "name": "Nome do Projeto",
     "name_hint": "Ex: Animais de estimação na cidade, colaboração cidadã",
     "name_empty_err": "O nome do projeto não pode estar vazio",
-    "duration": "Duração do projeto",
+    "duration": "Duração do projeto*",
     "statement": "Declaração de missão",
     "statement_hint": "Ex: Um pouco mais sobre o seu projeto, como juntar-se ao projeto poderá ajudar ",
     "statement_empty_err": "A declaração de missão não pode estar vazia.",
@@ -692,7 +692,7 @@
     "request_title": "Solicitar título *",
     "small_carpenty": "Ex: trabalhos de marcenaria pequena ...",
     "subject": "Por favor ingresse o título de suas solicitações",
-    "duration": "Duração das solicitações",
+    "duration": "Duração das solicitações*",
     "yang_desc": "Descrição da solicitação do grupo Yang Gang ",
     "desc": "Descrição das solicitações *",
     "request_hash": "Suas solicitações e #hashtags",
@@ -828,7 +828,7 @@
     "admin_cannot": "Os administradores não podem criar mensagem"
   },
   "coins": {
-    "donate": "Doar",
+    "donate": "Doar créditos",
     "donate_totimebank": "Doe créditos Seva ao Banco de tempo ",
     "not_enough": "Você não tem créditos suficientes para doar!",
     "donate_coins": "Doar créditos Seva para o Banco de tempo",
@@ -987,7 +987,7 @@
     "availablity": "Disponibilidade",
     "availablity_desc": "Descrever minha disponibilidade",
     "tutor": "Ex. Aulas de violão ",
-    "offer_duration": "Duração da oferta",
+    "offer_duration": "Duração da oferta*",
     "prep_hours": "No. de horas de preparação",
     "prep_hours_required": " No. de horas de preparação necessárias",
     "no_of_class": "No. de horas da aula",
@@ -1236,5 +1236,11 @@
     "change_advisory": " Você precisa fornecer detalhes de cobrança para este Timebank, incluindo o novo endereço de cobrança. A transferência de propriedade não será concluída até que isso seja feito.",
     "ownership_suceess": "Parabéns! Agora você é o novo proprietário do Timebank ",
     "already_invited": " já convidado."
+  },
+  "delete": {
+    "delete_request_title": "Delete request",
+    "sure_to_delete_request": "Are you sure you want to delete this request?",
+    "delete_offer_title": "Delete offer",
+    "sure_to_delete_offer": "Are you sure you want to delete this offer?"
   }
 }

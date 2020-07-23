@@ -187,7 +187,9 @@ class OfferDetails extends StatelessWidget {
       userId,
     );
     bool isCreator = offerModel.sevaUserId == userId;
-
+    bool canDeleteOffer = isCreator &&
+        offerModel.offerType == OfferType.INDIVIDUAL_OFFER &&
+        offerModel.individualOfferDataModel.offerAcceptors.length == 0;
     return Container(
       decoration: BoxDecoration(color: Colors.white54, boxShadow: [
         BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
@@ -219,50 +221,81 @@ class OfferDetails extends StatelessWidget {
                 ),
               ),
             ),
-            Offstage(
-              offstage: isCreator ||
-                  (isAccepted && offerModel.offerType == OfferType.GROUP_OFFER),
-              child: Container(
-                width: 120,
-                height: 32,
-                child: FlatButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  padding: EdgeInsets.all(0),
-                  color: Color.fromRGBO(44, 64, 140, 0.7),
-                  child: Row(
-                    children: <Widget>[
-                      SizedBox(width: 1),
-                      Container(
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(44, 64, 140, 1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.check,
-                          color: Colors.white,
-                        ),
+            canDeleteOffer
+                ? Container(
+                    padding: EdgeInsets.only(right: 5),
+                    width: 100,
+                    height: 32,
+                    child: FlatButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      Spacer(),
-                      Text(
-                        getButtonLabel(offerModel, userId),
-                        style: TextStyle(
-                          color: Colors.white,
+                      padding: EdgeInsets.all(0),
+                      color: Colors.red,
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(width: 1),
+                          Spacer(),
+                          Text(
+                            AppLocalizations.of(context)
+                                .translate("accidental_delete", "delete"),
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          Spacer(
+                            flex: 1,
+                          ),
+                        ],
+                      ),
+                      onPressed: () => deleteOffer(context, offerModel.id),
+                    ),
+                  )
+                : Offstage(
+                    offstage: isCreator ||
+                        (isAccepted &&
+                            offerModel.offerType == OfferType.GROUP_OFFER),
+                    child: Container(
+                      width: 120,
+                      height: 32,
+                      child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
+                        padding: EdgeInsets.all(0),
+                        color: Color.fromRGBO(44, 64, 140, 0.7),
+                        child: Row(
+                          children: <Widget>[
+                            SizedBox(width: 1),
+                            Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(44, 64, 140, 1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Spacer(),
+                            Text(
+                              getButtonLabel(offerModel, userId),
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            Spacer(
+                              flex: 2,
+                            ),
+                          ],
+                        ),
+                        onPressed: () => offerActions(context, offerModel)
+                            .then((_) => Navigator.of(context).pop()),
                       ),
-                      Spacer(
-                        flex: 2,
-                      ),
-                    ],
-                  ),
-                  onPressed: () => offerActions(context, offerModel)
-                      .then((_) => Navigator.of(context).pop()),
-                ),
-              ),
-            )
+                    ),
+                  )
           ],
         ),
       ),
