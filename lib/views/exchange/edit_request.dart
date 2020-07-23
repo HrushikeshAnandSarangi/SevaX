@@ -17,6 +17,7 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
     as RequestManager;
@@ -203,7 +204,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                   child: EditRepeatWidget(requestModel: widget.requestModel),
                 ),
               ),
-
               Padding(
                 padding: EdgeInsets.all(10.0),
               ),
@@ -238,6 +238,60 @@ class RequestEditFormState extends State<RequestEditForm> {
                   }
                   widget.requestModel.description = value;
                 },
+              ),
+              SizedBox(height: 20),
+              Text(
+                "Maximum credits*",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                  color: Colors.black,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      // focusNode: focusNodes[2],
+                      onFieldSubmitted: (v) {
+                        // FocusScope.of(context).requestFocus(focusNodes[3]);
+                      },
+                      onChanged: (v) {
+                        if (v.isNotEmpty && int.parse(v) >= 0) {
+                          widget.requestModel.maxCredits = int.parse(v);
+                          setState(() {});
+                        }
+                      },
+                      decoration: InputDecoration(
+                        hintText: "Maximum credits",
+                        hintStyle: hintTextStyle,
+                        // labelText: 'No. of volunteers',
+                      ),
+                      textInputAction: TextInputAction.done,
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Please enter maximum credits";
+                        } else if (int.parse(value) < 0) {
+                          return "Please enter maximum credits";
+                        } else if (int.parse(value) == 0) {
+                          return "Please enter maximum credits";
+                        } else {
+                          widget.requestModel.maxCredits = int.parse(value);
+                          setState(() {});
+                          return null;
+                        }
+                      },
+                    ),
+                  ),
+                  infoButton(
+                    context: context,
+                    key: GlobalKey(),
+                    type: InfoType.MAX_CREDITS,
+                  ),
+                ],
               ),
               Padding(
                 padding: EdgeInsets.all(10.0),
@@ -274,19 +328,16 @@ class RequestEditFormState extends State<RequestEditForm> {
                     return AppLocalizations.of(context).translate(
                         'create_request', 'no_of_volunteers_zero_err1');
                   } else {
-                    requestModel.numberOfApprovals = int.parse(value);
+                    widget.requestModel.numberOfApprovals = int.parse(value);
                     setState(() {});
                     return null;
                   }
                 },
               ),
-              TotalCredits(
-                  context,
-                  requestModel,
-                  OfferDurationWidgetState.starttimestamp,
-                  OfferDurationWidgetState.endtimestamp),
-//              if (FlavorConfig.appFlavor != Flavor.APP)
-              //addVolunteersForAdmin(),
+              totalCredits(
+                context,
+                widget.requestModel,
+              ),
               SizedBox(height: 20),
               Center(
                 child: LocationPickerWidget(

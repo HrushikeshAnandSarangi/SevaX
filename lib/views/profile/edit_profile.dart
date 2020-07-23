@@ -449,7 +449,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   decoration: InputDecoration(
                       hintText: AppLocalizations.of(context)
                           .translate('profile', 'enter_bio')),
-                  maxLength: 150,
+                  maxLength: 500,
                   maxLengthEnforced: true,
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,
@@ -613,8 +613,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                       // ));
                       try {
                         Navigator.of(_context).pop();
-                      } catch (e) {
-                      }
+                      } catch (e) {}
 
                       _signOut(
                           _context, SevaCore.of(context).loggedInUser.email);
