@@ -1,7 +1,4 @@
-import 'dart:async';
 import 'dart:collection';
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -344,7 +341,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                   selectedAddress: selectedAddress,
                   location: location,
                   onChanged: (LocationDataModel dataModel) {
-                    log("received data model");
+                    // log("received data model");
                     setState(() {
                       location = dataModel.geoPoint;
                       this.selectedAddress = dataModel.location;
@@ -699,7 +696,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         lastRound = true;
       }
     }
-    log("on mode recurrence count isss $recurrenceCount");
+    // log("on mode recurrence count isss $recurrenceCount");
     return recurrenceCount;
   }
 }
