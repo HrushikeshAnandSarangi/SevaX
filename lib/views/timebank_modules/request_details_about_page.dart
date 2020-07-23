@@ -14,6 +14,8 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
+
+import '../../flavor_config.dart';
 // import 'package:timezone/browser.dart';
 
 class RequestDetailsAboutPage extends StatefulWidget {
@@ -52,6 +54,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     color: Colors.grey,
   );
   bool isAdmin = false;
+  bool canDeleteRequest = false;
   @override
   void initState() {
     super.initState();
@@ -364,6 +367,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   bool isApplied = false;
   Widget getBottombar() {
+    canDeleteRequest = widget.requestItem.sevaUserId ==
+            SevaCore.of(context).loggedInUser.sevaUserID &&
+        widget.requestItem.acceptors.length == 0 &&
+        widget.requestItem.approvedUsers.length == 0 &&
+        widget.requestItem.invitedUsers.length == 0;
     return Container(
       decoration: BoxDecoration(color: Colors.white54, boxShadow: [
         BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
@@ -398,23 +406,52 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 ),
               ),
             ),
-            Offstage(
-              offstage: widget.requestItem.sevaUserId ==
-                  SevaCore.of(context).loggedInUser.sevaUserID,
-              child: Container(
-                margin: EdgeInsets.only(right: 5),
-                width: 100,
-                height: 32,
-                child: FlatButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  padding: EdgeInsets.all(0),
-                  color:
-                      isApplied ? Theme.of(context).accentColor : Colors.green,
-                  child: Row(
-                    children: <Widget>[
-                      SizedBox(width: 1),
+            canDeleteRequest
+                ? Container(
+                    margin: EdgeInsets.only(right: 5),
+                    width: 100,
+                    height: 32,
+                    child: FlatButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: EdgeInsets.all(0),
+                      color: Colors.red,
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(width: 1),
+                          Spacer(),
+                          optionText(
+                              title: AppLocalizations.of(context)
+                                  .translate("accidental_delete", "delete")),
+                          Spacer(
+                            flex: 1,
+                          ),
+                        ],
+                      ),
+                      onPressed: () {
+                        deleteRequestDialog();
+                      },
+                    ),
+                  )
+                : Offstage(
+                    offstage: widget.requestItem.sevaUserId ==
+                        SevaCore.of(context).loggedInUser.sevaUserID,
+                    child: Container(
+                      margin: EdgeInsets.only(right: 5),
+                      width: 100,
+                      height: 32,
+                      child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: EdgeInsets.all(0),
+                        color: isApplied
+                            ? Theme.of(context).accentColor
+                            : Colors.green,
+                        child: Row(
+                          children: <Widget>[
+                            SizedBox(width: 1),
 //                      Container(
 //                        width: 30,
 //                        height: 30,
@@ -427,44 +464,97 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 //                          color: Colors.white,
 //                        ),
 //                      ),
-                      Spacer(),
-                      Text(
-                        isApplied
-                            ? AppLocalizations.of(context)
-                                .translate('requests', 'withdraw_button')
-                            : AppLocalizations.of(context)
-                                .translate('requests', 'apply'),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
+                            Spacer(),
+                            optionText(
+                                title: isApplied
+                                    ? AppLocalizations.of(context).translate(
+                                        'requests', 'withdraw_button')
+                                    : AppLocalizations.of(context)
+                                        .translate('requests', 'apply')),
+                            Spacer(
+                              flex: 1,
+                            ),
+                          ],
                         ),
+                        onPressed: () {
+                          applyAction();
+                          // if (widget.timebankModel.protected) {
+                          //   if (widget.timebankModel.admins.contains(
+                          //       SevaCore.of(context).loggedInUser.sevaUserID)) {
+                          //     applyAction();
+                          //   } else {
+                          //     //show dialog
+                          //     _showProtectedTimebankMessage();
+                          //     print("not authorized");
+                          //   }
+                          // } else {
+                          //   applyAction();
+                          // }
+                        },
                       ),
-                      Spacer(
-                        flex: 1,
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    applyAction();
-                    // if (widget.timebankModel.protected) {
-                    //   if (widget.timebankModel.admins.contains(
-                    //       SevaCore.of(context).loggedInUser.sevaUserID)) {
-                    //     applyAction();
-                    //   } else {
-                    //     //show dialog
-                    //     _showProtectedTimebankMessage();
-                    //     print("not authorized");
-                    //   }
-                    // } else {
-                    //   applyAction();
-                    // }
-                  },
-                ),
-              ),
-            )
+                    ),
+                  )
           ],
         ),
       ),
+    );
+  }
+
+  Widget optionText({String title}) {
+    return Text(
+      title,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        color: Colors.white,
+      ),
+    );
+  }
+
+  void deleteRequestDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            AppLocalizations.of(context)
+                .translate('delete', 'delete_request_title'),
+          ),
+          content: Text(
+            AppLocalizations.of(context)
+                .translate('delete', 'sure_to_delete_request'),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => {Navigator.of(dialogContext).pop()},
+              child: Text(
+                AppLocalizations.of(context).translate(
+                  'notifications_card',
+                  'cancel',
+                ),
+                style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
+              ),
+            ),
+            FlatButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
+              onPressed: () async {
+                await Firestore.instance
+                    .collection('requests')
+                    .document(widget.requestItem.id)
+                    .updateData({'softDelete': true});
+                Navigator.of(dialogContext).pop();
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                AppLocalizations.of(context)
+                    .translate('notifications_card', 'delete'),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

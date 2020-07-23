@@ -829,7 +829,7 @@
     "admin_cannot": "Les administrateurs ne peuvent pas créer de message"
   },
   "coins": {
-    "donate": "Faire un don",
+    "donate": "Faire un don crédits",
     "donate_totimebank": "Faire don de pièces SEVA à une banque de temps",
     "not_enough": "Vous n'avez pas suffisamment de crédits pour faire un don!",
     "donate_coins": "Faire don de crédits SEVA à Timebank",
@@ -988,7 +988,7 @@
     "availablity": "Disponibilité",
     "availablity_desc": "Décrivez ma disponibilité",
     "tutor": "Ex enseigner une classe de python ..",
-    "offer_duration": "Durée de l'offre",
+    "offer_duration": "Durée de l'offre*",
     "prep_hours": "Nombre d'heures de préparation",
     "prep_hours_required": "Nombre d'heures de préparation nécessaires",
     "no_of_class": "Nombre d'heures de cours",
@@ -1237,5 +1237,11 @@
     "change_advisory": " Vous devez fournir les détails de facturation de cette Timebank, y compris la nouvelle adresse de facturation. Le transfert de propriété ne sera pas achevé tant que cela ne sera pas fait.",
     "ownership_suceess": "Toutes nos félicitations! Vous êtes maintenant le nouveau propriétaire de la Timebank ",
     "already_invited": " déjà invité."
+  },
+  "delete":{
+    "delete_request_title": "Delete request",
+    "sure_to_delete_request": "Are you sure you want to delete this request?",
+    "delete_offer_title": "Delete offer",
+    "sure_to_delete_offer": "Are you sure you want to delete this offer?"
   }
 }

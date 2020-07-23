@@ -363,7 +363,7 @@
     "name": "Nombre del proyecto",
     "name_hint": "Ej: mascotas en la ciudad, colaboración ciudadana",
     "name_empty_err": "El nombre del proyecto no puede estar vacío",
-    "duration": "Duración del proyecto",
+    "duration": "Duración del proyecto*",
     "statement": "Estado de la misión",
     "statement_hint": "Ej: un poco más sobre su proyecto que ayudará a asociarse con",
     "statement_empty_err": "La declaración de misión no puede estar vacía.",
@@ -693,7 +693,7 @@
     "request_title": "Título da solicitação *",
     "small_carpenty": "Ex: pequenos trabalhos de carpintaria ...",
     "subject": "Digite o assunto da sua solicitação",
-    "duration": "Duração da solicitação",
+    "duration": "Duração da solicitação*",
     "yang_desc": "Gang Gang Solicitar descrição",
     "desc": "Solicitar descrição *",
     "request_hash": "Sua solicitação e qualquer #hashtags",
@@ -829,7 +829,7 @@
     "admin_cannot": "Los administradores no pueden crear mensajes"
   },
   "coins": {
-    "donate": "Donar",
+    "donate": "Donar Monedas",
     "donate_totimebank": "Done monedas seva al banco de tiempo",
     "not_enough": "¡No tienes suficientes créditos para donar!",
     "donate_coins": "Done monedas seva al banco de tiempo",
@@ -988,7 +988,7 @@
     "availablity": "Disponibilidade",
     "availablity_desc": "Descrever minha disponibilidade",
     "tutor": "Ex dando aula de python ..",
-    "offer_duration": "Duração da oferta",
+    "offer_duration": "Duração da oferta*",
     "prep_hours": "Nº de horas de preparação",
     "prep_hours_required": "Número de horas de preparação necessárias",
     "no_of_class": "Nº de horas de aula",
@@ -1238,5 +1238,11 @@
     "change_advisory": " Debe proporcionar los detalles de facturación de este Timebank, incluida la nueva dirección de facturación. La transferencia de propiedad no se completará hasta que se haga esto.",
     "ownership_suceess": "¡Felicidades! Ahora eres el nuevo propietario del Banco de tiempo ",
     "already_invited": " Ya invitado."
+  },
+  "delete":{
+    "delete_request_title": "Delete request",
+    "sure_to_delete_request": "Are you sure you want to delete this request?",
+    "delete_offer_title": "Delete offer",
+    "sure_to_delete_offer": "Are you sure you want to delete this offer?"
   }
 }
