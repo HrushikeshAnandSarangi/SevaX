@@ -1,13 +1,9 @@
-//import 'dart:ffi';
-
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:http/http.dart' as http;
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
@@ -156,7 +152,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                     case NotificationType.RequestAccept:
                       RequestModel model =
                           RequestModel.fromMap(notification.data);
-                      // TODO needs flow correction to tasks model and transaction model
+
                       return FutureBuilder<RequestModel>(
                           future: FirestoreManager.getRequestFutureById(
                             requestId: model.id,
@@ -182,7 +178,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                     case NotificationType.TypeChangeOwnership:
                       ChangeOwnershipModel ownershipModel =
                           ChangeOwnershipModel.fromMap(notification.data);
-                      // TODO needs flow correction to tasks model and transaction model
+
                       return getChangeOwnershipNotificationWidget(
                           notificationId: notification.id,
                           communityId: notification.communityId,
@@ -292,57 +288,24 @@ class NotificationsView extends State<NotificationViewHolder> {
                       );
                       break;
                     case NotificationType.TransactionCredit:
-                      // TODO: Handle this case.
                       TransactionModel model =
                           TransactionModel.fromMap(notification.data);
-                      //  return Text('jhb');
+
                       return getNotificationCredit(
                           model, notification.senderUserId, notification.id);
                       break;
                     case NotificationType.TransactionDebit:
                       TransactionModel model =
                           TransactionModel.fromMap(notification.data);
-                      // return Text('ko');
+
                       return getNotificationDebit(
                           model, notification.senderUserId, notification.id);
                       break;
                     case NotificationType.OfferAccept:
                       return Container();
-                      //   OfferModel offerModel = OfferModel.fromMap(notification.data);
 
-                      //   List<NotificationsModel> offerAcceptNotificationList =
-                      //       notifications.where((noti) {
-                      //     if (noti.type == NotificationType.OfferAccept) return true;
-                      //     return false;
-                      //   }).toList();
-                      //   return getOfferAcceptNotification(
-                      //     offerModel,
-                      //     notification.senderUserId,
-                      //     notification.targetUserId,
-                      //     notification.id,
-                      //     offerModel.requestList.elementAt(0),
-                      //     offerAcceptNotificationList,
-                      //   );
-                      // return Column(
-                      //   children: offerModel.requestList.map<Widget>((value) {
-                      //     return getOfferAcceptNotification(
-                      //         offerModel,
-                      //         notification.senderUserId,
-                      //         notification.targetUserId,
-                      //         notification.id,
-                      //         value);
-                      //   }).toList(),
-                      // );
-
-                      // return getOfferAcceptNotification(
-                      //   offerModel,
-                      //   notification.senderUserId,
-                      //   notification.targetUserId,
-                      //   notification.id,
-                      // );
                       break;
                     case NotificationType.OfferReject:
-                      // TODO: Handle this case.
                       return Container(
                           width: 50, height: 50, color: Colors.red);
                       break;
@@ -367,13 +330,9 @@ class NotificationsView extends State<NotificationViewHolder> {
                                 user, notification.id, acceptedOffer, context);
                           });
 
-                      // return Text(
-                      //     'Acceptance Request ' + acceptedOffer.notificationContent);
                       break;
 
                     case NotificationType.RequestInvite:
-                      // TODO: Handle this case.
-
                       print("notification data ${notification.data}");
                       RequestInvitationModel requestInvitationModel =
                           RequestInvitationModel.fromMap(notification.data);
@@ -386,8 +345,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                       );
                       break;
                     case NotificationType.GroupJoinInvite:
-                      // TODO: Handle this case.
-
                       print("notification data ${notification.data}");
                       GroupInviteUserModel groupInviteUserModel =
                           GroupInviteUserModel.fromMap(notification.data);
@@ -399,36 +356,13 @@ class NotificationsView extends State<NotificationViewHolder> {
                       );
                       break;
 
-                    // One to many offer notifications(user)
-                    // DEBIT_FROM_OFFER,
-                    // CREDIT_FROM_OFFER,//user notification
-                    // NEW_MEMBER_SIGNUP_OFFER,//user notification
-                    // OFFER_FULFILMENT_ACHIEVED,// user notification
-                    // OFFER_SUBSCRIPTION_COMPLETED,//user ///successfully signed up
-                    // FEEDBACK_FROM_SIGNUP_MEMBER,//feedback user
-
-                    //TODO implement
-                    // case NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED:
-                    //   OneToManyNotificationDataModel data =
-                    //       OneToManyNotificationDataModel.fromJson(notification.data);
-
-                    //   return Container(
-                    //     child: Text(
-                    //         "${notification.type} ${data?.classDetails?.classTitle}  ${data?.participantDetails?.fullname}"),
-                    //     color: Colors.purple,
-                    //     height: 30,
-                    //   );
-                    //   break;
-
-                    //Creator notifications
                     case NotificationType.TYPE_CREDIT_FROM_OFFER:
                       OneToManyNotificationDataModel data =
                           OneToManyNotificationDataModel.fromJson(
                               notification.data);
 
                       return NotificationCard(
-                        photoUrl:
-                            '', //get timebank photourl// data.participantDetails.photourl,
+                        photoUrl: '',
                         title: AppLocalizations.of(context)
                             .translate('notifications', 'credited'),
                         subTitle: UserNotificationMessage.CREDIT_FROM_OFFER
@@ -470,8 +404,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                               notification.data);
 
                       return NotificationCard(
-                        photoUrl:
-                            '', //get timebank photourl// data.participantDetails.photourl,
+                        photoUrl: '',
                         title:
                             "${AppLocalizations.of(context).translate('notifications', 'creditsfor')} ${data.classDetails.classTitle}",
                         subTitle: UserNotificationMessage
@@ -488,8 +421,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                         onDismissed: onDismissed,
                       );
                       break;
-
-                    //Member notifications
 
                     case NotificationType.TYPE_DEBIT_FROM_OFFER:
                       OneToManyNotificationDataModel data =
@@ -587,12 +518,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                       log("Unhandled user notification type ${notification.type} ${notification.id}");
                       Crashlytics().log(
                           "Unhandled notification type ${notification.type} ${notification.id}");
-                      return Container(
-                          // child: Text(
-                          //   "Unhandled notification type ${notification.type} ${notification.id}",
-                          // ),
-                          // color: Colors.red,
-                          );
+                      return Container();
                   }
                 },
               ),
@@ -610,7 +536,6 @@ class NotificationsView extends State<NotificationViewHolder> {
     String timebankId,
     String communityId,
   }) {
-    // assert(user != null);
     return NotificationCard(
       entityName: userAddedModel.adminName,
       isDissmissible: true,
@@ -637,7 +562,6 @@ class NotificationsView extends State<NotificationViewHolder> {
     String timebankId,
     String communityId,
   }) {
-    // assert(user != null);
     return NotificationCard(
       entityName: changeOwnershipModel.creatorName,
       isDissmissible: true,
@@ -813,7 +737,6 @@ class NotificationsView extends State<NotificationViewHolder> {
           return notificationShimmer;
         }
         UserModel user = snapshot.data;
-        //bool fromOffer;
 
         return FutureBuilder<Object>(
             future: FirestoreManager.getUserForId(sevaUserId: loggedinUserID),
@@ -834,7 +757,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                         }
                         return SlideAction(
                           onTap: () {
-                            //fromOffer = true;
                             Set<String> acceptorList =
                                 Set.from(model.acceptors);
                             acceptorList.add(loggedinUser.email);
@@ -971,7 +893,6 @@ class NotificationsView extends State<NotificationViewHolder> {
       String reviewer,
       String reviewed,
       String requestId}) {
-    // adds review to firestore
     Firestore.instance.collection("reviews").add({
       "reviewer": reviewer,
       "reviewed": reviewed,
@@ -1008,7 +929,6 @@ class NotificationsView extends State<NotificationViewHolder> {
             secondaryActions: <Widget>[],
             child: GestureDetector(
               onTap: () async {
-                //check member balance
                 var canApproveTransaction =
                     await FirestoreManager.hasSufficientCredits(
                   credits: transactionModel.credits,
@@ -1021,7 +941,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                   return;
                 }
 
-                // member has sufficent balance
                 showMemberClaimConfirmation(
                   context: context,
                   notificationId: notificationId,
@@ -1103,8 +1022,6 @@ class NotificationsView extends State<NotificationViewHolder> {
       String notificationId,
       BuildContext buildContext,
       String communityId) {
-    // assert(user != null);
-
     return NotificationCard(
       entityName: groupInviteUserModel.timebankName.toLowerCase(),
       isDissmissible: true,
@@ -1181,8 +1098,6 @@ class NotificationsView extends State<NotificationViewHolder> {
       BuildContext buildContext,
       String timebankId,
       String communityId) {
-    // assert(user != null);
-
     return NotificationCard(
       entityName: requestInvitationModel.timebankName.toLowerCase(),
       isDissmissible: true,
@@ -1224,7 +1139,6 @@ class NotificationsView extends State<NotificationViewHolder> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(25.0))),
             content: Form(
-              //key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -1258,16 +1172,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ),
-//                  Padding(
-//                    padding: EdgeInsets.all(8.0),
-//                    child: Text(
-//                      userModel.bio == null
-//                          ? "Bio not yet updated"
-//                          : userModel.bio,
-//                      maxLines: 5,
-//                      overflow: TextOverflow.ellipsis,
-//                    ),
-//                  ),
                   getBio(userModel),
                   Padding(
                       padding: EdgeInsets.all(8.0),
@@ -1297,7 +1201,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
-                            // Once approved take for feeddback
                             approveMemberClaim(
                                 context: context,
                                 model: requestModel,
@@ -1320,7 +1223,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
-                            // reject the claim
                             rejectMemberClaimForEvent(
                               context: context,
                               model: requestModel,
@@ -1376,38 +1278,14 @@ class NotificationsView extends State<NotificationViewHolder> {
     String notificationId,
     double credits,
   }) async {
-    //request for feedback;
-    // if (model.requestMode == RequestMode.PERSONAL_REQUEST) {
-    //   var sevaCoinsValue = await FirestoreManager.getMemberBalance(
-    //     SevaCore.of(context).loggedInUser.email,
-    //     SevaCore.of(context).loggedInUser.sevaUserID,
-    //   );
-
-    //   var lowerLimit = json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
-
-    //   var finalbalance = (sevaCoinsValue + lowerLimit ?? 10);
-
-    //   print("----------- My Balance ${finalbalance}");
-
-    //   if (credits <= finalbalance) {
-    //     //show dialog for insuffcient balance
-    //     print("Insufficient balance ${}");
-    //   } else {
-    //     //let it go
-    //     print("Good to go balance ----------------");
-
-    //   }
-    // }
-
-    // return;
-
     checkForFeedback(
-        userId: userId,
-        user: user,
-        context: context,
-        model: model,
-        notificationId: notificationId,
-        sevaCore: SevaCore.of(context));
+      userId: userId,
+      user: user,
+      context: context,
+      model: model,
+      notificationId: notificationId,
+      sevaCore: SevaCore.of(context),
+    );
   }
 
   void rejectMemberClaimForEvent(
@@ -1428,7 +1306,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       userId: userId,
       communityid: SevaCore.of(context).loggedInUser.currentCommunity,
     );
-    // creating chat
+
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     ParticipantInfo sender = ParticipantInfo(
       id: loggedInUser.sevaUserID,
@@ -1460,8 +1338,6 @@ class NotificationsView extends State<NotificationViewHolder> {
       String notificationId,
       JoinRequestNotificationModel model,
       BuildContext context) {
-    // assert(user != null);
-
     return Dismissible(
         background: dismissibleBackground,
         key: Key(Utils.getUuid()),
@@ -1550,23 +1426,6 @@ class NotificationsView extends State<NotificationViewHolder> {
         ),
       ),
     );
-
-    // return StreamBuilder<UserModel>(
-    //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
-    //   builder: (context, snapshot) {
-    //     if (snapshot.hasError) {
-    //       return Center(
-    //         child: Container(),
-    //       );
-    //     }
-
-    //     if (snapshot.connectionState == ConnectionState.waiting) {
-    //       return notificationShimmer;
-    //     }
-
-    //     UserModel user = snapshot.data;
-    //   },
-    // );
   }
 
   Widget getNotificationRequestRejectWidget(
@@ -1595,22 +1454,6 @@ class NotificationsView extends State<NotificationViewHolder> {
         ),
       ),
     );
-
-    // return StreamBuilder<UserModel>(
-    //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
-    //   builder: (context, snapshot) {
-    //     if (snapshot.hasError) {
-    //       return Center(
-    //         child: Container(),
-    //       );
-    //     }
-    //     if (snapshot.connectionState == ConnectionState.waiting) {
-    //       return notificationShimmer;
-    //     }
-
-    //     UserModel user = snapshot.data;
-    //   },
-    // );
   }
 
   Widget getNotificationTaskCompletedRejectWidget(
@@ -1635,73 +1478,10 @@ class NotificationsView extends State<NotificationViewHolder> {
           ),
           subtitle: Text(
               '${AppLocalizations.of(context).translate('notifications', 'task_rejected_by')} ${model.fullName}'),
-          onTap: () {
-            // hibernated for release, check timebank protection status
-            // String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-            // List users = [model.timebankId, loggedInEmail];
-            // users.sort();
-            // ChatModel chatModel = ChatModel();
-            // chatModel.communityId =
-            //     SevaCore.of(context).loggedInUser.currentCommunity;
-            // chatModel.user1 = users[0];
-            // chatModel.user2 = users[1];
-            // chatModel.timebankId = widget.timebankId;
-
-            // createChat(chat: chatModel);
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //       builder: (context) => ChatView(
-            //             useremail: model.timebankId,
-            //             chatModel: chatModel,
-            //           )),
-            // );
-          },
+          onTap: () {},
         ),
       ),
     );
-    // return StreamBuilder<UserModel>(
-    //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
-    //   builder: (context, snapshot) {
-    //     if (snapshot.hasError) {
-    //       return Center(
-    //         child: Container(),
-    //       );
-    //     }
-
-    //     if (snapshot.connectionState == ConnectionState.waiting) {
-    //       return notificationShimmer;
-    //     }
-
-    //     UserModel user = snapshot.data;
-
-    //   },
-    // );
-  }
-
-  Future<http.Response> scheduleNotification(
-      {RequestModel model, UserModel userModel}) {
-    var url =
-        "https://us-central1-sevaexchange.cloudfunctions.net/sendNotifications";
-
-    var body = jsonEncode({
-      "request_start": model.requestStart,
-      "notification": {
-        "title":
-            "${model.title} ${AppLocalizations.of(context).translate('notifications', 'event_about_to')}",
-        "body":
-            "${model.title} ${AppLocalizations.of(context).translate('notifications', 'would_be_starting')}",
-        "icon": "firebase-icon.png"
-      },
-      "data": {
-        "message": AppLocalizations.of(context)
-            .translate('notifications', 'enter_message')
-      },
-      "to": userModel.tokens
-    });
-
-    return http.post(url,
-        headers: {"Content-Type": "application/json"}, body: body);
   }
 
   Widget getNotificationAcceptedWidget(
@@ -1798,7 +1578,6 @@ class NotificationsView extends State<NotificationViewHolder> {
     );
   }
 
-// crate dialog for approval or rejection
   void showDialogForApproval({
     BuildContext context,
     UserModel userModel,
@@ -1812,7 +1591,6 @@ class NotificationsView extends State<NotificationViewHolder> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(25.0))),
             content: Form(
-              //key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -1848,16 +1626,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                       ),
                     ),
                   getBio(userModel),
-//                  Padding(
-//                    padding: EdgeInsets.all(8.0),
-//                    child: Text(
-//                      userModel.bio == null
-//                          ? "Bio not yet updated"
-//                          : userModel.bio,
-//                      maxLines: 5,
-//                      overflow: TextOverflow.ellipsis,
-//                    ),
-//                  ),
                   Center(
                     child: Text(
                         "${AppLocalizations.of(context).translate('notifications', 'by_approving_short')}, ${userModel.fullname} ${AppLocalizations.of(context).translate('notifications', 'add_to')}.",
@@ -1883,7 +1651,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                                 color: Colors.white, fontFamily: 'Europa'),
                           ),
                           onPressed: () async {
-                            // Once approved
                             approveMemberForVolunteerRequest(
                                 model: requestModel,
                                 notificationId: notificationId,
@@ -1907,7 +1674,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                             ),
                           ),
                           onPressed: () async {
-                            // request declined
                             declineRequestedMember(
                                 model: requestModel,
                                 notificationId: notificationId,
@@ -2011,723 +1777,3 @@ class NotificationsView extends State<NotificationViewHolder> {
     );
   }
 }
-
-//class NotificationsView extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return ListView(
-//      children: <Widget>[
-//        StreamBuilder<List<RequestModel>>(
-//          stream: FirestoreManager.getRequestsNotificationsForUser(
-//            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-//          ),
-//          builder: (context, snapshot) {
-//            if (snapshot.connectionState == ConnectionState.waiting) {
-//              return Container();
-//            }
-//            List<RequestModel> requestModelList = snapshot.data;
-//
-//            List<Widget> requestList = [];
-//
-//            requestList.add(
-//              Padding(
-//                padding: const EdgeInsets.only(left: 8.0, top: 16),
-//                child: Text(
-//                  'Requests',
-//                  style: TextStyle(
-//                      fontSize: 12.0,
-//                      color: Colors.black,
-//                      fontWeight: FontWeight.bold),
-//                ),
-//              ),
-//            );
-//
-//            requestModelList.forEach(
-//              (requestModel) {
-//                requestList
-//                    .add(getNotificationRequest(requestModel: requestModel));
-//              },
-//            );
-//
-//            return Column(
-//              crossAxisAlignment: CrossAxisAlignment.start,
-//              children: requestModelList.length > 0 ? requestList : [],
-//            );
-//          },
-//        ),
-//        StreamBuilder<List<RequestModel>>(
-//          stream: FirestoreManager.getRequestApprovalNotificationForUser(
-//            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-//          ),
-//          builder: (context, snapshot) {
-//            if (snapshot.connectionState == ConnectionState.waiting) {
-//              return Container();
-//            }
-//            List<RequestModel> requestModelList = snapshot.data;
-//
-//            List<Widget> notificationList = [];
-//
-//            notificationList.add(Padding(
-//              padding: const EdgeInsets.only(left: 8.0, top: 16),
-//              child: Text('Approvals',
-//                  style: TextStyle(
-//                      fontSize: 12.0,
-//                      color: Colors.black,
-//                      fontWeight: FontWeight.bold)),
-//            ));
-//
-//            requestModelList.forEach(
-//              (requestModel) {
-//                if (requestModel.durationOfRequest != null &&
-//                    requestModel.durationOfRequest > 0) {
-//                  notificationList.add(
-//                    getNotificationCompletedWidget(
-//                      requestModel: requestModel,
-//                    ),
-//                  );
-//                } else {
-//                  notificationList.add(
-//                    getNotificationApprovedWidget(
-//                      requestModel: requestModel,
-//                    ),
-//                  );
-//                }
-//              },
-//            );
-//
-//            return Column(
-//              children: requestModelList.length > 0 ? notificationList : [],
-//              crossAxisAlignment: CrossAxisAlignment.start,
-//            );
-//          },
-//        ),
-//        StreamBuilder<List<RequestModel>>(
-//          stream: FirestoreManager.getRequestCompletionNotificationForUser(
-//            sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
-//          ),
-//          builder: (context, snapshot) {
-//            if (snapshot.connectionState == ConnectionState.waiting) {
-//              return Container();
-//            }
-//            List<RequestModel> requestModelList = snapshot.data;
-//            List<Widget> notificationList = [];
-//
-//            notificationList.add(
-//              Padding(
-//                padding: const EdgeInsets.only(left: 8.0, top: 16),
-//                child: Text(
-//                  'Completed',
-//                  style: TextStyle(
-//                      fontSize: 12.0,
-//                      color: Colors.black,
-//                      fontWeight: FontWeight.bold),
-//                ),
-//              ),
-//            );
-//
-//            requestModelList.forEach((requestModel) {
-//              notificationList.add(
-//                getApproveDurationWidget(
-//                  requestModel: requestModel,
-//                ),
-//              );
-//            });
-//
-//            return Column(
-//              crossAxisAlignment: CrossAxisAlignment.start,
-//              children: requestModelList.length > 0 ? notificationList : [],
-//            );
-//          },
-//        ),
-//        StreamBuilder<List<RequestModel>>(
-//          stream: FirestoreManager.getRejectionStream(
-//            userId: SevaCore.of(context).loggedInUser.sevaUserID,
-//          ),
-//          builder: (context, snapshot) {
-//            if (snapshot.connectionState == ConnectionState.waiting) {
-//              return Container();
-//            }
-//            if (snapshot.data == null) {
-//              return Text('No Data');
-//            }
-//            List<RequestModel> rejectionList = snapshot.data;
-//            return Column(
-//              mainAxisSize: MainAxisSize.min,
-//              crossAxisAlignment: CrossAxisAlignment.start,
-//              children: <Widget>[
-//                rejectionList.length > 0
-//                    ? Padding(
-//                        padding: const EdgeInsets.only(left: 8.0, top: 16),
-//                        child: Text(
-//                          'Rejected',
-//                          style: TextStyle(
-//                              fontSize: 12.0,
-//                              color: Colors.black,
-//                              fontWeight: FontWeight.bold),
-//                        ),
-//                      )
-//                    : Container(),
-//                ...rejectionList.map((model) {
-//                  return getRejectionNotification(
-//                    context: context,
-//                    requestModel: model,
-//                  );
-//                }).toList()
-//              ],
-//            );
-//          },
-//        ),
-//        StreamBuilder<List<OfferModel>>(
-//          stream: FirestoreManager.getOfferNotificationStream(
-//            userId: SevaCore.of(context).loggedInUser.sevaUserID,
-//          ),
-//          builder: (context, snapshot) {
-//            if (snapshot.hasError) return Container();
-//            if (snapshot.connectionState == ConnectionState.waiting) {
-//              return Container();
-//            }
-//            List<OfferModel> offerList = snapshot.data;
-//            return Column(
-//              crossAxisAlignment: CrossAxisAlignment.start,
-//              children: <Widget>[
-//                offerList.length < 1
-//                    ? Container()
-//                    : Padding(
-//                        padding: const EdgeInsets.only(left: 8.0, top: 16),
-//                        child: Text(
-//                          'Requests on your offers',
-//                          style: TextStyle(
-//                              fontSize: 12.0,
-//                              color: Colors.black,
-//                              fontWeight: FontWeight.bold),
-//                        ),
-//                      ),
-//                ...offerList.map((offer) {
-//                  return getOfferRequestWidget(offer: offer);
-//                }).toList(),
-//              ],
-//            );
-//          },
-//        ),
-//        StreamBuilder<List<RequestModel>>(
-//          stream: FirestoreManager.getOfferRequestApprovedNotificationStream(
-//            userId: SevaCore.of(context).loggedInUser.sevaUserID,
-//          ),
-//          builder: (context, snapshot) {
-//            if (snapshot.hasError) return Container();
-//            if (snapshot.connectionState == ConnectionState.waiting) {
-//              return Container();
-//            }
-//            List<RequestModel> requestList = snapshot.data;
-//            return Column(
-//              crossAxisAlignment: CrossAxisAlignment.start,
-//              children: <Widget>[
-//                requestList.length < 1
-//                    ? Container()
-//                    : Padding(
-//                        padding: const EdgeInsets.only(left: 8.0, top: 16),
-//                        child: Text(
-//                          'Request approved on offer',
-//                          style: TextStyle(
-//                              fontSize: 12.0,
-//                              color: Colors.black,
-//                              fontWeight: FontWeight.bold),
-//                        ),
-//                      ),
-//                ...requestList.map((model) {
-//                  return Slidable(
-//                    delegate: SlidableDrawerDelegate(),
-//                    actions: <Widget>[
-//                      IconSlideAction(
-//                        icon: Icons.delete,
-//                        onTap: () {
-//                          FirestoreManager.deleteOfferRequestApproval(
-//                              request: model);
-//                        },
-//                        caption: 'Dismiss',
-//                        color: Colors.red,
-//                        foregroundColor: Colors.white,
-//                      )
-//                    ],
-//                    child: ListTile(
-//                      title: Text(model.title),
-//                      subtitle: FutureBuilder<UserModel>(
-//                        future: FirestoreManager.getUserForId(
-//                            sevaUserId: model.approvedUserId),
-//                        builder: (context, snapshot) {
-//                          if (snapshot.hasError) return Text(snapshot.error);
-//                          if (snapshot.connectionState ==
-//                              ConnectionState.waiting) {
-//                            return Container();
-//                          }
-//                          UserModel user = snapshot.data;
-//                          return Text(user.fullname);
-//                        },
-//                      ),
-//                      leading: FutureBuilder<UserModel>(
-//                        future: FirestoreManager.getUserForId(
-//                            sevaUserId: model.approvedUserId),
-//                        builder: (context, snapshot) {
-//                          if (snapshot.hasError)
-//                            return CircleAvatar(
-//                              backgroundColor: Colors.red,
-//                            );
-//                          if (snapshot.connectionState ==
-//                              ConnectionState.waiting) {
-//                            return CircleAvatar(
-//                              backgroundColor: Colors.grey,
-//                            );
-//                          }
-//                          UserModel user = snapshot.data;
-//                          return CircleAvatar(
-//                            backgroundImage: NetworkImage(
-//                              user.photoURL,
-//                            ),
-//                          );
-//                        },
-//                      ),
-//                    ),
-//                  );
-//                }).toList(),
-//              ],
-//            );
-//          },
-//        ),
-//      ],
-//    );
-//  }
-//
-//  Widget getOfferRequestWidget({@required OfferModel offer}) {
-//    return Container(
-//      padding: EdgeInsets.all(16.0),
-//      child: Column(
-//        crossAxisAlignment: CrossAxisAlignment.start,
-//        children: <Widget>[
-//          Text(offer.title),
-//          ...offer.requestList.map((requestId) {
-//            return StreamBuilder<RequestModel>(
-//              stream:
-//                  FirestoreManager.getRequestStreamById(requestId: requestId),
-//              builder: (context, snapshot) {
-//                if (snapshot.hasError) return Text(snapshot.error);
-//                if (snapshot.connectionState == ConnectionState.waiting) {
-//                  return Container();
-//                }
-//                RequestModel request = snapshot.data;
-//                return Slidable(
-//                  child: Card(
-//                    child: ListTile(
-//                      dense: true,
-//                      title: Text(request.title),
-//                      subtitle: Text(request.description),
-//                      leading: FutureBuilder<UserModel>(
-//                          future: FirestoreManager.getUserForId(
-//                            sevaUserId: request.sevaUserId,
-//                          ),
-//                          builder: (context, snapshot) {
-//                            if (snapshot.hasError) return Text(snapshot.error);
-//                            if (snapshot.connectionState ==
-//                                ConnectionState.waiting) {
-//                              return CircleAvatar(backgroundColor: Colors.grey);
-//                            }
-//                            UserModel user = snapshot.data;
-//                            return CircleAvatar(
-//                              backgroundImage: NetworkImage(user.photoURL),
-//                            );
-//                          }),
-//                    ),
-//                  ),
-//                  delegate: SlidableDrawerDelegate(),
-//                  actions: <Widget>[
-//                    IconSlideAction(
-//                      icon: Icons.check,
-//                      foregroundColor: Colors.white,
-//                      color: Colors.green,
-//                      caption: 'Approve',
-//                      onTap: () {
-//                        RequestModel updatedRequest = request;
-//                        updatedRequest.accepted = true;
-//                        List<String> approvedUsers =
-//                            request.approvedUsers.map((s) => s).toList();
-//                        approvedUsers
-//                            .add(SevaCore.of(context).loggedInUser.sevaUserID);
-//                        updatedRequest.approvedUsers = approvedUsers;
-//
-//                        OfferModel updatedOffer = offer;
-//                        updatedOffer.associatedRequest = updatedRequest.id;
-//
-//                        FirestoreManager.acceptOfferRequest(
-//                          offer: updatedOffer,
-//                          request: updatedRequest,
-//                        );
-//                      },
-//                    )
-//                  ],
-//                );
-//              },
-//            );
-//          }).toList(),
-//        ],
-//      ),
-//    );
-//  }
-//
-//  Widget getApproveDurationWidget({@required RequestModel requestModel}) {
-//    return StreamBuilder<UserModel>(
-//      stream: FirestoreManager.getUserForIdStream(
-//        sevaUserId: requestModel.approvedUserId,
-//      ),
-//      builder: (context, snapshot) {
-//        if (snapshot.connectionState == ConnectionState.waiting) {
-//          return Container();
-//        }
-//        UserModel user = snapshot.data;
-//        return Slidable(
-//          delegate: SlidableScrollDelegate(),
-//          actions: [
-//            Padding(
-//              padding: EdgeInsets.only(
-//                top: 8,
-//                bottom: 8,
-//              ),
-//              child: IconSlideAction(
-//                icon: Icons.check,
-//                color: Colors.green,
-//                caption: 'Approve',
-//                onTap: () {
-//                  FirestoreManager.approveRequestCompletion(
-//                      requestModel: requestModel);
-//                },
-//                foregroundColor: Colors.white,
-//              ),
-//            ),
-//          ],
-//          secondaryActions: [
-//            Padding(
-//              padding: EdgeInsets.only(
-//                top: 8,
-//                bottom: 8,
-//              ),
-//              child: IconSlideAction(
-//                icon: Icons.close,
-//                color: Colors.red,
-//                caption: 'Reject',
-//                onTap: () {
-//                  _showRequestCompletionRejectAlertDialog(
-//                    context: context,
-//                    requestModel: requestModel,
-//                  );
-//                },
-//                foregroundColor: Colors.white,
-//              ),
-//            ),
-//          ],
-//          child: Card(
-//            child: ListTile(
-//              title: Text(requestModel.title),
-//              subtitle: Text('Approve for ${getHoursAndMinutes(
-//                timeInMinutes: requestModel.durationOfRequest,
-//              )}'),
-//              trailing: Column(
-//                children: <Widget>[
-//                  CircleAvatar(
-//                    backgroundImage: NetworkImage(user.photoURL),
-//                  )
-//                ],
-//              ),
-//            ),
-//          ),
-//        );
-//      },
-//    );
-//  }
-//
-//  void _showRequestCompletionRejectAlertDialog({
-//    @required BuildContext context,
-//    @required RequestModel requestModel,
-//  }) {
-//    final GlobalKey<FormState> _formKey = GlobalKey();
-//    String rejectReason = '';
-//
-//    showDialog(
-//      context: context,
-//      barrierDismissible: true,
-//      builder: (context) {
-//        return GestureDetector(
-//          onTap: () {
-//            FocusScope.of(context).requestFocus(FocusNode());
-//          },
-//          child: Container(
-//            width: double.infinity,
-//            child: AlertDialog(
-//              title: Text('Reject Request'),
-//              actions: <Widget>[
-//                FlatButton(
-//                  onPressed: () => Navigator.of(context).pop(),
-//                  child: Text('Cancel'),
-//                ),
-//                RaisedButton(
-//                  shape: RoundedRectangleBorder(
-//                    borderRadius: BorderRadius.all(
-//                      Radius.circular(12.0),
-//                    ),
-//                  ),
-//                  onPressed: () {
-//                    if (!_formKey.currentState.validate()) return;
-//                    RequestModel updatedRequest = requestModel;
-//                    updatedRequest.rejectedReason = rejectReason;
-//                    FirestoreManager.rejectRequestCompletion(
-//                        requestModel: updatedRequest);
-//                    Navigator.of(context).pop();
-//                  },
-//                  child: Padding(
-//                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-//                    child: Text(
-//                      'Reject',
-//                      style: TextStyle(color: Colors.white),
-//                    ),
-//                  ),
-//                  color: Theme.of(context).primaryColor,
-//                ),
-//              ],
-//              content: SingleChildScrollView(
-//                child: Column(
-//                  crossAxisAlignment: CrossAxisAlignment.start,
-//                  children: <Widget>[
-//                    Form(
-//                      key: _formKey,
-//                      child: Padding(
-//                        padding: const EdgeInsets.all(8.0),
-//                        child: TextFormField(
-//                          decoration: InputDecoration(
-//                            hasFloatingPlaceholder: true,
-//                            labelText: 'Reason for Rejecting',
-//                            border: OutlineInputBorder(),
-//                          ),
-//                          validator: (value) {
-//                            if (value.isEmpty)
-//                              return 'Provide reason for rejection';
-//                            if (value.length < 10) return 'Reason is too short';
-//                            rejectReason = value;
-//                            return null;
-//                          },
-//                          autocorrect: true,
-//                          maxLength: 100,
-//                          textCapitalization: TextCapitalization.sentences,
-//                          maxLines: 2,
-//                        ),
-//                      ),
-//                    ),
-//                  ],
-//                ),
-//              ),
-//            ),
-//          ),
-//        );
-//      },
-//    );
-//  }
-//
-//  Widget getNotificationCompletedWidget({
-//    @required RequestModel requestModel,
-//  }) {
-//    return Slidable(
-//      delegate: SlidableDrawerDelegate(),
-//      actions: <Widget>[
-//        IconSlideAction(
-//          icon: Icons.delete,
-//          color: Colors.red,
-//          foregroundColor: Colors.white,
-//          caption: 'Dismiss',
-//          onTap: () {
-//            FirestoreManager.deleteApprovalNotification(
-//              requestModel: requestModel,
-//            );
-//          },
-//        ),
-//      ],
-//      child: ListTile(
-//        title: Text('${requestModel.title}'),
-//        subtitle:
-//            Text('Approved That the task was completed in ${getHoursAndMinutes(
-//          timeInMinutes: requestModel.durationOfRequest,
-//        )}'),
-//      ),
-//    );
-//  }
-//
-//  Widget getNotificationApprovedWidget({@required RequestModel requestModel}) {
-//    return Column(
-//      crossAxisAlignment: CrossAxisAlignment.start,
-//      children: <Widget>[
-//        StreamBuilder<Object>(
-//            stream: FirestoreManager.getUserForIdStream(
-//              sevaUserId: requestModel.sevaUserId,
-//            ),
-//            builder: (context, snapshot) {
-//              if (snapshot.connectionState == ConnectionState.waiting) {
-//                return Center(child: CircularProgressIndicator());
-//              }
-//              UserModel user = snapshot.data;
-//              return Slidable(
-//                delegate: SlidableDrawerDelegate(),
-//                actions: <Widget>[
-//                  IconSlideAction(
-//                    icon: Icons.delete,
-//                    color: Colors.red,
-//                    foregroundColor: Colors.white,
-//                    caption: 'Dismiss',
-//                    onTap: () {
-//                      FirestoreManager.deleteApprovalNotification(
-//                        requestModel: requestModel,
-//                      );
-//                    },
-//                  ),
-//                ],
-//                child: ListTile(
-//                  title: Text('${requestModel.title}'),
-//                  subtitle: Text('Approved by ${user.fullname}'),
-//                  leading: CircleAvatar(
-//                    child: Icon(
-//                      Icons.check_circle,
-//                      color: Colors.green,
-//                      size: 32.0,
-//                    ),
-//                    backgroundColor: Colors.white.withAlpha(0),
-//                  ),
-//                ),
-//              );
-//            }),
-//      ],
-//    );
-//  }
-//
-//  Widget getRejectionNotification({
-//    @required BuildContext context,
-//    @required RequestModel requestModel,
-//  }) {
-//    return Card(
-//      child: ListTile(
-//        onTap: () {
-//          requestModel.color = Color.fromRGBO(237, 230, 110, 1.0);
-//          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-//            return TaskCardView(
-//              requestModel: requestModel,
-//            );
-//          }));
-//        },
-//        title: Text('${requestModel.title}'),
-//        subtitle: Text('${requestModel.rejectedReason}'),
-//        leading: CircleAvatar(
-//          child: Icon(
-//            Icons.error,
-//            color: Colors.red,
-//            size: 32.0,
-//          ),
-//          backgroundColor: Colors.white.withAlpha(0),
-//        ),
-//      ),
-//    );
-//  }
-//
-//  Widget getNotificationRequest({@required RequestModel requestModel}) {
-//    return requestModel.acceptors.length > 0
-//        ? Container(
-//            padding: EdgeInsets.only(top: 16.0),
-//            child: Column(
-//              crossAxisAlignment: CrossAxisAlignment.start,
-//              children: <Widget>[
-//                Padding(
-//                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-//                  child: Text('${requestModel.title}',
-//                      style: TextStyle(
-//                        fontSize: 12.0,
-//                        color: Colors.grey,
-//                      )),
-//                ),
-//                Column(
-//                    children: requestModel.acceptors.map(
-//                  (acceptorId) {
-//                    return StreamBuilder<UserModel>(
-//                      stream: FirestoreManager.getUserForIdStream(
-//                        sevaUserId: acceptorId,
-//                      ),
-//                      builder: (context, modelSnapshot) {
-//                        if (modelSnapshot.connectionState ==
-//                            ConnectionState.waiting) {
-//                          return Container();
-//                        }
-//                        UserModel user = modelSnapshot.data;
-//                        return Slidable(
-//                          delegate: SlidableDrawerDelegate(),
-//                          actions: <Widget>[
-//                            IconSlideAction(
-//                              icon: Icons.check_circle,
-//                              onTap: () {
-//                                RequestModel updatedModel = requestModel;
-//                                updatedModel.accepted = true;
-//                                updatedModel.approvedUserId = user.sevaUserID;
-//
-//                                FirestoreManager.approveAcceptRequest(
-//                                    requestModel: updatedModel);
-//                              },
-//                              caption: 'Approve',
-//                              color: Colors.green,
-//                              foregroundColor: Colors.white,
-//                            ),
-//                          ],
-//                          child: ListTile(
-//                            title: Text(user.fullname),
-//                            subtitle: Text(user.email),
-//                            leading: CircleAvatar(
-//                              backgroundImage: NetworkImage(user.photoURL),
-//                            ),
-//                          ),
-//                        );
-//                      },
-//                    );
-//                  },
-//                ).toList()),
-//              ],
-//            ),
-//          )
-//        : Container();
-//  }
-//
-//  String getHoursAndMinutes({@required int timeInMinutes}) {
-//    String hours = (timeInMinutes ~/ 60).toString();
-//    int minutes = timeInMinutes - (int.parse(hours) * 60);
-//    return minutes <= 0
-//        ? '$hours Hours'
-//        : '$hours Hours and ${minutes == 1 ? '$minutes Minute' : '$minutes Minutes'}';
-//  }
-//}
-
-// class AceeptorItem {
-//   final String sevaUserID;
-//   final bool approved;
-
-//   AceeptorItem({this.sevaUserID, this.approved})
-
-// }
-
-// class GetList {
-
-// void build(BuildContext context ){
-
-//   var acceptors = [];
-//   var approvedMembers = [];
-
-//   HashMap<String, AceeptorItem> consildatedList = HashMap();
-
-//   acceptors.map((f){
-//     consildatedList[f] = AceeptorItem(approved: false, sevaUserID: f);
-//   });
-
-// approvedMembers.map((f){
-//     consildatedList[f] = AceeptorItem(approved: true, sevaUserID: f);
-//   });
-
-//   Requedtmodel midel=consildatedList[imdex].approved
-
-// }
