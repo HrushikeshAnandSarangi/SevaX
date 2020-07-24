@@ -136,7 +136,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                         onDismissed: onDismissed,
                         title: "Event Reminder",
                         subTitle: "Your event ${notification.data["title"]} starts in less than an hour.",
-                        photoUrl: notification.data["requestorphotourl"],
+                        photoUrl: notification.data["requestorphotourl`"],
                       );
                       break;
                     case NotificationType.RecurringRequestUpdated:
