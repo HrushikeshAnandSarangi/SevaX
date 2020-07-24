@@ -990,6 +990,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 }
 
+///
 Widget totalCredits(context, RequestModel requestModel) {
   var label;
   var totalCredits =

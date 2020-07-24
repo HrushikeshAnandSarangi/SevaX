@@ -11,7 +11,6 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
     as RequestManager;
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
@@ -331,6 +330,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                   }
                 },
               ),
+              //keep this
               totalCredits(
                 context,
                 widget.requestModel,
@@ -663,16 +663,16 @@ class RequestEditFormState extends State<RequestEditForm> {
         });
   }
 
-  Future _getLocation() async {
-    String address = await LocationUtility().getFormattedAddress(
-      location.latitude,
-      location.longitude,
-    );
+  // Future _getLocation() async {
+  //   String address = await LocationUtility().getFormattedAddress(
+  //     location.latitude,
+  //     location.longitude,
+  //   );
 
-    setState(() {
-      this.selectedAddress = address;
-    });
-  }
+  //   setState(() {
+  //     this.selectedAddress = address;
+  //   });
+  // }
 
   int calculateRecurrencesOnMode(RequestModel requestModel) {
     DateTime eventStartDate =
