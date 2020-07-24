@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -432,7 +431,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                       }
                                     },
                                     decoration: InputDecoration(
-                                      hintText: "Maximum credits",
+                                      hintText: AppLocalizations.of(context)
+                                          .translate('create_request',
+                                              "max_credit_hint"),
                                       hintStyle: hintTextStyle,
                                       // labelText: 'No. of volunteers',
                                     ),

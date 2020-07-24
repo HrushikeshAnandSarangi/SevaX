@@ -1,23 +1,22 @@
 import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.dart';
-import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
+    as RequestManager;
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
-    as RequestManager;
 
 class EditRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -262,7 +261,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                         }
                       },
                       decoration: InputDecoration(
-                        hintText: "Maximum credits",
+                        hintText: AppLocalizations.of(context)
+                            .translate('create_request', "max_credit_hint"),
                         hintStyle: hintTextStyle,
                         // labelText: 'No. of volunteers',
                       ),

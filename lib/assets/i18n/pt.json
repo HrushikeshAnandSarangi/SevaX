@@ -681,7 +681,7 @@
     "others": "Otros"
   },
   "create_request": {
-    "sam_date_time" : "Você forneceu data e hora idênticas para o início e o fim. Forneça um horário de término posterior ao horário de início.",
+    "sam_date_time": "Você forneceu data e hora idênticas para o início e o fim. Forneça um horário de término posterior ao horário de início.",
     "humanity_first_create": "Criar solicitações da gang de Yang",
     "create": "criar",
     "edit": "Editar solicitações",
@@ -755,7 +755,8 @@
     "request_total_credits_timebank": "Os créditos Seva serão creditados no Timebank para esta solicitação. Observe que cada participante receberá no máximo",
     "request_total_credits_timebank_add": "créditos para concluir esta solicitação.",
     "request_total_credits_personal": "São necessários créditos Seva para esta solicitação. Ele será debitado do seu saldo. Observe que cada participante receberá no máximo",
-    "request_total_credits_personal_add": "créditos para concluir esta solicitação."
+    "request_total_credits_personal_add": "créditos para concluir esta solicitação.",
+    "max_credit_hint": "Créditos máximos a serem dados por voluntário"
   },
   "edit_group": {
     "add_members": "Adicionar membros",
@@ -956,7 +957,7 @@
     "Remove": "Eliminar",
     "Promote": "Promover",
     "Demote": "Rebaixar",
-    "Loan" : "Empréstimo",
+    "Loan": "Empréstimo",
     "Exit": "Saída",
     "admins": "Administradores",
     "coordinators": "Coordenadores",
@@ -1140,7 +1141,6 @@
     "add_caption": "Adicionar uma legenda",
     "tap_for_photo": "Tap para a foto",
     "name_error": "O nome não pode estar vazio"
-
   },
   "add_location": {
     "confirm_location_label": "CONFIRMAR localização"
