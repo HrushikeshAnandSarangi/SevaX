@@ -757,6 +757,7 @@
     "request_total_credits_timebank_add": "crédits pour avoir rempli cette demande.",
     "request_total_credits_personal": "Des crédits Seva sont requis pour cette demande. Elle sera débitée de votre solde. Notez que chaque participant recevra un maximum de",
     "request_total_credits_personal_add": "crédits pour avoir répondu à cette demande.",
+    "max_credit": "Crédits maximum*",
     "max_credit_hint": "Crédits maximum à accorder par bénévole"
   },
   "edit_group": {

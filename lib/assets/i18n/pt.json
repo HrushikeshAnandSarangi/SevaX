@@ -756,6 +756,7 @@
     "request_total_credits_timebank_add": "créditos para concluir esta solicitação.",
     "request_total_credits_personal": "São necessários créditos Seva para esta solicitação. Ele será debitado do seu saldo. Observe que cada participante receberá no máximo",
     "request_total_credits_personal_add": "créditos para concluir esta solicitação.",
+    "max_credit": "Créditos máximos*",
     "max_credit_hint": "Créditos máximos a serem dados por voluntário"
   },
   "edit_group": {

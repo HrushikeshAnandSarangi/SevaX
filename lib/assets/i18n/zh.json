@@ -752,6 +752,7 @@
     "request_total_credits_timebank_add": "完成此请求所获得的积分。",
     "request_total_credits_personal": "此请求需要Seva点数。将从您的余额中扣除。请注意，每个参与者最多可以收到",
     "request_total_credits_personal_add": "用于完成此请求的积分",
+    "max_credit": "最高学分 *",
     "max_credit_hint": "每位志愿者的最高学分"
   },
   "edit_group": {

@@ -753,6 +753,7 @@
     "request_total_credits_timebank_add": " credits for completing this request.",
     "request_total_credits_personal": " Seva Credits are required for this request. It will be debited from your balance. Note that each participant will receive a maximum of ",
     "request_total_credits_personal_add": " credits for completing this request.",
+    "max_credit": "Maximum credits*",
     "max_credit_hint": "Maximum credits to be given per volunteer"
   },
   "edit_group": {

@@ -406,7 +406,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                 : Container(),
                             SizedBox(height: 20),
                             Text(
-                              "Maximum credits*",
+                              AppLocalizations.of(context)
+                                  .translate('create_request', 'max_credit'),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
