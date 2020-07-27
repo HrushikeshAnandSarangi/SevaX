@@ -102,4 +102,8 @@ class UserApi {
   static Stream<QuerySnapshot> getBlockedMembers(String userId) {
     return ref.where("blockedBy", arrayContains: userId).snapshots();
   }
+
+  static Stream<QuerySnapshot> getMembersOfCommunity(String communityId) {
+    return ref.where("communities", arrayContains: communityId).snapshots();
+  }
 }
