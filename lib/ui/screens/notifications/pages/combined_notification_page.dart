@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
-import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
+import 'package:sevaexchange/ui/screens/notifications/pages/timebank_notifications.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
 class CombinedNotificationsPage extends StatefulWidget {
@@ -24,7 +24,7 @@ class _CombinedNotificationsPageState extends State<CombinedNotificationsPage> {
         ),
         centerTitle: true,
       ),
-      body: PersonalNotifications(),
+      body: TimebankNotifications(),
     );
   }
 }

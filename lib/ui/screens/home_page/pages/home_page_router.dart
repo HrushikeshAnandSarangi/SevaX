@@ -61,7 +61,11 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
             user,
           );
 
-          _notificationsBloc.init(user.email, user.currentCommunity);
+          _notificationsBloc.init(
+            user.email,
+            user.sevaUserID,
+            user.currentCommunity,
+          );
         });
       },
     );
