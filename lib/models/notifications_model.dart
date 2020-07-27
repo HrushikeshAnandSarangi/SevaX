@@ -148,7 +148,7 @@ NotificationType stringToNotificationType(String str) {
 }
 
 Map<String, NotificationType> typeMapper = {
-  "RecurringRequestUpdated":NotificationType.RecurringRequestUpdated,
+  "RecurringRequestUpdated": NotificationType.RecurringRequestUpdated,
   "RequestAccept": NotificationType.RequestAccept,
   "RequestApprove": NotificationType.RequestApprove,
   "RequestInvite": NotificationType.RequestInvite,
@@ -183,7 +183,6 @@ Map<String, NotificationType> typeMapper = {
       NotificationType.TYPE_FEEDBACK_FROM_SIGNUP_MEMBER,
   "TYPE_REPORT_MEMBER": NotificationType.TYPE_REPORT_MEMBER,
   "TYPE_DELETION_REQUEST_OUTPUT": NotificationType.TYPE_DELETION_REQUEST_OUTPUT,
-  "TYPE_REPORT_MEMBER": NotificationType.TYPE_REPORT_MEMBER,
 };
 
 ClearNotificationModel clearNotificationModelFromJson(String str) =>
@@ -205,7 +204,6 @@ class ClearNotificationModel {
             json["notificationType"].map((x) => typeMapper[x])),
       );
 }
-
 
 class ReccuringRequestUpdated {
   String eventName;
