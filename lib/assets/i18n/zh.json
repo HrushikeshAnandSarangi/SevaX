@@ -677,7 +677,7 @@
     "others": "其他"
   },
   "create_request": {
-    "sam_date_time" : "您已為開始和結束提供了相同的日期和時間。請提供一個比開始時間晚的結束時間。",
+    "sam_date_time": "您已為開始和結束提供了相同的日期和時間。請提供一個比開始時間晚的結束時間。",
     "humanity_first_create": "创建humanity_first请求",
     "create": "创建请求",
     "edit": "编辑请求",
@@ -748,10 +748,12 @@
     "repeat_cancel": "取消",
     "repeat_done": "完成",
     "recurringDays_err": "重复天数不能为空",
-    "request_total_credits_timebank":"对于此请求，Seva积分将记入时间银行。请注意，每个参与者最多将获得",
-    "request_total_credits_timebank_add":"完成此请求所获得的积分。",
-    "request_total_credits_personal":"此请求需要Seva点数。将从您的余额中扣除。请注意，每个参与者最多可以收到",
-    "request_total_credits_personal_add": "用于完成此请求的积分"
+    "request_total_credits_timebank": "对于此请求，Seva积分将记入时间银行。请注意，每个参与者最多将获得",
+    "request_total_credits_timebank_add": "完成此请求所获得的积分。",
+    "request_total_credits_personal": "此请求需要Seva点数。将从您的余额中扣除。请注意，每个参与者最多可以收到",
+    "request_total_credits_personal_add": "用于完成此请求的积分",
+    "max_credit": "最高学分 *",
+    "max_credit_hint": "每位志愿者的最高学分"
   },
   "edit_group": {
     "add_members": "添加成员",
@@ -1141,7 +1143,6 @@
     "add_caption": "添加字幕",
     "tap_for_photo": "水龙头照片",
     "name_error": "名称不能为空"
-
   },
   "add_location": {
     "confirm_location_label": "确认位置下"
@@ -1238,7 +1239,7 @@
     "ownership_suceess": "恭喜你！您现在是该帐户的新所有者 时间银行 ",
     "already_invited": " 已受邀。"
   },
-  "delete":{
+  "delete": {
     "delete_request_title": "Delete request",
     "sure_to_delete_request": "Are you sure you want to delete this request?",
     "delete_offer_title": "Delete offer",

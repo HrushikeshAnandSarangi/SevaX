@@ -109,7 +109,7 @@ class _BioViewState extends State<BioPage> {
                                     TextCapitalization.sentences,
                                 minLines: 6,
                                 maxLines: 50,
-                                maxLength: 150,
+                                maxLength: 500,
                                 validator: (value) {
                                   if (value.trim().isEmpty) {
                                     return AppLocalizations.of(context)

@@ -676,10 +676,9 @@
     "no_comments": "No comments",
     "timebank_offers": "Timebank Offers",
     "others": "Others"
-
   },
   "create_request": {
-    "sam_date_time" : "You have provided identical date and time for the Start and End. Please provide an End time that is after the Start time.",
+    "sam_date_time": "You have provided identical date and time for the Start and End. Please provide an End time that is after the Start time.",
     "humanity_first_create": "Create Yang Gang Request",
     "create": "Create Request",
     "edit": "Edit Request",
@@ -753,7 +752,9 @@
     "request_total_credits_timebank": " Seva Credits will be credited to the Timebank for this request. Note that each participant will receive a maximum of ",
     "request_total_credits_timebank_add": " credits for completing this request.",
     "request_total_credits_personal": " Seva Credits are required for this request. It will be debited from your balance. Note that each participant will receive a maximum of ",
-    "request_total_credits_personal_add": " credits for completing this request."
+    "request_total_credits_personal_add": " credits for completing this request.",
+    "max_credit": "Maximum credits*",
+    "max_credit_hint": "Maximum credits to be given per volunteer"
   },
   "edit_group": {
     "add_members": "Add Members",
@@ -1241,10 +1242,10 @@
     "ownership_suceess": "Congratulations! You are now the new owner of the Timebank ",
     "already_invited": " already invited."
   },
-  "delete":{
+  "delete": {
     "delete_request_title": "Delete request",
     "sure_to_delete_request": "Are you sure you want to delete this request?",
     "delete_offer_title": "Delete offer",
     "sure_to_delete_offer": "Are you sure you want to delete this offer?"
-}
+  }
 }

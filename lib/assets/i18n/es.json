@@ -682,7 +682,7 @@
     "others": "Outros"
   },
   "create_request": {
-    "sam_date_time" : "Ha proporcionado una fecha y hora idénticas para el inicio y el final. Proporcione una hora de finalización posterior a la hora de inicio.",
+    "sam_date_time": "Ha proporcionado una fecha y hora idénticas para el inicio y el final. Proporcione una hora de finalización posterior a la hora de inicio.",
     "humanity_first_create": "Criar solicitação de gangue Yang",
     "create": "Crio",
     "edit": "Editar solicitação",
@@ -756,7 +756,9 @@
     "request_total_credits_timebank": "Seva Credits se acreditará al Timebank por esta solicitud. Tenga en cuenta que cada participante recibirá un máximo de",
     "request_total_credits_timebank_add": "créditos por completar esta solicitud",
     "request_total_credits_personal": "Se requieren créditos Seva para esta solicitud. Se debitará de su saldo. Tenga en cuenta que cada participante recibirá un máximo de",
-    "request_total_credits_personal_add": "créditos por completar esta solicitud"
+    "request_total_credits_personal_add": "créditos por completar esta solicitud",
+    "max_credit": "Créditos máximos*",
+    "max_credit_hint": "Créditos máximos por voluntario"
   },
   "edit_group": {
     "add_members": "Adicionar membros",
@@ -958,7 +960,7 @@
     "Promote": "Promover",
     "Demote": "Rebaixar",
     "Exit": "Saída",
-    "Loan" : "Préstamo",
+    "Loan": "Préstamo",
     "admins": "Admins",
     "coordinators": "Coordenadores",
     "coordinator": "Coordenador",
@@ -1141,7 +1143,6 @@
     "add_caption": "Agrega un subtítulo",
     "tap_for_photo": "Toque para la foto",
     "name_error": "El nombre no puede estar vacío"
-
   },
   "add_location": {
     "confirm_location_label": "CONFIRMAR LOCAL"
@@ -1239,7 +1240,7 @@
     "ownership_suceess": "¡Felicidades! Ahora eres el nuevo propietario del Banco de tiempo ",
     "already_invited": " Ya invitado."
   },
-  "delete":{
+  "delete": {
     "delete_request_title": "Delete request",
     "sure_to_delete_request": "Are you sure you want to delete this request?",
     "delete_offer_title": "Delete offer",
