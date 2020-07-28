@@ -195,7 +195,7 @@
     "edit_profile_info": "Editar informação de perfil",
     "profile_information": "Informação do perfil",
     "updating_details": "Atualizando detalhes ",
-    "private_timebank": "Privado Timebank"
+    "private_timebank": "Banco de tempo privado"
   },
   "billing_plans": {
     "remote_config": "billing_plans_pt",
@@ -217,7 +217,7 @@
   "explore": {
     "title": "Explorar",
     "find_timebanks": "Encontre Bancos de tempos",
-    "groups_within": "Grupos dentro"
+    "groups_within": "Grupos dentro do"
   },
   "jointimebank_sub": {
     "loading": "Carregando",
@@ -289,13 +289,13 @@
   "homepage": {
     "your_groups": "Seus Grupos",
     "your_tasks": "Suas tarefas",
-    "pending": "Pendente",
-    "not_accepted": "Não aceito",
-    "completed": "Concluído",
+    "pending": "Pendentes",
+    "not_accepted": "Não aceitas",
+    "completed": "Concluídas",
     "groups_help": "Ajuda dos Grupos",
     "feeds": "Publicações",
     "projects": "Projetos",
-    "requests": "solicitações de",
+    "requests": "Solicitações",
     "offers": "Ofertas",
     "about": "Sobre",
     "members": "Membros",
@@ -363,7 +363,7 @@
     "name": "Nome do Projeto",
     "name_hint": "Ex: Animais de estimação na cidade, colaboração cidadã",
     "name_empty_err": "O nome do projeto não pode estar vazio",
-    "duration": "Duração do projeto*",
+    "duration": "Duração do projeto",
     "statement": "Declaração de missão",
     "statement_hint": "Ex: Um pouco mais sobre o seu projeto, como juntar-se ao projeto poderá ajudar ",
     "statement_empty_err": "A declaração de missão não pode estar vazia.",
@@ -530,11 +530,11 @@
     "not_mentioned": "Razão não mencionada",
     "allow": "Permitir",
     "timebank_exit": "sair do banco de tempo",
-    "exited_from": "ha salido de",
-    "tap_to_view": "Toca para ver los detalles",
-    "added_you": "te ha agregado a",
-    "timebank_join": "Timebank Join",
-    "group_invite": "Invitación para unirse al grupo",
+    "exited_from": "saiu do",
+    "tap_to_view": "Toque para ver os detalhes",
+    "added_you": "te incluiu no",
+    "timebank_join": "Junte-se ao Banco de tempo",
+    "group_invite": "Convite para juntar-se ao grupo",
     "notification_alert": "notificações"
   },
   "profile": {
@@ -565,7 +565,7 @@
     "enter_name": "Ingressar o nome para atualização",
     "update": "Atualizar",
     "update_bio": "Atualizar biografia",
-    "enter_bio": "Ingresar biografia",
+    "enter_bio": "Ingressar biografia",
     "please_enter_bio": "por favor ingresse sua biografia para atualização",
     "bio_50": "Ingresse mínimo 50 caracteres",
     "sure_logout": "Tem certeza de que deseja encerrar a sessão?",
@@ -605,7 +605,7 @@
     "select_request": "Selecione Solicitação",
     "protected_timebank": "Banco de tempo protegido",
     "cannot_post": "Você não pode postar solicitações em um Banco de tempo protegido",
-    "cannot_create_group": "Você não pode criar grupos em um Timebank protegido",
+    "cannot_create_group": "Você não pode criar grupos em um Banco de tempo protegido",
     "requests_help": "Solicita Ajuda",
     "delete_request_confirm": "Tem certeza de que deseja excluir esta solicitação?",
     "dont_delete": "Não",
@@ -677,11 +677,11 @@
     "by_approving_that": "Ao aprovar, você aceita que",
     "worked_for": "trabalhou para",
     "no_comments": "Sem comentários",
-    "timebank_offers": "Ofertas de banco de tempo",
+    "timebank_offers": "Ofertas do banco de tempo",
     "others": "Otros"
   },
   "create_request": {
-    "sam_date_time": "Você forneceu data e hora idênticas para o início e o fim. Forneça um horário de término posterior ao horário de início.",
+    "sam_date_time" : "Data de início e fim não podem ser as mesmas",
     "humanity_first_create": "Criar solicitações da gang de Yang",
     "create": "criar",
     "edit": "Editar solicitações",
@@ -692,7 +692,7 @@
     "request_title": "Solicitar título *",
     "small_carpenty": "Ex: trabalhos de marcenaria pequena ...",
     "subject": "Por favor ingresse o título de suas solicitações",
-    "duration": "Duração das solicitações*",
+    "duration": "Duração das solicitações",
     "yang_desc": "Descrição da solicitação do grupo Yang Gang ",
     "desc": "Descrição das solicitações *",
     "request_hash": "Suas solicitações e #hashtags",
@@ -733,7 +733,7 @@
     "tap_error_select": "Selecione uma ou mais opções",
     "save": "Salvar",
     "no_members_toadd": "Não há membros disponíveis para adicionar",
-    "select_timebank": "Selecionar grupo",
+    "select_timebank": "Selecionar Banco de tempo",
     "search_member": "Buscar membros",
     "atleast_3": "A busca exige um mínimo de 3 caracteres",
     "no_user": "Não foram encontrados usuários",
@@ -752,7 +752,7 @@
     "repeat_cancel": "Cancelar",
     "repeat_done": "feito",
     "recurringDays_err": "dias recorrentes não podem estar vazios",
-    "request_total_credits_timebank": "Os créditos Seva serão creditados no Timebank para esta solicitação. Observe que cada participante receberá no máximo",
+    "request_total_credits_timebank": "Os créditos Seva serão creditados no Banco de tempo para esta solicitação. Observe que cada participante receberá no máximo",
     "request_total_credits_timebank_add": "créditos para concluir esta solicitação.",
     "request_total_credits_personal": "São necessários créditos Seva para esta solicitação. Ele será debitado do seu saldo. Observe que cada participante receberá no máximo",
     "request_total_credits_personal_add": "créditos para concluir esta solicitação.",
@@ -784,7 +784,7 @@
   },
   "offers": {
     "my_offers": "Minhas Ofertas",
-    "my_offers_help": "Oferece ajuda",
+    "my_offers_help": "Ajuda para fazer e receber ofertas",
     "no_offers": "Sem ofertas",
     "filtering_offers_content": "Filtrando conteúdo de ofertas",
     "details": "Detalhes",
@@ -830,7 +830,7 @@
     "admin_cannot": "Os administradores não podem criar mensagem"
   },
   "coins": {
-    "donate": "Doar créditos",
+    "donate": "Doar",
     "donate_totimebank": "Doe créditos Seva ao Banco de tempo ",
     "not_enough": "Você não tem créditos suficientes para doar!",
     "donate_coins": "Doar créditos Seva para o Banco de tempo",
@@ -848,9 +848,9 @@
     "donate_totimebank": "Empréstimos seva créditos ao usuário",
     "not_enough": "Você não tem créditos suficientes para doar!",
     "donate_coins": "Empréstimos seva créditos ao usuário",
-    "current_coins": "Seus créditos do timebank seva são",
+    "current_coins": "Seus créditos Seva são",
     "coins": "Créditos",
-    "hint": "Ao clicar em Aprovar, o saldo do Timebank será ajustado",
+    "hint": "Ao clicar em Aprovar, o saldo do Banco de tempo será ajustado",
     "zero_err": "Você não pode emprestar 0 créditos",
     "less_zero_err": "Você não pode emprestar menos de 0 créditos",
     "empty_error": "Emprestar alguns créditos",
@@ -958,7 +958,6 @@
     "Remove": "Eliminar",
     "Promote": "Promover",
     "Demote": "Rebaixar",
-    "Loan": "Empréstimo",
     "Exit": "Saída",
     "admins": "Administradores",
     "coordinators": "Coordenadores",
@@ -989,7 +988,7 @@
     "availablity": "Disponibilidade",
     "availablity_desc": "Descrever minha disponibilidade",
     "tutor": "Ex. Aulas de violão ",
-    "offer_duration": "Duração da oferta*",
+    "offer_duration": "Duração da oferta",
     "prep_hours": "No. de horas de preparação",
     "prep_hours_required": " No. de horas de preparação necessárias",
     "no_of_class": "No. de horas da aula",
@@ -1073,7 +1072,7 @@
     "select_volunteer": "Selecionar voluntária"
   },
   "links": {
-    "linkToWeb": "links_pt"
+    "linkToWeb": "links_es"
   },
   "reported_members": {
     "reported_member": "denunciar membro",
@@ -1118,7 +1117,7 @@
     "new_chat": "Novo bate-papo",
     "frequently_contacted": "CONTATO FREQUENTE",
     "groups": "GRUPOS",
-    "timebank_members": "MEMBROS DO TIMEBANK",
+    "timebank_members": "MEMBROS DO Banco de tempo",
     "add_participants": "Adicionar participantes",
     "participants": "Participantes",
     "multi_user": "Sala de Mensagens",
@@ -1134,14 +1133,15 @@
     "sending": "Enviando ...",
     "loading": "Carregando...",
     "cancel": "Cancelar",
-    "next": "Next",
+    "next": "Próximo",
     "create": "Criar",
     "edit": "Editar",
-    "save": "Salve ",
+    "save": "Salvar ",
     "type_message": "Digite uma mensagem",
     "add_caption": "Adicionar uma legenda",
-    "tap_for_photo": "Tap para a foto",
+    "tap_for_photo": "Clique para a foto",
     "name_error": "O nome não pode estar vazio"
+
   },
   "add_location": {
     "confirm_location_label": "CONFIRMAR localização"
@@ -1172,7 +1172,7 @@
   "private_timebank": {
     "private_timebank": "Private banco de tempo",
     "alert_title": "Alerta privado do banco de tempo",
-    "alert_hint": "Por favor, informe que Private Timebanks não tem uma opção gratuita. Você precisará fornecer seus detalhes de cobrança para continuar a criar este Timebank"
+    "alert_hint": "Por favor, informe que o Banco de tempo privado não tem uma opção gratuita. Você precisará fornecer seus detalhes de cobrança para continuar a criar este Banco de tempo"
   },
   "upload_csv": {
     "csv_hint_one": "Faça o download do modelo CSV para",
@@ -1201,7 +1201,7 @@
     "member_exits": "O membro sai de um",
     "deletion_request": "Não foi possível processar a solicitação de exclusão (devido a transações pendentes)",
     "credit_request": "Crédito recebido por uma oferta para muitos",
-    "timebank": "Timebank",
+    "timebank": "Banco de tempo",
     "group": "Group"
   },
   "project_template": {
@@ -1223,21 +1223,21 @@
     "change_hint": "Alterar propriedade deste ",
     "change_hint_three": " para outro administrador.",
     "change_hint_two": "Mudar para",
-    "invitation_sent": "Enviámos a sua transferência de convite de propriedade. Você continuará sendo o proprietário do Timebank ",
+    "invitation_sent": "Enviámos a sua transferência de convite de propriedade. Você continuará sendo o proprietário do Banco de tempo ",
     "invitation_sent_two": " até ",
     "invitation_sent_three": " aceita o convite e fornece suas novas informações de cobrança.",
-    "notification_msg": "convidou você para ser o novo proprietário do Timebank",
+    "notification_msg": "convidou você para ser o novo proprietário do Banco de tempo",
     "accept": "Aceitar",
-    "change_alert": "Ao aceitar, você se tornará proprietário do timebank",
+    "change_alert": "Ao aceitar, você se tornará proprietário do Banco de tempo",
     "users_empty": "Por favor selecione um usuário",
     "pending_task": "Você tem tarefas pendentes. Conclua estas tarefas antes que a propriedade possa ser transferida",
     "pending_payment": "Você tem pagamento pendente de ",
     "pending_payment_two": ". Complete este pagamento antes que a propriedade possa ser transferida",
     "search_admin": "Pesquisar administrador",
-    "change_message": "Você é o novo proprietário do Timebank ",
+    "change_message": "Você é o novo proprietário do Banco de tempo ",
     "change_message_two": " Você precisa aceitá-lo para concluir o processo",
-    "change_advisory": " Você precisa fornecer detalhes de cobrança para este Timebank, incluindo o novo endereço de cobrança. A transferência de propriedade não será concluída até que isso seja feito.",
-    "ownership_suceess": "Parabéns! Agora você é o novo proprietário do Timebank ",
+    "change_advisory": " Você precisa fornecer detalhes de cobrança para este Banco de tempo, incluindo o novo endereço de cobrança. A transferência de propriedade não será concluída até que isso seja feito.",
+    "ownership_suceess": "Parabéns! Agora você é o novo proprietário do Banco de tempo ",
     "already_invited": " já convidado."
   },
   "delete": {
