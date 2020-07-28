@@ -40,7 +40,7 @@ class SevaCoinWidget extends StatelessWidget {
             ),
             SizedBox(width: 5),
             Text(
-              '${amount != null ? double.parse(amount.toStringAsFixed(2)) : 0} ${AppLocalizations.of(context).translate('profile','seva_credits')}',
+              '${amount != null ? double.parse(amount.toStringAsFixed(2)) : 0} ${AppLocalizations.of(context).translate('profile', 'seva_credits')}',
               style: TextStyle(
                 color: amount > 0 ? Colors.blue : Colors.red,
                 fontWeight: FontWeight.bold,

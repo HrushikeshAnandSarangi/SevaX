@@ -39,6 +39,7 @@ Widget infoButton({
   assert(key != null);
   assert(type != null);
   var temp = AppLocalizations.of(context).translate('info_window', 'mapper');
+
   Map<String, dynamic> details =
       json.decode(AppConfig.remoteConfig.getString(temp));
   return IconButton(

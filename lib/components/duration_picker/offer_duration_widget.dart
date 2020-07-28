@@ -38,21 +38,21 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
   Widget build(BuildContext context) {
     return Material(
       child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              title,
-              SizedBox(height: 8),
-              Row(
-                children: <Widget>[
-                  startWidget,
-                  SizedBox(width: 16),
-                  endWidget,
-                ],
-              ),
-            ],
-          ),
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            title,
+            SizedBox(height: 8),
+            Row(
+              children: <Widget>[
+                startWidget,
+                SizedBox(width: 10),
+                endWidget,
+              ],
+            ),
+          ],
+        ),
 //        ),
       ),
     );
@@ -94,65 +94,64 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
   Widget getDateTimeWidget(DateTime dateTime, DurationType type) {
     return Expanded(
         child: Container(
-          padding: EdgeInsets.all(8),
-          decoration: ShapeDecoration(
-            // color: Color(0xfff2f2f2),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
+      padding: EdgeInsets.all(8),
+      decoration: ShapeDecoration(
+        // color: Color(0xfff2f2f2),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+      ),
+      child: InkWell(
+        splashColor: Color(0xffe5e5e5),
+        onTap: () async {
+          Navigator.of(context)
+              .push(MaterialPageRoute<List<DateTime>>(
+            builder: (context) => CalendarPicker(
+                widget.title.replaceAll('*', ''),
+                _calendarState,
+                startTime ?? DateTime.now(),
+                endTime ?? DateTime.now(),
+                type == DurationType.START ? 'start' : 'end'),
+            // Open calendar
+          ))
+              .then((List<DateTime> dateList) {
+            setState(() {
+              startTime = dateList?.elementAt(0);
+              endTime = dateList?.elementAt(1);
+            });
+          });
+        },
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6.0),
+              // child: SvgPicture.asset('assets/icons/icon-calendar.svg'),
+              child: Icon(Icons.calendar_today, color: Colors.black),
             ),
-          ),
-          child: InkWell(
-            splashColor: Color(0xffe5e5e5),
-            onTap: () async {
-              Navigator.of(context)
-                  .push(MaterialPageRoute<List<DateTime>>(
-                builder: (context) =>
-                    CalendarPicker(
-                        widget.title.replaceAll('*', ''),
-                        _calendarState,
-                        startTime ?? DateTime.now(),
-                        endTime ?? DateTime.now(),
-                        type == DurationType.START ? 'start': 'end'),
-                // Open calendar
-              ))
-                  .then((List<DateTime> dateList) {
-                setState(() {
-                  startTime = dateList?.elementAt(0);
-                  endTime = dateList?.elementAt(1);
-                });
-              });
-            },
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  // child: SvgPicture.asset('assets/icons/icon-calendar.svg'),
-                  child: Icon(Icons.calendar_today, color: Colors.black),
-                ),
-                Text(
-                  getTimeString(dateTime, type),
-                  style: dateTime == null
-                      ? TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  )
-                      : TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
+            Text(
+              getTimeString(dateTime, type),
+              style: dateTime == null
+                  ? TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    )
+                  : TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                    ),
             ),
-          ),
-        ));
+          ],
+        ),
+      ),
+    ));
   }
 
   String getTimeString(DateTime dateTime, DurationType type) {
     if (dateTime == null) {
-      return '${type == DurationType.START ? AppLocalizations.of(context).translate('create_request','start') : AppLocalizations.of(context).translate('create_request','end')}\n${AppLocalizations.of(context).translate('create_request','start_end')}';
+      return '${type == DurationType.START ? AppLocalizations.of(context).translate('create_request', 'start') : AppLocalizations.of(context).translate('create_request', 'end')}\n${AppLocalizations.of(context).translate('create_request', 'start_end')}';
     }
     String dateTimeString = '';
     DateFormat format = DateFormat('dd MMM yyyy,\nhh:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());

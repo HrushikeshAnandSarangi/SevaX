@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:collection';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +11,6 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
     as RequestManager;
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
@@ -203,7 +199,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                   child: EditRepeatWidget(requestModel: widget.requestModel),
                 ),
               ),
-
               Padding(
                 padding: EdgeInsets.all(10.0),
               ),
@@ -347,7 +342,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                   selectedAddress: selectedAddress,
                   location: location,
                   onChanged: (LocationDataModel dataModel) {
-                    log("received data model");
+                    // log("received data model");
                     setState(() {
                       location = dataModel.geoPoint;
                       this.selectedAddress = dataModel.location;
@@ -669,16 +664,16 @@ class RequestEditFormState extends State<RequestEditForm> {
         });
   }
 
-  Future _getLocation() async {
-    String address = await LocationUtility().getFormattedAddress(
-      location.latitude,
-      location.longitude,
-    );
+  // Future _getLocation() async {
+  //   String address = await LocationUtility().getFormattedAddress(
+  //     location.latitude,
+  //     location.longitude,
+  //   );
 
-    setState(() {
-      this.selectedAddress = address;
-    });
-  }
+  //   setState(() {
+  //     this.selectedAddress = address;
+  //   });
+  // }
 
   int calculateRecurrencesOnMode(RequestModel requestModel) {
     DateTime eventStartDate =
@@ -702,7 +697,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         lastRound = true;
       }
     }
-    log("on mode recurrence count isss $recurrenceCount");
+    // log("on mode recurrence count isss $recurrenceCount");
     return recurrenceCount;
   }
 }

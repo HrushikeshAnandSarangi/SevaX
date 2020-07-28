@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import  'package:keyboard_actions/keyboard_actions.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
+
 typedef StringCallback = void Function(String bio);
 
 class BioView extends StatefulWidget {
@@ -108,7 +109,7 @@ class _BioViewState extends State<BioView> {
                                       keyboardType: TextInputType.multiline,
                                       minLines: 6,
                                       maxLines: 50,
-                                      maxLength: 150,
+                                      maxLength: 500,
                                       validator: (value) {
                                         if (value.trim().isEmpty) {
                                           return AppLocalizations.of(context)
@@ -122,9 +123,7 @@ class _BioViewState extends State<BioView> {
                                                   'bio', 'min_char_limit');
                                         }
                                         this.bio = value;
-                                      })
-                              )
-                          )
+                                      })))
                         ],
                       ),
                     )
