@@ -29,6 +29,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 
@@ -406,6 +407,65 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                 : Container(),
                             SizedBox(height: 20),
                             Text(
+                              AppLocalizations.of(context)
+                                  .translate('create_request', 'max_credit'),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Europa',
+                                color: Colors.black,
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: TextFormField(
+                                    focusNode: focusNodes[2],
+                                    onFieldSubmitted: (v) {
+                                      FocusScope.of(context)
+                                          .requestFocus(focusNodes[3]);
+                                    },
+                                    onChanged: (v) {
+                                      if (v.isNotEmpty && int.parse(v) >= 0) {
+                                        requestModel.maxCredits = int.parse(v);
+                                        setState(() {});
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: AppLocalizations.of(context)
+                                          .translate('create_request',
+                                              "max_credit_hint"),
+                                      hintStyle: hintTextStyle,
+                                      // labelText: 'No. of volunteers',
+                                    ),
+                                    textInputAction: TextInputAction.next,
+                                    keyboardType: TextInputType.number,
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return "Please enter maximum credits";
+                                      } else if (int.parse(value) < 0) {
+                                        return "Please enter maximum credits";
+                                      } else if (int.parse(value) == 0) {
+                                        return "Please enter maximum credits";
+                                      } else {
+                                        requestModel.maxCredits =
+                                            int.parse(value);
+                                        setState(() {});
+                                        return null;
+                                      }
+                                    },
+                                  ),
+                                ),
+                                infoButton(
+                                  context: context,
+                                  key: GlobalKey(),
+                                  type: InfoType.MAX_CREDITS,
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            Text(
                               AppLocalizations.of(context).translate(
                                   'create_request', 'no_of_volunteers'),
                               style: TextStyle(
@@ -455,11 +515,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                 }
                               },
                             ),
-                            TotalCredits(
-                                context,
-                                requestModel,
-                                OfferDurationWidgetState.starttimestamp,
-                                OfferDurationWidgetState.endtimestamp),
+                            SizedBox(height: 20),
+                            totalCredits(context, requestModel),
                             SizedBox(height: 40),
                             Center(
                               child: LocationPickerWidget(
@@ -934,37 +991,26 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 }
 
-Widget TotalCredits(
-    context, requestModel, int starttimestamp, int endtimestamp) {
+///
+Widget totalCredits(context, RequestModel requestModel) {
   var label;
-  var totalhours = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
-      .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
-      .inHours;
-  var totalminutes = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
-      .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
-      .inMinutes;
-  var totalallowedhours;
-  if (totalhours == 0) {
-    totalallowedhours = (totalhours + ((totalminutes / 60) / 100).ceil());
-  } else {
-    totalallowedhours = (totalhours + ((totalminutes / 60) / 100).round());
-  }
-
-  var totalCredits = requestModel.numberOfApprovals * totalallowedhours;
+  var totalCredits =
+      requestModel.numberOfApprovals * (requestModel.maxCredits ?? 1);
   requestModel.numberOfHours = totalCredits;
-  if (totalallowedhours > 0 && totalCredits > 0) {
+
+  if ((requestModel.maxCredits ?? 0) > 0 && totalCredits > 0) {
     if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
       label = totalCredits.toString() +
           AppLocalizations.of(context)
               .translate('create_request', 'request_total_credits_timebank') +
-          totalallowedhours.toString() +
+          requestModel.maxCredits.toString() +
           AppLocalizations.of(context).translate(
               'create_request', 'request_total_credits_timebank_add');
     } else {
       label = totalCredits.toString() +
           AppLocalizations.of(context)
               .translate('create_request', 'request_total_credits_personal') +
-          totalallowedhours.toString() +
+          requestModel.maxCredits.toString() +
           AppLocalizations.of(context).translate(
               'create_request', 'request_total_credits_personal_add');
     }
