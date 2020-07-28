@@ -266,6 +266,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                         hintStyle: hintTextStyle,
                         // labelText: 'No. of volunteers',
                       ),
+                      initialValue: widget.requestModel.maxCredits.toString(),
                       textInputAction: TextInputAction.done,
                       keyboardType: TextInputType.number,
                       validator: (value) {
@@ -331,6 +332,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                   }
                 },
               ),
+              SizedBox(height: 10),
               //keep this
               totalCredits(
                 context,
