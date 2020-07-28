@@ -1,0 +1,366 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/models/transaction_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_button.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+
+class TimebankRequestCompletedWidget extends StatelessWidget {
+  final NotificationsModel notification;
+  final TimebankModel timebankModel;
+
+  const TimebankRequestCompletedWidget(
+      {Key key, this.notification, this.timebankModel})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    RequestModel model = RequestModel.fromMap(notification.data);
+    return FutureBuilder<RequestModel>(
+      future: FirestoreManager.getRequestFutureById(requestId: model.id),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            snapshot.data == null) {
+          return NotificationShimmer();
+        }
+        RequestModel model = snapshot.data;
+        return getNotificationRequestCompletedWidget(
+          model,
+          notification.senderUserId,
+          notification.id,
+        );
+      },
+    );
+  }
+
+  Widget getNotificationRequestCompletedWidget(
+    RequestModel model,
+    String userId,
+    String notificationId,
+  ) {
+    TransactionModel transactionModel = model.transactions?.firstWhere(
+        (transaction) => transaction.to == userId,
+        orElse: () => null);
+    return StreamBuilder<UserModel>(
+      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return Container();
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return NotificationShimmer();
+        }
+        UserModel user = snapshot.data;
+
+        return NotificationCard(
+          isDissmissible: false,
+          title: model.title,
+          subTitle:
+              '${user.fullname} ${AppLocalizations.of(context).translate('notifications', 'completed_in')} ${transactionModel.credits ?? "0"} ${AppLocalizations.of(context).translate('notifications', 'hours')}, ${AppLocalizations.of(context).translate('notifications', 'waiting_for')}.',
+          photoUrl: user.photoURL,
+          entityName: user.fullname,
+          onPressed: () {
+            print("pressed");
+            showMemberClaimConfirmation(
+              context: context,
+              notificationId: notificationId,
+              requestModel: model,
+              userId: userId,
+              userModel: user,
+              credits: transactionModel.credits,
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void showMemberClaimConfirmation(
+      {BuildContext context,
+      UserModel userModel,
+      RequestModel requestModel,
+      String notificationId,
+      String userId,
+      double credits}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext viewContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25.0))),
+          content: Form(
+            //key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                CustomCloseButton(onTap: () => Navigator.of(viewContext).pop()),
+                Container(
+                  height: 70,
+                  width: 70,
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      userModel.photoURL ?? defaultUserImageURL,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(4.0),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(4.0),
+                  child: Text(
+                    userModel.fullname,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'Europa',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                if (userModel.bio != null)
+                  Padding(
+                    padding: EdgeInsets.all(0.0),
+                    child: Text(
+                      "${AppLocalizations.of(context).translate('notifications', 'about')} ${userModel.fullname}",
+                      style: TextStyle(
+                          fontFamily: 'Europa',
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                getBio(context, userModel),
+                Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text(
+                        "${AppLocalizations.of(context).translate('notifications', 'by_approving_that')} ${userModel.fullname} has worked for $credits hours",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'Europa',
+                          fontStyle: FontStyle.italic,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    )),
+                Padding(
+                  padding: EdgeInsets.all(5.0),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      width: double.infinity,
+                      child: RaisedButton(
+                        color: FlavorConfig.values.theme.primaryColor,
+                        child: Text(
+                          AppLocalizations.of(context)
+                              .translate('notifications', 'approve'),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Europa',
+                          ),
+                        ),
+                        onPressed: () async {
+                          // Once approved take for feeddback
+                          approveMemberClaim(
+                              context: context,
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                              userId: userId);
+
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(4.0),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      child: RaisedButton(
+                        color: Theme.of(context).accentColor,
+                        child: Text(
+                          AppLocalizations.of(context)
+                              .translate('notifications', 'reject'),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Europa',
+                          ),
+                        ),
+                        onPressed: () async {
+                          // reject the claim
+                          rejectMemberClaimForEvent(
+                              context: context,
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                              userId: userId);
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void approveMemberClaim({
+    String userId,
+    UserModel user,
+    BuildContext context,
+    RequestModel model,
+    String notificationId,
+  }) {
+    //request for feedback;
+    checkForFeedback(
+      userId: userId,
+      user: user,
+      context: context,
+      model: model,
+      notificationId: notificationId,
+      sevaCore: SevaCore.of(context),
+    );
+  }
+
+  void checkForFeedback({
+    String userId,
+    UserModel user,
+    RequestModel model,
+    String notificationId,
+    BuildContext context,
+    SevaCore sevaCore,
+  }) async {
+    Map results = await Navigator.of(context).push(MaterialPageRoute(
+      builder: (BuildContext context) {
+        return ReviewFeedback(
+          feedbackType: FeedbackType.FOR_REQUEST_VOLUNTEER,
+        );
+      },
+    ));
+
+    if (results != null && results.containsKey('selection')) {
+      onActivityResult(
+        sevaCore: sevaCore,
+        requestModel: model,
+        userId: userId,
+        notificationId: notificationId,
+        context: context,
+        reviewer: model.email,
+        reviewed: user.email,
+        requestId: model.id,
+        results: results,
+      );
+    } else {}
+  }
+
+  void onActivityResult(
+      {SevaCore sevaCore,
+      RequestModel requestModel,
+      String userId,
+      String notificationId,
+      BuildContext context,
+      Map results,
+      String reviewer,
+      String reviewed,
+      String requestId}) {
+    // adds review to firestore
+    Firestore.instance.collection("reviews").add({
+      "reviewer": reviewer,
+      "reviewed": reviewed,
+      "ratings": results['selection'],
+      "requestId": requestId,
+      "comments": (results['didComment']
+          ? results['comment']
+          : AppLocalizations.of(context)
+              .translate('notifications', 'no_comments'))
+    });
+    approveTransaction(requestModel, userId, notificationId, sevaCore);
+  }
+
+  void approveTransaction(RequestModel model, String userId,
+      String notificationId, SevaCore sevaCore) {
+    FirestoreManager.approveRequestCompletion(
+      model: model,
+      userId: userId,
+      communityId: sevaCore.loggedInUser.currentCommunity,
+    );
+
+    print("request completion chain ends here");
+
+    // return;
+    FirestoreManager.readTimeBankNotification(
+      notificationId: notificationId,
+      timebankId: model.timebankId,
+    );
+    //
+  }
+
+  Future<void> rejectMemberClaimForEvent(
+      {RequestModel model,
+      String userId,
+      BuildContext context,
+      UserModel user,
+      String notificationId}) async {
+    List<TransactionModel> transactions =
+        model.transactions.map((t) => t).toList();
+    transactions.removeWhere((t) => t.to == userId);
+
+    model.transactions = transactions.map((t) {
+      return t;
+    }).toList();
+    FirestoreManager.rejectRequestCompletion(
+      model: model,
+      userId: userId,
+      communityid: SevaCore.of(context).loggedInUser.currentCommunity,
+    );
+
+    UserModel loggedInUser = SevaCore.of(context).loggedInUser;
+    ParticipantInfo sender = ParticipantInfo(
+      id: model.timebankId,
+      name: timebankModel.name,
+      photoUrl: timebankModel.photoUrl,
+      type: timebankModel.parentTimebankId == FlavorConfig.values.timebankId
+          ? ChatType.TYPE_TIMEBANK
+          : ChatType.TYPE_GROUP,
+    );
+
+    ParticipantInfo reciever = ParticipantInfo(
+      id: user.sevaUserID,
+      photoUrl: user.photoURL,
+      name: user.fullname,
+      type: ChatType.TYPE_PERSONAL,
+    );
+
+    await createAndOpenChat(
+      context: context,
+      communityId: loggedInUser.currentCommunity,
+      sender: sender,
+      reciever: reciever,
+      isFromRejectCompletion: true,
+      isTimebankMessage: true,
+      onChatCreate: () {
+        FirestoreManager.readTimeBankNotification(
+          notificationId: notificationId,
+          timebankId: timebankModel.id,
+        );
+      },
+    );
+  }
+}

@@ -1,10 +1,37 @@
-import 'package:flutter/material.dart';
-import 'package:sevaexchange/models/notifications_model.dart';
-import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'dart:developer';
 
-class TimebankNotifications extends StatelessWidget {
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
+import 'package:sevaexchange/models/reported_member_notification_model.dart';
+import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
+import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
+import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_join_request_widget.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_request_complete_widget.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_request_widget.dart';
+import 'package:sevaexchange/ui/utils/notification_message.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/notifications/notification_utils.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/views/timebanks/widgets/timebank_user_exit_dialog.dart';
+
+class TimebankNotifications extends StatefulWidget {
+  final TimebankModel timebankModel;
+
+  const TimebankNotifications({Key key, this.timebankModel}) : super(key: key);
+  @override
+  _TimebankNotificationsState createState() => _TimebankNotificationsState();
+}
+
+class _TimebankNotificationsState extends State<TimebankNotifications> {
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<NotificationsBloc>(context);
@@ -12,15 +39,178 @@ class TimebankNotifications extends StatelessWidget {
       stream: _bloc.timebankNotifications,
       builder:
           (_, AsyncSnapshot<Map<String, List<NotificationsModel>>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting ||
-            snapshot.data == null) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         }
-        List<String> keys = List<String>.from(snapshot.data.keys);
+
+        List<NotificationsModel> notifications =
+            snapshot.data[snapshot.data.keys.first];
+
+        notifications.forEach((element) {
+          print(element.type);
+        });
+
+        if (notifications.isEmpty) {
+          return Center(
+            child: Text(
+              AppLocalizations.of(context)
+                  .translate('notifications', 'no_notifications'),
+            ),
+          );
+        }
         return ListView.builder(
-          itemCount: snapshot.data.length,
-          itemBuilder: (_, index) {
-            return Text(snapshot.data[keys[index]].toString());
+          shrinkWrap: true,
+          padding: EdgeInsets.only(bottom: 20),
+          itemCount: notifications.length,
+          itemBuilder: (context, index) {
+            NotificationsModel notification = notifications.elementAt(index);
+            switch (notification.type) {
+              case NotificationType.RequestAccept:
+                RequestModel model = RequestModel.fromMap(notification.data);
+                return TimebankRequestWidget(
+                  model: model,
+                  notification: notification,
+                );
+                break;
+
+              case NotificationType.TypeMemberExitTimebank:
+                UserExitModel userExitModel =
+                    UserExitModel.fromMap(notification.data);
+                return NotificationCard(
+                  title: AppLocalizations.of(context)
+                      .translate('notifications', 'timebank_exit'),
+                  subTitle:
+                      '${userExitModel.userName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'exited_from')} ${userExitModel.timebank}, ${AppLocalizations.of(context).translate('notifications', 'tap_to_view')}',
+                  photoUrl: userExitModel.userPhotoUrl ?? defaultUserImageURL,
+                  onDismissed: () {
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return TimebankUserExitDialogView(
+                          userExitModel: userExitModel,
+                          timeBankId: notification.timebankId,
+                          notificationId: notification.id,
+                          userModel: SevaCore.of(context).loggedInUser,
+                        );
+                      },
+                    );
+                  },
+                );
+                break;
+
+              case NotificationType.JoinRequest:
+                return TimebankJoinRequestWidget(notification: notification);
+                break;
+
+              case NotificationType.RequestCompleted:
+                return TimebankRequestCompletedWidget(
+                  notification: notification,
+                  timebankModel: widget.timebankModel,
+                );
+                break;
+
+              case NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK:
+                OneToManyNotificationDataModel data =
+                    OneToManyNotificationDataModel.fromJson(notification.data);
+                return NotificationCard(
+                  title: AppLocalizations.of(context)
+                      .translate('notifications', 'debited'),
+                  subTitle:
+                      TimebankNotificationMessage.DEBIT_FULFILMENT_FROM_TIMEBANK
+                          .replaceFirst(
+                            '*n',
+                            (data.classDetails.numberOfClassHours +
+                                    data.classDetails.numberOfPreperationHours)
+                                .toString(),
+                          )
+                          .replaceFirst('*name', data.classDetails.classHost)
+                          .replaceFirst('*class', data.classDetails.classTitle),
+                  entityName: data.classDetails.classHost,
+                  onDismissed: () {
+                    dismissTimebankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
+                );
+                break;
+
+              case NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED:
+                OneToManyNotificationDataModel data =
+                    OneToManyNotificationDataModel.fromJson(notification.data);
+                return NotificationCard(
+                  title: AppLocalizations.of(context)
+                      .translate('notifications', 'credited'),
+                  subTitle: TimebankNotificationMessage
+                      .CREDIT_FROM_OFFER_APPROVED
+                      .replaceFirst(
+                          '*n', data.classDetails.numberOfClassHours.toString())
+                      .replaceFirst('*class', data.classDetails.classTitle),
+                  // photoUrl: data.participantDetails.photourl,
+                  entityName: data.participantDetails.fullname,
+                  onDismissed: () {
+                    dismissTimebankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
+                );
+                break;
+
+              case NotificationType.TYPE_DELETION_REQUEST_OUTPUT:
+                var requestData =
+                    SoftDeleteRequestDataHolder.fromMap(notification.data);
+                return NotificationCard(
+                  entityName: requestData.entityTitle ?? "Deletion Request",
+                  photoUrl: null,
+                  title: requestData.requestAccepted
+                      ? "${requestData.entityTitle} was deleted!"
+                      : "${requestData.entityTitle} cannot be deleted!",
+                  subTitle: requestData.requestAccepted
+                      ? "${requestData.entityTitle} you requested to delete has been successfully deleted!"
+                      : "Your request to delete ${requestData.entityTitle} cannot be completed at this time. There are pending transactions. Tap here to view the details:",
+                  onPressed: () => !requestData.requestAccepted
+                      ? showDialogForIncompleteTransactions(
+                          context: context,
+                          deletionRequest: requestData,
+                        )
+                      : null,
+                  onDismissed: () {
+                    dismissTimebankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
+                );
+
+              case NotificationType.TYPE_REPORT_MEMBER:
+                ReportedMemberNotificationModel data =
+                    ReportedMemberNotificationModel.fromMap(notification.data);
+                return NotificationCard(
+                  title: "Member Reported",
+                  subTitle: TimebankNotificationMessage.MEMBER_REPORT
+                      .replaceFirst('*name', data.reportedUserName),
+                  photoUrl: data.reportedUserImage,
+                  entityName: data.reportedUserName,
+                  onDismissed: () {
+                    dismissTimebankNotification(
+                        timebankId: notification.timebankId,
+                        notificationId: notification.id);
+                  },
+                );
+              default:
+                log("Unhandled timebank notification type ${notification.type} ${notification.id}");
+                Crashlytics().log(
+                    "Unhandled timebank notification type ${notification.type} ${notification.id}");
+                return Container();
+                break;
+            }
           },
         );
       },
