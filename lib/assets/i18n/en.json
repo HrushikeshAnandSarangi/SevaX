@@ -359,7 +359,7 @@
     "name": "Project Name",
     "name_hint": "Ex: Pets-in-town, Citizen collab",
     "name_empty_err": "Project name cannot be empty",
-    "duration": "Project duration",
+    "duration": "Project duration*",
     "statement": "Mission Statement",
     "statement_hint": "Ex: A bit more about your project which will help to associate with",
     "statement_empty_err": "Mission statement cannot be empty.",
@@ -678,7 +678,7 @@
     "others": "Others"
   },
   "create_request": {
-    "sam_date_time" : "You have provided identical date and time for the Start and End. Please provide an End time that is after the Start time.",
+    "sam_date_time": "You have provided identical date and time for the Start and End. Please provide an End time that is after the Start time.",
     "humanity_first_create": "Create Yang Gang Request",
     "create": "Create Request",
     "edit": "Edit Request",
@@ -689,7 +689,7 @@
     "request_title": "Request title*",
     "small_carpenty": "Ex: Small carpentry work...",
     "subject": "Please enter the subject of your request",
-    "duration": "  Request duration",
+    "duration": "  Request duration*",
     "yang_desc": "Yang Gang Request description",
     "desc": "Request description*",
     "request_hash": "Your Request and any #hashtags",
@@ -749,10 +749,12 @@
     "repeat_cancel": "Cancel",
     "repeat_done": "Done",
     "recurringDays_err": "Recurring days cannot be empty",
-    "request_total_credits_timebank": " Seva Credits will be credited to the Timebank for this request. Note that each participant will receive a maximum of  ",
+    "request_total_credits_timebank": " Seva Credits will be credited to the Timebank for this request. Note that each participant will receive a maximum of ",
     "request_total_credits_timebank_add": " credits for completing this request.",
     "request_total_credits_personal": " Seva Credits are required for this request. It will be debited from your balance. Note that each participant will receive a maximum of ",
-    "request_total_credits_personal_add": " credits for completing this request."
+    "request_total_credits_personal_add": " credits for completing this request.",
+    "max_credit": "Maximum credits*",
+    "max_credit_hint": "Maximum credits to be given per volunteer"
   },
   "edit_group": {
     "add_members": "Add Members",
@@ -825,7 +827,7 @@
     "admin_cannot": "Admins cannot create message"
   },
   "coins": {
-    "donate": "Donate",
+    "donate": "Donate Credits",
     "donate_totimebank": "Donate seva credits to Timebank",
     "not_enough": "You do not have sufficient credits to donate!",
     "donate_coins": "Donate seva credits to Timebank",
@@ -988,7 +990,7 @@
     "availablity": "Availability",
     "availablity_desc": "Describe my availability",
     "tutor": "Ex teaching a python class..",
-    "offer_duration": "Offer duration",
+    "offer_duration": "Offer duration*",
     "prep_hours": "No. of preparation hours",
     "prep_hours_required": "No. of preparation hours required",
     "no_of_class": "No. of class hours",
@@ -1239,5 +1241,16 @@
     "change_advisory": " You are required to provide billing details for this Timebank - including the new billing address. The transfer of ownership will not be completed until this is done.",
     "ownership_suceess": "Congratulations! You are now the new owner of the Timebank ",
     "already_invited": " already invited."
+  },
+
+  "push_notification": {
+    "title": "The SevaX App would like to send you Push Notifications. Notifications may include alerts and reminders.",
+    "dont_allow": "Don't Allow"
+  },
+  "delete": {
+    "delete_request_title": "Delete request",
+    "sure_to_delete_request": "Are you sure you want to delete this request?",
+    "delete_offer_title": "Delete offer",
+    "sure_to_delete_offer": "Are you sure you want to delete this offer?"
   }
 }

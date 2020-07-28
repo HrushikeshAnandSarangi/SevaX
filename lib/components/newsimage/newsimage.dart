@@ -185,7 +185,8 @@ class NewsImageState extends State<NewsImage>
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-
+    globals.newsDocumentURL = null;
+    globals.newsDocumentName = null;
     imagePicker = NewsImagePickerHandler(this, _controller);
     imagePicker.init();
   }

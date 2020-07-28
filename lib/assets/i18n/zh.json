@@ -359,7 +359,7 @@
     "name": "项目名称",
     "name_hint": "例如：某某城市居民合作",
     "name_empty_err": "项目名称不能留空",
-    "duration": "项目时间长度",
+    "duration": "项目时间长度*",
     "statement": "使命宣言",
     "statement_hint": "例如：有关您的项目的更多信息。",
     "statement_empty_err": "任务说明不能为空。",
@@ -677,7 +677,7 @@
     "others": "其他"
   },
   "create_request": {
-    "sam_date_time" : "您已為開始和結束提供了相同的日期和時間。請提供一個比開始時間晚的結束時間。",
+    "sam_date_time": "您已為開始和結束提供了相同的日期和時間。請提供一個比開始時間晚的結束時間。",
     "humanity_first_create": "创建humanity_first请求",
     "create": "创建请求",
     "edit": "编辑请求",
@@ -688,7 +688,7 @@
     "request_title": "请求标题*",
     "small_carpenty": "例如：小木工工作...",
     "subject": "请输入您的请求的主题",
-    "duration": "  申请时间",
+    "duration": "  申请时间*",
     "yang_desc": "Andrew Yang要求内容",
     "desc": "要求内容*",
     "request_hash": "您的请求，任何＃哈希标签",
@@ -748,10 +748,12 @@
     "repeat_cancel": "取消",
     "repeat_done": "完成",
     "recurringDays_err": "重复天数不能为空",
-    "request_total_credits_timebank":"对于此请求，Seva积分将记入时间银行。请注意，每个参与者最多将获得",
-    "request_total_credits_timebank_add":"完成此请求所获得的积分。",
-    "request_total_credits_personal":"此请求需要Seva点数。将从您的余额中扣除。请注意，每个参与者最多可以收到",
-    "request_total_credits_personal_add": "用于完成此请求的积分"
+    "request_total_credits_timebank": "对于此请求，Seva积分将记入时间银行。请注意，每个参与者最多将获得",
+    "request_total_credits_timebank_add": "完成此请求所获得的积分。",
+    "request_total_credits_personal": "此请求需要Seva点数。将从您的余额中扣除。请注意，每个参与者最多可以收到",
+    "request_total_credits_personal_add": "用于完成此请求的积分",
+    "max_credit": "最高学分 *",
+    "max_credit_hint": "每位志愿者的最高学分"
   },
   "edit_group": {
     "add_members": "添加成员",
@@ -824,7 +826,7 @@
     "admin_cannot": "管理员不能创建消息"
   },
   "coins": {
-    "donate": "捐赠",
+    "donate": "捐赠 积分",
     "donate_totimebank": "捐赠Seva积分给时间银行",
     "not_enough": "您没有足够的积分可捐！",
     "donate_coins": "捐赠Seva积分给时间银行",
@@ -987,7 +989,7 @@
     "availablity": "可用性",
     "availablity_desc": "描述我可以的时间",
     "tutor": "举例：教学Python..",
-    "offer_duration": "服务项目的时间",
+    "offer_duration": "服务项目的时间*",
     "prep_hours": "备课的时数",
     "prep_hours_required": "备课所需的时数",
     "no_of_class": "课时号",
@@ -1141,7 +1143,6 @@
     "add_caption": "添加字幕",
     "tap_for_photo": "水龙头照片",
     "name_error": "名称不能为空"
-
   },
   "add_location": {
     "confirm_location_label": "确认位置下"
@@ -1188,7 +1189,9 @@
     "csv_file_alert": "不允许大于1 MB的文件",
     "csv_size_limit": "注意：最大文件大小为1 MB",
     "csv_progress": "上载CSV文件",
-    "upload_success": "上传成功"
+    "upload_success": "上传成功",
+    "extension_title": "扩展警报",
+    "extension_alert_messgae": "只允许CSV文件"
   },
   "project_template": {
     "save_as_template": "另存为模板",
@@ -1237,5 +1240,11 @@
     "change_advisory": " 您需要提供此时间银行的帐单详细信息-包括新的帐单地址。在完成所有权转移之前，不会完成所有权转移。",
     "ownership_suceess": "恭喜你！您现在是该帐户的新所有者 时间银行 ",
     "already_invited": " 已受邀。"
+  },
+  "delete": {
+    "delete_request_title": "Delete request",
+    "sure_to_delete_request": "Are you sure you want to delete this request?",
+    "delete_offer_title": "Delete offer",
+    "sure_to_delete_offer": "Are you sure you want to delete this offer?"
   }
 }

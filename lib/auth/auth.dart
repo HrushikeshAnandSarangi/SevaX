@@ -75,8 +75,7 @@ class Auth {
         default:
           break;
       }
-    } else {
-    }
+    } else {}
   }
 
   /// SignIn a User with his [email] and [password]
@@ -111,8 +110,7 @@ class Auth {
       );
       return _processEmailPasswordUser(result.user, displayName);
     } on PlatformException catch (error) {
-      if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-      }
+      if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {}
       throw error;
     } catch (error) {
       log('createUserWithEmailAndPassword: error: ${error.toString()}');

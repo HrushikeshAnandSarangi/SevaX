@@ -133,7 +133,6 @@ class UserModel extends DataModel {
       this.communities = communities;
     } else {
       this.communities = new List();
-      this.communities.add('asdfadf');
     }
 
     if (map.containsKey('blockedBy')) {

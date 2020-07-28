@@ -363,7 +363,7 @@
     "name": "Nome do Projeto",
     "name_hint": "Ex: Animais de estimação na cidade, colaboração cidadã",
     "name_empty_err": "O nome do projeto não pode estar vazio",
-    "duration": "Duração do projeto",
+    "duration": "Duração do projeto*",
     "statement": "Declaração de missão",
     "statement_hint": "Ex: Um pouco mais sobre o seu projeto, como juntar-se ao projeto poderá ajudar ",
     "statement_empty_err": "A declaração de missão não pode estar vazia.",
@@ -681,7 +681,7 @@
     "others": "Otros"
   },
   "create_request": {
-    "sam_date_time" : "Você forneceu data e hora idênticas para o início e o fim. Forneça um horário de término posterior ao horário de início.",
+    "sam_date_time": "Você forneceu data e hora idênticas para o início e o fim. Forneça um horário de término posterior ao horário de início.",
     "humanity_first_create": "Criar solicitações da gang de Yang",
     "create": "criar",
     "edit": "Editar solicitações",
@@ -692,7 +692,7 @@
     "request_title": "Solicitar título *",
     "small_carpenty": "Ex: trabalhos de marcenaria pequena ...",
     "subject": "Por favor ingresse o título de suas solicitações",
-    "duration": "Duração das solicitações",
+    "duration": "Duração das solicitações*",
     "yang_desc": "Descrição da solicitação do grupo Yang Gang ",
     "desc": "Descrição das solicitações *",
     "request_hash": "Suas solicitações e #hashtags",
@@ -755,7 +755,9 @@
     "request_total_credits_timebank": "Os créditos Seva serão creditados no Timebank para esta solicitação. Observe que cada participante receberá no máximo",
     "request_total_credits_timebank_add": "créditos para concluir esta solicitação.",
     "request_total_credits_personal": "São necessários créditos Seva para esta solicitação. Ele será debitado do seu saldo. Observe que cada participante receberá no máximo",
-    "request_total_credits_personal_add": "créditos para concluir esta solicitação."
+    "request_total_credits_personal_add": "créditos para concluir esta solicitação.",
+    "max_credit": "Créditos máximos*",
+    "max_credit_hint": "Créditos máximos a serem dados por voluntário"
   },
   "edit_group": {
     "add_members": "Adicionar membros",
@@ -828,7 +830,7 @@
     "admin_cannot": "Os administradores não podem criar mensagem"
   },
   "coins": {
-    "donate": "Doar",
+    "donate": "Doar créditos",
     "donate_totimebank": "Doe créditos Seva ao Banco de tempo ",
     "not_enough": "Você não tem créditos suficientes para doar!",
     "donate_coins": "Doar créditos Seva para o Banco de tempo",
@@ -956,7 +958,7 @@
     "Remove": "Eliminar",
     "Promote": "Promover",
     "Demote": "Rebaixar",
-    "Loan" : "Empréstimo",
+    "Loan": "Empréstimo",
     "Exit": "Saída",
     "admins": "Administradores",
     "coordinators": "Coordenadores",
@@ -987,7 +989,7 @@
     "availablity": "Disponibilidade",
     "availablity_desc": "Descrever minha disponibilidade",
     "tutor": "Ex. Aulas de violão ",
-    "offer_duration": "Duração da oferta",
+    "offer_duration": "Duração da oferta*",
     "prep_hours": "No. de horas de preparação",
     "prep_hours_required": " No. de horas de preparação necessárias",
     "no_of_class": "No. de horas da aula",
@@ -1140,7 +1142,6 @@
     "add_caption": "Adicionar uma legenda",
     "tap_for_photo": "Tap para a foto",
     "name_error": "O nome não pode estar vazio"
-
   },
   "add_location": {
     "confirm_location_label": "CONFIRMAR localização"
@@ -1187,7 +1188,9 @@
     "csv_file_alert": "Arquivos maiores que 1 MB não são permitidos",
     "csv_size_limit": "NOTA: O tamanho máximo do arquivo é 1 MB",
     "csv_progress": "Fazendo upload de arquivo CSV",
-    "upload_success": "Carregado com sucesso"
+    "upload_success": "Carregado com sucesso",
+    "extension_title": "Alerta de extensão",
+    "extension_alert_messgae": "Somente arquivos CSV são permitidos"
   },
   "external_notifications": {
     "notification_title": "Notificações",
@@ -1236,5 +1239,11 @@
     "change_advisory": " Você precisa fornecer detalhes de cobrança para este Timebank, incluindo o novo endereço de cobrança. A transferência de propriedade não será concluída até que isso seja feito.",
     "ownership_suceess": "Parabéns! Agora você é o novo proprietário do Timebank ",
     "already_invited": " já convidado."
+  },
+  "delete": {
+    "delete_request_title": "Delete request",
+    "sure_to_delete_request": "Are you sure you want to delete this request?",
+    "delete_offer_title": "Delete offer",
+    "sure_to_delete_offer": "Are you sure you want to delete this offer?"
   }
 }

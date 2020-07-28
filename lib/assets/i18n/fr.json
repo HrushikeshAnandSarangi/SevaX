@@ -682,7 +682,7 @@
     "others": "Autres"
   },
   "create_request": {
-    "sam_date_time" : "Vous avez fourni une date et une heure identiques pour le début et la fin. Veuillez indiquer une heure de fin postérieure à l'heure de début.",
+    "sam_date_time": "Vous avez fourni une date et une heure identiques pour le début et la fin. Veuillez indiquer une heure de fin postérieure à l'heure de début.",
     "humanity_first_create": "Crear solicitud de pandilla Yang",
     "create": "crear",
     "edit": "Modifier la demande",
@@ -756,7 +756,9 @@
     "request_total_credits_timebank": "Les crédits Seva seront crédités à la banque de temps pour cette demande. Notez que chaque participant recevra un maximum de",
     "request_total_credits_timebank_add": "crédits pour avoir rempli cette demande.",
     "request_total_credits_personal": "Des crédits Seva sont requis pour cette demande. Elle sera débitée de votre solde. Notez que chaque participant recevra un maximum de",
-    "request_total_credits_personal_add": "crédits pour avoir répondu à cette demande."
+    "request_total_credits_personal_add": "crédits pour avoir répondu à cette demande.",
+    "max_credit": "Crédits maximum*",
+    "max_credit_hint": "Crédits maximum à accorder par bénévole"
   },
   "edit_group": {
     "add_members": "Añadir miembros",
@@ -829,7 +831,7 @@
     "admin_cannot": "Les administrateurs ne peuvent pas créer de message"
   },
   "coins": {
-    "donate": "Faire un don",
+    "donate": "Faire un don crédits",
     "donate_totimebank": "Faire don de pièces SEVA à une banque de temps",
     "not_enough": "Vous n'avez pas suffisamment de crédits pour faire un don!",
     "donate_coins": "Faire don de crédits SEVA à Timebank",
@@ -956,7 +958,7 @@
     "Reject": "Rejeter",
     "Remove": "Retirer",
     "Promote": "Promouvoir",
-    "Loan" : "Prête",
+    "Loan": "Prête",
     "Demote": "Rétrograder",
     "Exit": "Sortie",
     "admins": "Administrateurs",
@@ -988,7 +990,7 @@
     "availablity": "Disponibilité",
     "availablity_desc": "Décrivez ma disponibilité",
     "tutor": "Ex enseigner une classe de python ..",
-    "offer_duration": "Durée de l'offre",
+    "offer_duration": "Durée de l'offre*",
     "prep_hours": "Nombre d'heures de préparation",
     "prep_hours_required": "Nombre d'heures de préparation nécessaires",
     "no_of_class": "Nombre d'heures de cours",
@@ -1141,7 +1143,6 @@
     "add_caption": "Ajouter une légende",
     "tap_for_photo": "Tap pour la photo",
     "name_error": "Le nom ne peut pas être vide"
-
   },
   "add_location": {
     "confirm_location_label": "CONFIRMER L'EMPLACEMENT"
@@ -1188,7 +1189,9 @@
     "csv_file_alert": "Les fichiers supérieurs à 1 MB ne sont pas autorisés",
     "csv_size_limit": "REMARQUE: la taille maximale du fichier est de 1 MB",
     "csv_progress": "Téléchargement d'un fichier CSV",
-    "upload_success": "Téléchargé avec succès"
+    "upload_success": "Téléchargé avec succès",
+    "extension_title": "Alerte d'extension",
+    "extension_alert_messgae": "Seuls les fichiers CSV sont autorisés"
   },
   "external_notifications": {
     "notification_title": "Notifications",
@@ -1237,5 +1240,11 @@
     "change_advisory": " Vous devez fournir les détails de facturation de cette Timebank, y compris la nouvelle adresse de facturation. Le transfert de propriété ne sera pas achevé tant que cela ne sera pas fait.",
     "ownership_suceess": "Toutes nos félicitations! Vous êtes maintenant le nouveau propriétaire de la Timebank ",
     "already_invited": " déjà invité."
+  },
+  "delete": {
+    "delete_request_title": "Delete request",
+    "sure_to_delete_request": "Are you sure you want to delete this request?",
+    "delete_offer_title": "Delete offer",
+    "sure_to_delete_offer": "Are you sure you want to delete this offer?"
   }
 }

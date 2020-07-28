@@ -61,7 +61,12 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
   Widget get title {
     return Text(
       widget.title,
-      // style: sectionLabelTextStyle,
+      style: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'Europa',
+        color: Colors.black,
+      ),
     );
   }
 
@@ -150,7 +155,7 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
       return '${type == DurationType.START ? AppLocalizations.of(context).translate('create_request','start') : AppLocalizations.of(context).translate('create_request','end')}\n${AppLocalizations.of(context).translate('create_request','start_end')}';
     }
     String dateTimeString = '';
-    DateFormat format = DateFormat('dd MMM,\nhh:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
+    DateFormat format = DateFormat('dd MMM yyyy,\nhh:mm a', Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
     dateTimeString = format.format(dateTime);
     return dateTimeString;
   }

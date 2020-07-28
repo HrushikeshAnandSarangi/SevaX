@@ -112,7 +112,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
                 child: globals.timebankAvatarURL == null
                     ? Stack(
                         children: <Widget>[
-                          defaultAvtarWidget,
+                          sevaXdeafaultImage,
                         ],
                       )
                     : Container(
@@ -128,22 +128,6 @@ class _TimebankAvatarState extends State<TimebankAvatar>
                         ),
                       ),
               ),
-      ),
-    );
-  }
-
-  Widget get defaultAvtarWidget {
-    return (FlavorConfig.appFlavor == Flavor.APP ||
-            FlavorConfig.appFlavor == Flavor.SEVA_DEV)
-        ? sevaXdeafaultImage
-        : sevaXdeafaultImage;
-  }
-
-  Widget get humanityFirstdefaultImage {
-    return Container(
-      child: CircleAvatar(
-        radius: 40.0,
-        backgroundImage: AssetImage('lib/assets/images/genericlogo.png'),
       ),
     );
   }
