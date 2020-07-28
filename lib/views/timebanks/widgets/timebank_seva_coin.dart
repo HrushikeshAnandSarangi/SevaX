@@ -65,16 +65,20 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                                 },
                               ),
                             ))),
-                Padding(
-                    padding: const EdgeInsets.only(left: 15.0),
-                    child: RaisedButton(
-                      onPressed: _showFontSizePickerDialog,
-                      child: Text(
-                        AppLocalizations.of(context)
-                            .translate('coins', 'donate'),
-                        style: Theme.of(context).primaryTextTheme.button,
-                      ),
-                    ))
+                Container(
+                  width: 148,
+                  height: 40,
+                  child: Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: RaisedButton(
+                        onPressed: _showFontSizePickerDialog,
+                        child: Text(
+                          AppLocalizations.of(context)
+                              .translate('coins', 'donate'),
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                      )),
+                )
               ]);
         }
         return Center(child: CircularProgressIndicator());

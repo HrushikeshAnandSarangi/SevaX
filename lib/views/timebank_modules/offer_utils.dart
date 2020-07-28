@@ -96,6 +96,60 @@ void addBookMark(String offerId, String userId) {
   });
 }
 
+Future<bool> deleteOffer(
+  BuildContext context,
+  String offerId,
+) async {
+  bool status = false;
+  await showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        title: Text(
+          AppLocalizations.of(context)
+              .translate('delete', 'delete_offer_title'),
+        ),
+        content: Text(
+          AppLocalizations.of(context)
+              .translate('delete', 'sure_to_delete_offer'),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+            },
+            child: Text(
+              AppLocalizations.of(context).translate(
+                'notifications_card',
+                'cancel',
+              ),
+              style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
+            ),
+          ),
+          FlatButton(
+            padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+            color: Theme.of(context).accentColor,
+            textColor: FlavorConfig.values.buttonTextColor,
+            onPressed: () async {
+              await Firestore.instance
+                  .collection("offers")
+                  .document(offerId)
+                  .updateData({'softDelete': true});
+              Navigator.of(dialogContext).pop();
+              Navigator.pop(context);
+            },
+            child: Text(
+              AppLocalizations.of(context)
+                  .translate('notifications_card', 'delete'),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 bool isParticipant(BuildContext context, OfferModel model) {
   return getOfferParticipants(offerDataModel: model)
       .contains(SevaCore.of(context).loggedInUser.sevaUserID);

@@ -56,24 +56,6 @@ Widget infoButton({
       showDialog(
         context: context,
         builder: (BuildContext _context) {
-          Map<InfoType, String> infoDescriptionMapper = {
-            InfoType.GROUPS:
-                AppLocalizations.of(context).translate('info_window', 'groups'),
-            InfoType.PROJECTS: AppLocalizations.of(context)
-                .translate('info_window', 'projects'),
-            InfoType.REQUESTS: AppLocalizations.of(context)
-                .translate('info_window', 'requests'),
-            InfoType.OFFERS:
-                AppLocalizations.of(context).translate('info_window', 'offers'),
-            InfoType.PROTECTED_TIMEBANK: AppLocalizations.of(context)
-                .translate('info_window', 'protected_timebank'),
-            InfoType.PRIVATE_TIMEBANK: AppLocalizations.of(context)
-                .translate('info_window', 'private_timebank'),
-            InfoType.PRIVATE_GROUP: AppLocalizations.of(context)
-                .translate('info_window', 'private_group'),
-            InfoType.TAX_CONFIGURATION: AppLocalizations.of(context)
-                .translate('info_window', 'tax_configuration'),
-          };
           bool _isDialogBottom = buttonPosition.dy >
               (MediaQuery.of(context).size.height / 2) + 100;
           return Stack(
@@ -116,8 +98,7 @@ Widget infoButton({
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            details[infoKeyMapper[type]] ??
-                                infoDescriptionMapper[key],
+                            details[infoKeyMapper[type]],
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,

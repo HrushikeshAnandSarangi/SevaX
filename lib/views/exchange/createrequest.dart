@@ -132,7 +132,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
   RequestModel requestModel = RequestModel();
   End end = End();
-  var focusNodes = List.generate(5, (_) => FocusNode());
+  var focusNodes = List.generate(6, (_) => FocusNode());
 
   GeoFirePoint location;
 
@@ -370,7 +370,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                               focusNode: focusNodes[0],
                               onFieldSubmitted: (v) {
                                 FocusScope.of(context)
-                                    .requestFocus(focusNodes[1]);
+                                    .requestFocus(focusNodes[2]);
                               },
                               textInputAction: TextInputAction.next,
                               decoration: InputDecoration(
@@ -476,7 +476,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                               ),
                             ),
                             TextFormField(
-                              focusNode: focusNodes[2],
+                              focusNode: focusNodes[3],
                               onFieldSubmitted: (v) {
                                 FocusScope.of(context).unfocus();
                               },

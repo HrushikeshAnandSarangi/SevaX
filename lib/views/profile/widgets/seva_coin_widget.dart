@@ -10,7 +10,7 @@ class SevaCoinWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 60,
-      padding: EdgeInsets.all(5),
+      padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
       child: RaisedButton(
         shape: StadiumBorder(),
         color: Colors.white,
@@ -38,13 +38,13 @@ class SevaCoinWidget extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(width: 8),
+            SizedBox(width: 5),
             Text(
               '${amount != null ? double.parse(amount.toStringAsFixed(2)) : 0} ${AppLocalizations.of(context).translate('profile','seva_credits')}',
               style: TextStyle(
                 color: amount > 0 ? Colors.blue : Colors.red,
                 fontWeight: FontWeight.bold,
-                fontSize: 16,
+                fontSize: 15,
               ),
             ),
           ],
