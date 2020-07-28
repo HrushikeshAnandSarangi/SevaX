@@ -292,7 +292,7 @@ Future<void> updateTimebankDetails(
     'photo_url': timebankModel.photoUrl,
     'preventAccedentalDelete': timebankModel.preventAccedentalDelete,
     'private': timebankModel.private,
-    'members': FieldValue.arrayUnion(members),
+    if (members.length > 0) 'members': FieldValue.arrayUnion(members)
   });
 }
 

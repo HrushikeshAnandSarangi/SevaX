@@ -22,6 +22,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -1035,16 +1036,31 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              GestureDetector(
-                                onTap: () {
-                                  Share.share(shareText(timebankCode));
-                                },
-                                child: Container(
-                                  margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                  child: Text(
-                                    AppLocalizations.of(context)
-                                        .translate('members', 'share_code'),
-                                    style: TextStyle(color: Colors.blue),
+                              Tooltip(
+                                message: "Copy Timebank Code",
+                                child: InkWell(
+                                  onTap: () {
+                                    if (AppConfig.isWeb) {
+                                      ClipboardData data = ClipboardData(
+                                          text: shareText(timebankCode));
+                                      Clipboard.setData(data);
+
+                                      SnackBar snackbar = SnackBar(
+                                        content: Text("Copied Timebank Code"),
+                                      );
+                                      _scaffoldKey.currentState
+                                          .showSnackBar(snackbar);
+                                    } else {
+                                      Share.share(shareText(timebankCode));
+                                    }
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                    child: Text(
+                                      AppLocalizations.of(context)
+                                          .translate('members', 'share_code'),
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
                                   ),
                                 ),
                               ),

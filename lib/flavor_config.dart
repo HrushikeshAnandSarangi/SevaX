@@ -19,8 +19,10 @@ class FlavorValues {
   final String dynamicLinkUriPrefix;
   final String bundleId;
   final String packageName;
-
+  final String projectApiKey;
+  final String googleMapsKey;
   FlavorValues({
+    this.googleMapsKey,
     this.bundleId,
     this.packageName,
     @required this.appName,
@@ -36,6 +38,7 @@ class FlavorValues {
     @required this.stripePublishableKey,
     @required this.androidPayMode,
     @required this.dynamicLinkUriPrefix,
+    this.projectApiKey,
   });
 }
 
@@ -46,6 +49,8 @@ class FlavorConfig {
     switch (appFlavor) {
       case Flavor.SEVA_DEV:
         return FlavorValues(
+          googleMapsKey: "AIzaSyCfJs1RFK22W-KvpPWkTmJ3lhrGEKoJ-Gc",
+          projectApiKey: "AIzaSyA1uAGsq35nEARPexmT5c1AFL29wfOuv5Y",
           bundleId: 'com.sevaexchange.dev',
           packageName: 'com.sevaexchange.dev',
           elasticSearchBaseURL: "http://35.227.68.255",
@@ -123,9 +128,11 @@ class FlavorConfig {
 
       case Flavor.APP:
         return FlavorValues(
+          googleMapsKey: "AIzaSyCfJs1RFK22W-KvpPWkTmJ3lhrGEKoJ-Gc",
+          projectApiKey: "AIzaSyC5p0iPaOTJEtOpfc8bT5zQnxlIrHtVgsU",
           bundleId: 'com.sevaexchange.app',
           packageName: 'com.sevaexchange.sevax',
-          elasticSearchBaseURL: "http://35.227.18.55",
+          elasticSearchBaseURL: "https://es.sevaexchange.com",
           cloudFunctionBaseURL:
               "https://us-central1-sevaxproject4sevax.cloudfunctions.net",
           androidPayMode: "production",

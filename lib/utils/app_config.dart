@@ -26,4 +26,8 @@ class AppConfig {
   static String appVersion;
   static int buildNumber;
   static String packageName;
+
+  //Platform checks
+  static bool isWeb;
+  static bool isMobile;
 }
