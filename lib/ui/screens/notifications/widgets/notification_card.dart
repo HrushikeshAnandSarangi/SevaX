@@ -5,7 +5,7 @@ import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 
 class NotificationCard extends StatelessWidget {
-  final Function onPressed;
+  final VoidCallback onPressed;
   final Function onDismissed;
   final String photoUrl;
   final String title;
@@ -29,54 +29,58 @@ class NotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AbsorbPointer(
-      absorbing: !isDissmissible,
+      absorbing: !isDissmissible && onPressed == null,
       child: Slidable(
         actionExtentRatio: 0.25,
-        actions: <Widget>[
-          IconSlideAction(
-            caption: AppLocalizations.of(context)
-                .translate('notifications_card', 'delete'),
-            color: Colors.red,
-            icon: Icons.delete,
-            onTap: () {
-              showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (BuildContext dialogContext) {
-                  return AlertDialog(
-                    title: Text(
-                      AppLocalizations.of(context).translate(
-                          'notifications_card', 'delete_notification_title'),
-                    ),
-                    content: Text(
-                      AppLocalizations.of(context)
-                          .translate('notifications_card', 'sure_to_delete'),
-                    ),
-                    actions: <Widget>[
-                      FlatButton(
-                        onPressed: () => {Navigator.of(dialogContext).pop()},
-                        child: Text(
-                          AppLocalizations.of(context)
-                              .translate('notifications_card', 'cancel'),
-                        ),
-                      ),
-                      FlatButton(
-                        onPressed: () async {
-                          onDismissed();
-                          Navigator.of(dialogContext).pop();
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)
-                              .translate('notifications_card', 'delete'),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-          ),
-        ],
+        actions: isDissmissible
+            ? <Widget>[
+                IconSlideAction(
+                  caption: AppLocalizations.of(context)
+                      .translate('notifications_card', 'delete'),
+                  color: Colors.red,
+                  icon: Icons.delete,
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (BuildContext dialogContext) {
+                        return AlertDialog(
+                          title: Text(
+                            AppLocalizations.of(context).translate(
+                                'notifications_card',
+                                'delete_notification_title'),
+                          ),
+                          content: Text(
+                            AppLocalizations.of(context).translate(
+                                'notifications_card', 'sure_to_delete'),
+                          ),
+                          actions: <Widget>[
+                            FlatButton(
+                              onPressed: () =>
+                                  {Navigator.of(dialogContext).pop()},
+                              child: Text(
+                                AppLocalizations.of(context)
+                                    .translate('notifications_card', 'cancel'),
+                              ),
+                            ),
+                            FlatButton(
+                              onPressed: () async {
+                                onDismissed();
+                                Navigator.of(dialogContext).pop();
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)
+                                    .translate('notifications_card', 'delete'),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ]
+            : [],
         delegate: SlidableDrawerDelegate(),
         child: Container(
           margin: EdgeInsets.fromLTRB(5, 5, 5, 0),

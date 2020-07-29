@@ -18,38 +18,39 @@ class JoinRequestWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-        background: dismissibleBackground,
-        key: Key(Utils.getUuid()),
-        onDismissed: (direction) {
-          String userEmail = SevaCore.of(context).loggedInUser.email;
-          FirestoreManager.readUserNotification(notificationId, userEmail);
-        },
-        child: GestureDetector(
-          child: Container(
-            margin: notificationPadding,
-            decoration: notificationDecoration,
-            child: ListTile(
-              title: Text(AppLocalizations.of(context)
-                  .translate('notifications', 'join_request')),
-              leading: user.photoURL != null
-                  ? CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL),
-                    )
-                  : Offstage(),
-              subtitle: Text(
-                  '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'requested_join')} ${model.timebankTitle}, ${AppLocalizations.of(context).translate('notifications', 'tap_toview')}'),
-            ),
+      background: dismissibleBackground,
+      key: Key(Utils.getUuid()),
+      onDismissed: (direction) {
+        String userEmail = SevaCore.of(context).loggedInUser.email;
+        FirestoreManager.readUserNotification(notificationId, userEmail);
+      },
+      child: GestureDetector(
+        child: Container(
+          margin: notificationPadding,
+          decoration: notificationDecoration,
+          child: ListTile(
+            title: Text(AppLocalizations.of(context)
+                .translate('notifications', 'join_request')),
+            leading: user.photoURL != null
+                ? CircleAvatar(
+                    backgroundImage: NetworkImage(user.photoURL),
+                  )
+                : Offstage(),
+            subtitle: Text(
+                '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'requested_join')} ${model.timebankTitle}, ${AppLocalizations.of(context).translate('notifications', 'tap_toview')}'),
           ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => JoinRequestView(
-                  timebankId: model.timebankId,
-                ),
+        ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => JoinRequestView(
+                timebankId: model.timebankId,
               ),
-            );
-          },
-        ));
+            ),
+          );
+        },
+      ),
+    );
   }
 }
