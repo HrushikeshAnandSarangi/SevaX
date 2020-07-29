@@ -469,6 +469,8 @@
     "are_you_sure_feed": "Tem certeza de que deseja excluir esta publicação de notícias?"
   },
   "notifications": {
+    "request_reminder_title": "",
+    "request_reminder_subtitle": "Este é um lembrete para o evento ***eventname no qual você se inscreveu. Aqui estão os detalhes:\n localização: ***eventlocation\n Tempo: ***eventtime",
     "you_signed_up_for": "Você se inscreveu para",
     "on": "em",
     "owner_changes": ". O Dono do evento modificou este evento. Verifique se as alterações feitas são adequadas para você e aplique novamente.",

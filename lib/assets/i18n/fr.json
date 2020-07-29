@@ -469,6 +469,8 @@
     "are_you_sure_feed": "Voulez-vous vraiment supprimer ce fil d'actualités?"
   },
   "notifications": {
+    "request_reminder_title": "",
+    "request_reminder_subtitle": "Ceci est un rappel pour l'événement ***eventname auquel vous êtes inscrit. Voici les détails:\n Emplacement: ***eventlocation\n Temps: ***eventtime",
     "you_signed_up_for": "Vous vous étiez inscrit à la",
     "on": "le vendredi",
     "owner_changes": ". Le propriétaire de l'événement a modifié cet événement. Veuillez vous assurer que les modifications apportées vous conviennent et faites une nouvelle demande",
