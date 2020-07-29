@@ -6,6 +6,7 @@ import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -48,6 +49,9 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   bool showAppbar = false;
   String nearTimebankText;
   var radius;
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
+  String errorText = '';
 
   @override
   void initState() {
@@ -221,10 +225,31 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         Padding(
           padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
         ),
-        TextField(
+        TextFormField(
+          onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
+          },
+          autovalidate: autoValidateText,
           style: TextStyle(color: Colors.black),
           controller: searchTextController,
+          validator: (value) {
+            if (profanityDetector.isProfaneString(value)) {
+              // errorText =
+              return AppLocalizations.of(context)
+                  .translate('profanity', 'alert');
+            }
+            return null;
+          },
           decoration: InputDecoration(
+              //errorText: errorText,
               suffixIcon: Offstage(
                 offstage: searchTextController.text.length == 0,
                 child: IconButton(
@@ -250,6 +275,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
               filled: true,
               fillColor: Colors.grey[300],
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: new BorderSide(color: Colors.white),
+                borderRadius: new BorderRadius.circular(25.7),
+              ),
               focusedBorder: OutlineInputBorder(
                 borderSide: new BorderSide(color: Colors.white),
                 borderRadius: new BorderRadius.circular(25.7),

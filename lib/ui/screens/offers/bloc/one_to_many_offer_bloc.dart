@@ -151,14 +151,20 @@ class OneToManyOfferBloc extends BlocBase {
     if (_title.value == null || _title.value == '') {
       _title.addError(ValidationErrors.titleError);
       flag = true;
-    }
-    if (profanityDetector.isProfaneString(_title.value)) {
-      _title.addError(ValidationErrors.profanityError);
-      flag = true;
+    } else {
+      if (profanityDetector.isProfaneString(_title.value)) {
+        _title.addError(ValidationErrors.profanityError);
+        flag = true;
+      }
     }
     if (_classDescription.value == null || _classDescription.value == '') {
       _classDescription.addError(ValidationErrors.genericError);
       flag = true;
+    } else {
+      if (profanityDetector.isProfaneString(_classDescription.value)) {
+        _classDescription.addError(ValidationErrors.profanityError);
+        flag = true;
+      }
     }
     if (_classHours.value == null ||
         !numberCheck.hasMatch(_classHours.value.replaceAll('__*__', ''))) {

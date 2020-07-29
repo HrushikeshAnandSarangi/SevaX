@@ -1378,11 +1378,11 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
-          autovalidate: autoValidateText,
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[2]);
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
             if (value.length > 1) {
               setState(() {
@@ -1644,6 +1644,11 @@ class CreateEditCommunityViewFormState
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[7]);
             // scrollToBottom();
+          },
+          validator: (value) {
+            return (profanityDetector.isProfaneString(value))
+                ? AppLocalizations.of(context).translate('profanity', 'alert')
+                : null;
           },
           autovalidate: autoValidateText,
           onChanged: (value) {

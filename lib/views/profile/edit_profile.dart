@@ -61,6 +61,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   String cvUrl = '';
   BuildContext parentContext;
   final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
   @override
   void initState() {
     super.initState();
@@ -434,6 +435,19 @@ class _EditProfilePageState extends State<EditProfilePage>
               Form(
                 key: _formKey,
                 child: TextFormField(
+                  autovalidate: autoValidateText,
+                  onChanged: (value) {
+                    print("name ------ $value");
+                    if (value.length > 1) {
+                      setState(() {
+                        autoValidateText = true;
+                      });
+                    } else {
+                      setState(() {
+                        autoValidateText = false;
+                      });
+                    }
+                  },
                   decoration: InputDecoration(
                       hintText: AppLocalizations.of(context)
                           .translate('profile', 'add_name')),
@@ -448,8 +462,13 @@ class _EditProfilePageState extends State<EditProfilePage>
                     if (value.isEmpty) {
                       return AppLocalizations.of(context)
                           .translate('profile', 'enter_name');
+                    } else if (profanityDetector.isProfaneString(value)) {
+                      return AppLocalizations.of(context)
+                          .translate('profanity', 'alert');
+                    } else {
+                      widget.userModel.fullname = value;
+                      return null;
                     }
-                    widget.userModel.fullname = value;
                   },
                 ),
               ),
@@ -532,8 +551,20 @@ class _EditProfilePageState extends State<EditProfilePage>
               Form(
                 key: _formKey,
                 child: TextFormField(
+                  autovalidate: autoValidateText,
                   //key: _formKey,
-
+                  onChanged: (value) {
+                    print("name ------ $value");
+                    if (value.length > 1) {
+                      setState(() {
+                        autoValidateText = true;
+                      });
+                    } else {
+                      setState(() {
+                        autoValidateText = false;
+                      });
+                    }
+                  },
                   decoration: InputDecoration(
                       hintText: AppLocalizations.of(context)
                           .translate('profile', 'enter_bio')),
@@ -543,18 +574,20 @@ class _EditProfilePageState extends State<EditProfilePage>
                   textCapitalization: TextCapitalization.sentences,
                   style: TextStyle(fontSize: 17.0),
                   initialValue: widget.userModel.bio,
-                  onChanged: (value) {
-                    print("${value.length}");
-                  },
+
                   validator: (value) {
                     if (value.isEmpty) {
                       return AppLocalizations.of(context)
                           .translate('profile', 'please_enter_bio');
+                    } else if (profanityDetector.isProfaneString(value)) {
+                      return AppLocalizations.of(context)
+                          .translate('profanity', 'alert');
                     } else if (value.length < 50) {
                       return AppLocalizations.of(context)
                           .translate('profile', 'bio_50');
                     } else {
                       widget.userModel.bio = value;
+                      return null;
                     }
                   },
                 ),

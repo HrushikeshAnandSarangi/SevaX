@@ -109,24 +109,25 @@ class IndividualOfferBloc extends BlocBase with Validators {
   bool errorCheck() {
     bool flag = false;
     if (_title.value == null || _title.value == '') {
-      print("title i sempty");
       _title.addError(ValidationErrors.titleError);
       flag = true;
-    } else {
-      if (profanityDetector.isProfaneString(_title.value)) {
-        print("profanity detected");
-
-        _title.addError(ValidationErrors.profanityError);
-        flag = true;
-      }
+    } else if (profanityDetector.isProfaneString(_title.value)) {
+      _title.addError(ValidationErrors.profanityError);
+      flag = true;
     }
 
     if (_offerDescription.value == null || _offerDescription.value == '') {
       _offerDescription.addError(ValidationErrors.genericError);
       flag = true;
+    } else if (profanityDetector.isProfaneString(_offerDescription.value)) {
+      _offerDescription.addError(ValidationErrors.profanityError);
+      flag = true;
     }
     if (_availabilty.value == null || _availabilty.value == '') {
       _availabilty.addError(ValidationErrors.genericError);
+      flag = true;
+    } else if (profanityDetector.isProfaneString(_availabilty.value)) {
+      _availabilty.addError(ValidationErrors.profanityError);
       flag = true;
     }
 

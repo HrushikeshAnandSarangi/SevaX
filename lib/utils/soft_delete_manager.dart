@@ -43,8 +43,6 @@ Future<bool> checkExistingRequest({
   });
 }
 
-final profanityDetector = ProfanityDetector();
-bool autoValidateText = false;
 Future<void> showAdvisoryBeforeDeletion({
   BuildContext context,
   SoftDelete softDeleteType,
@@ -53,6 +51,8 @@ Future<void> showAdvisoryBeforeDeletion({
   String associatedContentTitle,
   bool isAccedentalDeleteEnabled,
 }) async {
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
   progressDialog = ProgressDialog(
     context,
     type: ProgressDialogType.Normal,
@@ -126,13 +126,13 @@ Future<void> showAdvisoryBeforeDeletion({
                     if (value.isEmpty) {
                       return AppLocalizations.of(context)
                           .translate('reason', 'reason_err');
-                    }
-                    if (profanityDetector.isProfaneString(value)) {
+                    } else if (profanityDetector.isProfaneString(value)) {
                       return AppLocalizations.of(context)
                           .translate('profanity', 'alert');
+                    } else {
+                      reason = value;
+                      return null;
                     }
-                    reason = value;
-                    return null;
                   },
                 ),
               ],
