@@ -145,7 +145,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                           DateTime.fromMillisecondsSinceEpoch(
                               notification.data['request_start'])
                               .toString()),
-                        photoUrl: notification.data["requestorphotourl`"],
+                        photoUrl: notification.data["requestorphotourl"],
                       );
                       break;
                     case NotificationType.RecurringRequestUpdated:
