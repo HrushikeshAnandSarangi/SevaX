@@ -25,8 +25,10 @@ import 'package:sevaexchange/views/timebanks/widgets/timebank_user_exit_dialog.d
 
 class TimebankNotifications extends StatefulWidget {
   final TimebankModel timebankModel;
+  final ScrollPhysics physics;
 
-  const TimebankNotifications({Key key, this.timebankModel}) : super(key: key);
+  const TimebankNotifications({Key key, this.timebankModel, this.physics})
+      : super(key: key);
   @override
   _TimebankNotificationsState createState() => _TimebankNotificationsState();
 }
@@ -37,30 +39,29 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
     final _bloc = BlocProvider.of<NotificationsBloc>(context);
     return StreamBuilder(
       stream: _bloc.timebankNotifications,
-      builder:
-          (_, AsyncSnapshot<Map<String, List<NotificationsModel>>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+      builder: (_, AsyncSnapshot<TimebankNotificationData> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            snapshot.data == null) {
           return LoadingIndicator();
         }
 
         List<NotificationsModel> notifications =
-            snapshot.data[snapshot.data.keys.first];
-
-        notifications.forEach((element) {
-          print(element.type);
-        });
+            snapshot.data.notifications[widget.timebankModel.id] ?? [];
 
         if (notifications.isEmpty) {
           return Center(
-            child: Text(
-              AppLocalizations.of(context)
-                  .translate('notifications', 'no_notifications'),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Text(
+                AppLocalizations.of(context)
+                    .translate('notifications', 'no_notifications'),
+              ),
             ),
           );
         }
         return ListView.builder(
+          physics: widget.physics,
           shrinkWrap: true,
-          padding: EdgeInsets.only(bottom: 20),
           itemCount: notifications.length,
           itemBuilder: (context, index) {
             NotificationsModel notification = notifications.elementAt(index);

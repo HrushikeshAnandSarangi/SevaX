@@ -47,6 +47,17 @@ class PersonalNotifications extends StatelessWidget {
             snapshot.data == null) {
           return LoadingIndicator();
         }
+        if (snapshot.data.isEmpty) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Text(
+                AppLocalizations.of(context)
+                    .translate('notifications', 'no_notifications'),
+              ),
+            ),
+          );
+        }
         return ListView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.only(bottom: 20),
@@ -593,6 +604,7 @@ class PersonalNotifications extends StatelessWidget {
                     "Unhandled notification type ${notification.type} ${notification.id}");
                 return Container();
             }
+            return Container();
           },
         );
       },
