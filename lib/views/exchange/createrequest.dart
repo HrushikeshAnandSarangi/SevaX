@@ -358,7 +358,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                       .translate('create_request', 'subject');
                                 }
                                 if (profanityDetector.isProfaneString(value)) {
-                                  return "this is bad word";
+                                  return AppLocalizations.of(context)
+                                      .translate('profanity', 'alert');
                                 }
                                 requestModel.title = value;
                               },
@@ -420,7 +421,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                       'create_request', 'request_hash_empty');
                                 }
                                 if (profanityDetector.isProfaneString(value)) {
-                                  return "this is bad word";
+                                  return AppLocalizations.of(context)
+                                      .translate('profanity', 'alert');
                                 }
                                 requestModel.description = value;
                               },

@@ -250,7 +250,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                     .translate('create_feed', 'empty_err');
                               }
                               if (profanityDetector.isProfaneString(value)) {
-                                return "this is bad word";
+                                return AppLocalizations.of(context)
+                                    .translate('profanity', 'alert');
                               }
                               newsObject.subheading = value;
                               // print("object");

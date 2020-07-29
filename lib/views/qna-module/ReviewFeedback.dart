@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/new_baseline/models/device_model.dart';
@@ -26,13 +27,17 @@ class ReviewFeedback extends StatefulWidget {
 class ReviewFeedbackState extends State<ReviewFeedback> {
   // var forVolunteer;
   // ReviewFeedbackState({this.forVolunteer});
+  final _formKey = GlobalKey<FormState>();
 
   bool _validate = false;
+  bool _profane = false;
 
   var questionIndex = 0;
   var totalScore = 0;
   TextEditingController myCommentsController = TextEditingController();
   DeviceModel deviceModel = DeviceModel();
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -255,6 +260,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       margin: EdgeInsets.all(10),
       child: SingleChildScrollView(
         child: Form(
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -262,11 +268,26 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                 textCapitalization: TextCapitalization.sentences,
                 controller: myCommentsController,
                 style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                autovalidate: autoValidateText,
+                onChanged: (value) {
+                  if (value.length > 1) {
+                    setState(() {
+                      autoValidateText = true;
+                    });
+                  } else {
+                    setState(() {
+                      autoValidateText = false;
+                    });
+                  }
+                },
                 decoration: InputDecoration(
                   errorText: _validate
                       ? AppLocalizations.of(context)
                           .translate('review_feedback', 'cant_leave_blank')
-                      : null,
+                      : _profane
+                          ? AppLocalizations.of(context)
+                              .translate('profanity', 'alert')
+                          : null,
                   hintStyle: TextStyle(fontSize: 14),
                   // hintText:'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
                   hintText: AppLocalizations.of(context)
@@ -299,10 +320,20 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                         myCommentsController.text.isEmpty
                             ? _validate = true
                             : _validate = false;
+                        if (profanityDetector
+                            .isProfaneString(myCommentsController.text)) {
+                          setState(() {
+                            _profane = true;
+                          });
+                        } else {
+                          setState(() {
+                            _profane = false;
+                          });
+                        }
                       }
                     });
 
-                    if (!_validate) {
+                    if (!_validate && !_profane) {
                       finishState(context);
                     }
                   },

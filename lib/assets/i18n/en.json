@@ -1029,6 +1029,7 @@
     "members": "Members"
   },
   "validation_errors": {
+    "profanity_error": "This word is not allowed",
     "title_error": "Please enter the subject of your offer",
     "generic_error": "Please enter some text",
     "class_hours": "Please enter the hours required for the class",
@@ -1246,5 +1247,9 @@
   "cv": {
     "cv": "CV",
     "cv_info": "Click here to update your cv"
+  },
+
+  "profanity": {
+    "alert": "This word is not allowed"
   }
 }

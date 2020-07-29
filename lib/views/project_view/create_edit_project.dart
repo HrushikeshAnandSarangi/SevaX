@@ -340,7 +340,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   return AppLocalizations.of(context)
                       .translate('projects', 'name_empty_err');
                 } else if (profanityDetector.isProfaneString(value)) {
-                  return "this is bad word";
+                  return AppLocalizations.of(context)
+                      .translate('profanity', 'alert');
                 } else {
                   projectModel.name = value;
                 }
@@ -417,7 +418,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   return AppLocalizations.of(context)
                       .translate('projects', 'statement_empty_err');
                 } else if (profanityDetector.isProfaneString(value)) {
-                  return "this is bad word";
+                  return AppLocalizations.of(context)
+                      .translate('profanity', 'alert');
                 } else {
                   projectModel.description = value;
                 }
@@ -479,7 +481,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               textInputAction: TextInputAction.done,
 
               //  validator: _validateEmailId,
-              keyboardType: TextInputType.number,
               onSaved: (value) {
                 projectModel.phoneNumber = '+' + value;
               },

@@ -1028,6 +1028,7 @@
     "members": "Membros"
   },
   "validation_errors": {
+    "profanity_error": "This word is not allowed",
     "title_error": "Por favor, introduza o assunto de sua oferta",
     "generic_error": "Por favor, introduza algum texto",
     "class_hours": "Por favor, introduza as horas solicitadas para a aula",
@@ -1240,5 +1241,8 @@
   "reason": {
     "enter_reason": "Digite o motivo para excluir",
     "reason_err": "Digite o motivo para excluir"
+  },
+  "profanity": {
+    "alert": "This word is not allowed"
   }
 }

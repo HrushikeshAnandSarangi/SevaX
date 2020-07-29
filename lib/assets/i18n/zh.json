@@ -1028,6 +1028,7 @@
     "members": "会员"
   },
   "validation_errors": {
+    "profanity_error": "This word is not allowed",
     "title_error": "请输入您的要约的标的",
     "generic_error": "请输入一些文字",
     "class_hours": "请输入类所需的时间",
@@ -1241,5 +1242,8 @@
   "reason": {
     "enter_reason": "输入删除原因",
     "reason_err": "请输入删除原因"
+  },
+  "profanity": {
+    "alert": "This word is not allowed"
   }
 }

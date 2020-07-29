@@ -51,6 +51,7 @@ class ValidationErrors {
   static const String sizeOfClassIsNotInt = "size_of_class_not_int";
   static const String sizeOfClassError = "size_of_class_error";
   static const String offerCreditError = "offer_credit_error";
+  static const String profanityError = "profanity_error";
 
   // static const String titleError = 'Please enter the subject of your offer';
 }

@@ -203,7 +203,8 @@ class _RegisterPageState extends State<RegisterPage>
                 return AppLocalizations.of(context)
                     .translate('signup', 'full_name_err');
               } else if (profanityDetector.isProfaneString(value)) {
-                return "this is bad word";
+                return AppLocalizations.of(context)
+                    .translate('profanity', 'alert');
               } else {
                 return null;
               }

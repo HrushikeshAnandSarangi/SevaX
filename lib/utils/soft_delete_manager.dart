@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
@@ -42,6 +43,8 @@ Future<bool> checkExistingRequest({
   });
 }
 
+final profanityDetector = ProfanityDetector();
+bool autoValidateText = false;
 Future<void> showAdvisoryBeforeDeletion({
   BuildContext context,
   SoftDelete softDeleteType,
@@ -110,10 +113,23 @@ Future<void> showAdvisoryBeforeDeletion({
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(50),
                   ],
+                  autovalidate: autoValidateText,
+                  onChanged: (value) {
+                    if (value.length > 1) {
+                      autoValidateText = true;
+                    } else {
+                      autoValidateText = false;
+                    }
+                    print("auto $autoValidateText");
+                  },
                   validator: (value) {
                     if (value.isEmpty) {
                       return AppLocalizations.of(context)
                           .translate('reason', 'reason_err');
+                    }
+                    if (profanityDetector.isProfaneString(value)) {
+                      return AppLocalizations.of(context)
+                          .translate('profanity', 'alert');
                     }
                     reason = value;
                     return null;

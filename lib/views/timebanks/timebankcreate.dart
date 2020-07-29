@@ -256,7 +256,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 .translate('groups', 'please_enter');
           }
           if (profanityDetector.isProfaneString(value)) {
-            return "this is bad word";
+            return AppLocalizations.of(context).translate('profanity', 'alert');
           }
           timebankModel.name = value.trim();
         },
@@ -293,7 +293,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 .translate('groups', 'please_enter');
           }
           if (profanityDetector.isProfaneString(value)) {
-            return "this is bad word";
+            return AppLocalizations.of(context).translate('profanity', 'alert');
           }
           timebankModel.missionStatement = value;
         },

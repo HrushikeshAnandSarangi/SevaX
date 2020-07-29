@@ -1029,6 +1029,8 @@
     "members": "Membres"
   },
   "validation_errors": {
+    "profanity_error": "This word is not allowed",
+
     "title_error": "S'il vous plaît entrer dans le sujet de votre offre",
     "generic_error": "S'il vous plaît entrer un texte",
     "class_hours": "S'il vous plaît entrer les heures requises pour la classe",
@@ -1241,5 +1243,8 @@
   "reason": {
     "enter_reason": "Saisissez la raison de la suppression",
     "reason_err": "Veuillez saisir la raison de la suppression"
+  },
+  "profanity": {
+    "alert": "This word is not allowed"
   }
 }

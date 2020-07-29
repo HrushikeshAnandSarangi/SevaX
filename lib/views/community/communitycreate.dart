@@ -403,8 +403,10 @@ class CreateEditCommunityViewFormState
                                   'createtimebank', 'name_err_exists');
                             } else if (profanityDetector
                                 .isProfaneString(value)) {
-                              print("this is bad word");
-                              return "this is bad word";
+                              print(AppLocalizations.of(context)
+                                  .translate('profanity', 'alert'));
+                              return AppLocalizations.of(context)
+                                  .translate('profanity', 'alert');
                             } else {
                               enteredName =
                                   value.replaceAll("[^a-zA-Z0-9]", "");
@@ -449,7 +451,8 @@ class CreateEditCommunityViewFormState
                                   .translate('createtimebank', 'tell_more');
                             }
                             if (profanityDetector.isProfaneString(value)) {
-                              return "this is bad word";
+                              return AppLocalizations.of(context)
+                                  .translate('profanity', 'alert');
                             }
                             snapshot.data.community
                                 .updateValueByKey('about', value);
@@ -1403,7 +1406,8 @@ class CreateEditCommunityViewFormState
                 ? AppLocalizations.of(context)
                     .translate('createtimebank', 'err_empty')
                 : (profanityDetector.isProfaneString(value))
-                    ? "this is bad word"
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
                     : null;
           },
           focusNode: focusNodes[1],
@@ -1448,7 +1452,8 @@ class CreateEditCommunityViewFormState
                 ? AppLocalizations.of(context)
                     .translate('createtimebank', 'err_empty')
                 : (profanityDetector.isProfaneString(value))
-                    ? "this is bad word"
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
                     : null;
           },
           focusNode: focusNodes[0],
@@ -1482,7 +1487,8 @@ class CreateEditCommunityViewFormState
                 ? AppLocalizations.of(context)
                     .translate('createtimebank', 'err_empty')
                 : (profanityDetector.isProfaneString(value))
-                    ? "this is bad word"
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
                     : null;
           },
           focusNode: focusNodes[3],
@@ -1527,7 +1533,7 @@ class CreateEditCommunityViewFormState
                   : '',
           validator: (value) {
             return (profanityDetector.isProfaneString(value))
-                ? "this is bad word"
+                ? AppLocalizations.of(context).translate('profanity', 'alert')
                 : null;
           },
           onSaved: (value) {},
@@ -1570,7 +1576,8 @@ class CreateEditCommunityViewFormState
                 ? AppLocalizations.of(context)
                     .translate('createtimebank', 'err_empty')
                 : (profanityDetector.isProfaneString(value))
-                    ? "this is bad word"
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
                     : null;
           },
           focusNode: focusNodes[4],
@@ -1613,7 +1620,7 @@ class CreateEditCommunityViewFormState
             },
             validator: (value) {
               return (profanityDetector.isProfaneString(value))
-                  ? "this is bad word"
+                  ? AppLocalizations.of(context).translate('profanity', 'alert')
                   : null;
             },
             focusNode: focusNodes[5],
@@ -1697,7 +1704,8 @@ class CreateEditCommunityViewFormState
                 ? AppLocalizations.of(context)
                     .translate('createtimebank', 'err_empty')
                 : (profanityDetector.isProfaneString(value))
-                    ? "this is bad word"
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
                     : null;
           },
           focusNode: focusNodes[2],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 
 typedef StringCallback = void Function(String bio);
@@ -111,7 +112,8 @@ class _BioViewState extends State<BioView> {
                                   return 'Min 50 characters *';
                                 }
                                 if (profanityDetector.isProfaneString(value)) {
-                                  return "this is bad word";
+                                  return AppLocalizations.of(context)
+                                      .translate('profanity', 'alert');
                                 }
                                 this.bio = value;
                               }),
