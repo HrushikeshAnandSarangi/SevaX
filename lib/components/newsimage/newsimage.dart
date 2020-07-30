@@ -9,6 +9,8 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/location_model.dart';
+import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
+import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
@@ -58,7 +60,7 @@ class NewsImageState extends State<NewsImage>
   final int tenMegaBytes = 10485760;
   final int hundreKb = 14857;
   BuildContext parentContext;
-
+  ProfanityImageModel profanityImageModel = ProfanityImageModel();
   File _image;
   AnimationController _controller;
 
@@ -81,6 +83,7 @@ class NewsImageState extends State<NewsImage>
 
     // _newsImageURL = imageURL;
     globals.newsImageURL = imageURL;
+    profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
 
     // _setAvatarURL();
     // _updateDB();
@@ -170,6 +173,7 @@ class NewsImageState extends State<NewsImage>
     // _newsImageURL = imageURL;
     globals.newsDocumentURL = documentURL;
     globals.newsDocumentName = _fileName;
+
     // _setAvatarURL();
     // _updateDB();
     return documentURL;
@@ -234,6 +238,7 @@ class NewsImageState extends State<NewsImage>
                                 ),
                               ),
                             ),
+                            //Text(profanityImageModel.toString()),
                             Container(
                               padding: EdgeInsets.fromLTRB(
                                   MediaQuery.of(context).size.width / 4,
