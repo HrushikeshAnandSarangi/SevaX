@@ -39,6 +39,7 @@ class NotificationsBloc extends BlocBase {
       query.documents.forEach((DocumentSnapshot document) {
         notifications.add(NotificationsModel.fromMap(document.data));
       });
+      _personalNotificationCount.add(notifications.length);
       _personalNotifications.add(notifications);
     });
 
@@ -48,25 +49,29 @@ class NotificationsBloc extends BlocBase {
         (QuerySnapshot notificationSnapshot, QuerySnapshot timebankSnapshot) {
       Map<String, List<NotificationsModel>> _adminNotificationsMap = {};
       Map<String, TimebankModel> _adminTimebanks = {};
+      var _adminTimebankIds = <String>[];
+      int _adminNotificationCount = 0;
+
+      timebankSnapshot.documents.forEach((DocumentSnapshot document) {
+        TimebankModel timebank = TimebankModel.fromMap(document.data);
+        _adminTimebankIds.add(document.documentID);
+        _adminTimebanks[document.documentID] = timebank;
+      });
 
       notificationSnapshot.documents.forEach((DocumentSnapshot document) {
         NotificationsModel notification =
             NotificationsModel.fromMap(document.data);
+
+        if (_adminTimebankIds.contains(notification.timebankId)) {
+          _adminNotificationCount++;
+        }
         if (_adminNotificationsMap.containsKey(notification.timebankId)) {
           _adminNotificationsMap[notification.timebankId].add(notification);
         } else {
           _adminNotificationsMap[notification.timebankId] = [notification];
         }
       });
-
-      timebankSnapshot.documents.forEach((DocumentSnapshot document) {
-        TimebankModel timebank = TimebankModel.fromMap(document.data);
-        _adminTimebanks[document.documentID] = timebank;
-      });
-
-      print(_adminNotificationsMap);
-      print(_adminTimebanks);
-
+      _timebankNotificationCount.add(_adminNotificationCount);
       return TimebankNotificationData(
         notifications: _adminNotificationsMap,
         timebanks: _adminTimebanks,
@@ -74,40 +79,6 @@ class NotificationsBloc extends BlocBase {
     }).listen((data) {
       _adminNotificationData.add(data);
     });
-
-    // NotificationsApi.getAllTimebankNotifications(communityId)
-    //     .listen((QuerySnapshot snapshot) {
-    //   Map<String, List<NotificationsModel>> _adminNotificationsMap = {};
-    //   snapshot.documents.forEach((DocumentSnapshot document) {
-    //     NotificationsModel notification =
-    //         NotificationsModel.fromMap(document.data);
-    //     if (_adminNotificationsMap.containsKey(notification.timebankId)) {
-    //       _adminNotificationsMap[notification.timebankId].add(notification);
-    //     } else {
-    //       _adminNotificationsMap[notification.timebankId] = [notification];
-    //     }
-    //   });
-    //   print(_adminNotificationsMap);
-    //   _adminNotifications.add(_adminNotificationsMap);
-    // });
-
-    // TimebankApi.getAllTimebanksUserIsAdminOf(userId, communityId)
-    //     .listen((QuerySnapshot snapshot) {
-    //   List<TimebankModel> _timebanks = [];
-    //   Map<String, List<NotificationsModel>> _adminNotifications = {};
-    //   snapshot.documents.forEach((DocumentSnapshot document) {
-    //     _timebanks.add(TimebankModel(document.data));
-    //     NotificationsApi.getTimebankNotifications(document.documentID)
-    //         .listen((event) {
-    //       _adminNotifications[document.documentID] = [];
-    //       event.documents.forEach((element) {
-    //         _adminNotifications[document.documentID]
-    //             .add(NotificationsModel.fromMap(element.data));
-    //       });
-    //     });
-    //   });
-    //   _timebanksUserIsAdmin.add(_timebanks);
-    // });
   }
 
   Future clearNotification({String email, String notificationId}) {
@@ -136,4 +107,20 @@ class TimebankNotificationData {
 
   bool get isAdmin => timebanks.isNotEmpty;
   bool get isNotificationPresent => notifications.isNotEmpty;
+
+  bool isNotificationAvailable() {
+    bool status = false;
+    print(" timebanks ${timebanks.keys}");
+    print(notifications.keys);
+    timebanks.forEach((key, value) {
+      if (notifications.containsKey(key)) {
+        if (notifications[key].length == 0) {
+          status = false;
+        } else {
+          status = true;
+        }
+      }
+    });
+    return status;
+  }
 }

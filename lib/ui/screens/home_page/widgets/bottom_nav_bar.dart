@@ -1,14 +1,11 @@
-import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/nav_bar_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
+import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/views/core.dart';
 
 import 'custom_navigation_item.dart';
 
@@ -24,23 +21,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _messageBloc = BlocProvider.of<MessageBloc>(context);
+    final _notificationBloc = BlocProvider.of<NotificationsBloc>(context);
     return StreamBuilder<NavBarBadgeModel>(
       stream: CombineLatestStream.combine2(
-        Firestore.instance
-            .collection('users')
-            .document(SevaCore.of(context).loggedInUser.email)
-            .collection('notifications')
-            .where("communityId",
-                isEqualTo: SevaCore.of(context).loggedInUser.currentCommunity)
-            .where("isRead", isEqualTo: false)
-            .snapshots()
-            .transform(
-          StreamTransformer.fromHandlers(
-            handleData: (QuerySnapshot snapshot, sink) {
-              sink.add(snapshot.documents.length);
-            },
-          ),
-        ),
+        _notificationBloc.notificationCount,
         _messageBloc.messageCount,
         (n, m) => NavBarBadgeModel(notificationCount: n, chatCount: m),
       ),
@@ -51,7 +35,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
           notificationCount = snapshot.data.notificationCount;
           chatCount = snapshot.data.chatCount;
         }
-
         return CurvedNavigationBar(
           key: Key((notificationCount + chatCount).toString()),
           animationDuration: Duration(milliseconds: 300),
@@ -97,8 +80,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
           ],
           onTap: (index) {
             onChanged(index);
-            // selected = index;
-            // setState(() {});
           },
         );
       },
