@@ -245,10 +245,9 @@ class PersonalNotifications extends StatelessWidget {
               case NotificationType.RequestCompletedApproved:
                 RequestModel model = RequestModel.fromMap(notification.data);
                 TransactionModel transactionModel =
-                    model.transactions.firstWhere((transaction) {
-                  return transaction.to == user.sevaUserID;
-                });
-
+                    model.transactions.firstWhere(
+                  (transaction) => transaction.to == user.sevaUserID,
+                );
                 return NotificationCard(
                   entityName: model.fullName,
                   isDissmissible: true,
@@ -288,7 +287,7 @@ class PersonalNotifications extends StatelessWidget {
                 TransactionModel model =
                     TransactionModel.fromMap(notification.data);
 
-                FutureBuilder<UserModel>(
+                return FutureBuilder<UserModel>(
                   future: UserApi.fetchUserById(notification.senderUserId),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) return Container();
