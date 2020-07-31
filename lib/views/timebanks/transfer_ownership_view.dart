@@ -471,7 +471,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
         .document(tbmodel.id)
         .collection("notifications")
         .document(notification.id)
-        .setData(notification.toMap());
+        .setData((notification..isTimebankNotification = true).toMap());
   }
 }
 

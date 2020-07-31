@@ -1230,7 +1230,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         .document(timebank.id)
         .collection("notifications")
         .document(notification.id)
-        .setData(notification.toMap());
+        .setData((notification..isTimebankNotification = true).toMap());
   }
 
   Future loadCoordinators() async {
