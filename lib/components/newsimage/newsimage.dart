@@ -12,6 +12,7 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
@@ -53,14 +54,12 @@ class NewsImageState extends State<NewsImage>
   String _fileName;
   String _path;
   Map<String, String> _paths;
-  String _extension;
-  bool _loadingPath = false;
-  bool _multiPick = false;
   FileType _pickingType = FileType.custom;
   final int tenMegaBytes = 10485760;
   final int hundreKb = 14857;
   BuildContext parentContext;
   ProfanityImageModel profanityImageModel = ProfanityImageModel();
+  ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
   File _image;
   AnimationController _controller;
 
@@ -81,13 +80,38 @@ class NewsImageState extends State<NewsImage>
     );
     String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
 
-    // _newsImageURL = imageURL;
-    globals.newsImageURL = imageURL;
-    profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
+    await profanityCheck(imageURL: imageURL);
 
     // _setAvatarURL();
     // _updateDB();
     return imageURL;
+  }
+
+  Future<void> profanityCheck({String imageURL}) async {
+    // _newsImageURL = imageURL;
+    profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
+
+    profanityStatusModel =
+        await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+    if (profanityStatusModel.isProfane) {
+      showProfanityImageAlert(
+              context: context, content: profanityStatusModel.category)
+          .then((status) {
+        if (status == 'Proceed') {
+          FirebaseStorage.instance
+              .getReferenceFromUrl(imageURL)
+              .then((reference) {
+            reference.delete();
+            globals.newsImageURL = null;
+          }).catchError((e) => print(e));
+        } else {
+          print('error');
+        }
+      });
+    } else {
+      globals.newsImageURL = imageURL;
+    }
   }
 
   void userImage(File _image) {

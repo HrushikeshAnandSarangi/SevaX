@@ -5,10 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/data_model.dart';
+import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/utils.dart';
+
+import '../flavor_config.dart';
 
 String failureMessage =
     "Sending request failed somehow, please try again later!";
@@ -453,4 +457,66 @@ String getSuccessMessage(
   return AppLocalizations.of(context)
       .translate("accidental_delete", "see_you_go")
       .replaceAll('***', _getModelType(softDeleteType));
+}
+
+Future<String> showProfanityImageAlert({BuildContext context, String content}) {
+  return showDialog<String>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext _context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(_context)
+              .translate('profanity', 'alert_title')),
+          content: Text(AppLocalizations.of(_context)
+                  .translate('profanity', 'image_alert') +
+              content),
+          actions: <Widget>[
+            RaisedButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
+              child: Text(
+                AppLocalizations.of(_context).translate('homepage', 'ok'),
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(_context, 'Proceed');
+              },
+            ),
+          ],
+        );
+      });
+}
+
+Future<ProfanityStatusModel> getProfanityStatus(
+    {ProfanityImageModel profanityImageModel}) async {
+  ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
+
+  if (profanityImageModel.adult == ProfanityStrings.veryLikely ||
+      profanityImageModel.adult == ProfanityStrings.likely) {
+    profanityStatusModel.isProfane = true;
+    profanityStatusModel.category = ProfanityStrings.adult;
+  } else if (profanityImageModel.spoof == ProfanityStrings.veryLikely ||
+      profanityImageModel.spoof == ProfanityStrings.likely) {
+    profanityStatusModel.isProfane = true;
+    profanityStatusModel.category = ProfanityStrings.spoof;
+  } else if (profanityImageModel.medical == ProfanityStrings.veryLikely ||
+      profanityImageModel.medical == ProfanityStrings.likely) {
+    profanityStatusModel.isProfane = true;
+    profanityStatusModel.category = ProfanityStrings.medical;
+  } else if (profanityImageModel.racy == ProfanityStrings.veryLikely ||
+      profanityImageModel.racy == ProfanityStrings.likely) {
+    profanityStatusModel.isProfane = true;
+    profanityStatusModel.category = ProfanityStrings.racy;
+  } else if (profanityImageModel.violence == ProfanityStrings.veryLikely ||
+      profanityImageModel.violence == ProfanityStrings.likely) {
+    profanityStatusModel.isProfane = true;
+    profanityStatusModel.category = ProfanityStrings.violence;
+  } else {
+    profanityStatusModel.isProfane = false;
+  }
+
+  return profanityStatusModel;
 }

@@ -79,3 +79,38 @@ class ProfanityImageModel extends DataModel {
     return 'ProfanityImageModel{adult: $adult, spoof: $spoof, medical: $medical, violence: $violence, racy: $racy, adultConfidence: $adultConfidence, spoofConfidence: $spoofConfidence, medicalConfidence: $medicalConfidence, violenceConfidence: $violenceConfidence, racyConfidence: $racyConfidence, nsfwConfidence: $nsfwConfidence}';
   }
 }
+
+class ProfanityStrings {
+  static const String likely = 'LIKELY';
+  static const String unLikely = 'UNLIKELY';
+  static const String veryLikely = 'VERY_LIKELY';
+  static const String veryUnLikely = 'VERY_UNLIKELY';
+  static const String possible = 'POSSIBLE';
+
+  static const String adult = 'Adult';
+  static const String spoof = 'Spoof';
+  static const String medical = 'Medical';
+  static const String racy = 'Racy';
+  static const String violence = 'Violence';
+}
+
+class ProfanityStatusModel {
+  ProfanityStatusModel({
+    this.isProfane,
+    this.category,
+  });
+
+  bool isProfane;
+  String category;
+
+  factory ProfanityStatusModel.fromMap(Map<String, dynamic> json) =>
+      ProfanityStatusModel(
+        isProfane: json["isProfane"] == null ? null : json["isProfane"],
+        category: json["category"] == null ? null : json["category"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "isProfane": isProfane == null ? null : isProfane,
+        "category": category == null ? null : category,
+      };
+}

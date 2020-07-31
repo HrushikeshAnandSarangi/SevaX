@@ -4,6 +4,9 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 
 import './image_picker_handler.dart';
@@ -25,7 +28,8 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
   AnimationController _controller;
   ImagePickerHandler imagePicker;
   bool _isImageBeingUploaded = false;
-
+  ProfanityImageModel profanityImageModel = ProfanityImageModel();
+  ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
   Future<String> _uploadImage() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
@@ -48,6 +52,37 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
     });
 
     return imageURL;
+  }
+
+  Future<void> profanityCheck({String imageURL}) async {
+    // _newsImageURL = imageURL;
+    profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
+
+    profanityStatusModel =
+        await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+    if (profanityStatusModel.isProfane) {
+      showProfanityImageAlert(
+              context: context, content: profanityStatusModel.category)
+          .then((status) {
+        if (status == 'Proceed') {
+          FirebaseStorage.instance
+              .getReferenceFromUrl(imageURL)
+              .then((reference) {
+            reference.delete();
+            setState(() {
+              globals.projectsAvtaarURL = null;
+            });
+          }).catchError((e) => print(e));
+        } else {
+          print('error');
+        }
+      });
+    } else {
+      setState(() {
+        globals.projectsAvtaarURL = imageURL;
+      });
+    }
   }
 
   @override

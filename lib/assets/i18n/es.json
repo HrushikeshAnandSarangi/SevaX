@@ -1245,6 +1245,10 @@
     "reason_err": "Por favor, introduzca el motivo para eliminar"
   },
   "profanity": {
-    "alert": "This word is not allowed"
+    "alert": "This word is not allowed",
+    "image_alert": "This image is not allowed. this image contains ",
+    "alert_title": "Profanity alert"
+
+
   }
 }
