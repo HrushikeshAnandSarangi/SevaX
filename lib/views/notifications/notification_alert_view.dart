@@ -115,8 +115,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                 NotificationWidgetSwitch(
                   isTurnedOn:
                       getCurrentStatus('TYPE_FEEDBACK_FROM_SIGNUP_MEMBER'),
-                  title: AppLocalizations.of(context)
-                      .translate('external_notifications', 'credit_request'),
+                  title: "Feedback for one to many offer",
                   onPressed: (bool status) {
                     NotificationWidgetSwitch.updatePersonalNotifications(
                       userEmail: SevaCore.of(context).loggedInUser.email,
