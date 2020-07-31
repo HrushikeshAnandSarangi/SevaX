@@ -25,10 +25,8 @@ import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/group_manage_seva.dart';
-import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
-import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../flavor_config.dart';
@@ -84,7 +82,7 @@ Widget getUserRole(
 ) {
   switch (role) {
     case AboutUserRole.ADMIN:
-      TabController controller = TabController(vsync: vsync, length: 8);
+      TabController controller = TabController(vsync: vsync, length: 7);
       return createAdminTabBar(
         context,
         timebankModel,
@@ -181,46 +179,11 @@ Widget createAdminTabBar(
                   text: AppLocalizations.of(context)
                       .translate('homepage', "manage"),
                 ),
-                Container(
-                  width: 20,
-                  // height: 10,
-                  // color: Colors.green,
-                ),
               ],
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                color: Colors.white,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    SizedBox(width: 5),
-                    Container(
-                      height: 30,
-                      width: 1,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(width: 5),
-                    GestureDetector(
-                      onTap: () {
-                        controller.animateTo(7);
-                      },
-                      child: GetActiveTimebankNotifications(
-                        timebankId: timebankId,
-                      ),
-                    ),
-                    // SizedBox(width: 14),
-
-                    SizedBox(width: 10),
-                  ],
-                ),
-              ),
-            )
           ],
         ),
         Expanded(
-          // height: MediaQuery.of(context).size.height - 137,
           child: TabBarView(
             controller: controller,
             children: [
@@ -245,10 +208,6 @@ Widget createAdminTabBar(
                 timebankModel: timebankModel,
                 email: SevaCore.of(context).loggedInUser.email,
               ),
-              // AcceptedOffers(
-              //   sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-              //   timebankId: timebankModel.id,
-              // ),
               TimebankRequestAdminPage(
                 isUserAdmin: timebankModel.admins
                     .contains(SevaCore.of(context).loggedInUser.sevaUserID),
@@ -257,9 +216,6 @@ Widget createAdminTabBar(
                 isFromGroup: true,
               ),
               ManageGroupView.of(
-                timebankModel: timebankModel,
-              ),
-              TimebankNotificationsView(
                 timebankModel: timebankModel,
               ),
             ],
