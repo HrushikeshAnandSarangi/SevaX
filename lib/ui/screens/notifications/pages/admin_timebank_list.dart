@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/timebank_notifications.dart';
@@ -16,6 +17,18 @@ class NotificationTimebankList extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting ||
             snapshot.data == null) {
           return LoadingIndicator();
+        }
+
+        if (!snapshot.data.isNotificationAvailable()) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Text(
+                AppLocalizations.of(context)
+                    .translate('notifications', 'no_notifications'),
+              ),
+            ),
+          );
         }
 
         final List<TimebankModel> timebanks =

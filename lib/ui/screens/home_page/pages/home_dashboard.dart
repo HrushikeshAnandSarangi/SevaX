@@ -18,11 +18,9 @@ import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
-import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
-import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
 
 class HomeDashBoard extends StatefulWidget {
   @override
@@ -198,16 +196,12 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
                   tabs.length == 7) {
                 isAdmin = true;
-                _timebankController = TabController(length: 9, vsync: this);
+                _timebankController = TabController(length: 8, vsync: this);
 
-                tabs.add(Tab(
-                    text: AppLocalizations.of(context)
-                        .translate('main', 'manage')));
                 tabs.add(
-                  Container(
-                    width: 35,
-                    height: 10,
-                    color: Colors.green,
+                  Tab(
+                    text: AppLocalizations.of(context)
+                        .translate('main', 'manage'),
                   ),
                 );
               }
@@ -215,52 +209,14 @@ class _HomeDashBoardState extends State<HomeDashBoard>
             return Column(
               children: <Widget>[
                 ShowLimitBadge(),
-                Stack(
-                  children: <Widget>[
-                    TabBar(
-                      labelPadding: EdgeInsets.symmetric(horizontal: 10),
-                      controller: _timebankController,
-                      indicatorColor: Theme.of(context).primaryColor,
-                      unselectedLabelColor: Colors.black,
-                      labelColor: Theme.of(context).primaryColor,
-                      isScrollable: true,
-                      tabs: tabs,
-                    ),
-                    Offstage(
-                      offstage: !isAdmin,
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 6),
-                          child: Container(
-                            decoration: BoxDecoration(color: Colors.white),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                SizedBox(width: 5),
-                                Container(
-                                  height: 30,
-                                  width: 1,
-                                  // color: Colors.red,
-                                ),
-                                SizedBox(width: 5),
-                                GestureDetector(
-                                  onTap: () {
-                                    _timebankController.animateTo(8);
-                                  },
-                                  child: GetActiveTimebankNotifications(
-                                    timebankId: primaryTimebank.id,
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                TabBar(
+                  labelPadding: EdgeInsets.symmetric(horizontal: 10),
+                  controller: _timebankController,
+                  indicatorColor: Theme.of(context).primaryColor,
+                  unselectedLabelColor: Colors.black,
+                  labelColor: Theme.of(context).primaryColor,
+                  isScrollable: true,
+                  tabs: tabs,
                 ),
                 Expanded(
                   child: TabBarView(
@@ -306,9 +262,6 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                       ...isAdmin
                           ? [
                               ManageTimebankSeva.of(
-                                timebankModel: primaryTimebank,
-                              ),
-                              TimebankNotificationsView(
                                 timebankModel: primaryTimebank,
                               ),
                             ]

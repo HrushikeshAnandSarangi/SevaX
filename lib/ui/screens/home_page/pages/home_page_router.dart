@@ -16,9 +16,9 @@ import 'package:sevaexchange/ui/screens/notifications/pages/combined_notificatio
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/notifications/notifications_page.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/views/timebanks/explore_tabview.dart';
 
 import '../../../../flavor_config.dart';
 import 'home_dashboard.dart';
@@ -35,9 +35,8 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
   MessageBloc _messageBloc = MessageBloc();
   NotificationsBloc _notificationsBloc = NotificationsBloc();
   List<Widget> pages = [
-    // ExploreTabView(),
+    ExploreTabView(),
     CombinedNotificationsPage(),
-    NotificationsPage(),
     HomeDashBoard(),
     MessagePageRouter(),
     ProfilePage(),
@@ -160,14 +159,17 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                           ),
                           Align(
                             alignment: Alignment.bottomCenter,
-                            child: BlocProvider<MessageBloc>(
-                              bloc: _messageBloc,
-                              child: CustomBottomNavigationBar(
-                                selected: selected,
-                                onChanged: (index) {
-                                  selected = index;
-                                  setState(() {});
-                                },
+                            child: BlocProvider(
+                              bloc: _notificationsBloc,
+                              child: BlocProvider<MessageBloc>(
+                                bloc: _messageBloc,
+                                child: CustomBottomNavigationBar(
+                                  selected: selected,
+                                  onChanged: (index) {
+                                    selected = index;
+                                    setState(() {});
+                                  },
+                                ),
                               ),
                             ),
                           ),

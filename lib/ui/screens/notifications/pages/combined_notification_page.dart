@@ -54,19 +54,6 @@ class _CombinedNotificationsPageState extends State<CombinedNotificationsPage>
                       controller: _controller,
                       indicatorColor: Theme.of(context).primaryColor,
                       tabs: [
-                        // Stack(
-                        //   children: [
-                        //     Align(
-                        //       alignment: Alignment.topRight,
-                        //       child: Text("!"),
-                        //     ),
-                        //     Center(
-                        //       child: Tab(
-                        //         child: Text("Personal"),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
                         Tab(
                           child: Text("Personal"),
                         ),
