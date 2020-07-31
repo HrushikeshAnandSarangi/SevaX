@@ -1246,7 +1246,7 @@
   "profanity": {
     "alert": "This word is not allowed",
     "alert_title": "Profanity alert",
-    "image_alert": "This image is not allowed. this image contains ",
+    "image_alert": "This image is not allowed. this image contains "
 
   }
 }
