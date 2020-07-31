@@ -161,7 +161,8 @@ class RequestCompleteWidget extends StatelessWidget {
                   height: 70,
                   width: 70,
                   child: CircleAvatar(
-                    backgroundImage: NetworkImage(userModel.photoURL),
+                    backgroundImage:
+                        NetworkImage(userModel.photoURL ?? defaultUserImageURL),
                   ),
                 ),
                 Padding(
