@@ -27,13 +27,10 @@ class BillingPlanCard extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  BillingPlanCardState createState() {
-    return BillingPlanCardState();
-  }
+  _BillingPlanCardState createState() => _BillingPlanCardState();
 }
 
-// the form.
-class BillingPlanCardState extends State<BillingPlanCard> {
+class _BillingPlanCardState extends State<BillingPlanCard> {
   bool isBillMe = false;
 
   @override
