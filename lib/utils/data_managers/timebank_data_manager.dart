@@ -9,6 +9,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/invitation_model.dart';
 import 'package:sevaexchange/models/models.dart' as prefix0;
 import 'package:sevaexchange/models/reports_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -184,6 +185,22 @@ Stream<List<TimebankModel>> getTimebanksForAdmins(
         );
 
         timebankSink.add(modelList);
+      },
+    ),
+  );
+}
+
+/// Get all timebanknew associated with a User as a Stream
+Stream<UserModel> getUserDetails({@required String userId}) async* {
+  var data = Firestore.instance
+      .collection('users')
+      .where('sevauserid', isEqualTo: userId)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, UserModel>.fromHandlers(
+      handleData: (snapshot, timebankSink) {
+        timebankSink.add(UserModel.fromMap(snapshot.documents.first.data));
       },
     ),
   );

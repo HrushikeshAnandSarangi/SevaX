@@ -36,11 +36,15 @@ Stream<List<OfferModel>> getOffersStream({String timebankId}) async* {
 
         snapshot.documents.forEach((snapshot) {
           OfferModel model = OfferModel.fromMap(snapshot.data);
-
           futures.add(getUserInfo(model.email));
-
           model.id = snapshot.documentID;
-          offerList.add(model);
+
+          if (model.offerType == OfferType.GROUP_OFFER &&
+              !model.groupOfferDataModel.isCanceled) {
+            offerList.add(model);
+          } else if (model.offerType == OfferType.INDIVIDUAL_OFFER) {
+            offerList.add(model);
+          }
         });
 
         await Future.wait(futures).then((onValue) {

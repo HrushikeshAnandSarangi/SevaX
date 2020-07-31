@@ -62,11 +62,17 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
                         ),
                         tabs: _isCreator
                             ? <Widget>[
-                                Tab(child: Text(AppLocalizations.of(context).translate('offers','details'))),
-                                Tab(child: Text(AppLocalizations.of(context).translate('offers','accepted'))),
+                                Tab(
+                                    child: Text(AppLocalizations.of(context)
+                                        .translate('offers', 'details'))),
+                                Tab(
+                                    child: Text(AppLocalizations.of(context)
+                                        .translate('offers', 'accepted'))),
                               ]
                             : <Widget>[
-                                Tab(child: Text(AppLocalizations.of(context).translate('offers','details'))),
+                                Tab(
+                                    child: Text(AppLocalizations.of(context)
+                                        .translate('offers', 'details'))),
                               ],
                       ),
                     ),
