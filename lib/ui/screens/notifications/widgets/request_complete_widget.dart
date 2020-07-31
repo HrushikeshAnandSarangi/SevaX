@@ -223,6 +223,7 @@ class RequestCompleteWidget extends StatelessWidget {
                             notificationId: notificationId,
                             user: userModel,
                             userId: userId,
+                            sevaCore: SevaCore.of(context),
                           );
                           Navigator.pop(viewContext);
                         },
