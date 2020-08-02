@@ -88,6 +88,7 @@ class CreateChatBloc extends BlocBase {
       String imageUrl = _file.value != null
           ? await StorageApi.uploadFile("multiUserMessagingLogo", _file.value)
           : null;
+
       MultiUserMessagingModel groupDetails = MultiUserMessagingModel(
         name: _groupName.value,
         imageUrl: imageUrl,

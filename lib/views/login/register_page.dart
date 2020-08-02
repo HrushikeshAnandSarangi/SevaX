@@ -17,9 +17,12 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/profile/edit_profile.dart';
 import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
@@ -55,7 +58,8 @@ class _RegisterPageState extends State<RegisterPage>
   bool sentOTP = false;
   bool _isDocumentBeingUploaded = false;
   final int tenMegaBytes = 10485760;
-
+  ProfanityImageModel profanityImageModel = ProfanityImageModel();
+  ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
   String _fileName;
   String _path;
   String cvTitle = '';
@@ -503,9 +507,35 @@ class _RegisterPageState extends State<RegisterPage>
         password: password,
         displayName: fullName,
       );
+
       if (this.selectedImage != null) {
         String imageUrl = await uploadImage(user.email);
-        user.photoURL = imageUrl;
+        profanityImageModel = await checkProfanityForImage(imageUrl: imageUrl);
+
+        profanityStatusModel =
+            await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+        if (profanityStatusModel.isProfane) {
+          showProfanityImageAlert(
+                  context: context, content: profanityStatusModel.category)
+              .then((status) {
+            if (status == 'Proceed') {
+              FirebaseStorage.instance
+                  .getReferenceFromUrl(imageUrl)
+                  .then((reference) {
+                reference.delete();
+                if (dialogContext != null) {
+                  Navigator.pop(dialogContext);
+                }
+                setState(() {});
+              }).catchError((e) => print(e));
+            } else {
+              print('error');
+            }
+          });
+        } else {
+          user.photoURL = imageUrl;
+        }
       } else {
         user.photoURL = defaultUserImageURL;
       }
@@ -542,6 +572,10 @@ class _RegisterPageState extends State<RegisterPage>
       log('createUser: error: ${error.toString()}');
       return null;
     }
+  }
+
+  Future<void> profanityCheck({String imageURL, UserModel user}) async {
+    // _newsImageURL = imageURL;
   }
 
   @override

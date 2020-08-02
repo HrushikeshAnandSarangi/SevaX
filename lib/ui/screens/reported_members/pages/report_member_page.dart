@@ -75,7 +75,8 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate('reported_members', 'reported_member'),
+          AppLocalizations.of(context)
+              .translate('reported_members', 'reported_member'),
           style: TextStyle(fontSize: 18),
         ),
         centerTitle: true,
@@ -88,12 +89,14 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
         child: ListView(
           children: <Widget>[
             Text(
-              AppLocalizations.of(context).translate('reported_members', 'inform'),
+              AppLocalizations.of(context)
+                  .translate('reported_members', 'inform'),
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
             Text(
-              AppLocalizations.of(context).translate('reported_members', 'details'),
+              AppLocalizations.of(context)
+                  .translate('reported_members', 'details'),
             ),
             StreamBuilder<String>(
               stream: _bloc.message,
@@ -190,16 +193,20 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                 bool isEnabled =
                     snapshot.data ?? false; //(snapshot.data?.length ?? 0) > 10;
                 return RaisedButton(
-                  child: Text(AppLocalizations.of(context).translate('reported_members', 'report'),
+                  child: Text(
+                    AppLocalizations.of(context)
+                        .translate('reported_members', 'report'),
                   ),
                   onPressed: isEnabled
                       ? () {
                           _showSnackBar(
-                            AppLocalizations.of(context).translate('reported_members', 'reporting_member'),
+                            AppLocalizations.of(context).translate(
+                                'reported_members', 'reporting_member'),
                             isLongDuration: true,
                           );
                           _bloc
                               .createReport(
+                            context: context,
                             reportedUserModel: widget.reportedUserModel,
                             reportingUserModel: widget.reportingUserModel,
                             timebankId: widget.timebankId,
@@ -207,13 +214,15 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                             isTimebankReport: widget.isFromTimebank,
                           )
                               .then((status) {
-                            _showSnackBar(AppLocalizations.of(context).translate('reported_members', 'success'));
+                            _showSnackBar(AppLocalizations.of(context)
+                                .translate('reported_members', 'success'));
                             Future.delayed(
                               Duration(seconds: 1),
                               () => Navigator.of(context).pop(),
                             );
                           }).catchError((e) {
-                            _showSnackBar(AppLocalizations.of(context).translate('reported_members', 'failed'));
+                            _showSnackBar(AppLocalizations.of(context)
+                                .translate('reported_members', 'failed'));
                           });
                         }
                       : null,

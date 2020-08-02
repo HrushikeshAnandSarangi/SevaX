@@ -14,10 +14,13 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/notification_manager.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/splash_view.dart';
@@ -54,7 +57,8 @@ class _EditProfilePageState extends State<EditProfilePage>
   bool _saving = false;
   bool _isDocumentBeingUploaded = false;
   final int tenMegaBytes = 10485760;
-
+  ProfanityImageModel profanityImageModel = ProfanityImageModel();
+  ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
   String _fileName;
   String _path;
   String cvTitle = '';
@@ -337,15 +341,45 @@ class _EditProfilePageState extends State<EditProfilePage>
       });
       String imageUrl =
           await uploadImage(SevaCore.of(context).loggedInUser.email);
+
+      await profanityCheck(imageURL: imageUrl);
+    }
+  }
+
+  Future<void> profanityCheck({String imageURL}) async {
+    // _newsImageURL = imageURL;
+    profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
+
+    profanityStatusModel =
+        await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+    if (profanityStatusModel.isProfane) {
+      showProfanityImageAlert(
+              context: context, content: profanityStatusModel.category)
+          .then((status) {
+        if (status == 'Proceed') {
+          FirebaseStorage.instance
+              .getReferenceFromUrl(imageURL)
+              .then((reference) {
+            reference.delete();
+            setState(() {});
+          }).catchError((e) => print(e));
+        } else {
+          print('error');
+        }
+      });
+    } else {
       setState(() {
         SevaCore.of(context).loggedInUser.photoURL = imageUrl;
         widget.userModel.photoURL = imageUrl;
       });
+
+      await FirestoreManager.updateUser(
+          user: SevaCore.of(context).loggedInUser);
+      setState(() {
+        this._saving = false;
+      });
     }
-    await FirestoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
-    setState(() {
-      this._saving = false;
-    });
   }
 
   Future updateName() async {
