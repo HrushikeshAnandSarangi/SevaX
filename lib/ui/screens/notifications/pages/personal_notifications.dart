@@ -34,9 +34,16 @@ import 'package:sevaexchange/widgets/APi/notifications_api.dart';
 import 'package:sevaexchange/widgets/APi/request_api.dart';
 import 'package:sevaexchange/widgets/APi/user_api.dart';
 
-class PersonalNotifications extends StatelessWidget {
+class PersonalNotifications extends StatefulWidget {
+  @override
+  _PersonalNotificationsState createState() => _PersonalNotificationsState();
+}
+
+class _PersonalNotificationsState extends State<PersonalNotifications>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final _bloc = BlocProvider.of<NotificationsBloc>(context);
     final UserModel user = SevaCore.of(context).loggedInUser;
     return StreamBuilder<List<NotificationsModel>>(
@@ -84,8 +91,8 @@ class PersonalNotifications extends StatelessWidget {
                           .replaceFirst(
                               '***eventDate',
                               DateTime.fromMillisecondsSinceEpoch(
-                                      eventData.eventDate)
-                                  .toString()),
+                                eventData.eventDate,
+                              ).toString()),
                   entityName: "Request Updated",
                   photoUrl: eventData.photoUrl,
                   onDismissed: onDismissed,
@@ -603,7 +610,6 @@ class PersonalNotifications extends StatelessWidget {
                     "Unhandled notification type ${notification.type} ${notification.id}");
                 return Container();
             }
-            return Container();
           },
         );
       },
@@ -682,4 +688,7 @@ class PersonalNotifications extends StatelessWidget {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
