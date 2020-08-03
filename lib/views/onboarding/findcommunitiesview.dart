@@ -291,12 +291,12 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         ),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
+            if (!snapshot.hasData) {
               return Center(child: CircularProgressIndicator());
             } else {
               if (snapshot.data.length != 0) {
                 List<CommunityModel> communityList = snapshot.data;
-                print("comm list ${communityList}");
+//                print("comm list ${communityList}");
 //                communityList
 //                    .removeWhere((community) => community.private == true);
 
@@ -450,7 +450,9 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   Widget nearByTimebanks() {
     return StreamBuilder<List<CommunityModel>>(
-        stream: FirestoreManager.getNearCommunitiesListStream(),
+        stream: FirestoreManager.getNearCommunitiesListStream(
+          nearbySettings: widget.loggedInUser.nearBySettings,
+        ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());

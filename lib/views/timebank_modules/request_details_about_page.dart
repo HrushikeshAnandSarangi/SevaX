@@ -513,6 +513,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
     widget.requestItem.acceptors = acceptorList.toList();
     acceptRequest(
+      loggedInUser: SevaCore.of(context).loggedInUser,
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
@@ -521,11 +522,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   void _withdrawRequest() {
+    bool isAlreadyApproved = widget.requestItem.approvedUsers
+        .contains(SevaCore.of(context).loggedInUser.email);
     var assosciatedEmail = SevaCore.of(context).loggedInUser.email;
-    // if (widget.requestItem.approvedUsers
-    //     .contains(SevaCore.of(context).loggedInUser.email)) {
-    //   _showAlreadyApprovedMessage();
-    // } else {}
 
     Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
     acceptorList.remove(assosciatedEmail);
@@ -538,6 +537,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     }
 
     acceptRequest(
+      loggedInUser: SevaCore.of(context).loggedInUser,
+      isAlreadyApproved: isAlreadyApproved,
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       isWithdrawal: true,

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -598,6 +599,45 @@ class PersonalNotifications extends StatelessWidget {
                   onDismissed: onDismissed,
                 );
 
+              case NotificationType.APPROVED_MEMBER_WITHDRAWING_REQUEST:
+                var body = WithdrawnRequestBody.fromMap(notification.data);
+                return NotificationCard(
+                  entityName: body.fullName,
+                  photoUrl: null,
+                  title: "Member withdrawn",
+                  subTitle:
+                      "${body.fullName} has withdrawn from ${body.requestTite}.",
+                  onDismissed: onDismissed,
+                );
+
+              case NotificationType.OFFER_CANCELLED_BY_CREATOR:
+                // var body = WithdrawnRequestBody.fromMap(notification.data);
+                return NotificationCard(
+                  entityName: "",
+                  photoUrl: null,
+                  title: "One to many offer Cancelled",
+                  subTitle: "Offer cancelled by Creator",
+                  onDismissed: onDismissed,
+                );
+
+              case NotificationType.SEVA_COINS_CREDITED:
+                return NotificationCard(
+                  entityName: "CR",
+                  photoUrl: null,
+                  title: "Seva coins has been creited to your account",
+                  subTitle: "Seva coins has been credited to your account",
+                  onDismissed: onDismissed,
+                );
+
+              case NotificationType.SEVA_COINS_DEBITED:
+                return NotificationCard(
+                  entityName: "CR",
+                  photoUrl: null,
+                  title: "Seva coins has been debited from your account",
+                  subTitle: "Seva coins has been debited from your account",
+                  onDismissed: onDismissed,
+                );
+
               default:
                 log("Unhandled user notification type ${notification.type} ${notification.id}");
                 Crashlytics().log(
@@ -682,5 +722,23 @@ class PersonalNotifications extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class WithdrawnRequestBody {
+  String fullName;
+  String requestId;
+  String requestTite;
+
+  WithdrawnRequestBody.fromMap(Map<dynamic, dynamic> body) {
+    if (body.containsKey('fullName')) {
+      this.fullName = body['fullName'];
+    }
+    if (body.containsKey('requestId')) {
+      this.requestId = body['requestId'];
+    }
+    if (body.containsKey('requestTite')) {
+      this.requestTite = body['requestTite'];
+    }
   }
 }

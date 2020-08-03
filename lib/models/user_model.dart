@@ -1,7 +1,9 @@
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:location/location.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 
 import '../flavor_config.dart';
 
@@ -29,6 +31,8 @@ class UserModel extends DataModel {
   String lat_lng;
   bool emailSent;
   String language;
+
+  NearBySettings nearBySettings;
 
   int notificationsRead;
   Map<dynamic, dynamic> notificationsReadCount;
@@ -89,6 +93,19 @@ class UserModel extends DataModel {
       this.notificationAlerts});
 
   UserModel.fromMap(Map<String, dynamic> map) {
+    if (map.containsKey('nearbySettings')) {
+      Map<dynamic, dynamic> _neabySetting = map['nearbySettings'];
+      this.nearBySettings = NearBySettings()
+        ..isMiles = _neabySetting.containsKey('isMiles')
+            ? _neabySetting['isMiles']
+            : true
+        ..radius =
+            _neabySetting.containsKey('radius') ? _neabySetting['radius'] : 10;
+      log("Found nearby settings " + nearBySettings.toString());
+    } else {
+      log("Nearby Settings for user not found....");
+    }
+
     if (map.containsKey('tokens')) {
       this.tokens = map['tokens'];
     } else {
@@ -134,6 +151,7 @@ class UserModel extends DataModel {
       List<String> communities = List.castFrom(map['communities']);
       this.communities = communities;
     } else {
+      ///TODO Why this asdfadf ?
       this.communities = List();
       this.communities.add('asdfadf');
     }

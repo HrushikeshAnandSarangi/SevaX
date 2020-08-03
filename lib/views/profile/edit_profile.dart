@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -20,6 +21,7 @@ import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 
+import '../../nearby_setting.dart';
 import '../core.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -139,6 +141,9 @@ class _EditProfilePageState extends State<EditProfilePage>
               text: AppLocalizations.of(context)
                   .translate('profile', 'add_skills'),
               onTap: () => _navigateToSkillsView(usermodel),
+            ),
+            NearbySettingsWidget(
+              SevaCore.of(context).loggedInUser,
             ),
             Padding(
               padding: EdgeInsets.symmetric(

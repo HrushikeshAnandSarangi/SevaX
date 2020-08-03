@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,6 +9,9 @@ import 'package:sevaexchange/models/claimedRequestStatus.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
+import 'package:sevaexchange/views/core.dart';
+
+import '../utils.dart';
 
 Future<bool> fetchProtectedStatus(String timebankId) async {
   DocumentSnapshot timebank = await Firestore.instance
@@ -55,11 +59,24 @@ Future<void> createAcceptRequestNotification({
 
 Future<void> withdrawAcceptRequestNotification({
   NotificationsModel notificationsModel,
+  bool isAlreadyApproved,
+  UserModel loggedInUser,
 }) async {
   RequestModel requestModel = RequestModel.fromMap(notificationsModel.data);
-
+  var withdrawlNotification = getApprovedMemberWithdrawingNotification(
+    notificationsModel,
+    loggedInUser,
+    requestModel,
+  );
   switch (requestModel.requestMode) {
     case RequestMode.TIMEBANK_REQUEST:
+      await Firestore.instance
+          .collection('timebanknew')
+          .document(requestModel.timebankId)
+          .collection('notifications')
+          .document(withdrawlNotification.id)
+          .setData(withdrawlNotification.toMap());
+
       QuerySnapshot snapshotQuery = await Firestore.instance
           .collection('timebanknew')
           .document(notificationsModel.timebankId)
@@ -84,6 +101,14 @@ Future<void> withdrawAcceptRequestNotification({
     case RequestMode.PERSONAL_REQUEST:
       UserModel user =
           await getUserForId(sevaUserId: notificationsModel.targetUserId);
+
+      await Firestore.instance
+          .collection('users')
+          .document(user.email)
+          .collection('notifications')
+          .document(withdrawlNotification.id)
+          .setData(withdrawlNotification.toMap());
+
       QuerySnapshot querySnapshot = await Firestore.instance
           .collection('users')
           .document(user.email)
@@ -105,6 +130,27 @@ Future<void> withdrawAcceptRequestNotification({
 
       break;
   }
+}
+
+NotificationsModel getApprovedMemberWithdrawingNotification(
+  NotificationsModel notificationsModel,
+  UserModel loggedInUser,
+  RequestModel requestModel,
+) {
+  return NotificationsModel(
+    communityId: notificationsModel.communityId,
+    data: {
+      'fullName': loggedInUser.fullname,
+      'requestTite': requestModel.title,
+      'requestId': requestModel.id,
+    },
+    id: Utils.getUuid(),
+    isRead: false,
+    senderUserId: notificationsModel.senderUserId,
+    targetUserId: notificationsModel.targetUserId,
+    timebankId: notificationsModel.timebankId,
+    type: NotificationType.APPROVED_MEMBER_WITHDRAWING_REQUEST,
+  );
 }
 
 Future<QuerySnapshot> _getQueryForNotification({

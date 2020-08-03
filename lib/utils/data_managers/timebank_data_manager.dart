@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -14,6 +15,7 @@ import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
+import '../../nearby_setting.dart';
 import '../app_config.dart';
 
 Future<void> createTimebank({@required TimebankModel timebankModel}) async {
@@ -206,7 +208,18 @@ Stream<UserModel> getUserDetails({@required String userId}) async* {
   );
 }
 
-Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
+class NearBySettings {
+  int radius;
+  bool isMiles;
+
+  @override
+  String toString() {
+    return "${radius.toString()} = radius, ${isMiles.toString()} =  isMiles";
+  }
+}
+
+Stream<List<CommunityModel>> getNearCommunitiesListStream(
+    {@required NearBySettings nearbySettings}) async* {
   // LocationData pos = await location.getLocation();
   // double lat = pos.latitude;
   // double lng = pos.longitude;
@@ -218,12 +231,10 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream() async* {
   double lat = userLocation.latitude;
   double lng = userLocation.longitude;
 
-  var radius = 20;
-  try {
-    radius = json.decode(AppConfig.remoteConfig.getString('radius'));
-  } on Exception {
-    print("Exception raised while getting radius ");
-  }
+  //Here get radius from dataabse
+
+  var radius = NearbySettingsWidget.evaluatemaxRadiusForMember(nearbySettings);
+  log("Getting within the raidus ==> " + radius.toString());
 
   GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
   var query = Firestore.instance.collection('communities');

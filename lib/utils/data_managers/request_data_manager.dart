@@ -794,6 +794,8 @@ Future<void> sendOfferRequest({
 }
 
 Future<void> acceptRequest({
+  @required UserModel loggedInUser,
+  @required bool isAlreadyApproved,
   @required RequestModel requestModel,
   @required String senderUserId,
   bool isWithdrawal = false,
@@ -824,8 +826,9 @@ Future<void> acceptRequest({
 
     if (isWithdrawal)
       await utils.withdrawAcceptRequestNotification(
-        notificationsModel: model,
-      );
+          notificationsModel: model,
+          isAlreadyApproved: isAlreadyApproved,
+          loggedInUser: loggedInUser);
     else
       await utils.createAcceptRequestNotification(
         notificationsModel: model,
