@@ -1,13 +1,19 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/edit_group_info_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/create_new_chat_page.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_builder.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/APi/storage_api.dart';
 import 'package:sevaexchange/widgets/camera_icon.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
 
@@ -24,7 +30,8 @@ class _GroupInfoState extends State<GroupInfoPage> {
   final TextEditingController _controller = TextEditingController();
   final _bloc = EditGroupInfoBloc();
   ChatModel chatModel;
-
+  ProfanityImageModel profanityImageModel = ProfanityImageModel();
+  ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
   @override
   initState() {
     chatModel = widget.chatModel;
@@ -100,32 +107,35 @@ class _GroupInfoState extends State<GroupInfoPage> {
                       return AbsorbPointer(
                         absorbing: !isAdmin,
                         child: ImagePickerWidget(
-                          child: snapshot.data == null &&
-                                  chatModel.groupDetails.imageUrl == null
-                              ? CameraIcon(radius: 35)
-                              : Container(
-                                  width: 70,
-                                  height: 70,
-                                  padding: EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                    border: Border.all(),
+                            child: snapshot.data == null &&
+                                    chatModel.groupDetails.imageUrl == null
+                                ? CameraIcon(radius: 35)
+                                : Container(
+                                    width: 70,
+                                    height: 70,
+                                    padding: EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(),
+                                    ),
+                                    child: ClipOval(
+                                      child: snapshot.data != null
+                                          ? Image.file(
+                                              snapshot.data,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : CustomNetworkImage(
+                                              chatModel.groupDetails.imageUrl,
+                                              fit: BoxFit.cover,
+                                            ),
+                                    ),
                                   ),
-                                  child: ClipOval(
-                                    child: snapshot.data != null
-                                        ? Image.file(
-                                            snapshot.data,
-                                            fit: BoxFit.cover,
-                                          )
-                                        : CustomNetworkImage(
-                                            chatModel.groupDetails.imageUrl,
-                                            fit: BoxFit.cover,
-                                          ),
-                                  ),
-                                ),
-                          onChanged: _bloc.onImageChanged,
-                        ),
+                            onChanged: (file) {
+                              if (file != null) {
+                                profanityCheck(file: file, bloc: _bloc);
+                              }
+                            }),
                       );
                     },
                   ),
@@ -151,7 +161,8 @@ class _GroupInfoState extends State<GroupInfoPage> {
                               disabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
                               errorText: snapshot.error,
-                              hintText: AppLocalizations.of(context).translate('messages', 'multi_user_messaging_name'),
+                              hintText: AppLocalizations.of(context).translate(
+                                  'messages', 'multi_user_messaging_name'),
                               hintStyle: TextStyle(
                                 fontSize: 18,
                                 color: Colors.grey,
@@ -278,5 +289,55 @@ class _GroupInfoState extends State<GroupInfoPage> {
         ),
       ),
     );
+  }
+
+  Future<void> profanityCheck({
+    File file,
+    EditGroupInfoBloc bloc,
+  }) async {
+    progressDialog = ProgressDialog(
+      context,
+      type: ProgressDialogType.Normal,
+      isDismissible: false,
+    );
+    progressDialog.show();
+
+    // _newsImageURL = imageURL;
+    String filePath = DateTime.now().toString();
+    if (file == null) {
+      progressDialog.hide();
+    }
+    String imageUrl = file != null
+        ? await StorageApi.uploadFile("multiUserMessagingLogo", file)
+        : null;
+    profanityImageModel = await checkProfanityForImage(imageUrl: imageUrl);
+
+    profanityStatusModel =
+        await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+    if (profanityStatusModel.isProfane) {
+      progressDialog.hide();
+
+      showProfanityImageAlert(
+              context: context, content: profanityStatusModel.category)
+          .then((status) {
+        if (status == 'Proceed') {
+          FirebaseStorage.instance
+              .getReferenceFromUrl(imageUrl)
+              .then((reference) {
+            reference.delete();
+          }).catchError((e) => print(e));
+        } else {
+          print('error');
+        }
+      });
+    } else {
+      FirebaseStorage.instance.getReferenceFromUrl(imageUrl).then((reference) {
+        reference.delete();
+      }).catchError((e) => print(e));
+      bloc.onImageChanged(file);
+
+      progressDialog.hide();
+    }
   }
 }

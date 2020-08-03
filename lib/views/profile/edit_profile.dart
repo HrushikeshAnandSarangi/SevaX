@@ -362,7 +362,9 @@ class _EditProfilePageState extends State<EditProfilePage>
               .getReferenceFromUrl(imageURL)
               .then((reference) {
             reference.delete();
-            setState(() {});
+            setState(() {
+              this._saving = false;
+            });
           }).catchError((e) => print(e));
         } else {
           print('error');

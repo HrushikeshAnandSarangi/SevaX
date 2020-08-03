@@ -42,6 +42,8 @@ class EditGroupInfoBloc {
         imageUrl =
             await StorageApi.uploadFile("multiUserMessagingLogo", _file.value);
       }
+      print("image url ${imageUrl}");
+
       ChatsApi.editGroup(
           chatId, _groupName.value, imageUrl, _participantInfo.value);
     }

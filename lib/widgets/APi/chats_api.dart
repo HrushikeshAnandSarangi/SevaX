@@ -70,6 +70,7 @@ class ChatsApi {
     String imageUrl,
     List<ParticipantInfo> infos,
   ) async {
+    print("image url ${imageUrl}");
     WriteBatch batch = Firestore.instance.batch();
     if (groupName != null) {
       batch.setData(

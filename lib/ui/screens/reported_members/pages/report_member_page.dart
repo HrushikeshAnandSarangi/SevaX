@@ -1,9 +1,14 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/bloc/report_member_bloc.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
 
 class ReportMemberPage extends StatefulWidget {
@@ -53,7 +58,11 @@ class ReportMemberPage extends StatefulWidget {
 class _ReportMemberPageState extends State<ReportMemberPage> {
   final ReportMemberBloc _bloc = ReportMemberBloc();
   final FocusNode messageNode = FocusNode();
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  ProfanityImageModel profanityImageModel = ProfanityImageModel();
+  ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
+  FirebaseStorage _storage = FirebaseStorage();
 
   @override
   void initState() {
@@ -124,11 +133,14 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
               child: StreamBuilder<File>(
                 stream: _bloc.image,
                 builder: (context, snapshot) {
+                  if (snapshot.hasError) {}
                   return snapshot.data == null
                       ? ImagePickerWidget(
                           isAspectRatioFixed: false,
                           onChanged: (File file) {
-                            _bloc.uploadImage(file);
+                            if (file != null) {
+                              profanityCheck(file: file, bloc: _bloc);
+                            }
                           },
                           child: Container(
                             width: 70,
@@ -206,7 +218,6 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                           );
                           _bloc
                               .createReport(
-                            context: context,
                             reportedUserModel: widget.reportedUserModel,
                             reportingUserModel: widget.reportingUserModel,
                             timebankId: widget.timebankId,
@@ -233,6 +244,57 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
         ),
       ),
     );
+  }
+
+  Future<void> profanityCheck({
+    File file,
+    ReportMemberBloc bloc,
+  }) async {
+    progressDialog = ProgressDialog(
+      context,
+      type: ProgressDialogType.Normal,
+      isDismissible: false,
+    );
+    // _newsImageURL = imageURL;
+    progressDialog.show();
+
+    String filePath = DateTime.now().toString();
+    if (file == null) {
+      progressDialog.hide();
+    }
+    StorageUploadTask _uploadTask =
+        _storage.ref().child("reports/$filePath.png").putFile(file);
+    StorageTaskSnapshot snapshot = await _uploadTask.onComplete;
+
+    String imageURL = await snapshot.ref.getDownloadURL();
+    profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
+
+    profanityStatusModel =
+        await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+    if (profanityStatusModel.isProfane) {
+      progressDialog.hide();
+
+      showProfanityImageAlert(
+              context: context, content: profanityStatusModel.category)
+          .then((status) {
+        if (status == 'Proceed') {
+          FirebaseStorage.instance
+              .getReferenceFromUrl(imageURL)
+              .then((reference) {
+            reference.delete();
+          }).catchError((e) => print(e));
+        } else {
+          print('error');
+        }
+      });
+    } else {
+      FirebaseStorage.instance.getReferenceFromUrl(imageURL).then((reference) {
+        reference.delete();
+      }).catchError((e) => print(e));
+      bloc.uploadImage(file);
+      progressDialog.hide();
+    }
   }
 
   void _showSnackBar(String message, {bool isLongDuration = false}) {
