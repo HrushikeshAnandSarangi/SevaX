@@ -2,9 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 
 typedef StringListCallback = void Function(List<String> skills);
@@ -77,7 +78,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 onPressed: widget.onBacked,
               ),
         title: Text(
-          AppLocalizations.of(context).translate('interests', 'title'),
+          S.of(context).interests.firstWordUpperCase(),
           style: TextStyle(
             fontSize: 18,
           ),
@@ -90,7 +91,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
           children: <Widget>[
             SizedBox(height: 20),
             Text(
-              AppLocalizations.of(context).translate('interests', 'title_desc'),
+              S.of(context).interests_description,
               style: TextStyle(
                 color: Colors.black54,
                 fontSize: 16,
@@ -105,8 +106,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
               textFieldConfiguration: TextFieldConfiguration(
                 controller: _textEditingController,
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)
-                      .translate('interests', 'search'),
+                  hintText: S.of(context).search,
                   filled: true,
                   fillColor: Colors.grey[300],
                   focusedBorder: OutlineInputBorder(
@@ -161,8 +161,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    AppLocalizations.of(context)
-                        .translate('interests', 'no_match'),
+                    S.of(context).no_matching_interests,
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 );
@@ -217,11 +216,9 @@ class _InterestViewNewState extends State<InterestViewNew> {
                   if (connResult == ConnectivityResult.none) {
                     _scaffoldKey.currentState.showSnackBar(
                       SnackBar(
-                        content: Text(AppLocalizations.of(context)
-                            .translate('shared', 'check_internet')),
+                        content: Text(S.of(context).check_internet),
                         action: SnackBarAction(
-                          label: AppLocalizations.of(context)
-                              .translate('shared', 'dismiss'),
+                          label: S.of(context).dismiss,
                           onPressed: () =>
                               _scaffoldKey.currentState.hideCurrentSnackBar(),
                         ),
@@ -235,38 +232,21 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 },
                 child: Text(
                   widget.isFromProfile
-                      ? AppLocalizations.of(context)
-                          .translate('interests', 'update')
-                      : AppLocalizations.of(context)
-                          .translate('shared', 'next'),
+                      ? S.of(context).update
+                      : S.of(context).next,
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),
             ),
-//            widget.userModel.interests == null
-//                ? FlatButton(
-//                    onPressed: () {
-//                      widget.onSkipped();
-//                    },
-//                    child: Text(
-//                      AppConfig.prefs.getBool(AppConfig.skip_interest) == null
-//                          ? 'Skip'
-//                          : 'Cancel',
-//                      style: TextStyle(
-//                        color: Theme.of(context).accentColor,
-//                      ),
-//                    ),
-//                  )
-//                : Container(),
+
             FlatButton(
               onPressed: () {
                 widget.onSkipped();
               },
               child: Text(
                 AppConfig.prefs.getBool(AppConfig.skip_interest) == null
-                    ? AppLocalizations.of(context).translate('shared', 'skip')
-                    : AppLocalizations.of(context)
-                        .translate('shared', 'cancel'),
+                    ? S.of(context).skip
+                    : S.of(context).cancel,
                 style: TextStyle(
                   color: Theme.of(context).accentColor,
                 ),
@@ -278,18 +258,4 @@ class _InterestViewNewState extends State<InterestViewNew> {
       ),
     );
   }
-
-  // Padding buildChip(value) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 5.0),
-  //     child: Chip(
-  //       label: Text(value),
-  //       onDeleted: () {
-  //         String id = interests.keys.firstWhere((k) => interests[k] == value);
-  //         _selectedInterests.remove(id);
-  //         setState(() {});
-  //       },
-  //     ),
-  //   );
-  // }
 }

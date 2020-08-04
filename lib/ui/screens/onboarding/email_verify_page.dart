@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
-import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/widgets/empty_text_span.dart';
 
 class VerifyEmail extends StatefulWidget {
   final FirebaseUser firebaseUser;
@@ -58,26 +58,36 @@ class _VerifyEmailState extends State<VerifyEmail> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(left: 50),
+                  padding: const EdgeInsets.only(left: 50, right: 50),
                   child: RichText(
                     text: TextSpan(
                       style: TextStyle(color: Colors.black),
                       children: <TextSpan>[
                         TextSpan(
-                          text: AppLocalizations.of(context).translate('verify_email','check_email'),
+                          text: S.of(context).thanks,
                           style: TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                        emptyTextSpan(placeHolder: '\n'),
                         TextSpan(
-                          text: AppLocalizations.of(context).translate('verify_email','email_sent'),
+                          text: S.of(context).check_email,
+                          style: TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        emptyTextSpan(placeHolder: '\n'),
+                        TextSpan(
+                          text: S.of(context).email_sent_to,
                           style: TextStyle(
                             fontSize: 16,
                             // fontWeight: FontWeight.bold,
                             color: Colors.grey,
                           ),
                         ),
+                        emptyTextSpan(placeHolder: '\n'),
                         TextSpan(
                           text: "${widget.email}",
                           style: TextStyle(
@@ -86,8 +96,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
                             color: Colors.black,
                           ),
                         ),
+                        emptyTextSpan(),
                         TextSpan(
-                          text: AppLocalizations.of(context).translate('verify_email','verify_account'),
+                          text: S.of(context).verify_account,
                           style: TextStyle(
                             fontSize: 16,
                             // fontWeight: FontWeight.bold,
@@ -101,9 +112,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
                 Padding(
                   padding: const EdgeInsets.only(left: 28),
                   child: FlatButton(
-                    child: Text(AppLocalizations.of(context).translate('verify_email','resend_email')),
+                    child: Text(S.of(context).resend_email),
                     onPressed: () {
-                      print("Sending email for verification");
                       widget.firebaseUser
                           .sendEmailVerification()
                           .then((onValue) {
@@ -123,7 +133,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
             bottom: 80,
             child: Center(
               child: Text(
-                AppLocalizations.of(context).translate('verify_email','please_login'),
+                S.of(context).login_after_verification,
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 12,
@@ -136,7 +146,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
             right: 40,
             bottom: 20,
             child: RaisedButton(
-              child: Text(AppLocalizations.of(context).translate('verify_email','login')),
+              child: Text(S.of(context).sign_in),
               onPressed: () {
                 _signOut(context);
               },
@@ -164,12 +174,14 @@ class _VerifyEmailState extends State<VerifyEmail> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context).translate('verify_email','verification_sent')),
-          content: Text(AppLocalizations.of(context).translate('verify_email','verification_sent_desc'),),
+          title: Text(S.of(context).verification_sent),
+          content: Text(
+            S.of(context).verification_sent_desc,
+          ),
           actions: <Widget>[
             FlatButton(
               child: Text(
-            AppLocalizations.of(context).translate('shared','cancel'),
+                S.of(context).cancel,
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                   color: Colors.red,

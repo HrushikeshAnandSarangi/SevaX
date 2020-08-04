@@ -86,6 +86,7 @@ dependencies:
   logger: ^0.9.1
   pdf: ^1.10.0
   arbify: ^0.0.9
+  recase: ^3.0.0
 
 dev_dependencies:
   pedantic: ^1.9.0

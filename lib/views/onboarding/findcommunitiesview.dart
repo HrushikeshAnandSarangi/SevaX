@@ -7,7 +7,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -82,10 +82,9 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   @override
   Widget build(BuildContext context) {
-    JOIN = AppLocalizations.of(context).translate('findtimebank', "join");
-    JOINED = AppLocalizations.of(context).translate('findtimebank', "joined");
-    nearTimebankText = AppLocalizations.of(context)
-        .translate('findtimebank', 'timebanks_near_you');
+    JOIN = S.of(context).join;
+    JOINED = S.of(context).joined;
+    nearTimebankText = S.of(context).timebanks_near_you;
     bool showBachBtn = widget.showBackBtn;
     showAppbar = widget.isFromHome;
     return Scaffold(
@@ -113,8 +112,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     )
                   : Offstage(),
               title: Text(
-                AppLocalizations.of(context)
-                    .translate('findtimebank', 'find_your_timebank'),
+                S.of(context).find_your_timebank,
                 style: TextStyle(
                   fontSize: 18,
                 ),
@@ -134,13 +132,11 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title:
-              Text(AppLocalizations.of(context).translate('shared', 'logout')),
+          title: Text(S.of(context).log_out),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(AppLocalizations.of(context)
-                  .translate('shared', 'sure_logout')),
+              Text(S.of(context).log_out_confirmation),
               SizedBox(height: 10),
               Row(
                 children: <Widget>[
@@ -150,8 +146,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('shared', 'logout'),
+                      S.of(context).log_out,
                       style: TextStyle(fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
@@ -173,8 +168,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   ),
                   FlatButton(
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('shared', 'cancel'),
+                      S.of(context).cancel,
                       style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
                     ),
                     onPressed: () {
@@ -211,8 +205,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
         ),
         Text(
-          AppLocalizations.of(context)
-              .translate('findtimebank', 'looking_existing'),
+          S.of(context).looking_existing_timebank,
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
@@ -224,41 +217,41 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           style: TextStyle(color: Colors.black),
           controller: searchTextController,
           decoration: InputDecoration(
-              suffixIcon: Offstage(
-                offstage: searchTextController.text.length == 0,
-                child: IconButton(
-                  splashColor: Colors.transparent,
-                  icon: Icon(
-                    Icons.clear,
-                    color: Colors.black54,
-                  ),
-                  onPressed: () {
-                    //searchTextController.clear();
-                    WidgetsBinding.instance.addPostFrameCallback(
-                        (_) => searchTextController.clear());
-                  },
+            suffixIcon: Offstage(
+              offstage: searchTextController.text.length == 0,
+              child: IconButton(
+                splashColor: Colors.transparent,
+                icon: Icon(
+                  Icons.clear,
+                  color: Colors.black54,
                 ),
+                onPressed: () {
+                  //searchTextController.clear();
+                  WidgetsBinding.instance.addPostFrameCallback(
+                      (_) => searchTextController.clear());
+                },
               ),
-              hasFloatingPlaceholder: false,
-              alignLabelWithHint: true,
-              isDense: true,
-              prefixIcon: Icon(
-                Icons.search,
-                color: Colors.grey,
-              ),
-              contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-              filled: true,
-              fillColor: Colors.grey[300],
-              focusedBorder: OutlineInputBorder(
+            ),
+            hasFloatingPlaceholder: false,
+            alignLabelWithHint: true,
+            isDense: true,
+            prefixIcon: Icon(
+              Icons.search,
+              color: Colors.grey,
+            ),
+            contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+            filled: true,
+            fillColor: Colors.grey[300],
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+              borderRadius: BorderRadius.circular(25.7),
+            ),
+            enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.circular(25.7),
-              ),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                  borderRadius: BorderRadius.circular(25.7)),
-              hintText: AppLocalizations.of(context)
-                  .translate('findtimebank', 'help_text'),
-              hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
+                borderRadius: BorderRadius.circular(25.7)),
+            hintText: S.of(context).find_timebank_help_text,
+            hintStyle: TextStyle(color: Colors.black45, fontSize: 14),
+          ),
         ),
         SizedBox(height: 20),
         Expanded(
@@ -286,63 +279,53 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     }
     // ListView contains a group of widgets that scroll inside the drawer
     return StreamBuilder<List<CommunityModel>>(
-        stream: SearchManager.searchCommunity(
-          queryString: searchTextController.text,
-        ),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+      stream: SearchManager.searchCommunity(
+        queryString: searchTextController.text,
+      ),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            if (snapshot.data.length != 0) {
+              List<CommunityModel> communityList = snapshot.data;
+              print("comm list ${communityList}");
+
+              return Padding(
+                  padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
+                  child: ListView.builder(
+                      padding: EdgeInsets.only(
+                        bottom: 180,
+                      ),
+                      itemCount: communityList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        CompareUserStatus status;
+
+                        status = _compareUserStatus(communityList[index],
+                            widget.loggedInUser.sevaUserID);
+
+                        return timeBankWidget(
+                            communityModel: communityList[index],
+                            context: context,
+                            status: status);
+                      }));
             } else {
-              if (snapshot.data.length != 0) {
-                List<CommunityModel> communityList = snapshot.data;
-                print("comm list ${communityList}");
-//                communityList
-//                    .removeWhere((community) => community.private == true);
-
-                return Padding(
-                    padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
-                    child: ListView.builder(
-                        padding: EdgeInsets.only(
-                            bottom:
-                                180), //to avoid keyboard overlap //temp fix neeeds to be changed
-                        itemCount: communityList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          CompareUserStatus status;
-
-                          status = _compareUserStatus(communityList[index],
-                              widget.loggedInUser.sevaUserID);
-
-                          return timeBankWidget(
-                              communityModel: communityList[index],
-                              context: context,
-                              status: status);
-                        }));
-              } else {
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
-                  child: Center(
-                    child: Text(
-                        AppLocalizations.of(context)
-                            .translate('findtimebank', 'no_timebanks_found'),
-                        style: TextStyle(fontFamily: "Europa", fontSize: 14)),
-                  ),
-                );
-              }
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
+                child: Center(
+                  child: Text(S.of(context).no_timebanks_found,
+                      style: TextStyle(fontFamily: "Europa", fontSize: 14)),
+                ),
+              );
             }
-          } else if (snapshot.hasError) {
-            return Text(
-                AppLocalizations.of(context).translate('shared', 'try_later'));
           }
-          /*else if(snapshot.data==null){
-            return Expanded(
-              child: Center(
-                child: Text('No Timebank found'),
-              ),
-            );
-          }*/
-          return Text("");
-        });
+        } else if (snapshot.hasError) {
+          return Text(S.of(context).try_later);
+        }
+
+        return Text("");
+      },
+    );
   }
 
   Widget timeBankWidget(
@@ -358,22 +341,16 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
           if (snapshot.hasError) {
             return Text(
-              AppLocalizations.of(context)
-                  .translate('findtimebank', 'timebank'),
+              S.of(context).timebank,
             );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Text("...");
           } else if (snapshot.hasData) {
             return Text(
-              AppLocalizations.of(context)
-                      .translate('findtimebank', 'created_by') +
-                  snapshot.data.fullname,
+              S.of(context).created_by + snapshot.data.fullname,
             );
           } else {
-            return Text(
-              AppLocalizations.of(context)
-                  .translate('findtimebank', 'community'),
-            );
+            return Container();
           }
         },
       ),
@@ -397,7 +374,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                       ),
                     ),
                   );
-                  print('clicked ${communityModel.id}');
                 }
               : null,
           child: Row(
@@ -485,18 +461,16 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
                 child: Center(
-                  child: Text(
-                      AppLocalizations.of(context)
-                          .translate('findtimebank', 'no_timebanks_found'),
+                  child: Text(S.of(context).no_timebanks_found,
                       style: TextStyle(fontFamily: "Europa", fontSize: 14)),
                 ),
               );
             }
           } else if (snapshot.hasError) {
             return Padding(
-                padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 16.0),
-                child: Text(AppLocalizations.of(context)
-                    .translate('findtimebank', 'timebanks_around_you')));
+              padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 16.0),
+              child: Text(S.of(context).timebank_gps_hint),
+            );
             // return Text("Couldn't load results");
           }
           /*else if(snapshot.data==null){
@@ -579,17 +553,15 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             children: <Widget>[
               RaisedButton(
                 child: Text(
-                  AppLocalizations.of(context)
-                      .translate('findtimebank', 'create_timebank'),
+                  S.of(context).create_timebank,
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
                 onPressed: () async {
-                  var timebankAdvisory = AppLocalizations.of(context)
-                      .translate('findtimebank', 'create_timebank_warn');
+                  var timebankAdvisory =
+                      S.of(context).create_timebank_confirmation;
                   Map<String, bool> onActivityResult =
                       await showTimebankAdvisory(dialogTitle: timebankAdvisory);
                   if (onActivityResult['PROCEED']) {
-                    print("YES PROCEED WITH TIMEBANK CREATION");
                     createEditCommunityBloc
                         .updateUserDetails(SevaCore.of(context).loggedInUser);
                     Navigator.push(
@@ -646,8 +618,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context)
-                      .translate('shared', 'capital_cancel'),
+                  S.of(context).cancel,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -658,7 +629,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               ),
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('shared', 'proceed'),
+                  S.of(context).proceed,
                   style: TextStyle(
                     fontSize: 16,
                   ),

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class AboutMode {
@@ -71,8 +71,7 @@ class _WebViewExampleState extends State<SevaWebView> {
               children: <Widget>[
                 CircularProgressIndicator(),
                 SizedBox(height: 4),
-                Text(AppLocalizations.of(context)
-                    .translate('jointimebank_sub', 'loading')),
+                Text(S.of(context).loading),
               ],
             ),
           ),
@@ -101,8 +100,7 @@ class _WebViewExampleState extends State<SevaWebView> {
         dialogContext = context;
         return AlertDialog(
           title: Text(
-            AppLocalizations.of(context)
-                .translate('jointimebank_sub', 'loading'),
+            S.of(context).loading,
           ),
           content: CircularProgressIndicator(),
         );

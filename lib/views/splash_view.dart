@@ -6,15 +6,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flurry/flurry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/onboarding/email_verify_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/deep_link_manager/onboard_via_link.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/helpers/notification_manager.dart';
@@ -24,7 +22,6 @@ import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
-import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -50,17 +47,17 @@ class UserData {
     await fireStoreManager.updateUser(user: user);
   }
 
-  Future _getSignedInUserDocs(String userId) async {
-    UserModel userModel = await fireStoreManager.getUserForId(
-      sevaUserId: userId,
-    );
-    user = userModel;
-  }
+//   Future _getSignedInUserDocs(String userId) async {
+//     UserModel userModel = await fireStoreManager.getUserForId(
+//       sevaUserId: userId,
+//     );
+//     user = userModel;
+//   }
 
-  Future<String> _getLoggedInUserId() async {
-    userId = await PreferenceManager.loggedInUserId;
-    return userId;
-  }
+//   Future<String> _getLoggedInUserId() async {
+//     userId = await PreferenceManager.loggedInUserId;
+//     return userId;
+//   }
 }
 
 class SplashView extends StatefulWidget {
@@ -75,7 +72,6 @@ class _SplashViewState extends State<SplashView> {
   String _loadingMessage = '';
   bool _initialized = false;
   bool mainForced = false;
-  final _firestore = Firestore();
 
   @override
   void initState() {
@@ -157,8 +153,7 @@ class _SplashViewState extends State<SplashView> {
     super.didChangeDependencies();
     if (!_initialized) {
       Future.delayed(Duration.zero, () {
-        loadingMessage =
-            AppLocalizations.of(context).translate('splash', 'hang_on');
+        loadingMessage = S.of(context).hang_on;
       });
       _precacheImage().then((_) {
         initiateLogin();
@@ -220,181 +215,6 @@ class _SplashViewState extends State<SplashView> {
     );
   }
 
-  Widget get humanitySplash {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromARGB(255, 4, 47, 110),
-              Color.fromARGB(255, 4, 47, 110),
-              Color.fromARGB(255, 4, 47, 110),
-              //Colors.white,
-            ],
-            stops: [0, 0.6, 1],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                AppLocalizations.of(context)
-                    .translate('splash', 'humanityfirst')
-                    .toUpperCase(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  letterSpacing: 5,
-                  fontSize: 24,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Image.asset(
-                'lib/assets/images/seva-x-logo.png',
-                height: 140,
-                width: 140,
-              ),
-              if (loadingMessage != null && loadingMessage.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 32.0),
-                  child: Text(loadingMessage,
-                      style: TextStyle(color: Colors.white)),
-                ),
-              Container(
-                margin: EdgeInsets.only(top: 8),
-                child: SizedBox(
-                  height: 2,
-                  width: 150,
-                  child: LinearProgressIndicator(),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget get tulsiSplash {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Theme.of(context).primaryColor,
-              Theme.of(context).primaryColor,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                height: 16,
-              ),
-              SvgPicture.asset(
-                'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
-                height: 140,
-                width: 140,
-                color: Colors.white,
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              if (loadingMessage != null && loadingMessage.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 32.0),
-                  child: Text(
-                    loadingMessage,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              Container(
-                margin: EdgeInsets.only(top: 8),
-                child: SizedBox(
-                  height: 2,
-                  width: 150,
-                  child: Theme(
-                      data: Theme.of(context)
-                          .copyWith(accentColor: Colors.red[900]),
-                      child: LinearProgressIndicator(
-                        backgroundColor: Theme.of(context).primaryColor,
-                      )),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget get tomSplash {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Theme.of(context).primaryColor,
-              Theme.of(context).primaryColor,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                height: 16,
-              ),
-              SvgPicture.asset(
-                'lib/assets/ts2020-logo-w.svg',
-                height: 90,
-                width: 90,
-                //color: Colors.white,
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              if (loadingMessage != null && loadingMessage.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 32.0),
-                  child: Text(
-                    loadingMessage,
-                    style: TextStyle(color: Colors.white.withAlpha(120)),
-                  ),
-                ),
-              Container(
-                margin: EdgeInsets.only(top: 8),
-                child: SizedBox(
-                  height: 2,
-                  width: 150,
-                  child: Theme(
-                      data: Theme.of(context)
-                          .copyWith(accentColor: Colors.red[900]),
-                      child: LinearProgressIndicator(
-                        backgroundColor: Theme.of(context).primaryColor,
-                      )),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   void initiateLogin() {
     _getLoggedInUserId()
         .then(handleLoggedInUserIdResponse)
@@ -418,8 +238,7 @@ class _SplashViewState extends State<SplashView> {
 
   Future<void> handleLoggedInUserIdResponse(String userId) async {
     if (userId == null || userId.isEmpty) {
-      loadingMessage =
-          AppLocalizations.of(context).translate('splash', 'hang_on');
+      loadingMessage = S.of(context).hang_on;
       _navigateToLoginPage();
       return;
     }
@@ -446,8 +265,8 @@ class _SplashViewState extends State<SplashView> {
         loggedInUser.email);
 
     if (loggedInUser == null) {
-      loadingMessage =
-          AppLocalizations.of(context).translate('splash', 'world');
+      // loadingMessage =
+      //     AppLocalizations.of(context).translate('splash', 'world');
       _navigateToLoginPage();
       return;
     }
@@ -518,7 +337,7 @@ class _SplashViewState extends State<SplashView> {
         loggedInUser.bio == null) {
       await _navigateToBioView(loggedInUser);
     }
-    loadingMessage = AppLocalizations.of(context).translate('splash', 'we_met');
+    loadingMessage = S.of(context).we_met;
 
     if (loggedInUser.communities == null || loggedInUser.communities.isEmpty) {
       await _navigateToFindCommunitiesView(loggedInUser);
@@ -574,25 +393,17 @@ class _SplashViewState extends State<SplashView> {
             Navigator.pop(context);
             loggedInUser.skills = skills;
             updateUserData(loggedInUser);
-            loadingMessage = AppLocalizations.of(context)
-                .translate('skills', 'updating_loader');
+            loadingMessage =
+                S.of(context).updating + ' ' + S.of(context).skills;
           },
           onSkipped: () {
             Navigator.pop(context);
             AppConfig.prefs.setBool(AppConfig.skip_skill, true);
             loggedInUser.skills = [];
-            loadingMessage = AppLocalizations.of(context)
-                .translate('skills', 'skipping_loader');
+            loadingMessage =
+                S.of(context).skipping + ' ' + S.of(context).skills;
           },
         ),
-      ),
-    );
-  }
-
-  Future _navigateToWaitingView(UserModel loggedInUser) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => WaitingView(),
       ),
     );
   }
@@ -609,15 +420,16 @@ class _SplashViewState extends State<SplashView> {
             Navigator.pop(context);
             loggedInUser.interests = interests;
             updateUserData(loggedInUser);
-            loadingMessage = AppLocalizations.of(context)
-                .translate('interests', 'updating_loader');
+            loadingMessage =
+                S.of(context).updating + ' ' + S.of(context).interests;
           },
           onSkipped: () {
             Navigator.pop(context);
             loggedInUser.interests = [];
             AppConfig.prefs.setBool(AppConfig.skip_interest, true);
-            loadingMessage = AppLocalizations.of(context)
-                .translate('interests', 'skipping_loader');
+            loadingMessage =
+                S.of(context).skipping + ' ' + S.of(context).interests;
+            ;
           },
           onBacked: () {
             AppConfig.prefs.setBool(AppConfig.skip_skill, null);
@@ -663,16 +475,6 @@ class _SplashViewState extends State<SplashView> {
           ),
         ),
       ),
-    );
-  }
-
-  Future _navigateToHome_DashBoardView(UserModel loggedInUser) async {
-    userBloc.updateUserDetails(loggedInUser);
-
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-          builder: (context) =>
-              SevaCore(loggedInUser: loggedInUser, child: HomePageRouter())),
     );
   }
 
