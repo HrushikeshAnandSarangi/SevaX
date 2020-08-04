@@ -319,7 +319,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => NotificationAlert(),
+                                builder: (context) => NotificationAlert(
+                                  SevaCore.of(context).loggedInUser.sevaUserID,
+                                ),
                               ),
                             );
                           },

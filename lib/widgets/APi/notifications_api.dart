@@ -42,13 +42,6 @@ class NotificationsApi {
         .where("communityId", isEqualTo: communityId)
         .where("isRead", isEqualTo: false)
         .snapshots();
-    //     .listen((event) {
-    //   event.documents.forEach((element) {
-    //     print(element.data);
-    //   });
-
-    //   print("collection group ${event.documents.length}");
-    // });
   }
 
   static Future<void> readUserNotification(

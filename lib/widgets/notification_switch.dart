@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class NotificationWidgetSwitch extends StatefulWidget {
@@ -30,6 +29,18 @@ class NotificationWidgetSwitch extends StatefulWidget {
         .updateData(
       {
         'notificationSetting.$adminSevaUserId.$notificationType': status,
+      },
+    );
+  }
+
+  static void updatePersonalNotifications({
+    String userEmail,
+    String notificationType,
+    bool status,
+  }) {
+    Firestore.instance.collection('users').document(userEmail).updateData(
+      {
+        'notificationSetting.$notificationType': status,
       },
     );
   }

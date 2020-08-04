@@ -18,7 +18,6 @@ class _OffersTabViewState extends State<OffersTabView> {
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<SearchBloc>(context);
-    print("==>${_bloc.user.email}");
     return Container(
       child: StreamBuilder<String>(
         stream: _bloc.searchText,
@@ -41,7 +40,6 @@ class _OffersTabViewState extends State<OffersTabView> {
                 );
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
-                print("===>> ${snapshot.data}");
                 return Center(
                   child: Text(AppLocalizations.of(context)
                       .translate('search', 'no_data')),

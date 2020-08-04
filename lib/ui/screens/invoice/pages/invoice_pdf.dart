@@ -1,0 +1,212 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart' as material;
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart';
+import 'package:sevaexchange/models/invoice_model.dart';
+import 'package:sevaexchange/ui/screens/invoice/pages/invoice_screen.dart';
+
+class InvoicePdf {
+  void invoicePdf(context, InvoiceModel model) async {
+    final Document pdf = Document();
+
+    PdfImage _logo = PdfImage.file(
+      pdf.document,
+      bytes: (await rootBundle.load('images/invoice_seva_logo.jpg'))
+          .buffer
+          .asUint8List(),
+    );
+
+    Widget _rowText(String text, String value) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(text),
+          SizedBox(width: 30),
+          Text(value),
+        ],
+      );
+    }
+
+    int getSubTotal() {
+      int subtotal = 0;
+      model.details
+          .forEach((element) => subtotal += element.price * element.units);
+      return subtotal;
+    }
+
+    pdf.addPage(
+      MultiPage(
+        pageFormat:
+            PdfPageFormat.letter.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        header: (Context context) {
+          if (context.pageNumber == 1) {
+            return null;
+          }
+          return Container(
+            alignment: Alignment.centerRight,
+            margin: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
+            padding: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
+            decoration: const BoxDecoration(
+                border:
+                    BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey)),
+            child: Text(
+              'Report',
+              style: Theme.of(context)
+                  .defaultTextStyle
+                  .copyWith(color: PdfColors.grey),
+            ),
+          );
+        },
+        footer: (Context context) {
+          return Container(
+            alignment: Alignment.centerRight,
+            margin: const EdgeInsets.only(top: 1.0 * PdfPageFormat.cm),
+            child: Text(
+              'Page ${context.pageNumber} of ${context.pagesCount}',
+              style: Theme.of(context).defaultTextStyle.copyWith(
+                    color: PdfColors.grey,
+                  ),
+            ),
+          );
+        },
+        build: (Context context) => <Widget>[
+          Container(
+            width: PdfPageFormat.cm * 5,
+            child: AspectRatio(
+              aspectRatio: 3 / 2,
+              child: Image(
+                _logo,
+                fit: BoxFit.fitWidth,
+              ),
+            ),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Bill to Address",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Text("ATTN:Stalin 10-416/1", style: TextStyle(fontSize: 14)),
+                  Text("South Avenue, 53", style: TextStyle(fontSize: 14)),
+                  Text("NewYork", style: TextStyle(fontSize: 14)),
+                ],
+              ),
+              Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Account Number:",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  Text("3630943624", style: TextStyle(fontSize: 14)),
+                  SizedBox(height: 8),
+                  Text(
+                    "BILLING STATEMENT:",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  Text("Statement Number: 142544581",
+                      style: TextStyle(fontSize: 14)),
+                  Text("Statement Date: July 3 , 2018",
+                      style: TextStyle(fontSize: 14)),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Header(level: 2, text: model.note1),
+          SizedBox(height: 10),
+          Header(level: 2, text: model.note2),
+          SizedBox(height: 10),
+          Divider(thickness: 1, color: PdfColors.grey),
+          Table.fromTextArray(
+            context: context,
+            border: null,
+            cellAlignments: {
+              0: Alignment.centerLeft,
+              1: Alignment.center,
+              2: Alignment.center,
+              3: Alignment.center,
+            },
+            columnWidths: {
+              0: FlexColumnWidth(),
+              1: IntrinsicColumnWidth(),
+              2: IntrinsicColumnWidth(),
+              3: IntrinsicColumnWidth(),
+            },
+            cellHeight: 40,
+            cellStyle: TextStyle(fontSize: 14),
+            headerStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            headerDecoration: BoxDecoration(
+              border: BoxBorder(
+                bottom: true,
+                top: false,
+                color: PdfColors.grey,
+                width: 1,
+              ),
+            ),
+            rowDecoration: BoxDecoration(
+              border: BoxBorder(
+                bottom: true,
+                color: PdfColors.grey,
+                width: 1,
+              ),
+            ),
+            headers: ['DETAILS', 'NO.', 'PRICE', 'TOTAL'],
+            data: List.generate(
+              model.details.length,
+              (index) => [
+                model.details[index].description,
+                model.details[index].units,
+                model.details[index].price,
+                model.details[index].units * model.details[index].price
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(height: 12),
+                  _rowText("SUB TOTAL", "\$ ${getSubTotal()}"),
+                  SizedBox(height: 8),
+                  _rowText("TAX", "\$ ${model.tax ?? 0}"),
+                  SizedBox(height: 8),
+                  _rowText(
+                      "GRAND TOTAL", "\$ ${model.tax ?? 0 + getSubTotal()}"),
+                  SizedBox(height: 12),
+                ],
+              ),
+            ),
+          ),
+          Divider(thickness: 1, color: PdfColors.grey),
+        ],
+      ),
+    );
+    //save PDF
+
+    final String dir = (await getApplicationDocumentsDirectory()).path;
+    final String path = '$dir/invoice.pdf';
+    final File file = File(path);
+    await file.writeAsBytes(pdf.save());
+    material.Navigator.of(context).push(
+      material.MaterialPageRoute(
+        builder: (_) => InvoiceScreen(path: path),
+      ),
+    );
+  }
+}

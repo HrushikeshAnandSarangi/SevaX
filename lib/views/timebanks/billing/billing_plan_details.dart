@@ -7,7 +7,6 @@ import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/billing_plan_details.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 import 'package:sevaexchange/widgets/NoGlowScrollBehavior.dart';
 
@@ -18,14 +17,14 @@ class BillingPlanDetails extends StatefulWidget {
   final bool isPrivateTimebank;
   final String planName;
 
-  const BillingPlanDetails(
-      {Key key,
-      this.user,
-      this.isPlanActive,
-      this.planName,
-      this.autoImplyLeading = false,
-      this.isPrivateTimebank})
-      : super(key: key);
+  const BillingPlanDetails({
+    Key key,
+    this.user,
+    this.isPlanActive,
+    this.planName,
+    this.autoImplyLeading = false,
+    this.isPrivateTimebank,
+  }) : super(key: key);
   @override
   _BillingPlanDetailsState createState() => _BillingPlanDetailsState();
 }

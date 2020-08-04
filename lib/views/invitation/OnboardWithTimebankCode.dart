@@ -513,7 +513,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
             )
             .collection("notifications")
             .document(notification.id),
-        notification.toMap());
+        (notification..isTimebankNotification = true).toMap());
     batchWrite.setData(
         Firestore.instance
             .collection('join_requests')

@@ -826,7 +826,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                         decoration: notificationDecoration,
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundImage: NetworkImage(user.photoURL),
+                            backgroundImage: NetworkImage(
+                                user.photoURL ?? defaultUserImageURL),
                           ),
                           title: Text(model.title),
                           subtitle: RichText(
@@ -1165,7 +1166,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                     height: 70,
                     width: 70,
                     child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
+                      backgroundImage: NetworkImage(
+                          userModel.photoURL ?? defaultUserImageURL),
                     ),
                   ),
                   Padding(
@@ -1372,7 +1374,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                   .translate('notifications', 'join_request')),
               leading: user.photoURL != null
                   ? CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL),
+                      backgroundImage:
+                          NetworkImage(user.photoURL ?? defaultUserImageURL),
                     )
                   : Offstage(),
               subtitle: Text(
@@ -1408,7 +1411,8 @@ class NotificationsView extends State<NotificationViewHolder> {
               title: Text(AppLocalizations.of(context)
                   .translate('notifications', 'offer_accepted')),
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
+                backgroundImage:
+                    NetworkImage(user.photoURL ?? defaultUserImageURL),
               ),
               subtitle: Text(
                   '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'show_interest')}'),

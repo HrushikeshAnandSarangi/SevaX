@@ -32,6 +32,8 @@ class UserModel extends DataModel {
 
   int notificationsRead;
   Map<dynamic, dynamic> notificationsReadCount;
+  Map<dynamic, dynamic> notificationSetting;
+
   String root_timebank_id;
 
   //AvailabilityModel availability;
@@ -233,6 +235,19 @@ class UserModel extends DataModel {
     } else {
       notificationsReadCount = HashMap();
     }
+
+    if (map.containsKey('notificationSetting') &&
+        map['notificationSetting'] != null) {
+      try {
+        Map<dynamic, dynamic> _notificationSetting = map['notificationSetting'];
+        this.notificationSetting = _notificationSetting;
+      } catch (e) {
+        this.notificationSetting = HashMap();
+      }
+    } else {
+      notificationSetting = HashMap();
+    }
+
     if (map.containsKey('notificationAlerts')) {
       this.notificationAlerts = map['notificationAlerts'];
     } else {

@@ -13,6 +13,7 @@ class NotificationsModel extends DataModel {
   String timebankId;
   String communityId;
   int timestamp;
+  bool isTimebankNotification;
 
   NotificationsModel({
     this.id,
@@ -23,6 +24,7 @@ class NotificationsModel extends DataModel {
     this.senderUserId,
     this.timebankId,
     this.communityId,
+    this.isTimebankNotification,
   });
 
   NotificationsModel.fromMap(Map<String, dynamic> map) {
@@ -70,6 +72,8 @@ class NotificationsModel extends DataModel {
   @override
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {};
+
+    map['isTimebankNotification'] = isTimebankNotification ?? false;
 
     if (this.id != null) {
       map['id'] = this.id;

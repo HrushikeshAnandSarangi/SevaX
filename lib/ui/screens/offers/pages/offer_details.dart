@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
@@ -83,21 +84,26 @@ class OfferDetails extends StatelessWidget {
                           (getOfferParticipants(offerDataModel: offerModel)
                                   .isNotEmpty &&
                               offerModel.offerType == OfferType.GROUP_OFFER),
-                      child: Container(
-                        height: 30,
-                        width: 80,
-                        child: FlatButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 30,
+                            width: 80,
+                            child: FlatButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              color: Color.fromRGBO(44, 64, 140, 1),
+                              child: Text(
+                                AppLocalizations.of(context)
+                                    .translate('offers', 'edit'),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              onPressed: () => _onEdit(context),
+                            ),
                           ),
-                          color: Color.fromRGBO(44, 64, 140, 1),
-                          child: Text(
-                            AppLocalizations.of(context)
-                                .translate('offers', 'edit'),
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          onPressed: () => _onEdit(context),
-                        ),
+                          oneToManyOfferCancellation(context),
+                        ],
                       ),
                     ),
                   ),
@@ -157,6 +163,37 @@ class OfferDetails extends StatelessWidget {
     );
   }
 
+  Widget oneToManyOfferCancellation(BuildContext context) {
+    if (offerModel.offerType == OfferType.GROUP_OFFER &&
+        DateTime.now().millisecondsSinceEpoch <
+            offerModel.groupOfferDataModel.endDate) {
+      return Row(
+        children: [
+          SizedBox(
+            width: 10,
+          ),
+          Container(
+            height: 30,
+            width: 100,
+            child: FlatButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              color: Colors.red,
+              child: Text(
+                "Cancel",
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () => _onCancel(context),
+            ),
+          )
+        ],
+      );
+    }
+
+    return Container();
+  }
+
   void _onEdit(BuildContext context) {
     switch (offerModel.offerType) {
       case OfferType.INDIVIDUAL_OFFER:
@@ -177,6 +214,52 @@ class OfferDetails extends StatelessWidget {
               timebankId: offerModel.timebankId,
             ),
           ),
+        );
+        break;
+    }
+  }
+
+  void _onCancel(BuildContext context) {
+    switch (offerModel.offerType) {
+      case OfferType.INDIVIDUAL_OFFER:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => IndividualOffer(
+              offerModel: offerModel,
+              timebankId: offerModel.timebankId,
+            ),
+          ),
+        );
+        break;
+      case OfferType.GROUP_OFFER:
+        showDialog(
+          context: context,
+          builder: (BuildContext _context) {
+            return AlertDialog(
+              title: Text('Cancel Offer'),
+              content: Text('Are you sure you want to cancel the offer'),
+              actions: [
+                FlatButton(
+                  child: Text(AppLocalizations.of(context)
+                      .translate('create_request', 'close')),
+                  onPressed: () {
+                    Navigator.of(_context).pop();
+                  },
+                ),
+                FlatButton(
+                  child: Text("Cancel Offer"),
+                  onPressed: () async {
+                    Navigator.of(_context).pop();
+                    await Firestore.instance
+                        .collection('offers')
+                        .document(offerModel.id)
+                        .updateData({'groupOfferDataModel.isCanceled': true});
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
         );
         break;
     }

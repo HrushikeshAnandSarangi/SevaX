@@ -34,9 +34,16 @@ import 'package:sevaexchange/widgets/APi/notifications_api.dart';
 import 'package:sevaexchange/widgets/APi/request_api.dart';
 import 'package:sevaexchange/widgets/APi/user_api.dart';
 
-class PersonalNotifications extends StatelessWidget {
+class PersonalNotifications extends StatefulWidget {
+  @override
+  _PersonalNotificationsState createState() => _PersonalNotificationsState();
+}
+
+class _PersonalNotificationsState extends State<PersonalNotifications>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final _bloc = BlocProvider.of<NotificationsBloc>(context);
     final UserModel user = SevaCore.of(context).loggedInUser;
     return StreamBuilder<List<NotificationsModel>>(
@@ -46,6 +53,17 @@ class PersonalNotifications extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting ||
             snapshot.data == null) {
           return LoadingIndicator();
+        }
+        if (snapshot.data.isEmpty) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Text(
+                AppLocalizations.of(context)
+                    .translate('notifications', 'no_notifications'),
+              ),
+            ),
+          );
         }
         return ListView.builder(
           shrinkWrap: true,
@@ -73,8 +91,8 @@ class PersonalNotifications extends StatelessWidget {
                           .replaceFirst(
                               '***eventDate',
                               DateTime.fromMillisecondsSinceEpoch(
-                                      eventData.eventDate)
-                                  .toString()),
+                                eventData.eventDate,
+                              ).toString()),
                   entityName: "Request Updated",
                   photoUrl: eventData.photoUrl,
                   onDismissed: onDismissed,
@@ -234,10 +252,9 @@ class PersonalNotifications extends StatelessWidget {
               case NotificationType.RequestCompletedApproved:
                 RequestModel model = RequestModel.fromMap(notification.data);
                 TransactionModel transactionModel =
-                    model.transactions.firstWhere((transaction) {
-                  return transaction.to == user.sevaUserID;
-                });
-
+                    model.transactions.firstWhere(
+                  (transaction) => transaction.to == user.sevaUserID,
+                );
                 return NotificationCard(
                   entityName: model.fullName,
                   isDissmissible: true,
@@ -277,7 +294,7 @@ class PersonalNotifications extends StatelessWidget {
                 TransactionModel model =
                     TransactionModel.fromMap(notification.data);
 
-                FutureBuilder<UserModel>(
+                return FutureBuilder<UserModel>(
                   future: UserApi.fetchUserById(notification.senderUserId),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) return Container();
@@ -671,4 +688,7 @@ class PersonalNotifications extends StatelessWidget {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

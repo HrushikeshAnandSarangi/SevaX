@@ -27,48 +27,24 @@ class BillingPlanCard extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  BillingPlanCardState createState() {
-    return BillingPlanCardState(
-        // user: user,
-        // billMeVisibility: billMeVisibility,
-        // canBillMe: canBillMe,
-        // isPlanActive: isPlanActive,
-        // isSelected: isSelected,
-        // plan: plan,
-        );
-  }
+  _BillingPlanCardState createState() => _BillingPlanCardState();
 }
 
-// the form.
-class BillingPlanCardState extends State<BillingPlanCard> {
-  final bool isSelected;
-  final bool isPlanActive;
-  final UserModel user;
-  final BillingPlanDetailsModel plan;
-  final bool canBillMe;
-  final bool billMeVisibility;
+class _BillingPlanCardState extends State<BillingPlanCard> {
   bool isBillMe = false;
-
-  BillingPlanCardState({
-    this.isSelected,
-    this.isPlanActive,
-    this.user,
-    this.plan,
-    this.canBillMe,
-    this.billMeVisibility,
-  });
 
   @override
   Widget build(BuildContext context) {
-    final textColor = isSelected ? Colors.white : Colors.black;
-    print("co id ==>> ${user.currentCommunity}");
+    final textColor = widget.isSelected ? Colors.white : Colors.black;
+    print("co id ==>> ${widget.user.currentCommunity}");
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20),
       child: Container(
         width: MediaQuery.of(context).size.width - 90,
         child: Card(
-          color: isSelected ? Theme.of(context).primaryColor : Colors.white,
-          elevation: 3, //isSelected ? 5 : 2,
+          color:
+              widget.isSelected ? Theme.of(context).primaryColor : Colors.white,
+          elevation: 3, //widget.isSelected ? 5 : 2,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
           ),
@@ -83,12 +59,12 @@ class BillingPlanCardState extends State<BillingPlanCard> {
                     style: TextStyle(color: textColor),
                     children: [
                       TextSpan(
-                        text: "${plan.planName}\n",
+                        text: "${widget.plan.planName}\n",
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                       TextSpan(
-                        text: "${plan.planDescription}",
+                        text: "${widget.plan.planDescription}",
                         style: TextStyle(fontSize: 14),
                       ),
                     ],
@@ -100,7 +76,7 @@ class BillingPlanCardState extends State<BillingPlanCard> {
                 Row(
                   children: <Widget>[
                     Text(
-                      "${plan.note1}",
+                      "${widget.plan.note1}",
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: 16, color: textColor),
                     ),
@@ -108,12 +84,12 @@ class BillingPlanCardState extends State<BillingPlanCard> {
                   ],
                 ),
                 Text(
-                  "${plan.note2}",
+                  "${widget.plan.note2}",
                   style: TextStyle(fontSize: 10, color: textColor),
                 ),
                 SizedBox(height: 4),
                 Offstage(
-                  offstage: plan.id == "community_plan",
+                  offstage: widget.plan.id == "community_plan",
                   child: Row(
                     children: <Widget>[
                       Text(
@@ -146,16 +122,16 @@ class BillingPlanCardState extends State<BillingPlanCard> {
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return Text(
-                        plan.freeTransaction[index],
+                        widget.plan.freeTransaction[index],
                         style: TextStyle(color: textColor),
                       );
                     },
                     separatorBuilder: (context, index) => Divider(),
-                    itemCount: plan.freeTransaction.length,
+                    itemCount: widget.plan.freeTransaction.length,
                   ),
                 ),
                 SizedBox(height: 4),
-                billMeVisibility
+                widget.billMeVisibility
                     ? Row(
                         children: <Widget>[
                           Text(
@@ -184,7 +160,7 @@ class BillingPlanCardState extends State<BillingPlanCard> {
                           Checkbox(
                             value: isBillMe,
                             onChanged: (value) {
-                              if (canBillMe) {
+                              if (widget.canBillMe) {
                                 setState(() {
                                   isBillMe = value;
                                 });
@@ -206,8 +182,8 @@ class BillingPlanCardState extends State<BillingPlanCard> {
                   ),
                   color: textColor,
                   child: Text(
-                    isPlanActive
-                        ? isSelected
+                    widget.isPlanActive
+                        ? widget.isSelected
                             ? AppLocalizations.of(context)
                                 .translate('billing_plans', 'active')
                             : AppLocalizations.of(context)
@@ -215,7 +191,7 @@ class BillingPlanCardState extends State<BillingPlanCard> {
                         : AppLocalizations.of(context)
                             .translate('billing_plans', 'choose'),
                     style: TextStyle(
-                      color: isSelected
+                      color: widget.isSelected
                           ? Theme.of(context).primaryColor
                           : Colors.white,
                     ),
@@ -223,10 +199,11 @@ class BillingPlanCardState extends State<BillingPlanCard> {
                   onPressed:
                       // ? () {}
                       () {
-                    if (isPlanActive) {
+                    if (widget.isPlanActive) {
                       _changePlanAlert(context);
                     } else {
-                      if (plan.id == "community_plan" || isBillMe == true) {
+                      if (widget.plan.id == "community_plan" ||
+                          isBillMe == true) {
                         _planSuccessMessage(
                           context: context,
                         );
@@ -234,9 +211,9 @@ class BillingPlanCardState extends State<BillingPlanCard> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => BillingView(
-                              user.currentCommunity,
-                              plan.id,
-                              user: user,
+                              widget.user.currentCommunity,
+                              widget.plan.id,
+                              user: widget.user,
                               isFromChangeOwnership: false,
                             ),
                           ),
@@ -256,14 +233,14 @@ class BillingPlanCardState extends State<BillingPlanCard> {
   RichText planPriceBuilder(Color textColor) {
     List<String> price = [];
 
-    if (plan.price == '0') {
+    if (widget.plan.price == '0') {
       price.add('');
       price.add('FREE');
       price.add('');
     } else {
-      price.add(plan.currency);
-      price.add(plan.price);
-      price.add("/${plan.duration}");
+      price.add(widget.plan.currency);
+      price.add(widget.plan.price);
+      price.add("/${widget.plan.duration}");
     }
     return RichText(
       text: TextSpan(
@@ -303,10 +280,10 @@ class BillingPlanCardState extends State<BillingPlanCard> {
             child: ListView.separated(
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                return Text(plan.billableTransaction[index]);
+                return Text(widget.plan.billableTransaction[index]);
               },
               separatorBuilder: (context, index) => Divider(),
-              itemCount: plan.billableTransaction.length,
+              itemCount: widget.plan.billableTransaction.length,
             ),
           ),
           actions: <Widget>[
@@ -379,14 +356,14 @@ class BillingPlanCardState extends State<BillingPlanCard> {
       builder: (BuildContext context) {
         Firestore.instance
             .collection("communities")
-            .document(user.currentCommunity)
+            .document(widget.user.currentCommunity)
             .updateData(
           {
             "payment": {
               "payment_success": true,
-              "planId": plan.id,
+              "planId": widget.plan.id,
               "message": isBillMe
-                  ? plan.planName
+                  ? widget.plan.planName
                   : AppLocalizations.of(context)
                       .translate('billing_admin', 'community_plan')
             },

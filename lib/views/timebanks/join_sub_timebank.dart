@@ -408,7 +408,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
             )
             .collection("notifications")
             .document(notification.id),
-        notification.toMap());
+        (notification..isTimebankNotification = true).toMap());
 
     batchWrite.setData(
         Firestore.instance
