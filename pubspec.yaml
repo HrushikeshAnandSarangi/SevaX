@@ -85,6 +85,7 @@ dependencies:
   permission_handler: ^5.0.1+1
   logger: ^0.9.1
   pdf: ^1.10.0
+  arbify: ^0.0.9
 
 dev_dependencies:
   pedantic: ^1.9.0
@@ -93,6 +94,11 @@ dev_dependencies:
 #
 #  flutter_localizations:
 #    sdk: flutter
+
+arbify:
+  url: http://localize.sevaexchange.com
+  project_id: 1
+  output_dir: lib/l10n
 
 flutter:
   uses-material-design: true

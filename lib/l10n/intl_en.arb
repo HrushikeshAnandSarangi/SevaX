@@ -1,0 +1,8 @@
+{
+    "@@locale": "en",
+    "@@last_modified": "2020-08-03T16:52:36+00:00",
+    "timebank": "Timebank",
+    "@timebank": {
+        "description": "Timebank label"
+    }
+}
