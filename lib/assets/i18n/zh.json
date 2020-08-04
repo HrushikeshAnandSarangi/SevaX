@@ -1244,9 +1244,13 @@
     "reason_err": "请输入删除原因"
   },
   "profanity": {
-    "alert": "This word is not allowed",
-    "alert_title": "Profanity alert",
-    "image_alert": "This image is not allowed. this image contains "
-
+    "alert": "SevaX应用程序的政策不允许使用亵渎或露骨的语言。请修改您的文字。",
+    "image_alert": "SevaX应用程序的政策不允许出现亵渎，露骨或暴力图像。请使用其他图像.",
+    "alert_title": "亵渎警报"
+  },
+  "cv": {
+    "cv": "Upload my CV/Resume",
+    "cv_info": "CV will help out to provide more details",
+    "replace_cv": "Replace CV"
   }
 }

@@ -109,6 +109,7 @@ Future<void> showAdvisoryBeforeDeletion({
                 Text(_getContentFromType(softDeleteType, context)),
                 TextFormField(
                   decoration: InputDecoration(
+                      errorMaxLines: 2,
                       hintText: AppLocalizations.of(context)
                           .translate('reason', 'enter_reason')),
                   keyboardType: TextInputType.text,

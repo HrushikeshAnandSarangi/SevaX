@@ -378,6 +378,7 @@ class CreateEditCommunityViewFormState
                           },
                           decoration: InputDecoration(
                             errorText: errTxt,
+                            errorMaxLines: 2,
                             hintText: AppLocalizations.of(context)
                                 .translate('createtimebank', 'name_hinttext'),
                           ),
@@ -424,6 +425,8 @@ class CreateEditCommunityViewFormState
                           autovalidate: autoValidateText,
                           focusNode: aboutFocus,
                           decoration: InputDecoration(
+                            errorMaxLines: 2,
+
                             hintText: AppLocalizations.of(context)
                                 .translate('createtimebank', 'about_hint_text'),
                           ),
@@ -1356,6 +1359,8 @@ class CreateEditCommunityViewFormState
 
   static InputDecoration getInputDecoration({String fieldTitle}) {
     return InputDecoration(
+      errorMaxLines: 2,
+
       errorStyle: TextStyle(
         color: Colors.red,
         wordSpacing: 2.0,

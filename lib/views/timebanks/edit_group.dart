@@ -180,6 +180,7 @@ class EditGroupFormState extends State<EditGroupForm> {
           }
         },
         decoration: InputDecoration(
+          errorMaxLines: 2,
           errorText: errTxt,
           hintText:
               AppLocalizations.of(context).translate('edit_group', 'hint_text'),
@@ -215,6 +216,7 @@ class EditGroupFormState extends State<EditGroupForm> {
         },
         initialValue: widget.timebankModel.missionStatement ?? "",
         decoration: InputDecoration(
+          errorMaxLines: 2,
           hintText: AppLocalizations.of(context)
               .translate('edit_group', 'a_bit_more'),
         ),

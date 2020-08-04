@@ -7,8 +7,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:path_drawing/path_drawing.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -24,6 +26,7 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../core.dart';
 
@@ -61,8 +64,11 @@ class _EditProfilePageState extends State<EditProfilePage>
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
   String _fileName;
   String _path;
-  String cvTitle = '';
-  String cvUrl = '';
+  String cvName;
+  String cvUrl;
+  String cvFileError = '';
+  bool canuploadCV = false;
+
   BuildContext parentContext;
   final profanityDetector = ProfanityDetector();
   bool autoValidateText = false;
@@ -76,6 +82,11 @@ class _EditProfilePageState extends State<EditProfilePage>
       ),
     );
     this.usermodel = widget.userModel;
+    if (usermodel.cvUrl == null) {
+      setState(() {
+        this.canuploadCV = true;
+      });
+    }
     imagePicker = ImagePickerHandler(this, _controller);
     imagePicker.init();
   }
@@ -157,7 +168,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   .translate('profile', 'add_skills'),
               onTap: () => _navigateToSkillsView(usermodel),
             ),
-            detailsBuilder(
+            cvBuilder(
               title: AppLocalizations.of(context).translate('cv', 'cv'),
               text: AppLocalizations.of(context).translate('cv', 'cv_info'),
               onTap: () => _openFileExplorer(),
@@ -209,6 +220,278 @@ class _EditProfilePageState extends State<EditProfilePage>
           ],
         ),
       ),
+    );
+  }
+
+  Padding cvBuilder({String title, String text, Function onTap}) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(30, 10, 20, 10),
+      child: InkWell(
+        onTap: onTap,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 15.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              text ?? "",
+              style: TextStyle(color: Colors.grey),
+            ),
+            SizedBox(height: 8),
+            canuploadCV
+                ? cvUpload()
+                : Row(
+                    children: [
+                      Container(
+                        decoration: ShapeDecoration(
+                          color: Colors.grey[200],
+                          shape: StadiumBorder(),
+                        ),
+                        height: 40,
+                        width: 180,
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  usermodel.cvName ?? 'CV not available',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 12),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () async {
+                                  var connResult =
+                                      await Connectivity().checkConnectivity();
+                                  if (connResult == ConnectivityResult.none) {
+                                    _scaffoldKey.currentState.showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                            AppLocalizations.of(context)
+                                                .translate('shared',
+                                                    'check_internet')),
+                                        action: SnackBarAction(
+                                          label: AppLocalizations.of(context)
+                                              .translate('shared', 'dismiss'),
+                                          onPressed: () => _scaffoldKey
+                                              .currentState
+                                              .hideCurrentSnackBar(),
+                                        ),
+                                      ),
+                                    );
+                                    return;
+                                  }
+                                  if (await canLaunch(usermodel.cvUrl)) {
+                                    launch(usermodel.cvUrl);
+                                  } else {
+                                    print('could not launch url');
+                                  }
+                                },
+                                icon: Icon(
+                                  Icons.save_alt,
+                                  size: 20,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Container(
+                        height: 35,
+                        width: 105,
+                        child: Center(
+                          child: RaisedButton(
+                            shape: StadiumBorder(),
+                            child: Text(
+                              AppLocalizations.of(context)
+                                  .translate('cv', 'replace_cv'),
+                              style: TextStyle(fontSize: 11),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                this.canuploadCV = true;
+                              });
+                            },
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget cvUpload({String title, String text, Function onTap}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(
+          height: 15,
+        ),
+        GestureDetector(
+          onTap: () {
+            _openFileExplorer();
+          },
+          child: Container(
+            height: 150,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: DashPathBorder.all(
+                dashArray: CircularIntervalList<double>(<double>[5.0, 2.5]),
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'lib/assets/images/cv.png',
+                  height: 50,
+                  width: 50,
+                  color: FlavorConfig.values.theme.primaryColor,
+                ),
+                Text(
+                  AppLocalizations.of(context).translate('cv', 'choose_pdf'),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey),
+                ),
+                _isDocumentBeingUploaded
+                    ? Container(
+                        margin: EdgeInsets.only(top: 20),
+                        child: Center(
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                      )
+                    : Container(
+                        child: cvUrl == null
+                            ? Offstage()
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Card(
+                                  color: Colors.grey[100],
+                                  child: ListTile(
+                                    leading: Icon(Icons.attachment),
+                                    title: Text(
+                                      cvName ?? "cv not available",
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    trailing: IconButton(
+                                      icon: Icon(Icons.clear),
+                                      onPressed: () => setState(() {
+                                        cvName = null;
+                                        cvUrl = null;
+                                      }),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                      ),
+              ],
+            ),
+          ),
+        ),
+        Text(
+          AppLocalizations.of(context).translate('cv', 'size_limit'),
+          style: TextStyle(color: Colors.grey),
+        ),
+        Text(
+          cvFileError,
+          style: TextStyle(color: Colors.red),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: Container(
+                height: 30,
+                child: RaisedButton(
+                  onPressed: () async {
+                    var connResult = await Connectivity().checkConnectivity();
+                    if (connResult == ConnectivityResult.none) {
+                      _scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text(AppLocalizations.of(context)
+                              .translate('shared', 'check_internet')),
+                          action: SnackBarAction(
+                            label: AppLocalizations.of(context)
+                                .translate('shared', 'dismiss'),
+                            onPressed: () =>
+                                _scaffoldKey.currentState.hideCurrentSnackBar(),
+                          ),
+                        ),
+                      );
+                      return;
+                    }
+                    if (cvUrl == null ||
+                        cvUrl == '' ||
+                        cvName == '' ||
+                        cvName == null) {
+                      setState(() {
+                        this.cvFileError = AppLocalizations.of(context)
+                            .translate('cv', 'cv_error');
+                      });
+                    } else {
+                      await updateCV();
+                      _scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            AppLocalizations.of(context)
+                                .translate('upload_csv', 'upload_success'),
+                          ),
+                          action: SnackBarAction(
+                            label: AppLocalizations.of(context)
+                                .translate('shared', 'dismiss'),
+                            onPressed: () =>
+                                _scaffoldKey.currentState.hideCurrentSnackBar(),
+                          ),
+                        ),
+                      );
+                      setState(() {
+                        this.cvFileError = '';
+                        this.canuploadCV = false;
+                      });
+                    }
+                  },
+                  child: Text(
+                    AppLocalizations.of(context)
+                        .translate('upload_csv', 'upload'),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
+                  color: Colors.grey[300],
+                  shape: StadiumBorder(),
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 15,
+        ),
+      ],
     );
   }
 
@@ -277,7 +560,10 @@ class _EditProfilePageState extends State<EditProfilePage>
       getAlertDialog(parentContext);
     } else {
       uploadDocument().then((_) {
-        setState(() => this._isDocumentBeingUploaded = false);
+        setState(() {
+          this._isDocumentBeingUploaded = false;
+          this.cvFileError = '';
+        });
       });
     }
   }
@@ -299,11 +585,26 @@ class _EditProfilePageState extends State<EditProfilePage>
     String documentURL =
         await (await uploadTask.onComplete).ref.getDownloadURL();
 
-    cvTitle = name;
+    cvName = _fileName;
     cvUrl = documentURL;
     // _setAvatarURL();
     // _updateDB();
     return documentURL;
+  }
+
+  BuildContext dialogContext;
+
+  void showProgressDialog(String message) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          dialogContext = createDialogContext;
+          return AlertDialog(
+            title: Text(message),
+            content: LinearProgressIndicator(),
+          );
+        });
   }
 
   Future _navigateToSkillsView(UserModel loggedInUser) async {
@@ -406,6 +707,22 @@ class _EditProfilePageState extends State<EditProfilePage>
     });
   }
 
+  Future updateCV() async {
+    setState(() {
+      this._saving = true;
+    });
+    SevaCore.of(context).loggedInUser.cvName = cvName;
+    SevaCore.of(context).loggedInUser.cvUrl = cvUrl;
+    usermodel.cvUrl = cvUrl;
+    usermodel.cvName = cvName;
+    await FirestoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
+    setState(() {
+      this._saving = false;
+      cvName = null;
+      cvUrl = null;
+    });
+  }
+
   bool get shouldObscure => this._shouldObscure;
 
   set shouldObscure(bool shouldObscure) {
@@ -485,6 +802,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     }
                   },
                   decoration: InputDecoration(
+                      errorMaxLines: 2,
                       hintText: AppLocalizations.of(context)
                           .translate('profile', 'add_name')),
                   keyboardType: TextInputType.text,
@@ -602,6 +920,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     }
                   },
                   decoration: InputDecoration(
+                      errorMaxLines: 2,
                       hintText: AppLocalizations.of(context)
                           .translate('profile', 'enter_bio')),
                   maxLength: 150,

@@ -1,11 +1,10 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -15,6 +14,8 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/report_member_page.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 
 //TODO update bio and remove un-necessary stuff
@@ -168,9 +169,10 @@ class ProfileViewerState extends State<ProfileViewer> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        openPdfViewer(
-                            documentName: userData.cvName ?? "cv name",
-                            documentUrl: userData.cvUrl ?? "");
+                        if (user.cvUrl != null)
+                          openPdfViewer(
+                              documentName: user.cvName ?? "cv name",
+                              documentUrl: user.cvUrl ?? "");
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
@@ -181,13 +183,25 @@ class ProfileViewerState extends State<ProfileViewer> {
                           height: 40,
                           color: Color(0xFFFa3ebff).withOpacity(0.3),
                           alignment: Alignment.center,
-                          child: Text(
-                            userData.cvName ?? "CV Name",
-                            style: TextStyle(
-                              color: Color(0xFFF0ca5f2),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.attachment,
+                                color: Colors.black54,
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                user.cvName ?? "CV not available",
+                                style: TextStyle(
+                                  color: Color(0xFFF0ca5f2),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -279,21 +293,17 @@ class ProfileViewerState extends State<ProfileViewer> {
     );
   }
 
-  Future<File> createFileOfPdfUrl(
-      String documentUrl, String documentName) async {
-    final url = documentUrl;
-    final filename = documentName;
-    var request = await HttpClient().getUrl(Uri.parse(url));
-    var response = await request.close();
-    var bytes = await consolidateHttpClientResponseBytes(response);
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = new File('$dir/$filename');
-    await file.writeAsBytes(bytes);
-    return file;
-  }
-
   void openPdfViewer({String documentUrl, String documentName}) {
+    progressDialog = ProgressDialog(
+      context,
+      type: ProgressDialogType.Normal,
+      isDismissible: false,
+    );
+    progressDialog.show();
+
     createFileOfPdfUrl(documentUrl, documentName).then((f) {
+      progressDialog.hide();
+
       Navigator.push(
         context,
         MaterialPageRoute(

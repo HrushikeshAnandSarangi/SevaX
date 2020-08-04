@@ -319,6 +319,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                       : ""
                   : projectModel.name ?? "",
               decoration: InputDecoration(
+                errorMaxLines: 2,
                 errorText: errTxt,
                 hintText: AppLocalizations.of(context)
                     .translate('projects', 'name_hint'),
@@ -381,6 +382,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 .translate('projects', 'statement')),
             TextFormField(
               decoration: InputDecoration(
+                errorMaxLines: 2,
                 hintText: AppLocalizations.of(context)
                     .translate('projects', 'statement_hint'),
               ),

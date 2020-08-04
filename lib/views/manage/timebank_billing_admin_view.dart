@@ -554,6 +554,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
 
   InputDecoration getInputDecoration({String fieldTitle}) {
     return InputDecoration(
+      errorMaxLines: 2,
       errorStyle: TextStyle(
         color: Colors.red,
         wordSpacing: 2.0,

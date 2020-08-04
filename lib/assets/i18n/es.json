@@ -1245,10 +1245,13 @@
     "reason_err": "Por favor, introduzca el motivo para eliminar"
   },
   "profanity": {
-    "alert": "This word is not allowed",
-    "image_alert": "This image is not allowed. this image contains ",
-    "alert_title": "Profanity alert"
-
-
+    "alert": "La aplicación SevaX tiene una política de no permitir lenguaje profano o explícito. Por favor revisa tu texto.",
+    "image_alert": "La aplicación SevaX tiene la política de no permitir imágenes profanas, explícitas o violentas. Por favor usa otra imagen.",
+    "alert_title": "Alerta de blasfemias"
+  },
+  "cv": {
+    "cv": "Upload my CV/Resume",
+    "cv_info": "CV will help out to provide more details",
+    "replace_cv": "Replace CV"
   }
 }

@@ -338,6 +338,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                     RegExp("[a-zA-Z0-9_ ]*"))
                               ],
                               decoration: InputDecoration(
+                                errorMaxLines: 2,
                                 hintText: AppLocalizations.of(context)
                                     .translate(
                                         'create_request', 'small_carpenty'),
@@ -402,6 +403,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                               },
                               textInputAction: TextInputAction.next,
                               decoration: InputDecoration(
+                                errorMaxLines: 2,
                                 hintText: AppLocalizations.of(context)
                                     .translate(
                                         'create_request', 'request_hash'),

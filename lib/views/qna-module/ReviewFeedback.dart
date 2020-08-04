@@ -281,6 +281,8 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                   }
                 },
                 decoration: InputDecoration(
+                  errorMaxLines: 2,
+
                   errorText: _validate
                       ? AppLocalizations.of(context)
                           .translate('review_feedback', 'cant_leave_blank')

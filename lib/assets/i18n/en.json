@@ -1245,13 +1245,17 @@
   },
 
   "cv": {
-    "cv": "CV",
-    "cv_info": "Click here to update your cv"
+    "cv": "Upload my CV/Resume",
+    "cv_info": "CV will help out to provide more details",
+    "replace_cv": "Replace CV",
+    "choose_pdf": "Choose pdf file",
+    "size_limit": "NOTE : Maximum file size is 10 MB",
+    "cv_error": "Please select a CV file first before uploading"
   },
 
   "profanity": {
-    "alert": "This word is not allowed",
-    "image_alert": "This image is not allowed. this image contains ",
+    "alert": "The SevaX App has a policy of not allowing profane or explicit language. Please revise your text.",
+    "image_alert": "The SevaX App has a policy of not allowing profane, explicit or violent images. Please use another image.",
     "alert_title": "Profanity alert"
   }
 }

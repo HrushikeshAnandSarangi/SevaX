@@ -369,11 +369,11 @@ class UserModel extends DataModel {
     //   this.notificationAlerts = object['notificationAlerts'];
     // }
     if (this.cvUrl != null) {
-      this.cvUrl = object['cvUrl'];
+      object['cvUrl'] = this.cvUrl;
     }
 
     if (this.cvName != null) {
-      this.cvName = object['cvName'];
+      object['cvName'] = this.cvName;
     }
     return object;
   }

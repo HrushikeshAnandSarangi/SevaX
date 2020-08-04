@@ -1245,10 +1245,13 @@
     "reason_err": "Veuillez saisir la raison de la suppression"
   },
   "profanity": {
-    "alert": "This word is not allowed",
-    "image_alert": "This image is not allowed. this image contains ",
-    "alert_title": "Profanity alert"
-
-
+    "alert": "L'application SevaX a pour politique de ne pas autoriser le langage profane ou explicite. Veuillez réviser votre texte.",
+    "image_alert": "L'application SevaX a pour politique de ne pas autoriser les images profanes, explicites ou violentes. Veuillez utiliser une autre image.",
+    "alert_title": "Alerte de blasphème"
+  },
+  "cv": {
+    "cv": "Upload my CV/Resume",
+    "cv_info": "CV will help out to provide more details",
+    "replace_cv": "Replace CV"
   }
 }

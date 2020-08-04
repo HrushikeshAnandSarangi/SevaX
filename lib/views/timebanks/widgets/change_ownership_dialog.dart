@@ -888,6 +888,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
 
   InputDecoration getInputDecoration({String fieldTitle}) {
     return InputDecoration(
+      errorMaxLines: 2,
+
       errorStyle: TextStyle(
         color: Colors.red,
         wordSpacing: 2.0,

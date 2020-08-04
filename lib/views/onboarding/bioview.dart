@@ -80,6 +80,7 @@ class _BioViewState extends State<BioView> {
                               style: TextStyle(
                                   fontSize: 16.0, color: Colors.black54),
                               decoration: InputDecoration(
+                                errorMaxLines: 2,
                                 fillColor: Colors.grey[300],
                                 filled: true,
                                 hintText: 'Tell us a little about yourself.',

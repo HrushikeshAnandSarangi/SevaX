@@ -250,6 +250,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           },
           decoration: InputDecoration(
               //errorText: errorText,
+              errorMaxLines: 2,
               suffixIcon: Offstage(
                 offstage: searchTextController.text.length == 0,
                 child: IconButton(

@@ -242,6 +242,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           errorText: errTxt,
+          errorMaxLines: 2,
           hintText:
               AppLocalizations.of(context).translate('groups', 'name_group'),
         ),
@@ -283,6 +284,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         },
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
+          errorMaxLines: 2,
           hintText: AppLocalizations.of(context).translate('groups', 'example'),
         ),
         // keyboardType: TextInputType.multiline,

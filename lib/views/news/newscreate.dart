@@ -187,6 +187,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             controller: subheadingController,
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
+                              errorMaxLines: 2,
                               labelStyle: TextStyle(color: Colors.grey),
                               alignLabelWithHint: false,
                               hintText: AppLocalizations.of(context)

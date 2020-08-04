@@ -8,9 +8,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_drawing/path_drawing.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -62,8 +64,10 @@ class _RegisterPageState extends State<RegisterPage>
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
   String _fileName;
   String _path;
-  String cvTitle = '';
-  String cvUrl = '';
+  String cvName;
+  String cvUrl;
+  String cvFileError = '';
+
   BuildContext parentContext;
   final profanityDetector = ProfanityDetector();
   bool autoValidateText = false;
@@ -115,6 +119,12 @@ class _RegisterPageState extends State<RegisterPage>
                             SizedBox(height: 16),
                             _imagePicker,
                             _formFields,
+                            cvUpload(
+                              title: AppLocalizations.of(context)
+                                  .translate('cv', 'cv'),
+                              text: AppLocalizations.of(context)
+                                  .translate('cv', 'cv_info'),
+                            ),
                             SizedBox(height: 24),
                             registerButton,
                             SizedBox(height: 8),
@@ -144,6 +154,182 @@ class _RegisterPageState extends State<RegisterPage>
 
   set isLoading(bool isLoading) {
     setState(() => this._isLoading = isLoading);
+  }
+
+  Widget cvUpload({
+    String title,
+    String text,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(
+          height: 8,
+        ),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 15.0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(height: 10),
+        Text(
+          text ?? "",
+          style: TextStyle(color: Colors.grey),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        GestureDetector(
+          onTap: () {
+            _openFileExplorer();
+          },
+          child: Container(
+            height: 150,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: DashPathBorder.all(
+                dashArray: CircularIntervalList<double>(<double>[5.0, 2.5]),
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'lib/assets/images/cv.png',
+                  height: 50,
+                  width: 50,
+                  color: FlavorConfig.values.theme.primaryColor,
+                ),
+                Text(
+                  AppLocalizations.of(context).translate('cv', 'choose_pdf'),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey),
+                ),
+                _isDocumentBeingUploaded
+                    ? Container(
+                        margin: EdgeInsets.only(top: 20),
+                        child: Center(
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                      )
+                    : Container(
+                        child: cvName == null
+                            ? Offstage()
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Card(
+                                  color: Colors.grey[100],
+                                  child: ListTile(
+                                    leading: Icon(Icons.attachment),
+                                    title: Text(
+                                      cvName ?? "cv not available",
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    trailing: IconButton(
+                                      icon: Icon(Icons.clear),
+                                      onPressed: () => setState(() {
+                                        cvName = null;
+                                        cvUrl = null;
+                                      }),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                      ),
+              ],
+            ),
+          ),
+        ),
+        Text(
+          AppLocalizations.of(context).translate('cv', 'size_limit'),
+          style: TextStyle(color: Colors.grey),
+        ),
+//        Text(
+//          cvFileError,
+//          style: TextStyle(color: Colors.red),
+//        ),
+//        Row(
+//          mainAxisAlignment: MainAxisAlignment.end,
+//          children: <Widget>[
+//            Padding(
+//              padding: const EdgeInsets.only(top: 5),
+//              child: Container(
+//                height: 30,
+//                child: RaisedButton(
+//                  onPressed: () async {
+//                    var connResult = await Connectivity().checkConnectivity();
+//                    if (connResult == ConnectivityResult.none) {
+//                      _scaffoldKey.currentState.showSnackBar(
+//                        SnackBar(
+//                          content: Text(AppLocalizations.of(context)
+//                              .translate('shared', 'check_internet')),
+//                          action: SnackBarAction(
+//                            label: AppLocalizations.of(context)
+//                                .translate('shared', 'dismiss'),
+//                            onPressed: () =>
+//                                _scaffoldKey.currentState.hideCurrentSnackBar(),
+//                          ),
+//                        ),
+//                      );
+//                      return;
+//                    }
+//                    if (cvUrl == null ||
+//                        cvUrl == '' ||
+//                        cvName == '' ||
+//                        cvName == null) {
+//                      setState(() {
+//                        this.cvFileError = AppLocalizations.of(context)
+//                            .translate('cv', 'cv_error');
+//                      });
+//                    } else {
+//                      await updateCV();
+//                      _scaffoldKey.currentState.showSnackBar(
+//                        SnackBar(
+//                          content: Text(
+//                            AppLocalizations.of(context)
+//                                .translate('upload_csv', 'upload_success'),
+//                          ),
+//                          action: SnackBarAction(
+//                            label: AppLocalizations.of(context)
+//                                .translate('shared', 'dismiss'),
+//                            onPressed: () =>
+//                                _scaffoldKey.currentState.hideCurrentSnackBar(),
+//                          ),
+//                        ),
+//                      );
+//                      setState(() {
+//                        this.cvFileError = '';
+//                        this.canuploadCV = false;
+//                      });
+//                    }
+//                  },
+//                  child: Text(
+//                    AppLocalizations.of(context)
+//                        .translate('upload_csv', 'upload'),
+//                    textAlign: TextAlign.center,
+//                    style: TextStyle(
+//                      fontSize: 12,
+//                    ),
+//                  ),
+//                  color: Colors.grey[300],
+//                  shape: StadiumBorder(),
+//                ),
+//              ),
+//            ),
+//          ],
+//        ),
+        SizedBox(
+          height: 15,
+        ),
+      ],
+    );
   }
 
   Widget get _imagePicker {
@@ -340,6 +526,7 @@ class _RegisterPageState extends State<RegisterPage>
         },
         decoration: InputDecoration(
           labelText: hint,
+          errorMaxLines: 2,
           suffix: suffix,
           labelStyle: TextStyle(color: Colors.black),
           suffixStyle: TextStyle(color: Colors.black),
@@ -536,7 +723,11 @@ class _RegisterPageState extends State<RegisterPage>
   Future createUser({String imageUrl}) async {
     var appLanguage = AppLanguage();
     log('Called createUser');
+    if (cvName != null) {
+      await uploadDocument();
+    }
     Auth auth = AuthProvider.of(context).auth;
+
     try {
       UserModel user = await auth.createUserWithEmailAndPassword(
         email: email,
@@ -553,6 +744,16 @@ class _RegisterPageState extends State<RegisterPage>
           new LanguageListData().getLanguageSupported(_sysLng.toString());
       appLanguage.changeLanguage(Locale(language.code));
       user.language = language.code;
+      print("cv name ${cvName}");
+
+      if (cvName != null) {
+        user.cvName = cvName;
+        user.cvUrl = cvUrl;
+        print("cv details ${cvName + '' + cvUrl}");
+        print("cv details ${user.cvUrl + '' + user.cvName}");
+      }
+
+      print("cv details ${cvName + '' + cvUrl}");
       await FirestoreManager.updateUser(user: user);
 
       Navigator.pop(dialogContext);
@@ -664,7 +865,8 @@ class _RegisterPageState extends State<RegisterPage>
     setState(() {
       this._path = _doc;
       this._fileName = fileName;
-      this._isDocumentBeingUploaded = true;
+      this.cvName = _fileName;
+      // this._isDocumentBeingUploaded = true;
     });
     checkFileSize();
     return null;
@@ -674,12 +876,7 @@ class _RegisterPageState extends State<RegisterPage>
     var file = File(_path);
     final bytes = await file.lengthSync();
     if (bytes > tenMegaBytes) {
-      this._isDocumentBeingUploaded = false;
       getAlertDialog(parentContext);
-    } else {
-      uploadDocument().then((_) {
-        setState(() => this._isDocumentBeingUploaded = false);
-      });
     }
   }
 
@@ -699,10 +896,8 @@ class _RegisterPageState extends State<RegisterPage>
     String documentURL =
         await (await uploadTask.onComplete).ref.getDownloadURL();
 
-    cvTitle = name;
+    cvName = _fileName;
     cvUrl = documentURL;
-    // _setAvatarURL();
-    // _updateDB();
     return documentURL;
   }
 
