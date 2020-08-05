@@ -4,12 +4,14 @@ class InvoiceModel {
     this.note2,
     this.tax,
     this.details,
+    this.plans
   });
 
   String note1;
   String note2;
   int tax;
   List<Detail> details;
+  Map<String, dynamic> plans;
 
   factory InvoiceModel.fromJson(Map<String, dynamic> json) => InvoiceModel(
         note1: json["note1"],
@@ -17,6 +19,7 @@ class InvoiceModel {
         tax: json["tax"],
         details:
             List<Detail>.from(json["details"].map((x) => Detail.fromJson(x))),
+        plans: json["plans"]
       );
 
   Map<String, dynamic> toJson() => {
@@ -24,6 +27,7 @@ class InvoiceModel {
         "note2": note2,
         "tax": tax,
         "details": List<dynamic>.from(details.map((x) => x.toJson())),
+        "plans":plans
       };
 }
 
@@ -36,8 +40,8 @@ class Detail {
   });
 
   String description;
-  int units;
-  int price;
+  double units;
+  double price;
   String type;
 
   factory Detail.fromJson(Map<String, dynamic> json) => Detail(

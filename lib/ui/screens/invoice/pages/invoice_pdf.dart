@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart' as material;
@@ -6,12 +7,26 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:sevaexchange/models/invoice_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/invoice/pages/invoice_screen.dart';
 
 class InvoicePdf {
-  void invoicePdf(context, InvoiceModel model) async {
+  void invoicePdf(context, InvoiceModel model, CommunityModel communityModel, String date, Map<String, dynamic> myPlan ) async {
     final Document pdf = Document();
-
+    List<String> monthsArr = [
+      "January",
+      "Febuary",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
     PdfImage _logo = PdfImage.file(
       pdf.document,
       bytes: (await rootBundle.load('images/invoice_seva_logo.jpg'))
@@ -30,13 +45,14 @@ class InvoicePdf {
       );
     }
 
-    int getSubTotal() {
-      int subtotal = 0;
+    double getSubTotal() {
+      double subtotal = 0;
       model.details
           .forEach((element) => subtotal += element.price * element.units);
       return subtotal;
     }
-
+    var freeLimitAmount = myPlan['initial_transactions_qty'] * myPlan['pro_data_bill_amount'];
+    var totalAmount = getSubTotal();
     pdf.addPage(
       MultiPage(
         pageFormat:
@@ -96,9 +112,11 @@ class InvoicePdf {
                     "Bill to Address",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text("ATTN:Stalin 10-416/1", style: TextStyle(fontSize: 14)),
-                  Text("South Avenue, 53", style: TextStyle(fontSize: 14)),
-                  Text("NewYork", style: TextStyle(fontSize: 14)),
+                  Text("${communityModel.billing_address.companyname },", style: TextStyle(fontSize: 14)),
+                  Text("${communityModel.billing_address.street_address1!="" ? communityModel.billing_address.street_address1 : ""}", style: TextStyle(fontSize: 14)),
+                  Text("${communityModel.billing_address.street_address2!="" ? communityModel.billing_address.street_address2+' ' : ""}${communityModel.billing_address.city} ${communityModel.billing_address.pincode}", style: TextStyle(fontSize: 14)),
+
+                  Text("${communityModel.billing_address.state} ${communityModel.billing_address.country}", style: TextStyle(fontSize: 14)),
                 ],
               ),
               Spacer(),
@@ -118,7 +136,7 @@ class InvoicePdf {
                   ),
                   Text("Statement Number: 142544581",
                       style: TextStyle(fontSize: 14)),
-                  Text("Statement Date: July 3 , 2018",
+                  Text("Statement Date: 29th ${monthsArr[int.parse(date.split('_')[0])-1]}, ${date.split('_')[1]}",
                       style: TextStyle(fontSize: 14)),
                 ],
               ),
@@ -182,12 +200,14 @@ class InvoicePdf {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   SizedBox(height: 12),
-                  _rowText("SUB TOTAL", "\$ ${getSubTotal()}"),
+                  _rowText("SUB TOTAL", "\$ ${totalAmount}"),
                   SizedBox(height: 8),
-                  _rowText("TAX", "\$ ${model.tax ?? 0}"),
+                  _rowText("INITIAL PAYMENT PER YEAR", "\$ ${myPlan['initial_transactions_amount']}"),
+                  SizedBox(height: 8),
+                  _rowText("FREE LIMIT PER MONTH (FOR ${myPlan['name'].toUpperCase()})", "\$ ${freeLimitAmount}"),
                   SizedBox(height: 8),
                   _rowText(
-                      "GRAND TOTAL", "\$ ${model.tax ?? 0 + getSubTotal()}"),
+                      "GRAND TOTAL", "\$ ${totalAmount - freeLimitAmount > 0 ? (totalAmount - freeLimitAmount) : 0}"),
                   SizedBox(height: 12),
                 ],
               ),
@@ -201,6 +221,7 @@ class InvoicePdf {
 
     final String dir = (await getApplicationDocumentsDirectory()).path;
     final String path = '$dir/invoice.pdf';
+    log("path to pdf file is "+path);
     final File file = File(path);
     await file.writeAsBytes(pdf.save());
     material.Navigator.of(context).push(

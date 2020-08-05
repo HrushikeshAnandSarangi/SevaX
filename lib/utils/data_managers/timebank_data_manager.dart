@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -311,6 +312,33 @@ Future<void> updateTimebankDetails(
     'private': timebankModel.private,
     'members': FieldValue.arrayUnion(members),
   });
+}
+
+Future<String> getplanForCurrentCommunity(String communityId)async{
+  DocumentSnapshot cardDoc = await Firestore.instance.collection("cards").document(communityId).get();
+  if(cardDoc.exists){
+    return cardDoc.data['currentplan'];
+  }else{
+    DocumentSnapshot communityDoc = await Firestore.instance.collection("communities").document(communityId).get();
+    return communityDoc.data['payment']['planId'];
+  }
+}
+
+
+Future<List<Map<String, dynamic>>> getTransactionsCountsList (String communityId) async {
+  QuerySnapshot transactionsSnap = await Firestore.instance.collection('communities').document(communityId).collection("transactions").getDocuments();
+  List<Map<String, dynamic>> transactionsDocs = [];
+  var d = DateTime.now();
+  String dStr = "${d.month}_${d.year}";
+  transactionsSnap.documents.forEach((doc){
+    log("trans list doc id " + doc.documentID);
+    doc.data['id'] = doc.documentID;
+    if(doc.data['id']!=dStr){
+      transactionsDocs.add(doc.data);
+    }
+  });
+  List<Map<String, dynamic>> L = transactionsDocs.reversed.toList();
+  return L;
 }
 
 /// Get a particular Timebank by it's ID

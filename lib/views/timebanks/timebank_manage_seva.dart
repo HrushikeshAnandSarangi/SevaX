@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/invoice_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/invoice/pages/invoice_pdf.dart';
+import 'package:sevaexchange/ui/screens/invoice/pages/months_list.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_page.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
@@ -31,7 +32,7 @@ class ManageTimebankSeva extends StatefulWidget {
 
 class _ManageTimebankSeva extends State<ManageTimebankSeva> {
   var _indextab = 0;
-
+  String planId = "";
   CommunityModel communityModel = CommunityModel({});
   bool isSuperAdmin = false;
 
@@ -40,6 +41,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
     // TODO: implement initState
     super.initState();
     print("creator id ${widget.timebankModel.communityId}");
+
     Future.delayed(Duration.zero, () {
       FirestoreManager.getCommunityDetailsByCommunityId(
               communityId: widget.timebankModel.communityId)
@@ -53,6 +55,12 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         print("creator id -----> ${communityModel.created_by}");
       });
     });
+    Future.delayed(Duration.zero, () {
+      FirestoreManager.getplanForCurrentCommunity(widget.timebankModel.communityId).then((onvalue){
+        planId = onvalue;
+      });
+    });
+
 
     setState(() {});
   }
@@ -302,73 +310,21 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
   }
 
   Widget viewInvoice({BuildContext context}) {
+
     return GestureDetector(
       onTap: () {
-        InvoicePdf().invoicePdf(
-          context,
-          InvoiceModel(
-            note1:
-                "This invoice is for the billing period June 1 - June 30 , 2018",
-            note2:
-                "Greetings from Seva Exchange. We're writing to provide you with an invoice of your use of SevaX services. Additional information about your bill, individual service charge details, and your account history are available on the Billing section under Manage tab.",
-            details: [
-              Detail(description: "Monthly Toll Plan", units: 1, price: 15),
-              Detail(
-                description: "Additional Transactions",
-                units: 2,
-                price: 30,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-            ],
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => MonthsListing.of(
+              communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+              planId: planId,
+              communityModel:communityModel
+            ),
           ),
         );
       },
       child: Text(
-        "Invoice",
+        "Invoice and Reports",
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
