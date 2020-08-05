@@ -1028,7 +1028,7 @@
     "members": "Membros"
   },
   "validation_errors": {
-    "profanity_error": "This word is not allowed",
+    "profanity_error": "O aplicativo SevaX possui uma política de não permitir linguagem profana ou explícita. Revise seu texto.",
     "title_error": "Por favor, introduza o assunto de sua oferta",
     "generic_error": "Por favor, introduza algum texto",
     "class_hours": "Por favor, introduza as horas solicitadas para a aula",
@@ -1140,8 +1140,8 @@
     "type_message": "Digite uma mensagem",
     "add_caption": "Adicionar uma legenda",
     "tap_for_photo": "Tap para a foto",
-    "name_error": "O nome não pode estar vazio"
-
+    "name_error": "O nome não pode estar vazio",
+    "profanity":"O aplicativo SevaX possui uma política de não permitir linguagem profana ou explícita. Revise seu texto."
   },
   "add_location": {
     "confirm_location_label": "CONFIRMAR localização"

@@ -114,12 +114,16 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                   onChanged: _bloc.onMessageChanged,
                   focusNode: messageNode,
                   decoration: InputDecoration(
+                    errorMaxLines: 2,
                     border: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     errorBorder: InputBorder.none,
                     disabledBorder: InputBorder.none,
-                    errorText: snapshot.error,
+                    errorText: snapshot.error.toString().contains('profanity')
+                        ? AppLocalizations.of(context)
+                            .translate('profanity', 'alert')
+                        : snapshot.error,
                   ),
                   maxLines: null,
                   keyboardType: TextInputType.multiline,

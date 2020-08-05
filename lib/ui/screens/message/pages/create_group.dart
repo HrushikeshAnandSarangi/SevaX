@@ -21,11 +21,12 @@ class CreateGroupPage extends StatelessWidget {
   ProfanityImageModel profanityImageModel = ProfanityImageModel();
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
   FirebaseStorage _storage = FirebaseStorage();
+  BuildContext viewContext;
+  bool showLoadingDialog = false;
 
   CreateGroupPage({Key key, this.bloc}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    bool showLoadingDialog = false;
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
@@ -46,7 +47,6 @@ class CreateGroupPage extends StatelessWidget {
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             onPressed: () {
-              BuildContext viewContext;
               if (showLoadingDialog) {
                 showDialog(
                   context: context,
@@ -132,6 +132,13 @@ class CreateGroupPage extends StatelessWidget {
                       StreamBuilder<String>(
                         stream: bloc.groupName,
                         builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            if (snapshot.error
+                                .toString()
+                                .contains('profanity')) {
+                              showLoadingDialog = false;
+                            }
+                          }
                           _controller.value = _controller.value.copyWith(
                             text: snapshot.data,
                           );
@@ -143,6 +150,7 @@ class CreateGroupPage extends StatelessWidget {
                             controller: _controller,
                             onChanged: bloc.onGroupNameChanged,
                             decoration: InputDecoration(
+                              errorMaxLines: 2,
                               border: InputBorder.none,
                               enabledBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
@@ -254,5 +262,10 @@ class CreateGroupPage extends StatelessWidget {
       bloc.onImageChanged(file);
       progressDialog.hide();
     }
+  }
+
+  void stop() {
+    Navigator.of(viewContext).pop();
+    showLoadingDialog = false;
   }
 }

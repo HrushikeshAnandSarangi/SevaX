@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 
@@ -12,6 +13,7 @@ class ReportMemberBloc {
   final _file = BehaviorSubject<File>();
   final _message = BehaviorSubject<String>();
   final _buttonStatus = BehaviorSubject<bool>.seeded(false);
+  final profanityDetector = ProfanityDetector();
 
   FirebaseStorage _storage = FirebaseStorage();
   Function(bool) get changeButtonStatus => _buttonStatus.sink.add;
@@ -21,7 +23,11 @@ class ReportMemberBloc {
       _buttonStatus.add(true); //enable button
       log("button enabled");
     }
-
+    if (profanityDetector.isProfaneString(_message.value)) {
+      _message.addError('profanity');
+      _buttonStatus.add(false);
+      log("profanity detected");
+    }
     if (_message.value.length < 10 && _buttonStatus.value == true) {
       _buttonStatus.add(false); //disable button
       log("button disabled");

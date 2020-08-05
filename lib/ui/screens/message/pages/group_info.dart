@@ -156,11 +156,17 @@ class _GroupInfoState extends State<GroupInfoPage> {
                             controller: _controller,
                             onChanged: _bloc.onGroupNameChanged,
                             decoration: InputDecoration(
+                              errorMaxLines: 2,
                               border: InputBorder.none,
                               enabledBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
-                              errorText: snapshot.error,
+                              errorText: snapshot.error
+                                      .toString()
+                                      .contains('profanity')
+                                  ? AppLocalizations.of(context)
+                                      .translate('profanity', 'alert')
+                                  : snapshot.error,
                               hintText: AppLocalizations.of(context).translate(
                                   'messages', 'multi_user_messaging_name'),
                               hintStyle: TextStyle(

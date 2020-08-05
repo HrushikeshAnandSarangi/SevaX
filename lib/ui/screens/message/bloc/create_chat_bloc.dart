@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -28,6 +29,7 @@ class CreateChatBloc extends BlocBase {
   final _file = BehaviorSubject<File>();
   final Map<String, List<ParticipantInfo>> sortedMembers = {};
   final Map<String, int> scrollOffset = {};
+  final profanityDetector = ProfanityDetector();
 
   Function(String) get onSearchChanged => _searchText.sink.add;
   Function(String) get onGroupNameChanged => _groupName.sink.add;
@@ -84,7 +86,10 @@ class CreateChatBloc extends BlocBase {
   }
 
   Future<ChatModel> createMultiUserMessaging(UserModel creator) async {
-    if (_groupName.value != null) {
+    if (profanityDetector.isProfaneString(_groupName.value)) {
+      _groupName.addError("profanity");
+      return null;
+    } else if (_groupName.value != null) {
       String imageUrl = _file.value != null
           ? await StorageApi.uploadFile("multiUserMessagingLogo", _file.value)
           : null;
