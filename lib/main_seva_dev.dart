@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth.dart';
@@ -91,17 +92,18 @@ class MainApplication extends StatelessWidget {
           return AuthProvider(
             auth: Auth(),
             child: MaterialApp(
-              locale: Locale("es"),
+              locale: model.appLocal,
               supportedLocales: S.delegate.supportedLocales,
               localizationsDelegates: [
                 S.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
               ],
               debugShowCheckedModeBanner: false,
               theme: FlavorConfig.values.theme,
               title: AppConfig.appName,
-              // home: RequestStatusView(
-              //   requestId: "anitha.beberg@gmail.com*1573268670404",
-              // ),
+
               builder: (context, child) {
                 return GestureDetector(
                   child: child,

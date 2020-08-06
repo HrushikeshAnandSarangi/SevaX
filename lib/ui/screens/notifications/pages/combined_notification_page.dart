@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/admin_timebank_list.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
@@ -35,7 +35,7 @@ class _CombinedNotificationsPageState extends State<CombinedNotificationsPage>
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          AppLocalizations.of(context).translate('notifications', 'title'),
+          S.of(context).bottom_nav_notifications,
           style: TextStyle(fontSize: 18),
         ),
         centerTitle: true,
@@ -55,10 +55,10 @@ class _CombinedNotificationsPageState extends State<CombinedNotificationsPage>
                       indicatorColor: Theme.of(context).primaryColor,
                       tabs: [
                         Tab(
-                          child: Text("Personal"),
+                          child: Text(S.of(context).personal),
                         ),
                         Tab(
-                          child: Text("Timebank"),
+                          child: Text(S.of(context).timebank),
                         ),
                       ],
                     ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/pages/timebank_notifications.dart';
@@ -24,8 +24,7 @@ class NotificationTimebankList extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: Text(
-                AppLocalizations.of(context)
-                    .translate('notifications', 'no_notifications'),
+                S.of(context).no_notifications,
               ),
             ),
           );

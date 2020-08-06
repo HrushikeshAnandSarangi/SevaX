@@ -46,18 +46,6 @@ class UserData {
   Future updateUserData() async {
     await fireStoreManager.updateUser(user: user);
   }
-
-//   Future _getSignedInUserDocs(String userId) async {
-//     UserModel userModel = await fireStoreManager.getUserForId(
-//       sevaUserId: userId,
-//     );
-//     user = userModel;
-//   }
-
-//   Future<String> _getLoggedInUserId() async {
-//     userId = await PreferenceManager.loggedInUserId;
-//     return userId;
-//   }
 }
 
 class SplashView extends StatefulWidget {

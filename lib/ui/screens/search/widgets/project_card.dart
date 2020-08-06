@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ProjectsCard extends StatelessWidget {
@@ -64,10 +63,9 @@ class ProjectsCard extends StatelessWidget {
                   Spacer(),
                   Text(
                     timeago.format(
-                        DateTime.fromMillisecondsSinceEpoch(timestamp),
-                        locale:
-                            Locale(AppConfig.prefs.getString('language_code'))
-                                .toLanguageTag()),
+                      DateTime.fromMillisecondsSinceEpoch(timestamp),
+                      locale: S.of(context).localeName,
+                    ),
                     style: TextStyle(color: Colors.grey),
                   ),
                 ],
@@ -133,16 +131,15 @@ class ProjectsCard extends StatelessWidget {
                             ),
                             children: [
                               TextSpan(
-                                text:
-                                    "$tasks ${AppLocalizations.of(context).translate('projects', 'tasks')}",
+                                text: "$tasks ${S.of(context).tasks}",
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                 ),
                               ),
                               TextSpan(text: "     "),
                               TextSpan(
-                                  text:
-                                      "$pendingTask ${AppLocalizations.of(context).translate('projects', 'pending')}"),
+                                text: "$pendingTask ${S.of(context).pending}",
+                              ),
                             ],
                           ),
                         ),

@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -149,35 +149,25 @@ Widget createAdminTabBar(
               isScrollable: true,
               tabs: [
                 Tab(
-                  text: AppLocalizations.of(context)
-                      .translate('homepage', "feeds"),
+                  text: S.of(context).feeds,
                 ),
                 Tab(
-                  text: AppLocalizations.of(context)
-                      .translate('homepage', "projects"),
+                  text: S.of(context).projects,
                 ),
                 Tab(
-                  text: AppLocalizations.of(context)
-                      .translate('homepage', "requests"),
+                  text: S.of(context).requests,
                 ),
                 Tab(
-                  text: AppLocalizations.of(context)
-                      .translate('homepage', "offers"),
+                  text: S.of(context).offers,
                 ),
                 Tab(
-                  text: AppLocalizations.of(context)
-                      .translate('homepage', "about"),
-                ),
-                // Tab(
-                //   text: "Bookmarked Offers",
-                // ),
-                Tab(
-                  text: AppLocalizations.of(context)
-                      .translate('homepage', "members"),
+                  text: S.of(context).about,
                 ),
                 Tab(
-                  text: AppLocalizations.of(context)
-                      .translate('homepage', "manage"),
+                  text: S.of(context).members,
+                ),
+                Tab(
+                  text: S.of(context).manage,
                 ),
               ],
             ),
@@ -289,29 +279,22 @@ Widget createJoinedUserTabBar(
           isScrollable: true,
           tabs: [
             Tab(
-              text: AppLocalizations.of(context).translate('homepage', "feeds"),
+              text: S.of(context).feeds,
             ),
             Tab(
-              text: AppLocalizations.of(context)
-                  .translate('homepage', "projects"),
+              text: S.of(context).projects,
             ),
             Tab(
-              text: AppLocalizations.of(context)
-                  .translate('homepage', "requests"),
+              text: S.of(context).requests,
             ),
             Tab(
-              text:
-                  AppLocalizations.of(context).translate('homepage', "offers"),
+              text: S.of(context).offers,
             ),
             Tab(
-              text: AppLocalizations.of(context).translate('homepage', "about"),
+              text: S.of(context).about,
             ),
-            // Tab(
-            //   text: "Bookmarked Offers",
-            // ),
             Tab(
-              text:
-                  AppLocalizations.of(context).translate('homepage', "members"),
+              text: S.of(context).members,
             ),
           ],
         ),
@@ -386,12 +369,10 @@ Widget createNormalUserTabBar(
             isScrollable: false,
             tabs: [
               Tab(
-                text:
-                    AppLocalizations.of(context).translate('homepage', 'about'),
+                text: S.of(context).about,
               ),
               Tab(
-                text: AppLocalizations.of(context)
-                    .translate('homepage', 'members'),
+                text: S.of(context).members,
               )
             ],
           ),
@@ -465,7 +446,7 @@ class DiscussionListState extends State<DiscussionList> {
                 padding: EdgeInsets.only(left: 10),
               ),
               Text(
-                AppLocalizations.of(context).translate('homepage', 'feeds'),
+                S.of(context).feeds,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
               ),
             ],
@@ -477,10 +458,13 @@ class DiscussionListState extends State<DiscussionList> {
         ),
         InkWell(
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
+            Navigator.of(context).push(
+              MaterialPageRoute(
                 builder: (context) => NewsCreate(
-                      timebankId: widget.timebankId,
-                    )));
+                  timebankId: widget.timebankId,
+                ),
+              ),
+            );
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -504,8 +488,7 @@ class DiscussionListState extends State<DiscussionList> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        AppLocalizations.of(context)
-                            .translate('homepage', 'start_feed'),
+                        S.of(context).start_new_post,
                         maxLines: 1,
                         textAlign: TextAlign.start,
                         style: TextStyle(fontSize: 16),
@@ -522,7 +505,8 @@ class DiscussionListState extends State<DiscussionList> {
           builder: (context, snapshot) {
             if (snapshot.hasError)
               return Text(
-                  AppLocalizations.of(context).translate('homepage', 'gps_on'));
+                S.of(context).gps_on_reminder,
+              );
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
                 return Container(
@@ -553,8 +537,8 @@ class DiscussionListState extends State<DiscussionList> {
                   return Padding(
                     padding: const EdgeInsets.all(28.0),
                     child: Center(
-                        child: Text(AppLocalizations.of(context)
-                            .translate('homepage', 'feed_empty'))),
+                      child: Text(S.of(context).empty_feed),
+                    ),
                   );
                 }
                 return Expanded(
@@ -621,32 +605,6 @@ class DiscussionListState extends State<DiscussionList> {
     }
 
     return filteredNewsList;
-  }
-
-  void _showAdminAccessMessage() {
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('homepage', 'access_denied')),
-          content: Text(
-              AppLocalizations.of(context).translate('homepage', 'not_auth')),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            FlatButton(
-              child: Text(
-                  AppLocalizations.of(context).translate('homepage', 'close')),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   List<NewsModel> filterBlockedContent(
@@ -922,18 +880,11 @@ class DiscussionListState extends State<DiscussionList> {
                                             // return object of type Dialog
                                             return AlertDialog(
                                               title: Text(
-                                                AppLocalizations.of(context)
-                                                    .translate(
-                                                  'homepage',
-                                                  'report_feed',
-                                                ),
-                                              ),
+                                                  S.of(context).report_feed),
                                               content: Text(
-                                                AppLocalizations.of(context)
-                                                    .translate(
-                                                  'homepage',
-                                                  'want_report',
-                                                ),
+                                                S
+                                                    .of(context)
+                                                    .report_feed_confirmation_message,
                                               ),
                                               actions: <Widget>[
                                                 FlatButton(
@@ -944,11 +895,7 @@ class DiscussionListState extends State<DiscussionList> {
                                                   textColor: FlavorConfig
                                                       .values.buttonTextColor,
                                                   child: Text(
-                                                    AppLocalizations.of(context)
-                                                        .translate(
-                                                      'homepage',
-                                                      'report_feed',
-                                                    ),
+                                                    S.of(context).report_feed,
                                                     style: TextStyle(
                                                       fontSize:
                                                           dialogButtonSize,
@@ -984,11 +931,7 @@ class DiscussionListState extends State<DiscussionList> {
                                                 ),
                                                 FlatButton(
                                                   child: Text(
-                                                    AppLocalizations.of(context)
-                                                        .translate(
-                                                      'homepage',
-                                                      'cancel',
-                                                    ),
+                                                    S.of(context).cancel,
                                                     style: TextStyle(
                                                         color: Colors.red),
                                                   ),
@@ -1335,24 +1278,16 @@ class DiscussionListState extends State<DiscussionList> {
                                                 builder: (BuildContext
                                                     viewContextS) {
                                                   return AlertDialog(
-                                                    title: Text(AppLocalizations
-                                                            .of(context)
-                                                        .translate('homepage',
-                                                            'reported_already')),
-                                                    content: Text(
-                                                        AppLocalizations.of(
-                                                                context)
-                                                            .translate(
-                                                                'homepage',
-                                                                'reported_done')),
+                                                    title: Text(S
+                                                        .of(context)
+                                                        .already_reported),
+                                                    content: Text(S
+                                                        .of(context)
+                                                        .feed_reported),
                                                     actions: <Widget>[
                                                       FlatButton(
                                                         child: Text(
-                                                          AppLocalizations.of(
-                                                                  context)
-                                                              .translate(
-                                                                  'homepage',
-                                                                  'ok'),
+                                                          S.of(context).ok,
                                                           style: TextStyle(
                                                             fontSize:
                                                                 dialogButtonSize,
@@ -1374,18 +1309,12 @@ class DiscussionListState extends State<DiscussionList> {
                                                 builder:
                                                     (BuildContext viewContext) {
                                                   return AlertDialog(
-                                                    title: Text(
-                                                        AppLocalizations.of(
-                                                                context)
-                                                            .translate(
-                                                                'homepage',
-                                                                'report')),
-                                                    content: Text(
-                                                        AppLocalizations.of(
-                                                                context)
-                                                            .translate(
-                                                                'homepage',
-                                                                'want_report')),
+                                                    title: Text(S
+                                                        .of(context)
+                                                        .report_feed),
+                                                    content: Text(S
+                                                        .of(context)
+                                                        .report_feed_confirmation_message),
                                                     actions: <Widget>[
                                                       FlatButton(
                                                         padding:
@@ -1397,11 +1326,9 @@ class DiscussionListState extends State<DiscussionList> {
                                                             .values
                                                             .buttonTextColor,
                                                         child: Text(
-                                                          AppLocalizations.of(
-                                                                  context)
-                                                              .translate(
-                                                                  'homepage',
-                                                                  'report_feed'),
+                                                          S
+                                                              .of(context)
+                                                              .report_feed,
                                                           style: TextStyle(
                                                             fontSize:
                                                                 dialogButtonSize,
@@ -1444,11 +1371,7 @@ class DiscussionListState extends State<DiscussionList> {
                                                       ),
                                                       FlatButton(
                                                         child: Text(
-                                                          AppLocalizations.of(
-                                                                  context)
-                                                              .translate(
-                                                                  'shared',
-                                                                  'cancel'),
+                                                          S.of(context).cancel,
                                                           style: TextStyle(
                                                               color:
                                                                   Colors.red),

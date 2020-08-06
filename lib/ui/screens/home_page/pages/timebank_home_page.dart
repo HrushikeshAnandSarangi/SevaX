@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
@@ -15,7 +15,6 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/covid/covid_sceen.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/tasks/notAccepted_tasks.dart';
@@ -107,7 +106,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
             handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
             sliver: SliverAppBar(
               title: Text(
-                AppLocalizations.of(context).translate('tasks', 'your_tasks'),
+                S.of(context).your_tasks,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -123,78 +122,78 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                 background: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    covidcheck['show']
-                        ? Container(
-                            alignment: Alignment.center,
-                            height: 90.0,
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 0.0, vertical: 5),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 10.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(0.0),
-                              gradient: LinearGradient(
-                                colors: [Colors.white12, Colors.white12],
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey[200],
-                                ),
-                              ],
-                            ),
-                            child: InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => MyThreeOptions()));
-                                },
-                                child: Column(
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Text(
-                                            AppLocalizations.of(context)
-                                                .translate('covid', 'title'),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.clip,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .title
-                                                .apply(
-                                                    fontWeightDelta: 2,
-                                                    color: Colors.black54),
-                                          ),
-                                        ),
-                                        SizedBox(width: 15.0),
-                                        GestureDetector(
-                                          child: Icon(
-                                            Icons.keyboard_arrow_right,
-                                            color: Colors.black54,
-                                          ),
-                                          onTap: () {},
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(height: 5.0),
-                                    Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Text(
-                                            AppLocalizations.of(context)
-                                                .translate('covid', 'desc'),
-                                            textAlign: TextAlign.left,
-                                            maxLines: 2,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle
-                                                .apply(color: Colors.black54),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                )))
-                        : Container(),
+                    // covidcheck['show']
+                    //     ? Container(
+                    //         alignment: Alignment.center,
+                    //         height: 90.0,
+                    //         margin: const EdgeInsets.symmetric(
+                    //             horizontal: 0.0, vertical: 5),
+                    //         padding: const EdgeInsets.symmetric(
+                    //             horizontal: 20.0, vertical: 10.0),
+                    //         decoration: BoxDecoration(
+                    //           borderRadius: BorderRadius.circular(0.0),
+                    //           gradient: LinearGradient(
+                    //             colors: [Colors.white12, Colors.white12],
+                    //           ),
+                    //           boxShadow: [
+                    //             BoxShadow(
+                    //               color: Colors.grey[200],
+                    //             ),
+                    //           ],
+                    //         ),
+                    //         child: InkWell(
+                    //             onTap: () {
+                    //               Navigator.of(context).push(MaterialPageRoute(
+                    //                   builder: (context) => MyThreeOptions()));
+                    //             },
+                    //             child: Column(
+                    //               children: <Widget>[
+                    //                 Row(
+                    //                   children: <Widget>[
+                    //                     Expanded(
+                    //                       child: Text(
+                    //                         AppLocalizations.of(context)
+                    //                             .translate('covid', 'title'),
+                    //                         maxLines: 2,
+                    //                         overflow: TextOverflow.clip,
+                    //                         style: Theme.of(context)
+                    //                             .textTheme
+                    //                             .title
+                    //                             .apply(
+                    //                                 fontWeightDelta: 2,
+                    //                                 color: Colors.black54),
+                    //                       ),
+                    //                     ),
+                    //                     SizedBox(width: 15.0),
+                    //                     GestureDetector(
+                    //                       child: Icon(
+                    //                         Icons.keyboard_arrow_right,
+                    //                         color: Colors.black54,
+                    //                       ),
+                    //                       onTap: () {},
+                    //                     )
+                    //                   ],
+                    //                 ),
+                    //                 SizedBox(height: 5.0),
+                    //                 Row(
+                    //                   children: <Widget>[
+                    //                     Expanded(
+                    //                       child: Text(
+                    //                         AppLocalizations.of(context)
+                    //                             .translate('covid', 'desc'),
+                    //                         textAlign: TextAlign.left,
+                    //                         maxLines: 2,
+                    //                         style: Theme.of(context)
+                    //                             .textTheme
+                    //                             .subtitle
+                    //                             .apply(color: Colors.black54),
+                    //                       ),
+                    //                     ),
+                    //                   ],
+                    //                 ),
+                    //               ],
+                    //             )))
+                    //     : Container(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -208,8 +207,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                               FlatButton(
                                 onPressed: () {},
                                 child: Text(
-                                  AppLocalizations.of(context)
-                                      .translate('homepage', 'your_groups'),
+                                  S.of(context).your_groups,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -298,8 +296,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
-                        AppLocalizations.of(context)
-                            .translate('homepage', 'your_tasks'),
+                        S.of(context).your_tasks,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -317,16 +314,13 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                 indicatorColor: Theme.of(context).primaryColor,
                 tabs: [
                   Tab(
-                    child: Text(AppLocalizations.of(context)
-                        .translate('homepage', 'pending')),
+                    child: Text(S.of(context).pending),
                   ),
                   Tab(
-                    child: Text(AppLocalizations.of(context)
-                        .translate('homepage', 'not_accepted')),
+                    child: Text(S.of(context).not_accepted),
                   ),
                   Tab(
-                    child: Text(AppLocalizations.of(context)
-                        .translate('homepage', 'completed')),
+                    child: Text(S.of(context).completed),
                   ),
                 ],
                 controller: controller,
@@ -382,15 +376,12 @@ class _TimebankHomePageState extends State<TimebankHomePage>
       builder: (BuildContext _context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('requests', 'protected_timebank')),
-          content: Text(AppLocalizations.of(context)
-              .translate('requests', 'cannot_create_group')),
+          title: Text(S.of(context).protected_timebank),
+          content: Text(S.of(context).protected_timebank_group_creation_error),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
-              child: Text(
-                  AppLocalizations.of(context).translate('homepage', 'close')),
+              child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(_context).pop();
               },
@@ -432,15 +423,13 @@ class _TimebankHomePageState extends State<TimebankHomePage>
 
   void showGroupsWebPage() {
     var dynamicLinks = json.decode(
-      AppConfig.remoteConfig.getString(
-        AppLocalizations.of(context).translate('links', 'linkToWeb'),
-      ),
+      AppConfig.remoteConfig.getString("links_${S.of(context).localeName}"),
     );
     navigateToWebView(
       aboutMode: AboutMode(
-          title:
-              AppLocalizations.of(context).translate('homepage', 'groups_help'),
-          urlToHit: dynamicLinks['groupsInfoLink']),
+        title: S.of(context).groups_help_text,
+        urlToHit: dynamicLinks['groupsInfoLink'],
+      ),
       context: context,
     );
   }
@@ -459,28 +448,4 @@ class _TimebankHomePageState extends State<TimebankHomePage>
 
   @override
   bool get wantKeepAlive => true;
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate(this._tabBar);
-
-  final TabBar _tabBar;
-
-  @override
-  double get minExtent => _tabBar.preferredSize.height;
-  @override
-  double get maxExtent => _tabBar.preferredSize.height;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      child: _tabBar,
-    );
-  }
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
-  }
 }

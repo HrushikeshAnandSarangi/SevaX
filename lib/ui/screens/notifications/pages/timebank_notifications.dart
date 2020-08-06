@@ -4,6 +4,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
@@ -53,8 +54,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: Text(
-                AppLocalizations.of(context)
-                    .translate('notifications', 'no_notifications'),
+                S.of(context).no_notifications,
               ),
             ),
           );

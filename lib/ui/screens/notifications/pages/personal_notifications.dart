@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -59,8 +59,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: Text(
-                AppLocalizations.of(context)
-                    .translate('notifications', 'no_notifications'),
+                S.of(context).no_notifications,
               ),
             ),
           );
@@ -86,7 +85,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   title: "Request Updated",
                   subTitle:
-                      "${AppLocalizations.of(context).translate('notifications', 'you_signed_up_for')} ***eventName ${AppLocalizations.of(context).translate('notifications', 'on')} ***eventDate. ${AppLocalizations.of(context).translate('notifications', 'owner_changes')}"
+                      "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification}"
                           .replaceFirst('***eventName', eventData.eventName)
                           .replaceFirst(
                               '***eventDate',
@@ -157,10 +156,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   },
                   onPressed: null,
                   photoUrl: userAddedModel.timebankImage,
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'timebank_join'),
+                  title: S.of(context).notification_timebank_join,
                   subTitle:
-                      '${userAddedModel.adminName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'added_you')} ${userAddedModel.timebankName} ${AppLocalizations.of(context).translate('members', 'timebank')}',
+                      '${userAddedModel.adminName.toLowerCase()} ${S.of(context).notifications_added_you} ${userAddedModel.timebankName} ${S.of(context).timebank}',
                 );
                 break;
 
@@ -179,7 +177,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   onPressed: null,
                   photoUrl: model.photoUrl,
                   subTitle:
-                      '${AppLocalizations.of(context).translate('notifications', 'rejected_by')} ${model.fullName}',
+                      '${S.of(context).notifications_request_rejected_by} ${model.fullName}',
                 );
 
                 break;
@@ -200,8 +198,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     return user != null && user.fullname != null
                         ? NotificationCard(
                             entityName: user.fullname,
-                            title: AppLocalizations.of(context)
-                                .translate('notifications', 'join_request'),
+                            title: S.of(context).notifications_join_request,
                             isDissmissible: true,
                             onDismissed: () {
                               NotificationsApi.readUserNotification(
@@ -221,7 +218,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             },
                             photoUrl: user.photoURL,
                             subTitle:
-                                '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'requested_join')} ${model.timebankTitle}, ${AppLocalizations.of(context).translate('notifications', 'tap_toview')}',
+                                '${user.fullname.toLowerCase()} ${S.of(context).notifications_requested_join} ${model.timebankTitle}, ${S.of(context).notifications_tap_to_view}',
                           )
                         : Container();
                   },
@@ -267,7 +264,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   onPressed: null,
                   photoUrl: model.photoUrl,
                   subTitle:
-                      '${model.fullName} ${AppLocalizations.of(context).translate('notifications', 'approved_for')}  ${transactionModel.credits} ${AppLocalizations.of(context).translate('notifications', 'hours')}',
+                      '${model.fullName} ${S.of(context).notifications_approved_for}  ${transactionModel.credits} ${S.of(context).hour(2)}',
                   title: model.title,
                 );
                 break;
@@ -286,7 +283,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   onPressed: null,
                   photoUrl: model.photoUrl,
                   subTitle:
-                      '${AppLocalizations.of(context).translate('notifications', 'task_rejected_by')} ${model.fullName}',
+                      '${S.of(context).notifications_task_rejected_by} ${model.fullName}',
                 );
                 break;
 
@@ -314,10 +311,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       },
                       onPressed: null,
                       photoUrl: user.photoURL,
-                      title: AppLocalizations.of(context)
-                          .translate('notifications', 'credited'),
+                      title: S.of(context).notifications_credited,
                       subTitle:
-                          ' ${AppLocalizations.of(context).translate('notifications', 'congrats')}! ${model.credits} ${AppLocalizations.of(context).translate('notifications', 'credited_to')}.',
+                          ' ${S.of(context).congrats}! ${model.credits} ${S.of(context).notifications_credited_to}.',
                     );
                   },
                 );
@@ -346,10 +342,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       },
                       onPressed: null,
                       photoUrl: user.photoURL,
-                      title: AppLocalizations.of(context)
-                          .translate('notifications', 'debited'),
+                      title: S.of(context).notifications_debited,
                       subTitle:
-                          "${model.credits} ${AppLocalizations.of(context).translate('notifications', 'debited_to')}",
+                          "${model.credits} ${S.of(context).notifications_debited_to}",
                     );
                   },
                 );
@@ -387,10 +382,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       },
                       onPressed: null,
                       photoUrl: user.photoURL,
-                      title: AppLocalizations.of(context)
-                          .translate('notifications', 'offer_accepted'),
+                      title: S.of(context).notifications_offer_accepted,
                       subTitle:
-                          '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'show_interest')}',
+                          '${user.fullname.toLowerCase()} ${S.of(context).notifications_shown_interest}',
                     );
                   },
                 );
@@ -425,9 +419,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   },
                   photoUrl: requestInvitationModel.timebankImage,
                   subTitle:
-                      '${requestInvitationModel.timebankName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'requested_join')} ${requestInvitationModel.requestTitle}, ${AppLocalizations.of(context).translate('notifications', 'tap_toview')}',
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'join_request'),
+                      '${requestInvitationModel.timebankName.toLowerCase()} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestTitle}, ${S.of(context).notifications_tap_to_view}',
+                  title: S.of(context).notifications_join_request,
                 );
                 break;
               case NotificationType.GroupJoinInvite:
@@ -457,9 +450,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   },
                   photoUrl: groupInviteUserModel.timebankImage,
                   subTitle:
-                      '${groupInviteUserModel.adminName.toLowerCase()} ${AppLocalizations.of(context).translate('members', 'invited_you')} ${groupInviteUserModel.timebankName}, ${AppLocalizations.of(context).translate('notifications', 'tap_to_view')}',
-                  title:
-                      "${AppLocalizations.of(context).translate('notifications', 'group_invite')}",
+                      '${groupInviteUserModel.adminName.toLowerCase()} ${S.of(context).notifications_invited_to_join} ${groupInviteUserModel.timebankName}, ${S.of(context).notifications_tap_to_view}',
+                  title: "${S.of(context).notifications_group_join_invite}",
                 );
                 break;
 
@@ -469,8 +461,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                 return NotificationCard(
                   photoUrl: '',
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'credited'),
+                  title: S.of(context).notifications_credited,
                   subTitle: UserNotificationMessage.CREDIT_FROM_OFFER
                       .replaceFirst(
                         '*n',
@@ -488,8 +479,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                 return NotificationCard(
                   photoUrl: data.participantDetails.photourl,
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'new_member_signup'),
+                  title: S.of(context).notifications_new_member_signup,
                   subTitle: UserNotificationMessage.NEW_MEMBER_SIGNUP_OFFER
                       .replaceFirst(
                         '*name',
@@ -506,7 +496,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   photoUrl: '',
                   title:
-                      "${AppLocalizations.of(context).translate('notifications', 'creditsfor')} ${data.classDetails.classTitle}",
+                      "${S.of(context).notifications_credits_for} ${data.classDetails.classTitle}",
                   subTitle: UserNotificationMessage.OFFER_FULFILMENT_ACHIEVED
                       .replaceFirst(
                         '*n',
@@ -525,8 +515,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                 return NotificationCard(
                   photoUrl: data.participantDetails.photourl,
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'debited'),
+                  title: S.of(context).notifications_debited,
                   subTitle: UserNotificationMessage.DEBIT_FROM_OFFER
                       .replaceFirst(
                         '*n',
@@ -543,8 +532,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                 return NotificationCard(
                   photoUrl: data.participantDetails.photourl,
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'signup_for_class'),
+                  title: S.of(context).notifications_signed_for_class,
                   subTitle: UserNotificationMessage.OFFER_SUBSCRIPTION_COMPLETED
                       .replaceFirst(
                         '*class',
@@ -560,8 +548,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                 return NotificationCard(
                   photoUrl: data.participantDetails.photourl,
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'feedback_request'),
+                  title: S.of(context).notifications_feedback_request,
                   subTitle: UserNotificationMessage.FEEDBACK_FROM_SIGNUP_MEMBER
                       .replaceFirst(
                     '*class',
@@ -585,16 +572,17 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: requestData.entityTitle ?? "Deletion Request",
                   photoUrl: null,
                   title: requestData.requestAccepted
-                      ? "${requestData.entityTitle} ${AppLocalizations.of(context).translate('soft_delete', 'was_deleted')}"
-                      : "${requestData.entityTitle} ${AppLocalizations.of(context).translate('soft_delete', 'could_not_delete')}",
+                      ? "${requestData.entityTitle} ${S.of(context).notifications_was_deleted}"
+                      : "${requestData.entityTitle} ${S.of(context).notifications_could_not_delete}",
                   subTitle: requestData.requestAccepted
-                      ? AppLocalizations.of(context)
-                          .translate('soft_delete', 'deleted_successfully')
+                      ? S
+                          .of(context)
+                          .notifications_successfully_deleted
                           .replaceAll(
                             '***',
                             requestData.entityTitle,
                           )
-                      : "${requestData.entityTitle} ${AppLocalizations.of(context).translate('soft_delete', 'could_not_deleted')}",
+                      : "${requestData.entityTitle} ${S.of(context).notifications_could_not_deleted}",
                   onPressed: () => !requestData.requestAccepted
                       ? showDialogForIncompleteTransactions(
                           context,
@@ -647,20 +635,22 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
   void showDialogForIncompleteTransactions(
       BuildContext context, SoftDeleteRequestDataHolder deletionRequest) {
-    var reason = AppLocalizations.of(context)
-        .translate('soft_delete', 'incomplete_transaction')
-        .replaceAll('***', deletionRequest.entityTitle);
+    var reason = S
+            .of(context)
+            .notifications_incomplete_transaction
+            .replaceAll('***', deletionRequest.entityTitle) +
+        '\n';
     if (deletionRequest.noOfOpenOffers > 0) {
       reason +=
-          '${deletionRequest.noOfOpenOffers} ${AppLocalizations.of(context).translate('soft_delete', 'one_to_many_offers')}';
+          '${deletionRequest.noOfOpenOffers} ${S.of(context).one_to_many_offers}\n';
     }
     if (deletionRequest.noOfOpenProjects > 0) {
       reason +=
-          '${deletionRequest.noOfOpenProjects} ${AppLocalizations.of(context).translate('soft_delete', 'projects')}';
+          '${deletionRequest.noOfOpenProjects} ${S.of(context).projects}\n';
     }
     if (deletionRequest.noOfOpenRequests > 0) {
       reason +=
-          '${deletionRequest.noOfOpenRequests} ${AppLocalizations.of(context).translate('soft_delete', 'open_requests')}';
+          '${deletionRequest.noOfOpenRequests} ${S.of(context).open_requests}\n';
     }
 
     showDialog(
@@ -672,8 +662,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           actions: <Widget>[
             FlatButton(
               child: Text(
-                AppLocalizations.of(context)
-                    .translate('soft_delete', 'dismiss'),
+                S.of(context).dismiss,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.red,

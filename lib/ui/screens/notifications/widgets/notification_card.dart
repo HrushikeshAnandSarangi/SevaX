@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 
 class NotificationCard extends StatelessWidget {
@@ -35,8 +36,7 @@ class NotificationCard extends StatelessWidget {
         actions: isDissmissible
             ? <Widget>[
                 IconSlideAction(
-                  caption: AppLocalizations.of(context)
-                      .translate('notifications_card', 'delete'),
+                  caption: S.of(context).delete,
                   color: Colors.red,
                   icon: Icons.delete,
                   onTap: () {
@@ -46,21 +46,17 @@ class NotificationCard extends StatelessWidget {
                       builder: (BuildContext dialogContext) {
                         return AlertDialog(
                           title: Text(
-                            AppLocalizations.of(context).translate(
-                                'notifications_card',
-                                'delete_notification_title'),
+                            S.of(context).delete_notification,
                           ),
                           content: Text(
-                            AppLocalizations.of(context).translate(
-                                'notifications_card', 'sure_to_delete'),
+                            S.of(context).delete_notification_confirmation,
                           ),
                           actions: <Widget>[
                             FlatButton(
                               onPressed: () =>
                                   {Navigator.of(dialogContext).pop()},
                               child: Text(
-                                AppLocalizations.of(context)
-                                    .translate('notifications_card', 'cancel'),
+                                S.of(context).cancel,
                               ),
                             ),
                             FlatButton(
