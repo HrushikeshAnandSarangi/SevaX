@@ -7,7 +7,7 @@ import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/invoice_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/ui/screens/invoice/pages/invoice_pdf.dart';
+import 'package:sevaexchange/ui/screens/invoice/pages/report_pdf.dart';
 import 'package:sevaexchange/ui/screens/invoice/pages/months_list.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_page.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
