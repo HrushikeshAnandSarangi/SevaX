@@ -8,7 +8,6 @@ class AppConfig {
   static const String skip_interest = "skip_interest";
   static const String skip_bio = "skip_bio";
 
-
   static BillingPlanModel billing;
   static SharedPreferences prefs;
 

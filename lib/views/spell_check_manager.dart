@@ -154,32 +154,25 @@ class SentimentExpression {
 }
 
 class SpellCheckManager {
-  SpellCheckManager() {
-    int lastUsedIndex = 0;
-  }
-  static _getOcpApimKey(int size()) {
+  static String _getOcpApimKey() {
     final _random = new Random();
-
-    /**
-   * Generates a positive random integer uniformly distributed on the range
-   * from [min], inclusive, to [max], exclusive.
-   */
-    int next(int min, int max) => min + _random.nextInt(max - min);
+    var listOfKeys = [
+      '754b7ee07e8d49bb93542466f14d96b3',
+      'dcfb68de198c49379634f779aa4b4ea0',
+      'ca0982be53644221920ae9895c50bf83',
+    ];
+    var rand = 0 + _random.nextInt((listOfKeys.length - 1) - 0);
+    return listOfKeys[rand];
   }
 
   static Future<SpellCheckResult> evaluateSpellingFor(
     String keyword, {
     String language,
   }) async {
-    var listOfKeys = [
-      '754b7ee07e8d49bb93542466f14d96b3',
-      'dcfb68de198c49379634f779aa4b4ea0'
-    ];
-
     String url = "https://api.tisane.ai/parse";
     Map<String, String> headers = {
       "Content-Type": "application/json",
-      "Ocp-Apim-Subscription-Key": "754b7ee07e8d49bb93542466f14d96b3"
+      "Ocp-Apim-Subscription-Key": _getOcpApimKey()
     };
     dynamic body = jsonEncode({
       "language": "en",

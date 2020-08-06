@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -108,6 +111,10 @@ class _InterestViewNewState extends State<InterestViewNew> {
               suggestionsBoxDecoration: SuggestionsBoxDecoration(
                 borderRadius: BorderRadius.circular(8),
               ),
+              errorBuilder: (context, err) {
+                return Text('Error was thrown');
+              },
+              debounceDuration: Duration(milliseconds: 600),
               textFieldConfiguration: TextFieldConfiguration(
                 style: hasPellError
                     ? TextStyle(
@@ -128,8 +135,9 @@ class _InterestViewNewState extends State<InterestViewNew> {
                     borderRadius: BorderRadius.circular(25.7),
                   ),
                   enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(25.7)),
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
                   contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
                   prefixIcon: Icon(
                     Icons.search,
@@ -151,40 +159,74 @@ class _InterestViewNewState extends State<InterestViewNew> {
               suggestionsBoxController: controller,
               suggestionsCallback: (pattern) async {
                 List<SuggestedItem> dataCopy = [];
-                interests.forEach((k, v) => dataCopy.add(SuggestedItem()
-                  ..isLocal = true
-                  ..suggesttionTitle = v));
+                interests.forEach(
+                  (k, v) => dataCopy.add(SuggestedItem()
+                    ..suggestionMode = SuggestionMode.FROM_DB
+                    ..suggesttionTitle = v),
+                );
                 dataCopy.retainWhere((s) => s.suggesttionTitle
                     .toLowerCase()
                     .contains(pattern.toLowerCase()));
-                if (pattern.length > 2) {
+
+                if (pattern.length > 2 &&
+                    !dataCopy.contains(
+                        SuggestedItem()..suggesttionTitle = pattern)) {
                   var spellCheckResult =
                       await SpellCheckManager.evaluateSpellingFor(pattern,
                           language: 'en');
-                  dataCopy.add(SuggestedItem()
-                    ..isLocal = false
-                    ..suggesttionTitle = spellCheckResult.hasErros
-                        ? pattern
-                        : spellCheckResult.correctSpelling);
+                  if (spellCheckResult.hasErros) {
+                    dataCopy.add(SuggestedItem()
+                      ..suggestionMode = SuggestionMode.USER_DEFINED
+                      ..suggesttionTitle = pattern);
+                  } else if (spellCheckResult.correctSpelling != pattern) {
+                    dataCopy.add(SuggestedItem()
+                      ..suggestionMode = SuggestionMode.SUGGESTED
+                      ..suggesttionTitle = spellCheckResult.correctSpelling);
+
+                    dataCopy.add(SuggestedItem()
+                      ..suggestionMode = SuggestionMode.USER_DEFINED
+                      ..suggesttionTitle = pattern);
+                  } else {
+                    dataCopy.add(SuggestedItem()
+                      ..suggestionMode = SuggestionMode.USER_DEFINED
+                      ..suggesttionTitle = pattern);
+                  }
                 }
 
                 return await Future.value(dataCopy);
               },
               itemBuilder: (context, suggestedItem) {
-                if (suggestedItem.isLocal)
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      suggestedItem.suggesttionTitle,
-                      style: TextStyle(
-                        fontSize: 16,
+                if (ProfanityDetector()
+                    .isProfaneString(suggestedItem.suggesttionTitle)) {
+                  return Text("we dont entertain these words!");
+                }
+
+                switch (suggestedItem.suggestionMode) {
+                  case SuggestionMode.FROM_DB:
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        suggestedItem.suggesttionTitle,
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                  );
-                else
-                  return getSuggestionLayout(
-                    suggestion: suggestedItem.suggesttionTitle,
-                  );
+                    );
+
+                  case SuggestionMode.SUGGESTED:
+                    return searchUserDefinedEntity(
+                      keyword: suggestedItem.suggesttionTitle,
+                      language: 'en',
+                      suggestionMode: suggestedItem.suggestionMode,
+                    );
+
+                  case SuggestionMode.USER_DEFINED:
+                    return searchUserDefinedEntity(
+                      keyword: suggestedItem.suggesttionTitle,
+                      language: 'en',
+                      suggestionMode: suggestedItem.suggestionMode,
+                    );
+                }
               },
               noItemsFoundBuilder: (context) {
                 return searchUserDefinedEntity(
@@ -194,6 +236,35 @@ class _InterestViewNewState extends State<InterestViewNew> {
               },
               onSuggestionSelected: (SuggestedItem suggestion) {
                 _textEditingController.clear();
+                controller.close();
+
+                if (ProfanityDetector()
+                    .isProfaneString(suggestion.suggesttionTitle)) {
+                  return;
+                }
+
+                switch (suggestion.suggestionMode) {
+                  case SuggestionMode.SUGGESTED:
+                    var interestId = Uuid().generateV4();
+                    SkillsAndInterestBloc.addInterestToDb(
+                        interestId: interestId,
+                        interestLanguage: 'en',
+                        interestTitle: suggestion.suggesttionTitle);
+                    interests[interestId] = suggestion.suggesttionTitle;
+                    break;
+
+                  case SuggestionMode.USER_DEFINED:
+                    var interestId = Uuid().generateV4();
+                    SkillsAndInterestBloc.addInterestToDb(
+                        interestId: interestId,
+                        interestLanguage: 'en',
+                        interestTitle: suggestion.suggesttionTitle);
+                    interests[interestId] = suggestion.suggesttionTitle;
+                    break;
+
+                  case SuggestionMode.FROM_DB:
+                    break;
+                }
                 if (!_selectedInterests
                     .containsValue(suggestion.suggesttionTitle)) {
                   controller.close();
@@ -294,6 +365,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
   FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
     String keyword,
     String language,
+    SuggestionMode suggestionMode,
   }) {
     return FutureBuilder<SpellCheckResult>(
       future: SpellCheckManager.evaluateSpellingFor(
@@ -305,26 +377,9 @@ class _InterestViewNewState extends State<InterestViewNew> {
           return getLinearLoading;
         }
 
-        // var beforeStage = hasPellError;
-
-        // print(
-        //     "${snapshot.data.hasErros}  ${snapshot.data.errorType} || ${snapshot.data.correctSpelling == null}");
-        // if (snapshot.data.hasErros || snapshot.data.correctSpelling == null) {
-        //   hasPellError = true;
-        //   print("Setting error line");
-        // } else {
-        //   hasPellError = false;
-        //   print("Removing error line");
-        // }
-        // var afterStage = hasPellError;
-
-        // if (beforeStage != afterStage) {
-        //   setState(() {});
-        // }
-        // print("____________________" + hasPellError.toString());
         return getSuggestionLayout(
-          suggestion:
-              !snapshot.data.hasErros ? snapshot.data.correctSpelling : keyword,
+          suggestion: keyword,
+          suggestionMode: suggestionMode,
         );
       },
     );
@@ -332,67 +387,72 @@ class _InterestViewNewState extends State<InterestViewNew> {
 
   Widget get getLinearLoading {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: LinearProgressIndicator(
-        backgroundColor: Colors.grey,
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Theme.of(context).primaryColor,
-        ),
-      ),
-    );
+        padding: const EdgeInsets.all(8.0), child: CircularProgressIndicator());
   }
 
   Padding getSuggestionLayout({
     String suggestion,
+    SuggestionMode suggestionMode,
   }) {
     return Padding(
-      padding: const EdgeInsets.all(18.0),
-      child: GestureDetector(
-        onTap: () {
-          _textEditingController.clear();
-          controller.close();
-          var interestId = Uuid().generateV4();
-          SkillsAndInterestBloc.addInterestToDb(
-              interestId: interestId,
-              interestLanguage: 'en',
-              interestTitle: suggestion);
-          interests[interestId] = suggestion;
-
-          if (!_selectedInterests.containsValue(suggestion)) {
-            controller.close();
-            String id =
-                interests.keys.firstWhere((k) => interests[k] == suggestion);
-            _selectedInterests[id] = suggestion;
-            setState(() {});
-          }
-        },
-        child: Container(
-            height: 40,
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text("Add \"${suggestion}\"",
-                          style: TextStyle(fontSize: 16, color: Colors.blue)),
-                      Text(
-                        'No data found',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+          height: 37,
+          alignment: Alignment.centerLeft,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: "Add ",
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "\"${suggestion}\"",
+                            style: suggestionMode == SuggestionMode.SUGGESTED
+                                ? TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.blue,
+                                  )
+                                : TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: Colors.red,
+                                    decorationStyle: TextDecorationStyle.wavy,
+                                    decorationThickness: 1.5,
+                                  ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    Text(
+                      suggestionMode == SuggestionMode.SUGGESTED
+                          ? 'Suggested'
+                          : 'You entered',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
-                Icon(
-                  Icons.add,
-                  color: Colors.grey,
-                ),
-              ],
-            )),
-      ),
+              ),
+              Icon(
+                Icons.add,
+                color: Colors.grey,
+              ),
+            ],
+          )),
     );
   }
 }
@@ -424,5 +484,15 @@ class SkillsAndInterestBloc {
 
 class SuggestedItem {
   String suggesttionTitle;
-  bool isLocal;
+  SuggestionMode suggestionMode;
+
+  @override
+  bool operator ==(Object other) =>
+      other is SuggestedItem && other.suggesttionTitle == this.suggesttionTitle;
+}
+
+enum SuggestionMode {
+  FROM_DB,
+  USER_DEFINED,
+  SUGGESTED,
 }
