@@ -673,10 +673,10 @@ class _EditProfilePageState extends State<EditProfilePage>
       });
     } else {
       setState(() {
-        SevaCore.of(context).loggedInUser.photoURL = imageUrl;
-        widget.userModel.photoURL = imageUrl;
+        SevaCore.of(context).loggedInUser.photoURL = imageURL;
+        widget.userModel.photoURL = imageURL;
       });
-
+      print("image url ${imageURL}");
       await FirestoreManager.updateUser(
           user: SevaCore.of(context).loggedInUser);
       setState(() {

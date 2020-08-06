@@ -40,7 +40,10 @@ class NewsImage extends StatefulWidget {
 
 @override
 class NewsImageState extends State<NewsImage>
-    with TickerProviderStateMixin, NewsImagePickerListener {
+    with
+        TickerProviderStateMixin,
+        NewsImagePickerListener,
+        WidgetsBindingObserver {
   bool _isImageBeingUploaded = false;
   Function(LocationDataModel) onLocationDataModelUpdate;
   NewsImageState(this.onLocationDataModelUpdate);
@@ -208,6 +211,7 @@ class NewsImageState extends State<NewsImage>
     if (widget.geoFirePointLocation == null) _fetchCurrentlocation;
 
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     selectedAddress = widget.selectedAddress;
     _controller = AnimationController(
       vsync: this,
@@ -220,8 +224,20 @@ class NewsImageState extends State<NewsImage>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
+        globals.newsImageURL = globals.webImageUrl;
+        print('${globals.newsImageURL}');
+        setState(() {});
+      }
+    }
   }
 
   @override
@@ -401,6 +417,18 @@ class NewsImageState extends State<NewsImage>
         //error = e.message;
       }
     }
+  }
+
+  @override
+  addWebImageUrl() {
+    // TODO: implement addWebImageUrl
+    setState(() {
+      if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
+        globals.newsImageURL = globals.webImageUrl;
+        print('${globals.newsImageURL}');
+        setState(() {});
+      }
+    });
   }
 }
 

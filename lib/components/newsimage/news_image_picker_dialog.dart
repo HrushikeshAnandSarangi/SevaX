@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/views/image_url_view.dart';
 
 import 'news_image_picker_handler.dart';
 
@@ -15,15 +16,19 @@ class NewsImagePickerDialog extends StatelessWidget {
   Animation<double> _drawerContentsOpacity;
   Animation<Offset> _drawerDetailsPosition;
 
+  void refresh() {
+    _listener.addImageUrl();
+  }
+
   void initState() {
-    _drawerContentsOpacity = new CurvedAnimation(
-      parent: new ReverseAnimation(_controller),
+    _drawerContentsOpacity = CurvedAnimation(
+      parent: ReverseAnimation(_controller),
       curve: Curves.fastOutSlowIn,
     );
-    _drawerDetailsPosition = new Tween<Offset>(
+    _drawerDetailsPosition = Tween<Offset>(
       begin: const Offset(0.0, 1.0),
       end: Offset.zero,
-    ).animate(new CurvedAnimation(
+    ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.fastOutSlowIn,
     ));
@@ -39,10 +44,10 @@ class NewsImagePickerDialog extends StatelessWidget {
     _controller.forward();
     showDialog(
       context: context,
-      builder: (BuildContext context) => new SlideTransition(
+      builder: (BuildContext context) => SlideTransition(
         position: _drawerDetailsPosition,
-        child: new FadeTransition(
-          opacity: new ReverseAnimation(_drawerContentsOpacity),
+        child: FadeTransition(
+          opacity: ReverseAnimation(_drawerContentsOpacity),
           child: this,
         ),
       ),
@@ -54,8 +59,8 @@ class NewsImagePickerDialog extends StatelessWidget {
   }
 
   startTime() async {
-    var _duration = new Duration(milliseconds: 200);
-    return new Timer(_duration, navigationPage);
+    var _duration = Duration(milliseconds: 200);
+    return Timer(_duration, navigationPage);
   }
 
   void navigationPage() {
@@ -72,17 +77,17 @@ class NewsImagePickerDialog extends StatelessWidget {
   @override
   Widget build(BuildContext _context) {
     dialogContext = _context;
-    return new Material(
+    return Material(
         type: MaterialType.transparency,
-        child: new Opacity(
+        child: Opacity(
           opacity: 1.0,
-          child: new Container(
+          child: Container(
             padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 20.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                new GestureDetector(
+                GestureDetector(
                   onTap: () => _listener.openCamera(),
                   child: roundedButton(
                       AppLocalizations.of(context)
@@ -95,7 +100,7 @@ class NewsImagePickerDialog extends StatelessWidget {
                         color: Colors.white,
                       )),
                 ),
-                new GestureDetector(
+                GestureDetector(
                   onTap: () => _listener.openGallery(),
                   child: roundedButton(
                       AppLocalizations.of(context)
@@ -108,7 +113,30 @@ class NewsImagePickerDialog extends StatelessWidget {
                         color: Colors.white,
                       )),
                 ),
-                new GestureDetector(
+                GestureDetector(
+                  onTap: () {
+                    dismissDialog();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return ImageUrlView();
+                        },
+                      ),
+                    ).then((value) {
+                      refresh();
+                    });
+                  },
+                  child: roundedButton(
+                      'Image Url',
+                      EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                      const Color(0x0FF766FE0),
+                      const Color(0xFFFFFFFF),
+                      Icon(
+                        Icons.language,
+                        color: Colors.white,
+                      )),
+                ),
+                GestureDetector(
                   onTap: () => _listener.openDocument(),
                   child: roundedButton(
                       AppLocalizations.of(context)
@@ -122,9 +150,9 @@ class NewsImagePickerDialog extends StatelessWidget {
                       )),
                 ),
                 const SizedBox(height: 15.0),
-                new GestureDetector(
+                GestureDetector(
                   onTap: () => dismissDialog(),
-                  child: new Padding(
+                  child: Padding(
                     padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
                     child: roundedButton(
                         AppLocalizations.of(context)
@@ -143,13 +171,13 @@ class NewsImagePickerDialog extends StatelessWidget {
 
   Widget roundedButton(String buttonLabel, EdgeInsets margin, Color bgColor,
       Color textColor, Widget widget) {
-    var loginBtn = new Container(
+    var loginBtn = Container(
       margin: margin,
       padding: EdgeInsets.all(15.0),
       alignment: FractionalOffset.center,
-      decoration: new BoxDecoration(
+      decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: new BorderRadius.all(const Radius.circular(10.0)),
+        borderRadius: BorderRadius.all(const Radius.circular(10.0)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -160,7 +188,7 @@ class NewsImagePickerDialog extends StatelessWidget {
           ),
           Text(
             buttonLabel,
-            style: new TextStyle(
+            style: TextStyle(
                 color: textColor, fontSize: 15.0, fontWeight: FontWeight.w500),
           ),
         ],
