@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
@@ -78,8 +78,10 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
 
           userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
           if (userList.length == 0) {
-            return getEmptyWidget('Users',
-                AppLocalizations.of(context).translate('requests', 'no_users'));
+            return getEmptyWidget(
+              'Users',
+              S.of(context).no_user_found,
+            );
           }
           return ListView.builder(
             itemCount: userList.length,

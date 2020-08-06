@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
@@ -116,8 +116,7 @@ class _NewChatPageState extends State<NewChatPage> {
                                   ),
                                   SizedBox(width: 12),
                                   Text(
-                                    AppLocalizations.of(context)
-                                        .translate('messages', 'multi_user'),
+                                    S.of(context).messaging_room,
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
                                       fontSize: 16,
@@ -136,10 +135,7 @@ class _NewChatPageState extends State<NewChatPage> {
                   padding: EdgeInsets.only(left: 12),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    AppLocalizations.of(context).translate(
-                      'messages',
-                      'frequently_contacted',
-                    ),
+                    S.of(context).frequently_contacted.toUpperCase(),
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
@@ -158,8 +154,7 @@ class _NewChatPageState extends State<NewChatPage> {
                     : Center(
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
-                          child: Text(AppLocalizations.of(context)
-                              .translate('messages', 'nofrequent')),
+                          child: Text(S.of(context).no_frequent_contacts),
                         ),
                       ),
                 StreamBuilder<List<TimebankModel>>(
@@ -182,8 +177,7 @@ class _NewChatPageState extends State<NewChatPage> {
                             padding: EdgeInsets.only(left: 12),
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              AppLocalizations.of(context)
-                                  .translate('messages', 'timebank_members'),
+                              S.of(context).timebank_members,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
@@ -199,15 +193,11 @@ class _NewChatPageState extends State<NewChatPage> {
                         Row(
                           children: <Widget>[
                             tabBuilder(
-                              AppLocalizations.of(context).translate(
-                                'messages',
-                                'groups',
-                              ),
+                              S.of(context).groups,
                               0,
                             ),
                             tabBuilder(
-                              AppLocalizations.of(context)
-                                  .translate('messages', 'timebank_members'),
+                              S.of(context).timebank_members,
                               1,
                             ),
                           ],

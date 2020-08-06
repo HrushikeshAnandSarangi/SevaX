@@ -119,7 +119,7 @@ class CreateChatBloc extends BlocBase {
       String chatId = await ChatsApi.createNewChat(model);
       return model..id = chatId;
     } else {
-      _groupName.addError("name_error");
+      _groupName.addError("validation_error_room_name");
       return null;
     }
   }

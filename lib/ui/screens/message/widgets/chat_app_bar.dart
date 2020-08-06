@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
@@ -86,11 +86,10 @@ class ChatAppBar extends PreferredSize {
           case MessageMenu.BLOCK:
             showCustomDialog(
               context,
-              AppLocalizations.of(context).translate('chat', 'block') +
-                  " ${recieverInfo.name.split(' ')[0]}.",
-              "${recieverInfo.name.split(' ')[0]} ${AppLocalizations.of(context).translate('chat', 'block_warn')}",
-              AppLocalizations.of(context).translate('chat', 'block'),
-              AppLocalizations.of(context).translate('shared', 'cancel'),
+              S.of(context).block + " ${recieverInfo.name.split(' ')[0]}.",
+              "${recieverInfo.name.split(' ')[0]} ${S.of(context).chat_block_warning}",
+              S.of(context).block,
+              S.of(context).cancel,
             ).then((value) {
               if (value != "CANCEL") {
                 blockUser();
@@ -103,16 +102,16 @@ class ChatAppBar extends PreferredSize {
             );
             showCustomDialog(
               context,
-              AppLocalizations.of(context).translate('messages', 'exitroom'),
+              S.of(context).exit_messaging_room,
               isCreator
-                  ? AppLocalizations.of(context)
-                          .translate('messages', 'admin_confirm') +
+                  ? S.of(context).exit_messaging_room_admin_confirmation +
+                      ' ' +
                       groupDetails.name
-                  : AppLocalizations.of(context)
-                          .translate('profile', 'user_confirm') +
+                  : S.of(context).exit_messaging_room_user_confirmation +
+                      ' ' +
                       groupDetails.name,
-              AppLocalizations.of(context).translate('members', 'exit'),
-              AppLocalizations.of(context).translate('shared', 'cancel'),
+              S.of(context).exit,
+              S.of(context).cancel,
             ).then((value) {
               if (value != "CANCEL") {
                 if (exitGroup != null) exitGroup();
@@ -125,10 +124,10 @@ class ChatAppBar extends PreferredSize {
           case MessageMenu.CLEAR_CHAT:
             showCustomDialog(
               context,
-              AppLocalizations.of(context).translate('chat', 'delete_title'),
-              AppLocalizations.of(context).translate('chat', 'delete_desc'),
-              AppLocalizations.of(context).translate('chat', 'delete_title'),
-              AppLocalizations.of(context).translate('shared', 'cancel'),
+              S.of(context).delete_chat,
+              S.of(context).delete_chat_confirmation,
+              S.of(context).delete_chat,
+              S.of(context).cancel,
             ).then((value) {
               if (value != "CANCEL") {
                 clearChat();
@@ -141,7 +140,7 @@ class ChatAppBar extends PreferredSize {
         return [
           PopupMenuItem(
             child: Text(
-              AppLocalizations.of(context).translate('chat', 'delete_title'),
+              S.of(context).delete_chat,
             ),
             value: MessageMenu.CLEAR_CHAT,
           ),
@@ -149,7 +148,7 @@ class ChatAppBar extends PreferredSize {
               ? [
                   PopupMenuItem(
                     child: Text(
-                      AppLocalizations.of(context).translate('chat', 'block'),
+                      S.of(context).block,
                     ),
                     value: MessageMenu.BLOCK,
                   )
@@ -171,8 +170,7 @@ class ChatAppBar extends PreferredSize {
               ? [
                   PopupMenuItem(
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('messages', 'edit'),
+                      S.of(context).edit,
                     ),
                     value: MessageMenu.EDIT_GROUP,
                   )

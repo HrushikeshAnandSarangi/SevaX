@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/create_group.dart';
@@ -39,26 +39,15 @@ class CreateNewChatAppBar extends PreferredSize {
             padding: const EdgeInsets.all(10),
             child: Row(
               children: <Widget>[
-                customButton(
-                    AppLocalizations.of(context).translate(
-                      'messages',
-                      'cancel',
-                    ),
-                    Navigator.of(context).pop),
+                customButton(S.of(context).cancel, Navigator.of(context).pop),
                 Spacer(),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       isSelectionEnabled
-                          ? AppLocalizations.of(context).translate(
-                              'messages',
-                              'add_participants',
-                            )
-                          : AppLocalizations.of(context).translate(
-                              'messages',
-                              'new_chat',
-                            ),
+                          ? S.of(context).add_participants
+                          : S.of(context).new_chat,
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                     isSelectionEnabled
@@ -83,11 +72,7 @@ class CreateNewChatAppBar extends PreferredSize {
                         stream: _bloc.selectedMembers,
                         builder: (context, snapshot) {
                           return (snapshot.data?.length ?? 0) > 0
-                              ? customButton(
-                                  AppLocalizations.of(context).translate(
-                                    'messages',
-                                    'next',
-                                  ), () {
+                              ? customButton(S.of(context).next, () {
                                   if (isFromEditGroup) {
                                     _bloc.selectedMembers.first
                                         .then((List<String> members) {
@@ -131,8 +116,7 @@ class CreateNewChatAppBar extends PreferredSize {
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.only(bottom: 15, top: 10),
                     errorText: snapshot.error,
-                    hintText: AppLocalizations.of(context)
-                        .translate("search_page", "search"),
+                    hintText: S.of(context).search,
                     prefixIcon: Icon(Icons.search),
                     suffixIcon: Offstage(
                       offstage: !(snapshot.hasData ?? false),

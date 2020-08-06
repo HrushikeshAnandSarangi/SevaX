@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
@@ -61,7 +62,7 @@ class RequestCardWidget extends StatelessWidget {
         image: DecorationImage(
           fit: BoxFit.fill,
           image: CachedNetworkImageProvider(
-            userModel.photoURL,
+            userModel.photoURL ?? defaultUserImageURL,
           ),
         ),
       ),
@@ -100,9 +101,7 @@ class RequestCardWidget extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      userModel.fullname ??
-                          AppLocalizations.of(context)
-                              .translate('requests', 'no_name'),
+                      userModel.fullname ?? S.of(context).name_not_available,
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 18,
@@ -154,9 +153,7 @@ class RequestCardWidget extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  userModel.bio ??
-                      AppLocalizations.of(context)
-                          .translate('requests', 'updated_bio'),
+                  userModel.bio ?? S.of(context).bio_not_updated,
                   maxLines: 3,
                   style: TextStyle(
                     color: Colors.black,
@@ -183,9 +180,7 @@ class RequestCardWidget extends StatelessWidget {
                       color: Colors.indigo,
                       textColor: Colors.white,
                       elevation: 5,
-                      onPressed: reqStatus !=
-                              AppLocalizations.of(context)
-                                  .translate('members', 'invite')
+                      onPressed: reqStatus != S.of(context).invite
                           ? null
                           : () async {
                               await timeBankBloc.updateInvitedUsersForRequest(

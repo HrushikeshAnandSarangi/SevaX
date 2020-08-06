@@ -1146,11 +1146,6 @@ class S {
         name: 'accept',
       );
 
-  String get no_approved_members => Intl.message(
-        'No Approved members yet',
-        name: 'no_approved_members',
-      );
-
   String get view_approved_members => Intl.message(
         'View Approved Members',
         name: 'view_approved_members',
@@ -1199,6 +1194,737 @@ class S {
   String get fetching_location => Intl.message(
         'Fetching location',
         name: 'fetching_location',
+      );
+
+  String get edit => Intl.message(
+        'Edit',
+        name: 'edit',
+      );
+
+  String get title => Intl.message(
+        'Title',
+        name: 'title',
+      );
+
+  String get mission_statement => Intl.message(
+        'Mission Statement',
+        name: 'mission_statement',
+      );
+
+  String get organizer => Intl.message(
+        'Organiser',
+        name: 'organizer',
+      );
+
+  String get delete_project => Intl.message(
+        'Delete Project',
+        name: 'delete_project',
+      );
+
+  String get create_project => Intl.message(
+        'Create a Project',
+        name: 'create_project',
+      );
+
+  String get edit_project => Intl.message(
+        'Edit Project',
+        name: 'edit_project',
+      );
+
+  String timebank_project(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Timebank Project', other: 'Timebank Projects', args: [count])}',
+        name: 'timebank_project',        
+        args: [count],
+      );
+
+  String personal_project(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [count])}',
+        name: 'personal_project',        
+        args: [count],
+      );
+
+  String get project_logo => Intl.message(
+        'Project Logo',
+        name: 'project_logo',
+      );
+
+  String get project_name => Intl.message(
+        'Project Name',
+        name: 'project_name',
+      );
+
+  String get name_hint => Intl.message(
+        'Ex: Pets-in-town, Citizen collab',
+        name: 'name_hint',
+      );
+
+  String get validation_error_project_name_empty => Intl.message(
+        'Project name cannot be empty',
+        name: 'validation_error_project_name_empty',
+      );
+
+  String get project_duration => Intl.message(
+        'Project Duration',
+        name: 'project_duration',
+      );
+
+  String get project_mission_statement_hint => Intl.message(
+        'Ex: A bit more about your project which will help to associate with',
+        name: 'project_mission_statement_hint',
+      );
+
+  String get validation_error_mission_empty => Intl.message(
+        'Mission statement cannot be empty.',
+        name: 'validation_error_mission_empty',
+      );
+
+  String get email_hint => Intl.message(
+        'example@example.com',
+        name: 'email_hint',
+      );
+
+  String get phone_number => Intl.message(
+        'Phone Number',
+        name: 'phone_number',
+      );
+
+  String get project_location => Intl.message(
+        'Your project location.',
+        name: 'project_location',
+      );
+
+  String get project_location_hint => Intl.message(
+        'Project location will help your members to locate',
+        name: 'project_location_hint',
+      );
+
+  String get save_as_template => Intl.message(
+        'Save as Template',
+        name: 'save_as_template',
+      );
+
+  String get validation_error_no_date => Intl.message(
+        'Please mention the start and end date of the project',
+        name: 'validation_error_no_date',
+      );
+
+  String get creating_project => Intl.message(
+        'Creating project',
+        name: 'creating_project',
+      );
+
+  String get validation_error_location_mandatory => Intl.message(
+        'Location is Mandatory',
+        name: 'validation_error_location_mandatory',
+      );
+
+  String get validation_error_add_project_location => Intl.message(
+        'Please add location to your project',
+        name: 'validation_error_add_project_location',
+      );
+
+  String get updating_project => Intl.message(
+        'Updating Project',
+        name: 'updating_project',
+      );
+
+  String get save => Intl.message(
+        'Save',
+        name: 'save',
+      );
+
+  String get template_title => Intl.message(
+        'Provide a unique name for the template',
+        name: 'template_title',
+      );
+
+  String get template_hint => Intl.message(
+        'Template Name',
+        name: 'template_hint',
+      );
+
+  String get validation_error_template_name => Intl.message(
+        'Template name cannot be empty',
+        name: 'validation_error_template_name',
+      );
+
+  String get validation_error_template_name_exists => Intl.message(
+        'Template name is already in use.Please provide another name',
+        name: 'validation_error_template_name_exists',
+      );
+
+  String get add_location => Intl.message(
+        'Add Location',
+        name: 'add_location',
+      );
+
+  String get delete_confirmation => Intl.message(
+        'Are your sure you want to delete',
+        name: 'delete_confirmation',
+      );
+
+  String get accidental_delete_enabled => Intl.message(
+        'Accidental Deletion enabled',
+        name: 'accidental_delete_enabled',
+      );
+
+  String get accidental_delete_enabled_description => Intl.message(
+        'This ** has \"Prevent Accidental Delete\" enabled. Please uncheck that box (in the \"Manage\" tab) before attempting to delete the **.',
+        name: 'accidental_delete_enabled_description',
+      );
+
+  String get deletion_request_being_processed => Intl.message(
+        'Your request for deletion is being processed.',
+        name: 'deletion_request_being_processed',
+      );
+
+  String get deletion_request_progress_description => Intl.message(
+        'Your request to delete has been received by us. We are processing the request. You will be notified once it is completed.',
+        name: 'deletion_request_progress_description',
+      );
+
+  String get submitting_request => Intl.message(
+        'Submitting request...',
+        name: 'submitting_request',
+      );
+
+  String get advisory_for_timebank => Intl.message(
+        'All relevant information including projects, requests and offers under the group will be deleted!',
+        name: 'advisory_for_timebank',
+      );
+
+  String get advisory_for_projects => Intl.message(
+        'All requests associated to this request would be removed',
+        name: 'advisory_for_projects',
+      );
+
+  String get deletion_request_recieved => Intl.message(
+        'We have received your request to delete this ***. We are sorry to see you go. We will examine your request and (in some cases) get in touch with you offline before we process the deletion of the ***',
+        name: 'deletion_request_recieved',
+      );
+
+  String get request_failure_message => Intl.message(
+        'Sending request failed somehow, please try again later!',
+        name: 'request_failure_message',
+      );
+
+  String get request_submitted => Intl.message(
+        'Request submitted',
+        name: 'request_submitted',
+      );
+
+  String get request_failed => Intl.message(
+        'Request failed!',
+        name: 'request_failed',
+      );
+
+  String get hosted_by => Intl.message(
+        'Hosted by',
+        name: 'hosted_by',
+      );
+
+  String get no_approved_members => Intl.message(
+        'No Approved members yet.',
+        name: 'no_approved_members',
+      );
+
+  String get creator_of_request_message => Intl.message(
+        'You are the creator of this request.',
+        name: 'creator_of_request_message',
+      );
+
+  String get applied_for_request => Intl.message(
+        'You have applied for the request.',
+        name: 'applied_for_request',
+      );
+
+  String get particpate_in_request_question => Intl.message(
+        'Do you want to participate in this request?',
+        name: 'particpate_in_request_question',
+      );
+
+  String get apply => Intl.message(
+        'Apply',
+        name: 'apply',
+      );
+
+  String get protected_timebank_alert_dialog => Intl.message(
+        'You cannot accept requests in a protected Timebank',
+        name: 'protected_timebank_alert_dialog',
+      );
+
+  String get withdraw_request_failure => Intl.message(
+        'You cannot withdraw request since already approved',
+        name: 'withdraw_request_failure',
+      );
+
+  String get already_approved => Intl.message(
+        'Already Approved',
+        name: 'already_approved',
+      );
+
+  String get find_volunteers => Intl.message(
+        'Find Volunteers',
+        name: 'find_volunteers',
+      );
+
+  String get invited => Intl.message(
+        'Invited',
+        name: 'invited',
+      );
+
+  String get favourites => Intl.message(
+        'Favourites',
+        name: 'favourites',
+      );
+
+  String get past_hired => Intl.message(
+        'Past Hired',
+        name: 'past_hired',
+      );
+
+  String get type_team_member_name => Intl.message(
+        'Type your team members name',
+        name: 'type_team_member_name',
+      );
+
+  String get validation_error_search_min_characters => Intl.message(
+        'Search requires minimum 3 characters',
+        name: 'validation_error_search_min_characters',
+      );
+
+  String get no_user_found => Intl.message(
+        'No user found',
+        name: 'no_user_found',
+      );
+
+  String get approved => Intl.message(
+        'Approved',
+        name: 'approved',
+      );
+
+  String get invite => Intl.message(
+        'Invite',
+        name: 'invite',
+      );
+
+  String get name_not_available => Intl.message(
+        'Name is not available',
+        name: 'name_not_available',
+      );
+
+  String get create_request => Intl.message(
+        'Create Request',
+        name: 'create_request',
+      );
+
+  String get create_project_request => Intl.message(
+        'Create Project Request',
+        name: 'create_project_request',
+      );
+
+  String get set_duration => Intl.message(
+        'Click to Set Duration',
+        name: 'set_duration',
+      );
+
+  String get request_title => Intl.message(
+        'Request title*',
+        name: 'request_title',
+      );
+
+  String get request_title_hint => Intl.message(
+        'Ex: Small carpentry work...',
+        name: 'request_title_hint',
+      );
+
+  String get request_subject => Intl.message(
+        'Please enter the subject of your request',
+        name: 'request_subject',
+      );
+
+  String get request_duration => Intl.message(
+        'Request duration',
+        name: 'request_duration',
+      );
+
+  String get request_description => Intl.message(
+        'Request description*',
+        name: 'request_description',
+      );
+
+  String get request_description_hint => Intl.message(
+        'Your Request and any #hashtags',
+        name: 'request_description_hint',
+      );
+
+  String get number_of_volunteers => Intl.message(
+        'No. of volunteers*',
+        name: 'number_of_volunteers',
+      );
+
+  String get validation_error_volunteer_count => Intl.message(
+        'Please enter the number of volunteers needed',
+        name: 'validation_error_volunteer_count',
+      );
+
+  String get validation_error_volunteer_count_negative => Intl.message(
+        'No. of volunteers cannot be lesser than 0',
+        name: 'validation_error_volunteer_count_negative',
+      );
+
+  String get validation_error_volunteer_count_zero => Intl.message(
+        'No. of volunteers cannot be 0',
+        name: 'validation_error_volunteer_count_zero',
+      );
+
+  String timebank_request(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Timebank Request', other: 'Timebank Requests', args: [count])}',
+        name: 'timebank_request',        
+        args: [count],
+      );
+
+  String personal_request(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [count])}',
+        name: 'personal_request',        
+        args: [count],
+      );
+
+  String get validation_error_same_start_date_end_date => Intl.message(
+        'You have provided identical date and time for the Start and End. Please provide an End time that is after the Start time.',
+        name: 'validation_error_same_start_date_end_date',
+      );
+
+  String get validation_error_empty_recurring_days => Intl.message(
+        'Recurring days cannot be empty',
+        name: 'validation_error_empty_recurring_days',
+      );
+
+  String get creating_request => Intl.message(
+        'Creating Request',
+        name: 'creating_request',
+      );
+
+  String get updating_request => Intl.message(
+        'Updating Request',
+        name: 'updating_request',
+      );
+
+  String get insufficient_credits_for_request => Intl.message(
+        'Your seva credits are not sufficient to create the request.',
+        name: 'insufficient_credits_for_request',
+      );
+
+  String get assign_to_volunteers => Intl.message(
+        'Assign to volunteers',
+        name: 'assign_to_volunteers',
+      );
+
+  String members_selected(num count) => Intl.message(
+        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [count])}',
+        name: 'members_selected',        
+        args: [count],
+      );
+
+  String volunteers_selected(num count) => Intl.message(
+        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [count])}',
+        name: 'volunteers_selected',        
+        args: [count],
+      );
+
+  String get timebank_max_seva_credit_message1 => Intl.message(
+        'Seva Credits will be credited to the Timebank for this request. Note that each participant will receive a maximum of',
+        name: 'timebank_max_seva_credit_message1',
+      );
+
+  String get timebank_max_seva_credit_message2 => Intl.message(
+        'credits for completing this request.',
+        name: 'timebank_max_seva_credit_message2',
+      );
+
+  String get personal_max_seva_credit_message1 => Intl.message(
+        'Seva Credits are required for this request. It will be debited from your balance. Note that each participant will receive a maximum of',
+        name: 'personal_max_seva_credit_message1',
+      );
+
+  String get personal_max_seva_credit_message2 => Intl.message(
+        'credits for completing this request.',
+        name: 'personal_max_seva_credit_message2',
+      );
+
+  String get unassigned => Intl.message(
+        'Unassigned',
+        name: 'unassigned',
+      );
+
+  String get assign_to_project => Intl.message(
+        'Assign to project',
+        name: 'assign_to_project',
+      );
+
+  String get assign_to_one_project => Intl.message(
+        'Please assign to one project',
+        name: 'assign_to_one_project',
+      );
+
+  String get tap_to_select => Intl.message(
+        'Tap to select one or more...',
+        name: 'tap_to_select',
+      );
+
+  String get repeat => Intl.message(
+        'Repeat',
+        name: 'repeat',
+      );
+
+  String get repeat_on => Intl.message(
+        'Repeat on',
+        name: 'repeat_on',
+      );
+
+  String get ends => Intl.message(
+        'Ends',
+        name: 'ends',
+      );
+
+  String get after => Intl.message(
+        'After',
+        name: 'after',
+      );
+
+  String get occurences => Intl.message(
+        'Occurences',
+        name: 'occurences',
+      );
+
+  String get done => Intl.message(
+        'Done',
+        name: 'done',
+      );
+
+  String get date_time => Intl.message(
+        'date & time',
+        name: 'date_time',
+      );
+
+  String get start => Intl.message(
+        'Start',
+        name: 'start',
+      );
+
+  String get end => Intl.message(
+        'End',
+        name: 'end',
+      );
+
+  String get time => Intl.message(
+        'Time',
+        name: 'time',
+      );
+
+  String get date_selection_issue => Intl.message(
+        'Date Selection issue',
+        name: 'date_selection_issue',
+      );
+
+  String get validation_error_end_date_greater => Intl.message(
+        'End Date cannot be before Start Date',
+        name: 'validation_error_end_date_greater',
+      );
+
+  String get unblock => Intl.message(
+        'Unblock',
+        name: 'unblock',
+      );
+
+  String get blocked_members => Intl.message(
+        'Blocked Members',
+        name: 'blocked_members',
+      );
+
+  String get no_blocked_members => Intl.message(
+        'No blocked members',
+        name: 'no_blocked_members',
+      );
+
+  String get confirm_location => Intl.message(
+        'confirm location',
+        name: 'confirm_location',
+      );
+
+  String get reject_task_completion => Intl.message(
+        'I am rejecting your task completion request because',
+        name: 'reject_task_completion',
+      );
+
+  String get no_message => Intl.message(
+        'No Messages',
+        name: 'no_message',
+      );
+
+  String get type_message => Intl.message(
+        'Type a message',
+        name: 'type_message',
+      );
+
+  String get failed_to_load_post => Intl.message(
+        'Couldn\'t load the post!',
+        name: 'failed_to_load_post',
+      );
+
+  String get admin => Intl.message(
+        'Admin',
+        name: 'admin',
+      );
+
+  String get new_message_room => Intl.message(
+        'New Message Room',
+        name: 'new_message_room',
+      );
+
+  String get messaging_room_name => Intl.message(
+        'Messaging Room Name',
+        name: 'messaging_room_name',
+      );
+
+  String get new_chat => Intl.message(
+        'New Chat',
+        name: 'new_chat',
+      );
+
+  String get frequently_contacted => Intl.message(
+        'FREQUENTLY CONTACTED',
+        name: 'frequently_contacted',
+      );
+
+  String get groups => Intl.message(
+        'Groups',
+        name: 'groups',
+      );
+
+  String get timebank_members => Intl.message(
+        'Timebank Members',
+        name: 'timebank_members',
+      );
+
+  String get add_participants => Intl.message(
+        'Add Participants',
+        name: 'add_participants',
+      );
+
+  String get participants => Intl.message(
+        'Participants',
+        name: 'participants',
+      );
+
+  String get messaging_room => Intl.message(
+        'Messaging Room',
+        name: 'messaging_room',
+      );
+
+  String get creating_messaging_room => Intl.message(
+        'Creating Room...',
+        name: 'creating_messaging_room',
+      );
+
+  String get updating_messaging_room => Intl.message(
+        'Updating Room...',
+        name: 'updating_messaging_room',
+      );
+
+  String get messaging_room_note => Intl.message(
+        'Please provide a message room subject and optional group icon',
+        name: 'messaging_room_note',
+      );
+
+  String get exit_messaging_room => Intl.message(
+        'Exit Messaging Room',
+        name: 'exit_messaging_room',
+      );
+
+  String get exit_messaging_room_admin_confirmation => Intl.message(
+        'You are admin of this messaging room, are you sure you want to exit the Messaging room',
+        name: 'exit_messaging_room_admin_confirmation',
+      );
+
+  String get no_frequent_contacts => Intl.message(
+        'No Frequent Contacts',
+        name: 'no_frequent_contacts',
+      );
+
+  String get sending => Intl.message(
+        'Sending...',
+        name: 'sending',
+      );
+
+  String get create => Intl.message(
+        'Create',
+        name: 'create',
+      );
+
+  String get add_caption => Intl.message(
+        'Add a caption',
+        name: 'add_caption',
+      );
+
+  String get tap_for_photo => Intl.message(
+        'Tap for photo',
+        name: 'tap_for_photo',
+      );
+
+  String get validation_error_room_name => Intl.message(
+        'Name can\'t be empty',
+        name: 'validation_error_room_name',
+      );
+
+  String get chat_block_warning => Intl.message(
+        'will no longer be available to send you messages and engage with the content you create',
+        name: 'chat_block_warning',
+      );
+
+  String get delete_chat_confirmation => Intl.message(
+        'Are you sure you want to delete this chat',
+        name: 'delete_chat_confirmation',
+      );
+
+  String get block => Intl.message(
+        'Block',
+        name: 'block',
+      );
+
+  String get exit_messaging_room_user_confirmation => Intl.message(
+        'Are you sure you want to exit the Messaging room',
+        name: 'exit_messaging_room_user_confirmation',
+      );
+
+  String get exit => Intl.message(
+        'Exit',
+        name: 'exit',
+      );
+
+  String get delete_chat => Intl.message(
+        'Delete chat',
+        name: 'delete_chat',
+      );
+
+  String get group => Intl.message(
+        'Group',
+        name: 'group',
+      );
+
+  String get shared_post => Intl.message(
+        'Shared a post',
+        name: 'shared_post',
+      );
+
+  String get change_ownership => Intl.message(
+        'Change Ownership',
+        name: 'change_ownership',
+      );
+
+  String get change_ownership_invite => Intl.message(
+        'has invited you to be the new owner of the Timebank',
+        name: 'change_ownership_invite',
       );
 }
 

@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -86,10 +86,7 @@ Future<void> showAdvisoryBeforeDeletion({
     builder: (BuildContext contextDialog) {
       return AlertDialog(
         title: Text(
-          AppLocalizations.of(context)
-                  .translate("accidental_delete", "deletion_check") +
-              associatedContentTitle +
-              "?",
+          S.of(context).delete_confirmation + associatedContentTitle + "?",
         ),
         content: Text(_getContentFromType(softDeleteType, context)),
         actions: <Widget>[
@@ -98,8 +95,7 @@ Future<void> showAdvisoryBeforeDeletion({
               Navigator.pop(contextDialog);
             },
             child: Text(
-              AppLocalizations.of(context)
-                  .translate('accidental_delete', 'cancel'),
+              S.of(context).cancel,
             ),
           ),
           FlatButton(
@@ -147,10 +143,7 @@ Future<void> showAdvisoryBeforeDeletion({
               }
             },
             child: Text(
-              AppLocalizations.of(context)
-                      .translate('accidental_delete', 'delete') +
-                  " " +
-                  associatedContentTitle,
+              S.of(context).delete + " " + associatedContentTitle,
               style: TextStyle(
                 color: Colors.red,
               ),
@@ -245,23 +238,15 @@ void _showAccedentalDeleteConfirmation({
   BuildContext context,
   SoftDelete softDeleteType,
 }) {
-  print(
-    "<>>>>>>>>>>>>>>>>>>>>>>>>>" +
-        AppLocalizations.of(context)
-            .translate("accidental_delete", "accidental_delete_enabled_title"),
-  );
   showDialog(
     context: context,
     builder: (BuildContext accedentalDialogContext) {
       return AlertDialog(
         title: Text(
-          AppLocalizations.of(context).translate(
-              "accidental_delete", "accidental_delete_enabled_title"),
+          S.of(context).accidental_delete_enabled,
         ),
         content: Text(
-          AppLocalizations.of(context)
-              .translate("accidental_delete", "accidental_delete_enabled_body")
-              .replaceAll(
+          S.of(context).accidental_delete_enabled_description.replaceAll(
                 "**",
                 _getModelType(softDeleteType),
               ),
@@ -272,7 +257,7 @@ void _showAccedentalDeleteConfirmation({
               Navigator.pop(accedentalDialogContext);
             },
             child: Text(
-              AppLocalizations.of(context).translate("soft_delete", "dismiss"),
+              S.of(context).dismiss,
             ),
           ),
         ],
@@ -287,12 +272,10 @@ void _showRequestProcessingWithStatus({BuildContext context}) {
     builder: (BuildContext _showRequestProcessingWithStatusContext) {
       return AlertDialog(
         title: Text(
-          AppLocalizations.of(context)
-              .translate("soft_delete", "request_in_progress_tittle"),
+          S.of(context).deletion_request_being_processed,
         ),
         content: Text(
-          AppLocalizations.of(context)
-              .translate("soft_delete", "request_in_progress_body"),
+          S.of(context).deletion_request_progress_description,
         ),
         actions: <Widget>[
           RaisedButton(
@@ -300,7 +283,7 @@ void _showRequestProcessingWithStatus({BuildContext context}) {
               Navigator.pop(_showRequestProcessingWithStatusContext);
             },
             child: Text(
-              AppLocalizations.of(context).translate("soft_delete", "dismiss"),
+              S.of(context).dismiss,
             ),
           ),
         ],
@@ -318,8 +301,7 @@ void showLinearProgress({BuildContext context}) {
       buildContextForLinearProgress = context;
       return AlertDialog(
         title: Text(
-          AppLocalizations.of(context)
-              .translate('accidental_delete', 'submitting_request'),
+          S.of(context).submitting_request,
         ),
         content: LinearProgressIndicator(),
       );
@@ -333,14 +315,11 @@ String _getContentFromType(
 ) {
   switch (type) {
     case SoftDelete.REQUEST_DELETE_GROUP:
-      return AppLocalizations.of(context)
-          .translate("accidental_delete", "advisory_for_timebank");
+      return S.of(context).advisory_for_timebank;
     case SoftDelete.REQUEST_DELETE_PROJECT:
-      return AppLocalizations.of(context)
-          .translate("accidental_delete", "advisory_for_projects");
+      return S.of(context).advisory_for_projects;
     case SoftDelete.REQUEST_DELETE_TIMEBANK:
-      return AppLocalizations.of(context)
-          .translate("accidental_delete", "advisory_for_timebank");
+      return S.of(context).advisory_for_timebank;
   }
 }
 
@@ -367,16 +346,13 @@ void showFinalResultConfirmation(
       return AlertDialog(
         title: Text(
           didSuceed
-              ? AppLocalizations.of(context)
-                  .translate('accidental_delete', 'success_title')
-              : AppLocalizations.of(context)
-                  .translate('accidental_delete', 'failure_title'),
+              ? S.of(context).request_submitted
+              : S.of(context).request_failed,
         ),
         content: Text(
           didSuceed
               ? getSuccessMessage(softDeleteType, context)
-              : AppLocalizations.of(context)
-                  .translate('accidental_delete', 'failure_message'),
+              : S.of(context).request_failure_message,
         ),
         actions: <Widget>[
           RaisedButton(
@@ -386,8 +362,7 @@ void showFinalResultConfirmation(
             child: Container(
               margin: EdgeInsets.only(left: 10, right: 10),
               child: Text(
-                AppLocalizations.of(context)
-                    .translate('accidental_delete', 'dismiss'),
+                S.of(context).dismiss,
               ),
             ),
           ),
@@ -401,7 +376,8 @@ String getSuccessMessage(
   SoftDelete softDeleteType,
   BuildContext context,
 ) {
-  return AppLocalizations.of(context)
-      .translate("accidental_delete", "see_you_go")
+  return S
+      .of(context)
+      .deletion_request_recieved
       .replaceAll('***', _getModelType(softDeleteType));
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
@@ -51,10 +51,9 @@ class ChangeOwnershipWidget extends StatelessWidget {
         );
       },
       photoUrl: changeOwnershipModel.creatorPhotoUrl,
-      title: AppLocalizations.of(context)
-          .translate('change_ownership', 'change_ownership_title'),
+      title: S.of(context).change_ownership,
       subTitle:
-          '${changeOwnershipModel.creatorName.toLowerCase()} ${AppLocalizations.of(context).translate('change_ownership', 'notification_msg')} ${changeOwnershipModel.timebank.toLowerCase().replaceAll("timebank", "")} ${AppLocalizations.of(context).translate('members', 'timebank')}',
+          '${changeOwnershipModel.creatorName.toLowerCase()} ${S.of(context).change_ownership_invite} ${changeOwnershipModel.timebank.toLowerCase().replaceAll("timebank", "")} ${S.of(context).timebank}',
     );
   }
 }
