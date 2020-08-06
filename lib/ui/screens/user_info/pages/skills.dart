@@ -126,7 +126,6 @@ class _SkillViewNewState extends State<SkillsPage> {
                   skills.forEach((id, skill) => dataCopy.add(skill));
                   dataCopy.retainWhere(
                       (s) => s.toLowerCase().contains(pattern.toLowerCase()));
-
                   return await Future.value(dataCopy);
                 },
                 itemBuilder: (context, suggestion) {

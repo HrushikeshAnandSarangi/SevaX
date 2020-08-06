@@ -1175,6 +1175,31 @@ class S {
         'Default',
         name: 'default_text',
       );
+
+  String get access_denied => Intl.message(
+        'Access denied.',
+        name: 'access_denied',
+      );
+
+  String get not_authorized_create_request => Intl.message(
+        'You are not authorized to create a request.',
+        name: 'not_authorized_create_request',
+      );
+
+  String get add_requests => Intl.message(
+        'Add Requests',
+        name: 'add_requests',
+      );
+
+  String get no_requests_available => Intl.message(
+        'No requests available.Try',
+        name: 'no_requests_available',
+      );
+
+  String get fetching_location => Intl.message(
+        'Fetching location',
+        name: 'fetching_location',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

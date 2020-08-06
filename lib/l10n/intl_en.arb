@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-08-06T04:47:20+00:00",
+    "@@last_modified": "2020-08-06T06:53:12+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -230,5 +230,10 @@
     "request": "Request",
     "applied": "Applied",
     "accepted": "Accepted",
-    "default_text": "Default"
+    "default_text": "Default",
+    "access_denied": "Access denied.",
+    "not_authorized_create_request": "You are not authorized to create a request.",
+    "add_requests": "Add Requests",
+    "no_requests_available": "No requests available.Try",
+    "fetching_location": "Fetching location"
 }
