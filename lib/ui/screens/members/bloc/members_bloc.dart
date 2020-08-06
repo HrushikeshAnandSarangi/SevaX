@@ -9,7 +9,8 @@ class MembersBloc extends BlocBase {
   void fetchMembers(String communityId) {
     UserApi.getMembersOfCommunity(communityId).listen((QuerySnapshot snapshot) {
       snapshot.documents.forEach((DocumentSnapshot document) {
-        _members[document.documentID] = UserModel.fromMap(document.data);
+        _members[document.documentID] =
+            UserModel.fromMap(document.data, 'members_bloc');
       });
     });
   }

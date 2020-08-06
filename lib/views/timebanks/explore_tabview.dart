@@ -6,6 +6,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
+import 'package:sevaexchange/views/profile/filters.dart';
 import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -50,61 +51,79 @@ class _ExploreTabViewState extends State<ExploreTabView> {
           elevation: 0.5,
           centerTitle: true,
           title: Text(
-            AppLocalizations.of(context).translate('explore','title'),
+            AppLocalizations.of(context).translate('explore', 'title'),
             style: TextStyle(fontSize: 18, fontFamily: 'Europa'),
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.filter_list),
+              onPressed: () async {
+                await Navigator.of(context)
+                    .push(
+                      MaterialPageRoute(
+                        builder: (context) => NearByFiltersView(),
+                      ),
+                    )
+                    .then((value) => setState(() {}));
+              },
+            )
+          ],
         ),
         body: FutureBuilder<CommunityModel>(
-          future: FirestoreManager.getCommunityDetailsByCommunityId(
-              communityId: SevaCore.of(context).loggedInUser.currentCommunity),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) return Text(snapshot.error.toString());
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return shimmerWidget;
-            }
-            CommunityModel communityModel = snapshot.data;
-            return Column(
-              children: <Widget>[
-                TabBar(
-                  labelColor: Theme.of(context).primaryColor,
-                  indicatorColor: Theme.of(context).primaryColor,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  unselectedLabelColor: Colors.black,
-                  isScrollable: true,
-                  tabs: [
-                    Tab(
-                      text: AppLocalizations.of(context).translate('explore','find_timebanks'),
-                    ),
-                    Tab(
-                      text: "${AppLocalizations.of(context).translate('explore','groups_within')} ${snapshot.data.name ?? "Timebank"}  ",
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: TabBarView(
-                    children: <Widget>[
-                      FindCommunitiesView(
-                        keepOnBackPress: true,
-                        loggedInUser: SevaCore.of(context).loggedInUser,
-                        showBackBtn: true,
-                        isFromHome: true,
+            future: FirestoreManager.getCommunityDetailsByCommunityId(
+                communityId:
+                    SevaCore.of(context).loggedInUser.currentCommunity),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) return Text(snapshot.error.toString());
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return shimmerWidget;
+              }
+              CommunityModel communityModel = snapshot.data;
+              return Column(
+                children: <Widget>[
+                  TabBar(
+                    labelColor: Theme.of(context).primaryColor,
+                    indicatorColor: Theme.of(context).primaryColor,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    unselectedLabelColor: Colors.black,
+                    isScrollable: true,
+                    tabs: [
+                      Tab(
+                        text: AppLocalizations.of(context)
+                            .translate('explore', 'find_timebanks'),
                       ),
-                      JoinSubTimeBankView(
-                        isFromDash: true,
-                        loggedInUserModel: SevaCore.of(context).loggedInUser,
-                        communityId: communityModel.id,
-                        communityPrimaryTimebankId: communityModel.primary_timebank,
+                      Tab(
+                        text:
+                            "${AppLocalizations.of(context).translate('explore', 'groups_within')} ${snapshot.data.name ?? "Timebank"}  ",
                       ),
                     ],
                   ),
-                )
-              ],
-            );
-          }
-        ),
+                  Expanded(
+                    child: TabBarView(
+                      children: <Widget>[
+                        FindCommunitiesView(
+                          keepOnBackPress: true,
+                          loggedInUser: SevaCore.of(context).loggedInUser,
+                          showBackBtn: true,
+                          isFromHome: true,
+                        ),
+                        JoinSubTimeBankView(
+                          isFromDash: true,
+                          loggedInUserModel: SevaCore.of(context).loggedInUser,
+                          communityId: communityModel.id,
+                          communityPrimaryTimebankId:
+                              communityModel.primary_timebank,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              );
+            }),
       ),
     );
   }
+
   Widget get shimmerWidget {
     return Shimmer.fromColors(
       child: Container(

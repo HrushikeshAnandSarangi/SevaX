@@ -62,7 +62,7 @@ Future<UserModel> getUserForId({@required String sevaUserId}) async {
       .getDocuments()
       .then((QuerySnapshot querySnapshot) {
     querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-      userModel = UserModel.fromMap(documentSnapshot.data);
+      userModel = UserModel.fromMap(documentSnapshot.data, 'user_data_manager');
     });
   });
 
@@ -82,7 +82,7 @@ Future<UserModel> getUserForEmail({
   if (documentSnapshot == null || documentSnapshot.data == null) {
     return null;
   }
-  userModel = UserModel.fromMap(documentSnapshot.data);
+  userModel = UserModel.fromMap(documentSnapshot.data, 'user_data_manager');
   return userModel;
 }
 
@@ -111,8 +111,9 @@ Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(
     print(res.body);
     var rest = data["result"] as List;
     var useModelStatus = UserModelListMoreStatus();
-    useModelStatus.userModelList =
-        rest.map<UserModel>((json) => UserModel.fromMap(json)).toList();
+    useModelStatus.userModelList = rest
+        .map<UserModel>((json) => UserModel.fromMap(json, 'user_data_manager'))
+        .toList();
     useModelStatus.lastPage = (data["lastPage"] as bool);
     return useModelStatus;
   }
@@ -139,8 +140,9 @@ Future<UserModelListMoreStatus>
     print(res.body);
     var rest = data["result"] as List;
     var useModelStatus = UserModelListMoreStatus();
-    useModelStatus.userModelList =
-        rest.map<UserModel>((json) => UserModel.fromMap(json)).toList();
+    useModelStatus.userModelList = rest
+        .map<UserModel>((json) => UserModel.fromMap(json, 'user_data_manager'))
+        .toList();
     useModelStatus.lastPage = (data["lastPage"] as bool);
     return useModelStatus;
   }
@@ -165,8 +167,9 @@ Future<UserModelListMoreStatus> getUsersForTimebankId(
     var data = json.decode(res.body);
     var rest = data["result"] as List;
     var useModelStatus = UserModelListMoreStatus();
-    useModelStatus.userModelList =
-        rest.map<UserModel>((json) => UserModel.fromMap(json)).toList();
+    useModelStatus.userModelList = rest
+        .map<UserModel>((json) => UserModel.fromMap(json, 'user_data_manager'))
+        .toList();
     useModelStatus.lastPage = (data["lastPage"] as bool);
     return useModelStatus;
   }
@@ -185,7 +188,8 @@ Stream<UserModel> getUserForIdStream({@required String sevaUserId}) async* {
     StreamTransformer<QuerySnapshot, UserModel>.fromHandlers(
       handleData: (snapshot, userSink) async {
         DocumentSnapshot documentSnapshot = snapshot.documents[0];
-        UserModel model = UserModel.fromMap(documentSnapshot.data);
+        UserModel model =
+            UserModel.fromMap(documentSnapshot.data, 'user_data_manager');
 
         model.sevaUserID = sevaUserId;
         userSink.add(model);
@@ -203,7 +207,8 @@ Future<UserModel> getUserForIdFuture({@required String sevaUserId}) async {
       .getDocuments()
       .then((snapshot) {
     DocumentSnapshot documentSnapshot = snapshot.documents[0];
-    UserModel model = UserModel.fromMap(documentSnapshot.data);
+    UserModel model =
+        UserModel.fromMap(documentSnapshot.data, 'user_data_manager');
     return model;
   }).catchError((onError) {
     return UserModel();
@@ -222,7 +227,7 @@ Stream<UserModel> getUserForEmailStream(String userEmailAddress) async* {
   yield* userDataStream.transform(
     StreamTransformer<DocumentSnapshot, UserModel>.fromHandlers(
       handleData: (snapshot, userSink) {
-        UserModel model = UserModel.fromMap(snapshot.data);
+        UserModel model = UserModel.fromMap(snapshot.data, 'user_data_manager');
         // model.sevaUserID = snapshot.documentID;
         userSink.add(model);
       },

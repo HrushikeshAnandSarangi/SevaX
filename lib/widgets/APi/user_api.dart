@@ -12,7 +12,7 @@ class UserApi {
     if (query.documents.length == 0) {
       throw Exception("No user Found");
     }
-    return UserModel.fromMap(query.documents[0].data);
+    return UserModel.fromMap(query.documents[0].data, 'user_api');
   }
 
   static Future<String> fetchUserEmailById(String userId) async {

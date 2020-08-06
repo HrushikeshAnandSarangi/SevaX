@@ -72,7 +72,7 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
           List<UserModel> userList = [];
 
           snapshot.data.documents.forEach((userModel) {
-            UserModel model = UserModel.fromMap(userModel.data);
+            UserModel model = UserModel.fromMap(userModel.data, 'fav_users');
             userList.add(model);
           });
 

@@ -271,11 +271,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   }
 
   Widget buildList() {
-//    if (searchTextController.text.length == 0) {
-//      print('near by called');
-//
-//      return nearByTimebanks();
-
     if (searchTextController.text.trim().length < 1) {
       return Column(
         children: <Widget>[

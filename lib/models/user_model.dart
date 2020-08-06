@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
@@ -92,7 +93,9 @@ class UserModel extends DataModel {
       this.language,
       this.notificationAlerts});
 
-  UserModel.fromMap(Map<String, dynamic> map) {
+  UserModel.fromMap(Map<String, dynamic> map, @required String from) {
+    log("Called from $from");
+
     if (map.containsKey('nearbySettings')) {
       Map<dynamic, dynamic> _neabySetting = map['nearbySettings'];
       this.nearBySettings = NearBySettings()
@@ -101,7 +104,9 @@ class UserModel extends DataModel {
             : true
         ..radius =
             _neabySetting.containsKey('radius') ? _neabySetting['radius'] : 10;
-      log("Found nearby settings " + nearBySettings.toString());
+      // log("Found nearby settings " +
+      //     nearBySettings.toString() +
+      //     DateTime.now().toString());
     } else {
       log("Nearby Settings for user not found....");
     }

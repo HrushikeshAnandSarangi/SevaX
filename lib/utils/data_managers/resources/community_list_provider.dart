@@ -19,7 +19,8 @@ class RequestApiProvider {
     QuerySnapshot querySnapshot = await query.getDocuments();
 
     querySnapshot.documents.forEach((documentSnapshot) {
-      UserModel model = UserModel.fromMap(documentSnapshot.data);
+      UserModel model =
+          UserModel.fromMap(documentSnapshot.data, 'community_list_provider');
       usersDataList.add(model);
     });
     return usersDataList;

@@ -66,9 +66,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
       (QuerySnapshot querysnapshot) {
         querysnapshot.documents.forEach(
           (DocumentSnapshot user) => users.add(
-            UserModel.fromMap(
-              user.data,
-            ),
+            UserModel.fromMap(user.data, 'past_hired'),
           ),
         );
         if (users.isEmpty) {
@@ -99,7 +97,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
           List<UserModel> userList = [];
 
           snapshot.data.documents.forEach((userModel) {
-            UserModel model = UserModel.fromMap(userModel.data);
+            UserModel model = UserModel.fromMap(userModel.data, 'past_hired');
             userList.add(model);
           });
 

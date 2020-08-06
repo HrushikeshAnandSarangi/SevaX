@@ -12,7 +12,8 @@ class BlockedMembersBloc {
     UserApi.getBlockedMembers(userId).listen((QuerySnapshot event) {
       List<UserModel> blockedMembers = [];
       event.documents.forEach((DocumentSnapshot element) {
-        blockedMembers.add(UserModel.fromMap(element.data));
+        blockedMembers
+            .add(UserModel.fromMap(element.data, 'blocked_members_bloc'));
       });
       _blockedMembers.add(blockedMembers);
     });

@@ -537,7 +537,7 @@ class Searches {
 //        sourceMap['communities'].contains(loggedInUser.currentCommunity) &&
             loggedInUser.sevaUserID != sourceMap['sevauserid']) {
           print("usersList===========>" + sourceMap["fullname"]);
-          UserModel user = UserModel.fromMap(sourceMap);
+          UserModel user = UserModel.fromMap(sourceMap, 'queries');
           usersList.add(user);
         }
       } else {
@@ -547,7 +547,7 @@ class Searches {
             !loggedInUser.blockedBy.contains(sourceMap['sevauserid']) &&
                 loggedInUser.sevaUserID != sourceMap['sevauserid']) {
           print("usersList===========>" + sourceMap["fullname"]);
-          UserModel user = UserModel.fromMap(sourceMap);
+          UserModel user = UserModel.fromMap(sourceMap, 'queries');
           usersList.add(user);
         }
       }

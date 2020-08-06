@@ -1,12 +1,11 @@
-import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/utils.dart';
-
-//bsnl@123
 
 class NearbySettingsWidget extends StatefulWidget {
   final UserModel loggedInUser;
@@ -16,12 +15,12 @@ class NearbySettingsWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _NearbySettingsWidgetState();
 
   static int evaluatemaxRadiusForMember(NearBySettings nearBySettings) {
-    int DEFAULT_RADIUS_IN_MILES = 10;
+    const int DEFAULT_RADIUS_IN_MILES = 10;
     if (nearBySettings != null &&
         nearBySettings.radius != null &&
         nearBySettings.isMiles != null) {
       if (!nearBySettings.isMiles) {
-        var milesEqvivalant = (nearBySettings.radius * 1.6093).toInt();
+        var milesEqvivalant = (nearBySettings.radius ~/ 1.6093).toInt();
         return milesEqvivalant;
       }
 
@@ -30,21 +29,11 @@ class NearbySettingsWidget extends StatefulWidget {
     return DEFAULT_RADIUS_IN_MILES;
   }
 
-  static int valueForSeekBar(NearBySettings nearBySettings) {
-    print("------------------------- ");
-    int DEFAULT_RADIUS_IN_MILES = 10;
-    if (nearBySettings != null &&
-        nearBySettings.radius != null &&
-        nearBySettings.isMiles != null) {
-      print("${nearBySettings.radius}======================");
-      return nearBySettings.radius.toInt();
-    }
-    return DEFAULT_RADIUS_IN_MILES;
-  }
-
   static int isInMiles(NearBySettings nearBySettings) {
     if (nearBySettings != null && nearBySettings.isMiles != null) {
-      return nearBySettings.isMiles ? 1 : 2;
+      return nearBySettings.isMiles
+          ? NearbySettingBloc.MILES_SELECTION
+          : NearbySettingBloc.KILOMETERS_SELECTION;
     }
     return 1;
   }
@@ -53,22 +42,23 @@ class NearbySettingsWidget extends StatefulWidget {
 class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
   double rating;
   int selectedRadio;
-  final _debouncer = Debouncer(milliseconds: 500);
+  final _debouncer = Debouncer(milliseconds: 700);
 
   @override
   void initState() {
     super.initState();
-    rating =
-        NearbySettingsWidget.valueForSeekBar(widget.loggedInUser.nearBySettings)
-            .toDouble();
     selectedRadio =
         NearbySettingsWidget.isInMiles(widget.loggedInUser.nearBySettings);
+    rating = NearbySettingBloc.valueForSeekBar(
+            widget.loggedInUser.nearBySettings, selectedRadio)
+        .toDouble();
   }
 
   @override
   Widget build(BuildContext context) {
+    // log(rating.toString() + "<<<<<<<<<<<<<<<<<");
     return Container(
-      margin: EdgeInsets.only(left: 20, right: 20),
+      margin: EdgeInsets.only(left: 20, right: 20, top: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -80,11 +70,15 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "10",
+                  selectedRadio == NearbySettingBloc.MILES_SELECTION
+                      ? '10 M'
+                      : '16 Kms',
                   style: TextStyle(fontSize: 12),
                 ),
                 Text(
-                  "100",
+                  selectedRadio == NearbySettingBloc.MILES_SELECTION
+                      ? '50 M'
+                      : '80 Kms',
                   style: TextStyle(fontSize: 12),
                 ),
               ],
@@ -93,8 +87,10 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
           Container(
             width: MediaQuery.of(context).size.height,
             child: CupertinoSlider(
-              min: 10,
-              max: 100,
+              min: selectedRadio == NearbySettingBloc.MILES_SELECTION ? 10 : 16,
+              max: selectedRadio == NearbySettingBloc.MILES_SELECTION ? 50 : 80,
+              divisions:
+                  selectedRadio == NearbySettingBloc.MILES_SELECTION ? 8 : 13,
               thumbColor: Theme.of(context).primaryColor,
               activeColor: Theme.of(context).primaryColor,
               value: rating,
@@ -103,7 +99,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
                       email: widget.loggedInUser.email,
                       radius: newRating.toInt(),
                     )),
-                setState(() => rating = newRating)
+                setState(() => rating = newRating),
               },
             ),
           ),
@@ -113,11 +109,11 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
               Container(
                 child: Radio(
                   activeColor: Theme.of(context).primaryColor,
-                  value: 1,
+                  value: NearbySettingBloc.MILES_SELECTION,
                   groupValue: selectedRadio,
-                  onChanged: (val) {
+                  onChanged: (val) async {
                     setSelectedRadio(val);
-                    NearbySettingBloc.isMiles(
+                    await NearbySettingBloc.isMiles(
                       email: widget.loggedInUser.email,
                       val: true,
                     );
@@ -130,11 +126,11 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
               Container(
                 child: Radio(
                   activeColor: Theme.of(context).primaryColor,
-                  value: 2,
+                  value: NearbySettingBloc.KILOMETERS_SELECTION,
                   groupValue: selectedRadio,
-                  onChanged: (val) {
+                  onChanged: (val) async {
                     setSelectedRadio(val);
-                    NearbySettingBloc.isMiles(
+                    await NearbySettingBloc.isMiles(
                       email: widget.loggedInUser.email,
                       val: false,
                     );
@@ -151,19 +147,36 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
     );
   }
 
+  String appendDistanceUnit() {
+    return " " +
+        (selectedRadio == NearbySettingBloc.MILES_SELECTION ? 'M' : 'Kms');
+  }
+
   Container titleAndSubTitle() {
     return Container(
-      margin: EdgeInsets.only(left: 10, right: 10),
+      margin: EdgeInsets.only(left: 10, right: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text("What is Lorem Ipsum?"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Distance that I am willing to travel",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                double.parse((rating).toStringAsFixed(2)).toString() +
+                    appendDistanceUnit(),
+              )
+            ],
+          ),
           SizedBox(
             height: 10,
           ),
           Text(
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has"),
+              "This indicates the distance that the user is willing to travel to complete a Request for a Timebank or participate in a Project"),
           SizedBox(
             height: 20,
           ),
@@ -173,37 +186,56 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
   }
 
   void setSelectedRadio(int value) {
+    log(value.toString() + "--------------------" + selectedRadio.toString());
+    if (value == NearbySettingBloc.MILES_SELECTION) {
+      rating = rating / 1.6;
+    } else if (value == NearbySettingBloc.KILOMETERS_SELECTION) {
+      rating = rating * 1.6;
+    }
+    NearbySettingBloc.udpateNearbyRadius(
+      email: widget.loggedInUser.email,
+      radius: rating.toInt(),
+    );
+    print(rating.toString() + "<<<<<<<<<<<<<<<");
+    // selectedRadio = value;
     setState(() {
       selectedRadio = value;
     });
   }
 }
 
-class Debouncer {
-  final int milliseconds;
-  VoidCallback action;
-  Timer _timer;
-  Debouncer({this.milliseconds});
-  run(VoidCallback action) {
-    if (_timer != null) {
-      _timer.cancel();
-    }
-    _timer = Timer(Duration(milliseconds: milliseconds), action);
-  }
-}
-
 class NearbySettingBloc {
-  static isMiles({String email, bool val}) {
-    Firestore.instance.collection('users').document(email).updateData({
-      'nearbySettings.isMiles': val,
+  static const int MILES_SELECTION = 1;
+  static const int KILOMETERS_SELECTION = 2;
+  static int DEFAULT_RADIUS_IN_MILES = 10;
+  static int DEFAULT_RADIUS_IN_KILOMETERS = 16;
+
+  static final _debouncer = Debouncer(milliseconds: 800);
+
+  static isMiles({String email, bool val}) async {
+    _debouncer.run(() async {
+      await Firestore.instance.collection('users').document(email).updateData({
+        'nearbySettings.isMiles': val,
+      });
     });
+  }
+
+  static int valueForSeekBar(NearBySettings nearBySettings, int distanceUnit) {
+    if (nearBySettings != null &&
+        nearBySettings.radius != null &&
+        nearBySettings.isMiles != null) {
+      return nearBySettings.radius.toInt();
+    }
+    return distanceUnit == MILES_SELECTION
+        ? DEFAULT_RADIUS_IN_MILES
+        : DEFAULT_RADIUS_IN_KILOMETERS;
   }
 
   static udpateNearbyRadius({
     String email,
     int radius,
-  }) {
-    Firestore.instance.collection('users').document(email).updateData({
+  }) async {
+    await Firestore.instance.collection('users').document(email).updateData({
       'nearbySettings.radius': radius,
     });
   }

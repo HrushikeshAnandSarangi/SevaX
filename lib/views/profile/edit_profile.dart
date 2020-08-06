@@ -21,7 +21,6 @@ import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 
-import '../../nearby_setting.dart';
 import '../core.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -141,9 +140,6 @@ class _EditProfilePageState extends State<EditProfilePage>
               text: AppLocalizations.of(context)
                   .translate('profile', 'add_skills'),
               onTap: () => _navigateToSkillsView(usermodel),
-            ),
-            NearbySettingsWidget(
-              SevaCore.of(context).loggedInUser,
             ),
             Padding(
               padding: EdgeInsets.symmetric(

@@ -113,8 +113,8 @@ class BookmarkedOffers extends StatelessWidget {
                 ),
               );
             }
-            UserModel userModel =
-                UserModel.fromMap(snapshot.data.documents[0].data);
+            UserModel userModel = UserModel.fromMap(
+                snapshot.data.documents[0].data, 'bookmarked_offers');
             return AlertDialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(

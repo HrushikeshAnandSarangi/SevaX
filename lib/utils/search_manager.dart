@@ -66,7 +66,7 @@ class SearchManager {
     List<UserModel> userList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      UserModel user = UserModel.fromMap(sourceMap);
+      UserModel user = UserModel.fromMap(sourceMap, 'search_manager');
       userList.add(user);
     });
     yield userList;
@@ -326,7 +326,7 @@ class SearchManager {
     List<UserModel> userList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      UserModel user = UserModel.fromMap(sourceMap);
+      UserModel user = UserModel.fromMap(sourceMap, 'search_manager');
 
 //      if (validItems.contains(user.sevaUserID)) {
       userList.add(user);
@@ -368,7 +368,7 @@ class SearchManager {
     List<UserModel> userList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      UserModel user = UserModel.fromMap(sourceMap);
+      UserModel user = UserModel.fromMap(sourceMap, 'search_manager');
       if (validItems.contains(user.sevaUserID)) {
         userList.add(user);
       }
@@ -410,7 +410,7 @@ class SearchManager {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
 
-      UserModel user = UserModel.fromMap(sourceMap);
+      UserModel user = UserModel.fromMap(sourceMap, 'search_manager');
       if (validItems.contains(user.sevaUserID)) {
         userList.add(user);
       }

@@ -68,7 +68,7 @@ class ProfileViewerState extends State<ProfileViewer> {
             case ConnectionState.waiting:
               return Center(child: CircularProgressIndicator());
             default:
-              user = UserModel.fromMap(snapshot.data.data);
+              user = UserModel.fromMap(snapshot.data.data, 'profile_viewer');
 
               if (user == null) {
                 print("User details not fouund");

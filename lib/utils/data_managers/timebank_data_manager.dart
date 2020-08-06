@@ -14,8 +14,8 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/neayby_setting/nearby_setting.dart';
 
-import '../../nearby_setting.dart';
 import '../app_config.dart';
 
 Future<void> createTimebank({@required TimebankModel timebankModel}) async {
@@ -202,7 +202,8 @@ Stream<UserModel> getUserDetails({@required String userId}) async* {
   yield* data.transform(
     StreamTransformer<QuerySnapshot, UserModel>.fromHandlers(
       handleData: (snapshot, timebankSink) {
-        timebankSink.add(UserModel.fromMap(snapshot.documents.first.data));
+        timebankSink
+            .add(UserModel.fromMap(snapshot.documents.first.data, 'timebank'));
       },
     ),
   );
