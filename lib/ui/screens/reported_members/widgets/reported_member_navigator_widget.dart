@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_page.dart';
 
@@ -36,9 +36,8 @@ class _ReportedMemberNavigatorWidgetState
           child: Container(
             color: Color(0xFFFFAFAFA),
             child: ListTile(
-              title: Text(AppLocalizations.of(context).translate('reported_members', 'reported_users')),
-              subtitle:
-                  Text(AppLocalizations.of(context).translate('reported_members', 'detail')),
+              title: Text(S.of(context).reported_users),
+              subtitle: Text(S.of(context).reported_member_click_to_view),
               trailing: Icon(Icons.keyboard_arrow_right, color: Colors.black),
               onTap: () {
                 Navigator.of(context)

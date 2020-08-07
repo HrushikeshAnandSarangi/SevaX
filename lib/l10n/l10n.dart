@@ -1926,6 +1926,427 @@ class S {
         'has invited you to be the new owner of the Timebank',
         name: 'change_ownership_invite',
       );
+
+  String get notifications_insufficient_credits => Intl.message(
+        'Your seva credits are not sufficient to approve the credit request.',
+        name: 'notifications_insufficient_credits',
+      );
+
+  String get completed_task_in => Intl.message(
+        'completed the task in',
+        name: 'completed_task_in',
+      );
+
+  String get by_approving_you_accept => Intl.message(
+        'By approving, you accept that',
+        name: 'by_approving_you_accept',
+      );
+
+  String get reject => Intl.message(
+        'Reject',
+        name: 'reject',
+      );
+
+  String get no_comments => Intl.message(
+        'No Comments',
+        name: 'no_comments',
+      );
+
+  String get reason_to_join => Intl.message(
+        'Reason to join',
+        name: 'reason_to_join',
+      );
+
+  String get reason_not_mentioned => Intl.message(
+        'Reason not mentioned',
+        name: 'reason_not_mentioned',
+      );
+
+  String get allow => Intl.message(
+        'Allow',
+        name: 'allow',
+      );
+
+  String get updating_timebank => Intl.message(
+        'Updating Timebank..',
+        name: 'updating_timebank',
+      );
+
+  String get no_bookmarked_offers => Intl.message(
+        'No offers bookmarked',
+        name: 'no_bookmarked_offers',
+      );
+
+  String get create_offer => Intl.message(
+        'Create Offer',
+        name: 'create_offer',
+      );
+
+  String get individual_offer => Intl.message(
+        'Individual offer',
+        name: 'individual_offer',
+      );
+
+  String get one_to_many => Intl.message(
+        'One to many',
+        name: 'one_to_many',
+      );
+
+  String get update_offer => Intl.message(
+        'Update Offer',
+        name: 'update_offer',
+      );
+
+  String get creating_offer => Intl.message(
+        'Creating offer',
+        name: 'creating_offer',
+      );
+
+  String get updating_offer => Intl.message(
+        'Updating offer',
+        name: 'updating_offer',
+      );
+
+  String get offer_error_creating => Intl.message(
+        'There was error creating your offer, Please try again.',
+        name: 'offer_error_creating',
+      );
+
+  String get offer_error_updating => Intl.message(
+        'There was error updating offer, Please try again.',
+        name: 'offer_error_updating',
+      );
+
+  String get offer_title_hint => Intl.message(
+        'Ex babysitting',
+        name: 'offer_title_hint',
+      );
+
+  String get offer_description => Intl.message(
+        'Offer description',
+        name: 'offer_description',
+      );
+
+  String get offer_description_hint => Intl.message(
+        'Your offer and any #hashtags',
+        name: 'offer_description_hint',
+      );
+
+  String get availablity => Intl.message(
+        'Availability',
+        name: 'availablity',
+      );
+
+  String get availablity_description => Intl.message(
+        'Describe my availability',
+        name: 'availablity_description',
+      );
+
+  String get one_to_many_offer_hint => Intl.message(
+        'Ex teaching a python class..',
+        name: 'one_to_many_offer_hint',
+      );
+
+  String get offer_duration => Intl.message(
+        'Offer duration',
+        name: 'offer_duration',
+      );
+
+  String get offer_prep_hours => Intl.message(
+        'No. of preparation hours',
+        name: 'offer_prep_hours',
+      );
+
+  String get offer_prep_hours_required => Intl.message(
+        'No. of preparation hours required',
+        name: 'offer_prep_hours_required',
+      );
+
+  String get offer_number_class_hours => Intl.message(
+        'No. of class hours',
+        name: 'offer_number_class_hours',
+      );
+
+  String get offer_number_class_hours_required => Intl.message(
+        'No. of class hours required',
+        name: 'offer_number_class_hours_required',
+      );
+
+  String get offer_size_class => Intl.message(
+        'Size of class',
+        name: 'offer_size_class',
+      );
+
+  String get offer_enter_participants => Intl.message(
+        'Enter the number of participants',
+        name: 'offer_enter_participants',
+      );
+
+  String get offer_class_description => Intl.message(
+        'Class description',
+        name: 'offer_class_description',
+      );
+
+  String get offer_description_error => Intl.message(
+        'Please enter some class description',
+        name: 'offer_description_error',
+      );
+
+  String get offer_start_end_date => Intl.message(
+        'Please enter start and end date',
+        name: 'offer_start_end_date',
+      );
+
+  String get validation_error_offer_class_hours => Intl.message(
+        'Please enter the hours required for the class',
+        name: 'validation_error_offer_class_hours',
+      );
+
+  String get validation_error_offer_title => Intl.message(
+        'Please enter the subject of your offer',
+        name: 'validation_error_offer_title',
+      );
+
+  String get validation_error_hours_not_int => Intl.message(
+        'Entered number of hours is not valid',
+        name: 'validation_error_hours_not_int',
+      );
+
+  String get validation_error_offer_prep_hour => Intl.message(
+        'Please enter your preperation time',
+        name: 'validation_error_offer_prep_hour',
+      );
+
+  String get validation_error_location => Intl.message(
+        'Please select location',
+        name: 'validation_error_location',
+      );
+
+  String get validation_error_class_size_int => Intl.message(
+        'Size of class can\'t be in decimal',
+        name: 'validation_error_class_size_int',
+      );
+
+  String get validation_error_class_size => Intl.message(
+        'Please enter valid size of class',
+        name: 'validation_error_class_size',
+      );
+
+  String get validation_error_offer_credit => Intl.message(
+        'We cannot publish this Class. There are insufficient credits from the class. Please revise the Prep time or the number of students and submit the offer again',
+        name: 'validation_error_offer_credit',
+      );
+
+  String get posted_on => Intl.message(
+        'Posted on',
+        name: 'posted_on',
+      );
+
+  String get location => Intl.message(
+        'Location',
+        name: 'location',
+      );
+
+  String get offered_by => Intl.message(
+        'Offered by',
+        name: 'offered_by',
+      );
+
+  String get you_created_offer => Intl.message(
+        'You created this offer',
+        name: 'you_created_offer',
+      );
+
+  String get you_have => Intl.message(
+        'You have',
+        name: 'you_have',
+      );
+
+  String get not_yet => Intl.message(
+        'not yet',
+        name: 'not_yet',
+      );
+
+  String get signed_up_for => Intl.message(
+        'signed up for',
+        name: 'signed_up_for',
+      );
+
+  String get bookmarked => Intl.message(
+        'bookmarked',
+        name: 'bookmarked',
+      );
+
+  String get this_offer => Intl.message(
+        'this offer',
+        name: 'this_offer',
+      );
+
+  String get details => Intl.message(
+        'Details',
+        name: 'details',
+      );
+
+  String get no_offers => Intl.message(
+        'No Offers',
+        name: 'no_offers',
+      );
+
+  String get your_earnings => Intl.message(
+        'Your earnings',
+        name: 'your_earnings',
+      );
+
+  String get timebank_earnings => Intl.message(
+        'Timebank earnings',
+        name: 'timebank_earnings',
+      );
+
+  String get no_participants_yet => Intl.message(
+        'No Participants yet',
+        name: 'no_participants_yet',
+      );
+
+  String get bookmarked_offers => Intl.message(
+        'Bookmarked Offers',
+        name: 'bookmarked_offers',
+      );
+
+  String get my_offers => Intl.message(
+        'My Offers',
+        name: 'my_offers',
+      );
+
+  String get offer_help => Intl.message(
+        'Offers Help',
+        name: 'offer_help',
+      );
+
+  String get report_members => Intl.message(
+        'Report Member',
+        name: 'report_members',
+      );
+
+  String get report_member_inform => Intl.message(
+        'Please inform, why you are reporting this user.',
+        name: 'report_member_inform',
+      );
+
+  String get report_member_provide_details => Intl.message(
+        'Please provide as much detail as possible',
+        name: 'report_member_provide_details',
+      );
+
+  String get report => Intl.message(
+        'Report',
+        name: 'report',
+      );
+
+  String get reporting_member => Intl.message(
+        'Reporting member',
+        name: 'reporting_member',
+      );
+
+  String get reported_by => Intl.message(
+        'Reported by',
+        name: 'reported_by',
+      );
+
+  String user(num count) => Intl.message(
+        '${Intl.plural(count, one: 'user', other: 'users', args: [count])}',
+        name: 'user',        
+        args: [count],
+      );
+
+  String get user_removed_from_group => Intl.message(
+        'User is successfully removed from the group',
+        name: 'user_removed_from_group',
+      );
+
+  String get user_removed_from_group_failed => Intl.message(
+        'User cannot be deleted from this group',
+        name: 'user_removed_from_group_failed',
+      );
+
+  String get user_has => Intl.message(
+        'User has',
+        name: 'user_has',
+      );
+
+  String get pending_requests => Intl.message(
+        'pending requests',
+        name: 'pending_requests',
+      );
+
+  String get pending_projects => Intl.message(
+        'pending projects',
+        name: 'pending_projects',
+      );
+
+  String get pending_offers => Intl.message(
+        'pending offers',
+        name: 'pending_offers',
+      );
+
+  String get clear_transaction => Intl.message(
+        'Please clear the transactions and try again.',
+        name: 'clear_transaction',
+      );
+
+  String get remove_self_from_group_error => Intl.message(
+        'Cannot remove yourself from the group. Instead, please try deleting the group.',
+        name: 'remove_self_from_group_error',
+      );
+
+  String get user_removed_from_timebank => Intl.message(
+        'User is successfully removed from the Timebank',
+        name: 'user_removed_from_timebank',
+      );
+
+  String get user_removed_from_timebank_failed => Intl.message(
+        'User cannot be deleted from this Timebank',
+        name: 'user_removed_from_timebank_failed',
+      );
+
+  String get member_reported => Intl.message(
+        'Member reported successfully',
+        name: 'member_reported',
+      );
+
+  String get member_reporting_failed => Intl.message(
+        'Failed to report member! Try again',
+        name: 'member_reporting_failed',
+      );
+
+  String get reported_member_click_to_view => Intl.message(
+        'Click here to view reported users of this Timebank',
+        name: 'reported_member_click_to_view',
+      );
+
+  String get reported_users => Intl.message(
+        'Reported Users',
+        name: 'reported_users',
+      );
+
+  String get reported_members => Intl.message(
+        'Reported Members',
+        name: 'reported_members',
+      );
+
+  String get search_something => Intl.message(
+        'Search Something',
+        name: 'search_something',
+      );
+
+  String get no_data => Intl.message(
+        'No data found !',
+        name: 'no_data',
+      );
+
+  String get i_want_to_volunteer => Intl.message(
+        'I want to volunteer.',
+        name: 'i_want_to_volunteer',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

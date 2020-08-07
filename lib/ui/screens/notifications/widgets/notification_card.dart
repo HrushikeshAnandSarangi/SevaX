@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
 
@@ -65,8 +64,7 @@ class NotificationCard extends StatelessWidget {
                                 Navigator.of(dialogContext).pop();
                               },
                               child: Text(
-                                AppLocalizations.of(context)
-                                    .translate('notifications_card', 'delete'),
+                                S.of(context).delete,
                               ),
                             ),
                           ],

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -66,7 +66,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           isDissmissible: false,
           title: model.title,
           subTitle:
-              '${user.fullname} ${AppLocalizations.of(context).translate('notifications', 'completed_in')} ${transactionModel.credits ?? "0"} ${AppLocalizations.of(context).translate('notifications', 'hours')}, ${AppLocalizations.of(context).translate('notifications', 'waiting_for')}.',
+              '${user.fullname} ${S.of(context).completed_task_in} ${transactionModel.credits ?? "0"} ${S.of(context).hour(transactionModel.credits)}, ${S.of(context).notifications_waiting_for_approval}.',
           photoUrl: user.photoURL,
           entityName: user.fullname,
           onPressed: () {
@@ -131,7 +131,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(0.0),
                     child: Text(
-                      "${AppLocalizations.of(context).translate('notifications', 'about')} ${userModel.fullname}",
+                      "${S.of(context).about} ${userModel.fullname}",
                       style: TextStyle(
                           fontFamily: 'Europa',
                           fontSize: 13,
@@ -143,7 +143,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                     padding: EdgeInsets.all(8.0),
                     child: Center(
                       child: Text(
-                        "${AppLocalizations.of(context).translate('notifications', 'by_approving_that')} ${userModel.fullname} has worked for $credits hours",
+                        "${S.of(context).by_approving_you_accept} ${userModel.fullname} has worked for $credits hours",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: 'Europa',
@@ -164,8 +164,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                       child: RaisedButton(
                         color: FlavorConfig.values.theme.primaryColor,
                         child: Text(
-                          AppLocalizations.of(context)
-                              .translate('notifications', 'approve'),
+                          S.of(context).approve,
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Europa',
@@ -192,8 +191,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
                       child: RaisedButton(
                         color: Theme.of(context).accentColor,
                         child: Text(
-                          AppLocalizations.of(context)
-                              .translate('notifications', 'reject'),
+                          S.of(context).reject,
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Europa',
@@ -288,8 +286,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
       "requestId": requestId,
       "comments": (results['didComment']
           ? results['comment']
-          : AppLocalizations.of(context)
-              .translate('notifications', 'no_comments'))
+          : S.of(context).no_comments)
     });
     approveTransaction(requestModel, userId, notificationId, sevaCore);
   }

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -87,7 +87,7 @@ class ReportedMemberCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "${AppLocalizations.of(context).translate('reported_members', 'reported_by')} $userCount ${userCount == 1 ? AppLocalizations.of(context).translate('reported_members', 'user') : AppLocalizations.of(context).translate('reported_members', 'users')}",
+                      "${S.of(context).reported_by} $userCount ${S.of(context).user(userCount)}",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -189,13 +189,11 @@ class ReportedMemberCard extends StatelessWidget {
         builder: (BuildContext context) {
           // return object of type Dialog
           return AlertDialog(
-            content: Text(AppLocalizations.of(context)
-                .translate('reported_members', 'removed')),
+            content: Text(S.of(context).user_removed_from_group),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
               FlatButton(
-                child: Text(AppLocalizations.of(context)
-                    .translate('reported_members', 'close')),
+                child: Text(S.of(context).close),
                 textColor: Colors.red,
                 onPressed: () async {
                   await Firestore.instance
@@ -217,19 +215,16 @@ class ReportedMemberCard extends StatelessWidget {
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              title: Text(AppLocalizations.of(context)
-                  .translate('reported_members', 'cannot_group')),
-              content: Text(
-                  "${AppLocalizations.of(context).translate('reported_members', 'userhas')} \n"
-                  "${responseData['pendingProjects']['unfinishedProjects']} ${AppLocalizations.of(context).translate('reported_members', 'pending_projects')},\n"
-                  "${responseData['pendingRequests']['unfinishedRequests']} ${AppLocalizations.of(context).translate('reported_members', 'pending_requests')},\n"
-                  "${responseData['pendingOffers']['unfinishedOffers']} ${AppLocalizations.of(context).translate('reported_members', 'pending_offers')}.\n "
-                  "${AppLocalizations.of(context).translate('reported_members', 'clear_trans')} "),
+              title: Text(S.of(context).user_removed_from_group_failed),
+              content: Text("${S.of(context).user_has} \n"
+                  "${responseData['pendingProjects']['unfinishedProjects']} ${S.of(context).pending_projects},\n"
+                  "${responseData['pendingRequests']['unfinishedRequests']} ${S.of(context).pending_requests},\n"
+                  "${responseData['pendingOffers']['unfinishedOffers']} ${S.of(context).pending_offers}.\n "
+                  "${S.of(context).clear_transaction} "),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 FlatButton(
-                  child: Text(AppLocalizations.of(context)
-                      .translate('reported_members', 'close')),
+                  child: Text(S.of(context).close),
                   textColor: Colors.red,
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -246,13 +241,11 @@ class ReportedMemberCard extends StatelessWidget {
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              content: Text(AppLocalizations.of(context)
-                  .translate('reported_members', 'cannot_remove')),
+              content: Text(S.of(context).remove_self_from_group_error),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 FlatButton(
-                  child: Text(AppLocalizations.of(context)
-                      .translate('reported_members', 'close')),
+                  child: Text(S.of(context).close),
                   textColor: Colors.red,
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -277,13 +270,11 @@ class ReportedMemberCard extends StatelessWidget {
         builder: (BuildContext context) {
           // return object of type Dialog
           return AlertDialog(
-            content: Text(AppLocalizations.of(context)
-                .translate('reported_members', 'remove_success')),
+            content: Text(S.of(context).user_removed_from_timebank),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
               FlatButton(
-                child: Text(AppLocalizations.of(context)
-                    .translate('reported_members', 'close')),
+                child: Text(S.of(context).close),
                 onPressed: () async {
                   await Firestore.instance
                       .collection('reported_users_list')
@@ -305,19 +296,16 @@ class ReportedMemberCard extends StatelessWidget {
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              title: Text(AppLocalizations.of(context)
-                  .translate('reported_members', 'cannot_timebank')),
-              content: Text(
-                  "${AppLocalizations.of(context).translate('reported_members', 'userhas')} \n"
-                  "${responseData['pendingProjects']['unfinishedProjects']} ${AppLocalizations.of(context).translate('reported_members', 'pending_projects')},\n"
-                  "${responseData['pendingRequests']['unfinishedRequests']} ${AppLocalizations.of(context).translate('reported_members', 'pending_requests')},\n"
-                  "${responseData['pendingOffers']['unfinishedOffers']} ${AppLocalizations.of(context).translate('reported_members', 'pending_offers')}.\n "
-                  "${AppLocalizations.of(context).translate('reported_members', 'clear_trans')} "),
+              title: Text(S.of(context).user_removed_from_timebank_failed),
+              content: Text("${S.of(context).user_has} \n"
+                  "${responseData['pendingProjects']['unfinishedProjects']} ${S.of(context).pending_projects},\n"
+                  "${responseData['pendingRequests']['unfinishedRequests']} ${S.of(context).pending_requests},\n"
+                  "${responseData['pendingOffers']['unfinishedOffers']} ${S.of(context).pending_offers}.\n "
+                  "${S.of(context).clear_transaction} "),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 FlatButton(
-                  child: Text(AppLocalizations.of(context)
-                      .translate('reported_members', 'close')),
+                  child: Text(S.of(context).close),
                   textColor: Colors.red,
                   onPressed: () {
                     Navigator.of(context).pop();

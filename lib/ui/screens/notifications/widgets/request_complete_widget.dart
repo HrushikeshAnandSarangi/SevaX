@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
@@ -54,9 +54,9 @@ class RequestCompleteWidget extends StatelessWidget {
 
                 if (!canApproveTransaction) {
                   showDiologForMessage(
-                      context,
-                      AppLocalizations.of(context)
-                          .translate('notifications', 'no_sufficient'));
+                    context,
+                    S.of(context).notifications_insufficient_credits,
+                  );
                   return;
                 }
 
@@ -83,14 +83,14 @@ class RequestCompleteWidget extends StatelessWidget {
                       children: [
                         TextSpan(
                           text:
-                              '${user.fullname} ${AppLocalizations.of(context).translate('notifications', 'completed_in')} ',
+                              '${user.fullname} ${S.of(context).completed_task_in} ',
                           style: TextStyle(
                             color: Colors.grey,
                           ),
                         ),
                         TextSpan(
                           text: () {
-                            return '${transactionModel.credits} ${AppLocalizations.of(context).translate('notifications', 'hours')}';
+                            return '${transactionModel.credits} ${S.of(context).hour(transactionModel.credits).toLowerCase()}';
                           }(),
                           style: TextStyle(
                             color: Colors.black,
@@ -98,7 +98,7 @@ class RequestCompleteWidget extends StatelessWidget {
                         ),
                         TextSpan(
                           text: () {
-                            return ', ${AppLocalizations.of(context).translate('notifications', 'waiting_for')}';
+                            return ', ${S.of(context).notifications_waiting_for_approval}';
                           }(),
                           style: TextStyle(
                             color: Colors.grey,
@@ -123,7 +123,7 @@ class RequestCompleteWidget extends StatelessWidget {
           actions: <Widget>[
             FlatButton(
               child: Text(
-                AppLocalizations.of(context).translate('notifications', 'ok'),
+                S.of(context).ok,
                 style: TextStyle(
                   fontSize: 16,
                 ),
@@ -182,7 +182,7 @@ class RequestCompleteWidget extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(0.0),
                     child: Text(
-                      "${AppLocalizations.of(context).translate('notifications', 'about')} ${userModel.fullname}",
+                      "${S.of(context).about} ${userModel.fullname}",
                       style:
                           TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
@@ -192,7 +192,7 @@ class RequestCompleteWidget extends StatelessWidget {
                   padding: EdgeInsets.all(8.0),
                   child: Center(
                     child: Text(
-                      "${AppLocalizations.of(context).translate('notifications', 'by_approving')} ${userModel.fullname} has worked for $credits hours",
+                      "${S.of(context).by_approving_you_accept} ${userModel.fullname} has worked for $credits hours",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontStyle: FontStyle.italic,
@@ -212,8 +212,7 @@ class RequestCompleteWidget extends StatelessWidget {
                       width: double.infinity,
                       child: RaisedButton(
                         child: Text(
-                          AppLocalizations.of(context)
-                              .translate('notifications', 'approve'),
+                          S.of(context).approve,
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () async {
@@ -234,8 +233,7 @@ class RequestCompleteWidget extends StatelessWidget {
                       child: RaisedButton(
                         color: Theme.of(context).accentColor,
                         child: Text(
-                          AppLocalizations.of(context)
-                              .translate('notifications', 'reject'),
+                          S.of(context).reject,
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () async {
@@ -310,8 +308,7 @@ class RequestCompleteWidget extends StatelessWidget {
       "requestId": requestId,
       "comments": (results['didComment']
           ? results['comment']
-          : AppLocalizations.of(context)
-              .translate('notifications', 'no_comments'))
+          : S.of(context).no_comments)
     });
     approveTransaction(requestModel, userId, notificationId, sevaCore);
   }

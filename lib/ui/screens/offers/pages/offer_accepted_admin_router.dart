@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 
 import 'offer_earnings.dart';
@@ -25,10 +25,10 @@ class OfferAcceptedAdminRouter extends StatelessWidget {
                 ),
                 tabs: <Widget>[
                   Tab(
-                    child: Text(AppLocalizations.of(context).translate('offers','participants')),
+                    child: Text(S.of(context).participants),
                   ),
                   Tab(
-                    child: Text(AppLocalizations.of(context).translate('offers','completed')),
+                    child: Text(S.of(context).completed),
                   )
                 ],
               ),
