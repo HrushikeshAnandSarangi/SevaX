@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -23,7 +23,6 @@ class NewsCardView extends StatefulWidget {
 
   @override
   NewsCardViewState createState() {
-    // TODO: implement createState
     return NewsCardViewState();
   }
 }
@@ -493,13 +492,11 @@ class NewsCardViewState extends State<NewsCardView> {
       barrierDismissible: true,
       builder: (_context) {
         return AlertDialog(
-          title: Text(
-              AppLocalizations.of(context).translate('chat', 'delete_feed')),
+          title: Text(S.of(context).delete_feed),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(AppLocalizations.of(context)
-                  .translate('chat', 'are_you_sure_feed')),
+              Text(S.of(context).delete_feed_confirmation),
               SizedBox(
                 height: 15,
               ),
@@ -511,8 +508,7 @@ class NewsCardViewState extends State<NewsCardView> {
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('chat', 'delete_button'),
+                      S.of(context).delete,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: dialogButtonSize,
@@ -521,16 +517,13 @@ class NewsCardViewState extends State<NewsCardView> {
                     onPressed: () {
                       Navigator.pop(_context);
                       showProgressDialog(
-                          AppLocalizations.of(context)
-                              .translate('chat', 'delete_feed_progress'),
-                          parentContext);
+                          S.of(context).deleting_feed, parentContext);
                       _deleteNews(parentContext);
                     },
                   ),
                   FlatButton(
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('shared', 'cancel'),
+                      S.of(context).cancel,
                       style: TextStyle(
                         color: Colors.red,
                         fontSize: dialogButtonSize,

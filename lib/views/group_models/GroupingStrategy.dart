@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 
@@ -189,10 +189,9 @@ class GroupOfferCommons {
 
       case "Others":
         // return "${FlavorConfig.values.timebankTitle} Offers";
-        return AppLocalizations.of(context)
-            .translate('requests', 'timebank_offers');
+        return S.of(context).timebank_offers;
       default:
-        return AppLocalizations.of(context).translate('requests', 'others');
+        return S.of(context).other(3);
     }
   }
 }

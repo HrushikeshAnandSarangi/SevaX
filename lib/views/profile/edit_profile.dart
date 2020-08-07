@@ -10,7 +10,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -71,7 +71,7 @@ class _EditProfilePageState extends State<EditProfilePage>
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate('profile', 'title'),
+          S.of(context).bottom_nav_profile,
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -387,11 +387,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                       if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content: Text(AppLocalizations.of(context)
-                                .translate('shared', 'check_internet')),
+                            content: Text(S.of(context).check_internet),
                             action: SnackBarAction(
-                              label: AppLocalizations.of(context)
-                                  .translate('shared', 'dismiss'),
+                              label: S.of(context).dismiss,
                               onPressed: () => _scaffoldKey.currentState
                                   .hideCurrentSnackBar(),
                             ),
@@ -409,8 +407,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   ),
                   FlatButton(
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('shared', 'cancel'),
+                      S.of(context).cancel,
                       style: TextStyle(
                           fontSize: dialogButtonSize, color: Colors.red),
                     ),
@@ -490,11 +487,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                       if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content: Text(AppLocalizations.of(context)
-                                .translate('shared', 'check_internet')),
+                            content: Text(S.of(context).check_internet),
                             action: SnackBarAction(
-                              label: AppLocalizations.of(context)
-                                  .translate('shared', 'dismiss'),
+                              label: S.of(context).dismiss,
                               onPressed: () => _scaffoldKey.currentState
                                   .hideCurrentSnackBar(),
                             ),
@@ -515,8 +510,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   ),
                   FlatButton(
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('shared', 'cancel'),
+                      S.of(context).cancel,
                       style: TextStyle(
                           fontSize: dialogButtonSize, color: Colors.red),
                     ),
@@ -565,13 +559,11 @@ class _EditProfilePageState extends State<EditProfilePage>
       builder: (BuildContext _context) {
         // return object of type Dialog
         return AlertDialog(
-          title:
-              Text(AppLocalizations.of(context).translate('profile', 'logout')),
+          title: Text(S.of(context).log_out),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(AppLocalizations.of(context)
-                  .translate('profile', 'sure_logout')),
+              Text(S.of(context).log_out_confirmation),
               SizedBox(height: 10),
               Row(
                 children: <Widget>[
@@ -581,8 +573,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('profile', 'logout'),
+                      S.of(context).log_out,
                       style: TextStyle(fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
@@ -590,11 +581,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                       if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content: Text(AppLocalizations.of(context)
-                                .translate('shared', 'check_internet')),
+                            content: Text(S.of(context).check_internet),
                             action: SnackBarAction(
-                              label: AppLocalizations.of(context)
-                                  .translate('shared', 'dismiss'),
+                              label: S.of(context).dismiss,
                               onPressed: () => _scaffoldKey.currentState
                                   .hideCurrentSnackBar(),
                             ),
@@ -622,8 +611,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   ),
                   FlatButton(
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('shared', 'cancel'),
+                      S.of(context).cancel,
                       style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
                     ),
                     onPressed: () {

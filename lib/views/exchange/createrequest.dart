@@ -590,7 +590,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         return;
       }
 
-      /// TODO take language from Prakash
       if (OfferDurationWidgetState.starttimestamp ==
           OfferDurationWidgetState.endtimestamp) {
         showDialogForTitle(
@@ -599,14 +598,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         return;
       }
 
-      // if (!hasRegisteredLocation()) {
-      //   showDialogForTitle(
-      //       dialogTitle: AppLocalizations.of(context)
-      //           .translate('create_request', 'add_location'));
-      //   return;
-      // }
-
-      //in case the request is created for an accepted offer
       if (widget.isOfferRequest == true && widget.userModel != null) {
         if (requestModel.approvedUsers == null) requestModel.approvedUsers = [];
 

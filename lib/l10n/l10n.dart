@@ -2347,6 +2347,523 @@ class S {
         'I want to volunteer.',
         name: 'i_want_to_volunteer',
       );
+
+  String get help_about_us => Intl.message(
+        'About Us',
+        name: 'help_about_us',
+      );
+
+  String get feedback_messagae => Intl.message(
+        'Please let us know about your valuable feedback',
+        name: 'feedback_messagae',
+      );
+
+  String get help_training_video => Intl.message(
+        'Training Video',
+        name: 'help_training_video',
+      );
+
+  String get help_contact_us => Intl.message(
+        'Contac Us',
+        name: 'help_contact_us',
+      );
+
+  String get help_version => Intl.message(
+        'Version',
+        name: 'help_version',
+      );
+
+  String get feedback => Intl.message(
+        'Feedback',
+        name: 'feedback',
+      );
+
+  String get send_feedback => Intl.message(
+        'Send feedback',
+        name: 'send_feedback',
+      );
+
+  String get enter_feedback => Intl.message(
+        'Please enter your feedback',
+        name: 'enter_feedback',
+      );
+
+  String get create_timebank_description => Intl.message(
+        'A TimeBank is a community of volunteers that give and receive time to each other and to the larger community',
+        name: 'create_timebank_description',
+      );
+
+  String get timebank_logo => Intl.message(
+        'Timebank Logo',
+        name: 'timebank_logo',
+      );
+
+  String get timebank_name => Intl.message(
+        'Name your Timebank',
+        name: 'timebank_name',
+      );
+
+  String get timebank_name_hint => Intl.message(
+        'Ex: Pets-in-town, Citizen collab',
+        name: 'timebank_name_hint',
+      );
+
+  String get timebank_name_error => Intl.message(
+        'Timebank name cannot be empty',
+        name: 'timebank_name_error',
+      );
+
+  String get timebank_name_exists_error => Intl.message(
+        'Please choose another name for the Timebank. This Timebank name already exists',
+        name: 'timebank_name_exists_error',
+      );
+
+  String get timbank_about_hint => Intl.message(
+        'Ex: A bit more about your Timebank',
+        name: 'timbank_about_hint',
+      );
+
+  String get timebank_tell_more => Intl.message(
+        'Tell us more about your Timebank.',
+        name: 'timebank_tell_more',
+      );
+
+  String get timebank_select_tax_percentage => Intl.message(
+        'Select Tax percentage',
+        name: 'timebank_select_tax_percentage',
+      );
+
+  String get timebank_current_tax_percentage => Intl.message(
+        'Current Tax Percentage',
+        name: 'timebank_current_tax_percentage',
+      );
+
+  String get timebank_location => Intl.message(
+        'Your Timebank location.',
+        name: 'timebank_location',
+      );
+
+  String get timebank_location_hint => Intl.message(
+        'List the place or address where your community meets (such as a cafe, library, or church.).',
+        name: 'timebank_location_hint',
+      );
+
+  String get timebank_name_exists => Intl.message(
+        'Timebank name already exists !',
+        name: 'timebank_name_exists',
+      );
+
+  String get timebank_location_error => Intl.message(
+        'Please add the location of your Timebank',
+        name: 'timebank_location_error',
+      );
+
+  String get timebank_logo_error => Intl.message(
+        'Timebank logo is mandatory',
+        name: 'timebank_logo_error',
+      );
+
+  String get creating_timebank => Intl.message(
+        'Creating Timebank',
+        name: 'creating_timebank',
+      );
+
+  String get timebank_billing_error => Intl.message(
+        'Please configure your personal information details',
+        name: 'timebank_billing_error',
+      );
+
+  String get timebank_configure_profile_info => Intl.message(
+        'Configure profile information',
+        name: 'timebank_configure_profile_info',
+      );
+
+  String get timebank_profile_info => Intl.message(
+        'Profile Information',
+        name: 'timebank_profile_info',
+      );
+
+  String get validation_error_required_fields => Intl.message(
+        'Field cannot be left blank*',
+        name: 'validation_error_required_fields',
+      );
+
+  String get state => Intl.message(
+        'State',
+        name: 'state',
+      );
+
+  String get city => Intl.message(
+        'City',
+        name: 'city',
+      );
+
+  String get zip => Intl.message(
+        'Zip',
+        name: 'zip',
+      );
+
+  String get country => Intl.message(
+        'Country',
+        name: 'country',
+      );
+
+  String get street_add1 => Intl.message(
+        'Street Address 1',
+        name: 'street_add1',
+      );
+
+  String get street_add2 => Intl.message(
+        'Street Address 2',
+        name: 'street_add2',
+      );
+
+  String get company_name => Intl.message(
+        'Company name',
+        name: 'company_name',
+      );
+
+  String get continue_text => Intl.message(
+        'Continue',
+        name: 'continue_text',
+      );
+
+  String get private_timebank => Intl.message(
+        'Private Timebank',
+        name: 'private_timebank',
+      );
+
+  String get updating_details => Intl.message(
+        'Updating details',
+        name: 'updating_details',
+      );
+
+  String get edit_profile_information => Intl.message(
+        'Edit Profile Information',
+        name: 'edit_profile_information',
+      );
+
+  String get selected_users_before => Intl.message(
+        'Selected users before',
+        name: 'selected_users_before',
+      );
+
+  String get private_timebank_alert_hint => Intl.message(
+        'Please be informed that Private Timebanks do not have a free option. You will need to provide your billing details to continue to create this Timebank',
+        name: 'private_timebank_alert_hint',
+      );
+
+  String get private_timebank_alert => Intl.message(
+        'Private Timebank alert',
+        name: 'private_timebank_alert',
+      );
+
+  String get additional_notes => Intl.message(
+        'Additional Notes',
+        name: 'additional_notes',
+      );
+
+  String get prevent_accidental_delete => Intl.message(
+        'Prevent accidental delete',
+        name: 'prevent_accidental_delete',
+      );
+
+  String get update_request => Intl.message(
+        'Update Request',
+        name: 'update_request',
+      );
+
+  String get timebank_offers => Intl.message(
+        'Timebank Offers',
+        name: 'timebank_offers',
+      );
+
+  String other(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Other', other: 'Others', args: [count])}',
+        name: 'other',        
+        args: [count],
+      );
+
+  String get plan_details => Intl.message(
+        'Plan Details',
+        name: 'plan_details',
+      );
+
+  String get on_community_plan => Intl.message(
+        'You are on Community Plan',
+        name: 'on_community_plan',
+      );
+
+  String get change_plan => Intl.message(
+        'change plan',
+        name: 'change_plan',
+      );
+
+  String get your_community_on_the => Intl.message(
+        'Your community is on the',
+        name: 'your_community_on_the',
+      );
+
+  String get plan_yearly_1500 => Intl.message(
+        'paying yearly for \$1500 and additional charges of',
+        name: 'plan_yearly_1500',
+      );
+
+  String get plan_details_quota1 => Intl.message(
+        'per transaction billed monthly upon exceeding free monthly quota',
+        name: 'plan_details_quota1',
+      );
+
+  String get paying => Intl.message(
+        'paying',
+        name: 'paying',
+      );
+
+  String get charges_of => Intl.message(
+        'yearly and additional charges of',
+        name: 'charges_of',
+      );
+
+  String get per_transaction_quota => Intl.message(
+        'per transaction billed annualy upon exceeding free monthly quota',
+        name: 'per_transaction_quota',
+      );
+
+  String get status => Intl.message(
+        'Status',
+        name: 'status',
+      );
+
+  String get view_selected_plans => Intl.message(
+        'View selected plans',
+        name: 'view_selected_plans',
+      );
+
+  String get monthly_subscription => Intl.message(
+        'Monthly subscriptions',
+        name: 'monthly_subscription',
+      );
+
+  String subscription(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [count])}',
+        name: 'subscription',        
+        args: [count],
+      );
+
+  String get card_details => Intl.message(
+        'CARD DETAILS',
+        name: 'card_details',
+      );
+
+  String get add_new => Intl.message(
+        'Add New',
+        name: 'add_new',
+      );
+
+  String get no_cards_available => Intl.message(
+        'No cards available',
+        name: 'no_cards_available',
+      );
+
+  String get default_card_note => Intl.message(
+        'Note : long press to make a card default',
+        name: 'default_card_note',
+      );
+
+  String get bank_name => Intl.message(
+        'Bank Name',
+        name: 'bank_name',
+      );
+
+  String get default_card => Intl.message(
+        'Default Card',
+        name: 'default_card',
+      );
+
+  String get already_default_card => Intl.message(
+        'This card is already added as default card',
+        name: 'already_default_card',
+      );
+
+  String get make_default_card => Intl.message(
+        'Make this card as default',
+        name: 'make_default_card',
+      );
+
+  String get card_added => Intl.message(
+        'Card Added',
+        name: 'card_added',
+      );
+
+  String get card_sync => Intl.message(
+        'It may take couple of minutes to synchronize your payment',
+        name: 'card_sync',
+      );
+
+  String get select_group => Intl.message(
+        'Select Group',
+        name: 'select_group',
+      );
+
+  String get delete_feed => Intl.message(
+        'Delete feed',
+        name: 'delete_feed',
+      );
+
+  String get deleting_feed => Intl.message(
+        'Deleting feed..',
+        name: 'deleting_feed',
+      );
+
+  String get delete_feed_confirmation => Intl.message(
+        'Are you sure you want to delete this news feed?',
+        name: 'delete_feed_confirmation',
+      );
+
+  String get create_feed => Intl.message(
+        'Create Post',
+        name: 'create_feed',
+      );
+
+  String get create_feed_hint => Intl.message(
+        'Text, URL and Hashtags',
+        name: 'create_feed_hint',
+      );
+
+  String get create_feed_placeholder => Intl.message(
+        'What would you like to share*',
+        name: 'create_feed_placeholder',
+      );
+
+  String get creating_feed => Intl.message(
+        'Creating post',
+        name: 'creating_feed',
+      );
+
+  String get location_not_added => Intl.message(
+        'Location not added',
+        name: 'location_not_added',
+      );
+
+  String get category => Intl.message(
+        'Category',
+        name: 'category',
+      );
+
+  String get select_category => Intl.message(
+        'Please select a category',
+        name: 'select_category',
+      );
+
+  String get photo_credits => Intl.message(
+        'Photo Credits',
+        name: 'photo_credits',
+      );
+
+  String get change_image => Intl.message(
+        'Change image',
+        name: 'change_image',
+      );
+
+  String get change_attachment => Intl.message(
+        'Change Attachment',
+        name: 'change_attachment',
+      );
+
+  String get add_image => Intl.message(
+        'Add Image',
+        name: 'add_image',
+      );
+
+  String get add_attachment => Intl.message(
+        'Add Image / Document',
+        name: 'add_attachment',
+      );
+
+  String get validation_error_file_size => Intl.message(
+        'Files larger than 10 MB are not allowed',
+        name: 'validation_error_file_size',
+      );
+
+  String get large_file_size => Intl.message(
+        'Large file alert',
+        name: 'large_file_size',
+      );
+
+  String get updating_feed => Intl.message(
+        'Updating post',
+        name: 'updating_feed',
+      );
+
+  String get update_feed => Intl.message(
+        'Update post',
+        name: 'update_feed',
+      );
+
+  String get notification_alerts => Intl.message(
+        'Notification alerts',
+        name: 'notification_alerts',
+      );
+
+  String get request_accepted => Intl.message(
+        'Member has accepted a request and is waiting for approval',
+        name: 'request_accepted',
+      );
+
+  String get request_completed => Intl.message(
+        'Member claims time credits and is waiting for approval',
+        name: 'request_completed',
+      );
+
+  String get join_request_message => Intl.message(
+        'Member request to join a',
+        name: 'join_request_message',
+      );
+
+  String get offer_debit => Intl.message(
+        'Debit for one to many offer',
+        name: 'offer_debit',
+      );
+
+  String get member_exits => Intl.message(
+        'Member exits a',
+        name: 'member_exits',
+      );
+
+  String get deletion_request_message => Intl.message(
+        'Deletion request could not be processed (Due to pending transactions)',
+        name: 'deletion_request_message',
+      );
+
+  String get recieved_credits_one_to_many => Intl.message(
+        'Received Credit for one to many offer',
+        name: 'recieved_credits_one_to_many',
+      );
+
+  String get click_to_see_interests => Intl.message(
+        'Click here to see your interests',
+        name: 'click_to_see_interests',
+      );
+
+  String get click_to_see_skills => Intl.message(
+        'Click here to see your skills',
+        name: 'click_to_see_skills',
+      );
+
+  String get my_language => Intl.message(
+        'My Language',
+        name: 'my_language',
+      );
+
+  String get my_timezone => Intl.message(
+        'My Timezone',
+        name: 'my_timezone',
+      );
+
+  String get select_timebank => Intl.message(
+        'Select Timebank',
+        name: 'select_timebank',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
