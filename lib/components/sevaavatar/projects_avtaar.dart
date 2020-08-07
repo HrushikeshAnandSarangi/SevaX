@@ -192,4 +192,13 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
             borderRadius: BorderRadius.all(Radius.circular(75.0)),
             boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]));
   }
+
+  @override
+  addWebImageUrl() {
+    // TODO: implement addWebImageUrl
+    if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
+      globals.projectsAvtaarURL = globals.webImageUrl;
+      setState(() {});
+    }
+  }
 }

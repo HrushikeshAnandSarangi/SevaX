@@ -24,6 +24,8 @@ class _ImageUrlViewState extends State<ImageUrlView> {
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
   bool _saving = false;
 
+  _ImageUrlViewState();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -88,7 +90,9 @@ class _ImageUrlViewState extends State<ImageUrlView> {
                 textInputAction: TextInputAction.done,
                 keyboardType: TextInputType.url,
                 onChanged: (value) {
-                  scrapeURLFromTextField(value);
+                  if (value.length > 5) {
+                    scrapeURLFromTextField(value);
+                  }
                 },
                 decoration: InputDecoration(
                   hintText: 'Image Url',
@@ -201,4 +205,10 @@ class _ImageUrlViewState extends State<ImageUrlView> {
     color: Colors.grey,
     fontFamily: 'Europa',
   );
+
+  @override
+  addWebImageUrl(String imageUrl) {
+    // TODO: implement addWebImageUrl
+    throw UnimplementedError();
+  }
 }

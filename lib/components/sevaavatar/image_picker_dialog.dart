@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/views/image_url_view.dart';
 
 import './image_picker_handler.dart';
 
@@ -49,6 +50,10 @@ class ImagePickerDialog extends StatelessWidget {
     );
   }
 
+  void refresh() {
+    _listener.addImageUrl();
+  }
+
   void dispose() {
     _controller.dispose();
   }
@@ -67,12 +72,11 @@ class ImagePickerDialog extends StatelessWidget {
     startTime();
   }
 
-
-BuildContext dialogContext;
+  BuildContext dialogContext;
   @override
   Widget build(BuildContext _context) {
-   //context; 
-   this.dialogContext = _context;
+    //context;
+    this.dialogContext = _context;
     return new Material(
         type: MaterialType.transparency,
         child: new Opacity(
@@ -100,6 +104,30 @@ BuildContext dialogContext;
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0xFF673AB7),
                       const Color(0xFFFFFFFF)),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    dismissDialog();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return ImageUrlView();
+                        },
+                      ),
+                    ).then((value) {
+                      refresh();
+                    });
+                  },
+                  child: roundedButton(
+                    'Image Url',
+                    EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                    const Color(0xFF673AB7),
+                    const Color(0xFFFFFFFF),
+//                      Icon(
+//                        Icons.language,
+//                        color: Colors.white,
+//                      ),
+                  ),
                 ),
                 const SizedBox(height: 15.0),
                 new GestureDetector(

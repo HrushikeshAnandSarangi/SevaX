@@ -171,6 +171,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     );
     sendInviteNotification();
     globals.timebankAvatarURL = null;
+    globals.webImageUrl = null;
     globals.addedMembersId = [];
   }
 

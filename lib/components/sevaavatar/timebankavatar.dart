@@ -191,4 +191,12 @@ class _TimebankAvatarState extends State<TimebankAvatar>
             borderRadius: BorderRadius.all(Radius.circular(75.0)),
             boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]));
   }
+
+  @override
+  addWebImageUrl() {
+    if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
+      globals.timebankAvatarURL = globals.webImageUrl;
+      setState(() {});
+    }
+  }
 }

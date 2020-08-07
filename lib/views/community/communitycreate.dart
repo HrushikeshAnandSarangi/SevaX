@@ -426,7 +426,6 @@ class CreateEditCommunityViewFormState
                           focusNode: aboutFocus,
                           decoration: InputDecoration(
                             errorMaxLines: 2,
-
                             hintText: AppLocalizations.of(context)
                                 .translate('createtimebank', 'about_hint_text'),
                           ),
@@ -881,6 +880,9 @@ class CreateEditCommunityViewFormState
                                               snapshot.data.community.id;
                                         });
 
+                                        globals.timebankAvatarURL = null;
+                                        globals.webImageUrl = null;
+
                                         Navigator.pop(dialogContext);
                                         //   _formKey.currentState.reset();
                                         // _billingInformationKey.currentState.reset();
@@ -978,6 +980,9 @@ class CreateEditCommunityViewFormState
                                       .then((onValue) {
                                     print("community updated");
                                   });
+
+                                  globals.timebankAvatarURL = null;
+                                  globals.webImageUrl = null;
                                   if (dialogContext != null) {
                                     Navigator.pop(dialogContext);
                                   }

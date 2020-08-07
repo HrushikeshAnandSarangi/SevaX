@@ -937,4 +937,10 @@ class _EditTimebankViewState extends State<EditTimebankView>
     timebankModel.members = [..._members, loggedInUser.email];
     await FirestoreManager.updateTimebank(timebankModel: timebankModel);
   }
+
+  @override
+  addWebImageUrl() {
+    // TODO: implement addWebImageUrl
+    print('');
+  }
 }

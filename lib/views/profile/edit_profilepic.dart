@@ -261,4 +261,10 @@ class _EditProfilePicState extends State<EditProfilePic>
       ),
     );
   }
+
+  @override
+  addWebImageUrl() {
+    // TODO: implement addWebImageUrl
+    print('');
+  }
 }

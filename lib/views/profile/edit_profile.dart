@@ -28,6 +28,7 @@ import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../globals.dart' as globals;
 import '../core.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -72,6 +73,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   BuildContext parentContext;
   final profanityDetector = ProfanityDetector();
   bool autoValidateText = false;
+
   @override
   void initState() {
     super.initState();
@@ -89,6 +91,12 @@ class _EditProfilePageState extends State<EditProfilePage>
     }
     imagePicker = ImagePickerHandler(this, _controller);
     imagePicker.init();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -541,6 +549,30 @@ class _EditProfilePageState extends State<EditProfilePage>
     }
   }
 
+  @override
+  addWebImageUrl() {
+    // TODO: implement addWebImageUrl
+
+    if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
+      print('${globals.webImageUrl}');
+      setState(() {
+        SevaCore.of(context).loggedInUser.photoURL = globals.webImageUrl;
+        widget.userModel.photoURL = globals.webImageUrl;
+        this._saving = true;
+      });
+      globals.webImageUrl = null;
+
+      updateUserPic();
+    }
+  }
+
+  Future<void> updateUserPic() async {
+    await FirestoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
+    setState(() {
+      this._saving = false;
+    });
+  }
+
   void userDoc(String _doc, String fileName) {
     // TODO: implement userDoc
     setState(() {
@@ -677,11 +709,7 @@ class _EditProfilePageState extends State<EditProfilePage>
         widget.userModel.photoURL = imageURL;
       });
       print("image url ${imageURL}");
-      await FirestoreManager.updateUser(
-          user: SevaCore.of(context).loggedInUser);
-      setState(() {
-        this._saving = false;
-      });
+      await updateUserPic();
     }
   }
 

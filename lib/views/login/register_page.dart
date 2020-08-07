@@ -30,6 +30,8 @@ import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 import 'package:sevaexchange/views/splash_view.dart' as DefaultSplashView;
 
+import '../../globals.dart' as globals;
+
 class RegisterPage extends StatefulWidget {
   @override
   _RegisterPageState createState() => _RegisterPageState();
@@ -51,6 +53,7 @@ class _RegisterPageState extends State<RegisterPage>
   String password;
   String email = '';
   String imageUrl;
+  String webImageUrl;
   String confirmPassword;
   File selectedImage;
   String isImageSelected;
@@ -341,7 +344,7 @@ class _RegisterPageState extends State<RegisterPage>
         height: 150,
         width: 150,
         child: Container(
-          child: selectedImage == null
+          child: selectedImage == null && webImageUrl == null
               ? Container(
                   width: 150.0,
                   height: 150.0,
@@ -356,7 +359,10 @@ class _RegisterPageState extends State<RegisterPage>
               : Container(
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: FileImage(selectedImage), fit: BoxFit.cover),
+                          image: webImageUrl == null
+                              ? FileImage(selectedImage)
+                              : Image.network(webImageUrl),
+                          fit: BoxFit.cover),
                       borderRadius: BorderRadius.all(Radius.circular(75.0)),
                       boxShadow: [
                         BoxShadow(blurRadius: 7.0, color: Colors.black12)
@@ -370,7 +376,8 @@ class _RegisterPageState extends State<RegisterPage>
                               BorderRadius.all(Radius.circular(50.0))),
                       child: Icon(Icons.add_a_photo),
                     ),
-                  )),
+                  ),
+                ),
         ),
       ),
     );
@@ -611,6 +618,7 @@ class _RegisterPageState extends State<RegisterPage>
                                   return;
                                 }
                                 _formKey.currentState.save();
+
                                 await profanityCheck();
                                 isLoading = false;
                               },
@@ -681,6 +689,15 @@ class _RegisterPageState extends State<RegisterPage>
     RegExp regex =
         RegExp(r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)');
     return regex.hasMatch(email);
+  }
+
+  @override
+  addWebImageUrl() {
+    // TODO: implement addWebImageUrl
+    if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
+      webImageUrl = globals.webImageUrl;
+      setState(() {});
+    }
   }
 
   Future<void> profanityCheck() async {

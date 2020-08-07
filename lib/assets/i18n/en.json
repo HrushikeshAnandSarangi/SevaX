@@ -1253,7 +1253,6 @@
     "size_limit": "NOTE : Maximum file size is 10 MB",
     "cv_error": "Please select a CV file first before uploading"
   },
-
   "profanity": {
     "alert": "The SevaX App has a policy of not allowing profane or explicit language. Please revise your text.",
     "image_alert": "The SevaX App has a policy of not allowing profane, explicit or violent images. Please use another image.",

@@ -126,6 +126,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     globals.newsImageURL = null;
     globals.newsDocumentURL = null;
     globals.newsDocumentName = null;
+    globals.webImageUrl = null;
+
     if (dialogContext != null) {
       Navigator.pop(dialogContext);
     }

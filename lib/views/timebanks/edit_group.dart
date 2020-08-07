@@ -117,6 +117,7 @@ class EditGroupFormState extends State<EditGroupForm> {
       showDialogForSuccess(dialogTitle: "Details updated successfully.");
     });
     globals.timebankAvatarURL = null;
+    globals.webImageUrl = null;
   }
 
   Map onActivityResult;

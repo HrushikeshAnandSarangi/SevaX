@@ -110,7 +110,3 @@ abstract class NewsImagePickerListener {
   userDoc(String _doc, String fileName);
   addWebImageUrl();
 }
-
-abstract class WebImageListener {
-  addWebImageUrl(String imageUrl);
-}
