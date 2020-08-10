@@ -703,37 +703,40 @@ class _RegisterPageState extends State<RegisterPage>
   Future<void> profanityCheck() async {
     // _newsImageURL = imageURL;
     showDialogForAccountCreation();
-
-    if (this.selectedImage != null) {
-      String imageUrl = await uploadImage(email);
-      profanityImageModel = await checkProfanityForImage(imageUrl: imageUrl);
-      profanityStatusModel =
-          await getProfanityStatus(profanityImageModel: profanityImageModel);
-
-      if (profanityStatusModel.isProfane) {
-        if (dialogContext != null) {
-          Navigator.pop(dialogContext);
-        }
-        showProfanityImageAlert(
-                context: context, content: profanityStatusModel.category)
-            .then((status) {
-          if (status == 'Proceed') {
-            FirebaseStorage.instance
-                .getReferenceFromUrl(imageUrl)
-                .then((reference) {
-              reference.delete();
-
-              setState(() {});
-            }).catchError((e) => print(e));
-          } else {
-            print('error');
-          }
-        });
-      } else {
-        createUser(imageUrl: imageUrl);
-      }
+    if (webImageUrl != null && webImageUrl.isNotEmpty) {
+      createUser(imageUrl: webImageUrl);
     } else {
-      createUser(imageUrl: defaultUserImageURL);
+      if (this.selectedImage != null) {
+        String imageUrl = await uploadImage(email);
+        profanityImageModel = await checkProfanityForImage(imageUrl: imageUrl);
+        profanityStatusModel =
+            await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+        if (profanityStatusModel.isProfane) {
+          if (dialogContext != null) {
+            Navigator.pop(dialogContext);
+          }
+          showProfanityImageAlert(
+                  context: context, content: profanityStatusModel.category)
+              .then((status) {
+            if (status == 'Proceed') {
+              FirebaseStorage.instance
+                  .getReferenceFromUrl(imageUrl)
+                  .then((reference) {
+                reference.delete();
+
+                setState(() {});
+              }).catchError((e) => print(e));
+            } else {
+              print('error');
+            }
+          });
+        } else {
+          createUser(imageUrl: imageUrl);
+        }
+      } else {
+        createUser(imageUrl: defaultUserImageURL);
+      }
     }
   }
 

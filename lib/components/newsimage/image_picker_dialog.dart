@@ -141,7 +141,7 @@ class ImagePickerDialog extends StatelessWidget {
                       )
                     : Offstage(),
                 const SizedBox(height: 15.0),
-                new GestureDetector(
+                 GestureDetector(
                   onTap: () => dismissDialog(),
                   child: new Padding(
                     padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
