@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/invoice_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -24,14 +24,11 @@ class ManageTimebankSeva extends StatefulWidget {
   ManageTimebankSeva.of({this.timebankModel});
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _ManageTimebankSeva();
   }
 }
 
 class _ManageTimebankSeva extends State<ManageTimebankSeva> {
-  var _indextab = 0;
-
   CommunityModel communityModel = CommunityModel({});
   bool isSuperAdmin = false;
 
@@ -71,20 +68,14 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
               labelColor: Colors.black,
               isScrollable: true,
               tabs: <Widget>[
-                Tab(
-                    text: AppLocalizations.of(context)
-                        .translate('manage', 'edit_timebank')),
+                Tab(text: S.of(context).edit_timebank),
                 // Tab(text: "Upgrade"),
+                Tab(text: S.of(context).billing),
                 Tab(
-                    text: AppLocalizations.of(context)
-                        .translate('manage', 'billing')),
-                Tab(
-                  text: AppLocalizations.of(context)
-                      .translate('manage', 'settings'),
+                  text: S.of(context).settings,
                 ),
                 Tab(
-                  text: AppLocalizations.of(context).translate(
-                      'external_notifications', 'notification_title'),
+                  text: S.of(context).bottom_nav_notifications,
                 ),
               ],
             ),
@@ -120,16 +111,12 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
               labelColor: Colors.black,
               isScrollable: false,
               tabs: <Widget>[
+                Tab(text: S.of(context).edit_timebank),
                 Tab(
-                    text: AppLocalizations.of(context)
-                        .translate('manage', 'edit_timebank')),
-                Tab(
-                  text: AppLocalizations.of(context)
-                      .translate('manage', 'settings'),
+                  text: S.of(context).settings,
                 ),
                 Tab(
-                  text: AppLocalizations.of(context).translate(
-                      'external_notifications', 'notification_title'),
+                  text: S.of(context).bottom_nav_notifications,
                 ),
               ],
 //                onTap: (index) {
@@ -219,7 +206,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         );
       },
       child: Text(
-        AppLocalizations.of(context).translate('manage', 'delete_timebank'),
+        S.of(context).delete_timebank,
         textAlign: TextAlign.left,
         style: TextStyle(
           fontWeight: FontWeight.bold,
@@ -242,8 +229,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         );
       },
       child: Text(
-        AppLocalizations.of(context)
-            .translate('change_ownership', 'change_ownership_title'),
+        S.of(context).change_ownership,
         textAlign: TextAlign.left,
         style: TextStyle(
           fontWeight: FontWeight.bold,
@@ -268,7 +254,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         );
       },
       child: Text(
-        AppLocalizations.of(context).translate('manage', 'view_requests'),
+        S.of(context).view_requests,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
@@ -290,8 +276,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         );
       },
       child: Text(
-        AppLocalizations.of(context)
-            .translate('reported_members', 'reported_members'),
+        S.of(context).reported_members,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
@@ -461,7 +446,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 
   Widget get getTitle {
     return Text(
-      "${AppLocalizations.of(context).translate('manage', 'manage')} ${widget.timebankModel.name}",
+      "${S.of(context).manage} ${widget.timebankModel.name}",
       style: TextStyle(
         fontSize: 20,
         color: Colors.black,
@@ -748,8 +733,7 @@ class _NotificationManagerForAminsState
                     lineDivider,
                     NotificationWidgetSwitch(
                       isTurnedOn: notificationSetting.acceptedRequest,
-                      title: AppLocalizations.of(context).translate(
-                          'external_notifications', 'request_accepted'),
+                      title: S.of(context).request_accepted,
                       onPressed: (bool status) {
                         NotificationWidgetSwitch.updateNotificationFormAdmin(
                           adminSevaUserId: widget.adminSevaUserId,
@@ -762,8 +746,7 @@ class _NotificationManagerForAminsState
                     lineDivider,
                     NotificationWidgetSwitch(
                       isTurnedOn: notificationSetting.requestCompleted,
-                      title: AppLocalizations.of(context).translate(
-                          'external_notifications', 'request_completed'),
+                      title: S.of(context).request_completed,
                       onPressed: (bool status) {
                         NotificationWidgetSwitch.updateNotificationFormAdmin(
                           adminSevaUserId: widget.adminSevaUserId,
@@ -776,11 +759,9 @@ class _NotificationManagerForAminsState
                     lineDivider,
                     NotificationWidgetSwitch(
                       isTurnedOn: notificationSetting.joinRequest,
-                      title: AppLocalizations.of(context).translate(
-                              'external_notifications', 'join_request') +
-                          AppLocalizations.of(context).translate(
-                              'external_notifications',
-                              widget.isPrimaryTimebank ? 'timebank' : 'group'),
+                      title: S.of(context).join_request_message +
+                          ' ' +
+                          '${widget.isPrimaryTimebank ? S.of(context).timebank : S.of(context).group}',
                       onPressed: (bool status) {
                         NotificationWidgetSwitch.updateNotificationFormAdmin(
                           adminSevaUserId: widget.adminSevaUserId,
@@ -793,8 +774,7 @@ class _NotificationManagerForAminsState
                     lineDivider,
                     NotificationWidgetSwitch(
                       isTurnedOn: notificationSetting.debitNotificationForOffer,
-                      title: AppLocalizations.of(context)
-                          .translate('external_notifications', 'offer_debit'),
+                      title: S.of(context).offer_debit,
                       onPressed: (bool status) {
                         NotificationWidgetSwitch.updateNotificationFormAdmin(
                           adminSevaUserId: widget.adminSevaUserId,
@@ -808,11 +788,9 @@ class _NotificationManagerForAminsState
                     lineDivider,
                     NotificationWidgetSwitch(
                       isTurnedOn: notificationSetting.memberExit,
-                      title: AppLocalizations.of(context).translate(
-                              'external_notifications', 'member_exits') +
-                          AppLocalizations.of(context).translate(
-                              'external_notifications',
-                              widget.isPrimaryTimebank ? 'timebank' : 'group'),
+                      title: S.of(context).member_exits +
+                          ' ' +
+                          '${widget.isPrimaryTimebank ? S.of(context).timebank : S.of(context).group}',
                       onPressed: (bool status) {
                         NotificationWidgetSwitch.updateNotificationFormAdmin(
                           adminSevaUserId: widget.adminSevaUserId,
@@ -825,8 +803,7 @@ class _NotificationManagerForAminsState
                     lineDivider,
                     NotificationWidgetSwitch(
                       isTurnedOn: notificationSetting.softDeleteRequest,
-                      title: AppLocalizations.of(context).translate(
-                          'external_notifications', 'deletion_request'),
+                      title: S.of(context).deletion_request_message,
                       onPressed: (bool status) {
                         NotificationWidgetSwitch.updateNotificationFormAdmin(
                           adminSevaUserId: widget.adminSevaUserId,
@@ -840,8 +817,7 @@ class _NotificationManagerForAminsState
                     NotificationWidgetSwitch(
                       isTurnedOn:
                           notificationSetting.creditNotificationForOffer,
-                      title: AppLocalizations.of(context).translate(
-                          'external_notifications', 'credit_request'),
+                      title: S.of(context).recieved_credits_one_to_many,
                       onPressed: (bool status) {
                         NotificationWidgetSwitch.updateNotificationFormAdmin(
                           adminSevaUserId: widget.adminSevaUserId,

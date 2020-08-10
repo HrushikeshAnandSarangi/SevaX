@@ -116,28 +116,23 @@ class _EditProfilePageState extends State<EditProfilePage>
             ),
             SizedBox(height: 50),
             detailsBuilder(
-              title: AppLocalizations.of(context).translate('profile', 'name'),
+              title: S.of(context).name,
               text: widget.userModel.fullname,
               onTap: _updateName,
             ),
             detailsBuilder(
-              title: AppLocalizations.of(context).translate('profile', 'bio'),
-              text: widget.userModel.bio ??
-                  AppLocalizations.of(context).translate('profile', 'add_bio'),
+              title: S.of(context).bio,
+              text: widget.userModel.bio ?? S.of(context).add_bio,
               onTap: _updateBio,
             ),
             detailsBuilder(
-              title: AppLocalizations.of(context)
-                  .translate('profile', 'interests'),
-              text: AppLocalizations.of(context)
-                  .translate('profile', 'add_interests'),
+              title: S.of(context).interests,
+              text: S.of(context).click_to_see_interests,
               onTap: () => _navigateToInterestsView(usermodel),
             ),
             detailsBuilder(
-              title:
-                  AppLocalizations.of(context).translate('profile', 'skills'),
-              text: AppLocalizations.of(context)
-                  .translate('profile', 'add_skills'),
+              title: S.of(context).skills,
+              text: S.of(context).click_to_see_skills,
               onTap: () => _navigateToSkillsView(usermodel),
             ),
             Padding(
@@ -151,7 +146,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   color: Theme.of(context).primaryColor,
                   textColor: Colors.white,
                   child: Text(
-                    AppLocalizations.of(context).translate('profile', 'logout'),
+                    S.of(context).log_out,
                   ),
                   onPressed: logOut,
                 ),
@@ -337,18 +332,16 @@ class _EditProfilePageState extends State<EditProfilePage>
         return AlertDialog(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text(
-              AppLocalizations.of(context).translate('profile', 'update_name'),
-              style: TextStyle(fontSize: 15.0)),
+          title:
+              Text(S.of(context).update_name, style: TextStyle(fontSize: 15.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Form(
                 key: _formKey,
                 child: TextFormField(
-                  decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)
-                          .translate('profile', 'add_name')),
+                  decoration:
+                      InputDecoration(hintText: S.of(context).enter_name),
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,
                   style: TextStyle(fontSize: 17.0),
@@ -358,8 +351,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   ],
                   validator: (value) {
                     if (value.isEmpty) {
-                      return AppLocalizations.of(context)
-                          .translate('profile', 'enter_name');
+                      return S.of(context).enter_name_hint;
                     }
                     widget.userModel.fullname = value;
                   },
@@ -376,8 +368,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('profile', 'update'),
+                      S.of(context).update,
                       style: TextStyle(
                         fontSize: dialogButtonSize,
                       ),
@@ -432,9 +423,8 @@ class _EditProfilePageState extends State<EditProfilePage>
         return AlertDialog(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text(
-              AppLocalizations.of(context).translate('profile', 'update_bio'),
-              style: TextStyle(fontSize: 15.0)),
+          title:
+              Text(S.of(context).update_bio, style: TextStyle(fontSize: 15.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -443,8 +433,8 @@ class _EditProfilePageState extends State<EditProfilePage>
                 child: TextFormField(
                   //key: _formKey,
                   decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)
-                          .translate('profile', 'enter_bio')),
+                    hintText: S.of(context).enter_bio,
+                  ),
                   maxLength: 150,
                   maxLengthEnforced: true,
                   keyboardType: TextInputType.text,
@@ -456,11 +446,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                   },
                   validator: (value) {
                     if (value.isEmpty) {
-                      return AppLocalizations.of(context)
-                          .translate('profile', 'please_enter_bio');
+                      return S.of(context).update_bio_hint;
                     } else if (value.length < 50) {
-                      return AppLocalizations.of(context)
-                          .translate('profile', 'bio_50');
+                      return S.of(context).validation_error_bio_min_characters;
                     } else {
                       widget.userModel.bio = value;
                     }
@@ -476,8 +464,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('profile', 'update'),
+                      S.of(context).update,
                       style: TextStyle(
                         fontSize: dialogButtonSize,
                       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -26,8 +26,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
       return Scaffold(
           appBar: AppBar(
             title: Text(
-              AppLocalizations.of(context)
-                  .translate('requests', 'select_request'),
+              S.of(context).select_request,
               style: TextStyle(
                 fontSize: 18,
               ),
@@ -74,8 +73,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
                               padding: const EdgeInsets.all(16.0),
                               child: Center(
                                 child: Text(
-                                  AppLocalizations.of(context)
-                                      .translate('requests', 'no_requests'),
+                                  S.of(context).no_requests,
                                 ),
                               ),
                             );
@@ -133,8 +131,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
                         padding: const EdgeInsets.all(16.0),
                         child: Center(
                           child: Text(
-                            AppLocalizations.of(context)
-                                .translate('requests', 'no_requests'),
+                            S.of(context).no_requests,
                           ),
                         ),
                       );

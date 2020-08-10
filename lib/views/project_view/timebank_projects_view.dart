@@ -215,29 +215,6 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
     );
   }
 
-  // void _showAdminAccessMessage() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text(
-  //             AppLocalizations.of(context).translate('projects', 'alert')),
-  //         content: Text(
-  //             AppLocalizations.of(context).translate('projects', 'admin_can')),
-  //         actions: <Widget>[
-  //           FlatButton(
-  //             child: Text(
-  //                 AppLocalizations.of(context).translate('shared', 'close')),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
   void navigateToCreateProject() {
     Navigator.push(
       context,

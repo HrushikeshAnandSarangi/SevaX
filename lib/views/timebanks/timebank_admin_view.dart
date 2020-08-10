@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -321,8 +321,9 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
           .then((onValue) {
         _admins = [];
         _adminEmails = [];
-        _admins.add(getSectionTitle(context,
-            AppLocalizations.of(context).translate('members', 'admins')));
+        _admins.add(
+          getSectionTitle(context, S.of(context).admins),
+        );
         SplayTreeMap<String, dynamic>.from(onValue, (a, b) => a.compareTo(b))
             .forEach((key, user) {
           _adminEmails.add(user.email);
@@ -333,8 +334,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                 IconSlideAction(
                   icon: Icons.close,
                   color: Colors.red,
-                  caption: AppLocalizations.of(context)
-                      .translate('members', 'remove'),
+                  caption: S.of(context).remove,
                   onTap: () async {
                     List<String> admins =
                         timebankModel.admins.map((s) => s).toList();
@@ -347,8 +347,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                 IconSlideAction(
                   icon: Icons.arrow_downward,
                   color: Colors.orange,
-                  caption: AppLocalizations.of(context)
-                      .translate('members', 'coordinator'),
+                  caption: S.of(context).co_ordinators,
                   onTap: () {
                     List<String> admins =
                         timebankModel.admins.map((s) => s).toList();
@@ -387,8 +386,9 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
           .then((onValue) {
         _admins = [];
         _adminEmails = [];
-        _admins.add(getSectionTitle(context,
-            AppLocalizations.of(context).translate('members', 'coordinators')));
+        _admins.add(
+          getSectionTitle(context, S.of(context).co_ordinators),
+        );
         SplayTreeMap<String, dynamic>.from(onValue, (a, b) => a.compareTo(b))
             .forEach((key, user) {
           _adminEmails.add(user.email);
@@ -399,8 +399,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                 IconSlideAction(
                   icon: Icons.close,
                   color: Colors.red,
-                  caption: AppLocalizations.of(context)
-                      .translate('members', 'remove'),
+                  caption: S.of(context).remove,
                   onTap: () {
                     List<String> coordinators =
                         user.coordinators.map((s) => s).toList();
@@ -485,8 +484,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
             );
           }).toList();
           if (!_membersTitleDone) {
-            var memberTitle = getSectionTitle(context,
-                AppLocalizations.of(context).translate('members', 'members'));
+            var memberTitle = getSectionTitle(context, S.of(context).members);
             _members.add(memberTitle);
             _membersTitleDone = true;
           }
@@ -530,8 +528,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        getSectionTitle(context,
-            AppLocalizations.of(context).translate('members', 'coordinators')),
+        getSectionTitle(context, S.of(context).co_ordinators),
         ...model.coordinators.map((coordinator) {
           return FutureBuilder<UserModel>(
             future: FirestoreManager.getUserForId(sevaUserId: coordinator),
@@ -549,8 +546,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                     IconSlideAction(
                       icon: Icons.close,
                       color: Colors.red,
-                      caption: AppLocalizations.of(context)
-                          .translate('members', 'remove'),
+                      caption: S.of(context).remove,
                       onTap: () {
                         List<String> coordinators =
                             model.coordinators.map((s) => s).toList();
@@ -683,8 +679,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                         child: isAdmin && model.admins.length > 1
                             ? FlatButton(
                                 child: Text(
-                                  AppLocalizations.of(context)
-                                      .translate('members', 'remove_as_admin'),
+                                  S.of(context).remove_as_admin,
                                 ),
                                 onPressed: () async {
                                   // request declined
@@ -707,8 +702,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                                 ? Offstage()
                                 : FlatButton(
                                     child: Text(
-                                      AppLocalizations.of(context)
-                                          .translate('members', 'add_as_admin'),
+                                      S.of(context).add_as_admin,
                                     ),
                                     onPressed: () async {
                                       // request declined
@@ -732,8 +726,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                         width: double.infinity,
                         child: FlatButton(
                           child: Text(
-                            AppLocalizations.of(context)
-                                .translate('members', 'view_profile'),
+                            S.of(context).view_profile,
                           ),
                           onPressed: () async {
                             // Once approved
@@ -756,15 +749,14 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                             ? Offstage()
                             : FlatButton(
                                 child: Text(
-                                  AppLocalizations.of(context)
-                                      .translate('members', 'remove_member'),
+                                  S.of(context).remove_member,
                                 ),
                                 onPressed: () async {
                                   //Remove a member
                                   Map<String, bool> onActivityResult =
                                       await showAdvisory(
                                           dialogTitle:
-                                              "${AppLocalizations.of(context).translate('members', 'sure_a')} ${userModel.fullname ?? "member"} ${AppLocalizations.of(context).translate('members', 'timebank_members')}");
+                                              "${S.of(context).member_removal_confirmation} ${userModel.fullname ?? "member"} ${S.of(context).from_timebank_members}");
                                   if (onActivityResult['PROCEED']) {
                                     removeFromTimebank(model, userModel);
                                   } else {
@@ -778,8 +770,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                         width: double.infinity,
                         child: FlatButton(
                           child: Text(
-                            AppLocalizations.of(context)
-                                .translate('shared', 'proceed'),
+                            S.of(context).proceed,
                           ),
                           onPressed: () async {
                             // Once approved
@@ -918,7 +909,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('shared', 'cancel'),
+                  S.of(context).cancel,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -929,7 +920,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
               ),
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('shared', 'proceed'),
+                  S.of(context).proceed,
                   style: TextStyle(
                     fontSize: 16,
                   ),

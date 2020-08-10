@@ -7,7 +7,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -120,8 +120,7 @@ class EditGroupFormState extends State<EditGroupForm> {
 
   @override
   Widget build(BuildContext context) {
-    memberAssignment =
-        "+ ${AppLocalizations.of(context).translate('edit_group', 'add_members')}";
+    memberAssignment = "+ ${S.of(context).add_members}";
     return Form(
       key: _formKey,
       child: Container(
@@ -136,160 +135,149 @@ class EditGroupFormState extends State<EditGroupForm> {
 //umesha@uipep.com
 //upnsd143 uipep
   Widget get createSevaX {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-        Widget>[
-      Center(
-        child: Padding(
-          padding: EdgeInsets.all(5.0),
-          child: Column(
-            children: <Widget>[
-              TimebankAvatar(
-                photoUrl: widget.timebankModel.photoUrl ?? null,
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Center(
+            child: Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Column(
+                children: <Widget>[
+                  TimebankAvatar(
+                    photoUrl: widget.timebankModel.photoUrl ?? null,
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    S.of(context).group_logo,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  )
+                ],
               ),
-              SizedBox(height: 5),
-              Text(
-                AppLocalizations.of(context)
-                    .translate('edit_group', 'group_logo'),
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
+            ),
+          ),
+          headingText(S.of(context).name_your_group, true),
+          TextFormField(
+            textInputAction: TextInputAction.done,
+            controller: searchTextController,
+            decoration: InputDecoration(
+              errorText: errTxt,
+              hintText: S.of(context).timebank_name_hint,
+            ),
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              }
+              widget.timebankModel.name = value;
+            },
+          ),
+          headingText(S.of(context).about, true),
+          TextFormField(
+            initialValue: widget.timebankModel.missionStatement ?? "",
+            decoration: InputDecoration(
+              hintText: S.of(context).bit_more_about_group,
+            ),
+            textInputAction: TextInputAction.done,
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              }
+              widget.timebankModel.missionStatement = value;
+            },
+          ),
+          Row(
+            children: <Widget>[
+              headingText(
+                S.of(context).prevent_accidental_delete,
+                false,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                child: Checkbox(
+                  value: widget.timebankModel.preventAccedentalDelete,
+                  onChanged: (bool value) {
+                    print(value);
+                    setState(() {
+                      widget.timebankModel.preventAccedentalDelete = value;
+                    });
+                    print(widget.timebankModel.preventAccedentalDelete);
+                  },
                 ),
-              )
+              ),
             ],
           ),
-        ),
-      ),
-      headingText(
-          AppLocalizations.of(context).translate('edit_group', 'name'), true),
-      TextFormField(
-        textInputAction: TextInputAction.done,
-        controller: searchTextController,
-        decoration: InputDecoration(
-          errorText: errTxt,
-          hintText:
-              AppLocalizations.of(context).translate('edit_group', 'hint_text'),
-        ),
-        keyboardType: TextInputType.multiline,
-        maxLines: 1,
-        validator: (value) {
-          if (value.isEmpty) {
-            return AppLocalizations.of(context)
-                .translate('edit_group', 'enter_text');
-          }
-          widget.timebankModel.name = value;
-        },
-      ),
-      headingText(
-          AppLocalizations.of(context).translate('edit_group', 'about'), true),
-      TextFormField(
-        initialValue: widget.timebankModel.missionStatement ?? "",
-        decoration: InputDecoration(
-          hintText: AppLocalizations.of(context)
-              .translate('edit_group', 'a_bit_more'),
-        ),
-        textInputAction: TextInputAction.done,
-        keyboardType: TextInputType.multiline,
-        maxLines: null,
-        validator: (value) {
-          if (value.isEmpty) {
-            return AppLocalizations.of(context)
-                .translate('edit_group', 'enter_text');
-          }
-          widget.timebankModel.missionStatement = value;
-        },
-      ),
-      Row(
-        children: <Widget>[
-          headingText(
-            AppLocalizations.of(context)
-                .translate('edit_group', 'prevent_delete'),
-            false,
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-            child: Checkbox(
-              value: widget.timebankModel.preventAccedentalDelete,
-              onChanged: (bool value) {
-                print(value);
-                setState(() {
-                  widget.timebankModel.preventAccedentalDelete = value;
-                });
-                print(widget.timebankModel.preventAccedentalDelete);
-              },
-            ),
-          ),
-        ],
-      ),
-      Row(
-        children: <Widget>[
-          headingText(
-              AppLocalizations.of(context).translate('edit_group', 'private'),
-              false),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-            child: infoButton(
-              context: context,
-              key: GlobalKey(),
-              type: InfoType.PRIVATE_GROUP,
-            ),
-          ),
-          Column(
+          Row(
             children: <Widget>[
-              Divider(),
-              Checkbox(
-                value: widget.timebankModel.private,
-                onChanged: (bool value) {
-                  print(value);
+              headingText(S.of(context).private_group, false),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+                child: infoButton(
+                  context: context,
+                  key: GlobalKey(),
+                  type: InfoType.PRIVATE_GROUP,
+                ),
+              ),
+              Column(
+                children: <Widget>[
+                  Divider(),
+                  Checkbox(
+                    value: widget.timebankModel.private,
+                    onChanged: (bool value) {
+                      print(value);
+                      setState(() {
+                        widget.timebankModel.private = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+          headingText(S.of(context).is_pin_at_right_place, false),
+          Container(
+            margin: EdgeInsets.all(20),
+            child: Center(
+              child: LocationPickerWidget(
+                selectedAddress: selectedAddress,
+                location: location,
+                onChanged: (LocationDataModel dataModel) {
                   setState(() {
-                    widget.timebankModel.private = value;
+                    location = dataModel.geoPoint;
+                    this.selectedAddress = dataModel.location;
                   });
                 },
               ),
-            ],
+            ),
           ),
-        ],
-      ),
-      headingText(
-          AppLocalizations.of(context).translate('edit_group', 'is_pin_right'),
-          false),
-      Container(
-        margin: EdgeInsets.all(20),
-        child: Center(
-          child: LocationPickerWidget(
-            selectedAddress: selectedAddress,
-            location: location,
-            onChanged: (LocationDataModel dataModel) {
-              setState(() {
-                location = dataModel.geoPoint;
-                this.selectedAddress = dataModel.location;
-              });
-            },
-          ),
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5.0),
-        child: Container(
-          alignment: Alignment.center,
-          child: RaisedButton(
-            onPressed: () {
-              if (_formKey.currentState.validate() &&
-                  (errTxt == null || errTxt == "")) {
-                updateGroupDetails();
-              }
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                AppLocalizations.of(context).translate('edit_group', 'update'),
-                style: Theme.of(context).primaryTextTheme.button,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
+            child: Container(
+              alignment: Alignment.center,
+              child: RaisedButton(
+                onPressed: () {
+                  if (_formKey.currentState.validate() &&
+                      (errTxt == null || errTxt == "")) {
+                    updateGroupDetails();
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    S.of(context).update,
+                    style: Theme.of(context).primaryTextTheme.button,
+                  ),
+                ),
+                textColor: Colors.blue,
               ),
             ),
-            textColor: Colors.blue,
           ),
-        ),
-      ),
-    ]);
+        ]);
   }
 
   Widget headingText(String name, bool isMandatory) {
@@ -571,7 +559,7 @@ class EditGroupFormState extends State<EditGroupForm> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('edit_group', 'ok'),
+                  S.of(context).ok,
                   style: TextStyle(
                     fontSize: 16,
                   ),

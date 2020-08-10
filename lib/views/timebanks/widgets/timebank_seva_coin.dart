@@ -5,7 +5,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -23,7 +23,6 @@ class TimeBankSevaCoin extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return TimeBankSevaCoinState();
   }
 }
@@ -70,8 +69,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                     child: RaisedButton(
                       onPressed: _showFontSizePickerDialog,
                       child: Text(
-                        AppLocalizations.of(context)
-                            .translate('coins', 'donate'),
+                        S.of(context).donate,
                         style: Theme.of(context).primaryTextTheme.button,
                       ),
                     ))
@@ -87,10 +85,9 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
     if (connResult == ConnectivityResult.none) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)
-              .translate('shared', 'check_internet')),
+          content: Text(S.of(context).check_internet),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            label: S.of(context).dismiss,
             onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
           ),
         ),
@@ -103,10 +100,9 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
     if (this.widget.loggedInUser.currentBalance <= 0) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-              AppLocalizations.of(context).translate('coins', 'not_enough')),
+          content: Text(S.of(context).insufficient_credits_to_donate),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            label: S.of(context).dismiss,
             onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
           ),
         ),
@@ -182,35 +178,28 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title:
-          Text(AppLocalizations.of(context).translate('coins', 'donate_coins')),
+      title: Text(S.of(context).donate_to_timebank),
       content: Form(
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(
-                '${AppLocalizations.of(context).translate('coins', 'current_coins')} ' +
-                    widget.maxAmount.toStringAsFixed(2).toString()),
+            Text('${S.of(context).current_seva_credit} ' +
+                widget.maxAmount.toStringAsFixed(2).toString()),
             TextFormField(
               decoration: InputDecoration(
-                hintText: AppLocalizations.of(context)
-                    .translate('coins', 'coins_hint'),
+                hintText: S.of(context).number_of_seva_credit,
               ),
               keyboardType: TextInputType.number,
               validator: (value) {
                 if (value.isEmpty) {
-                  return AppLocalizations.of(context)
-                      .translate('coins', 'empty_error');
+                  return S.of(context).empty_credit_donation_error;
                 } else if (int.parse(value) > widget.maxAmount) {
-                  return AppLocalizations.of(context)
-                      .translate('coins', 'not_enough');
+                  return S.of(context).insufficient_credits_to_donate;
                 } else if (int.parse(value) == 0) {
-                  return AppLocalizations.of(context)
-                      .translate('coins', 'zero_err');
+                  return S.of(context).zero_credit_donation_error;
                 } else if (int.parse(value) <= 0) {
-                  return AppLocalizations.of(context)
-                      .translate('coins', 'less_zero_err');
+                  return S.of(context).negative_credit_donation_error;
                 } else {
                   _donateAmount = double.parse(value);
                   return null;
@@ -237,7 +226,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
             SizedBox(
               height: 10,
             ),
-            Text(AppLocalizations.of(context).translate('coins', 'hint')),
+            Text(S.of(context).donate_message),
           ],
         ),
       ),
@@ -247,7 +236,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
           color: Theme.of(context).accentColor,
           textColor: FlavorConfig.values.buttonTextColor,
           child: Text(
-            AppLocalizations.of(context).translate('coins', 'donate'),
+            S.of(context).donate,
             style: TextStyle(
               fontSize: dialogButtonSize,
             ),
@@ -269,7 +258,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
         ),
         FlatButton(
           child: Text(
-            AppLocalizations.of(context).translate('shared', 'cancel'),
+            S.of(context).cancel,
             style: TextStyle(color: Colors.red, fontSize: dialogButtonSize),
           ),
           onPressed: () {
@@ -308,13 +297,12 @@ class _InputDonateSuccessDialogState extends State<InputDonateSuccessDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
-          AppLocalizations.of(context).translate('coins', 'donate_totimebank')),
+      title: Text(S.of(context).donate_to_timebank),
       content: Container(
-          height: MediaQuery.of(context).size.height / 10,
-          width: MediaQuery.of(context).size.width / 12,
-          child: Text(AppLocalizations.of(context)
-              .translate('coins', 'donate_success'))),
+        height: MediaQuery.of(context).size.height / 10,
+        width: MediaQuery.of(context).size.width / 12,
+        child: Text(S.of(context).donation_success),
+      ),
     );
   }
 }

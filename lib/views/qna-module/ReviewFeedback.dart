@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/qna-module/FeedbackConstants.dart';
 
@@ -37,8 +37,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
-            AppLocalizations.of(context)
-                .translate('review_feedback', 'review_toolbar_title'),
+            S.of(context).review,
             style: TextStyle(
               color: Colors.white,
             ),
@@ -229,13 +228,11 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                 style: TextStyle(fontSize: 14.0, color: Colors.black87),
                 decoration: InputDecoration(
                   errorText: _validate
-                      ? AppLocalizations.of(context)
-                          .translate('review_feedback', 'cant_leave_blank')
+                      ? S.of(context).validation_error_required_fields
                       : null,
                   hintStyle: TextStyle(fontSize: 14),
                   // hintText:'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
-                  hintText: AppLocalizations.of(context)
-                      .translate('review_feedback', 'take_a_moment'),
+                  hintText: S.of(context).review_feedback_message,
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: Colors.red, //this has no effect
@@ -253,8 +250,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                   shape: StadiumBorder(),
                   color: Color(0x0FF766FE0),
                   child: Text(
-                    AppLocalizations.of(context)
-                        .translate('review_feedback', 'review_submit'),
+                    S.of(context).submit,
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {

@@ -647,12 +647,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           );
                           return;
                         }
-                        // if (!hasRegisteredLocation()) {
-                        //   showDialogForTitle(
-                        //       dialogTitle: AppLocalizations.of(context)
-                        //           .translate('projects', 'add_location_err'));
-                        //   return;
-                        // }
+
                         projectModel.communityId =
                             SevaCore.of(context).loggedInUser.currentCommunity;
                         projectModel.completedRequests = [];

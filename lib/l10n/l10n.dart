@@ -2864,6 +2864,896 @@ class S {
         'Select Timebank',
         name: 'select_timebank',
       );
+
+  String get name => Intl.message(
+        'Name',
+        name: 'name',
+      );
+
+  String get add_bio => Intl.message(
+        'Add your bio',
+        name: 'add_bio',
+      );
+
+  String get enter_name => Intl.message(
+        'Enter name',
+        name: 'enter_name',
+      );
+
+  String get update_name => Intl.message(
+        'Update name',
+        name: 'update_name',
+      );
+
+  String get enter_name_hint => Intl.message(
+        'Please enter name to update',
+        name: 'enter_name_hint',
+      );
+
+  String get update_bio => Intl.message(
+        'Update bio',
+        name: 'update_bio',
+      );
+
+  String get update_bio_hint => Intl.message(
+        'Please enter bio to update',
+        name: 'update_bio_hint',
+      );
+
+  String get enter_bio => Intl.message(
+        'Enter bio',
+        name: 'enter_bio',
+      );
+
+  String get available_as_needed => Intl.message(
+        'Available as needed - Open to Offers',
+        name: 'available_as_needed',
+      );
+
+  String get would_be_unblocked => Intl.message(
+        'would be unblocked',
+        name: 'would_be_unblocked',
+      );
+
+  String get jobs => Intl.message(
+        'Jobs',
+        name: 'jobs',
+      );
+
+  String get hours_worked => Intl.message(
+        'Hours worked',
+        name: 'hours_worked',
+      );
+
+  String get less => Intl.message(
+        'Less',
+        name: 'less',
+      );
+
+  String get more => Intl.message(
+        'More',
+        name: 'more',
+      );
+
+  String get no_ratings_yet => Intl.message(
+        'No ratings yet',
+        name: 'no_ratings_yet',
+      );
+
+  String get message => Intl.message(
+        'Message',
+        name: 'message',
+      );
+
+  String get not_completed_any_tasks => Intl.message(
+        'not completed any tasks',
+        name: 'not_completed_any_tasks',
+      );
+
+  String get review_earnings => Intl.message(
+        'Review Earnings',
+        name: 'review_earnings',
+      );
+
+  String get no_transactions_yet => Intl.message(
+        'You do not have any transaction yet',
+        name: 'no_transactions_yet',
+      );
+
+  String get anonymous => Intl.message(
+        'Anonymous',
+        name: 'anonymous',
+      );
+
+  String get date => Intl.message(
+        'Date',
+        name: 'date',
+      );
+
+  String get search_template_hint => Intl.message(
+        'Enter name of a Project Template',
+        name: 'search_template_hint',
+      );
+
+  String get create_project_from_template => Intl.message(
+        'Create Project from Template',
+        name: 'create_project_from_template',
+      );
+
+  String get create_new_project => Intl.message(
+        'Create new Project',
+        name: 'create_new_project',
+      );
+
+  String get no_templates_found => Intl.message(
+        'No templates found',
+        name: 'no_templates_found',
+      );
+
+  String get select_template => Intl.message(
+        'Please select a Template from the list of available Templates',
+        name: 'select_template',
+      );
+
+  String get template_alert => Intl.message(
+        'Template alert',
+        name: 'template_alert',
+      );
+
+  String get new_project => Intl.message(
+        'New Project',
+        name: 'new_project',
+      );
+
+  String get review_feedback_message => Intl.message(
+        'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
+        name: 'review_feedback_message',
+      );
+
+  String get submit => Intl.message(
+        'Submit',
+        name: 'submit',
+      );
+
+  String get review => Intl.message(
+        'Review',
+        name: 'review',
+      );
+
+  String get redirecting_to_messages => Intl.message(
+        'Redirecting to messages',
+        name: 'redirecting_to_messages',
+      );
+
+  String get completing_task => Intl.message(
+        'Completing task',
+        name: 'completing_task',
+      );
+
+  String get total_spent => Intl.message(
+        'Total Spent',
+        name: 'total_spent',
+      );
+
+  String get has_worked_for => Intl.message(
+        'has worked for',
+        name: 'has_worked_for',
+      );
+
+  String get email_not_updated => Intl.message(
+        'User email not updated',
+        name: 'email_not_updated',
+      );
+
+  String get no_pending_requests => Intl.message(
+        'No pending requests',
+        name: 'no_pending_requests',
+      );
+
+  String get choose_suitable_plan => Intl.message(
+        'Choose a suitable plan',
+        name: 'choose_suitable_plan',
+      );
+
+  String get click_for_more_info => Intl.message(
+        'Click here for more info',
+        name: 'click_for_more_info',
+      );
+
+  String get taking_to_new_timebank => Intl.message(
+        'Taking you to your new Timebank...',
+        name: 'taking_to_new_timebank',
+      );
+
+  String get bill_me => Intl.message(
+        'Bill Me',
+        name: 'bill_me',
+      );
+
+  String get bill_me_info1 => Intl.message(
+        'This is available only to users who have prior arrangements with Seva Exchange. Please send an email to billme@sevaexchange.com for details',
+        name: 'bill_me_info1',
+      );
+
+  String get bill_me_info2 => Intl.message(
+        'Only users who have been approved a priori can check the “Bill Me” box. If you would like to do this, please send an email to billme@sevaexchange.com',
+        name: 'bill_me_info2',
+      );
+
+  String get billable_transactions => Intl.message(
+        'Billable transactions',
+        name: 'billable_transactions',
+      );
+
+  String get currently_active => Intl.message(
+        'Currently Active',
+        name: 'currently_active',
+      );
+
+  String get choose => Intl.message(
+        'Choose',
+        name: 'choose',
+      );
+
+  String get plan_change => Intl.message(
+        'Plan change',
+        name: 'plan_change',
+      );
+
+  String get ownership_success => Intl.message(
+        'Congratulations! You are now the new owner of the Timebank',
+        name: 'ownership_success',
+      );
+
+  String get change => Intl.message(
+        'Change',
+        name: 'change',
+      );
+
+  String get contact_seva_to_change_plan => Intl.message(
+        'Please contact SevaX support to change the plans',
+        name: 'contact_seva_to_change_plan',
+      );
+
+  String get changing_ownership_of => Intl.message(
+        'Changing ownership of this',
+        name: 'changing_ownership_of',
+      );
+
+  String get to_other_admin => Intl.message(
+        'to another admin.',
+        name: 'to_other_admin',
+      );
+
+  String get change_to => Intl.message(
+        'Change to',
+        name: 'change_to',
+      );
+
+  String get invitation_sent1 => Intl.message(
+        'We have sent your transfer of ownership invitation. You will remain to be the owner of Timebank',
+        name: 'invitation_sent1',
+      );
+
+  String get invitation_sent2 => Intl.message(
+        'until',
+        name: 'invitation_sent2',
+      );
+
+  String get invitation_sent3 => Intl.message(
+        'accepts the invitation and provides their new billing information.',
+        name: 'invitation_sent3',
+      );
+
+  String get by_accepting_owner_timebank => Intl.message(
+        'By accepting, you will become owner of the timebank',
+        name: 'by_accepting_owner_timebank',
+      );
+
+  String get select_user => Intl.message(
+        'Please select a user',
+        name: 'select_user',
+      );
+
+  String get change_ownership_pending_task_message => Intl.message(
+        'You have pending tasks. Please complete tasks before ownership can be transferred',
+        name: 'change_ownership_pending_task_message',
+      );
+
+  String get change_ownership_pending_payment1 => Intl.message(
+        'You have payment pending of',
+        name: 'change_ownership_pending_payment1',
+      );
+
+  String get change_ownership_pending_payment2 => Intl.message(
+        '. Please complete these payment before ownership can be transferred',
+        name: 'change_ownership_pending_payment2',
+      );
+
+  String get search_admin => Intl.message(
+        'Search Admin',
+        name: 'search_admin',
+      );
+
+  String get change_ownership_message1 => Intl.message(
+        'You are the new owner of Timebank',
+        name: 'change_ownership_message1',
+      );
+
+  String get change_ownership_message2 => Intl.message(
+        'You need to accept it to complete the process',
+        name: 'change_ownership_message2',
+      );
+
+  String get change_ownership_advisory => Intl.message(
+        'You are required to provide billing details for this Timebank - including the new billing address. The transfer of ownership will not be completed until this is done.',
+        name: 'change_ownership_advisory',
+      );
+
+  String get change_ownership_already_invited => Intl.message(
+        'already invited.',
+        name: 'change_ownership_already_invited',
+      );
+
+  String get donate => Intl.message(
+        'Donate',
+        name: 'donate',
+      );
+
+  String get donate_to_timebank => Intl.message(
+        'Donate seva credits to Timebank',
+        name: 'donate_to_timebank',
+      );
+
+  String get insufficient_credits_to_donate => Intl.message(
+        'You do not have sufficient credits to donate!',
+        name: 'insufficient_credits_to_donate',
+      );
+
+  String get current_seva_credit => Intl.message(
+        'Your current seva credits is',
+        name: 'current_seva_credit',
+      );
+
+  String get donate_message => Intl.message(
+        'On click of donate your balance will be adjusted',
+        name: 'donate_message',
+      );
+
+  String get zero_credit_donation_error => Intl.message(
+        'You cannot donate 0 credits',
+        name: 'zero_credit_donation_error',
+      );
+
+  String get negative_credit_donation_error => Intl.message(
+        'You cannot donate lesser than 0 credits',
+        name: 'negative_credit_donation_error',
+      );
+
+  String get empty_credit_donation_error => Intl.message(
+        'Donate some credits',
+        name: 'empty_credit_donation_error',
+      );
+
+  String get number_of_seva_credit => Intl.message(
+        'No of seva credits',
+        name: 'number_of_seva_credit',
+      );
+
+  String get donation_success => Intl.message(
+        'You have donated credits successfully',
+        name: 'donation_success',
+      );
+
+  String get sending_invitation => Intl.message(
+        'Sending invitation...',
+        name: 'sending_invitation',
+      );
+
+  String get ownership_transfer_error => Intl.message(
+        'Error occurred! Please come back later and try again.',
+        name: 'ownership_transfer_error',
+      );
+
+  String get add_members => Intl.message(
+        'Add members',
+        name: 'add_members',
+      );
+
+  String get group_logo => Intl.message(
+        'Group logo',
+        name: 'group_logo',
+      );
+
+  String get name_your_group => Intl.message(
+        'Name your group',
+        name: 'name_your_group',
+      );
+
+  String get bit_more_about_group => Intl.message(
+        'Ex: A bit more about your group',
+        name: 'bit_more_about_group',
+      );
+
+  String get private_group => Intl.message(
+        'Private Group',
+        name: 'private_group',
+      );
+
+  String get is_pin_at_right_place => Intl.message(
+        'Is this pin at a right place?',
+        name: 'is_pin_at_right_place',
+      );
+
+  String get find_timebanks => Intl.message(
+        'Find Timebanks',
+        name: 'find_timebanks',
+      );
+
+  String get groups_within => Intl.message(
+        'Groups within',
+        name: 'groups_within',
+      );
+
+  String get edit_group => Intl.message(
+        'Edit Group',
+        name: 'edit_group',
+      );
+
+  String get view_requests => Intl.message(
+        'View requests',
+        name: 'view_requests',
+      );
+
+  String get delete_group => Intl.message(
+        'Delete Group',
+        name: 'delete_group',
+      );
+
+  String get settings => Intl.message(
+        'Settings',
+        name: 'settings',
+      );
+
+  String get invite_members => Intl.message(
+        'Invite Members',
+        name: 'invite_members',
+      );
+
+  String get invite_via_code => Intl.message(
+        'Invite via code',
+        name: 'invite_via_code',
+      );
+
+  String get bulk_invite_users_csv => Intl.message(
+        'Bulk invite users by CSV',
+        name: 'bulk_invite_users_csv',
+      );
+
+  String get csv_message1 => Intl.message(
+        'Download the CSV template to',
+        name: 'csv_message1',
+      );
+
+  String get csv_message2 => Intl.message(
+        'fill the users you would like to add',
+        name: 'csv_message2',
+      );
+
+  String get csv_message3 => Intl.message(
+        'then upload the CSV.',
+        name: 'csv_message3',
+      );
+
+  String get download_sample_csv => Intl.message(
+        'Download sample CSV file',
+        name: 'download_sample_csv',
+      );
+
+  String get choose_csv => Intl.message(
+        'Choose CSV file to bulk invite Members',
+        name: 'choose_csv',
+      );
+
+  String get csv_size_limit => Intl.message(
+        'NOTE : Maximum file size is 1 MB',
+        name: 'csv_size_limit',
+      );
+
+  String get uploading_csv => Intl.message(
+        'Uploading CSV File',
+        name: 'uploading_csv',
+      );
+
+  String get uploaded_successfully => Intl.message(
+        'Uploaded Successfully',
+        name: 'uploaded_successfully',
+      );
+
+  String get csv_error => Intl.message(
+        'Please select a CSV file first before uploading',
+        name: 'csv_error',
+      );
+
+  String get upload => Intl.message(
+        'Upload',
+        name: 'upload',
+      );
+
+  String get large_file_alert => Intl.message(
+        'Large file alert',
+        name: 'large_file_alert',
+      );
+
+  String get csv_large_file_message => Intl.message(
+        'Files larger than 1 MB are not allowed',
+        name: 'csv_large_file_message',
+      );
+
+  String get not_found => Intl.message(
+        'not found',
+        name: 'not_found',
+      );
+
+  String get resend_invite => Intl.message(
+        'Resend Invitation',
+        name: 'resend_invite',
+      );
+
+  String get add => Intl.message(
+        'Add',
+        name: 'add',
+      );
+
+  String get no_codes_generated => Intl.message(
+        'No codes generated yet.',
+        name: 'no_codes_generated',
+      );
+
+  String get not_yet_redeemed => Intl.message(
+        'Not yet redeemed',
+        name: 'not_yet_redeemed',
+      );
+
+  String get redeemed_by => Intl.message(
+        'Redeemed by',
+        name: 'redeemed_by',
+      );
+
+  String get timebank_code => Intl.message(
+        'Timebank code :',
+        name: 'timebank_code',
+      );
+
+  String get expired => Intl.message(
+        'Expired',
+        name: 'expired',
+      );
+
+  String get active => Intl.message(
+        'Active',
+        name: 'active',
+      );
+
+  String get share_code => Intl.message(
+        'Share code',
+        name: 'share_code',
+      );
+
+  String get invite_message => Intl.message(
+        'Timebanks are communities that allow you to volunteer and also receive time credits towards getting things done for you. Use the code',
+        name: 'invite_message',
+      );
+
+  String get invite_prompt => Intl.message(
+        'when prompted to join this Timebank. Please download the app from the links provided at https://sevaexchange.page.link/sevaxapp',
+        name: 'invite_prompt',
+      );
+
+  String get code_generated => Intl.message(
+        'Code generated',
+        name: 'code_generated',
+      );
+
+  String get is_your_code => Intl.message(
+        'is your code.',
+        name: 'is_your_code',
+      );
+
+  String get publish_code => Intl.message(
+        'Publish code',
+        name: 'publish_code',
+      );
+
+  String get invite_via_email => Intl.message(
+        'Invite members via email',
+        name: 'invite_via_email',
+      );
+
+  String get no_member_found => Intl.message(
+        'No member found',
+        name: 'no_member_found',
+      );
+
+  String get declined => Intl.message(
+        'Declined',
+        name: 'declined',
+      );
+
+  String get search_by_email_name => Intl.message(
+        'Search members via email,name',
+        name: 'search_by_email_name',
+      );
+
+  String get no_groups_found => Intl.message(
+        'No groups found',
+        name: 'no_groups_found',
+      );
+
+  String get no_image_available => Intl.message(
+        'No Image Avaialable',
+        name: 'no_image_available',
+      );
+
+  String get group_description => Intl.message(
+        'Groups within a Timebank allow for granular activities. You can join one of the groups below or create your own group',
+        name: 'group_description',
+      );
+
+  String get updating_users => Intl.message(
+        'Updating Users',
+        name: 'updating_users',
+      );
+
+  String get admins_organizers => Intl.message(
+        'Admins & Organizers',
+        name: 'admins_organizers',
+      );
+
+  String get enter_reason_to_exit => Intl.message(
+        'Enter reason to exit',
+        name: 'enter_reason_to_exit',
+      );
+
+  String get enter_reason_to_exit_hint => Intl.message(
+        'Please enter reason to exit',
+        name: 'enter_reason_to_exit_hint',
+      );
+
+  String get member_removal_confirmation => Intl.message(
+        'Are you sure you want to remove',
+        name: 'member_removal_confirmation',
+      );
+
+  String get loan => Intl.message(
+        'Loan',
+        name: 'loan',
+      );
+
+  String get loan_seva_credit_to_user => Intl.message(
+        'Loan seva credits to user',
+        name: 'loan_seva_credit_to_user',
+      );
+
+  String get timebank_seva_credit => Intl.message(
+        'Your timebank seva credits is',
+        name: 'timebank_seva_credit',
+      );
+
+  String get timebank_loan_message => Intl.message(
+        'On click of Approve, Timebank balance will be adjusted',
+        name: 'timebank_loan_message',
+      );
+
+  String get loan_zero_credit_error => Intl.message(
+        'You cannot loan 0 credits',
+        name: 'loan_zero_credit_error',
+      );
+
+  String get negative_credit_loan_error => Intl.message(
+        'You cannot loan lesser than 0 credits',
+        name: 'negative_credit_loan_error',
+      );
+
+  String get empty_credit_loan_error => Intl.message(
+        'Loan some credits',
+        name: 'empty_credit_loan_error',
+      );
+
+  String get loan_success => Intl.message(
+        'You have loaned credits successfully',
+        name: 'loan_success',
+      );
+
+  String get co_ordinators => Intl.message(
+        'Coordinators',
+        name: 'co_ordinators',
+      );
+
+  String get remove => Intl.message(
+        'Remove',
+        name: 'remove',
+      );
+
+  String get promote => Intl.message(
+        'Promote',
+        name: 'promote',
+      );
+
+  String get demote => Intl.message(
+        'Demote',
+        name: 'demote',
+      );
+
+  String get billing => Intl.message(
+        'Billing',
+        name: 'billing',
+      );
+
+  String get edit_timebank => Intl.message(
+        'Edit Timebank',
+        name: 'edit_timebank',
+      );
+
+  String get delete_timebank => Intl.message(
+        'Delete Timebank',
+        name: 'delete_timebank',
+      );
+
+  String get exit_user => Intl.message(
+        'Exit User',
+        name: 'exit_user',
+      );
+
+  String get remove_user => Intl.message(
+        'Remove User',
+        name: 'remove_user',
+      );
+
+  String get transfer_data_hint => Intl.message(
+        'Transfer ownership of this user\'s data to another user, like group ownership.',
+        name: 'transfer_data_hint',
+      );
+
+  String get transfer_to => Intl.message(
+        'Transfer to',
+        name: 'transfer_to',
+      );
+
+  String get search_user => Intl.message(
+        'Search a user',
+        name: 'search_user',
+      );
+
+  String get transer_hint_data_deletion => Intl.message(
+        'All data not transferred will be deleted.',
+        name: 'transer_hint_data_deletion',
+      );
+
+  String get user_removal_success => Intl.message(
+        'User is successfully removed from the timebank',
+        name: 'user_removal_success',
+      );
+
+  String get error_occured => Intl.message(
+        'Error occurred! Please come back later and try again.',
+        name: 'error_occured',
+      );
+
+  String get create_group => Intl.message(
+        'Create Group',
+        name: 'create_group',
+      );
+
+  String get group_exists => Intl.message(
+        'Group name already exists',
+        name: 'group_exists',
+      );
+
+  String get group_subset => Intl.message(
+        'Group is a subset of a Timebank that may be temporary. Ex: committees, project teams.',
+        name: 'group_subset',
+      );
+
+  String get part_of => Intl.message(
+        'Part of',
+        name: 'part_of',
+      );
+
+  String get global_timebank => Intl.message(
+        'SevaX Global Network of Timebanks',
+        name: 'global_timebank',
+      );
+
+  String get getting_volunteers => Intl.message(
+        'Getting volunteers...',
+        name: 'getting_volunteers',
+      );
+
+  String get no_volunteers_yet => Intl.message(
+        'No Volunteers joined yet.',
+        name: 'no_volunteers_yet',
+      );
+
+  String get read_less => Intl.message(
+        'Read Less',
+        name: 'read_less',
+      );
+
+  String get read_more => Intl.message(
+        'Read More',
+        name: 'read_more',
+      );
+
+  String get admin_not_available => Intl.message(
+        'Admin not Available',
+        name: 'admin_not_available',
+      );
+
+  String get admin_cannot_create_message => Intl.message(
+        'Admins cannot create message',
+        name: 'admin_cannot_create_message',
+      );
+
+  String get volunteers => Intl.message(
+        'Volunteer(s)',
+        name: 'volunteers',
+      );
+
+  String get and_others => Intl.message(
+        'and others',
+        name: 'and_others',
+      );
+
+  String get admins => Intl.message(
+        'Admins',
+        name: 'admins',
+      );
+
+  String get remove_as_admin => Intl.message(
+        'Remove as admin',
+        name: 'remove_as_admin',
+      );
+
+  String get add_as_admin => Intl.message(
+        'Add as admin',
+        name: 'add_as_admin',
+      );
+
+  String get view_profile => Intl.message(
+        'View profile',
+        name: 'view_profile',
+      );
+
+  String get remove_member => Intl.message(
+        'Remove member',
+        name: 'remove_member',
+      );
+
+  String get from_timebank_members => Intl.message(
+        'from Timebank members?',
+        name: 'from_timebank_members',
+      );
+
+  String get no_volunteers_available => Intl.message(
+        'No volunteers available',
+        name: 'no_volunteers_available',
+      );
+
+  String get select_volunteer => Intl.message(
+        'Select volunteers',
+        name: 'select_volunteer',
+      );
+
+  String get no_requests => Intl.message(
+        'No Requests',
+        name: 'no_requests',
+      );
+
+  String get switching_timebank => Intl.message(
+        'Switching Timebank',
+        name: 'switching_timebank',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
@@ -142,8 +142,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   Widget getTimebackList(BuildContext context, String timebankId) {
     if (isProgressBarActive) {
       return AlertDialog(
-        title: Text(AppLocalizations.of(context)
-            .translate('members', 'updating_users')),
+        title: Text(S.of(context).updating_users),
         content: LinearProgressIndicator(),
       );
     }
@@ -215,8 +214,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
   Future loadAllRequest(List<JoinRequestModel> modelItemList) async {
     _requestsWidgets = [];
-    _requestsWidgets.add(getSectionTitle(context,
-        AppLocalizations.of(context).translate('members', 'requests')));
+    _requestsWidgets.add(
+      getSectionTitle(
+        context,
+        S.of(context).requests,
+      ),
+    );
     for (var i = 0; i < modelItemList.length; i++) {
       if (modelItemList[i] == null ||
           modelItemList[i].operationTaken ||
@@ -492,7 +495,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         padding: EdgeInsets.all(10),
         child: Center(
           child: Text(
-              AppLocalizations.of(context).translate('members', 'no_users')),
+            S.of(context).no_user_found,
+          ),
         ),
       ),
     );
@@ -545,8 +549,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         timebankModel: timebankModel,
       ));
     }
-    _adminsWidgets.add(getSectionTitle(context,
-        AppLocalizations.of(context).translate('members', 'admin_organizers')));
+    _adminsWidgets
+        .add(getSectionTitle(context, S.of(context).admins_organizers));
     SplayTreeMap<String, dynamic>.from(adminUserModel, (a, b) => a.compareTo(b))
         .forEach((key, user) {
       String email = user.email.toString().trim();
@@ -647,7 +651,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
-              '${AppLocalizations.of(context).translate('members', 'exit')} ${widget.isFromGroup ? AppLocalizations.of(context).translate('members', 'group') : AppLocalizations.of(context).translate('members', 'timebank')}',
+              '${S.of(context).exit} ${widget.isFromGroup ? S.of(context).group : S.of(context).timebank}',
               style: TextStyle(fontSize: 15.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -656,8 +660,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                 key: _formKey,
                 child: TextFormField(
                   decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)
-                          .translate('members', 'enter_reason')),
+                      hintText: S.of(context).enter_reason_to_exit),
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,
                   style: TextStyle(fontSize: 17.0),
@@ -666,8 +669,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                   ],
                   validator: (value) {
                     if (value.isEmpty) {
-                      return AppLocalizations.of(context)
-                          .translate('members', 'reason_1');
+                      return S.of(context).enter_reason_to_exit_hint;
                     }
                     reason = value;
                     globals.userExitReason = value;
@@ -685,7 +687,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      AppLocalizations.of(context).translate('members', 'exit'),
+                      S.of(context).exit,
                       style: TextStyle(
                         fontSize: dialogButtonSize,
                       ),
@@ -695,11 +697,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                       if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content: Text(AppLocalizations.of(context)
-                                .translate('shared', 'check_internet')),
+                            content: Text(S.of(context).check_internet),
                             action: SnackBarAction(
-                              label: AppLocalizations.of(context)
-                                  .translate('shared', 'dismiss'),
+                              label: S.of(context).dismiss,
                               onPressed: () => _scaffoldKey.currentState
                                   .hideCurrentSnackBar(),
                             ),
@@ -745,8 +745,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                   ),
                   FlatButton(
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('shared', 'cancel'),
+                      S.of(context).cancel,
                       style: TextStyle(
                           fontSize: dialogButtonSize, color: Colors.red),
                     ),
@@ -886,7 +885,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                   Navigator.pop(_context);
                   Map<String, bool> onActivityResult = await showAdvisory(
                       dialogTitle:
-                          "${AppLocalizations.of(context).translate('members', 'are_you_sure')} ${user.fullname}?");
+                          "${S.of(context).member_removal_confirmation} ${user.fullname}?");
                   if (onActivityResult['PROCEED']) {
                     setState(() {
                       isProgressBarActive = true;
@@ -1006,7 +1005,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                   //Here we need to put dialog
                   Map<String, bool> onActivityResult = await showAdvisory(
                       dialogTitle:
-                          "${AppLocalizations.of(context).translate('members', 'are_you_sure')} ${user.fullname}?");
+                          "${S.of(context).member_removal_confirmation} ${user.fullname}?");
                   if (onActivityResult['PROCEED']) {
                     setState(() {
                       isProgressBarActive = true;
@@ -1047,10 +1046,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     if (connResult == ConnectivityResult.none) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)
-              .translate('shared', 'check_internet')),
+          content: Text(S.of(context).check_internet),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            label: S.of(context).dismiss,
             onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
           ),
         ),
@@ -1061,10 +1059,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     if (timebankModel.balance <= 0) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-              AppLocalizations.of(context).translate('loan', 'not_enough')),
+          content: Text(S.of(context).insufficient_credits_to_donate),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            label: S.of(context).dismiss,
             onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
           ),
         ),
@@ -1109,100 +1106,100 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     }
   }
 
-  Future _addUserToCommunityAndUpdateUserCommunityList({
-    TimebankModel model,
-    List<UserModel> members,
-    String currentCommunity,
-  }) async {
-    if (model == null || members == null || members.length == 0) {
-      return;
-    }
-    if (model.members == null) {
-      model.members = List<String>();
-    }
-    var communityModel =
-        await getCommunityDetailsByCommunityId(communityId: currentCommunity);
-    members.forEach((user) async {
-      //Update community members inside community collection
-      var communityMembers = List<String>();
-      if (!communityModel.members.contains(user)) {
-        communityMembers.addAll(communityModel.members);
-      }
-      communityMembers.add(user.sevaUserID);
-      communityModel.members = communityMembers;
+  // Future _addUserToCommunityAndUpdateUserCommunityList({
+  //   TimebankModel model,
+  //   List<UserModel> members,
+  //   String currentCommunity,
+  // }) async {
+  //   if (model == null || members == null || members.length == 0) {
+  //     return;
+  //   }
+  //   if (model.members == null) {
+  //     model.members = List<String>();
+  //   }
+  //   var communityModel =
+  //       await getCommunityDetailsByCommunityId(communityId: currentCommunity);
+  //   members.forEach((user) async {
+  //     //Update community members inside community collection
+  //     var communityMembers = List<String>();
+  //     if (!communityModel.members.contains(user)) {
+  //       communityMembers.addAll(communityModel.members);
+  //     }
+  //     communityMembers.add(user.sevaUserID);
+  //     communityModel.members = communityMembers;
 
-      //Update community inside user collections
-      var communities = List<String>();
-      if (user.communities.length > 0) {
-        communities.addAll(user.communities);
-      }
-      if (user.communities != null &&
-          !user.communities.contains(currentCommunity)) {
-        communities.add(currentCommunity);
-      }
-      user.communities = communities;
-      if (user.currentCommunity == '') {
-        user.currentCommunity =
-            SevaCore.of(context).loggedInUser.currentCommunity;
-      }
-      var insertMembers = model.members.contains(user.sevaUserID);
-      print("Itemqwerty:${user.sevaUserID} is present:$insertMembers");
-      var memberList = List<String>();
-      memberList.addAll(model.members);
-      if (!model.members.contains(user.sevaUserID)) {
-        memberList.add(user.sevaUserID);
-      }
-      model.members = memberList;
-      print(
-          "Itemqwerty:${user.sevaUserID} is listSize:${model.members.length}");
-      await updateUser(user: user);
-    });
-    await updateCommunity(communityModel: communityModel);
-    await FirestoreManager.updateTimebank(timebankModel: model);
-    resetAndLoad();
-  }
+  //     //Update community inside user collections
+  //     var communities = List<String>();
+  //     if (user.communities.length > 0) {
+  //       communities.addAll(user.communities);
+  //     }
+  //     if (user.communities != null &&
+  //         !user.communities.contains(currentCommunity)) {
+  //       communities.add(currentCommunity);
+  //     }
+  //     user.communities = communities;
+  //     if (user.currentCommunity == '') {
+  //       user.currentCommunity =
+  //           SevaCore.of(context).loggedInUser.currentCommunity;
+  //     }
+  //     var insertMembers = model.members.contains(user.sevaUserID);
+  //     print("Itemqwerty:${user.sevaUserID} is present:$insertMembers");
+  //     var memberList = List<String>();
+  //     memberList.addAll(model.members);
+  //     if (!model.members.contains(user.sevaUserID)) {
+  //       memberList.add(user.sevaUserID);
+  //     }
+  //     model.members = memberList;
+  //     print(
+  //         "Itemqwerty:${user.sevaUserID} is listSize:${model.members.length}");
+  //     await updateUser(user: user);
+  //   });
+  //   await updateCommunity(communityModel: communityModel);
+  //   await FirestoreManager.updateTimebank(timebankModel: model);
+  //   resetAndLoad();
+  // }
 
-  Future _removeUserFromCommunityAndUpdateUserCommunityList({
-    TimebankModel model,
-    List<String> members,
-    String userId,
-  }) async {
-    if (model == null || members == null || members.length == 0) {
-      return;
-    }
-    UserModel user = await getUserForId(sevaUserId: userId);
-    var currentCommunity = SevaCore.of(context).loggedInUser.currentCommunity;
-    print("Current community:$currentCommunity");
-    var communities = List<String>();
-    if (user.communities != null && user.communities.length > 0) {
-      communities.addAll(user.communities);
-      communities.remove(currentCommunity);
-    }
-    user.communities = communities.length > 0 ? communities : null;
+  // Future _removeUserFromCommunityAndUpdateUserCommunityList({
+  //   TimebankModel model,
+  //   List<String> members,
+  //   String userId,
+  // }) async {
+  //   if (model == null || members == null || members.length == 0) {
+  //     return;
+  //   }
+  //   UserModel user = await getUserForId(sevaUserId: userId);
+  //   var currentCommunity = SevaCore.of(context).loggedInUser.currentCommunity;
+  //   print("Current community:$currentCommunity");
+  //   var communities = List<String>();
+  //   if (user.communities != null && user.communities.length > 0) {
+  //     communities.addAll(user.communities);
+  //     communities.remove(currentCommunity);
+  //   }
+  //   user.communities = communities.length > 0 ? communities : null;
 
-    if (user.communities == null) {
-      user.currentCommunity = '';
-    } else if (user.communities.contains(currentCommunity)) {
-      user.currentCommunity =
-          user.communities.length > 0 ? user.communities[0] : '';
-    }
-    var communityModel =
-        await getCommunityDetailsByCommunityId(communityId: currentCommunity);
-    if (communityModel.members.contains(user.sevaUserID)) {
-      var newMembers = List<String>();
-      for (var i = 0; i < communityModel.members.length; i++) {
-        if (communityModel.members[i] != user.sevaUserID) {
-          newMembers.remove(communityModel.members[i]);
-        }
-      }
-      communityModel.members = newMembers;
-    }
-    model.members = members;
-    await updateUser(user: user);
-    await updateCommunity(communityModel: communityModel);
-    await FirestoreManager.updateTimebank(timebankModel: model);
-    resetAndLoad();
-  }
+  //   if (user.communities == null) {
+  //     user.currentCommunity = '';
+  //   } else if (user.communities.contains(currentCommunity)) {
+  //     user.currentCommunity =
+  //         user.communities.length > 0 ? user.communities[0] : '';
+  //   }
+  //   var communityModel =
+  //       await getCommunityDetailsByCommunityId(communityId: currentCommunity);
+  //   if (communityModel.members.contains(user.sevaUserID)) {
+  //     var newMembers = List<String>();
+  //     for (var i = 0; i < communityModel.members.length; i++) {
+  //       if (communityModel.members[i] != user.sevaUserID) {
+  //         newMembers.remove(communityModel.members[i]);
+  //       }
+  //     }
+  //     communityModel.members = newMembers;
+  //   }
+  //   model.members = members;
+  //   await updateUser(user: user);
+  //   await updateCommunity(communityModel: communityModel);
+  //   await FirestoreManager.updateTimebank(timebankModel: model);
+  //   resetAndLoad();
+  // }
 
   Future sendNotificationToAdmin({
     UserModel user,
@@ -1246,8 +1243,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           admins: timebankModel.admins);
       _adminsWidgets = [];
       _adminEmails = [];
-      _adminsWidgets.add(getSectionTitle(context,
-          AppLocalizations.of(context).translate('members', 'co_ordinators')));
+      _adminsWidgets.add(getSectionTitle(context, S.of(context).co_ordinators));
       SplayTreeMap<String, dynamic>.from(onValue, (a, b) => a.compareTo(b))
           .forEach((key, user) {
         _adminEmails.add(user.email);
@@ -1271,7 +1267,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('shared', 'cancel'),
+                  S.of(context).cancel,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -1282,9 +1278,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
               ),
               FlatButton(
                 child: Text(
-                  confirmationTitle ??
-                      AppLocalizations.of(context)
-                          .translate('requests', 'delete_request'),
+                  confirmationTitle ?? S.of(context).yes,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -1318,10 +1312,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           child: GestureDetector(
             child: Row(
               children: <Widget>[
-                getSectionTitle(
-                    context,
-                    AppLocalizations.of(context)
-                        .translate('members', 'members')),
+                getSectionTitle(context, S.of(context).members),
                 CircleAvatar(
                   backgroundColor: Colors.white,
                   radius: 10,
@@ -1350,8 +1341,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         _membersWidgets.add(gesture);
       } else {
         _membersWidgets.add(
-          getSectionTitle(context,
-              AppLocalizations.of(context).translate('members', 'members')),
+          getSectionTitle(context, S.of(context).members),
         );
       }
     }
@@ -1441,8 +1431,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        getSectionTitle(context,
-            AppLocalizations.of(context).translate('members', 'co_ordinators')),
+        getSectionTitle(context, S.of(context).co_ordinators),
         ...model.coordinators.map((coordinator) {
           return FutureBuilder<UserModel>(
             future: FirestoreManager.getUserForId(sevaUserId: coordinator),
@@ -1647,8 +1636,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 FlatButton(
-                  child: Text(AppLocalizations.of(context)
-                      .translate('billing_plans', 'close')),
+                  child: Text(S.of(context).cancel),
                   textColor: Colors.red,
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -1673,8 +1661,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 FlatButton(
-                  child: Text(AppLocalizations.of(context)
-                      .translate('billing_plans', 'close')),
+                  child: Text(S.of(context).close),
                   textColor: Colors.red,
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -1767,6 +1754,35 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
 enum Actions { Approve, Reject, Remove, Promote, Demote, Exit, Loan }
 
+String actionToStringMapper(BuildContext context, Actions action) {
+  S s = S.of(context);
+  switch (action) {
+    case Actions.Approve:
+      return s.approve;
+      break;
+    case Actions.Reject:
+      return s.reject;
+      break;
+    case Actions.Remove:
+      return s.remove;
+      break;
+    case Actions.Promote:
+      return s.promote;
+      break;
+    case Actions.Demote:
+      return s.demote;
+      break;
+    case Actions.Exit:
+      return s.exit;
+      break;
+    case Actions.Loan:
+      return s.loan;
+      break;
+    default:
+      return '';
+  }
+}
+
 class CustomRaisedButton extends StatelessWidget {
   final Actions action;
   final Function onTap;
@@ -1789,8 +1805,7 @@ class CustomRaisedButton extends StatelessWidget {
           ? null
           : Colors.red,
       child: Text(
-        AppLocalizations.of(context)
-            .translate('members', action.toString().split('.')[1]),
+        actionToStringMapper(context, action),
         style: TextStyle(fontSize: 12),
       ),
       onPressed: () {
@@ -1835,35 +1850,28 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title:
-          Text(AppLocalizations.of(context).translate('loan', 'donate_coins')),
+      title: Text(S.of(context).loan_seva_credit_to_user),
       content: Form(
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(
-                '${AppLocalizations.of(context).translate('loan', 'current_coins')} ' +
-                    widget.maxAmount.toStringAsFixed(2).toString()),
+            Text('${S.of(context).timebank_seva_credit} ' +
+                widget.maxAmount.toStringAsFixed(2).toString()),
             TextFormField(
               decoration: InputDecoration(
-                hintText: AppLocalizations.of(context)
-                    .translate('loan', 'coins_hint'),
+                hintText: S.of(context).number_of_seva_credit,
               ),
               keyboardType: TextInputType.number,
               validator: (value) {
                 if (value.isEmpty) {
-                  return AppLocalizations.of(context)
-                      .translate('loan', 'empty_error');
+                  return S.of(context).empty_credit_loan_error;
                 } else if (int.parse(value) > widget.maxAmount) {
-                  return AppLocalizations.of(context)
-                      .translate('loan', 'not_enough');
+                  return S.of(context).insufficient_credits_to_donate;
                 } else if (int.parse(value) == 0) {
-                  return AppLocalizations.of(context)
-                      .translate('loan', 'zero_err');
+                  return S.of(context).loan_zero_credit_error;
                 } else if (int.parse(value) <= 0) {
-                  return AppLocalizations.of(context)
-                      .translate('loan', 'less_zero_err');
+                  return S.of(context).negative_credit_loan_error;
                 } else {
                   _donateAmount = double.parse(value);
                   return null;
@@ -1873,7 +1881,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
             SizedBox(
               height: 10,
             ),
-            Text(AppLocalizations.of(context).translate('loan', 'hint')),
+            Text(S.of(context).timebank_loan_message),
           ],
         ),
       ),
@@ -1883,7 +1891,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
           color: Theme.of(context).accentColor,
           textColor: FlavorConfig.values.buttonTextColor,
           child: Text(
-            AppLocalizations.of(context).translate('loan', 'donate'),
+            S.of(context).loan,
             style: TextStyle(
               fontSize: dialogButtonSize,
             ),
@@ -1905,7 +1913,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
         ),
         FlatButton(
           child: Text(
-            AppLocalizations.of(context).translate('shared', 'cancel'),
+            S.of(context).cancel,
             style: TextStyle(color: Colors.red, fontSize: dialogButtonSize),
           ),
           onPressed: () {
@@ -1944,13 +1952,12 @@ class _InputDonateSuccessDialogState extends State<InputDonateSuccessDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
-          AppLocalizations.of(context).translate('loan', 'donate_totimebank')),
+      title: Text(S.of(context).loan_seva_credit_to_user),
       content: Container(
-          height: MediaQuery.of(context).size.height / 10,
-          width: MediaQuery.of(context).size.width / 12,
-          child: Text(AppLocalizations.of(context)
-              .translate('loan', 'donate_success'))),
+        height: MediaQuery.of(context).size.height / 10,
+        width: MediaQuery.of(context).size.width / 12,
+        child: Text(S.of(context).loan_success),
+      ),
     );
   }
 }

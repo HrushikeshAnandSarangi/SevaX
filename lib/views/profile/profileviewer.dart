@@ -5,7 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/report_member_page.dart';
@@ -141,8 +141,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                         vertical: 20,
                       ),
                       child: UserProfileDetails(
-                        title: AppLocalizations.of(context)
-                                .translate('profile', 'about') +
+                        title: S.of(context).about +
                             ' ${snapshot.data['fullname']}',
                         details: snapshot.data['bio'] ?? '',
                       ),
@@ -189,16 +188,13 @@ class ProfileViewerState extends State<ProfileViewer> {
                         text: TextSpan(
                           children: <TextSpan>[
                             TextSpan(
-                              text: AppLocalizations.of(context)
-                                      .translate('profile', 'availability') +
-                                  '\n',
+                              text: S.of(context).availablity + '\n',
                               style:
                                   TextStyle(fontSize: 18, color: Colors.black),
                             ),
                             // TextSpan(text: '', style: TextStyle(height: 10)),
                             TextSpan(
-                              text: AppLocalizations.of(context)
-                                  .translate('profile', 'availabilityas'),
+                              text: S.of(context).available_as_needed,
                               style: TextStyle(color: Colors.grey),
                             ),
                           ],
@@ -276,67 +272,6 @@ class ProfileViewerState extends State<ProfileViewer> {
         .then((_) {
       setState(() {});
     });
-    // showDialog(
-    //   context: context,
-    //   builder: (BuildContext viewContext) {
-    //     // return object of type Dialog
-    //     return AlertDialog(
-    //       title: Text('Report Member?'),
-    //       content: Text(
-    //         'Do you want to report this member to admin?',
-    //       ),
-    //       actions: <Widget>[
-    //         FlatButton(
-    //           padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-    //           color: Theme.of(context).accentColor,
-    //           textColor: FlavorConfig.values.buttonTextColor,
-    //           child: Text(
-    //             'Report',
-    //             style: TextStyle(
-    //               fontSize: dialogButtonSize,
-    //             ),
-    //           ),
-    //           onPressed: () {
-    //             print(reportedUserModel.sevaUserID);
-    //             Report report = Report(
-    //               reporterId: reporterUserModel.sevaUserID,
-    //               attachment: "some url",
-    //               message: "test message",
-    //               reporterImage: reporterUserModel.photoURL,
-    //               reporterName: reporterUserModel.fullname,
-    //             );
-    //             Firestore.instance
-    //                 .collection('reported_users_list')
-    //                 .document(
-    //                     "${reportedUserModel.sevaUserID}*${widget.timebankId}")
-    //                 .setData({
-    //               "reportedId": reportedUserModel.sevaUserID,
-    //               "timebankId": widget.timebankId,
-    //               "reportedUserName": reportedUserModel.fullname,
-    //               "reportedUserImage": reportedUserModel.photoURL,
-    //               "reporterId": FieldValue.arrayUnion(
-    //                 [reporterUserModel.sevaUserID],
-    //               ),
-    //               "reports": FieldValue.arrayUnion([report.toMap()])
-    //             }, merge: true).then((result) => {
-    //                       Navigator.pop(viewContext),
-    //                       Navigator.of(context).pop()
-    //                     });
-    //           },
-    //         ),
-    //         FlatButton(
-    //           child: Text(
-    //             'Cancel',
-    //             style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
-    //           ),
-    //           onPressed: () {
-    //             Navigator.of(viewContext).pop();
-    //           },
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
   }
 
   void blockMember(ACTION action) {
@@ -392,19 +327,18 @@ class ProfileViewerState extends State<ProfileViewer> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(isBlocked
-              ? AppLocalizations.of(context).translate('profile', 'unblock')
-              : AppLocalizations.of(context).translate('profile', 'block') +
-                  " ${user.fullname.split(' ')[0]}."),
+              ? S.of(context).unblock
+              : S.of(context).block + " ${user.fullname.split(' ')[0]}."),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(isBlocked
-                  ? '${user.fullname.split(' ')[0]} ' +
-                      AppLocalizations.of(context)
-                          .translate('profile', 'wouldbeunblocked')
-                  : "${user.fullname.split(' ')[0]} " +
-                      AppLocalizations.of(context)
-                          .translate('profile', 'nolonger')),
+              Text(
+                isBlocked
+                    ? '${user.fullname.split(' ')[0]} ' +
+                        S.of(context).would_be_unblocked
+                    : "${user.fullname.split(' ')[0]} " +
+                        S.of(context).chat_block_warning,
+              ),
               SizedBox(
                 height: 15,
               ),
@@ -416,11 +350,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      isBlocked
-                          ? AppLocalizations.of(context)
-                              .translate('profile', 'unblock')
-                          : AppLocalizations.of(context)
-                              .translate('profile', 'block'),
+                      isBlocked ? S.of(context).unblock : S.of(context).block,
                       style: TextStyle(
                           fontSize: dialogButtonSize, fontFamily: 'Europa'),
                     ),
@@ -432,8 +362,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                   ),
                   FlatButton(
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('shared', 'cancel'),
+                      S.of(context).cancel,
                       style: TextStyle(
                           fontSize: dialogButtonSize,
                           fontFamily: 'Europa',
@@ -521,8 +450,7 @@ class JobsCounter extends StatelessWidget {
                       style: title,
                     ),
                     TextSpan(
-                      text: AppLocalizations.of(context)
-                          .translate('profile', 'jobs'),
+                      text: S.of(context).jobs,
                       style: subTitle,
                     ),
                   ],
@@ -553,8 +481,7 @@ class JobsCounter extends StatelessWidget {
                       style: title,
                     ),
                     TextSpan(
-                      text: AppLocalizations.of(context)
-                          .translate('profile', 'hoursworked'),
+                      text: S.of(context).hours_worked,
                       style: subTitle,
                     ),
                   ],
@@ -627,12 +554,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
               TextSpan(
                 text: widget.details.length > maxLength
                     ? viewFullDetails
-                        ? ' ' +
-                            AppLocalizations.of(context)
-                                .translate('profile', 'less')
-                        : '  ' +
-                            AppLocalizations.of(context)
-                                .translate('profile', 'more')
+                        ? ' ' + S.of(context).less
+                        : '  ' + S.of(context).more
                     : '',
                 style: TextStyle(color: Colors.blue),
                 recognizer: TapGestureRecognizer()..onTap = viewMore,
@@ -694,10 +617,8 @@ class ProfileHeader extends StatelessWidget {
                     r != null
                         ? r > 0
                             ? '${(r / snapshot.data.documents.length).toStringAsFixed(1)}'
-                            : AppLocalizations.of(context)
-                                .translate('profile', 'noratingyet')
-                        : AppLocalizations.of(context)
-                            .translate('profile', 'loading_n'),
+                            : S.of(context).no_ratings_yet
+                        : S.of(context).loading,
                     style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.bold,
@@ -748,8 +669,7 @@ class ProfileHeader extends StatelessWidget {
                   Icons.message,
                 ),
                 onPressed: message,
-                tooltip: AppLocalizations.of(context)
-                    .translate('profile', 'message'),
+                tooltip: S.of(context).message,
                 color: Theme.of(context).accentColor,
               ),
               IconButton(
@@ -757,11 +677,8 @@ class ProfileHeader extends StatelessWidget {
                   Icons.block,
                 ),
                 onPressed: block,
-                tooltip: isBlocked
-                    ? AppLocalizations.of(context)
-                        .translate('profile', 'unblock')
-                    : AppLocalizations.of(context)
-                        .translate('profile', 'block'),
+                tooltip:
+                    isBlocked ? S.of(context).unblock : S.of(context).block,
                 color: isBlocked ? Colors.red : Theme.of(context).accentColor,
               ),
               FutureBuilder<bool>(
@@ -771,8 +688,7 @@ class ProfileHeader extends StatelessWidget {
                     return IconButton(
                       icon: Icon(Icons.flag),
                       onPressed: !(snapshot.data ?? true) ? report : null,
-                      tooltip: AppLocalizations.of(context)
-                          .translate('profile', 'report_member'),
+                      tooltip: S.of(context).report_members,
                       color: !(snapshot.data ?? true)
                           ? Theme.of(context).accentColor
                           : Colors.grey,
@@ -805,10 +721,7 @@ class CompletedList extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 8.0),
         child: Center(
           child: Text(
-              userModel.fullname +
-                  ' ' +
-                  AppLocalizations.of(context)
-                      .translate('profile', 'not_completed'),
+              userModel.fullname + ' ' + S.of(context).not_completed_any_tasks,
               textAlign: TextAlign.center),
         ),
       );
@@ -840,9 +753,7 @@ class CompletedList extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Text('${transmodel.credits}'),
-                      Text(
-                          AppLocalizations.of(context)
-                              .translate('profile', 'seva_credits_ad'),
+                      Text(S.of(context).seva_credits,
                           style: TextStyle(
                             fontSize: 9,
                             fontWeight: FontWeight.w600,
@@ -911,7 +822,7 @@ class SkillAndInterestBuilder extends StatelessWidget {
                   horizontal: 25,
                 ),
                 child: Text(
-                  AppLocalizations.of(context).translate('skills', 'title'),
+                  S.of(context).skills,
                   style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700),
                 ),
               ),
@@ -931,7 +842,7 @@ class SkillAndInterestBuilder extends StatelessWidget {
                   horizontal: 25,
                 ),
                 child: Text(
-                  AppLocalizations.of(context).translate('interests', 'title'),
+                  S.of(context).interests,
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.w700,
