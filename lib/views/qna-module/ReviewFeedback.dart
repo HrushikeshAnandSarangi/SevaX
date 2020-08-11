@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -32,6 +33,13 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      supportedLocales: S.delegate.supportedLocales,
+      localizationsDelegates: [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       title: AppConfig.appName,
       home: Scaffold(
         appBar: AppBar(

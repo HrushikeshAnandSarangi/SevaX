@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
@@ -88,6 +89,9 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
             supportedLocales: S.delegate.supportedLocales,
             localizationsDelegates: [
               S.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
             ],
             title: AppConfig.appName,
             debugShowCheckedModeBanner: false,

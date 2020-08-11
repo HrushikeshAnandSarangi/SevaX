@@ -55,18 +55,12 @@ class _AuthRouterState extends State<AuthRouter> {
               auth: Auth(),
               child: MaterialApp(
                 locale: model.appLocal,
-                supportedLocales: [
-                  Locale('en', 'US'),
-                  Locale('pt', 'PT'),
-                  Locale('es', 'ES'),
-                  Locale('fr', 'FR'),
-                  Locale('zh', 'CN')
-                ],
+                supportedLocales: S.delegate.supportedLocales,
                 localizationsDelegates: [
                   S.delegate,
                   GlobalMaterialLocalizations.delegate,
                   GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate
+                  GlobalCupertinoLocalizations.delegate,
                 ],
                 title: AppConfig.appName,
                 debugShowCheckedModeBanner: false,
