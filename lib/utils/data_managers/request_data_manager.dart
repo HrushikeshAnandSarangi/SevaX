@@ -963,8 +963,6 @@ Future<void> approveRequestCompletion({
     communityId: communityId,
   );
 
-  print("========================================================== Step2");
-
   Map<String, dynamic> transactionData = model.transactions
       .where((transactionModel) {
         if (transactionModel.from == model.sevaUserId &&
@@ -976,8 +974,6 @@ Future<void> approveRequestCompletion({
       })
       .elementAt(0)
       .toMap();
-
-  print("========================================================== Step3");
 
   //Create transaction record for timebank
 
@@ -1006,8 +1002,6 @@ Future<void> approveRequestCompletion({
   }
 
   // }
-
-  print("========================================================== Step6");
 
   // await Firestore.instance
   //     .collection('users')
@@ -1045,15 +1039,12 @@ Future<void> approveRequestCompletion({
     data: transactionData,
   );
 
-  print(
-      "========================================================== Step7 processing loans");
   // processing loans from the user who gets credits to timebank (both for personal and timebank approvals if users loans are pending just return it
   await utils.processLoans(
       timebankId: model.timebankId,
       userId: userId,
       to: editedTransaction.to,
       credits: editedTransaction.credits);
-  print("========================================================== Step8");
 
   await utils.createTaskCompletedApprovedNotification(model: notification);
   await utils.createTransactionNotification(model: creditnotification);

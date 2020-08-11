@@ -581,7 +581,9 @@ Stream<List<NotificationsModel>> getNotificationsForTimebank({
                     NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED ||
                 model.type ==
                     NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK ||
-                model.type == NotificationType.TYPE_DELETION_REQUEST_OUTPUT) {
+                model.type == NotificationType.TYPE_DELETION_REQUEST_OUTPUT ||
+                model.type == NotificationType.MEMBER_PROMOTED_AS_ADMIN ||
+                model.type == NotificationType.MEMBER_DEMOTED_FROM_ADMIN) {
               notifications.add(model);
             }
           }

@@ -57,12 +57,6 @@ Future<bool> handleLinkData(
         userId: firebaseUserCred.uid,
       );
 
-      print(
-          "==================================================================");
-      print("===${localUser.toMap()}===");
-      print(
-          "==================================================================");
-
       return await registerloggedInUserToCommunity(
         communityId: communityId,
         loggedInUser: localUser,

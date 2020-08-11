@@ -124,7 +124,32 @@ class _NotificationAlertState extends State<NotificationAlert> {
                     );
                   },
                 ),
-                lineDivider
+                lineDivider,
+                NotificationWidgetSwitch(
+                  isTurnedOn:
+                      getCurrentStatus('TYPE_FEEDBACK_FROM_SIGNUP_MEMBER'),
+                  title: "Promotion to admin",
+                  onPressed: (bool status) {
+                    NotificationWidgetSwitch.updatePersonalNotifications(
+                      userEmail: SevaCore.of(context).loggedInUser.email,
+                      notificationType: 'MEMBER_PROMOTED_AS_ADMIN',
+                      status: status,
+                    );
+                  },
+                ),
+                lineDivider,
+                NotificationWidgetSwitch(
+                  isTurnedOn:
+                      getCurrentStatus('TYPE_FEEDBACK_FROM_SIGNUP_MEMBER'),
+                  title: "Demotion from admin to member",
+                  onPressed: (bool status) {
+                    NotificationWidgetSwitch.updatePersonalNotifications(
+                      userEmail: SevaCore.of(context).loggedInUser.email,
+                      notificationType: 'MEMBER_DEMOTED_FROM_ADMIN',
+                      status: status,
+                    );
+                  },
+                ),
               ],
             );
           }),

@@ -149,6 +149,10 @@ enum NotificationType {
   DEBITED_SEVA_COINS_TIMEBANK,
   SEVA_COINS_DEBITED,
   SEVA_COINS_CREDITED,
+
+  //PROMOTION AND DEMOTION
+  MEMBER_PROMOTED_AS_ADMIN,
+  MEMBER_DEMOTED_FROM_ADMIN,
 }
 
 //Check the method
@@ -201,6 +205,8 @@ Map<String, NotificationType> typeMapper = {
   "DEBITED_SEVA_COINS_TIMEBANK": NotificationType.DEBITED_SEVA_COINS_TIMEBANK,
   "SEVA_COINS_CREDITED": NotificationType.SEVA_COINS_CREDITED,
   "SEVA_COINS_DEBITED": NotificationType.SEVA_COINS_DEBITED,
+  "MEMBER_PROMOTED_AS_ADMIN": NotificationType.MEMBER_PROMOTED_AS_ADMIN,
+  "MEMBER_DEMOTED_FROM_ADMIN": NotificationType.MEMBER_DEMOTED_FROM_ADMIN,
 };
 
 ClearNotificationModel clearNotificationModelFromJson(String str) =>
