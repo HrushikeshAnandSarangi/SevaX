@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -125,15 +125,12 @@ class NewsImageState extends State<NewsImage>
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('create_feed', 'size_alert_title')),
-          content: Text(AppLocalizations.of(context)
-              .translate('create_feed', 'size_alert')),
+          title: Text(S.of(context).large_file_alert),
+          content: Text(S.of(context).validation_error_file_size),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
-              child:
-                  Text(AppLocalizations.of(context).translate('help', 'close')),
+              child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -241,8 +238,7 @@ class NewsImageState extends State<NewsImage>
                                     ? widget.photoCredits
                                     : '',
                                 decoration: InputDecoration(
-                                  hintText:
-                                      '+ ${AppLocalizations.of(context).translate('create_feed', 'image_hint')}',
+                                  hintText: '+ ${S.of(context).photo_credits}',
                                 ),
                                 keyboardType: TextInputType.text,
                                 textAlign: TextAlign.center,
@@ -296,10 +292,8 @@ class NewsImageState extends State<NewsImage>
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Text(
                 globals.newsDocumentURL != null || globals.newsImageURL != null
-                    ? AppLocalizations.of(context)
-                        .translate('create_feed', 'change_attachment')
-                    : AppLocalizations.of(context)
-                        .translate('create_feed', 'add_attachment'),
+                    ? S.of(context).change_attachment
+                    : S.of(context).add_attachment,
               ),
             ),
             onPressed: () {

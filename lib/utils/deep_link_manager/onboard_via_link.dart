@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
@@ -148,21 +148,20 @@ Future<void> resetPassword(String email, BuildContext mContext) async {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text(AppLocalizations.of(mContext)
-              .translate('login', 'reset_password')),
+          title: Text(S.of(context).reset_password),
           content: Container(
             height: MediaQuery.of(mContext).size.height / 10,
             width: MediaQuery.of(mContext).size.width / 12,
             child: Text(
-              AppLocalizations.of(mContext)
-                  .translate('login', 'reset_link_message'),
+              S.of(context).reset_password_message,
             ),
           ),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
               child: Text(
-                  AppLocalizations.of(mContext).translate('shared', 'close')),
+                S.of(context).close,
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },

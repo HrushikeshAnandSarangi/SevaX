@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
@@ -73,11 +73,11 @@ class InvitationManager {
   Future<bool> resendInvitationToMember({
     InvitationViaLink invitation,
   }) async {
-    String invitationTitle = AppLocalizations.of(_context)
-        .translate("invitations", "invitation_email_title");
+    String invitationTitle = S.of(_context).invited_to_timebank_message;
 
-    var mailContent = AppLocalizations.of(_context)
-        .translate("invitations", "email_body")
+    var mailContent = S
+        .of(_context)
+        .invitation_email_body
         .replaceAll('***', invitation.timebankTitle);
     mailContent = mailContent.replaceAll('###', invitation.invitationLink);
     return await mailCodeToInvitedMember(
@@ -98,11 +98,11 @@ class InvitationManager {
       primaryTimebankId: invitation.timebankId,
     )
         .then((String invitationLink) async {
-          String invitationTitle = AppLocalizations.of(context)
-              .translate("invitations", "invitation_email_title");
+          String invitationTitle = S.of(context).invited_to_timebank_message;
 
-          var mailContent = AppLocalizations.of(context)
-              .translate("invitations", "email_body")
+          var mailContent = S
+              .of(context)
+              .invitation_email_body
               .replaceAll('***', invitation.timebankTitle);
 
           mailContent = mailContent.replaceAll('###', invitationLink);

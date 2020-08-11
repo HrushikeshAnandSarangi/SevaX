@@ -3754,6 +3754,76 @@ class S {
         'Switching Timebank',
         name: 'switching_timebank',
       );
+
+  String get tap_to_delete => Intl.message(
+        'Tap to delete this item',
+        name: 'tap_to_delete',
+      );
+
+  String get clear => Intl.message(
+        'Clear',
+        name: 'clear',
+      );
+
+  String get currently_selected => Intl.message(
+        'Currently selected',
+        name: 'currently_selected',
+      );
+
+  String get tap_to_remove_tooltip => Intl.message(
+        'items (tap to remove)',
+        name: 'tap_to_remove_tooltip',
+      );
+
+  String get timebank_exit => Intl.message(
+        'Timebank Exit',
+        name: 'timebank_exit',
+      );
+
+  String get has_exited_from => Intl.message(
+        'has exited from',
+        name: 'has_exited_from',
+      );
+
+  String get tap_to_view_details => Intl.message(
+        'Tap to view details',
+        name: 'tap_to_view_details',
+      );
+
+  String get invited_to_timebank_message => Intl.message(
+        'Awesome! You are invited to join a Timebank',
+        name: 'invited_to_timebank_message',
+      );
+
+  String get invitation_email_body => Intl.message(
+        '',
+        name: 'invitation_email_body',
+      );
+
+  String get open_settings => Intl.message(
+        'Open Settings',
+        name: 'open_settings',
+      );
+
+  String get failed_to_fetch_location => Intl.message(
+        'Failed to fetch location',
+        name: 'failed_to_fetch_location',
+      );
+
+  String get marker => Intl.message(
+        'Marker',
+        name: 'marker',
+      );
+
+  String get missing_permission => Intl.message(
+        'Missing Permission',
+        name: 'missing_permission',
+      );
+
+  String get pdf_document => Intl.message(
+        'PDF Document',
+        name: 'pdf_document',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

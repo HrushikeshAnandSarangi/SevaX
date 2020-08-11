@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -78,10 +77,9 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 UserExitModel userExitModel =
                     UserExitModel.fromMap(notification.data);
                 return NotificationCard(
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'timebank_exit'),
+                  title: S.of(context).timebank_exit,
                   subTitle:
-                      '${userExitModel.userName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'exited_from')} ${userExitModel.timebank}, ${AppLocalizations.of(context).translate('notifications', 'tap_to_view')}',
+                      '${userExitModel.userName.toLowerCase()} ${S.of(context).has_exited_from} ${userExitModel.timebank}, ${S.of(context).tap_to_view_details}',
                   photoUrl: userExitModel.userPhotoUrl ?? defaultUserImageURL,
                   onDismissed: () {
                     FirestoreManager.readTimeBankNotification(
@@ -120,8 +118,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 OneToManyNotificationDataModel data =
                     OneToManyNotificationDataModel.fromJson(notification.data);
                 return NotificationCard(
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'debited'),
+                  title: S.of(context).notifications_debited,
                   subTitle:
                       TimebankNotificationMessage.DEBIT_FULFILMENT_FROM_TIMEBANK
                           .replaceFirst(
@@ -146,8 +143,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 OneToManyNotificationDataModel data =
                     OneToManyNotificationDataModel.fromJson(notification.data);
                 return NotificationCard(
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'credited'),
+                  title: S.of(context).notifications_credited,
                   subTitle: TimebankNotificationMessage
                       .CREDIT_FROM_OFFER_APPROVED
                       .replaceFirst(

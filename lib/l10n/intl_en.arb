@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-08-10T16:40:25+00:00",
+    "@@last_modified": "2020-08-11T05:44:51+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -744,5 +744,19 @@
     "no_volunteers_available": "No volunteers available",
     "select_volunteer": "Select volunteers",
     "no_requests": "No Requests",
-    "switching_timebank": "Switching Timebank"
+    "switching_timebank": "Switching Timebank",
+    "tap_to_delete": "Tap to delete this item",
+    "clear": "Clear",
+    "currently_selected": "Currently selected",
+    "tap_to_remove_tooltip": "items (tap to remove)",
+    "timebank_exit": "Timebank Exit",
+    "has_exited_from": "has exited from",
+    "tap_to_view_details": "Tap to view details",
+    "invited_to_timebank_message": "Awesome! You are invited to join a Timebank",
+    "invitation_email_body": "<p>You are invited to download the SevaX app and join the Timebank ***. The SevaX App uses Timebanking, a reciprocity-based system where community members help each other out in exchange for Seva Credits. Please click on this <a href=\\\"###;&nbsp;\\\">link<\/a> to join.<\/p>",
+    "open_settings": "Open Settings",
+    "failed_to_fetch_location": "Failed to fetch location",
+    "marker": "Marker",
+    "missing_permission": "Missing Permission",
+    "pdf_document": "PDF Document"
 }

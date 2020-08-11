@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart' as prefix;
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -97,7 +97,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
     var finalWidget = Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate('members', 'select_volunteer'),
+          S.of(context).select_volunteer,
           style: TextStyle(fontSize: 18),
         ),
         elevation: 0,
@@ -164,9 +164,9 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   Widget getContent(BuildContext context, TimebankModel model) {
     if (_avtars.length == 0 && _lastReached) {
       return Center(
-        child: Text(
-            AppLocalizations.of(context).translate('members', 'no_volunteers')),
-      );
+          child: Text(
+        S.of(context).no_volunteers_available,
+      ));
     } else if (_avtars.length == 0 && _showMoreItems && !_isLoading) {
       return circularBar;
     } else {
