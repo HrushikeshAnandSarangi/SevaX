@@ -73,6 +73,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
 
   @override
   Widget build(BuildContext context) {
+    log('${S.of(context).localeName}');
     log("home dashboard page build");
     final _user = BlocProvider.of<UserDataBloc>(context);
     // print("user bloc ${_user.user.email}");

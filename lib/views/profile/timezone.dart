@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -694,6 +696,17 @@ class TimezoneListData {
   List<TimeZoneModel> getData() {
     return timezonelist;
   }
+
+  printData() {
+    List<String> x = [];
+    List<String> y = [];
+    timezonelist.forEach((element) {
+      x.add(element.timezoneName);
+      y.add(element.timezoneAbb);
+    });
+    log(x.toString());
+    log(y.toString());
+  }
 }
 
 class TimezoneView extends StatefulWidget {
@@ -704,6 +717,7 @@ class TimezoneView extends StatefulWidget {
 class _TimezoneViewState extends State<TimezoneView> {
   @override
   Widget build(BuildContext context) {
+    // TimezoneListData().printData();
     return Scaffold(
         appBar: AppBar(
           title: Text(
