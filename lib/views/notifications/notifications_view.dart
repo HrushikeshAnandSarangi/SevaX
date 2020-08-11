@@ -686,7 +686,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       Firestore.instance.collection("reviews").add(
         {
           "reviewer": SevaCore.of(context).loggedInUser.email,
-          "reviewed": data.classDetails.classTitle,
+          "reviewed": data..classDetails.classTitle,
           "ratings": results['selection'],
           "device_info": results['device_info'],
           "requestId": "testId",
@@ -694,8 +694,43 @@ class NotificationsView extends State<NotificationViewHolder> {
               results['didComment'] ? results['comment'] : "No comments",
         },
       );
-
+      await sendMessageOfferCreator(
+          loggedInUser: user,
+          message: results['didComment'] ? results['comment'] : "No comments",
+          creatorId: data.classDetails.sevauserid);
       _clearNotification(email: email, notificationId: notificationId);
+    }
+  }
+
+  Future<void> sendMessageOfferCreator({
+    UserModel loggedInUser,
+    String creatorId,
+    String message,
+  }) async {
+    UserModel userModel =
+        await FirestoreManager.getUserForId(sevaUserId: creatorId);
+    if (userModel != null) {
+      ParticipantInfo receiver = ParticipantInfo(
+        id: userModel.sevaUserID,
+        photoUrl: userModel.photoURL,
+        name: userModel.fullname,
+        type: ChatType.TYPE_PERSONAL,
+      );
+
+      ParticipantInfo sender = ParticipantInfo(
+        id: loggedInUser.sevaUserID,
+        photoUrl: loggedInUser.photoURL,
+        name: loggedInUser.fullname,
+        type: ChatType.TYPE_PERSONAL,
+      );
+      await sendBackgroundMessage(
+          messageContent: message,
+          reciever: receiver,
+          context: context,
+          isTimebankMessage: false,
+          timebankId: '',
+          communityId: loggedInUser.currentCommunity,
+          sender: sender);
     }
   }
 
