@@ -900,6 +900,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         requestId: model.id,
         results: results,
         credits: credits,
+        reciever: user,
       );
     } else {}
   }
@@ -934,7 +935,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       String reviewer,
       String reviewed,
       String requestId,
-      UserModel user,
+      UserModel reciever,
       num credits}) async {
     // adds review to firestore
     await Firestore.instance.collection("reviews").add({
@@ -958,7 +959,12 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     await FirestoreManager.saveRequestFinalAction(
       model: claimedRequestStatus,
     );
-
+    await sendMessageToMember(
+        loggedInUser: sevaCore.loggedInUser,
+        requestModel: requestModel,
+        receiver: reciever,
+        message: results['comment'] ??
+            AppLocalizations.of(context).translate('requests', 'no_comments'));
     await approveTransaction(requestModel, userId, notificationId, sevaCore);
   }
 
@@ -983,6 +989,54 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       isProgressBarActive = false;
     });
     Navigator.pop(context);
+  }
+
+  Future<void> sendMessageToMember({
+    UserModel loggedInUser,
+    UserModel receiver,
+    RequestModel requestModel,
+    String message,
+  }) async {
+    ParticipantInfo sender = ParticipantInfo(
+      id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+          ? loggedInUser.sevaUserID
+          : requestModel.timebankId,
+      photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+          ? loggedInUser.photoURL
+          : widget.timebankModel.photoUrl,
+      name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+          ? loggedInUser.fullname
+          : widget.timebankModel.name,
+      type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+          ? ChatType.TYPE_PERSONAL
+          : widget.timebankModel.parentTimebankId ==
+                  '73d0de2c-198b-4788-be64-a804700a88a4'
+              ? ChatType.TYPE_TIMEBANK
+              : ChatType.TYPE_GROUP,
+    );
+
+    ParticipantInfo reciever = ParticipantInfo(
+      id: receiver.sevaUserID,
+      photoUrl: receiver.photoURL,
+      name: receiver.fullname,
+      type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+          ? ChatType.TYPE_PERSONAL
+          : widget.timebankModel.parentTimebankId ==
+                  '73d0de2c-198b-4788-be64-a804700a88a4'
+              ? ChatType.TYPE_TIMEBANK
+              : ChatType.TYPE_GROUP,
+    );
+    await sendBackgroundMessage(
+        messageContent: message,
+        reciever: reciever,
+        context: context,
+        isTimebankMessage:
+            requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                ? true
+                : false,
+        timebankId: requestModel.timebankId,
+        communityId: loggedInUser.currentCommunity,
+        sender: sender);
   }
 
   Widget _getCloseButton(BuildContext context) {

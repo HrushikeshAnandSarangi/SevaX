@@ -27,7 +27,8 @@ class OfferParticipants extends StatelessWidget {
             return Container(
               height: MediaQuery.of(context).size.height * 0.75,
               alignment: Alignment.center,
-              child: Text(AppLocalizations.of(context).translate('offers','no_participants')),
+              child: Text(AppLocalizations.of(context)
+                  .translate('offers', 'no_participants')),
             );
           }
           return ListView.builder(

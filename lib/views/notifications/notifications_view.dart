@@ -694,7 +694,61 @@ class NotificationsView extends State<NotificationViewHolder> {
               results['didComment'] ? results['comment'] : "No comments",
         },
       );
+
       _clearNotification(email: email, notificationId: notificationId);
+    }
+  }
+
+  Future<void> sendMessageToMember({
+    UserModel loggedInUser,
+    RequestModel requestModel,
+    String message,
+  }) async {
+    TimebankModel timebankModel =
+        await getTimeBankForId(timebankId: requestModel.timebankId);
+    UserModel userModel = await FirestoreManager.getUserForId(
+        sevaUserId: requestModel.sevaUserId);
+    if (userModel != null && timebankModel != null) {
+      ParticipantInfo receiver = ParticipantInfo(
+        id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.sevaUserID
+            : requestModel.timebankId,
+        photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.photoURL
+            : timebankModel.photoUrl,
+        name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.fullname
+            : timebankModel.name,
+        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? ChatType.TYPE_PERSONAL
+            : timebankModel.parentTimebankId ==
+                    '73d0de2c-198b-4788-be64-a804700a88a4'
+                ? ChatType.TYPE_TIMEBANK
+                : ChatType.TYPE_GROUP,
+      );
+
+      ParticipantInfo sender = ParticipantInfo(
+        id: loggedInUser.sevaUserID,
+        photoUrl: loggedInUser.photoURL,
+        name: loggedInUser.fullname,
+        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? ChatType.TYPE_PERSONAL
+            : timebankModel.parentTimebankId ==
+                    '73d0de2c-198b-4788-be64-a804700a88a4'
+                ? ChatType.TYPE_TIMEBANK
+                : ChatType.TYPE_GROUP,
+      );
+      await sendBackgroundMessage(
+          messageContent: message,
+          reciever: receiver,
+          context: context,
+          isTimebankMessage:
+              requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                  ? true
+                  : false,
+          timebankId: requestModel.timebankId,
+          communityId: loggedInUser.currentCommunity,
+          sender: sender);
     }
   }
 
@@ -984,6 +1038,14 @@ class NotificationsView extends State<NotificationViewHolder> {
           : AppLocalizations.of(context)
               .translate('notifications', 'no_comments'))
     });
+    sendMessageToMember(
+        loggedInUser: user,
+        requestModel: requestModel,
+        message: (results['didComment']
+            ? results['comment']
+            : AppLocalizations.of(context)
+                .translate('notifications', 'no_comments')));
+
     approveTransaction(requestModel, userId, notificationId, sevaCore);
   }
 

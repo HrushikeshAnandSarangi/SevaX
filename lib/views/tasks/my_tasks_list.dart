@@ -9,9 +9,13 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
@@ -661,17 +665,21 @@ class TaskCardViewState extends State<TaskCardView> {
       return;
     }
 
-    Map results = await Navigator.of(context).push(MaterialPageRoute(
-      builder: (BuildContext context) {
-        return ReviewFeedback(
-          feedbackType: FeedbackType.FOR_REQUEST_CREATOR,
-        );
-      },
-    ));
+    Map results = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return ReviewFeedback(
+            feedbackType: FeedbackType.FOR_REQUEST_CREATOR,
+          );
+        },
+      ),
+    );
 
     if (results != null && results.containsKey('selection')) {
       showProgressForCreditRetrieval();
-      onActivityResult(results);
+      onActivityResult(
+        results,
+      );
     } else {}
   }
 
@@ -683,8 +691,9 @@ class TaskCardViewState extends State<TaskCardView> {
         builder: (BuildContext context) {
           creditRequestDialogContext = context;
           return AlertDialog(
-            title:
-                Text(AppLocalizations.of(context).translate('tasks', 'wait')),
+            title: Text(
+              AppLocalizations.of(context).translate('tasks', 'wait'),
+            ),
             content: LinearProgressIndicator(),
           );
         });
@@ -692,7 +701,6 @@ class TaskCardViewState extends State<TaskCardView> {
 
   Future<void> onActivityResult(Map results) async {
     // adds review to firestore
-    ;
     await Firestore.instance.collection("reviews").add({
       "reviewer": SevaCore.of(context).loggedInUser.email,
       "reviewed": requestModel.email,
@@ -701,8 +709,64 @@ class TaskCardViewState extends State<TaskCardView> {
       "requestId": requestModel.id,
       "comments": (results['didComment'] ? results['comment'] : "No comments")
     });
-
+    sendMessageToMember(
+        message: results['didComment'] ? results['comment'] : "No comments",
+        requestModel: requestModel,
+        loggedInUser: SevaCore.of(context).loggedInUser);
     startTransaction();
+  }
+
+  Future<void> sendMessageToMember({
+    UserModel loggedInUser,
+    RequestModel requestModel,
+    String message,
+  }) async {
+    TimebankModel timebankModel =
+        await getTimeBankForId(timebankId: requestModel.timebankId);
+    UserModel userModel = await FirestoreManager.getUserForId(
+        sevaUserId: requestModel.sevaUserId);
+    if (userModel != null && timebankModel != null) {
+      ParticipantInfo receiver = ParticipantInfo(
+        id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.sevaUserID
+            : requestModel.timebankId,
+        photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.photoURL
+            : timebankModel.photoUrl,
+        name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.fullname
+            : timebankModel.name,
+        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? ChatType.TYPE_PERSONAL
+            : timebankModel.parentTimebankId ==
+                    '73d0de2c-198b-4788-be64-a804700a88a4'
+                ? ChatType.TYPE_TIMEBANK
+                : ChatType.TYPE_GROUP,
+      );
+
+      ParticipantInfo sender = ParticipantInfo(
+        id: loggedInUser.sevaUserID,
+        photoUrl: loggedInUser.photoURL,
+        name: loggedInUser.fullname,
+        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? ChatType.TYPE_PERSONAL
+            : timebankModel.parentTimebankId ==
+                    '73d0de2c-198b-4788-be64-a804700a88a4'
+                ? ChatType.TYPE_TIMEBANK
+                : ChatType.TYPE_GROUP,
+      );
+      await sendBackgroundMessage(
+          messageContent: message,
+          reciever: receiver,
+          context: context,
+          isTimebankMessage:
+              requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                  ? true
+                  : false,
+          timebankId: requestModel.timebankId,
+          communityId: loggedInUser.currentCommunity,
+          sender: sender);
+    }
   }
 
   void startTransaction() async {
@@ -742,6 +806,7 @@ class TaskCardViewState extends State<TaskCardView> {
               : RequestMode.PERSONAL_REQUEST.toString(),
           this.requestModel.id,
           this.requestModel.timebankId);
+
       FirestoreManager.createTaskCompletedNotification(
         model: NotificationsModel(
           id: utils.Utils.getUuid(),
