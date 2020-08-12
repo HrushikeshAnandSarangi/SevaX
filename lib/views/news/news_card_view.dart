@@ -433,7 +433,8 @@ class NewsCardViewState extends State<NewsCardView> {
       isDismissible: false,
     );
     progressDialog.show();
-    createFileOfPdfUrl(widget.newsModel.newsDocumentUrl, newsModel.newsDocumentName)
+    createFileOfPdfUrl(
+            widget.newsModel.newsDocumentUrl, widget.newsModel.newsDocumentName)
         .then((f) {
       progressDialog.hide();
       Navigator.push(
