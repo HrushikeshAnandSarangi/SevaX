@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notifcation_values.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -33,7 +33,7 @@ class RequestApproveWidget extends StatelessWidget {
                   ? NetworkImage(model.photoUrl)
                   : AssetImage("lib/assets/images/approved.png")),
           subtitle: Text(
-              '${AppLocalizations.of(context).translate('notifications', 'approved_by')} ${model.fullName}'),
+              '${S.of(context).notifications_approved_by} ${model.fullName}'),
         ),
       ),
     );

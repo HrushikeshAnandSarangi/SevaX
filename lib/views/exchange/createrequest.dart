@@ -15,7 +15,7 @@ import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
@@ -71,7 +71,8 @@ class _CreateRequestState extends State<CreateRequest> {
             builder: (context, snapshot) {
               if (snapshot.hasError)
                 return Text(
-                    '${AppLocalizations.of(context).translate('shared', 'error')}: ${snapshot.error}');
+                  S.of(context).general_stream_error,
+                );
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               }
@@ -94,10 +95,9 @@ class _CreateRequestState extends State<CreateRequest> {
     if (widget.projectId == null ||
         widget.projectId.isEmpty ||
         widget.projectId == "") {
-      return AppLocalizations.of(context).translate('create_request', 'create');
+      return S.of(context).create_request;
     }
-    return AppLocalizations.of(context)
-        .translate('create_request', 'create_project');
+    return S.of(context).create_project_request;
   }
 }
 
@@ -229,14 +229,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
   @override
   Widget build(BuildContext context) {
-    hoursMessage = AppLocalizations.of(context)
-        .translate('create_request', 'set_duration');
-    TextStyle textStyle = TextStyle(
-      fontSize: 14,
-      // fontWeight: FontWeight.bold,
-      color: Colors.black,
-      fontFamily: 'Europa',
-    );
+    hoursMessage = S.of(context).set_duration;
 
     TextStyle hintTextStyle = TextStyle(
       fontSize: 14,
@@ -308,8 +301,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                           children: <Widget>[
                             headerContainer(snapshot),
                             Text(
-                              AppLocalizations.of(context)
-                                  .translate('create_request', 'request_title'),
+                              S.of(context).request_title,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -340,9 +332,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                               ],
                               decoration: InputDecoration(
                                 errorMaxLines: 2,
-                                hintText: AppLocalizations.of(context)
-                                    .translate(
-                                        'create_request', 'small_carpenty'),
+                                hintText: S.of(context).request_title_hint,
                                 hintStyle: hintTextStyle,
                               ),
                               textInputAction: TextInputAction.next,
@@ -356,8 +346,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                               textCapitalization: TextCapitalization.sentences,
                               validator: (value) {
                                 if (value.isEmpty) {
-                                  return AppLocalizations.of(context)
-                                      .translate('create_request', 'subject');
+                                  return S.of(context).request_subject;
                                 }
                                 if (profanityDetector.isProfaneString(value)) {
                                   return AppLocalizations.of(context)
@@ -368,15 +357,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                             ),
                             SizedBox(height: 30),
                             OfferDurationWidget(
-                              title: AppLocalizations.of(context)
-                                  .translate('create_request', 'duration'),
+                              title: S.of(context).request_duration,
                             ),
                             SizedBox(height: 12),
                             RepeatWidget(),
                             SizedBox(height: 20),
                             Text(
-                              AppLocalizations.of(context)
-                                  .translate('create_request', 'desc'),
+                              S.of(context).request_description,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -405,9 +392,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                               textInputAction: TextInputAction.next,
                               decoration: InputDecoration(
                                 errorMaxLines: 2,
-                                hintText: AppLocalizations.of(context)
-                                    .translate(
-                                        'create_request', 'request_hash'),
+                                hintText:
+                                    S.of(context).request_description_hint,
                                 hintStyle: hintTextStyle,
                               ),
                               initialValue:
@@ -420,8 +406,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                               maxLines: 1,
                               validator: (value) {
                                 if (value.isEmpty) {
-                                  return AppLocalizations.of(context).translate(
-                                      'create_request', 'request_hash_empty');
+                                  return S
+                                      .of(context)
+                                      .validation_error_general_text;
                                 }
                                 if (profanityDetector.isProfaneString(value)) {
                                   return AppLocalizations.of(context)
@@ -442,8 +429,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                 : Container(),
                             SizedBox(height: 20),
                             Text(
-                              AppLocalizations.of(context).translate(
-                                  'create_request', 'no_of_volunteers'),
+                              S.of(context).number_of_volunteers,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -463,26 +449,24 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                 }
                               },
                               decoration: InputDecoration(
-                                hintText: AppLocalizations.of(context)
-                                    .translate(
-                                        'create_request', 'no_of_volunteers'),
+                                hintText: S.of(context).number_of_volunteers,
                                 hintStyle: hintTextStyle,
                                 // labelText: 'No. of volunteers',
                               ),
                               keyboardType: TextInputType.number,
                               validator: (value) {
                                 if (value.isEmpty) {
-                                  return AppLocalizations.of(context).translate(
-                                      'create_request',
-                                      'no_of_volunteers_zero');
+                                  return S
+                                      .of(context)
+                                      .validation_error_volunteer_count;
                                 } else if (int.parse(value) < 0) {
-                                  return AppLocalizations.of(context).translate(
-                                      'create_request',
-                                      'no_of_volunteers_zero_err');
+                                  return S
+                                      .of(context)
+                                      .validation_error_volunteer_count_negative;
                                 } else if (int.parse(value) == 0) {
-                                  return AppLocalizations.of(context).translate(
-                                      'create_request',
-                                      'no_of_volunteers_zero_err1');
+                                  return S
+                                      .of(context)
+                                      .validation_error_volunteer_count_zero;
                                 } else {
                                   requestModel.numberOfApprovals =
                                       int.parse(value);
@@ -519,9 +503,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                   child: RaisedButton(
                                     onPressed: createRequest,
                                     child: Text(
-                                      AppLocalizations.of(context)
-                                          .translate('create_request',
-                                              'create_request_button')
+                                      S
+                                          .of(context)
+                                          .create_request
                                           .padLeft(10)
                                           .padRight(10),
                                       style: Theme.of(context)
@@ -557,13 +541,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           selectedColor: Theme.of(context).primaryColor,
           children: {
             0: Text(
-              AppLocalizations.of(context)
-                  .translate('shared', 'timebank_request'),
+              S.of(context).timebank_request(1),
               style: TextStyle(fontSize: 12.0),
             ),
             1: Text(
-              AppLocalizations.of(context)
-                  .translate('shared', 'personal_request'),
+              S.of(context).personal_request(1),
               style: TextStyle(fontSize: 12.0),
             ),
           },
@@ -607,10 +589,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     if (connResult == ConnectivityResult.none) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)
-              .translate('shared', 'check_internet')),
+          content: Text(S.of(context).check_internet),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            label: S.of(context).dismiss,
             onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
           ),
         ),
@@ -641,29 +622,18 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       // validate request start and end date
 
       if (requestModel.requestStart == 0 || requestModel.requestEnd == 0) {
-        showDialogForTitle(
-            dialogTitle: AppLocalizations.of(context)
-                .translate('create_request', 'start_date_err'));
+        showDialogForTitle(dialogTitle: S.of(context).validation_error_no_date);
         return;
       }
 
-      /// TODO take language from Prakash
       if (OfferDurationWidgetState.starttimestamp ==
           OfferDurationWidgetState.endtimestamp) {
         showDialogForTitle(
-            dialogTitle: AppLocalizations.of(context)
-                .translate('create_request', 'sam_date_time'));
+            dialogTitle:
+                S.of(context).validation_error_same_start_date_end_date);
         return;
       }
 
-      // if (!hasRegisteredLocation()) {
-      //   showDialogForTitle(
-      //       dialogTitle: AppLocalizations.of(context)
-      //           .translate('create_request', 'add_location'));
-      //   return;
-      // }
-
-      //in case the request is created for an accepted offer
       if (widget.isOfferRequest == true && widget.userModel != null) {
         if (requestModel.approvedUsers == null) requestModel.approvedUsers = [];
 
@@ -676,8 +646,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       if (requestModel.isRecurring) {
         if (requestModel.recurringDays.length == 0) {
           showDialogForTitle(
-              dialogTitle: AppLocalizations.of(context)
-                  .translate('create_request', 'recurringDays_err'));
+              dialogTitle: S.of(context).validation_error_empty_recurring_days);
           return;
         }
       }
@@ -731,8 +700,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text(AppLocalizations.of(context)
-                .translate('create_request', 'progress')),
+            title: Text(S.of(context).creating_request),
             content: LinearProgressIndicator(),
           );
         });
@@ -743,13 +711,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         context: context,
         builder: (BuildContext viewContext) {
           return AlertDialog(
-            title: Text(AppLocalizations.of(context)
-                .translate('create_request', 'not_enough_seva')),
+            title: Text(S.of(context).insufficient_credits_for_request),
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context)
-                      .translate('create_request', 'ok'),
+                  S.of(context).ok,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -772,8 +738,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context)
-                      .translate('create_request', 'ok'),
+                  S.of(context).ok,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -802,14 +767,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       map[widget.userModel.email] = widget.userModel;
       selectedUsers.addAll(map);
     }
-    memberAssignment = AppLocalizations.of(context)
-        .translate('create_request', 'assign_members');
+    memberAssignment = S.of(context).assign_to_volunteers;
     return Container(
       margin: EdgeInsets.all(10),
       width: double.infinity,
       child: RaisedButton(
         child: Text(selectedUsers != null && selectedUsers.length > 0
-            ? "${selectedUsers.length} ${AppLocalizations.of(context).translate('create_request', 'selected')}"
+            ? "${selectedUsers.length} ${S.of(context).members_selected(selectedUsers.length)}"
             : memberAssignment),
         onPressed: () async {
           onActivityResult = await Navigator.of(context).push(
@@ -828,11 +792,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             selectedUsers = onActivityResult['membersSelected'];
             setState(() {
               if (selectedUsers != null && selectedUsers.length == 0)
-                memberAssignment = AppLocalizations.of(context)
-                    .translate('create_request', 'assign_to_vol');
+                memberAssignment = S.of(context).assign_to_volunteers;
               else
                 memberAssignment =
-                    "${selectedUsers.length ?? ''} ${AppLocalizations.of(context).translate('create_request', 'vol_selected')}";
+                    "${selectedUsers.length ?? ''} ${S.of(context).volunteers_selected(selectedUsers.length)}";
             });
           } else {
             //no users where selected
@@ -943,8 +906,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context)
-                      .translate('shared', 'capital_cancel'),
+                  S.of(context).cancel,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -955,7 +917,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               ),
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('shared', 'proceed'),
+                  S.of(context).proceed,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -991,18 +953,18 @@ Widget TotalCredits(
   if (totalallowedhours > 0 && totalCredits > 0) {
     if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
       label = totalCredits.toString() +
-          AppLocalizations.of(context)
-              .translate('create_request', 'request_total_credits_timebank') +
+          ' ' +
+          S.of(context).timebank_max_seva_credit_message1 +
           totalallowedhours.toString() +
-          AppLocalizations.of(context).translate(
-              'create_request', 'request_total_credits_timebank_add');
+          ' ' +
+          S.of(context).timebank_max_seva_credit_message2;
     } else {
       label = totalCredits.toString() +
-          AppLocalizations.of(context)
-              .translate('create_request', 'request_total_credits_personal') +
+          ' ' +
+          S.of(context).personal_max_seva_credit_message1 +
           totalallowedhours.toString() +
-          AppLocalizations.of(context).translate(
-              'create_request', 'request_total_credits_personal_add');
+          ' ' +
+          S.of(context).personal_max_seva_credit_message2;
     }
   } else {
     label = "";
@@ -1043,11 +1005,7 @@ class ProjectSelectionState extends State<ProjectSelection> {
       return Container();
     }
     List<dynamic> list = [
-      {
-        "name": AppLocalizations.of(context)
-            .translate('create_request', 'none_project'),
-        "code": "None"
-      }
+      {"name": S.of(context).unassigned, "code": "None"}
     ];
     for (var i = 0; i < widget.projectModelList.length; i++) {
       list.add({
@@ -1059,20 +1017,16 @@ class ProjectSelectionState extends State<ProjectSelection> {
     return MultiSelect(
       autovalidate: true,
       initialValue: ['None'],
-      titleText: AppLocalizations.of(context)
-          .translate('create_request', 'assign_to_project'),
+      titleText: S.of(context).assign_to_project,
       maxLength: 1, // optional
-      hintText: AppLocalizations.of(context)
-          .translate('create_request', 'tap_select'),
+      hintText: S.of(context).tap_to_select,
       validator: (dynamic value) {
         if (value == null) {
-          return AppLocalizations.of(context)
-              .translate('create_request', 'assign_to_one');
+          return S.of(context).assign_to_one_project;
         }
         return null;
       },
-      errorText: AppLocalizations.of(context)
-          .translate('create_request', 'assign_to_one'),
+      errorText: S.of(context).assign_to_one_project,
       dataSource: list,
       admin: widget.admin,
       textField: 'name',

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
@@ -28,8 +28,7 @@ class OfferListItems extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
           if (snapshot.hasError)
-            return Text(
-                '${AppLocalizations.of(context).translate('requests', 'error')}: ${snapshot.error}');
+            return Text('${S.of(context).general_stream_error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
@@ -43,8 +42,7 @@ class OfferListItems extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
-                    child: Text(AppLocalizations.of(context)
-                        .translate('offers', 'no_offers')),
+                    child: Text(S.of(context).no_offers),
                   ),
                 );
               }
@@ -61,8 +59,7 @@ class OfferListItems extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
           if (snapshot.hasError)
-            return Text(
-                '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
+            return Text('${S.of(context).general_stream_error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
@@ -76,8 +73,7 @@ class OfferListItems extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
-                    child: Text(AppLocalizations.of(context)
-                        .translate('offers', 'no_offers')),
+                    child: Text(S.of(context).no_offers),
                   ),
                 );
               }
@@ -94,17 +90,18 @@ class OfferListItems extends StatelessWidget {
   List<OfferModel> filterBlockedOffersContent(
       {List<OfferModel> requestModelList, BuildContext context}) {
     List<OfferModel> filteredList = [];
-    requestModelList.forEach((request) => SevaCore.of(context)
-                .loggedInUser
-                .blockedMembers
-                .contains(request.sevaUserId) ||
-            SevaCore.of(context)
-                .loggedInUser
-                .blockedBy
-                .contains(request.sevaUserId)
-        ? AppLocalizations.of(context)
-            .translate('offers', 'filtering_offers_content')
-        : filteredList.add(request));
+    requestModelList.forEach((request) {
+      if (!(SevaCore.of(context)
+              .loggedInUser
+              .blockedMembers
+              .contains(request.sevaUserId) ||
+          SevaCore.of(context)
+              .loggedInUser
+              .blockedBy
+              .contains(request.sevaUserId))) {
+        filteredList.add(request);
+      }
+    });
     return filteredList;
   }
 
@@ -219,8 +216,7 @@ class NearOfferListItems extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
           if (snapshot.hasError)
-            return Text(
-                '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
+            return Text('${S.of(context).general_stream_error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
@@ -234,8 +230,7 @@ class NearOfferListItems extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
-                    child: Text(AppLocalizations.of(context)
-                        .translate('offers', 'no_offers')),
+                    child: Text(S.of(context).no_offers),
                   ),
                 );
               }
@@ -260,8 +255,7 @@ class NearOfferListItems extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
           if (snapshot.hasError)
-            return Text(
-                '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
+            return Text('${S.of(context).general_stream_error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
@@ -275,8 +269,7 @@ class NearOfferListItems extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Center(
-                    child: Text(AppLocalizations.of(context)
-                        .translate('offers', 'no_offers')),
+                    child: Text(S.of(context).no_offers),
                   ),
                 );
               }
@@ -301,17 +294,18 @@ class NearOfferListItems extends StatelessWidget {
   List<OfferModel> filterBlockedOffersContent(
       {List<OfferModel> requestModelList, BuildContext context}) {
     List<OfferModel> filteredList = [];
-    requestModelList.forEach((request) => SevaCore.of(context)
-                .loggedInUser
-                .blockedMembers
-                .contains(request.sevaUserId) ||
-            SevaCore.of(context)
-                .loggedInUser
-                .blockedBy
-                .contains(request.sevaUserId)
-        ? AppLocalizations.of(context)
-            .translate('offers', 'filtering_offers_content')
-        : filteredList.add(request));
+    requestModelList.forEach((request) {
+      if (!(SevaCore.of(context)
+              .loggedInUser
+              .blockedMembers
+              .contains(request.sevaUserId) ||
+          SevaCore.of(context)
+              .loggedInUser
+              .blockedBy
+              .contains(request.sevaUserId))) {
+        filteredList.add(request);
+      }
+    });
     return filteredList;
   }
 

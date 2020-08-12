@@ -16,13 +16,14 @@ import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/profile/edit_profile.dart';
@@ -90,15 +91,14 @@ class _RegisterPageState extends State<RegisterPage>
 
   @override
   Widget build(BuildContext context) {
-    isImageSelected =
-        AppLocalizations.of(context).translate('signup', 'add_photo');
+    isImageSelected = S.of(context).add_photo;
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
         elevation: 0.5,
         title: Text(
-          AppLocalizations.of(context).translate('signup', 'your_details'),
+          S.of(context).your_details,
           style: TextStyle(
             fontSize: 18,
           ),
@@ -394,18 +394,18 @@ class _RegisterPageState extends State<RegisterPage>
               FocusScope.of(context).requestFocus(emailFocus);
             },
             shouldRestrictLength: true,
-            hint: AppLocalizations.of(context).translate('signup', 'full_name'),
+            hint: S.of(context).full_name,
             validator: (value) {
-              if (value.isEmpty) {
-                return AppLocalizations.of(context)
-                    .translate('signup', 'full_name_err');
+
+              if   (value.isEmpty) {
+                return S.of(context).validation_error_full_name;
               } else if (profanityDetector.isProfaneString(value)) {
                 return AppLocalizations.of(context)
                     .translate('profanity', 'alert');
               } else {
                 return null;
               }
-            },
+            }
             capitalization: TextCapitalization.words,
             onSave: (value) => this.fullName = value,
           ),
@@ -415,12 +415,10 @@ class _RegisterPageState extends State<RegisterPage>
               FocusScope.of(context).requestFocus(pwdFocus);
             },
             shouldRestrictLength: false,
-            hint: AppLocalizations.of(context)
-                .translate('signup', 'email_address'),
+            hint: S.of(context).email.firstWordUpperCase(),
             validator: (value) {
               if (!isValidEmail(value.trim())) {
-                return AppLocalizations.of(context)
-                    .translate('signup', 'email_address_err');
+                return S.of(context).validation_error_invalid_email;
               }
               return null;
             },
@@ -433,13 +431,12 @@ class _RegisterPageState extends State<RegisterPage>
               FocusScope.of(context).requestFocus(confirmPwdFocus);
             },
             shouldRestrictLength: false,
-            hint: AppLocalizations.of(context).translate('signup', 'password'),
+            hint: S.of(context).password.firstWordUpperCase(),
             shouldObscure: shouldObscurePassword,
             validator: (value) {
               this.password = '';
               if (value.length < 6) {
-                return AppLocalizations.of(context)
-                    .translate('signup', 'password_err');
+                return S.of(context).validation_error_invalid_password;
               }
               this.password = value;
               return null;
@@ -467,17 +464,16 @@ class _RegisterPageState extends State<RegisterPage>
               FocusScope.of(context).requestFocus(FocusNode());
             },
             shouldRestrictLength: false,
-            hint: AppLocalizations.of(context)
-                .translate('signup', 'confirm_password'),
+            hint: S.of(context).confirm.firstWordUpperCase() +
+                ' ' +
+                S.of(context).password.firstWordUpperCase(),
             shouldObscure: shouldObscureConfirmPassword,
             validator: (value) {
               if (value.length < 6) {
-                return AppLocalizations.of(context)
-                    .translate('signup', 'confirm_password_err');
+                return S.of(context).validation_error_invalid_password;
               }
               if (value != password) {
-                return AppLocalizations.of(context)
-                    .translate('signup', 'confirm_password_err2');
+                return S.of(context).validation_error_password_mismatch;
               }
               return null;
             },
@@ -570,11 +566,9 @@ class _RegisterPageState extends State<RegisterPage>
                 if (connResult == ConnectivityResult.none) {
                   _scaffoldKey.currentState.showSnackBar(
                     SnackBar(
-                      content: Text(AppLocalizations.of(context)
-                          .translate('shared', 'check_internet')),
+                      content: Text(S.of(context).check_internet),
                       action: SnackBarAction(
-                        label: AppLocalizations.of(context)
-                            .translate('shared', 'dismiss'),
+                        label: S.of(context).dismiss,
                         onPressed: () =>
                             _scaffoldKey.currentState.hideCurrentSnackBar(),
                       ),
@@ -597,19 +591,17 @@ class _RegisterPageState extends State<RegisterPage>
                       return WillPopScope(
                         onWillPop: () {},
                         child: AlertDialog(
-                          title: Text(AppLocalizations.of(context)
-                              .translate('signup', 'add_photo')),
-                          content: Text(AppLocalizations.of(context)
-                              .translate('signup', 'add_photo_des')),
+                          title: Text(S.of(context).add_photo),
+                          content: Text(S.of(context).add_photo_hint),
                           actions: <Widget>[
                             FlatButton(
                               child: Text(
-                                AppLocalizations.of(context)
-                                    .translate('signup', 'skip_register'),
+                                S.of(context).skip_and_register,
                                 style: TextStyle(
-                                    fontSize: dialogButtonSize,
-                                    color: Colors.red,
-                                    fontFamily: 'Europa'),
+                                  fontSize: dialogButtonSize,
+                                  color: Colors.red,
+                                  fontFamily: 'Europa',
+                                ),
                               ),
                               onPressed: () async {
                                 Navigator.pop(viewContext);
@@ -628,11 +620,11 @@ class _RegisterPageState extends State<RegisterPage>
                               color: Theme.of(context).accentColor,
                               textColor: FlavorConfig.values.buttonTextColor,
                               child: Text(
-                                AppLocalizations.of(context)
-                                    .translate('signup', 'add_photo'),
+                                S.of(context).add_photo,
                                 style: TextStyle(
-                                    fontSize: dialogButtonSize,
-                                    fontFamily: 'Europa'),
+                                  fontSize: dialogButtonSize,
+                                  fontFamily: 'Europa',
+                                ),
                               ),
                               onPressed: () {
                                 Navigator.pop(viewContext);
@@ -657,7 +649,7 @@ class _RegisterPageState extends State<RegisterPage>
                 }
               },
         child: Text(
-          AppLocalizations.of(context).translate('login', 'signup'),
+          S.of(context).sign_up,
           style: TextStyle(
             color: Colors.white,
             fontSize: 18,
@@ -678,8 +670,7 @@ class _RegisterPageState extends State<RegisterPage>
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text(AppLocalizations.of(context)
-                .translate('signup', 'create_account')),
+            title: Text(S.of(context).creating_account),
             content: LinearProgressIndicator(),
           );
         });
@@ -786,7 +777,7 @@ class _RegisterPageState extends State<RegisterPage>
         SnackBar(
           content: Text(error.message),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            label: S.of(context).dismiss,
             onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
           ),
         ),
@@ -807,8 +798,7 @@ class _RegisterPageState extends State<RegisterPage>
     if (_image == null) return;
     setState(() {
       this.selectedImage = _image;
-      isImageSelected =
-          AppLocalizations.of(context).translate('signup', 'upload_photo');
+      isImageSelected = S.of(context).update_photo;
     });
   }
 
@@ -929,7 +919,7 @@ class _RegisterPageState extends State<RegisterPage>
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             horizontalLine(),
-            Text(AppLocalizations.of(context).translate('signup', 'or')),
+            Text(S.of(context).or),
             horizontalLine()
           ],
         ),
@@ -1062,8 +1052,7 @@ class _RegisterPageState extends State<RegisterPage>
   Widget get googleLoginiPhone {
     return signInButton(
       imageRef: 'lib/assets/google-logo-png-open-2000.png',
-      msg:
-          AppLocalizations.of(context).translate('login', 'signin_with_google'),
+      msg: S.of(context).sign_in_with_google,
       operation: useGoogleSignIn,
     );
   }
@@ -1071,7 +1060,7 @@ class _RegisterPageState extends State<RegisterPage>
   Widget get appleLoginiPhone {
     return signInButton(
       imageRef: 'lib/assets/images/apple-logo.png',
-      msg: AppLocalizations.of(context).translate('login', 'signin_with_apple'),
+      msg: S.of(context).sign_in_with_apple,
       operation: appleLogIn,
     );
   }
@@ -1081,10 +1070,9 @@ class _RegisterPageState extends State<RegisterPage>
     if (connResult == ConnectivityResult.none) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)
-              .translate('shared', 'check_internet')),
+          content: Text(S.of(context).check_internet),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            label: S.of(context).dismiss,
             onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
           ),
         ),
@@ -1120,10 +1108,9 @@ class _RegisterPageState extends State<RegisterPage>
     if (connResult == ConnectivityResult.none) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)
-              .translate('shared', 'check_internet')),
+          content: Text(S.of(context).check_internet),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            label: S.of(context).dismiss,
             onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
           ),
         ),
@@ -1140,11 +1127,9 @@ class _RegisterPageState extends State<RegisterPage>
       if (erorr.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
         _scaffoldKey.currentState.showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)
-                .translate('signup', 'already_registered')),
+            content: Text(S.of(context).validation_error_email_registered),
             action: SnackBarAction(
-              label:
-                  AppLocalizations.of(context).translate('shared', 'dismiss'),
+              label: S.of(context).dismiss,
               onPressed: () {
                 _scaffoldKey.currentState.hideCurrentSnackBar();
               },
@@ -1182,7 +1167,7 @@ class _RegisterPageState extends State<RegisterPage>
         SnackBar(
           content: Text(error.message),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            label: S.of(context).dismiss,
             onPressed: () {
               _scaffoldKey.currentState.hideCurrentSnackBar();
             },
@@ -1194,8 +1179,7 @@ class _RegisterPageState extends State<RegisterPage>
         SnackBar(
           content: Text(error.message),
           action: SnackBarAction(
-            label: AppLocalizations.of(context)
-                .translate('shared', 'change_password'),
+            label: S.of(context).change_password,
             onPressed: () {
               resetPassword(email);
               _scaffoldKey.currentState.hideCurrentSnackBar();
@@ -1206,10 +1190,9 @@ class _RegisterPageState extends State<RegisterPage>
     } else if (error.message.contains("already")) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)
-              .translate('shared', 'already_registered')),
+          content: Text(S.of(context).validation_error_email_registered),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            label: S.of(context).dismiss,
             onPressed: () {
               _scaffoldKey.currentState.hideCurrentSnackBar();
             },
@@ -1224,10 +1207,9 @@ class _RegisterPageState extends State<RegisterPage>
         .sendPasswordResetEmail(email: email)
         .then((onValue) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)
-            .translate('signup', 'sent_reset_link')),
+        content: Text(S.of(context).reset_password_message),
         action: SnackBarAction(
-          label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+          label: S.of(context).dismiss,
           onPressed: () {
             _scaffoldKey.currentState.hideCurrentSnackBar();
           },

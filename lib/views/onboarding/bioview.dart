@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 
 typedef StringCallback = void Function(String bio);
@@ -45,7 +46,7 @@ class _BioViewState extends State<BioView> {
             ),
             elevation: 0.5,
             title: Text(
-              'Bio',
+              S.of(context).bio,
               style: TextStyle(fontSize: 18),
             ),
             centerTitle: true,
@@ -61,7 +62,7 @@ class _BioViewState extends State<BioView> {
                       padding: const EdgeInsets.only(
                           left: 0.0, top: 0.0, bottom: 10.0),
                       child: Text(
-                        'Please tell us a little about yourself in a few sentences. For example, what makes you unique.',
+                        S.of(context).bio_description,
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 16,
@@ -76,24 +77,24 @@ class _BioViewState extends State<BioView> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           TextFormField(
-                              textCapitalization: TextCapitalization.sentences,
-                              style: TextStyle(
-                                  fontSize: 16.0, color: Colors.black54),
-                              decoration: InputDecoration(
-                                errorMaxLines: 2,
+                            textCapitalization: TextCapitalization.sentences,
+                            style: TextStyle(
+                                fontSize: 16.0, color: Colors.black54),
+                            decoration: InputDecoration(
+                              errorMaxLines: 2,
                                 fillColor: Colors.grey[300],
                                 filled: true,
-                                hintText: 'Tell us a little about yourself.',
+                                hintText: S.of(context).bio_hint,
                                 border: textFieldBorder,
                                 enabledBorder: textFieldBorder,
                                 focusedBorder: textFieldBorder,
                               ),
                               keyboardType: TextInputType.multiline,
                               autovalidate: autoValidateText,
-                              minLines: 6,
-                              maxLines: 50,
-                              maxLength: 150,
-                              onChanged: (value) {
+                            minLines: 6,
+                            maxLines: 50,
+                            maxLength: 150,
+                            onChanged: (value) {
                                 if (value.length > 1) {
                                   setState(() {
                                     autoValidateText = true;
@@ -106,22 +107,22 @@ class _BioViewState extends State<BioView> {
                               },
                               validator: (value) {
                                 if (value.trim().isEmpty) {
-                                  return 'It\'s easy, please fill few words about you.';
-                                }
-                                if (value.length < 50) {
-                                  this.bio = value;
-                                  return 'Min 50 characters *';
+                                  return S.of(context).validation_error_bio_empty;
+                              }
+                              if (value.length < 50) {
+                                this.bio = value;
+                                return S
+                                    .of(context)
+                                    .validation_error_bio_min_characters;
                                 }
                                 if (profanityDetector.isProfaneString(value)) {
                                   return AppLocalizations.of(context)
                                       .translate('profanity', 'alert');
-                                }
-                                this.bio = value;
-                              }),
-                          // Text(
-                          //   '*min 100 characters',
-                          //   style: TextStyle(color: Colors.red),
-                          // )
+                              }
+                              this.bio = value;
+                              return null;
+                            },
+                          ),
                         ],
                       ),
                     )

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
@@ -35,10 +35,9 @@ class TimebankJoinRequestWidget extends StatelessWidget {
         UserModel user = snapshot.data;
         return user != null && user.fullname != null
             ? NotificationCard(
-                title: AppLocalizations.of(context)
-                    .translate('notifications', 'join_request'),
+                title: S.of(context).notifications_join_request,
                 subTitle:
-                    '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'requested_join')} ${model.timebankTitle}.',
+                    '${user.fullname.toLowerCase()} ${S.of(context).notifications_requested_join} ${model.timebankTitle}.',
                 photoUrl: user.photoURL,
                 entityName: user.fullname,
                 onDismissed: () {
@@ -108,7 +107,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(0.0),
                     child: Text(
-                      "${AppLocalizations.of(context).translate('notifications', 'about')} ${userModel.fullname}",
+                      "${S.of(context).about} ${userModel.fullname}",
                       style:
                           TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
@@ -117,7 +116,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    "${AppLocalizations.of(context).translate('notifications', 'reason_to_join')}:",
+                    "${S.of(context).reason_to_join}:",
                     style: TextStyle(
                       decoration: TextDecoration.underline,
                       fontSize: 16,
@@ -128,9 +127,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(4.0),
                   child: Text(
-                    model.reason ??
-                        AppLocalizations.of(context)
-                            .translate('notifications', 'not_mentioned'),
+                    model.reason ?? S.of(context).reason_not_mentioned,
                   ),
                 ),
                 Padding(
@@ -145,8 +142,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                       child: RaisedButton(
                         color: FlavorConfig.values.theme.primaryColor,
                         child: Text(
-                          AppLocalizations.of(context)
-                              .translate('notifications', 'allow'),
+                          S.of(context).allow,
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () async {
@@ -176,8 +172,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                       child: RaisedButton(
                         color: Theme.of(context).accentColor,
                         child: Text(
-                          AppLocalizations.of(context)
-                              .translate('notifications', 'reject'),
+                          S.of(context).reject,
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () async {
@@ -210,8 +205,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
       builder: (createDialogContext) {
         return AlertDialog(
           title: Text(
-            AppLocalizations.of(context)
-                .translate('notifications', 'updating_timebank'),
+            S.of(context).updating_timebank,
           ),
           content: LinearProgressIndicator(),
         );

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/edit_group_info_bloc.dart';
@@ -56,7 +56,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
             offstage: !isAdmin,
             child: FlatButton(
               child: Text(
-                AppLocalizations.of(context).translate('messages', 'save'),
+                S.of(context).save,
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
               onPressed: () {
@@ -69,10 +69,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       content: Text(
-                        AppLocalizations.of(context).translate(
-                          'messages',
-                          'updating_multi_user_messaging',
-                        ),
+                        S.of(context).updating_messaging_room,
                       ),
                     );
                   },
@@ -167,8 +164,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
                                   ? AppLocalizations.of(context)
                                       .translate('profanity', 'alert')
                                   : snapshot.error,
-                              hintText: AppLocalizations.of(context).translate(
-                                  'messages', 'multi_user_messaging_name'),
+                              hintText: S.of(context).messaging_room_name,
                               hintStyle: TextStyle(
                                 fontSize: 18,
                                 color: Colors.grey,
@@ -192,7 +188,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(left: 20),
               child: Text(
-                "${AppLocalizations.of(context).translate('messages', 'participants')}: ${chatModel.participants.length ?? 0} OF 256",
+                "${S.of(context).participants}: ${chatModel.participants.length ?? 0} OF 256",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
@@ -256,8 +252,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                AppLocalizations.of(context)
-                                    .translate('messages', 'add_participants'),
+                                S.of(context).add_participants,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,

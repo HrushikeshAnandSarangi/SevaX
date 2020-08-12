@@ -3,9 +3,10 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/components/get_location.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 
 import '../spell_check_manager.dart';
@@ -76,7 +77,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
       appBar: AppBar(
         automaticallyImplyLeading: widget.automaticallyImplyLeading,
         title: Text(
-          AppLocalizations.of(context).translate('skills', 'title'),
+          S.of(context).skills.firstWordUpperCase(),
           style: TextStyle(
             fontSize: 18,
           ),
@@ -89,7 +90,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
           children: <Widget>[
             SizedBox(height: 20),
             Text(
-              AppLocalizations.of(context).translate('skills', 'title_desc'),
+              S.of(context).skills_description,
               style: TextStyle(
                   color: Colors.black54,
                   fontSize: 16,
@@ -106,8 +107,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
               textFieldConfiguration: TextFieldConfiguration(
                 controller: _textEditingController,
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)
-                      .translate('skills', 'search'),
+                  hintText: S.of(context).search,
                   filled: true,
                   fillColor: Colors.grey[300],
                   focusedBorder: OutlineInputBorder(
@@ -218,11 +218,9 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   if (connResult == ConnectivityResult.none) {
                     _scaffoldKey.currentState.showSnackBar(
                       SnackBar(
-                        content: Text(AppLocalizations.of(context)
-                            .translate('shared', 'check_internet')),
+                        content: Text(S.of(context).check_internet),
                         action: SnackBarAction(
-                          label: AppLocalizations.of(context)
-                              .translate('shared', 'dismiss'),
+                          label: S.of(context).dismiss,
                           onPressed: () =>
                               _scaffoldKey.currentState.hideCurrentSnackBar(),
                         ),
@@ -237,10 +235,8 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 },
                 child: Text(
                   widget.isFromProfile
-                      ? AppLocalizations.of(context)
-                          .translate('skills', 'update')
-                      : AppLocalizations.of(context)
-                          .translate('shared', 'next'),
+                      ? S.of(context).update
+                      : S.of(context).next,
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),
@@ -251,9 +247,8 @@ class _SkillViewNewState extends State<SkillViewNew> {
               },
               child: Text(
                 AppConfig.prefs.getBool(AppConfig.skip_skill) == null
-                    ? AppLocalizations.of(context).translate('shared', 'skip')
-                    : AppLocalizations.of(context)
-                        .translate('shared', 'cancel'),
+                    ? S.of(context).skip
+                    : S.of(context).cancel,
                 style: TextStyle(
                   color: Theme.of(context).accentColor,
                 ),

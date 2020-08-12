@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/personal_message_page.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
@@ -22,7 +22,7 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate('messages', 'messages_title'),
+          S.of(context).bottom_nav_messages,
           style: TextStyle(fontSize: 18),
         ),
         actions: <Widget>[
@@ -99,11 +99,11 @@ class _MessagePageRouterState extends State<MessagePageRouter> {
   Map<int, Widget> getLocalWidgets(BuildContext context) {
     return <int, Widget>{
       0: Text(
-        AppLocalizations.of(context).translate('messages', 'personal_messages'),
+        S.of(context).personal,
         style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
       ),
       1: Text(
-        AppLocalizations.of(context).translate('messages', 'admin_messages'),
+        S.of(context).admin,
         style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
       ),
     };

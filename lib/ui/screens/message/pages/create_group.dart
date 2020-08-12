@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
@@ -31,19 +31,13 @@ class CreateGroupPage extends StatelessWidget {
       appBar: AppBar(
         titleSpacing: 0,
         title: Text(
-          AppLocalizations.of(context).translate(
-            'messages',
-            'new_multi_user_messaging',
-          ),
+          S.of(context).new_message_room,
           style: TextStyle(fontSize: 18),
         ),
         actions: <Widget>[
           FlatButton(
             child: Text(
-              AppLocalizations.of(context).translate(
-                'messages',
-                'create',
-              ),
+              S.of(context).create,
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             onPressed: () {
@@ -58,10 +52,7 @@ class CreateGroupPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       content: Text(
-                        AppLocalizations.of(context).translate(
-                          'messages',
-                          'creating_multi_user_messaging',
-                        ),
+                        S.of(context).creating_messaging_room,
                       ),
                     );
                   },
@@ -155,14 +146,11 @@ class CreateGroupPage extends StatelessWidget {
                               enabledBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
-                              errorText: AppLocalizations.of(context).translate(
-                                'messages',
-                                snapshot.error,
-                              ),
-                              hintText: AppLocalizations.of(context).translate(
-                                'messages',
-                                'multi_user_messaging_name',
-                              ),
+                              errorText:
+                                  snapshot.error == 'validation_error_room_name'
+                                      ? S.of(context).validation_error_room_name
+                                      : null,
+                              hintText: S.of(context).messaging_room_name,
                               hintStyle: TextStyle(
                                 fontSize: 18,
                                 color: Colors.grey,
@@ -173,10 +161,7 @@ class CreateGroupPage extends StatelessWidget {
                       ),
                       Divider(),
                       Text(
-                        AppLocalizations.of(context).translate(
-                          'messages',
-                          'note',
-                        ),
+                        S.of(context).messaging_room_note,
                         style: TextStyle(
                           color: Colors.grey,
                         ),
@@ -198,7 +183,7 @@ class CreateGroupPage extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     padding: EdgeInsets.only(left: 20),
                     child: Text(
-                      "${AppLocalizations.of(context).translate('messages', 'participants')}: ${snapshot.data?.length ?? 0} OF 256",
+                      "${S.of(context).participants}: ${snapshot.data?.length ?? 0} OF 256",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),

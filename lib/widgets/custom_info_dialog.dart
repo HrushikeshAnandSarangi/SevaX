@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 
 import '../flavor_config.dart';
@@ -36,9 +36,9 @@ Widget infoButton({
   assert(context != null);
   assert(key != null);
   assert(type != null);
-  var temp = AppLocalizations.of(context).translate('info_window', 'mapper');
-  Map<String, dynamic> details =
-      json.decode(AppConfig.remoteConfig.getString(temp));
+  // var temp = AppLocalizations.of(context).translate('info_window', 'mapper');
+  Map<String, dynamic> details = json.decode(AppConfig.remoteConfig
+      .getString("i_button_info_${S.of(context).localeName}"));
   return IconButton(
     key: key,
     icon: Image.asset(
@@ -53,24 +53,24 @@ Widget infoButton({
       showDialog(
         context: context,
         builder: (BuildContext _context) {
-          Map<InfoType, String> infoDescriptionMapper = {
-            InfoType.GROUPS:
-                AppLocalizations.of(context).translate('info_window', 'groups'),
-            InfoType.PROJECTS: AppLocalizations.of(context)
-                .translate('info_window', 'projects'),
-            InfoType.REQUESTS: AppLocalizations.of(context)
-                .translate('info_window', 'requests'),
-            InfoType.OFFERS:
-                AppLocalizations.of(context).translate('info_window', 'offers'),
-            InfoType.PROTECTED_TIMEBANK: AppLocalizations.of(context)
-                .translate('info_window', 'protected_timebank'),
-            InfoType.PRIVATE_TIMEBANK: AppLocalizations.of(context)
-                .translate('info_window', 'private_timebank'),
-            InfoType.PRIVATE_GROUP: AppLocalizations.of(context)
-                .translate('info_window', 'private_group'),
-            InfoType.TAX_CONFIGURATION: AppLocalizations.of(context)
-                .translate('info_window', 'tax_configuration'),
-          };
+          // Map<InfoType, String> infoDescriptionMapper = {
+          //   InfoType.GROUPS:
+          //       AppLocalizations.of(context).translate('info_window', 'groups'),
+          //   InfoType.PROJECTS: AppLocalizations.of(context)
+          //       .translate('info_window', 'projects'),
+          //   InfoType.REQUESTS: AppLocalizations.of(context)
+          //       .translate('info_window', 'requests'),
+          //   InfoType.OFFERS:
+          //       AppLocalizations.of(context).translate('info_window', 'offers'),
+          //   InfoType.PROTECTED_TIMEBANK: AppLocalizations.of(context)
+          //       .translate('info_window', 'protected_timebank'),
+          //   InfoType.PRIVATE_TIMEBANK: AppLocalizations.of(context)
+          //       .translate('info_window', 'private_timebank'),
+          //   InfoType.PRIVATE_GROUP: AppLocalizations.of(context)
+          //       .translate('info_window', 'private_group'),
+          //   InfoType.TAX_CONFIGURATION: AppLocalizations.of(context)
+          //       .translate('info_window', 'tax_configuration'),
+          // };
           bool _isDialogBottom = buttonPosition.dy >
               (MediaQuery.of(context).size.height / 2) + 100;
           return Stack(
@@ -113,8 +113,8 @@ Widget infoButton({
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            details[infoKeyMapper[type]] ??
-                                infoDescriptionMapper[key],
+                            details[infoKeyMapper[type]], //??
+                            // infoDescriptionMapper[key],
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
@@ -124,8 +124,7 @@ Widget infoButton({
                         Align(
                           alignment: Alignment.bottomRight,
                           child: FlatButton(
-                            child: Text(AppLocalizations.of(context)
-                                .translate('notifications', 'ok')),
+                            child: Text(S.of(context).ok),
                             onPressed: () {
                               Navigator.of(_context).pop();
                             },

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
@@ -40,7 +40,7 @@ class _MembersTabViewState extends State<MembersTabView> {
         stream: _bloc.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
-            return Center(child: Text(AppLocalizations.of(context).translate('search','search_something')));
+            return Center(child: Text(S.of(context).search_something));
           }
           return StreamBuilder<List<UserModel>>(
             stream: Searches.searchMembersOfTimebank(
@@ -60,7 +60,7 @@ class _MembersTabViewState extends State<MembersTabView> {
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 print("===>> ${snapshot.data}");
                 return Center(
-                  child: Text(AppLocalizations.of(context).translate('search','no_data')),
+                  child: Text(S.of(context).no_data),
                 );
               }
               return ListView.builder(

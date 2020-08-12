@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/bookmarked_offers.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -25,10 +25,10 @@ class OfferRouter extends StatelessWidget {
                 unselectedLabelColor: Colors.black,
                 tabs: <Widget>[
                   Tab(
-                    child: Text(AppLocalizations.of(context).translate('tabs','offers')),
+                    child: Text(S.of(context).offers),
                   ),
                   Tab(
-                    child: Text(AppLocalizations.of(context).translate('tabs','book_marked_offers')),
+                    child: Text(S.of(context).bookmarked_offers),
                   ),
                 ],
               ),

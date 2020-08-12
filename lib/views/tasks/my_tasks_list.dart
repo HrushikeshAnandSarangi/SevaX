@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -54,8 +54,7 @@ class MyTasksList extends StatelessWidget {
             sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text(
-                '${AppLocalizations.of(context).translate('tasks', 'error')} ${snapshot.error}');
+            return Text(S.of(context).general_stream_error);
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -83,17 +82,14 @@ class MyTasksList extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(top: 58.0),
                   child: Text(
-                    AppLocalizations.of(context)
-                        .translate('tasks', 'no_pending'),
+                    S.of(context).no_pending_task,
                     textAlign: TextAlign.center,
                   ),
                 );
               }
               return ListView.builder(
                 itemCount: requestModelList.length,
-                // physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (listContext, index) {
-                  // TODO needs flow correction to tasks model
                   RequestModel model = requestModelList[index];
 
                   return getTaskWidget(model, usertimezone);
@@ -445,7 +441,7 @@ class TaskCardViewState extends State<TaskCardView> {
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
-                        '${AppLocalizations.of(context).translate('tasks', 'from')}  ' +
+                        '${S.of(context).from}  ' +
                             DateFormat(
                                     'MMMM dd, yyyy @ h:mm a',
                                     Locale(AppConfig.prefs
@@ -463,7 +459,7 @@ class TaskCardViewState extends State<TaskCardView> {
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
-                        '${AppLocalizations.of(context).translate('tasks', 'untill')}  ' +
+                        '${S.of(context).until}  ' +
                             DateFormat(
                                     'MMMM dd, yyyy @ h:mm a',
                                     Locale(AppConfig.prefs
@@ -480,15 +476,14 @@ class TaskCardViewState extends State<TaskCardView> {
                     Container(
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
-                      child: Text(
-                          '${AppLocalizations.of(context).translate('tasks', 'posted_by')} ' +
-                              requestModel.fullName),
+                      child: Text('${S.of(context).posted_by} ' +
+                          requestModel.fullName),
                     ),
                     Container(
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
-                        '${AppLocalizations.of(context).translate('tasks', 'posted_date')}  ' +
+                        '${S.of(context).posted_date}  ' +
                             DateFormat(
                                     'MMMM dd, yyyy @ h:mm a',
                                     Locale(AppConfig.prefs
@@ -528,18 +523,15 @@ class TaskCardViewState extends State<TaskCardView> {
                                           EdgeInsets.only(bottom: 20)),
                                   validator: (value) {
                                     if (value == null) {
-                                      return AppLocalizations.of(context)
-                                          .translate('tasks', 'enterhours');
+                                      return S.of(context).enter_hours;
                                     }
                                     if (value.isEmpty) {
-                                      return AppLocalizations.of(context)
-                                          .translate('tasks', 'selecthours');
+                                      S.of(context).select_hours;
                                     }
                                     this.selectedHourValue = value;
                                   },
                                 ),
-                                Text(AppLocalizations.of(context)
-                                    .translate('tasks', 'hours')),
+                                Text(S.of(context).hour(3)),
                               ],
                             ),
                           ),
@@ -562,13 +554,10 @@ class TaskCardViewState extends State<TaskCardView> {
                               children: <Widget>[
                                 DropdownButtonFormField<String>(
                                   validator: (value) {
-                                    if (value == null) {
-                                      return AppLocalizations.of(context)
-                                          .translate('tasks', 'minutes_null');
-                                    }
-                                    if (value.isEmpty) {
-                                      return AppLocalizations.of(context)
-                                          .translate('tasks', 'minutes_empty');
+                                    if (value == null || value.isEmpty) {
+                                      return S
+                                          .of(context)
+                                          .validation_error_invalid_hours;
                                     }
                                     selectedMinuteValue = value;
                                   },
@@ -583,8 +572,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                   },
                                   value: selectedMinuteValue,
                                 ),
-                                Text(AppLocalizations.of(context)
-                                    .translate('tasks', 'minutes')),
+                                Text(S.of(context).minutes),
                               ],
                             ),
                           ),
@@ -600,8 +588,7 @@ class TaskCardViewState extends State<TaskCardView> {
                           subject.add(0);
                         },
                         child: Text(
-                          AppLocalizations.of(context)
-                              .translate('tasks', 'completed'),
+                          S.of(context).completed,
                           style: Theme.of(context).primaryTextTheme.button,
                         ),
                       ),
@@ -625,8 +612,7 @@ class TaskCardViewState extends State<TaskCardView> {
             content: Text(content),
             actions: <Widget>[
               FlatButton(
-                child: Text(AppLocalizations.of(context)
-                    .translate('homepage', 'close')),
+                child: Text(S.of(context).close),
                 onPressed: () {
                   Navigator.of(buildContext).pop();
                 },
@@ -649,18 +635,16 @@ class TaskCardViewState extends State<TaskCardView> {
 
     if (creditRequest > maxClaim) {
       showDialogFoInfo(
-        title:
-            AppLocalizations.of(context).translate('tasks', 'limit_exceeded'),
+        title: S.of(context).limit_exceeded,
         content:
-            "${AppLocalizations.of(context).translate('tasks', 'only_request')} $maxClaim ${AppLocalizations.of(context).translate('tasks', 'hours_of_credit')}",
+            "${S.of(context).task_max_request_message} $maxClaim ${S.of(context).task_max_hours_of_credit}",
       );
       return;
       //show dialog
     } else if (creditRequest == 0) {
       showDialogFoInfo(
-        title: AppLocalizations.of(context).translate('tasks', 'enter_hours'),
-        content: AppLocalizations.of(context)
-            .translate('tasks', 'enter_valid_hours'),
+        title: S.of(context).enter_hours,
+        content: S.of(context).validation_error_invalid_hours,
       );
       return;
     }

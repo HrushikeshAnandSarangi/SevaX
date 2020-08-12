@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -99,8 +99,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ),
               centerTitle: true,
               title: Text(
-                AppLocalizations.of(context)
-                    .translate('requests', 'my_requests'),
+                S.of(context).my_requests,
                 style: TextStyle(
                     fontFamily: "Europa", fontSize: 20, color: Colors.black),
               ),
@@ -189,8 +188,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                 ),
                                 color: Color.fromRGBO(44, 64, 140, 1),
                                 child: Text(
-                                  AppLocalizations.of(context)
-                                      .translate('requests', 'edit'),
+                                  S.of(context).edit,
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 13),
                                 ),
@@ -235,7 +233,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       color: Colors.grey,
                     ),
                     title: Text(
-                      "${AppLocalizations.of(context).translate('requests', 'hosted_by')} ${widget.requestItem.fullName ?? ""}",
+                      "${S.of(context).hosted_by} ${widget.requestItem.fullName ?? ""}",
                       style: titleStyle,
                       maxLines: 1,
                     ),
@@ -254,7 +252,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           (context, AsyncSnapshot<List<dynamic>> snapshot) {
                         if (snapshot.hasError)
                           return Text(
-                              '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
+                            '${S.of(context).general_stream_error}',
+                          );
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return Center(child: CircularProgressIndicator());
@@ -264,8 +263,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           return Container(
                             margin: EdgeInsets.only(left: 0, top: 10),
                             child: Text(
-                              AppLocalizations.of(context)
-                                  .translate('requests', 'none_approved_yet'),
+                              S.of(context).no_approved_members,
                             ),
                           );
                         }
@@ -381,13 +379,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     TextSpan(
                       text: widget.requestItem.sevaUserId ==
                               SevaCore.of(context).loggedInUser.sevaUserID
-                          ? AppLocalizations.of(context)
-                              .translate('requests', 'creator_you')
+                          ? S.of(context).creator_of_request_message
                           : isApplied
-                              ? AppLocalizations.of(context)
-                                  .translate('requests', 'applied_you')
-                              : AppLocalizations.of(context)
-                                  .translate('requests', 'want_part'),
+                              ? S.of(context).applied_for_request
+                              : S.of(context).particpate_in_request_question,
                       style: TextStyle(
                         fontSize: 16,
                         fontFamily: 'Europa',
@@ -430,10 +425,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       Spacer(),
                       Text(
                         isApplied
-                            ? AppLocalizations.of(context)
-                                .translate('requests', 'withdraw_button')
-                            : AppLocalizations.of(context)
-                                .translate('requests', 'apply'),
+                            ? S.of(context).withdraw
+                            : S.of(context).apply,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
@@ -475,16 +468,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('requests', 'protected_alert')),
-          content: Text(AppLocalizations.of(context)
-              .translate('requests', 'projected_alert_dialog')),
+          title: Text(S.of(context).protected_timebank),
+          content: Text(S.of(context).protected_timebank_alert_dialog),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
               textColor: Colors.red,
               child: Text(
-                AppLocalizations.of(context).translate('shared', 'close'),
+                S.of(context).close,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -555,15 +546,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('requests', 'already_approved')),
-          content: Text(AppLocalizations.of(context)
-              .translate('requests', 'cant_withdraw')),
+          title: Text(S.of(context).already_approved),
+          content: Text(S.of(context).withdraw_request_failure),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
-              child: Text(
-                  AppLocalizations.of(context).translate('shared', 'close')),
+              child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
               },

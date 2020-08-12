@@ -5,7 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/image_caption_model.dart';
 import 'package:sevaexchange/widgets/camera/selected_image_preview.dart';
 
@@ -188,8 +188,7 @@ class _CameraState extends State<CameraPage> {
             Container(
               padding: EdgeInsets.symmetric(vertical: 10.0),
               child: Text(
-                AppLocalizations.of(context)
-                    .translate('messages', 'tap_for_photo'),
+                S.of(context).tap_for_photo,
                 style: Theme.of(context)
                     .textTheme
                     .subtitle1

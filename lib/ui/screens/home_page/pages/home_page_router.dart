@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/bottom_nav_bar.dart';
@@ -86,18 +86,12 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
         builder: (context, model, child) {
           return MaterialApp(
             locale: model.appLocal,
-            supportedLocales: [
-              Locale('en', 'US'),
-              Locale('pt', 'PT'),
-              Locale('es', 'ES'),
-              Locale('fr', 'FR'),
-              Locale('zh', 'CN')
-            ],
+            supportedLocales: S.delegate.supportedLocales,
             localizationsDelegates: [
-              AppLocalizations.delegate,
+              S.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate
+              GlobalCupertinoLocalizations.delegate,
             ],
             title: AppConfig.appName,
             debugShowCheckedModeBanner: false,

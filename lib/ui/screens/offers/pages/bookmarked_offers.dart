@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -34,7 +34,7 @@ class BookmarkedOffers extends StatelessWidget {
         if (snapshot.data == null || snapshot.data?.documents?.length == 0) {
           return Center(
             child: Text(
-              AppLocalizations.of(context).translate('offers', 'no_bookmarked'),
+              S.of(context).no_bookmarked_offers,
             ),
           );
         }
@@ -54,7 +54,6 @@ class BookmarkedOffers extends StatelessWidget {
                 model: _offer,
                 parentContext: context,
               ),
-              // onActionPressed: () => offerActions(parentContext, model),
             );
           },
         );

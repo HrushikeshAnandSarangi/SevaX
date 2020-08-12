@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
@@ -13,7 +13,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_view.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../flavor_config.dart';
 
@@ -24,12 +23,9 @@ class TimeBankBillingAdminView extends StatefulWidget {
 }
 
 class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
-  String _billingDetailsError = '';
   String communityImageError = '';
-  final _formKey = GlobalKey<FormState>();
 
   var scollContainer = ScrollController();
-  PanelController _pc = PanelController();
   var scrollIsOpen = false;
   List<FocusNode> focusNodes;
   GlobalKey<FormState> _billingInformationKey = GlobalKey();
@@ -77,8 +73,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      headingText(AppLocalizations.of(context)
-                          .translate('billing_admin', 'plan_details')),
+                      headingText(S.of(context).plan_details),
                       StreamBuilder<CardModel>(
                         stream: FirestoreManager.getCardModelStream(
                             communityId: SevaCore.of(context)
@@ -109,11 +104,11 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                                         "grande_plan") {
                                       data =
 //                                      "${AppLocalizations.of(context).translate('billing_admin', 'on_the')} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${AppLocalizations.of(context).translate('billing_admin', 'plan_yearly1500')} \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10} ${AppLocalizations.of(context).translate('billing_admin', 'plan_details_quota1')}.";
-                                          "${AppLocalizations.of(context).translate('billing_admin', 'on_the')} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${AppLocalizations.of(context).translate('billing_admin', 'plan_yearly1500')} \$0.03 ${AppLocalizations.of(context).translate('billing_admin', 'plan_details_quota1')}.";
+                                          "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).plan_yearly_1500} \$0.03 ${S.of(context).plan_details_quota1}.";
                                     } else {
                                       data =
 //                                      "${AppLocalizations.of(context).translate('billing_admin', 'on_the')} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${AppLocalizations.of(context).translate('billing_admin', 'paying')} \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} ${AppLocalizations.of(context).translate('billing_admin', 'charges_of')} \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10}  ${AppLocalizations.of(context).translate('billing_admin', 'per_transaction')}.";
-                                          "${AppLocalizations.of(context).translate('billing_admin', 'on_the')} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${AppLocalizations.of(context).translate('billing_admin', 'paying')} \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} ${AppLocalizations.of(context).translate('billing_admin', 'charges_of')} \$0.01  ${AppLocalizations.of(context).translate('billing_admin', 'per_transaction')}.";
+                                          "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).paying} \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} ${S.of(context).charges_of} \$0.01  ${S.of(context).per_transaction_quota}.";
                                     }
                                     return spendingsTextWidgettwo(data ?? "");
                                   } else {
@@ -132,8 +127,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                           }
                         },
                       ),
-                      headingText(AppLocalizations.of(context)
-                          .translate('billing_admin', 'status')),
+                      headingText(S.of(context).status),
                       statusWidget(),
                     ],
                   ),
@@ -150,8 +144,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        headingText(AppLocalizations.of(context)
-            .translate('billing_admin', 'plan_details')),
+        headingText(S.of(context).plan_details),
         Padding(
           padding: const EdgeInsets.only(left: 20.0),
           child: RichText(
@@ -160,11 +153,10 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
               children: [
                 TextSpan(
                     text: _bloc.community.payment["planId"] == "community_plan"
-                        ? "${AppLocalizations.of(context).translate('billing_admin', 'community_plan')}  "
-                        : "${AppLocalizations.of(context).translate('billing_admin', 'on_the')} ${_bloc.community.payment['message']}  "),
+                        ? "${S.of(context).on_community_plan}  "
+                        : "${S.of(context).your_community_on_the} ${_bloc.community.payment['message']}  "),
                 TextSpan(
-                  text: AppLocalizations.of(context)
-                      .translate('billing_admin', 'change_plan'),
+                  text: S.of(context).change_plan,
                   style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       fontSize: 16,
@@ -219,9 +211,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             ),
             TextSpan(
               text: data != ""
-                  ? ' ${AppLocalizations.of(context).translate('billing_admin', 'change_plan')}'
-                  : AppLocalizations.of(context)
-                      .translate('billing_admin', 'view_selected'),
+                  ? ' ${S.of(context).change_plan}'
+                  : S.of(context).view_selected_plans,
               style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 16,
@@ -313,7 +304,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   Widget emptyText() {
     return Center(
       child: Text(
-          AppLocalizations.of(context).translate('billing_admin', 'no_data')),
+        S.of(context).no_data,
+      ),
     );
   }
 
@@ -334,8 +326,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              headingText(AppLocalizations.of(context)
-                  .translate('billing_admin', 'montly_subsciption')),
+              headingText(S.of(context).monthly_subscription),
               Padding(
                 padding: EdgeInsets.only(left: 10, top: 15, right: 10),
                 child: IconButton(
@@ -392,8 +383,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        headingText(AppLocalizations.of(context)
-            .translate('createtimebank', 'edit_profile_info')),
+        headingText(S.of(context).edit_profile_information),
         Padding(
           padding: EdgeInsets.only(left: 10, top: 10, right: 10),
           child: IconButton(
@@ -518,8 +508,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             Column(
               children: <Widget>[
                 Text(
-                  AppLocalizations.of(context)
-                      .translate('createtimebank', 'profile_info_title'),
+                  S.of(context).timebank_profile_info,
                   style: TextStyle(
                       color: FlavorConfig.values.theme.primaryColor,
                       fontSize: 20,
@@ -603,16 +592,13 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           initialValue: city != null ? city : '',
           validator: (value) {
             return value.isEmpty
-                ? AppLocalizations.of(context)
-                    .translate('createtimebank', 'err_empty')
+                ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
                     ? AppLocalizations.of(context)
                         .translate('profanity', 'alert')
                     : null;
           },
-          decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(context)
-                  .translate('createtimebank', 'city')),
+          decoration: getInputDecoration(fieldTitle: S.of(context).city),
         ),
       );
     }
@@ -643,17 +629,14 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           initialValue: state != null ? state : '',
           validator: (value) {
             return value.isEmpty
-                ? AppLocalizations.of(context)
-                    .translate('createtimebank', 'err_empty')
+                ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
                     ? AppLocalizations.of(context)
                         .translate('profanity', 'alert')
                     : null;
           },
           focusNode: focusNodes[0],
-          decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(context)
-                  .translate('createtimebank', 'state')),
+          decoration: getInputDecoration(fieldTitle: S.of(context).state),
         ),
       );
     }
@@ -674,16 +657,13 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           initialValue: pinCode != null ? pinCode.toString() : '',
           validator: (value) {
             return value.isEmpty
-                ? AppLocalizations.of(context)
-                    .translate('createtimebank', 'err_empty')
+                ? S.of(context).validation_error_required_fields
                 : null;
           },
           focusNode: focusNodes[2],
           keyboardType: TextInputType.number,
           maxLength: 15,
-          decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(context)
-                  .translate('createtimebank', 'zip')),
+          decoration: getInputDecoration(fieldTitle: S.of(context).zip),
         ),
       );
     }
@@ -717,9 +697,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           initialValue: notes != null ? notes : '',
           focusNode: focusNodes[7],
           textInputAction: TextInputAction.done,
-          decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(context)
-                  .translate('createtimebank', 'additional_notes')),
+          decoration:
+              getInputDecoration(fieldTitle: S.of(context).additional_notes),
         ),
       );
     }
@@ -747,8 +726,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           },
           validator: (value) {
             return value.isEmpty
-                ? AppLocalizations.of(context)
-                    .translate('createtimebank', 'err_empty')
+                ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
                     ? AppLocalizations.of(context)
                         .translate('profanity', 'alert')
@@ -757,9 +735,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           focusNode: focusNodes[3],
           textInputAction: TextInputAction.done,
           initialValue: street_address1 != null ? street_address1 : '',
-          decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(context)
-                  .translate('createtimebank', 'street_add1')),
+          decoration: getInputDecoration(fieldTitle: S.of(context).street_add1),
         ),
       );
     }
@@ -795,8 +771,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             textInputAction: TextInputAction.done,
             initialValue: street_address2 != null ? street_address2 : '',
             decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(context)
-                  .translate('createtimebank', 'street_add2'),
+              fieldTitle: S.of(context).street_add2,
             )),
       );
     }
@@ -827,8 +802,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           initialValue: country != null ? country : '',
           validator: (value) {
             return value.isEmpty
-                ? AppLocalizations.of(context)
-                    .translate('createtimebank', 'err_empty')
+                ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
                     ? AppLocalizations.of(context)
                         .translate('profanity', 'alert')
@@ -836,8 +810,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           },
           focusNode: focusNodes[1],
           decoration: getInputDecoration(
-            fieldTitle: AppLocalizations.of(context)
-                .translate('createtimebank', 'country_name'),
+            fieldTitle: S.of(context).country,
           ),
         ),
       );
@@ -878,8 +851,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           focusNode: focusNodes[6],
           textInputAction: TextInputAction.done,
           decoration: getInputDecoration(
-            fieldTitle: AppLocalizations.of(context)
-                .translate('createtimebank', 'company_name'),
+            fieldTitle: S.of(context).company_name,
           ),
         ),
       );
@@ -890,8 +862,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         padding: const EdgeInsets.fromLTRB(100, 10, 100, 20),
         child: RaisedButton(
           child: Text(
-            AppLocalizations.of(context)
-                .translate('createtimebank', 'continue'),
+            S.of(context).continue_text,
             style: Theme.of(parentContext).primaryTextTheme.button,
           ),
           onPressed: () async {
@@ -901,8 +872,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                 scrollToTop();
               } else {
                 print("All Good");
-                showProgressDialog(AppLocalizations.of(context)
-                    .translate('createtimebank', 'updating_details'));
+                showProgressDialog(S.of(context).updating_details);
 
                 await FirestoreManager.updateCommunityDetails(
                     communityModel: communityModel);

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/individual_offer.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/one_to_many_offer.dart';
 
@@ -21,7 +21,7 @@ class _CreateOfferState extends State<CreateOffer> {
         // iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          AppLocalizations.of(context).translate('create_offer','title'),
+          S.of(context).create_offer,
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -58,11 +58,11 @@ class _CreateOfferState extends State<CreateOffer> {
         selectedColor: Theme.of(context).primaryColor,
         children: {
           0: Text(
-            AppLocalizations.of(context).translate('shared','individual_offer'),
+            S.of(context).individual_offer,
             style: TextStyle(fontSize: 12.0),
           ),
           1: Text(
-            AppLocalizations.of(context).translate('shared','one_to_many'),
+            S.of(context).one_to_many,
             style: TextStyle(fontSize: 12.0),
           ),
         },

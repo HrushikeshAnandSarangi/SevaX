@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart'
     as prefix0;
@@ -27,9 +27,7 @@ class _GroupTabViewState extends State<GroupTabView> {
         stream: _bloc.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
-            return Center(
-                child: Text(AppLocalizations.of(context)
-                    .translate('search', 'search_something')));
+            return Center(child: Text(S.of(context).search_something));
           }
           return StreamBuilder<GroupData>(
             stream: CombineLatestStream.combine2(
@@ -57,8 +55,7 @@ class _GroupTabViewState extends State<GroupTabView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
-                    Text(AppLocalizations.of(context)
-                        .translate('search', 'no_data')),
+                    Text(S.of(context).no_data),
                   ],
                 );
               }
@@ -208,8 +205,7 @@ class _GroupTabViewState extends State<GroupTabView> {
       entityId: subtimebankId,
       entityType: prefix0.EntityType.Timebank,
       operationTaken: false,
-      reason: AppLocalizations.of(context)
-          .translate('notifications', 'want_volunteer'),
+      reason: S.of(context).i_want_to_volunteer,
       timestamp: DateTime.now().millisecondsSinceEpoch,
       userId: userIdForNewMember,
       isFromGroup: true,

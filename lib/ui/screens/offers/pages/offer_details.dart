@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -54,8 +54,7 @@ class OfferDetails extends StatelessWidget {
                       color: Colors.grey,
                     ),
                     title: Text(
-                      AppLocalizations.of(context)
-                          .translate('offers', 'posted_on'),
+                      S.of(context).posted_on,
                       style: titleStyle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -95,8 +94,7 @@ class OfferDetails extends StatelessWidget {
                               ),
                               color: Color.fromRGBO(44, 64, 140, 1),
                               child: Text(
-                                AppLocalizations.of(context)
-                                    .translate('offers', 'edit'),
+                                S.of(context).edit,
                                 style: TextStyle(color: Colors.white),
                               ),
                               onPressed: () => _onEdit(context),
@@ -114,8 +112,7 @@ class OfferDetails extends StatelessWidget {
                             color: Colors.grey,
                           ),
                           title: Text(
-                            AppLocalizations.of(context)
-                                .translate('offers', 'location'),
+                            S.of(context).location,
                             style: titleStyle,
                             maxLines: 1,
                           ),
@@ -132,7 +129,7 @@ class OfferDetails extends StatelessWidget {
                       color: Colors.grey,
                     ),
                     title: Text(
-                      "${AppLocalizations.of(context).translate('offers', 'offered_by')} ${offerModel.fullName}",
+                      "${S.of(context).offered_by} ${offerModel.fullName}",
                       style: titleStyle,
                       maxLines: 1,
                     ),
@@ -240,8 +237,7 @@ class OfferDetails extends StatelessWidget {
               content: Text('Are you sure you want to cancel the offer'),
               actions: [
                 FlatButton(
-                  child: Text(AppLocalizations.of(context)
-                      .translate('create_request', 'close')),
+                  child: Text(S.of(context).close),
                   onPressed: () {
                     Navigator.of(_context).pop();
                   },
@@ -289,9 +285,8 @@ class OfferDetails extends StatelessWidget {
                     children: [
                       TextSpan(
                         text: isCreator
-                            ? AppLocalizations.of(context)
-                                .translate('offers', 'created_this_offer')
-                            : '${AppLocalizations.of(context).translate('offers', 'you_have')} ${isAccepted ? '' : " ${AppLocalizations.of(context).translate('offers', 'not_yet')}"} ${offerModel.offerType == OfferType.GROUP_OFFER ? AppLocalizations.of(context).translate('offers', 'signed_upfor') : AppLocalizations.of(context).translate('offers', 'bookmarked')} ${AppLocalizations.of(context).translate('offers', 'thisoffer')}.',
+                            ? S.of(context).you_created_offer
+                            : '${S.of(context).you_have} ${isAccepted ? '' : " ${S.of(context).not_yet}"} ${offerModel.offerType == OfferType.GROUP_OFFER ? S.of(context).signed_up_for : S.of(context).bookmarked} ${S.of(context).this_offer}.',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

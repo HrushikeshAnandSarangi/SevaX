@@ -5,7 +5,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -14,7 +14,6 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
 class UpdateNewsFeed extends StatelessWidget {
-  final GlobalKey<NewsCreateFormState> _formState = GlobalKey();
   final String timebankId;
   final NewsModel newsMmodel;
   String photoCredits;
@@ -34,8 +33,7 @@ class UpdateNewsFeed extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context)
-                .translate('create_feed', 'update_post'),
+            S.of(context).update_feed,
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -215,10 +213,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
                               alignLabelWithHint: false,
-                              hintText: AppLocalizations.of(context)
-                                  .translate('create_feed', 'hint'),
-                              labelText: AppLocalizations.of(context)
-                                  .translate('create_feed', 'placeholder'),
+                              hintText: S.of(context).create_feed_hint,
+                              labelText: S.of(context).create_feed_placeholder,
                               border: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(0.0),
@@ -236,8 +232,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             },
                             validator: (value) {
                               if (value.isEmpty) {
-                                return AppLocalizations.of(context)
-                                    .translate('create_feed', 'empty_err');
+                                return S
+                                    .of(context)
+                                    .validation_error_general_text;
                               }
                               newsObject.subheading = value;
                             },
@@ -332,11 +329,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     if (connResult == ConnectivityResult.none) {
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(AppLocalizations.of(context)
-                              .translate('shared', 'check_internet')),
+                          content: Text(S.of(context).check_internet),
                           action: SnackBarAction(
-                            label: AppLocalizations.of(context)
-                                .translate('shared', 'dismiss'),
+                            label: S.of(context).dismiss,
                             onPressed: () =>
                                 Scaffold.of(context).hideCurrentSnackBar(),
                           ),
@@ -354,9 +349,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             builder: (createDialogContext) {
                               dialogContext = createDialogContext;
                               return AlertDialog(
-                                title: Text(AppLocalizations.of(context)
-                                    .translate(
-                                        'create_feed', 'update_progress')),
+                                title: Text(S.of(context).updating_feed),
                                 content: LinearProgressIndicator(),
                               );
                             });
@@ -372,15 +365,13 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     } else {
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(AppLocalizations.of(context)
-                              .translate('create_feed', 'location_notadded')),
+                          content: Text(S.of(context).location_not_added),
                         ),
                       );
                     }
                   },
                   child: Text(
-                    AppLocalizations.of(context)
-                        .translate('create_feed', 'update_post'),
+                    S.of(context).update_feed,
                     style: TextStyle(
                       color: Colors.white,
                     ),

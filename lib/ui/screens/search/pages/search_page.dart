@@ -8,7 +8,6 @@ import 'package:sevaexchange/ui/screens/search/pages/projects_tab_view.dart';
 import 'package:sevaexchange/ui/screens/search/pages/requests_tab_view.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/search_field.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/search_tab_bar.dart';
-import 'package:sevaexchange/ui/utils/strings.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
 import 'feeds_tab_view.dart';
@@ -50,7 +49,7 @@ class _SearchPageState extends State<SearchPage>
     );
 
     _tabController = TabController(
-      length: SearchPageLabels.tabContent.length,
+      length: 6,
       initialIndex: 0,
       vsync: this,
     );

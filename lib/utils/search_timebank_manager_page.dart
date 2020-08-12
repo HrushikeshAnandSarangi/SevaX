@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -76,8 +76,7 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
                     borderSide: BorderSide(color: Colors.white)),
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white)),
-                hintText: AppLocalizations.of(context)
-                    .translate('create_request', 'search_member'),
+                hintText: S.of(context).search + ' ' + S.of(context).members,
                 hintStyle: TextStyle(color: Colors.white)),
             // controller: searchTextController,
           ),
@@ -276,9 +275,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
       );
     } else if (widget.controller.text.trim().length < 3) {
       return getEmptyWidget(
-          'Users',
-          AppLocalizations.of(context)
-              .translate('create_request', 'atleast_3'));
+          'Users', S.of(context).validation_error_search_min_characters);
     }
     return StreamBuilder<List<UserModel>>(
       stream: SearchManager.searchForUserWithTimebankId(
@@ -298,8 +295,10 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
         }
         List<UserModel> userList = snapshot.data;
         if (userList.length == 0) {
-          return getEmptyWidget('Users',
-              AppLocalizations.of(context).translate('members', 'no_users'));
+          return getEmptyWidget(
+            'Users',
+            S.of(context).no_user_found,
+          );
         }
         return ListView.builder(
           shrinkWrap: true,

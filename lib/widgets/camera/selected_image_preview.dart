@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/image_caption_model.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/message_input.dart';
 
@@ -88,8 +88,8 @@ class _SelectedImagePreviewState extends State<SelectedImagePreview> {
                       send(_file, value);
                     },
                     hideCameraIcon: true,
-                    hintText: AppLocalizations.of(context)
-                        .translate('messages', 'add_caption'),
+                    hintText: S.of(context)
+                        .add_caption,
                     onSend: () {
                       send(_file, textController.text);
                     },

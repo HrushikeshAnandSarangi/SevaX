@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/billing_plan_details.dart';
 import 'package:sevaexchange/models/user_model.dart';
 
@@ -93,8 +93,7 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
                   child: Row(
                     children: <Widget>[
                       Text(
-                        AppLocalizations.of(context)
-                            .translate('billing_plans', 'info_click'),
+                        S.of(context).click_for_more_info,
                         style: TextStyle(fontSize: 10, color: textColor),
                       ),
                       SizedBox(width: 8),
@@ -135,17 +134,14 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
                     ? Row(
                         children: <Widget>[
                           Text(
-                            AppLocalizations.of(context)
-                                .translate('billing_plans', 'bill_me'),
+                            S.of(context).bill_me,
                             style: TextStyle(fontSize: 14, color: textColor),
                           ),
                           SizedBox(width: 8),
                           InkWell(
                             onTap: () {
                               _showBillMeDialog(
-                                  context,
-                                  AppLocalizations.of(context).translate(
-                                      'billing_plans', 'bill_me_info'));
+                                  context, S.of(context).bill_me_info1);
                             },
                             child: CircleAvatar(
                               radius: 8,
@@ -166,9 +162,9 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
                                 });
                               } else {
                                 _showBillMeDialog(
-                                    context,
-                                    AppLocalizations.of(context).translate(
-                                        'billing_plans', 'bill_me_info_two'));
+                                  context,
+                                  S.of(context).bill_me_info2,
+                                );
                               }
                             },
                           )
@@ -184,12 +180,9 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
                   child: Text(
                     widget.isPlanActive
                         ? widget.isSelected
-                            ? AppLocalizations.of(context)
-                                .translate('billing_plans', 'active')
-                            : AppLocalizations.of(context)
-                                .translate('billing_plans', 'change')
-                        : AppLocalizations.of(context)
-                            .translate('billing_plans', 'choose'),
+                            ? S.of(context).currently_active
+                            : S.of(context).change
+                        : S.of(context).choose,
                     style: TextStyle(
                       color: widget.isSelected
                           ? Theme.of(context).primaryColor
@@ -272,8 +265,7 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('billing_plans', 'billable_transactions')),
+          title: Text(S.of(context).billable_transactions),
           content: Container(
             height: 300,
             width: 300,
@@ -289,7 +281,8 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
           actions: <Widget>[
             FlatButton(
               child: Text(
-                  AppLocalizations.of(context).translate('homepage', 'ok')),
+                S.of(context).ok,
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -305,13 +298,11 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('billing_plans', 'billable_transactions')),
+          title: Text(S.of(context).billable_transactions),
           content: Text(msg),
           actions: <Widget>[
             FlatButton(
-              child: Text(
-                  AppLocalizations.of(context).translate('homepage', 'ok')),
+              child: Text(S.of(context).ok),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -327,16 +318,13 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('billing_plans', 'alert_title')),
+          title: Text(S.of(context).plan_change),
           content: Container(
-            child: Text(AppLocalizations.of(context)
-                .translate('billing_plans', 'contact')),
+            child: Text(S.of(context).contact_seva_to_change_plan),
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text(AppLocalizations.of(context)
-                  .translate('billing_plans', 'close')),
+              child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -364,8 +352,7 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
               "planId": widget.plan.id,
               "message": isBillMe
                   ? widget.plan.planName
-                  : AppLocalizations.of(context)
-                      .translate('billing_admin', 'community_plan')
+                  : S.of(context).on_community_plan
             },
             "billMe": isBillMe
           },
@@ -384,8 +371,7 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(AppLocalizations.of(context)
-                  .translate('billing_plans', 'progress')),
+              Text(S.of(context).taking_to_new_timebank),
               // Text('It may take couple of minutes to synchronize your payment'),
             ],
           ),

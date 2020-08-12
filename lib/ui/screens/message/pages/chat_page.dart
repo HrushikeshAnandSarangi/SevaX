@@ -4,7 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/image_caption_model.dart';
 import 'package:sevaexchange/models/message_model.dart';
@@ -75,8 +75,7 @@ class _ChatPageState extends State<ChatPage> {
     _scrollController = ScrollController();
 
     if (widget.isFromRejectCompletion)
-      textcontroller.text =
-          '${AppLocalizations.of(context).translate('chat', 'rejecting_becz')} ';
+      textcontroller.text = '${S.of(context).reject_task_completion} ';
 
     if (widget.isFromShare) {
       print("Pushing new message from share");
@@ -174,7 +173,7 @@ class _ChatPageState extends State<ChatPage> {
                 if (snapshot.hasError) {
                   _scrollToBottom();
                   return Text(
-                    '${AppLocalizations.of(context).translate('chat', 'error')}',
+                    '${S.of(context).general_stream_error}',
                   );
                 }
 
@@ -186,8 +185,7 @@ class _ChatPageState extends State<ChatPage> {
                 if (snapshot.data.length == 0) {
                   return Center(
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('chat', 'no_messages'),
+                      S.of(context).no_message,
                     ),
                   );
                 }
@@ -267,8 +265,7 @@ class _ChatPageState extends State<ChatPage> {
                 }
                 messageContent = value;
               },
-              hintText: AppLocalizations.of(context)
-                  .translate('messages', 'type_message'),
+              hintText: S.of(context).type_message,
               onCameraPressed: () async {
                 List<CameraDescription> cameras = await availableCameras();
                 Navigator.of(context)
@@ -363,8 +360,7 @@ class _ChatPageState extends State<ChatPage> {
       future: FeedApi.getFeedFromId(messageModel.message),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Text(
-              AppLocalizations.of(context).translate('chat', 'couldnt_post'));
+          return Text(S.of(context).failed_to_load_post);
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container();

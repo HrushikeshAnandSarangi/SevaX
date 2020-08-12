@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/claimedRequestStatus.dart';
@@ -70,10 +72,11 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   Widget build(BuildContext context) {
     if (isProgressBarActive) {
       return AlertDialog(
-        title: Text(isRemoving
-            ? AppLocalizations.of(context).translate('requests', 'redirection')
-            : AppLocalizations.of(context)
-                .translate('requests', 'completing_task')),
+        title: Text(
+          isRemoving
+              ? S.of(context).redirecting_to_messages
+              : S.of(context).completed_task_in,
+        ),
         content: LinearProgressIndicator(),
       );
     }
@@ -168,9 +171,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text('${transmodel.credits}'),
-              Text(
-                  AppLocalizations.of(context)
-                      .translate('requests', 'seva_credits'),
+              Text(S.of(context).seva_credits,
                   style: TextStyle(
                     fontSize: 9,
                     fontWeight: FontWeight.w600,
@@ -242,7 +243,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            AppLocalizations.of(context).translate('requests', 'total_spent'),
+            S.of(context).total_spent,
             style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey,
@@ -444,8 +445,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
                       if (!canApproveTransaction) {
                         showDiologForMessage(
-                          AppLocalizations.of(context)
-                              .translate('requests', 'insufficient'),
+                          S.of(context).notifications_insufficient_credits,
                           context,
                         );
                         return;
@@ -460,9 +460,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                         userModel: user,
                         credits: transactionModel.credits);
                   },
-                  child: Text(
-                      AppLocalizations.of(context)
-                          .translate('requests', 'pending'),
+                  child: Text(S.of(context).pending,
                       style: TextStyle(fontSize: 12)),
                 ),
               ),
@@ -480,8 +478,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         builder: (createDialogContext) {
           linearProgressForBalanceCheck = createDialogContext;
           return AlertDialog(
-            title: Text(
-                AppLocalizations.of(context).translate('requests', 'hangon')),
+            title: Text(S.of(context).hang_on),
             content: LinearProgressIndicator(),
           );
         });
@@ -535,14 +532,14 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                   children: [
                     TextSpan(
                       text:
-                          '${user.fullname} ${AppLocalizations.of(context).translate('requests', 'completed_task_in')} ',
+                          '${user.fullname} ${S.of(context).completed_task_in} ',
                       style: TextStyle(
                         color: Colors.grey,
                       ),
                     ),
                     TextSpan(
                       text: () {
-                        return '${transactionModel.credits} ${AppLocalizations.of(context).translate('requests', 'hours')}';
+                        return '${transactionModel.credits} ${S.of(context).hour(transactionModel.credits)}';
                       }(),
                       style: TextStyle(
                         color: Colors.black,
@@ -550,7 +547,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                     ),
                     TextSpan(
                       text: () {
-                        return ', ${AppLocalizations.of(context).translate('requests', 'waiting_for_approval')}';
+                        return ', ${S.of(context).notifications_waiting_for_approval}';
                       }(),
                       style: TextStyle(
                         color: Colors.grey,
@@ -573,7 +570,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('requests', 'ok'),
+                  S.of(context).ok,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -632,7 +629,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                     Padding(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                        "${AppLocalizations.of(context).translate('requests', 'about')} ${userModel.fullname}",
+                        "${S.of(context).about} ${userModel.fullname}",
                         style: TextStyle(
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
@@ -642,7 +639,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                       padding: EdgeInsets.all(8.0),
                       child: Center(
                         child: Text(
-                          "${AppLocalizations.of(context).translate('requests', 'by_approving_that')} ${userModel.fullname} ${AppLocalizations.of(context).translate('requests', 'worked_for')} $credits ${AppLocalizations.of(context).translate('requests', 'hours')}",
+                          "${S.of(context).by_approving_you_accept} ${userModel.fullname} ${S.of(context).has_worked_for} $credits ${S.of(context).hour(credits)}",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
@@ -662,8 +659,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                         child: RaisedButton(
                           color: FlavorConfig.values.theme.primaryColor,
                           child: Text(
-                            AppLocalizations.of(context)
-                                .translate('requests', 'approve'),
+                            S.of(context).approve,
                             style: TextStyle(
                                 color: Colors.white, fontFamily: 'Europa'),
                           ),
@@ -693,8 +689,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                         child: RaisedButton(
                           color: Theme.of(context).accentColor,
                           child: Text(
-                            AppLocalizations.of(context)
-                                .translate('requests', 'reject'),
+                            S.of(context).reject,
                             style: TextStyle(
                                 color: Colors.white, fontFamily: 'Europa'),
                           ),
@@ -846,8 +841,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     }
     return Padding(
       padding: EdgeInsets.all(8.0),
-      child: Text(
-          AppLocalizations.of(context).translate('requests', 'not_updated')),
+      child: Text(S.of(context).email_not_updated),
     );
   }
 
@@ -944,7 +938,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       "requestId": requestId,
       "comments": (results['didComment']
           ? results['comment']
-          : AppLocalizations.of(context).translate('requests', 'no_comments'))
+          : S.of(context).no_comments)
     });
     await updateUserData(reviewer, reviewed);
     var claimedRequestStatus = ClaimedRequestStatusModel(

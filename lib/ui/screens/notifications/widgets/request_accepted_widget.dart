@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_button.dart';
@@ -62,7 +62,7 @@ class RequestAcceptedWidget extends StatelessWidget {
                 subtitle: Padding(
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                   child: Text(
-                    '${AppLocalizations.of(context).translate('notifications', 'request_accepted_by')} ${user.fullname}, ${AppLocalizations.of(context).translate('notifications', 'waiting_for')}',
+                    '${S.of(context).notifications_request_accepted_by} ${user.fullname}, ${S.of(context).notifications_waiting_for_approval}',
                   ),
                 ),
               ),
@@ -115,7 +115,7 @@ class RequestAcceptedWidget extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(0.0),
                     child: Text(
-                      "${AppLocalizations.of(context).translate('notifications', 'about')} ${userModel.fullname}",
+                      "${S.of(context).about} ${userModel.fullname}",
                       style:
                           TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
@@ -123,11 +123,12 @@ class RequestAcceptedWidget extends StatelessWidget {
                 getBio(context, userModel),
                 Center(
                   child: Text(
-                      "${AppLocalizations.of(context).translate('notifications', 'by_approving_short')}, ${userModel.fullname} ${AppLocalizations.of(context).translate('notifications', 'add_to')}.",
-                      style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                      ),
-                      textAlign: TextAlign.center),
+                    "${S.of(context).notifications_by_approving}, ${userModel.fullname} ${S.of(context).notifications_will_be_added_to}.",
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.all(5.0),
@@ -140,8 +141,7 @@ class RequestAcceptedWidget extends StatelessWidget {
                       child: RaisedButton(
                         color: Theme.of(context).primaryColor,
                         child: Text(
-                          AppLocalizations.of(context)
-                              .translate('notifications', 'approve'),
+                          S.of(context).approve,
                           style: TextStyle(
                               color: Colors.white, fontFamily: 'Europa'),
                         ),
@@ -166,8 +166,7 @@ class RequestAcceptedWidget extends StatelessWidget {
                       child: RaisedButton(
                         color: Theme.of(context).accentColor,
                         child: Text(
-                          AppLocalizations.of(context)
-                              .translate('notifications', 'decline'),
+                          S.of(context).decline,
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -262,7 +261,6 @@ Widget getBio(BuildContext context, UserModel userModel) {
   }
   return Padding(
     padding: EdgeInsets.all(8.0),
-    child: Text(AppLocalizations.of(context)
-        .translate('notifications', 'bio_notupdated')),
+    child: Text(S.of(context).bio_not_updated),
   );
 }

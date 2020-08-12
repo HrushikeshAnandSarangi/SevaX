@@ -2,7 +2,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 
 import 'calendar_widget.dart';
 import 'date_time_selector_widget.dart';
@@ -65,8 +65,7 @@ class CalendarPickerState extends State<CalendarPicker> {
             children: <Widget>[
               Expanded(
                 child: DateTimeSelector(
-                  title: AppLocalizations.of(context)
-                      .translate('create_request', 'start'),
+                  title: S.of(context).start,
                   onPressed: () {
                     setState(() => {selectionType = SelectionType.START_DATE});
                     log("start date : $startDate");
@@ -77,8 +76,7 @@ class CalendarPickerState extends State<CalendarPicker> {
               ),
               Expanded(
                 child: DateTimeSelector(
-                  title: AppLocalizations.of(context)
-                      .translate('create_request', 'end'),
+                  title: S.of(context).end,
                   onPressed: () {
                     setState(() => {selectionType = SelectionType.END_DATE});
                     log("end date : $endDate");
@@ -117,8 +115,7 @@ class CalendarPickerState extends State<CalendarPicker> {
                   padding: EdgeInsets.fromLTRB(16, 8, 8, 8),
                   color: Color(0xfff2f2f2),
                   child: Text(
-                    AppLocalizations.of(context)
-                        .translate('create_request', 'time'),
+                    S.of(context).time,
                     style: TextStyle(
                         fontFamily: 'Europa',
                         fontSize: 14,
@@ -175,14 +172,18 @@ class CalendarPickerState extends State<CalendarPicker> {
               ],
             ),
           ),
-          getBottomButton(context, () {
-            if (endDate.millisecondsSinceEpoch <
-                startDate.millisecondsSinceEpoch) {
-              _dateInvalidAlert(context);
-            } else {
-              Navigator.pop(context, [startDate, endDate]);
-            }
-          }, AppLocalizations.of(context).translate('create_request', 'done')),
+          getBottomButton(
+            context,
+            () {
+              if (endDate.millisecondsSinceEpoch <
+                  startDate.millisecondsSinceEpoch) {
+                _dateInvalidAlert(context);
+              } else {
+                Navigator.pop(context, [startDate, endDate]);
+              }
+            },
+            S.of(context).done,
+          ),
         ],
       ),
     );
@@ -193,16 +194,13 @@ class CalendarPickerState extends State<CalendarPicker> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('create_request', 'date_selection_issue')),
+          title: Text(S.of(context).date_selection_issue),
           content: Container(
-            child: Text(AppLocalizations.of(context)
-                .translate('create_request', 'end_date_start_date')),
+            child: Text(S.of(context).validation_error_end_date_greater),
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text(AppLocalizations.of(context)
-                  .translate('create_request', 'close')),
+              child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
               },

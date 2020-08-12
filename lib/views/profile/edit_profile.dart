@@ -15,7 +15,7 @@ import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -109,7 +109,7 @@ class _EditProfilePageState extends State<EditProfilePage>
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate('profile', 'title'),
+          S.of(context).bottom_nav_profile,
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -154,28 +154,23 @@ class _EditProfilePageState extends State<EditProfilePage>
             ),
             SizedBox(height: 50),
             detailsBuilder(
-              title: AppLocalizations.of(context).translate('profile', 'name'),
+              title: S.of(context).name,
               text: widget.userModel.fullname,
               onTap: _updateName,
             ),
             detailsBuilder(
-              title: AppLocalizations.of(context).translate('profile', 'bio'),
-              text: widget.userModel.bio ??
-                  AppLocalizations.of(context).translate('profile', 'add_bio'),
+              title: S.of(context).bio,
+              text: widget.userModel.bio ?? S.of(context).add_bio,
               onTap: _updateBio,
             ),
             detailsBuilder(
-              title: AppLocalizations.of(context)
-                  .translate('profile', 'interests'),
-              text: AppLocalizations.of(context)
-                  .translate('profile', 'add_interests'),
+              title: S.of(context).interests,
+              text: S.of(context).click_to_see_interests,
               onTap: () => _navigateToInterestsView(usermodel),
             ),
             detailsBuilder(
-              title:
-                  AppLocalizations.of(context).translate('profile', 'skills'),
-              text: AppLocalizations.of(context)
-                  .translate('profile', 'add_skills'),
+              title: S.of(context).skills,
+              text: S.of(context).click_to_see_skills,
               onTap: () => _navigateToSkillsView(usermodel),
             ),
             cvBuilder(
@@ -194,7 +189,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   color: Theme.of(context).primaryColor,
                   textColor: Colors.white,
                   child: Text(
-                    AppLocalizations.of(context).translate('profile', 'logout'),
+                    S.of(context).log_out,
                   ),
                   onPressed: logOut,
                 ),
@@ -809,27 +804,21 @@ class _EditProfilePageState extends State<EditProfilePage>
         return AlertDialog(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text(
-              AppLocalizations.of(context).translate('profile', 'update_name'),
-              style: TextStyle(fontSize: 15.0)),
+          title:
+              Text(S.of(context).update_name, style: TextStyle(fontSize: 15.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Form(
                 key: _formKey,
                 child: TextFormField(
+                  decoration:
+                      InputDecoration(hintText: S.of(context).enter_name),
                   autovalidate: autoValidateText,
                   onChanged: (value) {
-                    print("name ------ $value");
-                    if (value.length > 1) {
-                      setState(() {
-                        autoValidateText = true;
-                      });
-                    } else {
-                      setState(() {
-                        autoValidateText = false;
-                      });
-                    }
+                    setState(() {
+                      autoValidateText = value.length > 1;
+                    });
                   },
                   decoration: InputDecoration(
                       errorMaxLines: 2,
@@ -844,8 +833,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   ],
                   validator: (value) {
                     if (value.isEmpty) {
-                      return AppLocalizations.of(context)
-                          .translate('profile', 'enter_name');
+                      return S.of(context).enter_name_hint;
                     } else if (profanityDetector.isProfaneString(value)) {
                       return AppLocalizations.of(context)
                           .translate('profanity', 'alert');
@@ -867,8 +855,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('profile', 'update'),
+                      S.of(context).update,
                       style: TextStyle(
                         fontSize: dialogButtonSize,
                       ),
@@ -878,11 +865,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                       if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content: Text(AppLocalizations.of(context)
-                                .translate('shared', 'check_internet')),
+                            content: Text(S.of(context).check_internet),
                             action: SnackBarAction(
-                              label: AppLocalizations.of(context)
-                                  .translate('shared', 'dismiss'),
+                              label: S.of(context).dismiss,
                               onPressed: () => _scaffoldKey.currentState
                                   .hideCurrentSnackBar(),
                             ),
@@ -900,8 +885,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   ),
                   FlatButton(
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('shared', 'cancel'),
+                      S.of(context).cancel,
                       style: TextStyle(
                           fontSize: dialogButtonSize, color: Colors.red),
                     ),
@@ -926,9 +910,8 @@ class _EditProfilePageState extends State<EditProfilePage>
         return AlertDialog(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          title: Text(
-              AppLocalizations.of(context).translate('profile', 'update_bio'),
-              style: TextStyle(fontSize: 15.0)),
+          title:
+              Text(S.of(context).update_bio, style: TextStyle(fontSize: 15.0)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -950,9 +933,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                     }
                   },
                   decoration: InputDecoration(
-                      errorMaxLines: 2,
-                      hintText: AppLocalizations.of(context)
-                          .translate('profile', 'enter_bio')),
+                    errorMaxLines: 2,
+                      hintText: S.of(context).enter_bio,
+                  ),
                   maxLength: 150,
                   maxLengthEnforced: true,
                   keyboardType: TextInputType.text,
@@ -962,14 +945,12 @@ class _EditProfilePageState extends State<EditProfilePage>
 
                   validator: (value) {
                     if (value.isEmpty) {
-                      return AppLocalizations.of(context)
-                          .translate('profile', 'please_enter_bio');
+                      return S.of(context).update_bio_hint;
                     } else if (profanityDetector.isProfaneString(value)) {
                       return AppLocalizations.of(context)
                           .translate('profanity', 'alert');
                     } else if (value.length < 50) {
-                      return AppLocalizations.of(context)
-                          .translate('profile', 'bio_50');
+                      return S.of(context).validation_error_bio_min_characters;
                     } else {
                       widget.userModel.bio = value;
                       return null;
@@ -986,8 +967,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('profile', 'update'),
+                      S.of(context).update,
                       style: TextStyle(
                         fontSize: dialogButtonSize,
                       ),
@@ -997,11 +977,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                       if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content: Text(AppLocalizations.of(context)
-                                .translate('shared', 'check_internet')),
+                            content: Text(S.of(context).check_internet),
                             action: SnackBarAction(
-                              label: AppLocalizations.of(context)
-                                  .translate('shared', 'dismiss'),
+                              label: S.of(context).dismiss,
                               onPressed: () => _scaffoldKey.currentState
                                   .hideCurrentSnackBar(),
                             ),
@@ -1022,8 +1000,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   ),
                   FlatButton(
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('shared', 'cancel'),
+                      S.of(context).cancel,
                       style: TextStyle(
                           fontSize: dialogButtonSize, color: Colors.red),
                     ),
@@ -1072,13 +1049,11 @@ class _EditProfilePageState extends State<EditProfilePage>
       builder: (BuildContext _context) {
         // return object of type Dialog
         return AlertDialog(
-          title:
-              Text(AppLocalizations.of(context).translate('profile', 'logout')),
+          title: Text(S.of(context).log_out),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(AppLocalizations.of(context)
-                  .translate('profile', 'sure_logout')),
+              Text(S.of(context).log_out_confirmation),
               SizedBox(height: 10),
               Row(
                 children: <Widget>[
@@ -1088,8 +1063,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('profile', 'logout'),
+                      S.of(context).log_out,
                       style: TextStyle(fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
@@ -1097,11 +1071,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                       if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content: Text(AppLocalizations.of(context)
-                                .translate('shared', 'check_internet')),
+                            content: Text(S.of(context).check_internet),
                             action: SnackBarAction(
-                              label: AppLocalizations.of(context)
-                                  .translate('shared', 'dismiss'),
+                              label: S.of(context).dismiss,
                               onPressed: () => _scaffoldKey.currentState
                                   .hideCurrentSnackBar(),
                             ),
@@ -1129,8 +1101,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   ),
                   FlatButton(
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('shared', 'cancel'),
+                      S.of(context).cancel,
                       style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
                     ),
                     onPressed: () {

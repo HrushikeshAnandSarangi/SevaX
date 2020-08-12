@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 
 class SwitchTimebank extends StatelessWidget {
@@ -27,9 +27,7 @@ class SwitchTimebank extends StatelessWidget {
             CircularProgressIndicator(),
             SizedBox(height: 20),
             Text(
-              content ??
-                  AppLocalizations.of(context)
-                      .translate('switching_timebank', 'switch_timebank'),
+              content ?? S.of(context).switching_timebank,
               style: TextStyle(
                 fontSize: 22,
               ),

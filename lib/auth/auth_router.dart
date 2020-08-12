@@ -3,8 +3,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
@@ -55,18 +55,12 @@ class _AuthRouterState extends State<AuthRouter> {
               auth: Auth(),
               child: MaterialApp(
                 locale: model.appLocal,
-                supportedLocales: [
-                  Locale('en', 'US'),
-                  Locale('pt', 'PT'),
-                  Locale('es', 'ES'),
-                  Locale('fr', 'FR'),
-                  Locale('zh', 'CN')
-                ],
+                supportedLocales: S.delegate.supportedLocales,
                 localizationsDelegates: [
-                  AppLocalizations.delegate,
+                  S.delegate,
                   GlobalMaterialLocalizations.delegate,
                   GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate
+                  GlobalCupertinoLocalizations.delegate,
                 ],
                 title: AppConfig.appName,
                 debugShowCheckedModeBanner: false,

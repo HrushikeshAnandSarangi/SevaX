@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
@@ -33,9 +33,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
         stream: _bloc.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
-            return Center(
-                child: Text(AppLocalizations.of(context)
-                    .translate('search', 'search_something')));
+            return Center(child: Text(S.of(context).search_something));
           }
           return StreamBuilder<List<NewsModel>>(
             stream: Searches.searchFeeds(
@@ -52,8 +50,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 print("===>> ${snapshot.data}");
                 return Center(
-                  child: Text(AppLocalizations.of(context)
-                      .translate('search', 'search_something')),
+                  child: Text(S.of(context).search_something),
                 );
               }
               return ListView.builder(
@@ -198,15 +195,17 @@ class _FeedsTabViewState extends State<FeedsTabView>
         builder: (BuildContext viewContext) {
           // return object of type Dialog
           return AlertDialog(
-            title: Text(AppLocalizations.of(context).translate('homepage', 'report')),
-            content: Text(AppLocalizations.of(context).translate('homepage', 'want_report')),
+            title: Text(
+              S.of(context).report_feed,
+            ),
+            content: Text(S.of(context).report_feed_confirmation_message),
             actions: <Widget>[
               FlatButton(
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                 color: Theme.of(mContext).accentColor,
                 textColor: FlavorConfig.values.buttonTextColor,
                 child: Text(
-                  AppLocalizations.of(context).translate('homepage', 'report_feed'),
+                  S.of(context).report_feed,
                   style: TextStyle(
                     fontSize: dialogButtonSize,
                   ),
@@ -232,7 +231,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
               ),
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('shared', 'cancel'),
+                  S.of(context).cancel,
                   style: TextStyle(color: Colors.red),
                 ),
                 onPressed: () {

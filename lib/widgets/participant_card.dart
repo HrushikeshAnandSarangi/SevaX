@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
@@ -94,7 +94,9 @@ class ParticipantCard extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 8),
-                      Text(bio ?? AppLocalizations.of(context).translate('offers','no_bio')),
+                      Text(
+                        bio ?? S.of(context).bio_not_updated,
+                      ),
                     ],
                   ),
                 ),

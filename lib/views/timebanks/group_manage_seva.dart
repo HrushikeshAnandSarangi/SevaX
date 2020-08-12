@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_page.dart';
@@ -65,15 +65,10 @@ class _ManageGroupView extends State<ManageGroupView> {
               labelColor: Colors.black,
               isScrollable: false,
               tabs: <Widget>[
+                Tab(text: S.of(context).edit_group),
+                Tab(text: S.of(context).settings),
                 Tab(
-                    text: AppLocalizations.of(context)
-                        .translate('group', 'edit_group')),
-                Tab(
-                    text: AppLocalizations.of(context)
-                        .translate('group', 'settings')),
-                Tab(
-                  text: AppLocalizations.of(context).translate(
-                      'external_notifications', 'notification_title'),
+                  text: S.of(context).bottom_nav_notifications,
                 ),
               ],
             ),
@@ -106,15 +101,10 @@ class _ManageGroupView extends State<ManageGroupView> {
               labelColor: Colors.black,
               isScrollable: false,
               tabs: <Widget>[
+                Tab(text: S.of(context).edit_group),
+                Tab(text: S.of(context).settings),
                 Tab(
-                    text: AppLocalizations.of(context)
-                        .translate('group', 'edit_group')),
-                Tab(
-                    text: AppLocalizations.of(context)
-                        .translate('group', 'settings')),
-                Tab(
-                  text: AppLocalizations.of(context).translate(
-                      'external_notifications', 'notification_title'),
+                  text: S.of(context).bottom_nav_notifications,
                 ),
               ],
             ),
@@ -130,7 +120,6 @@ class _ManageGroupView extends State<ManageGroupView> {
                     SevaCore.of(context).loggedInUser.sevaUserID,
                     widget.timebankModel.parentTimebankId ==
                         FlavorConfig.values.timebankId,
-
                   )
                 ],
               ),
@@ -153,12 +142,8 @@ class _ManageGroupView extends State<ManageGroupView> {
               labelColor: Colors.black,
               isScrollable: false,
               tabs: <Widget>[
-                Tab(
-                    text: AppLocalizations.of(context)
-                        .translate('group', 'about')),
-                Tab(
-                    text: AppLocalizations.of(context)
-                        .translate('group', 'settings')),
+                Tab(text: S.of(context).about),
+                Tab(text: S.of(context).settings),
               ],
             ),
             Expanded(
@@ -209,7 +194,7 @@ class _ManageGroupView extends State<ManageGroupView> {
         );
       },
       child: Text(
-        AppLocalizations.of(context).translate('group', 'view_request'),
+        S.of(context).view_requests,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
@@ -231,7 +216,7 @@ class _ManageGroupView extends State<ManageGroupView> {
         );
       },
       child: Text(
-        AppLocalizations.of(context).translate('group', 'reported_members'),
+        S.of(context).reported_members,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
@@ -255,7 +240,7 @@ class _ManageGroupView extends State<ManageGroupView> {
         );
       },
       child: Text(
-        AppLocalizations.of(context).translate('group', 'delete_group'),
+        S.of(context).delete_group,
         textAlign: TextAlign.left,
         style: TextStyle(
           fontWeight: FontWeight.bold,
@@ -267,7 +252,7 @@ class _ManageGroupView extends State<ManageGroupView> {
 
   Widget get getTitle {
     return Text(
-      "${AppLocalizations.of(context).translate('group', 'manage')} ${widget.timebankModel.name}",
+      "${S.of(context).manage} ${widget.timebankModel.name}",
       style: TextStyle(
         fontSize: 20,
         color: Colors.black,

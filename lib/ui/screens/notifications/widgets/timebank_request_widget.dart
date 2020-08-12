@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -48,7 +48,7 @@ class TimebankRequestWidget extends StatelessWidget {
               isDissmissible: false,
               title: model.title,
               subTitle:
-                  '${AppLocalizations.of(context).translate('notifications', 'request_accepted_by')} ${user.fullname}, ${AppLocalizations.of(context).translate('notifications', 'waiting_for')}',
+                  '${S.of(context).notifications_request_accepted_by} ${user.fullname}, ${S.of(context).notifications_waiting_for_approval}',
               photoUrl: user.photoURL,
               entityName: user.fullname,
               onPressed: () {
@@ -108,7 +108,7 @@ class TimebankRequestWidget extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(0.0),
                     child: Text(
-                      "${AppLocalizations.of(context).translate('notifications', 'about')} ${userModel.fullname}",
+                      "${S.of(context).about} ${userModel.fullname}",
                       style:
                           TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
@@ -122,7 +122,7 @@ class TimebankRequestWidget extends StatelessWidget {
                   children: <Widget>[
                     Center(
                       child: Text(
-                          "${AppLocalizations.of(context).translate('notifications', 'by_approving_short')}, ${userModel.fullname} ${AppLocalizations.of(context).translate('notifications', 'add_to')}.",
+                          "${S.of(context).notifications_by_approving}, ${userModel.fullname} ${S.of(context).notifications_will_be_added_to}.",
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
                           ),
@@ -133,8 +133,7 @@ class TimebankRequestWidget extends StatelessWidget {
                       child: RaisedButton(
                         color: FlavorConfig.values.theme.primaryColor,
                         child: Text(
-                          AppLocalizations.of(context)
-                              .translate('notifications', 'approve'),
+                          S.of(context).approve,
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () async {
@@ -153,8 +152,7 @@ class TimebankRequestWidget extends StatelessWidget {
                       child: RaisedButton(
                         color: Theme.of(context).accentColor,
                         child: Text(
-                          AppLocalizations.of(context)
-                              .translate('notifications', 'decline'),
+                          S.of(context).decline,
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () async {

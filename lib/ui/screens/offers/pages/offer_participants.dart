@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_participants_model.dart';
@@ -27,8 +27,8 @@ class OfferParticipants extends StatelessWidget {
             return Container(
               height: MediaQuery.of(context).size.height * 0.75,
               alignment: Alignment.center,
-              child: Text(AppLocalizations.of(context)
-                  .translate('offers', 'no_participants')),
+              child: Text(S.of(context)
+                  .no_participants_yet),
             );
           }
           return ListView.builder(

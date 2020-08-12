@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -22,8 +22,7 @@ class SelectTimeBankForNewChatState extends State<SelectTimeBankForNewChat> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)
-              .translate('select_member', 'select_timebank'),
+          S.of(context).select_group,
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -90,10 +89,8 @@ Widget getTimebanks(BuildContext context) {
                           child: Text(
                             timebank.parentTimebankId ==
                                     FlavorConfig.values.timebankId
-                                ? AppLocalizations.of(context)
-                                    .translate("members", "timebank")
-                                : AppLocalizations.of(context)
-                                    .translate("members", "group"),
+                                ? S.of(context).timebank
+                                : S.of(context).group,
                             style: TextStyle(fontSize: 8, color: Colors.white),
                           ),
                         ),

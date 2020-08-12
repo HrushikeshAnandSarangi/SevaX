@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notifcation_values.dart';
@@ -29,15 +29,14 @@ class JoinRequestWidget extends StatelessWidget {
           margin: notificationPadding,
           decoration: notificationDecoration,
           child: ListTile(
-            title: Text(AppLocalizations.of(context)
-                .translate('notifications', 'join_request')),
+            title: Text(S.of(context).notifications_join_request),
             leading: user.photoURL != null
                 ? CircleAvatar(
                     backgroundImage: NetworkImage(user.photoURL),
                   )
                 : Offstage(),
             subtitle: Text(
-                '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'requested_join')} ${model.timebankTitle}, ${AppLocalizations.of(context).translate('notifications', 'tap_toview')}'),
+                '${user.fullname.toLowerCase()} ${S.of(context).notifications_requested_join} ${model.timebankTitle}, ${S.of(context).notifications_tap_to_view}'),
           ),
         ),
         onTap: () {
