@@ -610,14 +610,104 @@ class NotificationsView extends State<NotificationViewHolder> {
       Firestore.instance.collection("reviews").add(
         {
           "reviewer": SevaCore.of(context).loggedInUser.email,
-          "reviewed": data.classDetails.classTitle,
+          "reviewed": data..classDetails.classTitle,
           "ratings": results['selection'],
+          "device_info": results['device_info'],
           "requestId": "testId",
           "comments":
               results['didComment'] ? results['comment'] : "No comments",
         },
       );
+      await sendMessageOfferCreator(
+          loggedInUser: user,
+          message: results['didComment'] ? results['comment'] : "No comments",
+          creatorId: data.classDetails.sevauserid);
       _clearNotification(email: email, notificationId: notificationId);
+    }
+  }
+
+  Future<void> sendMessageOfferCreator({
+    UserModel loggedInUser,
+    String creatorId,
+    String message,
+  }) async {
+    UserModel userModel =
+        await FirestoreManager.getUserForId(sevaUserId: creatorId);
+    if (userModel != null) {
+      ParticipantInfo receiver = ParticipantInfo(
+        id: userModel.sevaUserID,
+        photoUrl: userModel.photoURL,
+        name: userModel.fullname,
+        type: ChatType.TYPE_PERSONAL,
+      );
+
+      ParticipantInfo sender = ParticipantInfo(
+        id: loggedInUser.sevaUserID,
+        photoUrl: loggedInUser.photoURL,
+        name: loggedInUser.fullname,
+        type: ChatType.TYPE_PERSONAL,
+      );
+      await sendBackgroundMessage(
+          messageContent: message,
+          reciever: receiver,
+          context: context,
+          isTimebankMessage: false,
+          timebankId: '',
+          communityId: loggedInUser.currentCommunity,
+          sender: sender);
+    }
+  }
+
+  Future<void> sendMessageToMember({
+    UserModel loggedInUser,
+    RequestModel requestModel,
+    String message,
+  }) async {
+    TimebankModel timebankModel =
+        await getTimeBankForId(timebankId: requestModel.timebankId);
+    UserModel userModel = await FirestoreManager.getUserForId(
+        sevaUserId: requestModel.sevaUserId);
+    if (userModel != null && timebankModel != null) {
+      ParticipantInfo receiver = ParticipantInfo(
+        id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.sevaUserID
+            : requestModel.timebankId,
+        photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.photoURL
+            : timebankModel.photoUrl,
+        name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.fullname
+            : timebankModel.name,
+        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? ChatType.TYPE_PERSONAL
+            : timebankModel.parentTimebankId ==
+                    '73d0de2c-198b-4788-be64-a804700a88a4'
+                ? ChatType.TYPE_TIMEBANK
+                : ChatType.TYPE_GROUP,
+      );
+
+      ParticipantInfo sender = ParticipantInfo(
+        id: loggedInUser.sevaUserID,
+        photoUrl: loggedInUser.photoURL,
+        name: loggedInUser.fullname,
+        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? ChatType.TYPE_PERSONAL
+            : timebankModel.parentTimebankId ==
+                    '73d0de2c-198b-4788-be64-a804700a88a4'
+                ? ChatType.TYPE_TIMEBANK
+                : ChatType.TYPE_GROUP,
+      );
+      await sendBackgroundMessage(
+          messageContent: message,
+          reciever: receiver,
+          context: context,
+          isTimebankMessage:
+              requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                  ? true
+                  : false,
+          timebankId: requestModel.timebankId,
+          communityId: loggedInUser.currentCommunity,
+          sender: sender);
     }
   }
 
@@ -898,12 +988,21 @@ class NotificationsView extends State<NotificationViewHolder> {
       "reviewer": reviewer,
       "reviewed": reviewed,
       "ratings": results['selection'],
+      "device_info": results['device_info'],
       "requestId": requestId,
       "comments": (results['didComment']
           ? results['comment']
           : AppLocalizations.of(context)
               .translate('notifications', 'no_comments'))
     });
+    sendMessageToMember(
+        loggedInUser: user,
+        requestModel: requestModel,
+        message: (results['didComment']
+            ? results['comment']
+            : AppLocalizations.of(context)
+                .translate('notifications', 'no_comments')));
+
     approveTransaction(requestModel, userId, notificationId, sevaCore);
   }
 

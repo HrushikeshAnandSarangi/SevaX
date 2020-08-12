@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -79,7 +80,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   final nameNode = FocusNode();
   final aboutNode = FocusNode();
   final _textUpdates = StreamController<String>();
-
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
   void initState() {
     super.initState();
     timebankModel.preventAccedentalDelete = true;
@@ -169,6 +171,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     );
     sendInviteNotification();
     globals.timebankAvatarURL = null;
+    globals.webImageUrl = null;
     globals.addedMembersId = [];
   }
 
@@ -217,6 +220,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
       headingText(
           AppLocalizations.of(context).translate('groups', 'name'), true),
       TextFormField(
+        autovalidate: autoValidateText,
+
         textCapitalization: TextCapitalization.sentences,
         focusNode: nameNode,
         onFieldSubmitted: (v) {
@@ -225,10 +230,20 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         controller: searchTextController,
         onChanged: (value) {
           print("groupname ------ $value");
+          if (value.length > 1) {
+            setState(() {
+              autoValidateText = true;
+            });
+          } else {
+            setState(() {
+              autoValidateText = false;
+            });
+          }
         },
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           errorText: errTxt,
+          errorMaxLines: 2,
           hintText:
               AppLocalizations.of(context).translate('groups', 'name_group'),
         ),
@@ -242,20 +257,35 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             return AppLocalizations.of(context)
                 .translate('groups', 'please_enter');
           }
+          if (profanityDetector.isProfaneString(value)) {
+            return AppLocalizations.of(context).translate('profanity', 'alert');
+          }
           timebankModel.name = value.trim();
         },
       ),
       headingText(
           AppLocalizations.of(context).translate('groups', 'about'), true),
       TextFormField(
+        autovalidate: autoValidateText,
         textCapitalization: TextCapitalization.sentences,
-
+        onChanged: (value) {
+          if (value.length > 1) {
+            setState(() {
+              autoValidateText = true;
+            });
+          } else {
+            setState(() {
+              autoValidateText = false;
+            });
+          }
+        },
         focusNode: aboutNode,
         onFieldSubmitted: (v) {
           FocusScope.of(context).requestFocus(FocusNode());
         },
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
+          errorMaxLines: 2,
           hintText: AppLocalizations.of(context).translate('groups', 'example'),
         ),
         // keyboardType: TextInputType.multiline,
@@ -264,6 +294,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           if (value.isEmpty) {
             return AppLocalizations.of(context)
                 .translate('groups', 'please_enter');
+          }
+          if (profanityDetector.isProfaneString(value)) {
+            return AppLocalizations.of(context).translate('profanity', 'alert');
           }
           timebankModel.missionStatement = value;
         },

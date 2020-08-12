@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -88,6 +89,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   String reason = '';
+  final profanityDetector = ProfanityDetector();
 
   @override
   void initState() {
@@ -672,9 +674,14 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                     if (value.isEmpty) {
                       return AppLocalizations.of(context)
                           .translate('members', 'reason_1');
+                    } else if (profanityDetector.isProfaneString(value)) {
+                      return AppLocalizations.of(context)
+                          .translate('profanity', 'alert');
+                    } else {
+                      reason = value;
+                      globals.userExitReason = value;
+                      return null;
                     }
-                    reason = value;
-                    globals.userExitReason = value;
                   },
                 ),
               ),

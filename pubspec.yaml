@@ -86,6 +86,7 @@ dependencies:
   logger: ^0.9.1
   pdf: ^1.10.0
 
+  device_info: ^0.4.2+4
 dev_dependencies:
   pedantic: ^1.9.0
   #  flutter_test:
@@ -121,6 +122,7 @@ flutter:
     - lib/assets/images/image_02.png
     - lib/assets/images/search.png
     - lib/assets/images/csv.png
+    - lib/assets/images/cv.png
     - lib/assets/i18n/
     - lib/assets/images/apple-id-outline-yes_2x.png
 

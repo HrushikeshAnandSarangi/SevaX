@@ -14,6 +14,7 @@ import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -141,6 +142,8 @@ class CreateEditCommunityViewFormState
   int totalMembersCount = 0;
 
   final _textUpdates = StreamController<String>();
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
 
   void initState() {
     super.initState();
@@ -344,7 +347,9 @@ class CreateEditCommunityViewFormState
                         ),
                         headingText(AppLocalizations.of(context)
                             .translate('createtimebank', 'name')),
+
                         TextFormField(
+                          autovalidate: autoValidateText,
                           focusNode: nameFocus,
                           textCapitalization: TextCapitalization.sentences,
                           onFieldSubmitted: (v) {
@@ -352,11 +357,19 @@ class CreateEditCommunityViewFormState
                           },
                           controller: searchTextController,
                           onChanged: (value) {
+                            if (value.length > 1) {
+                              setState(() {
+                                autoValidateText = true;
+                              });
+                            } else {
+                              setState(() {
+                                autoValidateText = false;
+                              });
+                            }
                             enteredName =
                                 value.replaceAll("[^a-zA-Z0-9_ ]*", "");
 
-                            print(
-                                "name ------ ${enteredName.replaceAll("[^a-zA-Z0-9_ ]*", "")}");
+                            // print("name ------ ${enteredName.replaceAll("[^a-zA-Z0-9_ ]*", "")}");
                             communityModel.name =
                                 value.replaceAll("[^a-zA-Z0-9_ ]*", "");
 
@@ -365,6 +378,7 @@ class CreateEditCommunityViewFormState
                           },
                           decoration: InputDecoration(
                             errorText: errTxt,
+                            errorMaxLines: 2,
                             hintText: AppLocalizations.of(context)
                                 .translate('createtimebank', 'name_hinttext'),
                           ),
@@ -388,6 +402,12 @@ class CreateEditCommunityViewFormState
                             } else if (communityFound) {
                               return AppLocalizations.of(context).translate(
                                   'createtimebank', 'name_err_exists');
+                            } else if (profanityDetector
+                                .isProfaneString(value)) {
+                              print(AppLocalizations.of(context)
+                                  .translate('profanity', 'alert'));
+                              return AppLocalizations.of(context)
+                                  .translate('profanity', 'alert');
                             } else {
                               enteredName =
                                   value.replaceAll("[^a-zA-Z0-9]", "");
@@ -402,8 +422,10 @@ class CreateEditCommunityViewFormState
                         headingText(AppLocalizations.of(context)
                             .translate('createtimebank', 'about')),
                         TextFormField(
+                          autovalidate: autoValidateText,
                           focusNode: aboutFocus,
                           decoration: InputDecoration(
+                            errorMaxLines: 2,
                             hintText: AppLocalizations.of(context)
                                 .translate('createtimebank', 'about_hint_text'),
                           ),
@@ -413,14 +435,26 @@ class CreateEditCommunityViewFormState
                           textCapitalization: TextCapitalization.sentences,
                           initialValue: timebankModel.missionStatement ?? "",
                           onChanged: (value) {
+                            if (value.length > 1) {
+                              setState(() {
+                                autoValidateText = true;
+                              });
+                            } else {
+                              setState(() {
+                                autoValidateText = false;
+                              });
+                            }
                             timebankModel.missionStatement = value;
                             communityModel.about = value;
                           },
                           validator: (value) {
-                            if (value.isEmpty) {
+                            if (value.trim().isEmpty) {
                               return AppLocalizations.of(context)
                                   .translate('createtimebank', 'tell_more');
-                              ;
+                            }
+                            if (profanityDetector.isProfaneString(value)) {
+                              return AppLocalizations.of(context)
+                                  .translate('profanity', 'alert');
                             }
                             snapshot.data.community
                                 .updateValueByKey('about', value);
@@ -846,6 +880,9 @@ class CreateEditCommunityViewFormState
                                               snapshot.data.community.id;
                                         });
 
+                                        globals.timebankAvatarURL = null;
+                                        globals.webImageUrl = null;
+
                                         Navigator.pop(dialogContext);
                                         //   _formKey.currentState.reset();
                                         // _billingInformationKey.currentState.reset();
@@ -943,6 +980,9 @@ class CreateEditCommunityViewFormState
                                       .then((onValue) {
                                     print("community updated");
                                   });
+
+                                  globals.timebankAvatarURL = null;
+                                  globals.webImageUrl = null;
                                   if (dialogContext != null) {
                                     Navigator.pop(dialogContext);
                                   }
@@ -1324,6 +1364,8 @@ class CreateEditCommunityViewFormState
 
   static InputDecoration getInputDecoration({String fieldTitle}) {
     return InputDecoration(
+      errorMaxLines: 2,
+
       errorStyle: TextStyle(
         color: Colors.red,
         wordSpacing: 2.0,
@@ -1350,8 +1392,18 @@ class CreateEditCommunityViewFormState
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[2]);
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
-            print(controller.community.billing_address);
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
+            // print(controller.community.billing_address);
             controller.community.billing_address
                 .updateValueByKey('state', value);
             createEditCommunityBloc.onChange(controller);
@@ -1363,7 +1415,10 @@ class CreateEditCommunityViewFormState
             return value.isEmpty
                 ? AppLocalizations.of(context)
                     .translate('createtimebank', 'err_empty')
-                : null;
+                : (profanityDetector.isProfaneString(value))
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
+                    : null;
           },
           focusNode: focusNodes[1],
           textInputAction: TextInputAction.next,
@@ -1383,8 +1438,18 @@ class CreateEditCommunityViewFormState
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[1]);
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
-            print(controller.community.billing_address);
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
+            // print(controller.community.billing_address);
             controller.community.billing_address
                 .updateValueByKey('city', value);
             createEditCommunityBloc.onChange(controller);
@@ -1396,7 +1461,10 @@ class CreateEditCommunityViewFormState
             return value.isEmpty
                 ? AppLocalizations.of(context)
                     .translate('createtimebank', 'err_empty')
-                : null;
+                : (profanityDetector.isProfaneString(value))
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
+                    : null;
           },
           focusNode: focusNodes[0],
           textInputAction: TextInputAction.next,
@@ -1428,7 +1496,10 @@ class CreateEditCommunityViewFormState
             return value.isEmpty
                 ? AppLocalizations.of(context)
                     .translate('createtimebank', 'err_empty')
-                : null;
+                : (profanityDetector.isProfaneString(value))
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
+                    : null;
           },
           focusNode: focusNodes[3],
           keyboardType: TextInputType.number,
@@ -1451,7 +1522,17 @@ class CreateEditCommunityViewFormState
             FocusScope.of(context).unfocus();
             // scrollToBottom();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             controller.community.billing_address
                 .updateValueByKey('additionalnotes', value);
             createEditCommunityBloc.onChange(controller);
@@ -1460,12 +1541,12 @@ class CreateEditCommunityViewFormState
               controller.community.billing_address.additionalnotes != null
                   ? controller.community.billing_address.additionalnotes
                   : '',
-//          validator: (value) {
-//            return value.isEmpty ? 'Field cannot be left blank' : null;
-//          },
-          // onSaved: (value) {
-
-          // },
+          validator: (value) {
+            return (profanityDetector.isProfaneString(value))
+                ? AppLocalizations.of(context).translate('profanity', 'alert')
+                : null;
+          },
+          onSaved: (value) {},
           focusNode: focusNodes[7],
           textInputAction: TextInputAction.done,
           decoration: getInputDecoration(
@@ -1485,7 +1566,17 @@ class CreateEditCommunityViewFormState
             // FocusScope.of(context).requestFocus(focusNodes[5]);
             FocusScope.of(context).unfocus();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             controller.community.billing_address
                 .updateValueByKey('street_address1', value);
             createEditCommunityBloc.onChange(controller);
@@ -1494,7 +1585,10 @@ class CreateEditCommunityViewFormState
             return value.isEmpty
                 ? AppLocalizations.of(context)
                     .translate('createtimebank', 'err_empty')
-                : null;
+                : (profanityDetector.isProfaneString(value))
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
+                    : null;
           },
           focusNode: focusNodes[4],
           textInputAction: TextInputAction.done,
@@ -1514,15 +1608,30 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+            autovalidate: autoValidateText,
             textCapitalization: TextCapitalization.sentences,
             onFieldSubmitted: (input) {
               FocusScope.of(context).unfocus();
             },
             keyboardType: TextInputType.text,
             onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateText = false;
+                });
+              }
               controller.community.billing_address
                   .updateValueByKey('street_address2', value);
               createEditCommunityBloc.onChange(controller);
+            },
+            validator: (value) {
+              return (profanityDetector.isProfaneString(value))
+                  ? AppLocalizations.of(context).translate('profanity', 'alert')
+                  : null;
             },
             focusNode: focusNodes[5],
             textInputAction: TextInputAction.done,
@@ -1546,7 +1655,22 @@ class CreateEditCommunityViewFormState
             FocusScope.of(context).requestFocus(focusNodes[7]);
             // scrollToBottom();
           },
+          validator: (value) {
+            return (profanityDetector.isProfaneString(value))
+                ? AppLocalizations.of(context).translate('profanity', 'alert')
+                : null;
+          },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             controller.community.billing_address
                 .updateValueByKey('companyname', value);
             createEditCommunityBloc.onChange(controller);
@@ -1572,7 +1696,17 @@ class CreateEditCommunityViewFormState
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[3]);
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             controller.community.billing_address
                 .updateValueByKey('country', value);
             createEditCommunityBloc.onChange(controller);
@@ -1584,7 +1718,10 @@ class CreateEditCommunityViewFormState
             return value.isEmpty
                 ? AppLocalizations.of(context)
                     .translate('createtimebank', 'err_empty')
-                : null;
+                : (profanityDetector.isProfaneString(value))
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
+                    : null;
           },
           focusNode: focusNodes[2],
           textInputAction: TextInputAction.next,

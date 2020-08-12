@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/image_caption_model.dart';
@@ -55,7 +56,9 @@ class _ChatPageState extends State<ChatPage> {
   Map<String, ParticipantInfo> participantsInfoById = {};
   ChatModel chatModel;
   bool exitFromChatPage = false;
-
+  final profanityDetector = ProfanityDetector();
+  bool isProfane = false;
+  String errorText = '';
   @override
   void initState() {
     chatModel = widget.chatModel;
@@ -250,11 +253,18 @@ class _ChatPageState extends State<ChatPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 5),
             child: MessageInput(
               handleSubmitted: (value) {},
               textController: textcontroller,
+              errorText: errorText,
               handleChange: (String value) {
+                if (value.length < 2) {
+                  setState(() {
+                    isProfane = false;
+                    errorText = '';
+                  });
+                }
                 messageContent = value;
               },
               hintText: AppLocalizations.of(context)
@@ -281,14 +291,38 @@ class _ChatPageState extends State<ChatPage> {
               },
               onSend: () {
                 if (textcontroller.text != null &&
-                    textcontroller.text.isNotEmpty)
-                  pushNewMessage(
-                    messageContent: messageContent,
-                    type: MessageType.MESSAGE,
-                  );
+                    textcontroller.text.isNotEmpty) {
+                  if (profanityDetector.isProfaneString(textcontroller.text)) {
+                    setState(() {
+                      isProfane = true;
+                      errorText = AppLocalizations.of(context)
+                          .translate('profanity', 'alert');
+                    });
+                  } else {
+                    setState(() {
+                      isProfane = false;
+                      errorText = '';
+                    });
+                    pushNewMessage(
+                      messageContent: messageContent,
+                      type: MessageType.MESSAGE,
+                    );
+                  }
+                }
               },
             ),
           ),
+          isProfane
+              ? Container(
+                  margin: EdgeInsets.only(left: 20),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    errorText,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 12, color: Colors.red),
+                  ),
+                )
+              : Offstage(),
         ],
       ),
     );

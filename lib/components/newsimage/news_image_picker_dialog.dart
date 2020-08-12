@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/views/image_url_view.dart';
 
 import 'news_image_picker_handler.dart';
 
@@ -14,6 +15,10 @@ class NewsImagePickerDialog extends StatelessWidget {
 
   Animation<double> _drawerContentsOpacity;
   Animation<Offset> _drawerDetailsPosition;
+
+  void refresh() {
+    _listener.addImageUrl();
+  }
 
   void initState() {
     _drawerContentsOpacity = CurvedAnimation(
@@ -105,6 +110,29 @@ class NewsImagePickerDialog extends StatelessWidget {
                       const Color(0xFFFFFFFF),
                       Icon(
                         Icons.image,
+                        color: Colors.white,
+                      )),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    dismissDialog();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return ImageUrlView();
+                        },
+                      ),
+                    ).then((value) {
+                      refresh();
+                    });
+                  },
+                  child: roundedButton(
+                      'Image Url',
+                      EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                      const Color(0x0FF766FE0),
+                      const Color(0xFFFFFFFF),
+                      Icon(
+                        Icons.language,
                         color: Colors.white,
                       )),
                 ),

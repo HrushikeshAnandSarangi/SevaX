@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -144,7 +145,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   Future<TimebankModel> getTimebankAdminStatus;
   Future getProjectsByFuture;
   TimebankModel timebankModel;
-
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
   @override
   void initState() {
     super.initState();
@@ -316,6 +318,18 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                               ),
                             ),
                             TextFormField(
+                              autovalidate: autoValidateText,
+                              onChanged: (value) {
+                                if (value.length > 1) {
+                                  setState(() {
+                                    autoValidateText = true;
+                                  });
+                                } else {
+                                  setState(() {
+                                    autoValidateText = false;
+                                  });
+                                }
+                              },
                               onFieldSubmitted: (v) {
                                 FocusScope.of(context)
                                     .requestFocus(focusNodes[0]);
@@ -325,6 +339,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                     RegExp("[a-zA-Z0-9_ ]*"))
                               ],
                               decoration: InputDecoration(
+                                errorMaxLines: 2,
                                 hintText: AppLocalizations.of(context)
                                     .translate(
                                         'create_request', 'small_carpenty'),
@@ -343,6 +358,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                 if (value.isEmpty) {
                                   return AppLocalizations.of(context)
                                       .translate('create_request', 'subject');
+                                }
+                                if (profanityDetector.isProfaneString(value)) {
+                                  return AppLocalizations.of(context)
+                                      .translate('profanity', 'alert');
                                 }
                                 requestModel.title = value;
                               },
@@ -366,6 +385,18 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                               ),
                             ),
                             TextFormField(
+                              autovalidate: autoValidateText,
+                              onChanged: (value) {
+                                if (value.length > 1) {
+                                  setState(() {
+                                    autoValidateText = true;
+                                  });
+                                } else {
+                                  setState(() {
+                                    autoValidateText = false;
+                                  });
+                                }
+                              },
                               focusNode: focusNodes[0],
                               onFieldSubmitted: (v) {
                                 FocusScope.of(context)
@@ -373,6 +404,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                               },
                               textInputAction: TextInputAction.next,
                               decoration: InputDecoration(
+                                errorMaxLines: 2,
                                 hintText: AppLocalizations.of(context)
                                     .translate(
                                         'create_request', 'request_hash'),
@@ -390,6 +422,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                 if (value.isEmpty) {
                                   return AppLocalizations.of(context).translate(
                                       'create_request', 'request_hash_empty');
+                                }
+                                if (profanityDetector.isProfaneString(value)) {
+                                  return AppLocalizations.of(context)
+                                      .translate('profanity', 'alert');
                                 }
                                 requestModel.description = value;
                               },

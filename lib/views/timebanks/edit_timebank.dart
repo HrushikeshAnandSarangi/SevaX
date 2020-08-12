@@ -312,4 +312,10 @@ class _EditTimebankPicState extends State<EditTimebankPic>
       ),
     );
   }
+
+  @override
+  addWebImageUrl() {
+    // TODO: implement addWebImageUrl
+    print('');
+  }
 }

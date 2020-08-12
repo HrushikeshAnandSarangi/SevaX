@@ -1029,6 +1029,8 @@
     "members": "Membres"
   },
   "validation_errors": {
+    "profanity_error": "L'application SevaX a pour politique de ne pas autoriser le langage profane ou explicite. Veuillez réviser votre texte.",
+
     "title_error": "S'il vous plaît entrer dans le sujet de votre offre",
     "generic_error": "S'il vous plaît entrer un texte",
     "class_hours": "S'il vous plaît entrer les heures requises pour la classe",
@@ -1140,7 +1142,8 @@
     "type_message": "Tapez un message",
     "add_caption": "Ajouter une légende",
     "tap_for_photo": "Tap pour la photo",
-    "name_error": "Le nom ne peut pas être vide"
+    "name_error": "Le nom ne peut pas être vide",
+    "profanity": "L'application SevaX a pour politique de ne pas autoriser le langage profane ou explicite. Veuillez réviser votre texte."
   },
   "add_location": {
     "confirm_location_label": "CONFIRMER L'EMPLACEMENT"
@@ -1241,5 +1244,19 @@
     "blocked_members": "Membres bloqués",
     "no_blocked_members": "Aucun membre bloqués",
     "unblock": "Débloquer"
+  },
+  "reason": {
+    "enter_reason": "Saisissez la raison de la suppression",
+    "reason_err": "Veuillez saisir la raison de la suppression"
+  },
+  "profanity": {
+    "alert": "L'application SevaX a pour politique de ne pas autoriser le langage profane ou explicite. Veuillez réviser votre texte.",
+    "image_alert": "L'application SevaX a pour politique de ne pas autoriser les images profanes, explicites ou violentes. Veuillez utiliser une autre image.",
+    "alert_title": "Alerte de blasphème"
+  },
+  "cv": {
+    "cv": "Upload my CV/Resume",
+    "cv_info": "CV will help out to provide more details",
+    "replace_cv": "Replace CV"
   }
 }

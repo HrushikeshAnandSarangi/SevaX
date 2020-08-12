@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/internationalization/app_localization.dart';
@@ -57,6 +58,8 @@ class EditGroupFormState extends State<EditGroupForm> {
   var _searchText = "";
   String errTxt;
   final _textUpdates = StreamController<String>();
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
   void initState() {
     super.initState();
 
@@ -114,6 +117,7 @@ class EditGroupFormState extends State<EditGroupForm> {
       showDialogForSuccess(dialogTitle: "Details updated successfully.");
     });
     globals.timebankAvatarURL = null;
+    globals.webImageUrl = null;
   }
 
   Map onActivityResult;
@@ -164,7 +168,20 @@ class EditGroupFormState extends State<EditGroupForm> {
       TextFormField(
         textInputAction: TextInputAction.done,
         controller: searchTextController,
+        autovalidate: autoValidateText,
+        onChanged: (value) {
+          if (value.length > 1) {
+            setState(() {
+              autoValidateText = true;
+            });
+          } else {
+            setState(() {
+              autoValidateText = false;
+            });
+          }
+        },
         decoration: InputDecoration(
+          errorMaxLines: 2,
           errorText: errTxt,
           hintText:
               AppLocalizations.of(context).translate('edit_group', 'hint_text'),
@@ -175,15 +192,32 @@ class EditGroupFormState extends State<EditGroupForm> {
           if (value.isEmpty) {
             return AppLocalizations.of(context)
                 .translate('edit_group', 'enter_text');
+          } else if (profanityDetector.isProfaneString(value)) {
+            return AppLocalizations.of(context).translate('profanity', 'alert');
+          } else {
+            widget.timebankModel.name = value;
+            return null;
           }
-          widget.timebankModel.name = value;
         },
       ),
       headingText(
           AppLocalizations.of(context).translate('edit_group', 'about'), true),
       TextFormField(
+        autovalidate: autoValidateText,
+        onChanged: (value) {
+          if (value.length > 1) {
+            setState(() {
+              autoValidateText = true;
+            });
+          } else {
+            setState(() {
+              autoValidateText = false;
+            });
+          }
+        },
         initialValue: widget.timebankModel.missionStatement ?? "",
         decoration: InputDecoration(
+          errorMaxLines: 2,
           hintText: AppLocalizations.of(context)
               .translate('edit_group', 'a_bit_more'),
         ),
@@ -194,8 +228,12 @@ class EditGroupFormState extends State<EditGroupForm> {
           if (value.isEmpty) {
             return AppLocalizations.of(context)
                 .translate('edit_group', 'enter_text');
+          } else if (profanityDetector.isProfaneString(value)) {
+            return AppLocalizations.of(context).translate('profanity', 'alert');
+          } else {
+            widget.timebankModel.missionStatement = value;
+            return null;
           }
-          widget.timebankModel.missionStatement = value;
         },
       ),
       Row(

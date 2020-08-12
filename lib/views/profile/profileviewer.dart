@@ -1,8 +1,11 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
@@ -11,6 +14,8 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/report_member_page.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 
 //TODO update bio and remove un-necessary stuff
@@ -151,6 +156,56 @@ class ProfileViewerState extends State<ProfileViewer> {
                       skills: snapshot.data['skills'],
                       interests: snapshot.data['interests'],
                     ),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 25,
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context).translate('cv', 'cv'),
+                        style: TextStyle(
+                            fontSize: 16.0, fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        if (user.cvUrl != null)
+                          openPdfViewer(
+                              documentName: user.cvName ?? "cv name",
+                              documentUrl: user.cvUrl ?? "");
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 22.5,
+                          vertical: 5,
+                        ),
+                        child: Container(
+                          height: 40,
+                          color: Color(0xFFFa3ebff).withOpacity(0.3),
+                          alignment: Alignment.center,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.attachment,
+                                color: Colors.black54,
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                user.cvName ?? "CV not available",
+                                style: TextStyle(
+                                  color: Color(0xFFF0ca5f2),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding:
                           EdgeInsets.symmetric(horizontal: 25, vertical: 20),
@@ -236,6 +291,30 @@ class ProfileViewerState extends State<ProfileViewer> {
       reciever: reciever,
       isFromRejectCompletion: false,
     );
+  }
+
+  void openPdfViewer({String documentUrl, String documentName}) {
+    progressDialog = ProgressDialog(
+      context,
+      type: ProgressDialogType.Normal,
+      isDismissible: false,
+    );
+    progressDialog.show();
+
+    createFileOfPdfUrl(documentUrl, documentName).then((f) {
+      progressDialog.hide();
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PDFScreen(
+                  docName: documentName,
+                  pathPDF: f.path,
+                  isFromFeeds: false,
+                  pdfUrl: documentUrl,
+                )),
+      );
+    });
   }
 
   void onBlockClick() {

@@ -8,6 +8,7 @@ import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 
 import '../../flavor_config.dart';
 
@@ -270,6 +271,19 @@ Future<Map<String, dynamic>> checkChangeOwnershipStatus(
   print("result ${result}");
   var data = json.decode(result.body);
   return data;
+}
+
+Future<ProfanityImageModel> checkProfanityForImage({String imageUrl}) async {
+  var result = await http.post(
+    "${FlavorConfig.values.cloudFunctionBaseURL}/visionApi",
+    body: {"imageURL": imageUrl},
+  );
+  print("result ${result.body.toString()}");
+  print("result code ${result.statusCode}");
+  var data = json.decode(result.body);
+  ProfanityImageModel profanityImageModel =
+      ProfanityImageModel.fromMap(json.decode(result.body));
+  return profanityImageModel;
 }
 
 Future<String> updateChangeOwnerDetails(

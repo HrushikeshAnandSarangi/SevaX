@@ -1,12 +1,11 @@
 import 'dart:collection';
 import 'dart:core';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
@@ -18,6 +17,8 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
@@ -668,28 +669,23 @@ class DiscussionListState extends State<DiscussionList> {
     return filteredNewsList;
   }
 
-  Future<File> createFileOfPdfUrl(
-      String documentUrl, String documentName) async {
-    final url = documentUrl;
-    final filename = documentName;
-    var request = await HttpClient().getUrl(Uri.parse(url));
-    var response = await request.close();
-    var bytes = await consolidateHttpClientResponseBytes(response);
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = File('$dir/$filename');
-    await file.writeAsBytes(bytes);
-    return file;
-  }
-
   void openPdfViewer(String documentUrl, String documentName) {
+    progressDialog = ProgressDialog(
+      context,
+      type: ProgressDialogType.Normal,
+      isDismissible: false,
+    );
+    progressDialog.show();
     createFileOfPdfUrl(documentUrl, documentName).then((f) {
+      progressDialog.hide();
+
       Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => PDFScreen(
                   docName: documentName,
                   pathPDF: f.path,
-                  pdf: f,
+                  isFromFeeds: true,
                 )),
       );
     });
@@ -839,7 +835,9 @@ class DiscussionListState extends State<DiscussionList> {
                           SizedBox(
                             height: 5,
                           ),
-                          document(newsModel: news),
+                          document(
+                              newsDocumentName: news.newsDocumentName,
+                              newsDocumentUrl: news.newsDocumentUrl),
                           //  SizedBox(height: 10),
                         ],
                       ),
@@ -1614,13 +1612,12 @@ class DiscussionListState extends State<DiscussionList> {
     );
   }
 
-  Widget document({NewsModel newsModel}) {
-    return newsModel.newsDocumentUrl == null
+  Widget document({String newsDocumentUrl, String newsDocumentName}) {
+    return newsDocumentUrl == null
         ? Offstage()
         : GestureDetector(
             onTap: () {
-              openPdfViewer(
-                  newsModel.newsDocumentUrl, newsModel.newsDocumentName);
+              openPdfViewer(newsDocumentUrl, newsDocumentName);
             },
             child: Container(
               height: 30,
@@ -1642,7 +1639,7 @@ class DiscussionListState extends State<DiscussionList> {
                     ),
                     Expanded(
                       child: Text(
-                        newsModel.newsDocumentName ?? "Document",
+                        newsDocumentName ?? "Document",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.start,

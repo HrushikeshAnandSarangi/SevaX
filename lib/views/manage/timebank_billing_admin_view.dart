@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -37,7 +38,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   BuildContext parentContext;
   var planData = [];
   var transactionPaymentData;
-
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
   @override
   void initState() {
     super.initState();
@@ -552,6 +554,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
 
   InputDecoration getInputDecoration({String fieldTitle}) {
     return InputDecoration(
+      errorMaxLines: 2,
       errorStyle: TextStyle(
         color: Colors.red,
         wordSpacing: 2.0,
@@ -583,7 +586,17 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             // FocusScope.of(bc).requestFocus(focusNodes[0]);
             FocusScope.of(bc).unfocus();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             print(value);
             communityModel.billing_address.city = value;
           },
@@ -592,7 +605,10 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             return value.isEmpty
                 ? AppLocalizations.of(context)
                     .translate('createtimebank', 'err_empty')
-                : null;
+                : (profanityDetector.isProfaneString(value))
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
+                    : null;
           },
           decoration: getInputDecoration(
               fieldTitle: AppLocalizations.of(context)
@@ -611,7 +627,17 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             // FocusScope.of(bc).requestFocus(focusNodes[1]);
             FocusScope.of(bc).unfocus();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             communityModel.billing_address.state = value;
           },
           initialValue: state != null ? state : '',
@@ -619,7 +645,10 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             return value.isEmpty
                 ? AppLocalizations.of(context)
                     .translate('createtimebank', 'err_empty')
-                : null;
+                : (profanityDetector.isProfaneString(value))
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
+                    : null;
           },
           focusNode: focusNodes[0],
           decoration: getInputDecoration(
@@ -667,8 +696,23 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           onFieldSubmitted: (input) {
             scrollToBottom();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             communityModel.billing_address.additionalnotes = value;
+          },
+          validator: (value) {
+            return (profanityDetector.isProfaneString(value))
+                ? AppLocalizations.of(context).translate('profanity', 'alert')
+                : null;
           },
           initialValue: notes != null ? notes : '',
           focusNode: focusNodes[7],
@@ -688,14 +732,27 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           onFieldSubmitted: (input) {
             FocusScope.of(bc).unfocus();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             communityModel.billing_address.street_address1 = value;
           },
           validator: (value) {
             return value.isEmpty
                 ? AppLocalizations.of(context)
                     .translate('createtimebank', 'err_empty')
-                : null;
+                : (profanityDetector.isProfaneString(value))
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
+                    : null;
           },
           focusNode: focusNodes[3],
           textInputAction: TextInputAction.done,
@@ -716,8 +773,23 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
               // FocusScope.of(bc).requestFocus(focusNodes[6]);
               FocusScope.of(bc).unfocus();
             },
+            autovalidate: autoValidateText,
             onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateText = false;
+                });
+              }
               communityModel.billing_address.street_address2 = value;
+            },
+            validator: (value) {
+              return (profanityDetector.isProfaneString(value))
+                  ? AppLocalizations.of(context).translate('profanity', 'alert')
+                  : null;
             },
             focusNode: focusNodes[5],
             textInputAction: TextInputAction.done,
@@ -739,7 +811,17 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             // FocusScope.of(bc).requestFocus(focusNodes[2]);
             FocusScope.of(bc).unfocus();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             communityModel.billing_address.country = value;
           },
           initialValue: country != null ? country : '',
@@ -747,7 +829,10 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             return value.isEmpty
                 ? AppLocalizations.of(context)
                     .translate('createtimebank', 'err_empty')
-                : null;
+                : (profanityDetector.isProfaneString(value))
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
+                    : null;
           },
           focusNode: focusNodes[1],
           decoration: getInputDecoration(
@@ -768,7 +853,22 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             // FocusScope.of(bc).requestFocus(focusNodes[7]);
             FocusScope.of(bc).unfocus();
           },
+          validator: (value) {
+            return (profanityDetector.isProfaneString(value))
+                ? AppLocalizations.of(context).translate('profanity', 'alert')
+                : null;
+          },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             communityModel.billing_address.companyname = value;
           },
           initialValue: companyname != null ? companyname : '',

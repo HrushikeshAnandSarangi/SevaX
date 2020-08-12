@@ -1,13 +1,12 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/news/update_feed.dart';
@@ -427,27 +426,23 @@ class NewsCardViewState extends State<NewsCardView> {
     );
   }
 
-  Future<File> createFileOfPdfUrl(String documentUrl) async {
-    final url = documentUrl;
-    final filename = widget.newsModel.newsDocumentName;
-    var request = await HttpClient().getUrl(Uri.parse(url));
-    var response = await request.close();
-    var bytes = await consolidateHttpClientResponseBytes(response);
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = File('$dir/$filename');
-    await file.writeAsBytes(bytes);
-    return file;
-  }
-
   void openPdfViewer() {
-    createFileOfPdfUrl(widget.newsModel.newsDocumentUrl).then((f) {
+    progressDialog = ProgressDialog(
+      context,
+      type: ProgressDialogType.Normal,
+      isDismissible: false,
+    );
+    progressDialog.show();
+    createFileOfPdfUrl(widget.newsModel.newsDocumentUrl, newsModel.newsDocumentName)
+        .then((f) {
+      progressDialog.hide();
       Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => PDFScreen(
                   docName: widget.newsModel.newsDocumentName,
                   pathPDF: f.path,
-                  pdf: f,
+                  isFromFeeds: true,
                 )),
       );
     });

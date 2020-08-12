@@ -2,17 +2,25 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/data_model.dart';
+import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/utils.dart';
+
+import '../flavor_config.dart';
 
 String failureMessage =
     "Sending request failed somehow, please try again later!";
 
 String successTitle = "Request submitted";
 String failureTitle = "Request failed!";
+String reason = "";
+final GlobalKey<FormState> _formKey = GlobalKey();
 
 ProgressDialog progressDialog;
 
@@ -47,6 +55,8 @@ Future<void> showAdvisoryBeforeDeletion({
   String associatedContentTitle,
   bool isAccedentalDeleteEnabled,
 }) async {
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
   progressDialog = ProgressDialog(
     context,
     type: ProgressDialogType.Normal,
@@ -91,7 +101,47 @@ Future<void> showAdvisoryBeforeDeletion({
               associatedContentTitle +
               "?",
         ),
-        content: Text(_getContentFromType(softDeleteType, context)),
+        content: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(_getContentFromType(softDeleteType, context)),
+                TextFormField(
+                  decoration: InputDecoration(
+                      errorMaxLines: 2,
+                      hintText: AppLocalizations.of(context)
+                          .translate('reason', 'enter_reason')),
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.sentences,
+                  style: TextStyle(fontSize: 17.0),
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(50),
+                  ],
+                  autovalidate: autoValidateText,
+                  onChanged: (value) {
+                    if (value.length > 1) {
+                      autoValidateText = true;
+                    } else {
+                      autoValidateText = false;
+                    }
+                    print("auto $autoValidateText");
+                  },
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return AppLocalizations.of(context)
+                          .translate('reason', 'reason_err');
+                    } else if (profanityDetector.isProfaneString(value)) {
+                      return AppLocalizations.of(context)
+                          .translate('profanity', 'alert');
+                    } else {
+                      reason = value;
+                      return null;
+                    }
+                  },
+                ),
+              ],
+            )),
         actions: <Widget>[
           RaisedButton(
             onPressed: () {
@@ -105,6 +155,9 @@ Future<void> showAdvisoryBeforeDeletion({
           FlatButton(
             color: Colors.white,
             onPressed: () async {
+              if (!_formKey.currentState.validate()) {
+                return;
+              }
               Navigator.pop(contextDialog);
               progressDialog.show();
               try {
@@ -113,6 +166,7 @@ Future<void> showAdvisoryBeforeDeletion({
                   softDeleteRequest: SoftDeleteRequest.createRequest(
                     associatedId: associatedId,
                     requestType: _getModelType(softDeleteType),
+                    reason: reason,
                   ),
                   softDeleteType: softDeleteType,
                 ).commit();
@@ -185,14 +239,13 @@ class SoftDeleteRequest extends DataModel {
   String id;
   String timestamp;
   String requestStatus;
+  String reason;
 
   final String associatedId;
   final String requestType;
 
-  SoftDeleteRequest.createRequest({
-    this.associatedId,
-    this.requestType,
-  }) {
+  SoftDeleteRequest.createRequest(
+      {this.associatedId, this.requestType, this.reason}) {
     id = Utils.getUuid();
     requestStatus = "REQUESTED";
   }
@@ -204,6 +257,7 @@ class SoftDeleteRequest extends DataModel {
     map['requestStatus'] = this.requestStatus ?? "NA";
     map['requestType'] = this.requestType ?? "NA";
     map['id'] = this.id;
+    map['reason'] = this.reason;
     map['timestamp'] = DateTime.now().millisecondsSinceEpoch;
     return map;
   }
@@ -404,4 +458,66 @@ String getSuccessMessage(
   return AppLocalizations.of(context)
       .translate("accidental_delete", "see_you_go")
       .replaceAll('***', _getModelType(softDeleteType));
+}
+
+Future<String> showProfanityImageAlert({BuildContext context, String content}) {
+  return showDialog<String>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext _context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(_context)
+              .translate('profanity', 'alert_title')),
+          content: Text(AppLocalizations.of(_context)
+                  .translate('profanity', 'image_alert') +
+              content),
+          actions: <Widget>[
+            RaisedButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
+              child: Text(
+                AppLocalizations.of(_context).translate('homepage', 'ok'),
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(_context, 'Proceed');
+              },
+            ),
+          ],
+        );
+      });
+}
+
+Future<ProfanityStatusModel> getProfanityStatus(
+    {ProfanityImageModel profanityImageModel}) async {
+  ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
+
+  if (profanityImageModel.adult == ProfanityStrings.veryLikely ||
+      profanityImageModel.adult == ProfanityStrings.likely) {
+    profanityStatusModel.isProfane = true;
+    profanityStatusModel.category = ProfanityStrings.adult;
+  } else if (profanityImageModel.spoof == ProfanityStrings.veryLikely ||
+      profanityImageModel.spoof == ProfanityStrings.likely) {
+    profanityStatusModel.isProfane = true;
+    profanityStatusModel.category = ProfanityStrings.spoof;
+  } else if (profanityImageModel.medical == ProfanityStrings.veryLikely ||
+      profanityImageModel.medical == ProfanityStrings.likely) {
+    profanityStatusModel.isProfane = true;
+    profanityStatusModel.category = ProfanityStrings.medical;
+  } else if (profanityImageModel.racy == ProfanityStrings.veryLikely ||
+      profanityImageModel.racy == ProfanityStrings.likely) {
+    profanityStatusModel.isProfane = true;
+    profanityStatusModel.category = ProfanityStrings.racy;
+  } else if (profanityImageModel.violence == ProfanityStrings.veryLikely ||
+      profanityImageModel.violence == ProfanityStrings.likely) {
+    profanityStatusModel.isProfane = true;
+    profanityStatusModel.category = ProfanityStrings.violence;
+  } else {
+    profanityStatusModel.isProfane = false;
+  }
+
+  return profanityStatusModel;
 }

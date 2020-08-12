@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
@@ -46,7 +47,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
   final GlobalKey<FormState> _billingInformationKey = GlobalKey();
   BuildContext progressContext;
   var scollContainer = ScrollController();
-
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
   @override
   void initState() {
     super.initState();
@@ -472,7 +474,17 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             // FocusScope.of(bc).requestFocus(focusNodes[0]);
             FocusScope.of(bc).unfocus();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             print(value);
             communityModel.billing_address.city = value;
           },
@@ -481,7 +493,10 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             return value.isEmpty
                 ? AppLocalizations.of(widget.parentContext)
                     .translate('createtimebank', 'err_empty')
-                : null;
+                : (profanityDetector.isProfaneString(value))
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
+                    : null;
           },
           decoration: getInputDecoration(
               fieldTitle: AppLocalizations.of(widget.parentContext)
@@ -500,14 +515,27 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             // FocusScope.of(bc).requestFocus(focusNodes[1]);
             FocusScope.of(bc).unfocus();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             communityModel.billing_address.state = value;
           },
           validator: (value) {
             return value.isEmpty
                 ? AppLocalizations.of(widget.parentContext)
                     .translate('createtimebank', 'err_empty')
-                : null;
+                : (profanityDetector.isProfaneString(value))
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
+                    : null;
           },
           focusNode: focusNodes[1],
           decoration: getInputDecoration(
@@ -554,6 +582,11 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           onFieldSubmitted: (input) {
             scrollToBottom();
           },
+          validator: (value) {
+            return (profanityDetector.isProfaneString(value))
+                ? AppLocalizations.of(context).translate('profanity', 'alert')
+                : null;
+          },
           onChanged: (value) {
             communityModel.billing_address.additionalnotes = value;
           },
@@ -574,14 +607,27 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           onFieldSubmitted: (input) {
             FocusScope.of(bc).unfocus();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             communityModel.billing_address.street_address1 = value;
           },
           validator: (value) {
             return value.isEmpty
                 ? AppLocalizations.of(widget.parentContext)
                     .translate('createtimebank', 'err_empty')
-                : null;
+                : (profanityDetector.isProfaneString(value))
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
+                    : null;
           },
           focusNode: focusNodes[4],
           textInputAction: TextInputAction.next,
@@ -601,7 +647,22 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
               // FocusScope.of(bc).requestFocus(focusNodes[6]);
               FocusScope.of(bc).unfocus();
             },
+            autovalidate: autoValidateText,
+            validator: (value) {
+              return (profanityDetector.isProfaneString(value))
+                  ? AppLocalizations.of(context).translate('profanity', 'alert')
+                  : null;
+            },
             onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateText = false;
+                });
+              }
               communityModel.billing_address.street_address2 = value;
             },
             focusNode: focusNodes[5],
@@ -623,14 +684,27 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             // FocusScope.of(bc).requestFocus(focusNodes[2]);
             FocusScope.of(bc).unfocus();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             communityModel.billing_address.country = value;
           },
           validator: (value) {
             return value.isEmpty
                 ? AppLocalizations.of(widget.parentContext)
                     .translate('createtimebank', 'err_empty')
-                : null;
+                : (profanityDetector.isProfaneString(value))
+                    ? AppLocalizations.of(context)
+                        .translate('profanity', 'alert')
+                    : null;
           },
           focusNode: focusNodes[2],
           decoration: getInputDecoration(
@@ -646,17 +720,28 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           textCapitalization: TextCapitalization.sentences,
-
           onFieldSubmitted: (input) {
             // FocusScope.of(bc).requestFocus(focusNodes[7]);
             FocusScope.of(bc).unfocus();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             communityModel.billing_address.companyname = value;
           },
-          // validator: (value) {
-          //   return value.isEmpty ? 'Field cannot be left blank*' : null;
-          // },
+          validator: (value) {
+            return (profanityDetector.isProfaneString(value))
+                ? AppLocalizations.of(context).translate('profanity', 'alert')
+                : null;
+          },
           focusNode: focusNodes[6],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
@@ -798,6 +883,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
 
   InputDecoration getInputDecoration({String fieldTitle}) {
     return InputDecoration(
+      errorMaxLines: 2,
+
       errorStyle: TextStyle(
         color: Colors.red,
         wordSpacing: 2.0,

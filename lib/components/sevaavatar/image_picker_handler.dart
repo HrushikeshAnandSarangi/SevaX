@@ -26,6 +26,10 @@ class ImagePickerHandler {
     cropImage(image);
   }
 
+  addImageUrl() async {
+    _listener.addWebImageUrl();
+  }
+
   void init() {
     imagePicker = ImagePickerDialog(this, _controller);
     imagePicker.initState();
@@ -54,4 +58,5 @@ class ImagePickerHandler {
 
 abstract class ImagePickerListener {
   void userImage(File _image);
+  addWebImageUrl();
 }

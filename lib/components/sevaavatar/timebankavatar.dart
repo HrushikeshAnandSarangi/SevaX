@@ -4,6 +4,9 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 
 import './image_picker_handler.dart';
@@ -25,7 +28,8 @@ class _TimebankAvatarState extends State<TimebankAvatar>
   AnimationController _controller;
   ImagePickerHandler imagePicker;
   bool _isImageBeingUploaded = false;
-
+  ProfanityImageModel profanityImageModel = ProfanityImageModel();
+  ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
   Future<String> _uploadImage() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
@@ -42,12 +46,40 @@ class _TimebankAvatarState extends State<TimebankAvatar>
       ),
     );
     String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
-
-    setState(() {
-      globals.timebankAvatarURL = imageURL;
-    });
+    await profanityCheck(imageURL: imageURL);
 
     return imageURL;
+  }
+
+  Future<void> profanityCheck({String imageURL}) async {
+    // _newsImageURL = imageURL;
+    profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
+
+    profanityStatusModel =
+        await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+    if (profanityStatusModel.isProfane) {
+      showProfanityImageAlert(
+              context: context, content: profanityStatusModel.category)
+          .then((status) {
+        if (status == 'Proceed') {
+          FirebaseStorage.instance
+              .getReferenceFromUrl(imageURL)
+              .then((reference) {
+            reference.delete();
+            setState(() {
+              globals.timebankAvatarURL = null;
+            });
+          }).catchError((e) => print(e));
+        } else {
+          print('error');
+        }
+      });
+    } else {
+      setState(() {
+        globals.timebankAvatarURL = imageURL;
+      });
+    }
   }
 
   @override
@@ -158,5 +190,13 @@ class _TimebankAvatarState extends State<TimebankAvatar>
                 fit: BoxFit.cover),
             borderRadius: BorderRadius.all(Radius.circular(75.0)),
             boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]));
+  }
+
+  @override
+  addWebImageUrl() {
+    if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
+      globals.timebankAvatarURL = globals.webImageUrl;
+      setState(() {});
+    }
   }
 }

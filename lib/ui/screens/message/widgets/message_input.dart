@@ -9,6 +9,7 @@ class MessageInput extends StatelessWidget {
   final VoidCallback onCameraPressed;
   final VoidCallback onSend;
   final String hintText;
+  final String errorText;
   final bool hideCameraIcon;
 
   MessageInput({
@@ -19,6 +20,7 @@ class MessageInput extends StatelessWidget {
     this.onSend,
     this.hintText,
     this.hideCameraIcon = false,
+    this.errorText,
   })  : _textController = textController,
         _handleSubmitted = handleSubmitted,
         _handleChange = handleChange;
@@ -46,6 +48,7 @@ class MessageInput extends StatelessWidget {
                   child: TextField(
                     maxLines: null,
                     decoration: InputDecoration(
+                      //  errorText: errorText,
                       hintText: hintText,
                       border: InputBorder.none,
                       errorBorder: InputBorder.none,

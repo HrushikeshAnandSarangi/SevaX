@@ -1,22 +1,32 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_builder.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/APi/storage_api.dart';
 import 'package:sevaexchange/widgets/camera_icon.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
 
 class CreateGroupPage extends StatelessWidget {
   final CreateChatBloc bloc;
   final TextEditingController _controller = TextEditingController();
+  ProfanityImageModel profanityImageModel = ProfanityImageModel();
+  ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
+  FirebaseStorage _storage = FirebaseStorage();
+  BuildContext viewContext;
+  bool showLoadingDialog = false;
 
   CreateGroupPage({Key key, this.bloc}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    bool showLoadingDialog = false;
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
@@ -37,7 +47,6 @@ class CreateGroupPage extends StatelessWidget {
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             onPressed: () {
-              BuildContext viewContext;
               if (showLoadingDialog) {
                 showDialog(
                   context: context,
@@ -105,7 +114,12 @@ class CreateGroupPage extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                        onChanged: bloc.onImageChanged,
+                        onChanged: (file) {
+                          if (file != null) {
+                            profanityCheck(
+                                bloc: bloc, file: file, context: context);
+                          }
+                        },
                       );
                     },
                   ),
@@ -118,6 +132,13 @@ class CreateGroupPage extends StatelessWidget {
                       StreamBuilder<String>(
                         stream: bloc.groupName,
                         builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            if (snapshot.error
+                                .toString()
+                                .contains('profanity')) {
+                              showLoadingDialog = false;
+                            }
+                          }
                           _controller.value = _controller.value.copyWith(
                             text: snapshot.data,
                           );
@@ -129,6 +150,7 @@ class CreateGroupPage extends StatelessWidget {
                             controller: _controller,
                             onChanged: bloc.onGroupNameChanged,
                             decoration: InputDecoration(
+                              errorMaxLines: 2,
                               border: InputBorder.none,
                               enabledBorder: InputBorder.none,
                               disabledBorder: InputBorder.none,
@@ -190,5 +212,60 @@ class CreateGroupPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> profanityCheck({
+    File file,
+    CreateChatBloc bloc,
+    BuildContext context,
+  }) async {
+    progressDialog = ProgressDialog(
+      context,
+      type: ProgressDialogType.Normal,
+      isDismissible: false,
+    );
+    progressDialog.show();
+
+    // _newsImageURL = imageURL;
+    String filePath = DateTime.now().toString();
+    if (file == null) {
+      progressDialog.hide();
+    }
+    String imageUrl = file != null
+        ? await StorageApi.uploadFile("multiUserMessagingLogo", file)
+        : null;
+    profanityImageModel = await checkProfanityForImage(imageUrl: imageUrl);
+
+    profanityStatusModel =
+        await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+    if (profanityStatusModel.isProfane) {
+      progressDialog.hide();
+
+      showProfanityImageAlert(
+              context: context, content: profanityStatusModel.category)
+          .then((status) {
+        if (status == 'Proceed') {
+          FirebaseStorage.instance
+              .getReferenceFromUrl(imageUrl)
+              .then((reference) {
+            reference.delete();
+          }).catchError((e) => print(e));
+        } else {
+          print('error');
+        }
+      });
+    } else {
+      FirebaseStorage.instance.getReferenceFromUrl(imageUrl).then((reference) {
+        reference.delete();
+      }).catchError((e) => print(e));
+      bloc.onImageChanged(file);
+      progressDialog.hide();
+    }
+  }
+
+  void stop() {
+    Navigator.of(viewContext).pop();
+    showLoadingDialog = false;
   }
 }

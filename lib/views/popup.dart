@@ -24,7 +24,6 @@ class AvailabilityState extends State<Availability> {
     if (save != _canSave) setState(() => _canSave = save);
   }
 
-  bool _done = false;
   String finalValue = '';
 
   List<String> interests = const [
