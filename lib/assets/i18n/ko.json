@@ -460,6 +460,8 @@
     "are_you_sure_feed": "이 뉴스 피드를 삭제 하시겠습니까?"
   },
   "notifications": {
+    "request_reminder_title": "",
+    "request_reminder_subtitle": "이것은 ***eventname 이벤트에 대한 알림입니다. 자세한 내용은 다음과 같습니다:\n 위치: ***eventlocation\n 시각: ***eventtime",
     "you_signed_up_for": "당신은 가입했습니다",
     "on": "의 위에",
     "owner_changes": ". 이벤트 소유자가이 이벤트를 수정했습니다. 변경 사항이 본인에게 적합한 지 확인하고 다시 적용하십시오.",

@@ -10,8 +10,8 @@ import 'package:sevaexchange/models/invoice_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/invoice/pages/invoice_screen.dart';
 
-class InvoicePdf {
-  void invoicePdf(context, InvoiceModel model, CommunityModel communityModel, String date, Map<String, dynamic> myPlan ) async {
+class ReportPdf {
+  void reportPdf(context, InvoiceModel model, CommunityModel communityModel, String date, Map<String, dynamic> myPlan ) async {
     final Document pdf = Document();
     List<String> monthsArr = [
       "January",
@@ -47,7 +47,8 @@ class InvoicePdf {
 
     double getSubTotal() {
       double subtotal = 0;
-      subtotal = model.details[1].price * model.details[1].units;
+      model.details
+          .forEach((element) => subtotal += element.price * element.units);
       return subtotal;
     }
     var freeLimitAmount = myPlan['initial_transactions_qty'] * myPlan['pro_data_bill_amount'];
@@ -55,7 +56,7 @@ class InvoicePdf {
     pdf.addPage(
       MultiPage(
         pageFormat:
-        PdfPageFormat.letter.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
+            PdfPageFormat.letter.copyWith(marginBottom: 1.5 * PdfPageFormat.cm),
         crossAxisAlignment: CrossAxisAlignment.start,
         header: (Context context) {
           if (context.pageNumber == 1) {
@@ -67,9 +68,9 @@ class InvoicePdf {
             padding: const EdgeInsets.only(bottom: 3.0 * PdfPageFormat.mm),
             decoration: const BoxDecoration(
                 border:
-                BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey)),
+                    BoxBorder(bottom: true, width: 0.5, color: PdfColors.grey)),
             child: Text(
-              'Invoice',
+              'Report',
               style: Theme.of(context)
                   .defaultTextStyle
                   .copyWith(color: PdfColors.grey),
@@ -83,8 +84,8 @@ class InvoicePdf {
             child: Text(
               'Page ${context.pageNumber} of ${context.pagesCount}',
               style: Theme.of(context).defaultTextStyle.copyWith(
-                color: PdfColors.grey,
-              ),
+                    color: PdfColors.grey,
+                  ),
             ),
           );
         },
@@ -183,7 +184,7 @@ class InvoicePdf {
             headers: ['DETAILS', 'NO.', 'PRICE', 'TOTAL'],
             data: List.generate(
               model.details.length,
-                  (index) => [
+              (index) => [
                 model.details[index].description,
                 model.details[index].units,
                 model.details[index].price,
@@ -201,6 +202,10 @@ class InvoicePdf {
                   SizedBox(height: 12),
                   _rowText("SUB TOTAL", "\$ ${totalAmount}"),
                   SizedBox(height: 8),
+                  _rowText("INITIAL PAYMENT PER YEAR", "\$ ${myPlan['initial_transactions_amount']}"),
+                  SizedBox(height: 8),
+                  _rowText("FREE LIMIT PER MONTH (FOR ${myPlan['name'].toUpperCase()})", "\$ ${freeLimitAmount}"),
+                  SizedBox(height: 8),
                   _rowText(
                       "GRAND TOTAL", "\$ ${totalAmount - freeLimitAmount > 0 ? (totalAmount - freeLimitAmount) : 0}"),
                   SizedBox(height: 12),
@@ -216,8 +221,8 @@ class InvoicePdf {
 
     final String dir = (await getApplicationDocumentsDirectory()).path;
 //    final String dir = (await getExternalStorageDirectory()).path;
-    final String path = '$dir/invoice.pdf';
-//    final String path = 'C://invoice.pdf';
+    final String path = '$dir/report.pdf';
+//    final String path = 'C://report.pdf';
     log("path to pdf file is "+path);
     final File file = File(path);
     await file.writeAsBytes(pdf.save());

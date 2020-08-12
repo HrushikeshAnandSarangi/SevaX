@@ -319,11 +319,7 @@ Future<void> updateRecurrenceRequestsFrontEnd(
         temp.requestStart = eventStartDate.millisecondsSinceEpoch;
         temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
         temp.postTimestamp = DateTime.now().millisecondsSinceEpoch;
-        temp.id = temp.email +
-            "*" +
-            temp.postTimestamp.toString() +
-            "*" +
-            temp.requestStart.toString();
+        temp.id = temp.email +"*" + temp.postTimestamp.toString() + "*" +temp.requestStart.toString();
         temp.occurenceCount = occurenceCount;
         occurenceCount++;
         temp.softDelete = false;

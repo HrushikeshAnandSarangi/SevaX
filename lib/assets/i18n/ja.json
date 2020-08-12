@@ -460,6 +460,8 @@
     "are_you_sure_feed": "このニュースフィードを削除してもよろしいですか？"
   },
   "notifications": {
+    "request_reminder_title": "",
+    "request_reminder_subtitle": "これは、サインアップしている ***eventname イベントの通知です。詳細はこちら:\n ロケーション: ***eventlocation\n 時間: ***eventtime",
     "you_signed_up_for": "登録しました",
     "on": "オン",
     "owner_changes": ". イベントオーナーがこのイベントを変更しました。行った変更が正しいことを確認して、もう一度適用してください",

@@ -465,6 +465,8 @@
     "are_you_sure_feed": "Are you sure you want to delete this news feed?"
   },
   "notifications": {
+    "request_reminder_title": "Your event is about to start in an hour.",
+    "request_reminder_subtitle": "This is a reminder for the ***eventname event that you are signed up for. Here are the details:\n Location: ***eventlocation\n Time: ***eventtime",
     "you_signed_up_for": "You had signed up for",
     "on": "on",
     "owner_changes": ". The Event Owner has modified this event. Make sure the changes made are right for you and apply again",

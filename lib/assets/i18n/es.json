@@ -469,6 +469,8 @@
     "are_you_sure_feed": "¿Estás seguro de que deseas eliminar esta fuente de noticias?"
   },
   "notifications": {
+    "request_reminder_title": "Su evento está por comenzar en una hora.",
+    "request_reminder_subtitle": "Este es un recordatorio para el evento ***eventname en el que está inscrito. Aquí están los detalles:\n Ubicación: ***eventlocation\n Hora: ***eventtime",
     "you_signed_up_for": "Te habías registrado para",
     "on": "en",
     "owner_changes": ". El propietario del evento ha modificado este evento. Asegúrese de que los cambios realizados sean adecuados para usted y solicite nuevamente",

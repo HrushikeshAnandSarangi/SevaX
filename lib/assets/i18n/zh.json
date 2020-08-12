@@ -465,6 +465,8 @@
     "are_you_sure_feed": "您确定要删除此新闻提要吗？"
   },
   "notifications": {
+    "request_reminder_title": "",
+    "request_reminder_subtitle": "这是对您注册的 ***eventname 事件的提醒。这是详细信息\n 位置: ***eventlocation\n 时间: ***eventtime",
     "you_signed_up_for": "您已注册",
     "on": "上",
     "owner_changes": ". 事件所有者已修改此事件。确保所做的更改适合您并再次应用",

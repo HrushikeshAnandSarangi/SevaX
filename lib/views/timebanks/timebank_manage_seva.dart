@@ -1,5 +1,5 @@
 import 'dart:collection';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -7,11 +7,13 @@ import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/invoice_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/ui/screens/invoice/pages/invoice_pdf.dart';
+import 'package:sevaexchange/ui/screens/invoice/pages/report_pdf.dart';
+import 'package:sevaexchange/ui/screens/invoice/pages/months_list.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_page.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
+import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
@@ -31,7 +33,7 @@ class ManageTimebankSeva extends StatefulWidget {
 
 class _ManageTimebankSeva extends State<ManageTimebankSeva> {
   var _indextab = 0;
-
+  String planId = "";
   CommunityModel communityModel = CommunityModel({});
   bool isSuperAdmin = false;
 
@@ -40,6 +42,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
     // TODO: implement initState
     super.initState();
     print("creator id ${widget.timebankModel.communityId}");
+
     Future.delayed(Duration.zero, () {
       FirestoreManager.getCommunityDetailsByCommunityId(
               communityId: widget.timebankModel.communityId)
@@ -53,6 +56,12 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         print("creator id -----> ${communityModel.created_by}");
       });
     });
+    Future.delayed(Duration.zero, () {
+      FirestoreManager.getplanForCurrentCommunity(widget.timebankModel.communityId).then((onvalue){
+        planId = onvalue;
+      });
+    });
+
 
     setState(() {});
   }
@@ -302,73 +311,21 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
   }
 
   Widget viewInvoice({BuildContext context}) {
+
     return GestureDetector(
       onTap: () {
-        InvoicePdf().invoicePdf(
-          context,
-          InvoiceModel(
-            note1:
-                "This invoice is for the billing period June 1 - June 30 , 2018",
-            note2:
-                "Greetings from Seva Exchange. We're writing to provide you with an invoice of your use of SevaX services. Additional information about your bill, individual service charge details, and your account history are available on the Billing section under Manage tab.",
-            details: [
-              Detail(description: "Monthly Toll Plan", units: 1, price: 15),
-              Detail(
-                description: "Additional Transactions",
-                units: 2,
-                price: 30,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-              Detail(
-                description: "Discounted Transactions as per your current plan",
-                units: 1,
-                price: 15,
-              ),
-            ],
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => MonthsListing.of(
+              communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+              planId: planId,
+              communityModel:communityModel
+            ),
           ),
         );
       },
       child: Text(
-        "Invoice",
+        "Invoice and Reports",
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
@@ -378,86 +335,31 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
     );
   }
 
-//  Widget viewAcceptedOffers({BuildContext context}) {
-//    return GestureDetector(
-//      onTap: () {
-//        Navigator.push(
-//          context,
-//          MaterialPageRoute(
-//            builder: (context) => AcceptedOffers(
-//              timebankId: widget.timebankModel.id,
-//            ),
-//          ),
-//        );
-//      },
-//      child: Container(
-//        margin: EdgeInsets.only(top: 20),
-//        child: Text(
-//          'View accepted offers',
-//          style: TextStyle(
-//            fontSize: 14,
-//            fontWeight: FontWeight.bold,
-//            color: Colors.blue,
-//          ),
-//        ),
-//      ),
-//    );
-//  }
-//
-//  Widget vieweditPage({BuildContext context}) {
-//    return GestureDetector(
-//      onTap: () {
-//        Navigator.of(context).push(
-//          MaterialPageRoute(
-//            builder: (context) => CreateEditCommunityView(
-//              timebankId: widget.timebankModel.id,
-//              isFromFind: false,
-//              isCreateTimebank: false,
-//            ),
-//          ),
-//        );
-//      },
-//      child: Container(
-//        margin: EdgeInsets.only(top: 20),
-//        child: Text(
-//          'About',
-//          style: TextStyle(
-//            fontSize: 14,
-//            fontWeight: FontWeight.bold,
-//            color: Colors.blue,
-//          ),
-//        ),
-//      ),
-//    );
-//  }
+  Widget oauthview({BuildContext context}) {
 
-//  Widget billingView({BuildContext context}) {
-//    return GestureDetector(
-//      onTap: () {
-//        Navigator.push(
-//          context,
-//          MaterialPageRoute(
-//            builder: (context) => BillingView(
-//              widget.timebankModel.id,
-//              '',
-//              user: SevaCore.of(context).loggedInUser,
-//            ),
-//          ),
-//        );
-//      },
-//      child: Container(
-//        margin: EdgeInsets.only(top: 20),
-//        child: Text(
-//          'Billing',
-//          style: TextStyle(
-//            fontSize: 14,
-//            fontWeight: FontWeight.bold,
-//            color: Colors.blue,
-//          ),
-//        ),
-//      ),
-//    );
-//  }
+    return GestureDetector(
+      onTap: () async{
+        String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+        String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+        if (await canLaunch(authorizationUrl.toString())) {
+        await launch(authorizationUrl.toString());
+        }
+//        final linksStream = getLinksStream().listen((Uri uri) async {
+//        if (uri.toString().startsWith(redirectUrl)) {
+//        var responseUrl = uri;
+//        }
+//        });
+      },
+      child: Text(
+        "oauth",
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          color: Colors.red,
+        ),
+      ),
+    );
+  }
 
   Widget get getTitle {
     return Text(
@@ -595,6 +497,8 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
               : Container(),
 
           viewInvoice(context: context),
+          SizedBox(height: 20),
+          oauthview(context: context),
           SizedBox(height: 20),
           viewReportedMembers(context: context),
           SizedBox(height: 20),

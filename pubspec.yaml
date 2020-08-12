@@ -99,6 +99,8 @@ flutter:
   uses-material-design: true
 
   assets:
+    - lib/assets/images/report_icon.jpeg
+    - lib/assets/images/invoice_icon.jpeg
     - lib/assets/google-logo-png-open-2000.png
     - lib/assets/images/profile.png
     - lib/assets/images/seva-x-logo.png

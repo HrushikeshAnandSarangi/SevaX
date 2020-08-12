@@ -130,6 +130,24 @@ class NotificationsView extends State<NotificationViewHolder> {
                   }
 
                   switch (notification.type) {
+                    case NotificationType.RequestScheduleReminder:
+                      return NotificationCard(
+                        onPressed: null,
+                        onDismissed: onDismissed,
+                        title: "${AppLocalizations.of(context).translate('notifications', 'request_reminder_title')}",
+                        subTitle: "${AppLocalizations.of(context).translate('notifications', 'request_reminder_subtitle')}"
+                          .replaceFirst(
+                          '***eventname', notification.data['title'])
+                          .replaceFirst(
+                          '***eventlocation', notification.data['address'])
+                          .replaceFirst(
+                          '***eventtime',
+                          DateTime.fromMillisecondsSinceEpoch(
+                              notification.data['request_start'])
+                              .toString()),
+                        photoUrl: notification.data["requestorphotourl"],
+                      );
+                      break;
                     case NotificationType.RecurringRequestUpdated:
                       ReccuringRequestUpdated eventData =
                           ReccuringRequestUpdated.fromMap(notification.data);
