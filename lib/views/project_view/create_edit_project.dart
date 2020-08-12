@@ -325,7 +325,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               onFieldSubmitted: (_) {
                 FocusScope.of(context).requestFocus(focusNodes[1]);
               },
-
               onSaved: (value) {
                 projectModel.name = value;
               },
