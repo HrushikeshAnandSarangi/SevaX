@@ -161,9 +161,11 @@ class ProfileViewerState extends State<ProfileViewer> {
                         horizontal: 25,
                       ),
                       child: Text(
-                        AppLocalizations.of(context).translate('cv', 'cv'),
+                        S.of(context).upload_cv_resume,
                         style: TextStyle(
-                            fontSize: 16.0, fontWeight: FontWeight.w700),
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     GestureDetector(

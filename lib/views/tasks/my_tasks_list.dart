@@ -675,9 +675,7 @@ class TaskCardViewState extends State<TaskCardView> {
         builder: (BuildContext context) {
           creditRequestDialogContext = context;
           return AlertDialog(
-            title: Text(
-              AppLocalizations.of(context).translate('tasks', 'wait'),
-            ),
+            title: Text(S.of(context).please_wait),
             content: LinearProgressIndicator(),
           );
         });

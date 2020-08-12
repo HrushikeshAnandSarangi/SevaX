@@ -30,7 +30,7 @@ import 'package:sevaexchange/views/profile/edit_profile.dart';
 import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 import 'package:sevaexchange/views/splash_view.dart' as DefaultSplashView;
-import 'dart:ui' as ui;
+
 import '../../globals.dart' as globals;
 
 class RegisterPage extends StatefulWidget {
@@ -123,10 +123,8 @@ class _RegisterPageState extends State<RegisterPage>
                             _imagePicker,
                             _formFields,
                             cvUpload(
-                              title: AppLocalizations.of(context)
-                                  .translate('cv', 'cv'),
-                              text: AppLocalizations.of(context)
-                                  .translate('cv', 'cv_info'),
+                              title: S.of(context).upload_cv_resume,
+                              text: S.of(context).cv_message,
                             ),
                             SizedBox(height: 24),
                             registerButton,
@@ -207,7 +205,7 @@ class _RegisterPageState extends State<RegisterPage>
                   color: FlavorConfig.values.theme.primaryColor,
                 ),
                 Text(
-                  AppLocalizations.of(context).translate('cv', 'choose_pdf'),
+                  S.of(context).choose_pdf_file,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey),
                 ),
@@ -251,7 +249,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
         ),
         Text(
-          AppLocalizations.of(context).translate('cv', 'size_limit'),
+          S.of(context).validation_error_cv_size,
           style: TextStyle(color: Colors.grey),
         ),
 //        Text(
@@ -396,16 +394,14 @@ class _RegisterPageState extends State<RegisterPage>
             shouldRestrictLength: true,
             hint: S.of(context).full_name,
             validator: (value) {
-
-              if   (value.isEmpty) {
+              if (value.isEmpty) {
                 return S.of(context).validation_error_full_name;
               } else if (profanityDetector.isProfaneString(value)) {
-                return AppLocalizations.of(context)
-                    .translate('profanity', 'alert');
+                return S.of(context).profanity_text_alert;
               } else {
                 return null;
               }
-            }
+            },
             capitalization: TextCapitalization.words,
             onSave: (value) => this.fullName = value,
           ),

@@ -167,19 +167,19 @@ class EditGroupFormState extends State<EditGroupForm> {
             textInputAction: TextInputAction.done,
             controller: searchTextController,
             autovalidate: autoValidateText,
-        onChanged: (value) {
-          if (value.length > 1) {
-            setState(() {
-              autoValidateText = true;
-            });
-          } else {
-            setState(() {
-              autoValidateText = false;
-            });
-          }
-        },
-        decoration: InputDecoration(
-          errorMaxLines: 2,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateText = false;
+                });
+              }
+            },
+            decoration: InputDecoration(
+              errorMaxLines: 2,
               errorText: errTxt,
               hintText: S.of(context).timebank_name_hint,
             ),
@@ -188,31 +188,31 @@ class EditGroupFormState extends State<EditGroupForm> {
             validator: (value) {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
-          } else if (profanityDetector.isProfaneString(value)) {
-            return AppLocalizations.of(context).translate('profanity', 'alert');
-          } else {
-            widget.timebankModel.name = value;
-            return null;
-          }
+              } else if (profanityDetector.isProfaneString(value)) {
+                return S.of(context).profanity_text_alert;
+              } else {
+                widget.timebankModel.name = value;
+                return null;
+              }
             },
           ),
           headingText(S.of(context).about, true),
           TextFormField(
             autovalidate: autoValidateText,
-        onChanged: (value) {
-          if (value.length > 1) {
-            setState(() {
-              autoValidateText = true;
-            });
-          } else {
-            setState(() {
-              autoValidateText = false;
-            });
-          }
-        },
-        initialValue: widget.timebankModel.missionStatement ?? "",
-        decoration: InputDecoration(
-          errorMaxLines: 2,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateText = false;
+                });
+              }
+            },
+            initialValue: widget.timebankModel.missionStatement ?? "",
+            decoration: InputDecoration(
+              errorMaxLines: 2,
               hintText: S.of(context).bit_more_about_group,
             ),
             textInputAction: TextInputAction.done,
@@ -221,12 +221,12 @@ class EditGroupFormState extends State<EditGroupForm> {
             validator: (value) {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
-          } else if (profanityDetector.isProfaneString(value)) {
-            return AppLocalizations.of(context).translate('profanity', 'alert');
-          } else {
-            widget.timebankModel.missionStatement = value;
-            return null;
-          }
+              } else if (profanityDetector.isProfaneString(value)) {
+                return S.of(context).profanity_text_alert;
+              } else {
+                widget.timebankModel.missionStatement = value;
+                return null;
+              }
             },
           ),
           Row(

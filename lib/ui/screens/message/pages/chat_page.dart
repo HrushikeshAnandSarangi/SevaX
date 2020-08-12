@@ -292,8 +292,7 @@ class _ChatPageState extends State<ChatPage> {
                   if (profanityDetector.isProfaneString(textcontroller.text)) {
                     setState(() {
                       isProfane = true;
-                      errorText = AppLocalizations.of(context)
-                          .translate('profanity', 'alert');
+                      errorText = S.of(context).profanity_text_alert;
                     });
                   } else {
                     setState(() {

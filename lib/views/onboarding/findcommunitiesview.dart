@@ -235,43 +235,42 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           validator: (value) {
             if (profanityDetector.isProfaneString(value)) {
               // errorText =
-              return AppLocalizations.of(context)
-                  .translate('profanity', 'alert');
+              return S.of(context).profanity_text_alert;
             }
             return null;
           },
           decoration: InputDecoration(
             //errorText: errorText,
-              errorMaxLines: 2,
-              suffixIcon: Offstage(
-                offstage: searchTextController.text.length == 0,
-                child: IconButton(
-                  splashColor: Colors.transparent,
-                  icon: Icon(
-                    Icons.clear,
-                    color: Colors.black54,
-                  ),
-                  onPressed: () {
-                    //searchTextController.clear();
-                    WidgetsBinding.instance.addPostFrameCallback(
-                        (_) => searchTextController.clear());
-                  },
+            errorMaxLines: 2,
+            suffixIcon: Offstage(
+              offstage: searchTextController.text.length == 0,
+              child: IconButton(
+                splashColor: Colors.transparent,
+                icon: Icon(
+                  Icons.clear,
+                  color: Colors.black54,
                 ),
+                onPressed: () {
+                  //searchTextController.clear();
+                  WidgetsBinding.instance.addPostFrameCallback(
+                      (_) => searchTextController.clear());
+                },
               ),
-              hasFloatingPlaceholder: false,
-              alignLabelWithHint: true,
-              isDense: true,
-              prefixIcon: Icon(
-                Icons.search,
-                color: Colors.grey,
-              ),
-              contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-              filled: true,
-              fillColor: Colors.grey[300],
-              focusedErrorBorder: OutlineInputBorder(
-                borderSide: new BorderSide(color: Colors.white),
-                borderRadius: new BorderRadius.circular(25.7),
-              ),
+            ),
+            hasFloatingPlaceholder: false,
+            alignLabelWithHint: true,
+            isDense: true,
+            prefixIcon: Icon(
+              Icons.search,
+              color: Colors.grey,
+            ),
+            contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+            filled: true,
+            fillColor: Colors.grey[300],
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: new BorderSide(color: Colors.white),
+              borderRadius: new BorderRadius.circular(25.7),
+            ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.white),
               borderRadius: BorderRadius.circular(25.7),
@@ -310,10 +309,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator());
-            } else {
-              if (snapshot.data.length != 0) {
-                List<CommunityModel> communityList = snapshot.data;
+            return Center(child: CircularProgressIndicator());
+          } else {
+            if (snapshot.data.length != 0) {
+              List<CommunityModel> communityList = snapshot.data;
 //                print("comm list ${communityList}");
 
               return Padding(

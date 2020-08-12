@@ -106,9 +106,9 @@ Future<void> showAdvisoryBeforeDeletion({
                 Text(_getContentFromType(softDeleteType, context)),
                 TextFormField(
                   decoration: InputDecoration(
-                      errorMaxLines: 2,
-                      hintText: AppLocalizations.of(context)
-                          .translate('reason', 'enter_reason')),
+                    errorMaxLines: 2,
+                    hintText: S.of(context).enter_reason_to_delete,
+                  ),
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,
                   style: TextStyle(fontSize: 17.0),
@@ -126,11 +126,9 @@ Future<void> showAdvisoryBeforeDeletion({
                   },
                   validator: (value) {
                     if (value.isEmpty) {
-                      return AppLocalizations.of(context)
-                          .translate('reason', 'reason_err');
+                      return S.of(context).enter_reason_to_delete_error;
                     } else if (profanityDetector.isProfaneString(value)) {
-                      return AppLocalizations.of(context)
-                          .translate('profanity', 'alert');
+                      return S.of(context).profanity_text_alert;
                     } else {
                       reason = value;
                       return null;
@@ -442,18 +440,17 @@ Future<String> showProfanityImageAlert({BuildContext context, String content}) {
       context: context,
       builder: (BuildContext _context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(_context)
-              .translate('profanity', 'alert_title')),
-          content: Text(AppLocalizations.of(_context)
-                  .translate('profanity', 'image_alert') +
-              content),
+          title: Text(S.of(context).profanity_alert),
+          content: Text(
+            S.of(context).profanity_image_alert + ' ' + content,
+          ),
           actions: <Widget>[
             RaisedButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
               child: Text(
-                AppLocalizations.of(_context).translate('homepage', 'ok'),
+                S.of(context).ok,
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                 ),

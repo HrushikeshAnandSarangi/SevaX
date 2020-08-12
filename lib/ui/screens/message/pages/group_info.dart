@@ -161,8 +161,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
                               errorText: snapshot.error
                                       .toString()
                                       .contains('profanity')
-                                  ? AppLocalizations.of(context)
-                                      .translate('profanity', 'alert')
+                                  ? S.of(context).profanity_text_alert
                                   : snapshot.error,
                               hintText: S.of(context).messaging_room_name,
                               hintStyle: TextStyle(

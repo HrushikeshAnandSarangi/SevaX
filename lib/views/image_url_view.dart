@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
@@ -41,8 +41,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
           child: Padding(
             padding: const EdgeInsets.only(left: 8),
             child: Center(
-              child: Text(
-                  AppLocalizations.of(context).translate("shared", 'cancel'),
+              child: Text(S.of(context).cancel,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -129,8 +128,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
                             height: 80,
                             child: Center(
                               child: Text(
-                                AppLocalizations.of(context)
-                                    .translate('timebank_about', 'no_image'),
+                                S.of(context).no_image_available,
                                 textAlign: TextAlign.center,
                               ),
                             )),

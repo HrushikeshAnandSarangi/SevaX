@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
@@ -186,7 +187,7 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
         );
 
       default:
-        return Text("DEFAULT");
+        return Text(S.of(context).default_text);
     }
   }
 

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -51,12 +50,10 @@ class NewsImageState extends State<NewsImage>
   NewsImagePickerHandler imagePicker;
   //document related variables
   bool _isDocumentBeingUploaded = false;
-  File _file;
-  List<File> _files;
+
   String _fileName;
   String _path;
-  Map<String, String> _paths;
-  FileType _pickingType = FileType.custom;
+
   final int tenMegaBytes = 10485760;
   final int hundreKb = 14857;
   BuildContext parentContext;

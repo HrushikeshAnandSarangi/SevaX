@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/device_model.dart';
@@ -292,10 +292,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 
                   errorText: _validate
                       ? S.of(context).validation_error_required_fields
-                      : _profane
-                          ? AppLocalizations.of(context)
-                              .translate('profanity', 'alert')
-                          : null,
+                      : _profane ? S.of(context).profanity_text_alert : null,
                   hintStyle: TextStyle(fontSize: 14),
                   // hintText:'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
                   hintText: S.of(context).review_feedback_message,

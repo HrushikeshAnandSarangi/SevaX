@@ -5,8 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
-import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/claimedRequestStatus.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -955,8 +953,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         loggedInUser: sevaCore.loggedInUser,
         requestModel: requestModel,
         receiver: reciever,
-        message: results['comment'] ??
-            AppLocalizations.of(context).translate('requests', 'no_comments'));
+        message: results['comment'] ?? S.of(context).no_comments);
     await approveTransaction(requestModel, userId, notificationId, sevaCore);
   }
 

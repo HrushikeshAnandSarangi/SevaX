@@ -7,7 +7,6 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
-import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -21,12 +20,10 @@ import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_s
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/reported_members/widgets/reported_member_navigator_widget.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
-import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
@@ -677,8 +674,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                     if (value.isEmpty) {
                       return S.of(context).enter_reason_to_exit_hint;
                     } else if (profanityDetector.isProfaneString(value)) {
-                      return AppLocalizations.of(context)
-                          .translate('profanity', 'alert');
+                      return S.of(context).profanity_text_alert;
                     } else {
                       reason = value;
                       globals.userExitReason = value;

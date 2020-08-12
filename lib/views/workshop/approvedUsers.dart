@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/workshop/MembersInvolved.dart';
@@ -60,7 +61,7 @@ class RequestStatusViewState extends State<RequestStatusView> {
                     actions: <Widget>[
                       // usually buttons at the bottom of the dialog
                       FlatButton(
-                        child: Text("OK"),
+                        child: Text(S.of(context).ok.toUpperCase()),
                         onPressed: () {
                           Navigator.of(viewcontext).pop();
                         },

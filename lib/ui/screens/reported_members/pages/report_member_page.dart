@@ -84,8 +84,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          S.of(context)
-              .report_members,
+          S.of(context).report_members,
           style: TextStyle(fontSize: 18),
         ),
         centerTitle: true,
@@ -98,14 +97,12 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
         child: ListView(
           children: <Widget>[
             Text(
-              S.of(context)
-                  .report_member_inform,
+              S.of(context).report_member_inform,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
             Text(
-              S.of(context)
-                  .report_member_provide_details,
+              S.of(context).report_member_provide_details,
             ),
             StreamBuilder<String>(
               stream: _bloc.message,
@@ -121,8 +118,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                     errorBorder: InputBorder.none,
                     disabledBorder: InputBorder.none,
                     errorText: snapshot.error.toString().contains('profanity')
-                        ? AppLocalizations.of(context)
-                            .translate('profanity', 'alert')
+                        ? S.of(context).profanity_text_alert
                         : snapshot.error,
                   ),
                   maxLines: null,
@@ -210,8 +206,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                     snapshot.data ?? false; //(snapshot.data?.length ?? 0) > 10;
                 return RaisedButton(
                   child: Text(
-                    S.of(context)
-                        .report,
+                    S.of(context).report,
                   ),
                   onPressed: isEnabled
                       ? () {
@@ -228,16 +223,14 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                             isTimebankReport: widget.isFromTimebank,
                           )
                               .then((status) {
-                            _showSnackBar(S.of(context)
-                                .member_reported);
+                            _showSnackBar(S.of(context).member_reported);
                             Future.delayed(
                               Duration(seconds: 1),
                               () => Navigator.of(context).pop(),
                             );
                           }).catchError((e) {
                             _showSnackBar(
-                                S.of(context)
-                                .member_reporting_failed);
+                                S.of(context).member_reporting_failed);
                           });
                         }
                       : null,

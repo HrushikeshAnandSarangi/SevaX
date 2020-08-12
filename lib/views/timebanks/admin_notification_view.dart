@@ -402,37 +402,36 @@
 //         });
 //   }
 
+//             case NotificationType.DEBITED_SEVA_COINS_TIMEBANK:
+//               return NotificationCard(
+//                 title: "Seva Coins debited",
+//                 subTitle: "Seva coins debited",
+//                 photoUrl: null,
+//                 entityName: "Debited",
+//                 onDismissed: () {
+//                   dismissTimebankNotification(
+//                       timebankId: notification.timebankId,
+//                       notificationId: notification.id);
+//                 },
+//               );
 
-              case NotificationType.DEBITED_SEVA_COINS_TIMEBANK:
-                return NotificationCard(
-                  title: "Seva Coins debited",
-                  subTitle: "Seva coins debited",
-                  photoUrl: null,
-                  entityName: "Debited",
-                  onDismissed: () {
-                    dismissTimebankNotification(
-                        timebankId: notification.timebankId,
-                        notificationId: notification.id);
-                  },
-                );
-
-              default:
-                log("Unhandled timebank notification type ${notification.type} ${notification.id}");
-                Crashlytics().log(
-                    "Unhandled timebank notification type ${notification.type} ${notification.id}");
-                return Container(
-                    // child: Text(
-                    //   "Unhandled notification type ${notification.type} ${notification.id}",
-                    // ),
-                    // color: Colors.red,
-                    );
-                break;
-            }
-          },
-        );
-      },
-    );
-  }
+//             default:
+//               log("Unhandled timebank notification type ${notification.type} ${notification.id}");
+//               Crashlytics().log(
+//                   "Unhandled timebank notification type ${notification.type} ${notification.id}");
+//               return Container(
+//                   // child: Text(
+//                   //   "Unhandled notification type ${notification.type} ${notification.id}",
+//                   // ),
+//                   // color: Colors.red,
+//                   );
+//               break;
+//           }
+//         },
+//       );
+//     },
+//   );
+// }
 
 //         return FutureBuilder<Object>(
 //             future: FirestoreManager.getUserForId(sevaUserId: loggedinUserID),
@@ -590,322 +589,322 @@
 
 //     print("request completion chain ends here");
 
-                            notifications.forEach((_notification) {
-                              OfferModel _offer =
-                                  OfferModel.fromMap(_notification.data);
-                              if (_offer.id == offermodel.id) {
-                                FirestoreManager.readUserNotification(
-                                    _notification.id, loggedinUser.email);
-                              }
-                            });
-                          },
-                          child: Container(
-                            padding: notificationPadding,
-                            decoration: ShapeDecoration(
-                              shape: CircleBorder(),
-                              color: Colors.green,
-                              shadows: shadowList,
-                            ),
-                            child: Icon(
-                              Icons.check,
-                              color: Colors.white,
-                            ),
-                          ),
-                        );
-                      }),
-                ],
-                child: FutureBuilder<Object>(
-                    future: FirestoreManager.getRequestFutureById(
-                        requestId: requestid),
-                    builder: (context, snapshot) {
-                      RequestModel model = snapshot.data;
-                      if (snapshot.hasError) return Container();
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        // return notificationShimmer;
-                        return Text(AppLocalizations.of(context).translate(
-                            'notifications', 'getofferacceptnotification'));
-                      }
-                      return Container(
-                        margin: notificationPadding,
-                        decoration: notificationDecoration,
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                user.photoURL ?? defaultUserImageURL),
-                          ),
-                          title: Text(model.title),
-                          subtitle: RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text:
-                                      '${user.fullname} ${AppLocalizations.of(context).translate('notifications', 'send_request_for')}: ${getOfferTitle(offerDataModel: offermodel)} ',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontFamily: 'Europa',
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: () {
-                                    return '';
-                                  }(),
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'Europa',
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
-              );
-            });
-      },
-    );
-  }
+//                           notifications.forEach((_notification) {
+//                             OfferModel _offer =
+//                                 OfferModel.fromMap(_notification.data);
+//                             if (_offer.id == offermodel.id) {
+//                               FirestoreManager.readUserNotification(
+//                                   _notification.id, loggedinUser.email);
+//                             }
+//                           });
+//                         },
+//                         child: Container(
+//                           padding: notificationPadding,
+//                           decoration: ShapeDecoration(
+//                             shape: CircleBorder(),
+//                             color: Colors.green,
+//                             shadows: shadowList,
+//                           ),
+//                           child: Icon(
+//                             Icons.check,
+//                             color: Colors.white,
+//                           ),
+//                         ),
+//                       );
+//                     }),
+//               ],
+//               child: FutureBuilder<Object>(
+//                   future: FirestoreManager.getRequestFutureById(
+//                       requestId: requestid),
+//                   builder: (context, snapshot) {
+//                     RequestModel model = snapshot.data;
+//                     if (snapshot.hasError) return Container();
+//                     if (snapshot.connectionState == ConnectionState.waiting) {
+//                       // return notificationShimmer;
+//                       return Text(AppLocalizations.of(context).translate(
+//                           'notifications', 'getofferacceptnotification'));
+//                     }
+//                     return Container(
+//                       margin: notificationPadding,
+//                       decoration: notificationDecoration,
+//                       child: ListTile(
+//                         leading: CircleAvatar(
+//                           backgroundImage: NetworkImage(
+//                               user.photoURL ?? defaultUserImageURL),
+//                         ),
+//                         title: Text(model.title),
+//                         subtitle: RichText(
+//                           text: TextSpan(
+//                             children: [
+//                               TextSpan(
+//                                 text:
+//                                     '${user.fullname} ${AppLocalizations.of(context).translate('notifications', 'send_request_for')}: ${getOfferTitle(offerDataModel: offermodel)} ',
+//                                 style: TextStyle(
+//                                   color: Colors.grey,
+//                                   fontFamily: 'Europa',
+//                                 ),
+//                               ),
+//                               TextSpan(
+//                                 text: () {
+//                                   return '';
+//                                 }(),
+//                                 style: TextStyle(
+//                                   color: Colors.black,
+//                                   fontFamily: 'Europa',
+//                                 ),
+//                               )
+//                             ],
+//                           ),
+//                         ),
+//                       ),
+//                     );
+//                   }),
+//             );
+//           });
+//     },
+//   );
+// }
 
-  Widget getUserExitNotificationWidget(
-      UserExitModel userExitModel,
-      String notificationId,
-      BuildContext buildContext,
-      String timebankId,
-      String communityId) {
-    // assert(user != null);
-    return NotificationCard(
-      title: AppLocalizations.of(context)
-          .translate('notifications', 'timebank_exit'),
-      subTitle:
-          '${userExitModel.userName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'exited_from')} ${userExitModel.timebank}, ${AppLocalizations.of(context).translate('notifications', 'tap_to_view')}',
-      photoUrl: userExitModel.userPhotoUrl ?? defaultUserImageURL,
-      onDismissed: () {
-        FirestoreManager.readTimeBankNotification(
-          notificationId: notificationId,
-          timebankId: widget.timebankModel.id,
-        );
-      },
-      onPressed: () {
-        showDialog(
-            context: buildContext,
-            builder: (context) {
-              return TimebankUserExitDialogView(
-                userExitModel: userExitModel,
-                timeBankId: timebankId,
-                notificationId: notificationId,
-                userModel: SevaCore.of(buildContext).loggedInUser,
-              );
-            });
-      },
-    );
-  }
+// Widget getUserExitNotificationWidget(
+//     UserExitModel userExitModel,
+//     String notificationId,
+//     BuildContext buildContext,
+//     String timebankId,
+//     String communityId) {
+//   // assert(user != null);
+//   return NotificationCard(
+//     title: AppLocalizations.of(context)
+//         .translate('notifications', 'timebank_exit'),
+//     subTitle:
+//         '${userExitModel.userName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'exited_from')} ${userExitModel.timebank}, ${AppLocalizations.of(context).translate('notifications', 'tap_to_view')}',
+//     photoUrl: userExitModel.userPhotoUrl ?? defaultUserImageURL,
+//     onDismissed: () {
+//       FirestoreManager.readTimeBankNotification(
+//         notificationId: notificationId,
+//         timebankId: widget.timebankModel.id,
+//       );
+//     },
+//     onPressed: () {
+//       showDialog(
+//           context: buildContext,
+//           builder: (context) {
+//             return TimebankUserExitDialogView(
+//               userExitModel: userExitModel,
+//               timeBankId: timebankId,
+//               notificationId: notificationId,
+//               userModel: SevaCore.of(buildContext).loggedInUser,
+//             );
+//           });
+//     },
+//   );
+// }
 
-  void approveTransaction(RequestModel model, String userId,
-      String notificationId, SevaCore sevaCore) {
-    FirestoreManager.approveRequestCompletion(
-      model: model,
-      userId: userId,
-      communityId: sevaCore.loggedInUser.currentCommunity,
-    );
+// void approveTransaction(RequestModel model, String userId,
+//     String notificationId, SevaCore sevaCore) {
+//   FirestoreManager.approveRequestCompletion(
+//     model: model,
+//     userId: userId,
+//     communityId: sevaCore.loggedInUser.currentCommunity,
+//   );
 
-    print("request completion chain ends here");
+//   print("request completion chain ends here");
 
-    // return;
-    FirestoreManager.readTimeBankNotification(
-      notificationId: notificationId,
-      timebankId: model.timebankId,
-    );
-    //
-  }
+//   // return;
+//   FirestoreManager.readTimeBankNotification(
+//     notificationId: notificationId,
+//     timebankId: model.timebankId,
+//   );
+//   //
+// }
 
-  void checkForFeedback({
-    String userId,
-    UserModel user,
-    RequestModel model,
-    String notificationId,
-    BuildContext context,
-    SevaCore sevaCore,
-  }) async {
-    Map results = await Navigator.of(context).push(MaterialPageRoute(
-      builder: (BuildContext context) {
-        return ReviewFeedback(
-          feedbackType: FeedbackType.FOR_REQUEST_VOLUNTEER,
-        );
-      },
-    ));
+// void checkForFeedback({
+//   String userId,
+//   UserModel user,
+//   RequestModel model,
+//   String notificationId,
+//   BuildContext context,
+//   SevaCore sevaCore,
+// }) async {
+//   Map results = await Navigator.of(context).push(MaterialPageRoute(
+//     builder: (BuildContext context) {
+//       return ReviewFeedback(
+//         feedbackType: FeedbackType.FOR_REQUEST_VOLUNTEER,
+//       );
+//     },
+//   ));
 
-    if (results != null && results.containsKey('selection')) {
-      onActivityResult(
-          sevaCore: sevaCore,
-          requestModel: model,
-          userId: userId,
-          notificationId: notificationId,
-          context: context,
-          reviewer: model.email,
-          reviewed: user.email,
-          requestId: model.id,
-          results: results,
-          reciever: user);
-    } else {}
-  }
+//   if (results != null && results.containsKey('selection')) {
+//     onActivityResult(
+//         sevaCore: sevaCore,
+//         requestModel: model,
+//         userId: userId,
+//         notificationId: notificationId,
+//         context: context,
+//         reviewer: model.email,
+//         reviewed: user.email,
+//         requestId: model.id,
+//         results: results,
+//         reciever: user);
+//   } else {}
+// }
 
-  void onActivityResult(
-      {SevaCore sevaCore,
-      RequestModel requestModel,
-      UserModel reciever,
-      String userId,
-      String notificationId,
-      BuildContext context,
-      Map results,
-      String reviewer,
-      String reviewed,
-      String requestId}) async {
-    // adds review to firestore
-    Firestore.instance.collection("reviews").add({
-      "reviewer": reviewer,
-      "reviewed": reviewed,
-      "ratings": results['selection'],
-      "device_info": results['device_info'],
-      "requestId": requestId,
-      "comments": (results['didComment']
-          ? results['comment']
-          : AppLocalizations.of(context)
-              .translate('notifications', 'no_comments'))
-    });
-    await sendMessageToMember(
-        loggedInUser: sevaCore.loggedInUser,
-        requestModel: requestModel,
-        receiver: reciever,
-        message: results['comment'] ??
-            AppLocalizations.of(context).translate('requests', 'no_comments'));
-    approveTransaction(requestModel, userId, notificationId, sevaCore);
-  }
+// void onActivityResult(
+//     {SevaCore sevaCore,
+//     RequestModel requestModel,
+//     UserModel reciever,
+//     String userId,
+//     String notificationId,
+//     BuildContext context,
+//     Map results,
+//     String reviewer,
+//     String reviewed,
+//     String requestId}) async {
+//   // adds review to firestore
+//   Firestore.instance.collection("reviews").add({
+//     "reviewer": reviewer,
+//     "reviewed": reviewed,
+//     "ratings": results['selection'],
+//     "device_info": results['device_info'],
+//     "requestId": requestId,
+//     "comments": (results['didComment']
+//         ? results['comment']
+//         : AppLocalizations.of(context)
+//             .translate('notifications', 'no_comments'))
+//   });
+//   await sendMessageToMember(
+//       loggedInUser: sevaCore.loggedInUser,
+//       requestModel: requestModel,
+//       receiver: reciever,
+//       message: results['comment'] ??
+//           AppLocalizations.of(context).translate('requests', 'no_comments'));
+//   approveTransaction(requestModel, userId, notificationId, sevaCore);
+// }
 
-  Future<void> sendMessageToMember({
-    UserModel loggedInUser,
-    UserModel receiver,
-    RequestModel requestModel,
-    String message,
-  }) async {
-    ParticipantInfo sender = ParticipantInfo(
-      id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-          ? loggedInUser.sevaUserID
-          : requestModel.timebankId,
-      photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-          ? loggedInUser.photoURL
-          : widget.timebankModel.photoUrl,
-      name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-          ? loggedInUser.fullname
-          : widget.timebankModel.name,
-      type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-          ? ChatType.TYPE_PERSONAL
-          : widget.timebankModel.parentTimebankId ==
-                  '73d0de2c-198b-4788-be64-a804700a88a4'
-              ? ChatType.TYPE_TIMEBANK
-              : ChatType.TYPE_GROUP,
-    );
+// Future<void> sendMessageToMember({
+//   UserModel loggedInUser,
+//   UserModel receiver,
+//   RequestModel requestModel,
+//   String message,
+// }) async {
+//   ParticipantInfo sender = ParticipantInfo(
+//     id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+//         ? loggedInUser.sevaUserID
+//         : requestModel.timebankId,
+//     photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+//         ? loggedInUser.photoURL
+//         : widget.timebankModel.photoUrl,
+//     name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+//         ? loggedInUser.fullname
+//         : widget.timebankModel.name,
+//     type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+//         ? ChatType.TYPE_PERSONAL
+//         : widget.timebankModel.parentTimebankId ==
+//                 '73d0de2c-198b-4788-be64-a804700a88a4'
+//             ? ChatType.TYPE_TIMEBANK
+//             : ChatType.TYPE_GROUP,
+//   );
 
-    ParticipantInfo reciever = ParticipantInfo(
-      id: receiver.sevaUserID,
-      photoUrl: receiver.photoURL,
-      name: receiver.fullname,
-      type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-          ? ChatType.TYPE_PERSONAL
-          : widget.timebankModel.parentTimebankId ==
-                  '73d0de2c-198b-4788-be64-a804700a88a4'
-              ? ChatType.TYPE_TIMEBANK
-              : ChatType.TYPE_GROUP,
-    );
-    await sendBackgroundMessage(
-        messageContent: message,
-        reciever: reciever,
-        context: context,
-        isTimebankMessage:
-            requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-                ? true
-                : false,
-        timebankId: requestModel.timebankId,
-        communityId: loggedInUser.currentCommunity,
-        sender: sender);
-  }
+//   ParticipantInfo reciever = ParticipantInfo(
+//     id: receiver.sevaUserID,
+//     photoUrl: receiver.photoURL,
+//     name: receiver.fullname,
+//     type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+//         ? ChatType.TYPE_PERSONAL
+//         : widget.timebankModel.parentTimebankId ==
+//                 '73d0de2c-198b-4788-be64-a804700a88a4'
+//             ? ChatType.TYPE_TIMEBANK
+//             : ChatType.TYPE_GROUP,
+//   );
+//   await sendBackgroundMessage(
+//       messageContent: message,
+//       reciever: reciever,
+//       context: context,
+//       isTimebankMessage:
+//           requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+//               ? true
+//               : false,
+//       timebankId: requestModel.timebankId,
+//       communityId: loggedInUser.currentCommunity,
+//       sender: sender);
+// }
 
-  Widget getNotificationRequestCompletedWidget(
-    RequestModel model,
-    String userId,
-    String notificationId,
-  ) {
-    TransactionModel transactionModel = model.transactions?.firstWhere(
-        (transaction) => transaction.to == userId,
-        orElse: () => null);
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) return Container();
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return notificationShimmer;
-        }
-        UserModel user = snapshot.data;
-        return Slidable(
-            delegate: SlidableBehindDelegate(),
-            actions: <Widget>[],
-            secondaryActions: <Widget>[],
-            child: GestureDetector(
-              onTap: () {
-                showMemberClaimConfirmation(
-                  context: context,
-                  notificationId: notificationId,
-                  requestModel: model,
-                  userId: userId,
-                  userModel: user,
-                  credits: transactionModel.credits,
-                );
-              },
-              child: Container(
-                margin: notificationPadding,
-                decoration: notificationDecoration,
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage:
-                        NetworkImage(user.photoURL ?? defaultUserImageURL),
-                  ),
-                  title: Text(model.title),
-                  subtitle: RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text:
-                              '${user.fullname} ${AppLocalizations.of(context).translate('notifications', 'completed_in')} ',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontFamily: 'Europa',
-                          ),
-                        ),
-                        TextSpan(
-                          text: () {
-                            return '${transactionModel.credits ?? "0"} ${AppLocalizations.of(context).translate('notifications', 'hours')}';
-                          }(),
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        TextSpan(
-                          text: () {
-                            return ', ${AppLocalizations.of(context).translate('notifications', 'waiting_for')}.';
-                          }(),
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontFamily: 'Europa',
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ));
-      },
-    );
-  }
+// Widget getNotificationRequestCompletedWidget(
+//   RequestModel model,
+//   String userId,
+//   String notificationId,
+// ) {
+//   TransactionModel transactionModel = model.transactions?.firstWhere(
+//       (transaction) => transaction.to == userId,
+//       orElse: () => null);
+//   return StreamBuilder<UserModel>(
+//     stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+//     builder: (context, snapshot) {
+//       if (snapshot.hasError) return Container();
+//       if (snapshot.connectionState == ConnectionState.waiting) {
+//         return notificationShimmer;
+//       }
+//       UserModel user = snapshot.data;
+//       return Slidable(
+//           delegate: SlidableBehindDelegate(),
+//           actions: <Widget>[],
+//           secondaryActions: <Widget>[],
+//           child: GestureDetector(
+//             onTap: () {
+//               showMemberClaimConfirmation(
+//                 context: context,
+//                 notificationId: notificationId,
+//                 requestModel: model,
+//                 userId: userId,
+//                 userModel: user,
+//                 credits: transactionModel.credits,
+//               );
+//             },
+//             child: Container(
+//               margin: notificationPadding,
+//               decoration: notificationDecoration,
+//               child: ListTile(
+//                 leading: CircleAvatar(
+//                   backgroundImage:
+//                       NetworkImage(user.photoURL ?? defaultUserImageURL),
+//                 ),
+//                 title: Text(model.title),
+//                 subtitle: RichText(
+//                   text: TextSpan(
+//                     children: [
+//                       TextSpan(
+//                         text:
+//                             '${user.fullname} ${AppLocalizations.of(context).translate('notifications', 'completed_in')} ',
+//                         style: TextStyle(
+//                           color: Colors.grey,
+//                           fontFamily: 'Europa',
+//                         ),
+//                       ),
+//                       TextSpan(
+//                         text: () {
+//                           return '${transactionModel.credits ?? "0"} ${AppLocalizations.of(context).translate('notifications', 'hours')}';
+//                         }(),
+//                         style: TextStyle(
+//                           color: Colors.black,
+//                         ),
+//                       ),
+//                       TextSpan(
+//                         text: () {
+//                           return ', ${AppLocalizations.of(context).translate('notifications', 'waiting_for')}.';
+//                         }(),
+//                         style: TextStyle(
+//                           color: Colors.grey,
+//                           fontFamily: 'Europa',
+//                         ),
+//                       )
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ));
+//     },
+//   );
+// }
 
 //   void showMemberClaimConfirmation(
 //       {BuildContext context,

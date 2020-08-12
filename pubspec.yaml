@@ -99,7 +99,7 @@ dev_dependencies:
 
 arbify:
   url: http://localize.sevaexchange.com
-  project_id: 1
+  project_id: 3
   output_dir: lib/l10n
 
 flutter:

@@ -11,8 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/auth/auth_provider.dart';
-import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -387,10 +385,7 @@ class CreateEditCommunityViewFormState
                               return S.of(context).timebank_name_exists_error;
                             } else if (profanityDetector
                                 .isProfaneString(value)) {
-                              print(AppLocalizations.of(context)
-                                  .translate('profanity', 'alert'));
-                              return AppLocalizations.of(context)
-                                  .translate('profanity', 'alert');
+                              return S.of(context).profanity_text_alert;
                             } else {
                               enteredName =
                                   value.replaceAll("[^a-zA-Z0-9]", "");
@@ -433,8 +428,7 @@ class CreateEditCommunityViewFormState
                               return S.of(context).timebank_tell_more;
                             }
                             if (profanityDetector.isProfaneString(value)) {
-                              return AppLocalizations.of(context)
-                                  .translate('profanity', 'alert');
+                              return S.of(context).profanity_text_alert;
                             }
                             snapshot.data.community
                                 .updateValueByKey('about', value);
@@ -1357,8 +1351,7 @@ class CreateEditCommunityViewFormState
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
-                    ? AppLocalizations.of(context)
-                        .translate('profanity', 'alert')
+                    ? S.of(context).profanity_text_alert
                     : null;
           },
           focusNode: focusNodes[1],
@@ -1401,8 +1394,7 @@ class CreateEditCommunityViewFormState
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
-                    ? AppLocalizations.of(context)
-                        .translate('profanity', 'alert')
+                    ? S.of(context).profanity_text_alert
                     : null;
           },
           focusNode: focusNodes[0],
@@ -1434,8 +1426,7 @@ class CreateEditCommunityViewFormState
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
-                    ? AppLocalizations.of(context)
-                        .translate('profanity', 'alert')
+                    ? S.of(context).profanity_text_alert
                     : null;
           },
           focusNode: focusNodes[3],
@@ -1479,7 +1470,7 @@ class CreateEditCommunityViewFormState
                   : '',
           validator: (value) {
             return (profanityDetector.isProfaneString(value))
-                ? AppLocalizations.of(context).translate('profanity', 'alert')
+                ? S.of(context).profanity_text_alert
                 : null;
           },
           onSaved: (value) {},
@@ -1520,8 +1511,7 @@ class CreateEditCommunityViewFormState
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
-                    ? AppLocalizations.of(context)
-                        .translate('profanity', 'alert')
+                    ? S.of(context).profanity_text_alert
                     : null;
           },
           focusNode: focusNodes[4],
@@ -1563,7 +1553,7 @@ class CreateEditCommunityViewFormState
             },
             validator: (value) {
               return (profanityDetector.isProfaneString(value))
-                  ? AppLocalizations.of(context).translate('profanity', 'alert')
+                  ? S.of(context).profanity_text_alert
                   : null;
             },
             focusNode: focusNodes[5],
@@ -1589,7 +1579,7 @@ class CreateEditCommunityViewFormState
           },
           validator: (value) {
             return (profanityDetector.isProfaneString(value))
-                ? AppLocalizations.of(context).translate('profanity', 'alert')
+                ? S.of(context).profanity_text_alert
                 : null;
           },
           autovalidate: autoValidateText,
@@ -1649,8 +1639,7 @@ class CreateEditCommunityViewFormState
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
-                    ? AppLocalizations.of(context)
-                        .translate('profanity', 'alert')
+                    ? S.of(context).profanity_text_alert
                     : null;
           },
           focusNode: focusNodes[2],

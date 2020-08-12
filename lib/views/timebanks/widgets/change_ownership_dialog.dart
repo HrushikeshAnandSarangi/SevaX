@@ -484,8 +484,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
-                    ? AppLocalizations.of(context)
-                        .translate('profanity', 'alert')
+                    ? S.of(context).profanity_text_alert
                     : null;
           },
           decoration: getInputDecoration(fieldTitle: S.of(context).city),
@@ -520,8 +519,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
-                    ? AppLocalizations.of(context)
-                        .translate('profanity', 'alert')
+                    ? S.of(context).profanity_text_alert
                     : null;
           },
           focusNode: focusNodes[1],
@@ -566,7 +564,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           },
           validator: (value) {
             return (profanityDetector.isProfaneString(value))
-                ? AppLocalizations.of(context).translate('profanity', 'alert')
+                ? S.of(context).profanity_text_alert
                 : null;
           },
           onChanged: (value) {
@@ -605,8 +603,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
-                    ? AppLocalizations.of(context)
-                        .translate('profanity', 'alert')
+                    ? S.of(context).profanity_text_alert
                     : null;
           },
           focusNode: focusNodes[4],
@@ -628,7 +625,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             autovalidate: autoValidateText,
             validator: (value) {
               return (profanityDetector.isProfaneString(value))
-                  ? AppLocalizations.of(context).translate('profanity', 'alert')
+                  ? S.of(context).profanity_text_alert
                   : null;
             },
             onChanged: (value) {
@@ -678,8 +675,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
-                    ? AppLocalizations.of(context)
-                        .translate('profanity', 'alert')
+                    ? S.of(context).profanity_text_alert
                     : null;
           },
           focusNode: focusNodes[2],
@@ -714,7 +710,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           },
           validator: (value) {
             return (profanityDetector.isProfaneString(value))
-                ? AppLocalizations.of(context).translate('profanity', 'alert')
+                ? S.of(context).profanity_text_alert
                 : null;
           },
           focusNode: focusNodes[6],

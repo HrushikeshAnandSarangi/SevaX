@@ -252,8 +252,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                     .validation_error_general_text;
                               }
                               if (profanityDetector.isProfaneString(value)) {
-                                return AppLocalizations.of(context)
-                                    .translate('profanity', 'alert');
+                                return S.of(context).profanity_text_alert;
                               }
                               newsObject.subheading = value;
                               // print("object");

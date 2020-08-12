@@ -349,8 +349,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                   return S.of(context).request_subject;
                                 }
                                 if (profanityDetector.isProfaneString(value)) {
-                                  return AppLocalizations.of(context)
-                                      .translate('profanity', 'alert');
+                                  return S.of(context).profanity_text_alert;
                                 }
                                 requestModel.title = value;
                               },
@@ -411,8 +410,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                       .validation_error_general_text;
                                 }
                                 if (profanityDetector.isProfaneString(value)) {
-                                  return AppLocalizations.of(context)
-                                      .translate('profanity', 'alert');
+                                  return S.of(context).profanity_text_alert;
                                 }
                                 requestModel.description = value;
                               },

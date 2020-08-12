@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 
@@ -82,42 +81,41 @@ class _BioViewState extends State<BioView> {
                                 fontSize: 16.0, color: Colors.black54),
                             decoration: InputDecoration(
                               errorMaxLines: 2,
-                                fillColor: Colors.grey[300],
-                                filled: true,
-                                hintText: S.of(context).bio_hint,
-                                border: textFieldBorder,
-                                enabledBorder: textFieldBorder,
-                                focusedBorder: textFieldBorder,
-                              ),
-                              keyboardType: TextInputType.multiline,
-                              autovalidate: autoValidateText,
+                              fillColor: Colors.grey[300],
+                              filled: true,
+                              hintText: S.of(context).bio_hint,
+                              border: textFieldBorder,
+                              enabledBorder: textFieldBorder,
+                              focusedBorder: textFieldBorder,
+                            ),
+                            keyboardType: TextInputType.multiline,
+                            autovalidate: autoValidateText,
                             minLines: 6,
                             maxLines: 50,
                             maxLength: 150,
                             onChanged: (value) {
-                                if (value.length > 1) {
-                                  setState(() {
-                                    autoValidateText = true;
-                                  });
-                                } else {
-                                  setState(() {
-                                    autoValidateText = false;
-                                  });
-                                }
-                              },
-                              validator: (value) {
-                                if (value.trim().isEmpty) {
-                                  return S.of(context).validation_error_bio_empty;
+                              if (value.length > 1) {
+                                setState(() {
+                                  autoValidateText = true;
+                                });
+                              } else {
+                                setState(() {
+                                  autoValidateText = false;
+                                });
+                              }
+                            },
+                            validator: (value) {
+                              if (value.trim().isEmpty) {
+                                return S.of(context).validation_error_bio_empty;
                               }
                               if (value.length < 50) {
                                 this.bio = value;
                                 return S
                                     .of(context)
                                     .validation_error_bio_min_characters;
-                                }
-                                if (profanityDetector.isProfaneString(value)) {
-                                  return AppLocalizations.of(context)
-                                      .translate('profanity', 'alert');
+                              }
+                              if (profanityDetector.isProfaneString(value)) {
+                                return S.of(context).profanity_text_alert;
                               }
                               this.bio = value;
                               return null;

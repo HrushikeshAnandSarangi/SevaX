@@ -201,6 +201,20 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                         notificationId: notification.id);
                   },
                 );
+
+              case NotificationType.DEBITED_SEVA_COINS_TIMEBANK:
+                return NotificationCard(
+                  title: "Seva Coins debited",
+                  subTitle: "Seva coins debited",
+                  photoUrl: null,
+                  entityName: "Debited",
+                  onDismissed: () {
+                    dismissTimebankNotification(
+                        timebankId: notification.timebankId,
+                        notificationId: notification.id);
+                  },
+                );
+
               default:
                 log("Unhandled timebank notification type ${notification.type} ${notification.id}");
                 Crashlytics().log(

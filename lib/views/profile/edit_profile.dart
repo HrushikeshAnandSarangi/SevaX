@@ -24,7 +24,6 @@ import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
-import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/splash_view.dart';
@@ -174,8 +173,8 @@ class _EditProfilePageState extends State<EditProfilePage>
               onTap: () => _navigateToSkillsView(usermodel),
             ),
             cvBuilder(
-              title: AppLocalizations.of(context).translate('cv', 'cv'),
-              text: AppLocalizations.of(context).translate('cv', 'cv_info'),
+              title: S.of(context).upload_cv_resume,
+              text: S.of(context).cv_message,
               onTap: () => _openFileExplorer(),
             ),
             Padding(
@@ -281,13 +280,10 @@ class _EditProfilePageState extends State<EditProfilePage>
                                   if (connResult == ConnectivityResult.none) {
                                     _scaffoldKey.currentState.showSnackBar(
                                       SnackBar(
-                                        content: Text(
-                                            AppLocalizations.of(context)
-                                                .translate('shared',
-                                                    'check_internet')),
+                                        content:
+                                            Text(S.of(context).check_internet),
                                         action: SnackBarAction(
-                                          label: AppLocalizations.of(context)
-                                              .translate('shared', 'dismiss'),
+                                          label: S.of(context).dismiss,
                                           onPressed: () => _scaffoldKey
                                               .currentState
                                               .hideCurrentSnackBar(),
@@ -322,8 +318,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                           child: RaisedButton(
                             shape: StadiumBorder(),
                             child: Text(
-                              AppLocalizations.of(context)
-                                  .translate('cv', 'replace_cv'),
+                              S.of(context).replace_cv,
                               style: TextStyle(fontSize: 11),
                             ),
                             onPressed: () {
@@ -372,7 +367,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   color: FlavorConfig.values.theme.primaryColor,
                 ),
                 Text(
-                  AppLocalizations.of(context).translate('cv', 'choose_pdf'),
+                  S.of(context).choose_pdf_file,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey),
                 ),
@@ -416,7 +411,7 @@ class _EditProfilePageState extends State<EditProfilePage>
           ),
         ),
         Text(
-          AppLocalizations.of(context).translate('cv', 'size_limit'),
+          S.of(context).validation_error_cv_size,
           style: TextStyle(color: Colors.grey),
         ),
         Text(
@@ -436,11 +431,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                     if (connResult == ConnectivityResult.none) {
                       _scaffoldKey.currentState.showSnackBar(
                         SnackBar(
-                          content: Text(AppLocalizations.of(context)
-                              .translate('shared', 'check_internet')),
+                          content: Text(S.of(context).check_internet),
                           action: SnackBarAction(
-                            label: AppLocalizations.of(context)
-                                .translate('shared', 'dismiss'),
+                            label: S.of(context).dismiss,
                             onPressed: () =>
                                 _scaffoldKey.currentState.hideCurrentSnackBar(),
                           ),
@@ -453,20 +446,18 @@ class _EditProfilePageState extends State<EditProfilePage>
                         cvName == '' ||
                         cvName == null) {
                       setState(() {
-                        this.cvFileError = AppLocalizations.of(context)
-                            .translate('cv', 'cv_error');
+                        this.cvFileError =
+                            S.of(context).validation_error_cv_not_selected;
                       });
                     } else {
                       await updateCV();
                       _scaffoldKey.currentState.showSnackBar(
                         SnackBar(
                           content: Text(
-                            AppLocalizations.of(context)
-                                .translate('upload_csv', 'upload_success'),
+                            S.of(context).uploaded_successfully,
                           ),
                           action: SnackBarAction(
-                            label: AppLocalizations.of(context)
-                                .translate('shared', 'dismiss'),
+                            label: S.of(context).dismiss,
                             onPressed: () =>
                                 _scaffoldKey.currentState.hideCurrentSnackBar(),
                           ),
@@ -479,8 +470,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     }
                   },
                   child: Text(
-                    AppLocalizations.of(context)
-                        .translate('upload_csv', 'upload'),
+                    S.of(context).upload,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 12,
@@ -812,18 +802,16 @@ class _EditProfilePageState extends State<EditProfilePage>
               Form(
                 key: _formKey,
                 child: TextFormField(
-                  decoration:
-                      InputDecoration(hintText: S.of(context).enter_name),
+                  decoration: InputDecoration(
+                    hintText: S.of(context).enter_name,
+                    errorMaxLines: 2,
+                  ),
                   autovalidate: autoValidateText,
                   onChanged: (value) {
                     setState(() {
                       autoValidateText = value.length > 1;
                     });
                   },
-                  decoration: InputDecoration(
-                      errorMaxLines: 2,
-                      hintText: AppLocalizations.of(context)
-                          .translate('profile', 'add_name')),
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,
                   style: TextStyle(fontSize: 17.0),
@@ -835,8 +823,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     if (value.isEmpty) {
                       return S.of(context).enter_name_hint;
                     } else if (profanityDetector.isProfaneString(value)) {
-                      return AppLocalizations.of(context)
-                          .translate('profanity', 'alert');
+                      return S.of(context).profanity_text_alert;
                     } else {
                       widget.userModel.fullname = value;
                       return null;
@@ -934,7 +921,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   },
                   decoration: InputDecoration(
                     errorMaxLines: 2,
-                      hintText: S.of(context).enter_bio,
+                    hintText: S.of(context).enter_bio,
                   ),
                   maxLength: 150,
                   maxLengthEnforced: true,
@@ -947,8 +934,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     if (value.isEmpty) {
                       return S.of(context).update_bio_hint;
                     } else if (profanityDetector.isProfaneString(value)) {
-                      return AppLocalizations.of(context)
-                          .translate('profanity', 'alert');
+                      return S.of(context).profanity_text_alert;
                     } else if (value.length < 50) {
                       return S.of(context).validation_error_bio_min_characters;
                     } else {
@@ -1139,15 +1125,12 @@ getAlertDialog(BuildContext context) {
     builder: (BuildContext context) {
       // return object of type Dialog
       return AlertDialog(
-        title: Text(AppLocalizations.of(context)
-            .translate('create_feed', 'size_alert_title')),
-        content: new Text(AppLocalizations.of(context)
-            .translate('create_feed', 'size_alert')),
+        title: Text(S.of(context).large_file_size),
+        content: Text(S.of(context).validation_error_file_size),
         actions: <Widget>[
           // usually buttons at the bottom of the dialog
-          new FlatButton(
-            child: new Text(
-                AppLocalizations.of(context).translate('help', 'close')),
+          FlatButton(
+            child: Text(S.of(context).close),
             onPressed: () {
               Navigator.of(context).pop();
             },

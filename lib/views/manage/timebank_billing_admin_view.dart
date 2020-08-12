@@ -594,8 +594,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
-                    ? AppLocalizations.of(context)
-                        .translate('profanity', 'alert')
+                    ? S.of(context).profanity_text_alert
                     : null;
           },
           decoration: getInputDecoration(fieldTitle: S.of(context).city),
@@ -631,8 +630,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
-                    ? AppLocalizations.of(context)
-                        .translate('profanity', 'alert')
+                    ? S.of(context).profanity_text_alert
                     : null;
           },
           focusNode: focusNodes[0],
@@ -691,7 +689,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           },
           validator: (value) {
             return (profanityDetector.isProfaneString(value))
-                ? AppLocalizations.of(context).translate('profanity', 'alert')
+                ? S.of(context).profanity_text_alert
                 : null;
           },
           initialValue: notes != null ? notes : '',
@@ -728,8 +726,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
-                    ? AppLocalizations.of(context)
-                        .translate('profanity', 'alert')
+                    ? S.of(context).profanity_text_alert
                     : null;
           },
           focusNode: focusNodes[3],
@@ -764,7 +761,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             },
             validator: (value) {
               return (profanityDetector.isProfaneString(value))
-                  ? AppLocalizations.of(context).translate('profanity', 'alert')
+                  ? S.of(context).profanity_text_alert
                   : null;
             },
             focusNode: focusNodes[5],
@@ -804,8 +801,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             return value.isEmpty
                 ? S.of(context).validation_error_required_fields
                 : (profanityDetector.isProfaneString(value))
-                    ? AppLocalizations.of(context)
-                        .translate('profanity', 'alert')
+                    ? S.of(context).profanity_text_alert
                     : null;
           },
           focusNode: focusNodes[1],
@@ -828,7 +824,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           },
           validator: (value) {
             return (profanityDetector.isProfaneString(value))
-                ? AppLocalizations.of(context).translate('profanity', 'alert')
+                ? S.of(context).profanity_text_alert
                 : null;
           },
           autovalidate: autoValidateText,

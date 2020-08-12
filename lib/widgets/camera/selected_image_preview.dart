@@ -88,8 +88,7 @@ class _SelectedImagePreviewState extends State<SelectedImagePreview> {
                       send(_file, value);
                     },
                     hideCameraIcon: true,
-                    hintText: S.of(context)
-                        .add_caption,
+                    hintText: S.of(context).add_caption,
                     onSend: () {
                       send(_file, textController.text);
                     },
@@ -119,8 +118,7 @@ class _SelectedImagePreviewState extends State<SelectedImagePreview> {
       if (profanityDetector.isProfaneString(caption)) {
         setState(() {
           isProfane = true;
-          errorText =
-              AppLocalizations.of(context).translate('profanity', 'alert');
+          errorText = S.of(context).profanity_text_alert;
         });
       } else {
         setState(() {

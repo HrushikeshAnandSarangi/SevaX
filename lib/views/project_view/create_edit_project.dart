@@ -333,8 +333,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 if (value.isEmpty) {
                   return S.of(context).validation_error_project_name_empty;
                 } else if (profanityDetector.isProfaneString(value)) {
-                  return AppLocalizations.of(context)
-                      .translate('profanity', 'alert');
+                  return S.of(context).profanity_text_alert;
                 } else {
                   projectModel.name = value;
                 }
@@ -406,8 +405,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 if (value.isEmpty) {
                   return S.of(context).validation_error_mission_empty;
                 } else if (profanityDetector.isProfaneString(value)) {
-                  return AppLocalizations.of(context)
-                      .translate('profanity', 'alert');
+                  return S.of(context).profanity_text_alert;
                 } else {
                   projectModel.description = value;
                 }
