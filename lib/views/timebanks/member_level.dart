@@ -12,7 +12,7 @@ class MembershipManager {
     String targetUserId,
     String parentTimebankId,
     String userEmail,
-    String associatedNames,
+    String associatedName,
     NotificationType notificationType,
   }) async {
     var batch = Firestore.instance.batch();
@@ -27,7 +27,7 @@ class MembershipManager {
       type: notificationType,
       timebankId: timebankId,
       data: {
-        'associatedNames': associatedNames,
+        'associatedName': associatedName,
         'timebankName': timebankName,
         'isGroup': parentTimebankId != FlavorConfig.values.timebankId,
       },

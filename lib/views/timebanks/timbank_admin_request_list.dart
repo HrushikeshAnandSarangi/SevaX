@@ -840,7 +840,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
                     // PROMOTTE
                     await MembershipManager.updateMembershipStatus(
-                      associatedNames:
+                      associatedName:
                           SevaCore.of(context).loggedInUser.fullname,
                       communityId:
                           SevaCore.of(context).loggedInUser.currentCommunity,
@@ -870,6 +870,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                     });
                     // DEMOTE
                     await MembershipManager.updateMembershipStatus(
+                      associatedName:
+                          SevaCore.of(context).loggedInUser.fullname,
                       communityId:
                           SevaCore.of(context).loggedInUser.currentCommunity,
                       timebankId: timebankModel.id,
