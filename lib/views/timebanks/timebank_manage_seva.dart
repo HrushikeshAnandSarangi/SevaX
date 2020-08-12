@@ -1,5 +1,5 @@
 import 'dart:collection';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -13,6 +13,7 @@ import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_p
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
+import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
@@ -334,86 +335,31 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
     );
   }
 
-//  Widget viewAcceptedOffers({BuildContext context}) {
-//    return GestureDetector(
-//      onTap: () {
-//        Navigator.push(
-//          context,
-//          MaterialPageRoute(
-//            builder: (context) => AcceptedOffers(
-//              timebankId: widget.timebankModel.id,
-//            ),
-//          ),
-//        );
-//      },
-//      child: Container(
-//        margin: EdgeInsets.only(top: 20),
-//        child: Text(
-//          'View accepted offers',
-//          style: TextStyle(
-//            fontSize: 14,
-//            fontWeight: FontWeight.bold,
-//            color: Colors.blue,
-//          ),
-//        ),
-//      ),
-//    );
-//  }
-//
-//  Widget vieweditPage({BuildContext context}) {
-//    return GestureDetector(
-//      onTap: () {
-//        Navigator.of(context).push(
-//          MaterialPageRoute(
-//            builder: (context) => CreateEditCommunityView(
-//              timebankId: widget.timebankModel.id,
-//              isFromFind: false,
-//              isCreateTimebank: false,
-//            ),
-//          ),
-//        );
-//      },
-//      child: Container(
-//        margin: EdgeInsets.only(top: 20),
-//        child: Text(
-//          'About',
-//          style: TextStyle(
-//            fontSize: 14,
-//            fontWeight: FontWeight.bold,
-//            color: Colors.blue,
-//          ),
-//        ),
-//      ),
-//    );
-//  }
+  Widget oauthview({BuildContext context}) {
 
-//  Widget billingView({BuildContext context}) {
-//    return GestureDetector(
-//      onTap: () {
-//        Navigator.push(
-//          context,
-//          MaterialPageRoute(
-//            builder: (context) => BillingView(
-//              widget.timebankModel.id,
-//              '',
-//              user: SevaCore.of(context).loggedInUser,
-//            ),
-//          ),
-//        );
-//      },
-//      child: Container(
-//        margin: EdgeInsets.only(top: 20),
-//        child: Text(
-//          'Billing',
-//          style: TextStyle(
-//            fontSize: 14,
-//            fontWeight: FontWeight.bold,
-//            color: Colors.blue,
-//          ),
-//        ),
-//      ),
-//    );
-//  }
+    return GestureDetector(
+      onTap: () async{
+        String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+        String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+        if (await canLaunch(authorizationUrl.toString())) {
+        await launch(authorizationUrl.toString());
+        }
+//        final linksStream = getLinksStream().listen((Uri uri) async {
+//        if (uri.toString().startsWith(redirectUrl)) {
+//        var responseUrl = uri;
+//        }
+//        });
+      },
+      child: Text(
+        "oauth",
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          color: Colors.red,
+        ),
+      ),
+    );
+  }
 
   Widget get getTitle {
     return Text(
@@ -551,6 +497,8 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
               : Container(),
 
           viewInvoice(context: context),
+          SizedBox(height: 20),
+          oauthview(context: context),
           SizedBox(height: 20),
           viewReportedMembers(context: context),
           SizedBox(height: 20),

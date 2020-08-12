@@ -28,7 +28,7 @@ class MonthsListing extends StatefulWidget {
 class _MonthsListingState extends State<MonthsListing> {
   String communityId = "";
   CommunityModel communityModel = null;
-  String planId="";
+  String planId = "";
   List<String> monthsArr = [
     "January",
     "Febuary",
@@ -43,7 +43,8 @@ class _MonthsListingState extends State<MonthsListing> {
     "November",
     "December"
   ];
-  Map<String,dynamic> plans = {
+
+  Map<String, dynamic> plans = {
     "tall_plan": {
       "name": "Tall Plan",
       "initial_transactions_amount": 15,
@@ -62,10 +63,11 @@ class _MonthsListingState extends State<MonthsListing> {
       "initial_transactions_qty": 5000,
       "pro_data_bill_amount": 0.01,
     }
-  } ;
-  Map<String,dynamic> transactionTypes = {
+  };
+
+  Map<String, dynamic> transactionTypes = {
     "quota_TypeJoinTimebank": {
-      "name":"Total Users Who Joined this timebank",
+      "name": "Total Users Who Joined this timebank",
       "billable": true,
     },
     "quota_TypeRequestApply": {
@@ -144,7 +146,6 @@ class _MonthsListingState extends State<MonthsListing> {
     communityId = widget.communityId;
     planId = widget.planId;
     communityModel = widget.communityModel;
-
   }
 
   Widget build(BuildContext context) {
@@ -173,103 +174,106 @@ class _MonthsListingState extends State<MonthsListing> {
                 List<Detail> DetailsList = [];
 
                 log(transactionsMonthsList[index]['id']);
-                transactionsMonthsList[index].forEach((k,v){
-                  if(transactionTypes.containsKey(k)){
+                transactionsMonthsList[index].forEach((k, v) {
+                  if (transactionTypes.containsKey(k)) {
                     log("$k -> $v");
-                    DetailsList.add(
-                      Detail(
-                        description: transactionTypes[k]["name"],
-  //                        units: transactionsMonthsList[index][k],
-                        units: v.toDouble(),
-                        price: transactionTypes[k]["billable"]==true ? plans[planId]["pro_data_bill_amount"] : 0,
-                      ));
+                    DetailsList.add(Detail(
+                      description: transactionTypes[k]["name"],
+                      //                        units: transactionsMonthsList[index][k],
+                      units: v.toDouble(),
+                      price: transactionTypes[k]["billable"] == true
+                          ? plans[planId]["pro_data_bill_amount"]
+                          : 0,
+                    ));
                   }
                 });
                 var sum = 0;
-                transactionsMonthsList[index].forEach((k,v){
-                  if(transactionTypes.containsKey(k)){
-                    if(transactionTypes[k]["billable"]==true){
+                transactionsMonthsList[index].forEach((k, v) {
+                  if (transactionTypes.containsKey(k)) {
+                    if (transactionTypes[k]["billable"] == true) {
                       sum += v;
                     }
                   }
                 });
-                return GestureDetector(
-                  onTap: () {
-                    ReportPdf().reportPdf(
-                      context,
-                      InvoiceModel(
-                        note1:
-                            "This report is for the billing period for the month of ${monthsArr[int.parse(transactionsMonthsList[index]['id'].split('_')[0])-1]}, ${transactionsMonthsList[index]['id'].split('_')[1]}",
-                        note2:
-                            "Greetings from Seva Exchange. We're writing to provide you with a detailed report of your use of SevaX services. Additional information about your bill, individual service charge details, and your account history are available on the Billing section under Manage tab.",
-                        details: DetailsList,
-                        plans:plans
+                return Card(
+                    child: ListTile(
+                        title: Row(
+                  children: [
+                    Text(
+                        "${monthsArr[int.parse(transactionsMonthsList[index]['id'].split('_')[0]) - 1]}  ${transactionsMonthsList[index]['id'].split('_')[1]} "),
+                    Spacer(),
+                    GestureDetector(
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 15,
+                        child: Image.asset(
+                          "lib/assets/images/report_icon.jpeg",
+                        ),
                       ),
-                      communityModel,
-                        transactionsMonthsList[index]['id'],
-                      plans[planId]
-                    );
-                  },
-                  child: Card(
-                      child: ListTile(
-                          title: Row(
-                            children: [
-                              Text(
-                                  "${monthsArr[int.parse(transactionsMonthsList[index]['id'].split('_')[0])-1]}  ${transactionsMonthsList[index]['id'].split('_')[1]} "),
-                              Spacer(),
-                              IconButton(icon: Icon(Icons.file_download),
-                                onPressed: () {
-                                ReportPdf().reportPdf(
-                                    context,
-                                    InvoiceModel(
-                                        note1:
-                                        "This report is for the billing period for the month of ${monthsArr[int.parse(transactionsMonthsList[index]['id'].split('_')[0])-1]}, ${transactionsMonthsList[index]['id'].split('_')[1]}",
-                                        note2:
-                                        "Greetings from Seva Exchange. We're writing to provide you with a detailed report of your use of SevaX services. Additional information about your bill, individual service charge details, and your account history are available on the Billing section under Manage tab.",
-                                        details: DetailsList,
-                                        plans:plans
-                                    ),
-                                    communityModel,
-                                    transactionsMonthsList[index]['id'],
-                                    plans[planId]
-                                );
-                              },),
-                              IconButton(icon: Icon(Icons.cloud_download),
-                                  onPressed: () {
-                                    InvoicePdf().invoicePdf(
-                                        context,
-                                        InvoiceModel(
-                                            note1:
-                                            "This invoice is for the billing period for the month of ${monthsArr[int.parse(transactionsMonthsList[index]['id'].split('_')[0])-1]}, ${transactionsMonthsList[index]['id'].split('_')[1]}",
-                                            note2:
-                                            "Greetings from Seva Exchange. We're writing to provide you with a detailed report of your use of SevaX services. Additional information about your bill, individual service charge details, and your account history are available on the Billing section under Manage tab.",
-                                            details: [
-                                              Detail(
-                                                description: "${planId=="tall_plan"? "Monthly":"Yearly"} ${plans[planId]["name"]} Initial Charges",
-                                                units: 1.00,
-                                                price: plans[planId]["initial_transactions_amount"].toDouble()
-                                              ),
-                                              Detail(
-                                                  description: "Additional Billable Transactions",
-                                                  units: sum.toDouble(),
-                                                  price: plans[planId]["pro_data_bill_amount"].toDouble()
-                                              ),
-                                              Detail(
-                                                  description: "Discounted Billable Transactions as per your current plan",
-                                                  units: plans[planId]["initial_transactions_qty"].toDouble(),
-                                                  price: plans[planId]["pro_data_bill_amount"].toDouble()
-                                              )
-                                            ],
-                                            plans:plans
-                                        ),
-                                        communityModel,
-                                        transactionsMonthsList[index]['id'],
-                                        plans[planId]
-                                    );
-                                  },),
-                            ],
-                          ))),
-                );
+                      onTap: () {
+                        ReportPdf().reportPdf(
+                            context,
+                            InvoiceModel(
+                                note1:
+                                    "This report is for the billing period for the month of ${monthsArr[int.parse(transactionsMonthsList[index]['id'].split('_')[0]) - 1]}, ${transactionsMonthsList[index]['id'].split('_')[1]}",
+                                note2:
+                                    "Greetings from Seva Exchange. We're writing to provide you with a detailed report of your use of SevaX services. Additional information about your bill, individual service charge details, and your account history are available on the Billing section under Manage tab.",
+                                details: DetailsList,
+                                plans: plans),
+                            communityModel,
+                            transactionsMonthsList[index]['id'],
+                            plans[planId]);
+                      },
+                    ),
+                    SizedBox(width: 30),
+                    GestureDetector(
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 15,
+                        child:
+                            Image.asset("lib/assets/images/invoice_icon.jpeg"),
+                      ),
+                      onTap: () {
+                        InvoicePdf().invoicePdf(
+                            context,
+                            InvoiceModel(
+                                note1:
+                                    "This invoice is for the billing period for the month of ${monthsArr[int.parse(transactionsMonthsList[index]['id'].split('_')[0]) - 1]}, ${transactionsMonthsList[index]['id'].split('_')[1]}",
+                                note2:
+                                    "Greetings from Seva Exchange. We're writing to provide you with a detailed report of your use of SevaX services. Additional information about your bill, individual service charge details, and your account history are available on the Billing section under Manage tab.",
+                                details: [
+                                  Detail(
+                                      description:
+                                          "${planId == "tall_plan" ? "Monthly" : "Yearly"} ${plans[planId]["name"]} Initial Charges",
+                                      units: 1.00,
+                                      price: plans[planId]
+                                              ["initial_transactions_amount"]
+                                          .toDouble()),
+                                  Detail(
+                                      description:
+                                          "Additional Billable Transactions",
+                                      units: sum.toDouble(),
+                                      price: plans[planId]
+                                              ["pro_data_bill_amount"]
+                                          .toDouble()),
+                                  Detail(
+                                      description:
+                                          "Discounted Billable Transactions as per your current plan",
+                                      units: plans[planId]
+                                              ["initial_transactions_qty"]
+                                          .toDouble(),
+                                      price: plans[planId]
+                                              ["pro_data_bill_amount"]
+                                          .toDouble())
+                                ],
+                                plans: plans),
+                            communityModel,
+                            transactionsMonthsList[index]['id'],
+                            plans[planId]);
+                      },
+                    ),
+                  ],
+                )));
               });
         },
       ),
