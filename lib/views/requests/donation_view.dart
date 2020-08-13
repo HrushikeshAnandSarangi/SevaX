@@ -16,9 +16,9 @@ class _DonationViewState extends State<DonationView> {
     'Hygiene supplies',
     'Cleaning supplies'
   ];
+  Map selectedList = {};
   bool _checked = false;
   bool _selected = false;
-  Color _activeColor = Colors.green;
   Color _checkColor = Colors.black;
   PageController pageController = PageController();
   @override
@@ -159,7 +159,30 @@ class _DonationViewState extends State<DonationView> {
             shrinkWrap: true,
             itemCount: donationsCategories.length,
             itemBuilder: (context, index) {
-              return donationCategory(title: donationsCategories[index]);
+              return Row(
+                children: [
+                  Checkbox(
+                    value: selectedList.containsKey(donationsCategories[index]),
+                    checkColor: _checkColor,
+                    onChanged: (bool value) {
+                      print(value);
+                      setState(() {
+                        if (value) {
+                          selectedList[donationsCategories[index]] = 1;
+                        } else {
+                          selectedList.remove(donationsCategories[index]);
+                        }
+                        print('${selectedList.keys.toString()}');
+                      });
+                    },
+                    activeColor: Colors.grey[200],
+                  ),
+                  Text(
+                    donationsCategories[index],
+                    style: subTitleStyle,
+                  ),
+                ],
+              );
             },
           ),
           SizedBox(
@@ -244,16 +267,17 @@ class _DonationViewState extends State<DonationView> {
   }
 
   Widget donationCategory({String title}) {
+    bool selected = false;
     return Row(
       children: [
         Checkbox(
-          value: _checked,
-          activeColor: _activeColor,
+          value: selected,
+          activeColor: Colors.white70,
           checkColor: _checkColor,
           onChanged: (bool value) {
             setState(() {
-              _checked = value;
-              _selected = value;
+              selected = value;
+              // _selected = value;
             });
           },
         ),
