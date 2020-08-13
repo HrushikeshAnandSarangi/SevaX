@@ -24,13 +24,26 @@ class DonationBloc {
         : _selectedList.value.add(selectedItem);
   }
 
-  Future<bool> donateGoods({DonationModel donationModel}) {}
+  Future<bool> donateGoods({DonationModel donationModel}) async {
+    if (_selectedList.value.isEmpty) {
+      _errorMessage.add('Select a goods category');
+    } else {
+      donationModel.cashDetails.pledgedAmount = int.parse(_amountPledged.value);
+      try {
+        await FirestoreManager.createDonation(donationModel: donationModel);
+        return true;
+      } on Exception catch (e) {
+        _errorMessage.add("something went wrong try again later");
+      }
+    }
+    return false;
+  }
+
   Future<bool> donateAmount({DonationModel donationModel}) async {
     if (_amountPledged.value.isEmpty || int.parse(_amountPledged.value) == 0) {
       _amountPledged.addError('Enter valid amount');
     } else {
-      donationModel.amount = int.parse(_amountPledged.value);
-
+      donationModel.cashDetails.pledgedAmount = int.parse(_amountPledged.value);
       try {
         await FirestoreManager.createDonation(donationModel: donationModel);
         return true;

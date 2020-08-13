@@ -8,34 +8,32 @@ DonationModel donationModelFromMap(String str) =>
 String donationModelToMap(DonationModel data) => json.encode(data.toMap());
 
 class DonationModel {
-  DonationModel({
-    this.amount,
-    this.communityId,
-    this.donorSevaUserId,
-    this.donatedTo,
-    this.donatedToTimebank,
-    this.donationInBetween,
-    this.donationType,
-    this.id,
-    this.requestId,
-    this.timebankId,
-    this.timestamp,
-  });
+  DonationModel(
+      {this.communityId,
+      this.donorSevaUserId,
+      this.donatedTo,
+      this.donatedToTimebank,
+      this.donationInBetween,
+      this.donationType,
+      this.id,
+      this.requestId,
+      this.timebankId,
+      this.timestamp,
+      this.cashDetails});
 
-  int amount;
   String communityId;
   String donorSevaUserId;
   String donatedTo;
   bool donatedToTimebank;
   List<String> donationInBetween;
-  DonationType donationType;
+  RequestType donationType;
   String id;
   String requestId;
   String timebankId;
   int timestamp;
+  CashDetails cashDetails;
 
   factory DonationModel.fromMap(Map<String, dynamic> json) => DonationModel(
-        amount: json["amount"] == null ? null : json["amount"],
         communityId: json["communityId"] == null ? null : json["communityId"],
         donorSevaUserId:
             json["donorSevaUserId"] == null ? null : json["donorSevaUserId"],
@@ -49,18 +47,20 @@ class DonationModel {
         donationType: json["donationType"] == null
             ? null
             : json["donationType"] == "CASH"
-                ? DonationType.CASH
+                ? RequestType.CASH
                 : json["donationType"] == "GOODS"
-                    ? DonationType.GOODS
-                    : DonationType.TIME,
+                    ? RequestType.GOODS
+                    : RequestType.TIME,
         id: json["id"] == null ? null : json["id"],
         requestId: json["requestId"] == null ? null : json["requestId"],
         timebankId: json["timebankId"] == null ? null : json["timebankId"],
         timestamp: json["timestamp"] == null ? null : json["timestamp"],
+        cashDetails: json['cashDetails'] == null
+            ? null
+            : CashDetails.fromMap(json['cashDetails']),
       );
 
   Map<String, dynamic> toMap() => {
-        "amount": amount == null ? null : amount,
         "communityId": communityId == null ? null : communityId,
         "donorSevaUserId": donorSevaUserId == null ? null : donorSevaUserId,
         "donatedTo": donatedTo == null ? null : donatedTo,
@@ -71,12 +71,35 @@ class DonationModel {
             : List<dynamic>.from(donationInBetween.map((x) => x)),
         "donationType": donationType == null
             ? null
-            : donationType == DonationType.CASH
+            : donationType == RequestType.CASH
                 ? 'CASH'
-                : donationType == DonationType.GOODS ? 'GOODS' : 'TIME',
+                : donationType == RequestType.GOODS ? 'GOODS' : 'TIME',
         "id": id == null ? null : id,
         "requestId": requestId == null ? null : requestId,
         "timebankId": timebankId == null ? null : timebankId,
-        "timestamp": timestamp == null ? null : timestamp,
+        "timestamp": DateTime.now().millisecondsSinceEpoch,
+        "cashDetails": cashDetails == null ? null : cashDetails.toMap(),
+      };
+}
+
+CashDetails cashDetailsFromMap(String str) =>
+    CashDetails.fromMap(json.decode(str));
+
+String cashDetailsToMap(CashDetails data) => json.encode(data.toMap());
+
+class CashDetails {
+  CashDetails({
+    this.pledgedAmount,
+  });
+
+  int pledgedAmount;
+
+  factory CashDetails.fromMap(Map<String, dynamic> json) => CashDetails(
+        pledgedAmount:
+            json["pledgedAmount"] == null ? null : json["pledgedAmount"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "pledgedAmount": pledgedAmount == null ? null : pledgedAmount,
       };
 }

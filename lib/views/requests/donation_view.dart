@@ -4,15 +4,17 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/donation_model.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_bloc.dart';
 
 class DonationView extends StatefulWidget {
   final RequestModel requestModel;
-  final int initialScreen;
+  final String timabankName;
 
-  DonationView({this.requestModel, this.initialScreen});
+  DonationView({this.requestModel, this.timabankName});
 
   @override
   _DonationViewState createState() => _DonationViewState();
@@ -38,7 +40,9 @@ class _DonationViewState extends State<DonationView> {
   @override
   void initState() {
     // TODO: implement initState
-    pageController = PageController(initialPage: widget.initialScreen);
+    pageController = PageController(
+        initialPage:
+            widget.requestModel.requestType == RequestType.GOODS ? 0 : 1);
     donationBloc.errorMessage.listen((event) {
       if (event.isNotEmpty && event != null) {
         _scaffoldKey.currentState.showSnackBar(
@@ -58,6 +62,8 @@ class _DonationViewState extends State<DonationView> {
 
   @override
   Widget build(BuildContext context) {
+    setUpModel();
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -84,6 +90,25 @@ class _DonationViewState extends State<DonationView> {
     );
   }
 
+  void setUpModel() {
+    UserModel sevaUser = SevaCore.of(context).loggedInUser;
+
+    donationsModel.timebankId = widget.requestModel.timebankId;
+    donationsModel.communityId = sevaUser.currentCommunity;
+    donationsModel.id = Utils.getUuid();
+    donationsModel.requestId = widget.requestModel.id;
+    donationsModel.donatedToTimebank =
+        widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? false
+            : true;
+    donationsModel.donorSevaUserId = sevaUser.sevaUserID;
+    donationsModel.donationType = widget.requestModel.requestType;
+    donationsModel.donatedTo =
+        widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? widget.requestModel.sevaUserId
+            : widget.requestModel.timebankId;
+  }
+
   Widget amountWidget() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
@@ -95,7 +120,10 @@ class _DonationViewState extends State<DonationView> {
               stream: donationBloc.amountPledged,
               builder: (context, snapshot) {
                 return TextField(
-                  onChanged: donationBloc.onAmountChange,
+                  onChanged: (value) {
+                    donationBloc.onAmountChange;
+                    amountEntered = int.parse(value);
+                  },
                   maxLines: 1,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
@@ -114,12 +142,7 @@ class _DonationViewState extends State<DonationView> {
               actionButton(
                 buttonTitle: 'Done',
                 onPressed: () {
-                  donationBloc
-                      .donateAmount(donationModel: donationsModel)
-                      .then((value) {
-                    if (value) Navigator.pop(context);
-                  });
-                  pageController.animateToPage(0,
+                  pageController.animateToPage(2,
                       curve: Curves.easeInOut,
                       duration: Duration(milliseconds: 500));
                 },
@@ -142,7 +165,7 @@ class _DonationViewState extends State<DonationView> {
             height: 10,
           ),
           Text(
-            'Great, you have choose to donate for Timebank name a minimum donations is 1USD. Please click on the below link to fo the donation.',
+            '${'Great, you have choose to donate for' + widget.timabankName + ' a minimum donations is' + amountEntered.toString() + 'USD. Please click on the below link to fo the donation.'}',
             style: subTitleStyle,
           ),
           SizedBox(
@@ -166,9 +189,11 @@ class _DonationViewState extends State<DonationView> {
               actionButton(
                 buttonTitle: 'Donated',
                 onPressed: () {
-                  pageController.animateToPage(2,
-                      curve: Curves.easeInOut,
-                      duration: Duration(milliseconds: 500));
+                  donationBloc
+                      .donateAmount(donationModel: donationsModel)
+                      .then((value) {
+                    if (value) Navigator.pop(context);
+                  });
                 },
               ),
               SizedBox(
@@ -259,12 +284,11 @@ class _DonationViewState extends State<DonationView> {
                       );
                       return;
                     }
-
-                    await FirestoreManager.createDonation(
-                        donationModel: donationsModel);
-                    pageController.animateToPage(1,
-                        curve: Curves.easeInOut,
-                        duration: Duration(milliseconds: 500));
+                    donationBloc
+                        .donateGoods(donationModel: donationsModel)
+                        .then((value) {
+                      if (value) Navigator.of(context).pop();
+                    });
                   }),
               SizedBox(
                 width: 20,
@@ -299,29 +323,6 @@ class _DonationViewState extends State<DonationView> {
           shape: StadiumBorder(),
         ),
       ),
-    );
-  }
-
-  Widget donationCategory({String title}) {
-    bool selected = false;
-    return Row(
-      children: [
-        Checkbox(
-          value: selected,
-          activeColor: Colors.white70,
-          checkColor: _checkColor,
-          onChanged: (bool value) {
-            setState(() {
-              selected = value;
-              // _selected = value;
-            });
-          },
-        ),
-        Text(
-          title,
-          style: subTitleStyle,
-        ),
-      ],
     );
   }
 
