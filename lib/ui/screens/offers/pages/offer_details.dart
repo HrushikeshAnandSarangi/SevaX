@@ -233,8 +233,8 @@ class OfferDetails extends StatelessWidget {
           context: context,
           builder: (BuildContext _context) {
             return AlertDialog(
-              title: Text('Cancel Offer'),
-              content: Text('Are you sure you want to cancel the offer'),
+              title: Text(S.of(context).cancel_offer),
+              content: Text(S.of(context).cancel_offer_confirmation),
               actions: [
                 FlatButton(
                   child: Text(S.of(context).close),
@@ -243,7 +243,7 @@ class OfferDetails extends StatelessWidget {
                   },
                 ),
                 FlatButton(
-                  child: Text("Cancel Offer"),
+                  child: Text(S.of(context).cancel_offer),
                   onPressed: () async {
                     Navigator.of(_context).pop();
                     await Firestore.instance

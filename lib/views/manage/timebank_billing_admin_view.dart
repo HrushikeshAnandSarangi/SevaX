@@ -414,90 +414,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         });
   }
 
-//
-//  Widget cardsDetailWidget() {
-//    return ListView.separated(
-//      itemCount: 2,
-//      shrinkWrap: true,
-//      physics: NeverScrollableScrollPhysics(),
-//      itemBuilder: (parentContext, index) {
-//        return getCardWidget();
-//      },
-//      separatorBuilder: (BuildContext parentContext, int index) =>
-//          const Divider(),
-//    );
-//  }
-//
-//  Widget getCardWidget() {
-//    return Card(
-//      child: Padding(
-//        padding: EdgeInsets.only(left: 10, bottom: 0, right: 5),
-//        child: Row(
-//          children: <Widget>[
-//            Icon(
-//              Icons.credit_card,
-//              size: 45,
-//            ),
-//            Padding(
-//              padding: EdgeInsets.only(left: 10),
-//            ),
-//            Column(
-//              crossAxisAlignment: CrossAxisAlignment.start,
-//              children: <Widget>[
-//                Text(
-//                  "FY 6773",
-//                  style: TextStyle(
-//                    fontWeight: FontWeight.bold,
-//                    fontFamily: 'Europa',
-//                    fontSize: 20,
-//                    color: Colors.black,
-//                  ),
-//                ),
-//                Text(
-//                  "Volkswagen Golf 3",
-//                  style: TextStyle(
-//                    fontFamily: 'Europa',
-//                    fontWeight: FontWeight.bold,
-//                    fontSize: 14,
-//                    color: Colors.grey,
-//                  ),
-//                ),
-//              ],
-//            ),
-//            Padding(
-//              padding: EdgeInsets.only(left: 20),
-//            ),
-//            Text(
-//              "....",
-//              textAlign: TextAlign.center,
-//              style: TextStyle(
-//                fontWeight: FontWeight.bold,
-//                fontSize: 30,
-//              ),
-//            ),
-//            Padding(
-//              padding: const EdgeInsets.only(left: 8, top: 15),
-//              child: Text(
-//                "7777",
-//                textAlign: TextAlign.center,
-//                style: TextStyle(
-//                    fontFamily: "Europa", color: Colors.black, fontSize: 18),
-//              ),
-//            ),
-//            Padding(
-//              padding: const EdgeInsets.only(left: 5, top: 15),
-//              child: Image.asset(
-//                "images/card_provider/master_card.png",
-//                width: 55,
-//                height: 40,
-//              ),
-//            )
-//          ],
-//        ),
-//      ),
-//    );
-//  }
-
   Widget get _billingDetailsTitle {
     return Container(
 //        margin: EdgeInsets.fromLTRB(10, 0, 20, 10),
@@ -1024,7 +940,8 @@ class _SpendingsCardViewState extends State<SpendingsCardView> {
                   color: Colors.grey,
                   size: 45,
                 ),
-                headingText("Seva Credits left"),
+                headingText(
+                    S.of(context).seva_credits + ' ' + S.of(context).left),
                 valueText(" \$125.00"),
                 Align(
                   alignment: Alignment.bottomLeft,

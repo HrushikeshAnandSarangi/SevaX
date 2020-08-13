@@ -262,8 +262,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       ],
                     ),
                   ),
-
-                  // Text(""),
                   Padding(
                     padding: const EdgeInsets.only(top: 0),
                     child: Center(

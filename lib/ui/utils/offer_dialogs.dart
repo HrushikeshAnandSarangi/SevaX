@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_participants_model.dart';
 
 void timeEndWarning(context, Duration duration) {
@@ -9,10 +10,11 @@ void timeEndWarning(context, Duration duration) {
       return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         content: Text(
-            "You can't perform action before the offer ends.\n\nTime left ${duration.inHours}hrs"),
+          "${S.of(context).cant_perfrom_action_offer}.\n\n${S.of(context).time_left} ${duration.inHours}hrs",
+        ),
         actions: <Widget>[
           FlatButton(
-            child: Text("Close"),
+            child: Text(S.of(context).close),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -29,13 +31,12 @@ void requestAgainDialog(context, DocumentReference ref) {
     builder: (BuildContext context) {
       return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        // title:  Text("Action Denied!"),
         content: Text(
-          "Are you sure you want to request for credits again?",
+          S.of(context).request_credits_again,
         ),
         actions: <Widget>[
           FlatButton(
-            child: Text("REQUEST"),
+            child: Text(S.of(context).request.toUpperCase()),
             onPressed: () {
               ref.updateData({
                 "status": ParticipantStatus.CREATOR_REQUESTED_CREDITS
@@ -47,7 +48,7 @@ void requestAgainDialog(context, DocumentReference ref) {
             },
           ),
           FlatButton(
-            child: Text("Close"),
+            child: Text(S.of(context).close),
             onPressed: () {
               Navigator.of(context).pop();
             },

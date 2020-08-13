@@ -477,7 +477,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(S.of(context).admin_cannot_create_message),
-          // content:  Text("Khud he ko message kyu kar rha hai?"),
           actions: <Widget>[
             FlatButton(
               child: Text(

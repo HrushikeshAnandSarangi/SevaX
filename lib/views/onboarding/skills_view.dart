@@ -330,10 +330,12 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("Add \"${suggestion}\"",
-                          style: TextStyle(fontSize: 16, color: Colors.blue)),
                       Text(
-                        'No data found',
+                        "${S.of(context).add.toUpperCase()} \"${suggestion}\"",
+                        style: TextStyle(fontSize: 16, color: Colors.blue),
+                      ),
+                      Text(
+                        S.of(context).no_data,
                         style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                     ],

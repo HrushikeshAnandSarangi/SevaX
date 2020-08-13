@@ -330,16 +330,7 @@ class TimebankEditFormState extends State<TimebankEditForm> {
                 ),
               ),
               Divider(),
-//              Padding(
-//                padding: EdgeInsets.only(top: 10.0),
-//                child: _showMembers(),
-//              ),
               Text(''),
-              // Padding(
-              //   padding: EdgeInsets.only(top: 8.0),
-              //   child:
-              //   Text('Add Admins'),
-              // ),
             ],
           )),
         ));

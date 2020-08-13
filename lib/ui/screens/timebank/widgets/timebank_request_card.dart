@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 
@@ -57,8 +58,11 @@ class TimebankRequestCard extends StatelessWidget {
                           style: Theme.of(context).textTheme.subhead,
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left:140),
-                          child: Icon(Icons.navigate_next, size: 20,),
+                          padding: const EdgeInsets.only(left: 140),
+                          child: Icon(
+                            Icons.navigate_next,
+                            size: 20,
+                          ),
                         ),
                       ],
                     ),
@@ -91,8 +95,13 @@ class TimebankRequestCard extends StatelessWidget {
                       child: Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: <Widget>[
-                          Text("Recurring",
-                            style: TextStyle(fontSize: 16.0,color:Theme.of(context).primaryColor,fontWeight:FontWeight.bold),),
+                          Text(
+                            S.of(context).recurring,
+                            style: TextStyle(
+                                fontSize: 16.0,
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
                     ),
@@ -112,7 +121,7 @@ class TimebankRequestCard extends StatelessWidget {
                                   padding: EdgeInsets.all(0),
                                   color: Colors.green,
                                   child: Text(
-                                    'Applied',
+                                    S.of(context).applied,
                                     style: TextStyle(
                                       color: Colors.white,
                                     ),

@@ -117,7 +117,7 @@ class ImagePickerDialog extends StatelessWidget {
                     });
                   },
                   child: roundedButton(
-                    'Image Url',
+                    S.of(context).image_url,
                     EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                     const Color(0xFF673AB7),
                     const Color(0xFFFFFFFF),
