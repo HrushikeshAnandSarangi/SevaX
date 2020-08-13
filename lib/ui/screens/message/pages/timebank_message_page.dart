@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/timebank_message_bloc.dart';
@@ -53,7 +54,9 @@ class _TimebankMessagePageState extends State<TimebankMessagePage> {
             return Center(child: CircularProgressIndicator());
           }
           if (snapshot.data.length == 0) {
-            return Center(child: Text("No message"));
+            return Center(
+              child: Text(S.of(context).no_message),
+            );
           }
           return ListView.builder(
             itemCount: snapshot.data.length,

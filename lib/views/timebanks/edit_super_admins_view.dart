@@ -13,7 +13,6 @@ import 'package:sevaexchange/views/timebanks/invite_members.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_join_request.dart';
-import 'package:sevaexchange/views/timebanks/timebank_join_requests_view.dart';
 import 'package:sevaexchange/views/timebanks/timebankedit.dart';
 
 import '../../flavor_config.dart';
@@ -948,26 +947,6 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
     }
   }
 
-  Widget _showJoinRequests(BuildContext context) {
-    if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
-      return FlatButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => _whichRoute('joinrequests'),
-            ),
-          );
-        },
-        child: _whichButton('joinrequests'),
-      );
-    } else {
-      return Padding(
-        padding: EdgeInsets.all(0.0),
-      );
-    }
-  }
-
   Widget _whichRoute(String section) {
     switch (section) {
       case 'timebanks':
@@ -986,21 +965,6 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
 //             owner:ownerModel,
 //        );
         }
-        break;
-      // case 'campaigns':
-      //   return CampaignCreate(
-      //     timebankModel: timebankModel,
-      //   );
-      //   break;
-      // case 'viewcampaigns':
-      //   return CampaignsView(
-      //     timebankModel: timebankModel,
-      //   );
-      //   break;
-      case 'joinrequests':
-        return TimebankJoinRequestView(
-          timebankModel: timebankModel,
-        );
         break;
       default:
         return null;

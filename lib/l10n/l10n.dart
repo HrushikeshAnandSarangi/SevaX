@@ -1753,7 +1753,7 @@ class S {
       );
 
   String get no_message => Intl.message(
-        'No Messages',
+        'No Message',
         name: 'no_message',
       );
 
@@ -3878,6 +3878,146 @@ class S {
   String get enter_reason_to_delete_error => Intl.message(
         'Please enter reason to delete',
         name: 'enter_reason_to_delete_error',
+      );
+
+  String get max_credits => Intl.message(
+        'Maximum credits*',
+        name: 'max_credits',
+      );
+
+  String get max_credit_hint => Intl.message(
+        'Maximum credits to be given per volunteer',
+        name: 'max_credit_hint',
+      );
+
+  String get dont_allow => Intl.message(
+        'Don\'t Allow',
+        name: 'dont_allow',
+      );
+
+  String get push_notification_message => Intl.message(
+        'The SevaX App would like to send you Push Notifications. Notifications may include alerts and reminders.',
+        name: 'push_notification_message',
+      );
+
+  String get only_pdf_files_allowed => Intl.message(
+        'Only Pdf files are allowed',
+        name: 'only_pdf_files_allowed',
+      );
+
+  String get delete_request => Intl.message(
+        'Delete Request',
+        name: 'delete_request',
+      );
+
+  String get delete_offer => Intl.message(
+        'Delete Offer',
+        name: 'delete_offer',
+      );
+
+  String get delete_request_confirmation => Intl.message(
+        'Are you sure you want to delete this request?',
+        name: 'delete_request_confirmation',
+      );
+
+  String get delete_offer_confirmation => Intl.message(
+        'Are you sure you want to delete this offer?',
+        name: 'delete_offer_confirmation',
+      );
+
+  String get extension_alert => Intl.message(
+        'Extension alert',
+        name: 'extension_alert',
+      );
+
+  String get only_csv_allowed => Intl.message(
+        'Only CSV files are allowed',
+        name: 'only_csv_allowed',
+      );
+
+  String get no_members => Intl.message(
+        'No Members',
+        name: 'no_members',
+      );
+
+  String get will_be_added_to_request => Intl.message(
+        '*** will be automatically added to the request.',
+        name: 'will_be_added_to_request',
+      );
+
+  String get cancel_offer => Intl.message(
+        'Cancel Offer',
+        name: 'cancel_offer',
+      );
+
+  String get cancel_offer_confirmation => Intl.message(
+        'Are you sure you want to cancel the offer?',
+        name: 'cancel_offer_confirmation',
+      );
+
+  String get recurring => Intl.message(
+        'Recurring',
+        name: 'recurring',
+      );
+
+  String get request_credits_again => Intl.message(
+        'Are you sure you want to request for credits again?',
+        name: 'request_credits_again',
+      );
+
+  String get cant_perfrom_action_offer => Intl.message(
+        'You can\'t perform action before the offer ends.',
+        name: 'cant_perfrom_action_offer',
+      );
+
+  String get time_left => Intl.message(
+        'Time left',
+        name: 'time_left',
+      );
+
+  String get days_available => Intl.message(
+        'Days Available',
+        name: 'days_available',
+      );
+
+  String get this_is_repeating_event => Intl.message(
+        'This is a repeating event',
+        name: 'this_is_repeating_event',
+      );
+
+  String get edit_this_event => Intl.message(
+        'Edit this event only',
+        name: 'edit_this_event',
+      );
+
+  String get edit_subsequent_event => Intl.message(
+        'Edit subsequent events',
+        name: 'edit_subsequent_event',
+      );
+
+  String get left => Intl.message(
+        'left',
+        name: 'left',
+      );
+
+  String get cant_exit_group => Intl.message(
+        'You cannot exit from this group',
+        name: 'cant_exit_group',
+      );
+
+  String get cant_exit_timebank => Intl.message(
+        'cannot exit from this timebank',
+        name: 'cant_exit_timebank',
+      );
+
+  String get add_image_url => Intl.message(
+        'Add Image Url',
+        name: 'add_image_url',
+      );
+
+  String get image_url => Intl.message(
+        'Image Url',
+        name: 'image_url',
       );
 }
 

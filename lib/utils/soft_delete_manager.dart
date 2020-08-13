@@ -61,12 +61,6 @@ Future<void> showAdvisoryBeforeDeletion({
     context,
     type: ProgressDialogType.Normal,
     isDismissible: false,
-
-    // customBody: Container(
-    //   child: Center(
-    //     child: Text("Please wait..."),
-    //   ),
-    // ),
   );
 
   progressDialog.show();

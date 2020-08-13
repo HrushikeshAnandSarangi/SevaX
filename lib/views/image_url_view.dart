@@ -16,7 +16,6 @@ class ImageUrlView extends StatefulWidget {
 
 class _ImageUrlViewState extends State<ImageUrlView> {
   TextEditingController imageUrlTextController = new TextEditingController();
-  final _textUpdates = StreamController<String>();
   List<String> imageUrls = [];
   String urlError = '';
   String imageUrl = '';
@@ -28,7 +27,6 @@ class _ImageUrlViewState extends State<ImageUrlView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -50,7 +48,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
             ),
           ),
         ),
-        title: Text('Add Image Url',
+        title: Text(S.of(context).add_image_url,
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -67,7 +65,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
               Navigator.of(context).pop();
             },
             child: Text(
-              'Continue',
+              S.of(context).continue_text,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,

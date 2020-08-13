@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
@@ -198,7 +196,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
               itemBuilder: (context, suggestedItem) {
                 if (ProfanityDetector()
                     .isProfaneString(suggestedItem.suggesttionTitle)) {
-                  return Text("we dont entertain these words!");
+                  return Text(S.of(context).profanity_text_alert);
                 }
 
                 switch (suggestedItem.suggestionMode) {

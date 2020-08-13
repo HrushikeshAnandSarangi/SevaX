@@ -129,6 +129,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     parentContext = context;
     return Scaffold(
       key: _scaffoldKey,
@@ -1612,27 +1613,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       } else {
         resetAndLoad();
       }
-//      showDialog(
-//        context: context,
-//        builder: (BuildContext context) {
-//          // return object of type Dialog
-//          return AlertDialog(
-//            content:  Text("User is successfully removed from the group"),
-//            actions: <Widget>[
-//              // usually buttons at the bottom of the dialog
-//               FlatButton(
-//                child:  Text("Close"),
-//                textColor: Colors.red,
-//                onPressed: () {
-//                  Navigator.of(context).pop();
-//                  // TODO this is temporory fix a full fetched refreshing scienario is needed
-//
-//                },
-//              ),
-//            ],
-//          );
-//        },
-//      );
     } else {
       if (responseData['softDeleteCheck'] == false &&
           responseData['groupOwnershipCheck'] == false) {
@@ -1644,12 +1624,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           builder: (BuildContext context) {
             // return object of type Dialog
             return AlertDialog(
-              title: Text("You cannot exit from this group"),
-              content: Text("You have \n"
-                  "${responseData['pendingProjects']['unfinishedProjects']} pending projects,\n"
-                  "${responseData['pendingRequests']['unfinishedRequests']} pending requests,\n"
-                  "${responseData['pendingOffers']['unfinishedOffers']} pending offers.\n "
-                  "Please clear the transactions and try again. "),
+              title: Text(S.of(context).cant_exit_group),
+              content: Text("${S.of(context).you_have} \n"
+                  "${responseData['pendingProjects']['unfinishedProjects']} ${S.of(context).pending_projects},\n"
+                  "${responseData['pendingRequests']['unfinishedRequests']} ${S.of(context).pending_requests},\n"
+                  "${responseData['pendingOffers']['unfinishedOffers']} ${S.of(context).pending_offers}.\n "
+                  "${S.of(context).clear_transaction} "),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 FlatButton(
@@ -1727,16 +1707,16 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
             // return object of type Dialog
             return AlertDialog(
               title: Text(
-                  " ${isFromExit ? "You" : "User"} cannot exit from this timebank"),
+                  " ${isFromExit ? "You" : "User"} ${S.of(context).cant_exit_timebank}"),
               content: Text("${isFromExit ? "You" : "User"} have \n"
-                  "${responseData['pendingProjects']['unfinishedProjects']} pending projects,\n"
-                  "${responseData['pendingRequests']['unfinishedRequests']} pending requests,\n"
-                  "${responseData['pendingOffers']['unfinishedOffers']} pending offers.\n "
-                  "Please clear the transactions and try again. "),
+                  "${responseData['pendingProjects']['unfinishedProjects']} ${S.of(context).pending_projects},\n"
+                  "${responseData['pendingRequests']['unfinishedRequests']} ${S.of(context).pending_requests},\n"
+                  "${responseData['pendingOffers']['unfinishedOffers']} ${S.of(context).pending_offers}.\n "
+                  "${S.of(context).clear_transaction} "),
               actions: <Widget>[
                 // usually buttons at the bottom of the dialog
                 FlatButton(
-                  child: Text("Close"),
+                  child: Text(S.of(context).close),
                   textColor: Colors.red,
                   onPressed: () {
                     Navigator.of(context).pop();

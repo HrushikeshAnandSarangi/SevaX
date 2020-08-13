@@ -18,77 +18,78 @@ class RequestTabHolder extends StatelessWidget {
       S.of(context).accepted
     ];
     return StreamBuilder(
-        stream: timeBankBloc.timebankController,
-        builder: (context, AsyncSnapshot<TimebankController> snapshot) {
-          if (snapshot.data != null && snapshot.data.selectedrequest != null) {
-            var requestModel = snapshot.data.selectedrequest;
-            TimebankModel timebank = snapshot.data.selectedtimebank;
-            return DefaultTabController(
-              length: 3,
-              child: Scaffold(
-                body: SafeArea(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        height: 50,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            IconButton(
-                              icon: Icon(Icons.arrow_back_ios),
-                              color: Colors.grey,
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                            Expanded(
-                              child: TabBar(
-                                tabs: List.generate(
-                                  3,
-                                  (index) => Tab(
-                                    child: Text(
-                                      titles[index],
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
+      stream: timeBankBloc.timebankController,
+      builder: (context, AsyncSnapshot<TimebankController> snapshot) {
+        if (snapshot.data != null && snapshot.data.selectedrequest != null) {
+          var requestModel = snapshot.data.selectedrequest;
+          TimebankModel timebank = snapshot.data.selectedtimebank;
+          return DefaultTabController(
+            length: 3,
+            child: Scaffold(
+              body: SafeArea(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: 50,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(Icons.arrow_back_ios),
+                            color: Colors.grey,
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                          Expanded(
+                            child: TabBar(
+                              tabs: List.generate(
+                                3,
+                                (index) => Tab(
+                                  child: Text(
+                                    titles[index],
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          )
+                        ],
                       ),
-                      Expanded(
-                        child: TabBarView(
-                          children: <Widget>[
-                            Container(
-                              child: RequestDetailsAboutPage(
-                                requestItem: requestModel,
-                                timebankModel: timebank,
-                                isAdmin: true,
-                                applied: false,
-                              ),
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        children: <Widget>[
+                          Container(
+                            child: RequestDetailsAboutPage(
+                              requestItem: requestModel,
+                              timebankModel: timebank,
+                              isAdmin: true,
+                              applied: false,
                             ),
-                            Container(
-                              child: RequestUsersTabsViewHolder.of(
-                                requestItem: requestModel,
-                              ),
+                          ),
+                          Container(
+                            child: RequestUsersTabsViewHolder.of(
+                              requestItem: requestModel,
                             ),
-                            Container(
-                              child: RequestAcceptedTabsViewHolder.of(
-                                requestItem: requestModel,
-                                timebankModel: timebank,
-                              ),
+                          ),
+                          Container(
+                            child: RequestAcceptedTabsViewHolder.of(
+                              requestItem: requestModel,
+                              timebankModel: timebank,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            );
-          } else {
-            return Text("");
-          }
-        });
+            ),
+          );
+        } else {
+          return Text("");
+        }
+      },
+    );
   }
 }

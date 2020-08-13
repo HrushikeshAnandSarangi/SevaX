@@ -106,14 +106,18 @@ class BookmarkedOffers extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       height: 30,
-                      child: Text("Something went wrong!"),
+                      child: Text(
+                        S.of(context).general_stream_error,
+                      ),
                     ),
                   ],
                 ),
               );
             }
             UserModel userModel = UserModel.fromMap(
-                snapshot.data.documents[0].data, 'bookmarked_offers');
+              snapshot.data.documents[0].data,
+              'bookmarked_offers',
+            );
             return AlertDialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
@@ -149,7 +153,7 @@ class BookmarkedOffers extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                        "About ${userModel.fullname}",
+                        S.of(context).about + " " + userModel.fullname,
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
@@ -158,10 +162,13 @@ class BookmarkedOffers extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                  getBio(userModel),
+                  getBio(context, userModel),
                   Center(
                     child: Text(
-                        "${userModel.fullname} will be automatically added to the request.",
+                        S
+                            .of(context)
+                            .will_be_added_to_request
+                            .replaceFirst('***', userModel.fullname),
                         style: TextStyle(
                           fontStyle: FontStyle.italic,
                         ),
@@ -177,7 +184,7 @@ class BookmarkedOffers extends StatelessWidget {
                         child: Container(
                           width: double.infinity,
                           child: Text(
-                            'Create Request',
+                            S.of(context).create_request,
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.white),
                           ),
@@ -288,7 +295,7 @@ class BookmarkedOffers extends StatelessWidget {
     );
   }
 
-  Widget getBio(UserModel userModel) {
+  Widget getBio(BuildContext context, UserModel userModel) {
     if (userModel.bio != null) {
       if (userModel.bio.length < 100) {
         return Container(
@@ -317,7 +324,7 @@ class BookmarkedOffers extends StatelessWidget {
     }
     return Padding(
       padding: EdgeInsets.all(8.0),
-      child: Text("Bio not yet updated"),
+      child: Text(S.of(context).bio_not_updated),
     );
   }
 

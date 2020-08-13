@@ -154,16 +154,6 @@ class ChatAppBar extends PreferredSize {
                   )
                 ]
               : [],
-          // ...(isGroupMessage)
-          //     ? [
-          //         PopupMenuItem(
-          //           child: Text("Exit"
-          //               // AppLocalizations.of(context).translate('chat', 'block'),
-          //               ),
-          //           value: MessageMenu.EXIT_CHAT,
-          //         )
-          //       ]
-          //     : [],
           ...(isGroupMessage &&
                   groupDetails.admins
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID))
