@@ -1,26 +1,61 @@
+import 'dart:collection';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/models/donation_model.dart';
+import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/requests/donations/donation_bloc.dart';
 
 class DonationView extends StatefulWidget {
+  final RequestModel requestModel;
+  final int initialScreen;
+
+  DonationView({this.requestModel, this.initialScreen});
+
   @override
   _DonationViewState createState() => _DonationViewState();
 }
 
 class _DonationViewState extends State<DonationView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  final DonationBloc donationBloc = DonationBloc();
   List<String> donationsCategories = [
     'Clothing',
     'Books',
     'Hygiene supplies',
     'Cleaning supplies'
   ];
+  int amountEntered = 0;
   Map selectedList = {};
   bool _checked = false;
   bool _selected = false;
   Color _checkColor = Colors.black;
-  PageController pageController = PageController();
+  PageController pageController;
+  DonationModel donationsModel;
+  @override
+  void initState() {
+    // TODO: implement initState
+    pageController = PageController(initialPage: widget.initialScreen);
+    donationBloc.errorMessage.listen((event) {
+      if (event.isNotEmpty && event != null) {
+        _scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(event),
+            action: SnackBarAction(
+              label:
+                  AppLocalizations.of(context).translate('shared', 'dismiss'),
+              onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+            ),
+          ),
+        );
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,6 +68,7 @@ class _DonationViewState extends State<DonationView> {
         centerTitle: true,
       ),
       body: PageView(
+        physics: NeverScrollableScrollPhysics(),
         controller: pageController,
         scrollDirection: Axis.horizontal,
         pageSnapping: true,
@@ -41,8 +77,8 @@ class _DonationViewState extends State<DonationView> {
         },
         children: [
           donatedItems(),
-          donationDetails(),
           amountWidget(),
+          donationDetails(),
         ],
       ),
     );
@@ -55,14 +91,20 @@ class _DonationViewState extends State<DonationView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           titleText(title: 'Amount Donated?'),
-          TextFormField(
-            maxLines: 1,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              hintStyle: subTitleStyle,
-              hintText: 'Add amount that you have donated.',
-            ),
-          ),
+          StreamBuilder<String>(
+              stream: donationBloc.amountPledged,
+              builder: (context, snapshot) {
+                return TextField(
+                  onChanged: donationBloc.onAmountChange,
+                  maxLines: 1,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    errorText: snapshot.error,
+                    hintStyle: subTitleStyle,
+                    hintText: 'Add amount that you have donated.',
+                  ),
+                );
+              }),
           SizedBox(
             height: 20,
           ),
@@ -72,6 +114,11 @@ class _DonationViewState extends State<DonationView> {
               actionButton(
                 buttonTitle: 'Done',
                 onPressed: () {
+                  donationBloc
+                      .donateAmount(donationModel: donationsModel)
+                      .then((value) {
+                    if (value) Navigator.pop(context);
+                  });
                   pageController.animateToPage(0,
                       curve: Curves.easeInOut,
                       duration: Duration(milliseconds: 500));
@@ -129,7 +176,9 @@ class _DonationViewState extends State<DonationView> {
               ),
               actionButton(
                 buttonTitle: 'No later',
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
               ),
             ],
           ),
@@ -155,36 +204,36 @@ class _DonationViewState extends State<DonationView> {
               hintText: 'Describe your goods or select from checkbox below',
             ),
           ),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: donationsCategories.length,
-            itemBuilder: (context, index) {
-              return Row(
-                children: [
-                  Checkbox(
-                    value: selectedList.containsKey(donationsCategories[index]),
-                    checkColor: _checkColor,
-                    onChanged: (bool value) {
-                      print(value);
-                      setState(() {
-                        if (value) {
-                          selectedList[donationsCategories[index]] = 1;
-                        } else {
-                          selectedList.remove(donationsCategories[index]);
-                        }
-                        print('${selectedList.keys.toString()}');
-                      });
-                    },
-                    activeColor: Colors.grey[200],
-                  ),
-                  Text(
-                    donationsCategories[index],
-                    style: subTitleStyle,
-                  ),
-                ],
-              );
-            },
-          ),
+          StreamBuilder<HashSet>(
+              stream: donationBloc.selectedList,
+              builder: (context, snapshot) {
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: donationsCategories.length,
+                  itemBuilder: (context, index) {
+                    return Row(
+                      children: [
+                        Checkbox(
+                          value: snapshot.data
+                                  ?.contains(donationsCategories[index]) ??
+                              false,
+                          checkColor: _checkColor,
+                          onChanged: (bool value) {
+                            print(value);
+                            donationBloc.addAddRemove(
+                                selectedItem: donationsCategories[index]);
+                          },
+                          activeColor: Colors.grey[200],
+                        ),
+                        Text(
+                          donationsCategories[index],
+                          style: subTitleStyle,
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }),
           SizedBox(
             height: 10,
           ),
@@ -211,6 +260,8 @@ class _DonationViewState extends State<DonationView> {
                       return;
                     }
 
+                    await FirestoreManager.createDonation(
+                        donationModel: donationsModel);
                     pageController.animateToPage(1,
                         curve: Curves.easeInOut,
                         duration: Duration(milliseconds: 500));
@@ -220,23 +271,8 @@ class _DonationViewState extends State<DonationView> {
               ),
               actionButton(
                   buttonTitle: 'Do it later',
-                  onPressed: () async {
-                    var connResult = await Connectivity().checkConnectivity();
-                    if (connResult == ConnectivityResult.none) {
-                      _scaffoldKey.currentState.showSnackBar(
-                        SnackBar(
-                          content: Text(AppLocalizations.of(context)
-                              .translate('shared', 'check_internet')),
-                          action: SnackBarAction(
-                            label: AppLocalizations.of(context)
-                                .translate('shared', 'dismiss'),
-                            onPressed: () =>
-                                _scaffoldKey.currentState.hideCurrentSnackBar(),
-                          ),
-                        ),
-                      );
-                      return;
-                    }
+                  onPressed: () {
+                    Navigator.of(context).pop();
                   }),
             ],
           ),
@@ -287,20 +323,6 @@ class _DonationViewState extends State<DonationView> {
         ),
       ],
     );
-//    return ListTile(
-//      leading: Checkbox(
-//        value: _checked,
-//        activeColor: _activeColor,
-//        checkColor: _checkColor,
-//        onChanged: (bool value) {
-//          setState(() {
-//            _checked = value;
-//            _selected = value;
-//          });
-//        },
-//      ),
-//      title: Text(title),
-//    );
   }
 
   Widget titleText({String title}) {
@@ -320,21 +342,11 @@ class _DonationViewState extends State<DonationView> {
     fontSize: 13,
     color: Colors.grey,
   );
-}
 
-class DonatedItems extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text('Tell us what you have donated'),
-        TextFormField(
-          maxLines: 2,
-          decoration: InputDecoration(
-            hintText: 'Describe your goods or select from checkbox below',
-          ),
-        ),
-      ],
-    );
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    pageController.dispose();
   }
 }
