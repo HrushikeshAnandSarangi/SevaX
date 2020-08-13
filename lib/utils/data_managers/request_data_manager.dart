@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -30,6 +31,13 @@ Future<void> createRequest({@required RequestModel requestModel}) async {
       .collection('requests')
       .document(requestModel.id)
       .setData(requestModel.toMap());
+}
+
+Future<void> createDonation({@required DonationModel donationModel}) async {
+  return await Firestore.instance
+      .collection('donations')
+      .document(donationModel.id)
+      .setData(donationModel.toMap());
 }
 
 Future<int> createRecurringEvents({@required RequestModel requestModel}) async {
@@ -319,7 +327,11 @@ Future<void> updateRecurrenceRequestsFrontEnd(
         temp.requestStart = eventStartDate.millisecondsSinceEpoch;
         temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
         temp.postTimestamp = DateTime.now().millisecondsSinceEpoch;
-        temp.id = temp.email +"*" + temp.postTimestamp.toString() + "*" +temp.requestStart.toString();
+        temp.id = temp.email +
+            "*" +
+            temp.postTimestamp.toString() +
+            "*" +
+            temp.requestStart.toString();
         temp.occurenceCount = occurenceCount;
         occurenceCount++;
         temp.softDelete = false;
