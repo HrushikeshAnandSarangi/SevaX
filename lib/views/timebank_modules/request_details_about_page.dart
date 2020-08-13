@@ -14,6 +14,9 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../flavor_config.dart';
 // import 'package:timezone/browser.dart';
 
 class RequestDetailsAboutPage extends StatefulWidget {
@@ -415,18 +418,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   child: Row(
                     children: <Widget>[
                       SizedBox(width: 1),
-//                      Container(
-//                        width: 30,
-//                        height: 30,
-//                        decoration: BoxDecoration(
-//                          color: Color.fromRGBO(44, 64, 140, 1),
-//                          shape: BoxShape.circle,
-//                        ),
-//                        child: Icon(
-//                          Icons.check,
-//                          color: Colors.white,
-//                        ),
-//                      ),
                       Spacer(),
                       Text(
                         isApplied
@@ -445,19 +436,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     ],
                   ),
                   onPressed: () {
-                    applyAction();
-                    // if (widget.timebankModel.protected) {
-                    //   if (widget.timebankModel.admins.contains(
-                    //       SevaCore.of(context).loggedInUser.sevaUserID)) {
-                    //     applyAction();
-                    //   } else {
-                    //     //show dialog
-                    //     _showProtectedTimebankMessage();
-                    //     print("not authorized");
-                    //   }
-                    // } else {
-                    //   applyAction();
-                    // }
+                    if(SevaCore.of(context).loggedInUser.calendarId==null) {
+                      _settingModalBottomSheet(context);
+                    }else{
+                      applyAction();
+                    }
                   },
                 ),
               ),
@@ -496,23 +479,24 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     );
   }
 
-  void applyAction() {
+  void applyAction() async {
     if (isApplied) {
       print("Withraw request");
       _withdrawRequest();
     } else {
       print("Accept request");
-      _acceptRequest();
+      await _acceptRequest();
       Navigator.pop(context);
     }
   }
 
-  void _acceptRequest() {
+  void _acceptRequest() async {
+
     Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
     acceptorList.add(SevaCore.of(context).loggedInUser.email);
 
     widget.requestItem.acceptors = acceptorList.toList();
-    acceptRequest(
+    await acceptRequest(
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
@@ -520,7 +504,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     );
   }
 
-  void _withdrawRequest() {
+  void _withdrawRequest() async {
     var assosciatedEmail = SevaCore.of(context).loggedInUser.email;
     // if (widget.requestItem.approvedUsers
     //     .contains(SevaCore.of(context).loggedInUser.email)) {
@@ -537,7 +521,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       widget.requestItem.approvedUsers = approvedUsers.toList();
     }
 
-    acceptRequest(
+    await acceptRequest(
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       isWithdrawal: true,
@@ -545,6 +529,98 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       directToMember: !widget.timebankModel.protected,
     );
     Navigator.pop(context);
+  }
+
+  void _settingModalBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: new Wrap(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+                  child: Text(
+                    "Would you like to link your calendar with Sevax ?",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(6,6,6,6),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/googlecal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            applyAction();
+                            Navigator.of(bc).pop();
+                          }
+                      ),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/outlookcal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            applyAction();
+                            Navigator.of(bc).pop();
+                          }
+                      ),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/ical.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            applyAction();
+                            Navigator.of(bc).pop();
+                          }
+                      )
+                    ],
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Spacer(),
+                    FlatButton(
+                        child: Text("Do it later", style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
+                        onPressed: () async {
+                          applyAction();
+                          Navigator.of(bc).pop();
+                        }
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
   }
 
   void _showAlreadyApprovedMessage() {

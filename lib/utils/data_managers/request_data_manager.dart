@@ -814,6 +814,7 @@ Future<void> acceptRequest({
       isRead: false,
       senderUserId: senderUserId,
       communityId: communityId,
+      isTimebankNotification: true
     );
 
     print("Creating notificationss model $requestModel");
