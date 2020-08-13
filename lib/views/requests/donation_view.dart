@@ -9,6 +9,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DonationView extends StatefulWidget {
   final RequestModel requestModel;
@@ -24,6 +25,7 @@ class _DonationViewState extends State<DonationView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final GlobalKey<FormState> _formKey = GlobalKey();
   final DonationBloc donationBloc = DonationBloc();
+
   List<String> donationsCategories = [
     'Clothing',
     'Books',
@@ -171,8 +173,14 @@ class _DonationViewState extends State<DonationView> {
             height: 20,
           ),
           GestureDetector(
-            onTap: () {
-              print('clicked');
+            onTap: () async {
+              if (await canLaunch(
+                  widget.requestModel.cashModel.donationInstructionLink)) {
+                await launch(
+                    widget.requestModel.cashModel.donationInstructionLink);
+              } else {
+                throw 'couldnt launch';
+              }
             },
             child: Text(
               'www.sevaexchange.com',

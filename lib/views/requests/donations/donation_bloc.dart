@@ -28,7 +28,7 @@ class DonationBloc {
     if (_selectedList.value.isEmpty) {
       _errorMessage.add('Select a goods category');
     } else {
-      donationModel.cashDetails.pledgedAmount = int.parse(_amountPledged.value);
+      // donationModel.cashDetails.pledgedAmount = int.parse(_amountPledged.value);
       try {
         await FirestoreManager.createDonation(donationModel: donationModel);
         return true;
