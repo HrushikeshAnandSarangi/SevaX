@@ -234,6 +234,9 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                         timebankModel: primaryTimebank,
                       ),
                       // TimebankFeeds(),
+//                      DonationView(
+//                        initialScreen: 0,
+//                      ),
                       RequestsModule.of(
                         timebankId: primaryTimebank.id,
                         timebankModel: primaryTimebank,

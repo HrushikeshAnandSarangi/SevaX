@@ -169,7 +169,6 @@ class IndividualOfferDataModel extends DataModel {
   }
 }
 
-
 class OfferModel extends DataModel {
   bool acceptedOffer = false;
   String associatedRequest;
@@ -191,23 +190,22 @@ class OfferModel extends DataModel {
   GroupOfferDataModel groupOfferDataModel;
   IndividualOfferDataModel individualOfferDataModel;
 
-  OfferModel({
-    this.id,
-    this.email,
-    this.fullName,
-    this.sevaUserId,
-    this.associatedRequest,
-    this.color,
-    this.timestamp,
-    this.timebankId,
-    this.location,
-    this.offerType,
-    this.groupOfferDataModel,
-    this.individualOfferDataModel,
-    this.selectedAdrress,
-    this.communityId,
-    this.softDelete
-  }) {
+  OfferModel(
+      {this.id,
+      this.email,
+      this.fullName,
+      this.sevaUserId,
+      this.associatedRequest,
+      this.color,
+      this.timestamp,
+      this.timebankId,
+      this.location,
+      this.offerType,
+      this.groupOfferDataModel,
+      this.individualOfferDataModel,
+      this.selectedAdrress,
+      this.communityId,
+      this.softDelete}) {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
 
@@ -220,7 +218,7 @@ class OfferModel extends DataModel {
     if (map.containsKey('offerType')) {
       this.offerType = offerTypeMapper[map['offerType']];
     }
-    if(map.containsKey('softDelete')){
+    if (map.containsKey('softDelete')) {
       this.softDelete = map['softDelete'];
     }
 
@@ -277,7 +275,6 @@ class OfferModel extends DataModel {
           GroupOfferDataModel.fromMap(map['groupOfferDataModel']);
     else
       this.groupOfferDataModel = null;
-
   }
 
   OfferModel.fromMap(Map<String, dynamic> map) {
@@ -356,7 +353,7 @@ class OfferModel extends DataModel {
     if (this.offerType != null) {
       map['offerType'] = describeOfferType(this.offerType);
     }
-    if(this.softDelete!=null){
+    if (this.softDelete != null) {
       map['softDelete'] = this.softDelete;
     }
 
@@ -420,7 +417,7 @@ class OfferModel extends DataModel {
     if (this.email != null && this.email.isNotEmpty) {
       map['email'] = this.email;
     }
-    if(this.softDelete!=null){
+    if (this.softDelete != null) {
       map['softDelete'] = this.softDelete;
     }
     if (this.fullName != null && this.fullName.isNotEmpty) {
