@@ -1,13 +1,10 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:http/http.dart' show Client, Response;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 
 class RequestApiProvider {
-  Client client = Client();
-
   Future<List<UserModel>> getUserFromRequest(String requestID) async {
     List<UserModel> usersDataList = [];
     print("uder ${requestID}");
@@ -145,7 +142,6 @@ class RequestApiProvider {
 }
 
 class CommunityApiProvider {
-  Client client = Client();
 //  Future<CategoryListModel> fetchCategoryList() async {
 //    Response response;
 //    if(_apiKey != 'api-key') {

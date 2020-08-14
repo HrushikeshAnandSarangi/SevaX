@@ -57,13 +57,21 @@ class DonationModel {
             json["donationStatus"] == null ? null : json["donationStatus"],
         cashDetails: json['cashDetails'] == null
             ? null
-            : CashDetails.fromMap(json['cashDetails']),
+            : CashDetails.fromMap(
+                Map<String, dynamic>.from(
+                  json['cashDetails'],
+                ),
+              ),
         goodsDetails: json['goodsDetails'] == null
             ? null
             : GoodsDetails.fromMap(json['goodsDetails']),
         donorDetails: json['donorDetails'] == null
             ? null
-            : DonorDetails.fromMap(json['donorDetails']),
+            : DonorDetails.fromMap(
+                Map<String, dynamic>.from(
+                  json['donorDetails'],
+                ),
+              ),
       );
 
   Map<String, dynamic> toMap() => {
