@@ -23,9 +23,16 @@ enum Collections {
   users
 }
 
-class Database {
-  static const users = 'users';
-  static const transactions = 'transactions';
+class DBCollection {
+  static const String cards = 'cards';
+  static const String chats = 'chatsnew';
+  static const String communities = 'communities';
+  static const String csvFiles = 'csv_files';
+  static const String invitations = 'invitations';
+  static const String transactions = 'transactions';
+  static const String donations = 'donations';
+  static const String timebank = 'timebanknew';
+  static const String users = 'users';
 }
 
 class DBCardsHelper {

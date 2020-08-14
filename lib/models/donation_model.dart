@@ -59,7 +59,11 @@ class DonationModel {
         timestamp: json["timestamp"] == null ? null : json["timestamp"],
         cashDetails: json['cashDetails'] == null
             ? null
-            : CashDetails.fromMap(json['cashDetails']),
+            : CashDetails.fromMap(
+                Map<String, dynamic>.from(
+                  json['cashDetails'],
+                ),
+              ),
         goodsDetails: json['goodsDetails'] == null
             ? null
             : GoodsDetails.fromMap(json['goodsDetails']),
