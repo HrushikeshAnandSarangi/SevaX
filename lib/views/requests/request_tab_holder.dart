@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
-import 'package:sevaexchange/views/requests/request_accepted_content_holder.dart';
+import 'package:sevaexchange/views/requests/donation_accepted_page.dart';
 import 'package:sevaexchange/views/requests/request_users_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 
 class RequestTabHolder extends StatelessWidget {
-  bool isAdmin;
+  final bool isAdmin;
   RequestTabHolder({this.isAdmin});
-  List<String> titles;
   @override
   Widget build(BuildContext context) {
-    titles = [
+    List<String> titles = [
       S.of(context).about,
       S.of(context).search,
       S.of(context).accepted
@@ -73,11 +72,14 @@ class RequestTabHolder extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            child: RequestAcceptedTabsViewHolder.of(
-                              requestItem: requestModel,
-                              timebankModel: timebank,
-                            ),
+                            child: DonationAcceptedPage(),
                           ),
+                          // Container(
+                          //   child: RequestAcceptedTabsViewHolder.of(
+                          //     requestItem: requestModel,
+                          //     timebankModel: timebank,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
