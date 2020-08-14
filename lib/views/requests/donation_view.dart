@@ -102,6 +102,10 @@ class _DonationViewState extends State<DonationView> {
         widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST
             ? widget.requestModel.sevaUserId
             : widget.requestModel.timebankId;
+    donationsModel.donorDetails.name = sevaUser.fullname;
+    donationsModel.donorDetails.photoUrl = sevaUser.photoURL;
+    donationsModel.donorDetails.email = sevaUser.email;
+    donationsModel.donorDetails.bio = sevaUser.bio;
   }
 
   Widget amountWidget() {
