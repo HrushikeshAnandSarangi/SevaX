@@ -104,6 +104,17 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       default:
         return UserMode.NOT_YET_SIGNED_UP;
     }
+
+    //cut and paste this
+//    Navigator.push(
+//      context,
+//      MaterialPageRoute(
+//        builder: (context) => DonationView(
+//          timabankName: widget.timebankModel.name,
+//          requestModel: widget.requestItem,
+//        ),
+//      ),
+//    );
   }
 
   var futures = <Future>[];

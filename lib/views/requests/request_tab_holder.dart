@@ -3,7 +3,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/requests/donation_accepted_page.dart';
-import 'package:sevaexchange/views/requests/request_users_content_holder.dart';
+import 'package:sevaexchange/views/requests/request_accepted_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 
 class RequestTabHolder extends StatelessWidget {
@@ -66,20 +66,20 @@ class RequestTabHolder extends StatelessWidget {
                               applied: false,
                             ),
                           ),
-                          Container(
-                            child: RequestUsersTabsViewHolder.of(
-                              requestItem: requestModel,
-                            ),
-                          ),
+                          // Container(
+                          //   child: RequestUsersTabsViewHolder.of(
+                          //     requestItem: requestModel,
+                          //   ),
+                          // ),
                           Container(
                             child: DonationAcceptedPage(),
                           ),
-                          // Container(
-                          //   child: RequestAcceptedTabsViewHolder.of(
-                          //     requestItem: requestModel,
-                          //     timebankModel: timebank,
-                          //   ),
-                          // ),
+                          Container(
+                            child: RequestAcceptedTabsViewHolder.of(
+                              requestItem: requestModel,
+                              timebankModel: timebank,
+                            ),
+                          ),
                         ],
                       ),
                     ),

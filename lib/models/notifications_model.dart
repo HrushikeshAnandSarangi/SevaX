@@ -132,6 +132,7 @@ enum NotificationType {
   TypeChangeOwnership,
   TypeMemberAdded,
   GroupJoinInvite,
+  TypeApproveDonation,
   TYPE_DEBIT_FROM_OFFER,
   TYPE_CREDIT_FROM_OFFER_ON_HOLD,
   TYPE_CREDIT_FROM_OFFER_APPROVED,
@@ -164,8 +165,8 @@ NotificationType stringToNotificationType(String str) {
 }
 
 Map<String, NotificationType> typeMapper = {
-  "RequestScheduleReminder":NotificationType.RequestScheduleReminder,
-  "RecurringRequestUpdated":NotificationType.RecurringRequestUpdated,
+  "RequestScheduleReminder": NotificationType.RequestScheduleReminder,
+  "RecurringRequestUpdated": NotificationType.RecurringRequestUpdated,
   "RequestAccept": NotificationType.RequestAccept,
   "RequestApprove": NotificationType.RequestApprove,
   "RequestInvite": NotificationType.RequestInvite,
@@ -183,6 +184,7 @@ Map<String, NotificationType> typeMapper = {
   "TypeMemberAdded": NotificationType.TypeMemberAdded,
   "TypeChangeOwnership": NotificationType.TypeChangeOwnership,
   "GroupJoinInvite": NotificationType.GroupJoinInvite,
+  "TypeApproveDonation": NotificationType.TypeApproveDonation,
   "TYPE_DEBIT_FROM_OFFER": NotificationType.TYPE_DEBIT_FROM_OFFER,
   "TYPE_CREDIT_FROM_OFFER_ON_HOLD":
       NotificationType.TYPE_CREDIT_FROM_OFFER_ON_HOLD,

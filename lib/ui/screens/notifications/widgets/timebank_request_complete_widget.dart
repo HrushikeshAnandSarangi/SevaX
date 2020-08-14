@@ -255,16 +255,16 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
 
     if (results != null && results.containsKey('selection')) {
       onActivityResult(
-        sevaCore: sevaCore,
-        requestModel: model,
-        userId: userId,
-        notificationId: notificationId,
-        context: context,
-        reviewer: model.email,
-        reviewed: user.email,
-        requestId: model.id,
-        results: results,
-      );
+          sevaCore: sevaCore,
+          requestModel: model,
+          userId: userId,
+          notificationId: notificationId,
+          context: context,
+          reviewer: model.email,
+          reviewed: user.email,
+          requestId: model.id,
+          results: results,
+          reciever: user);
     } else {}
   }
 
@@ -277,7 +277,8 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
       Map results,
       String reviewer,
       String reviewed,
-      String requestId}) {
+      UserModel reciever,
+      String requestId}) async {
     // adds review to firestore
     Firestore.instance.collection("reviews").add({
       "reviewer": reviewer,
@@ -288,7 +289,62 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           ? results['comment']
           : S.of(context).no_comments)
     });
+    await sendMessageToMember(
+        context: context,
+        loggedInUser: sevaCore.loggedInUser,
+        requestModel: requestModel,
+        receiver: reciever,
+        message: results['comment'] ?? S.of(context).no_comments);
     approveTransaction(requestModel, userId, notificationId, sevaCore);
+  }
+
+  Future<void> sendMessageToMember({
+    UserModel loggedInUser,
+    UserModel receiver,
+    RequestModel requestModel,
+    String message,
+    BuildContext context,
+  }) async {
+    ParticipantInfo sender = ParticipantInfo(
+      id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+          ? loggedInUser.sevaUserID
+          : requestModel.timebankId,
+      photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+          ? loggedInUser.photoURL
+          : timebankModel.photoUrl,
+      name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+          ? loggedInUser.fullname
+          : timebankModel.name,
+      type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+          ? ChatType.TYPE_PERSONAL
+          : timebankModel.parentTimebankId ==
+                  '73d0de2c-198b-4788-be64-a804700a88a4'
+              ? ChatType.TYPE_TIMEBANK
+              : ChatType.TYPE_GROUP,
+    );
+
+    ParticipantInfo reciever = ParticipantInfo(
+      id: receiver.sevaUserID,
+      photoUrl: receiver.photoURL,
+      name: receiver.fullname,
+      type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+          ? ChatType.TYPE_PERSONAL
+          : timebankModel.parentTimebankId ==
+                  '73d0de2c-198b-4788-be64-a804700a88a4'
+              ? ChatType.TYPE_TIMEBANK
+              : ChatType.TYPE_GROUP,
+    );
+    await sendBackgroundMessage(
+        messageContent: message,
+        reciever: reciever,
+        context: context,
+        isTimebankMessage:
+            requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                ? true
+                : false,
+        timebankId: requestModel.timebankId,
+        communityId: loggedInUser.currentCommunity,
+        sender: sender);
   }
 
   void approveTransaction(RequestModel model, String userId,

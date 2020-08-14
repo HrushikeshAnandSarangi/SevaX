@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -26,19 +24,18 @@ class _DonationViewState extends State<DonationView> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final DonationBloc donationBloc = DonationBloc();
 
-  List<String> donationsCategories = [
-    'Clothing',
-    'Books',
-    'Hygiene supplies',
-    'Cleaning supplies'
-  ];
+  List<String> donationsCategories = [];
   int amountEntered = 0;
   Map selectedList = {};
   bool _checked = false;
   bool _selected = false;
   Color _checkColor = Colors.black;
   PageController pageController;
-  DonationModel donationsModel;
+  DonationModel donationsModel = DonationModel(
+      donorDetails: DonorDetails(),
+      cashDetails: CashDetails(),
+      goodsDetails: GoodsDetails());
+  UserModel sevaUser = UserModel();
   @override
   void initState() {
     // TODO: implement initState
@@ -92,7 +89,7 @@ class _DonationViewState extends State<DonationView> {
   }
 
   void setUpModel() {
-    UserModel sevaUser = SevaCore.of(context).loggedInUser;
+    sevaUser = SevaCore.of(context).loggedInUser;
 
     donationsModel.timebankId = widget.requestModel.timebankId;
     donationsModel.communityId = sevaUser.currentCommunity;
@@ -108,6 +105,11 @@ class _DonationViewState extends State<DonationView> {
         widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST
             ? widget.requestModel.sevaUserId
             : widget.requestModel.timebankId;
+    donationsModel.donorDetails.name = sevaUser.fullname;
+    donationsModel.donorDetails.photoUrl = sevaUser.photoURL;
+    donationsModel.donorDetails.email = sevaUser.email;
+    donationsModel.donorDetails.bio = sevaUser.bio;
+    donationsModel.donationStatus = false;
   }
 
   Widget amountWidget() {
@@ -122,8 +124,11 @@ class _DonationViewState extends State<DonationView> {
               builder: (context, snapshot) {
                 return TextField(
                   onChanged: (value) {
-                    donationBloc.onAmountChange;
-                    amountEntered = int.parse(value);
+                    donationBloc.onAmountChange(value);
+                    setState(() {
+                      amountEntered = int.parse(value);
+                    });
+                    print(amountEntered);
                   },
                   maxLines: 1,
                   keyboardType: TextInputType.number,
@@ -166,7 +171,14 @@ class _DonationViewState extends State<DonationView> {
             height: 10,
           ),
           Text(
-            '${'Great, you have choose to donate for' + widget.timabankName + ' a minimum donations is' + amountEntered.toString() + 'USD. Please click on the below link to fo the donation.'}',
+            '${'Great, you have choose to donate for ' + widget.timabankName + ' a minimum donations is ' + amountEntered.toString() + 'USD. Please click on the below link to fo the donation.'}',
+            style: subTitleStyle,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            'Please use the link down below to donate and once done take a pledge on how much you have donated.',
             style: subTitleStyle,
           ),
           SizedBox(
@@ -194,10 +206,13 @@ class _DonationViewState extends State<DonationView> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               actionButton(
-                buttonTitle: 'Donated',
+                buttonTitle: 'Pledge',
                 onPressed: () {
                   donationBloc
-                      .donateAmount(donationModel: donationsModel)
+                      .donateAmount(
+                          donationModel: donationsModel,
+                          requestModel: widget.requestModel,
+                          donor: sevaUser)
                       .then((value) {
                     if (value) Navigator.pop(context);
                   });
@@ -207,7 +222,7 @@ class _DonationViewState extends State<DonationView> {
                 width: 20,
               ),
               actionButton(
-                buttonTitle: 'No later',
+                buttonTitle: 'Do it later',
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -233,32 +248,43 @@ class _DonationViewState extends State<DonationView> {
             maxLines: 2,
             decoration: InputDecoration(
               hintStyle: subTitleStyle,
-              hintText: 'Describe your goods or select from checkbox below',
+              hintText: 'Describe your goods and select from checkbox below',
             ),
           ),
-          StreamBuilder<HashSet>(
+          StreamBuilder<Map<dynamic, dynamic>>(
               stream: donationBloc.selectedList,
               builder: (context, snapshot) {
+                List<String> keys = List.from(widget
+                    .requestModel.goodsDonationDetails.requiredGoods.keys);
                 return ListView.builder(
                   shrinkWrap: true,
-                  itemCount: donationsCategories.length,
+                  itemCount: widget
+                      .requestModel.goodsDonationDetails.requiredGoods.length,
                   itemBuilder: (context, index) {
                     return Row(
                       children: [
                         Checkbox(
-                          value: snapshot.data
-                                  ?.contains(donationsCategories[index]) ??
+                          value: snapshot.data?.containsKey(widget
+                                  .requestModel
+                                  .goodsDonationDetails
+                                  .requiredGoods[keys[index]]) ??
                               false,
                           checkColor: _checkColor,
                           onChanged: (bool value) {
                             print(value);
                             donationBloc.addAddRemove(
-                                selectedItem: donationsCategories[index]);
+                              selectedValue: widget
+                                  .requestModel
+                                  .goodsDonationDetails
+                                  .requiredGoods[keys[index]],
+                              selectedKey: keys[index],
+                            );
                           },
                           activeColor: Colors.grey[200],
                         ),
                         Text(
-                          donationsCategories[index],
+                          widget.requestModel.goodsDonationDetails
+                              .requiredGoods[keys[index]],
                           style: subTitleStyle,
                         ),
                       ],
@@ -290,7 +316,10 @@ class _DonationViewState extends State<DonationView> {
                       return;
                     }
                     donationBloc
-                        .donateGoods(donationModel: donationsModel)
+                        .donateGoods(
+                            donationModel: donationsModel,
+                            requestModel: widget.requestModel,
+                            donor: sevaUser)
                         .then((value) {
                       if (value) Navigator.of(context).pop();
                     });
@@ -354,5 +383,7 @@ class _DonationViewState extends State<DonationView> {
     // TODO: implement dispose
     super.dispose();
     pageController.dispose();
+    donationBloc.dispose();
+    amountEntered = 0;
   }
 }
