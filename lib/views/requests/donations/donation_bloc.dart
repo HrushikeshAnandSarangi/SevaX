@@ -35,7 +35,8 @@ class DonationBloc {
     if (_selectedList.value.isEmpty) {
       _errorMessage.add('Select a goods category');
     } else {
-      // donationModel.cashDetails.pledgedAmount = int.parse(_amountPledged.value);
+      donationModel.goodsDetails.donatedGoods = _selectedList.value;
+      requestModel.goodsDonationDetails.donors.add(donor.sevaUserID);
       try {
         await FirestoreManager.createDonation(donationModel: donationModel);
         await sendNotification(
@@ -56,11 +57,17 @@ class DonationBloc {
       UserModel donor}) async {
     if (_amountPledged.value.isEmpty || int.parse(_amountPledged.value) == 0) {
       _amountPledged.addError('Enter valid amount');
+    } else if (int.parse(_amountPledged.value) <
+        requestModel.cashModel.minAmount) {
+      _amountPledged.addError(
+          'Minimum amount is ${requestModel.cashModel.minAmount.toString()}');
     } else {
       donationModel.cashDetails.pledgedAmount = int.parse(_amountPledged.value);
+
+      requestModel.cashModel.donors.add(donor.sevaUserID);
       try {
         await FirestoreManager.createDonation(donationModel: donationModel);
-        await FirestoreManager.createDonation(donationModel: donationModel);
+        await FirestoreManager.updateRequest(requestModel: requestModel);
 
         return true;
       } on Exception catch (e) {

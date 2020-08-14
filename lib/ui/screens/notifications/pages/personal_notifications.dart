@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/donation_approve_model.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -34,6 +35,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/views/requests/donations/approve_donation_dialog.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/group_join_reject_dialog.dart';
@@ -470,6 +472,40 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   subTitle:
                       '${requestInvitationModel.timebankName.toLowerCase()} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestTitle}, ${S.of(context).notifications_tap_to_view}',
                   title: S.of(context).notifications_join_request,
+                );
+                break;
+
+              case NotificationType.TypeApproveDonation:
+                print("notification data ${notification.data}");
+                DonationApproveModel donationApproveModel =
+                    DonationApproveModel.fromMap(notification.data);
+
+                return NotificationCard(
+                  entityName: donationApproveModel.requestTitle.toLowerCase(),
+                  isDissmissible: true,
+                  onDismissed: () {
+                    NotificationsRepository.readUserNotification(
+                      notification.id,
+                      user.email,
+                    );
+                  },
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return ApproveDonationDialog(
+                          donationApproveModel: donationApproveModel,
+                          timeBankId: notification.timebankId,
+                          notificationId: notification.id,
+                          userModel: user,
+                        );
+                      },
+                    );
+                  },
+                  photoUrl: donationApproveModel.donorPhotoUrl,
+                  subTitle:
+                      '${donationApproveModel.donorName.toLowerCase() + ' donated ' + donationApproveModel.donationType}, ${S.of(context).notifications_tap_to_view}',
+                  title: 'Donation approval',
                 );
                 break;
               case NotificationType.GroupJoinInvite:

@@ -14,6 +14,7 @@ class DonationModel {
       this.timestamp,
       this.cashDetails,
       this.goodsDetails,
+      this.donationStatus,
       this.donorDetails});
 
   String communityId;
@@ -26,6 +27,7 @@ class DonationModel {
   String requestId;
   String timebankId;
   int timestamp;
+  bool donationStatus;
   CashDetails cashDetails;
   GoodsDetails goodsDetails;
   DonorDetails donorDetails;
@@ -51,6 +53,8 @@ class DonationModel {
         requestId: json["requestId"] == null ? null : json["requestId"],
         timebankId: json["timebankId"] == null ? null : json["timebankId"],
         timestamp: json["timestamp"] == null ? null : json["timestamp"],
+        donationStatus:
+            json["donationStatus"] == null ? null : json["donationStatus"],
         cashDetails: json['cashDetails'] == null
             ? null
             : CashDetails.fromMap(json['cashDetails']),
@@ -79,6 +83,7 @@ class DonationModel {
         "id": id == null ? null : id,
         "requestId": requestId == null ? null : requestId,
         "timebankId": timebankId == null ? null : timebankId,
+        "donationStatus": donationStatus == null ? null : donationStatus,
         "timestamp": DateTime.now().millisecondsSinceEpoch,
         "cashDetails": cashDetails == null ? null : cashDetails.toMap(),
         "goodsDetails": goodsDetails == null ? null : goodsDetails.toMap(),

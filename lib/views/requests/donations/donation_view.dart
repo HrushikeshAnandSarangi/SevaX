@@ -106,6 +106,7 @@ class _DonationViewState extends State<DonationView> {
     donationsModel.donorDetails.photoUrl = sevaUser.photoURL;
     donationsModel.donorDetails.email = sevaUser.email;
     donationsModel.donorDetails.bio = sevaUser.bio;
+    donationsModel.donationStatus = false;
   }
 
   Widget amountWidget() {

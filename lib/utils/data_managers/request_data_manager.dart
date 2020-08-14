@@ -33,6 +33,13 @@ Future<void> createRequest({@required RequestModel requestModel}) async {
       .setData(requestModel.toMap());
 }
 
+Future<void> updateRequest({@required RequestModel requestModel}) async {
+  return await Firestore.instance
+      .collection('requests')
+      .document(requestModel.id)
+      .updateData(requestModel.toMap());
+}
+
 Future<void> createDonation({@required DonationModel donationModel}) async {
   return await Firestore.instance
       .collection('donations')
