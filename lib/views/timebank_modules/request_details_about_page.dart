@@ -541,7 +541,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
                   child: Text(
-                    "Would you like to link your calendar with Sevax ?",
+                    "Would you like to link your calendar with Sevax before proceeding ?",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),

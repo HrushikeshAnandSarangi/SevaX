@@ -33,6 +33,9 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/APi/notifications_api.dart';
 import 'package:sevaexchange/widgets/APi/request_api.dart';
 import 'package:sevaexchange/widgets/APi/user_api.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../../../flavor_config.dart';
 
 class PersonalNotifications extends StatefulWidget {
   @override
@@ -400,7 +403,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 print("notification data ${notification.data}");
                 RequestInvitationModel requestInvitationModel =
                     RequestInvitationModel.fromMap(notification.data);
-
                 return NotificationCard(
                   entityName: requestInvitationModel.timebankName.toLowerCase(),
                   isDissmissible: true,
@@ -411,17 +413,22 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     );
                   },
                   onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return JoinRejectDialogView(
-                          requestInvitationModel: requestInvitationModel,
-                          timeBankId: notification.timebankId,
-                          notificationId: notification.id,
-                          userModel: user,
-                        );
-                      },
-                    );
+                    if(SevaCore.of(context).loggedInUser.calendarId == null) {
+                     _settingModalBottomSheet(context, requestInvitationModel, notification.timebankId, notification.id, user);
+                    }else{
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return JoinRejectDialogView(
+                            requestInvitationModel: requestInvitationModel,
+                            timeBankId: notification.timebankId,
+                            notificationId: notification.id,
+                            userModel: user,
+                          );
+                        },
+                      );
+                    }
+
                   },
                   photoUrl: requestInvitationModel.timebankImage,
                   subTitle:
@@ -614,6 +621,138 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         );
       },
     );
+  }
+
+  void _settingModalBottomSheet(BuildContext context, RequestInvitationModel requestInvitationModel, String timebankId, String id, UserModel user) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: new Wrap(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+                  child: Text(
+                    "Would you like to link your calendar with Sevax before proceeding ?",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(6,6,6,6),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/googlecal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return JoinRejectDialogView(
+                                  requestInvitationModel: requestInvitationModel,
+                                  timeBankId: timebankId,
+                                  notificationId: id,
+                                  userModel: user,
+                                );
+                              },
+                            );
+                          }
+                      ),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/outlookcal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return JoinRejectDialogView(
+                                  requestInvitationModel: requestInvitationModel,
+                                  timeBankId: timebankId,
+                                  notificationId: id,
+                                  userModel: user,
+                                );
+                              },
+                            );
+                          }
+                      ),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/ical.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return JoinRejectDialogView(
+                                  requestInvitationModel: requestInvitationModel,
+                                  timeBankId: timebankId,
+                                  notificationId: id,
+                                  userModel: user,
+                                );
+                              },
+                            );
+                          }
+                      )
+                    ],
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Spacer(),
+                    FlatButton(
+                        child: Text("Do it later", style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
+                        onPressed: () async {
+                          Navigator.of(bc).pop();
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return JoinRejectDialogView(
+                                requestInvitationModel: requestInvitationModel,
+                                timeBankId: timebankId,
+                                notificationId: id,
+                                userModel: user,
+                              );
+                            },
+                          );
+                        }
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
   }
 
   void _handleFeedBackNotificationAction(

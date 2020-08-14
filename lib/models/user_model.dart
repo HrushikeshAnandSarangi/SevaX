@@ -57,9 +57,11 @@ class UserModel extends DataModel {
 
   String calendarId;
   int calendarAccId;
+  String calendarAccessToken;
 
   UserModel(
       {
+        this.calendarAccessToken,
         this.calendarId,
         this.calendarAccId,
         this.bio,
@@ -101,6 +103,9 @@ class UserModel extends DataModel {
     }
     if(map.containsKey('calendarAccId')){
       this.calendarAccId = map['calendarAccId'];
+    }
+    if (map.containsKey('calendarAccessToken')) {
+      this.calendarAccessToken = map['calendarAccessToken'];
     }
     if (map.containsKey('tokens')) {
       this.tokens = map['tokens'];
@@ -289,6 +294,9 @@ class UserModel extends DataModel {
 
     if (this.calendarId != null && this.calendarId.isNotEmpty) {
       object['calendarId'] = this.calendarId;
+    }
+    if (this.calendarAccessToken != null) {
+      object['calendarAccessToken'] = this.calendarAccessToken;
     }
     if (this.calendarAccId != null) {
       object['calendarAccId'] = this.calendarAccId;
