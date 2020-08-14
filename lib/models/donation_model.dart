@@ -1,27 +1,20 @@
-import 'dart:convert';
-
 import 'package:sevaexchange/models/request_model.dart';
 
-DonationModel donationModelFromMap(String str) =>
-    DonationModel.fromMap(json.decode(str));
-
-String donationModelToMap(DonationModel data) => json.encode(data.toMap());
-
 class DonationModel {
-  DonationModel({
-    this.communityId,
-    this.donorSevaUserId,
-    this.donatedTo,
-    this.donatedToTimebank,
-    this.donationInBetween,
-    this.donationType,
-    this.id,
-    this.requestId,
-    this.timebankId,
-    this.timestamp,
-    this.cashDetails,
-    this.goodsDetails,
-  });
+  DonationModel(
+      {this.communityId,
+      this.donorSevaUserId,
+      this.donatedTo,
+      this.donatedToTimebank,
+      this.donationInBetween,
+      this.donationType,
+      this.id,
+      this.requestId,
+      this.timebankId,
+      this.timestamp,
+      this.cashDetails,
+      this.goodsDetails,
+      this.donorDetails});
 
   String communityId;
   String donorSevaUserId;
@@ -35,6 +28,7 @@ class DonationModel {
   int timestamp;
   CashDetails cashDetails;
   GoodsDetails goodsDetails;
+  DonorDetails donorDetails;
   factory DonationModel.fromMap(Map<String, dynamic> json) => DonationModel(
         communityId: json["communityId"] == null ? null : json["communityId"],
         donorSevaUserId:
@@ -63,6 +57,9 @@ class DonationModel {
         goodsDetails: json['goodsDetails'] == null
             ? null
             : GoodsDetails.fromMap(json['goodsDetails']),
+        donorDetails: json['donorDetails'] == null
+            ? null
+            : DonorDetails.fromMap(json['donorDetails']),
       );
 
   Map<String, dynamic> toMap() => {
@@ -85,13 +82,9 @@ class DonationModel {
         "timestamp": DateTime.now().millisecondsSinceEpoch,
         "cashDetails": cashDetails == null ? null : cashDetails.toMap(),
         "goodsDetails": goodsDetails == null ? null : goodsDetails.toMap(),
+        "donorDetails": donorDetails == null ? null : donorDetails.toMap(),
       };
 }
-
-CashDetails cashDetailsFromMap(String str) =>
-    CashDetails.fromMap(json.decode(str));
-
-String cashDetailsToMap(CashDetails data) => json.encode(data.toMap());
 
 class CashDetails {
   CashDetails({
@@ -124,5 +117,33 @@ class GoodsDetails {
 
   Map<String, dynamic> toMap() => {
         "comments": comments == null ? null : comments,
+      };
+}
+
+class DonorDetails {
+  DonorDetails({
+    this.name,
+    this.photoUrl,
+    this.email,
+    this.bio,
+  });
+
+  String name;
+  String photoUrl;
+  String email;
+  String bio;
+
+  factory DonorDetails.fromMap(Map<String, dynamic> json) => DonorDetails(
+        name: json["name"],
+        photoUrl: json["photoUrl"],
+        email: json["email"],
+        bio: json["bio"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "name": name,
+        "photoUrl": photoUrl,
+        "email": email,
+        "bio": bio,
       };
 }
