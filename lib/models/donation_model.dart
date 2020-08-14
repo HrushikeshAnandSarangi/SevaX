@@ -8,18 +8,20 @@ DonationModel donationModelFromMap(String str) =>
 String donationModelToMap(DonationModel data) => json.encode(data.toMap());
 
 class DonationModel {
-  DonationModel(
-      {this.communityId,
-      this.donorSevaUserId,
-      this.donatedTo,
-      this.donatedToTimebank,
-      this.donationInBetween,
-      this.donationType,
-      this.id,
-      this.requestId,
-      this.timebankId,
-      this.timestamp,
-      this.cashDetails});
+  DonationModel({
+    this.communityId,
+    this.donorSevaUserId,
+    this.donatedTo,
+    this.donatedToTimebank,
+    this.donationInBetween,
+    this.donationType,
+    this.id,
+    this.requestId,
+    this.timebankId,
+    this.timestamp,
+    this.cashDetails,
+    this.goodsDetails,
+  });
 
   String communityId;
   String donorSevaUserId;
@@ -32,7 +34,7 @@ class DonationModel {
   String timebankId;
   int timestamp;
   CashDetails cashDetails;
-
+  GoodsDetails goodsDetails;
   factory DonationModel.fromMap(Map<String, dynamic> json) => DonationModel(
         communityId: json["communityId"] == null ? null : json["communityId"],
         donorSevaUserId:
@@ -58,6 +60,9 @@ class DonationModel {
         cashDetails: json['cashDetails'] == null
             ? null
             : CashDetails.fromMap(json['cashDetails']),
+        goodsDetails: json['goodsDetails'] == null
+            ? null
+            : GoodsDetails.fromMap(json['goodsDetails']),
       );
 
   Map<String, dynamic> toMap() => {
@@ -79,6 +84,7 @@ class DonationModel {
         "timebankId": timebankId == null ? null : timebankId,
         "timestamp": DateTime.now().millisecondsSinceEpoch,
         "cashDetails": cashDetails == null ? null : cashDetails.toMap(),
+        "goodsDetails": goodsDetails == null ? null : goodsDetails.toMap(),
       };
 }
 
@@ -101,5 +107,22 @@ class CashDetails {
 
   Map<String, dynamic> toMap() => {
         "pledgedAmount": pledgedAmount == null ? null : pledgedAmount,
+      };
+}
+
+class GoodsDetails {
+  GoodsDetails({this.comments, this.donatedGoods});
+
+  String comments;
+  Map<dynamic, dynamic> donatedGoods;
+
+  factory GoodsDetails.fromMap(Map<String, dynamic> json) => GoodsDetails(
+      comments: json["comments"] == null ? null : json["comments"],
+      donatedGoods: json.containsKey('donatedGoods')
+          ? Map<dynamic, dynamic>.from(json["donatedGoods"])
+          : null);
+
+  Map<String, dynamic> toMap() => {
+        "comments": comments == null ? null : comments,
       };
 }

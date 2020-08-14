@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 
-class ChatsApi {
+class ChatsRepository {
   static CollectionReference collectionReference =
       Firestore.instance.collection("chatsnew");
 

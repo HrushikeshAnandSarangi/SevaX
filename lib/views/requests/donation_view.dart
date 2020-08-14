@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -26,12 +24,7 @@ class _DonationViewState extends State<DonationView> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final DonationBloc donationBloc = DonationBloc();
 
-  List<String> donationsCategories = [
-    'Clothing',
-    'Books',
-    'Hygiene supplies',
-    'Cleaning supplies'
-  ];
+  List<String> donationsCategories = [];
   int amountEntered = 0;
   Map selectedList = {};
   bool _checked = false;
@@ -247,29 +240,40 @@ class _DonationViewState extends State<DonationView> {
               hintText: 'Describe your goods and select from checkbox below',
             ),
           ),
-          StreamBuilder<HashSet>(
+          StreamBuilder<Map<dynamic, dynamic>>(
               stream: donationBloc.selectedList,
               builder: (context, snapshot) {
+                List<String> keys = List.from(widget
+                    .requestModel.goodsDonationDetails.requiredGoods.keys);
                 return ListView.builder(
                   shrinkWrap: true,
-                  itemCount: donationsCategories.length,
+                  itemCount: widget
+                      .requestModel.goodsDonationDetails.requiredGoods.length,
                   itemBuilder: (context, index) {
                     return Row(
                       children: [
                         Checkbox(
-                          value: snapshot.data
-                                  ?.contains(donationsCategories[index]) ??
+                          value: snapshot.data?.containsKey(widget
+                                  .requestModel
+                                  .goodsDonationDetails
+                                  .requiredGoods[keys[index]]) ??
                               false,
                           checkColor: _checkColor,
                           onChanged: (bool value) {
                             print(value);
                             donationBloc.addAddRemove(
-                                selectedItem: donationsCategories[index]);
+                              selectedValue: widget
+                                  .requestModel
+                                  .goodsDonationDetails
+                                  .requiredGoods[keys[index]],
+                              selectedKey: keys[index],
+                            );
                           },
                           activeColor: Colors.grey[200],
                         ),
                         Text(
-                          donationsCategories[index],
+                          widget.requestModel.goodsDonationDetails
+                              .requiredGoods[keys[index]],
                           style: subTitleStyle,
                         ),
                       ],

@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/widgets/APi/chats_api.dart';
-import 'package:sevaexchange/widgets/APi/storage_api.dart';
+import 'package:sevaexchange/repositories/chats_repository.dart';
+import 'package:sevaexchange/repositories/storage_repository.dart';
 
 class EditGroupInfoBloc {
   final _chatModel = BehaviorSubject<ChatModel>();
@@ -26,7 +26,7 @@ class EditGroupInfoBloc {
       _participantInfo.sink.add;
 
   Future<ChatModel> getChatModel(String chatId) async {
-    return await ChatsApi.getChatModel(chatId);
+    return await ChatsRepository.getChatModel(chatId);
   }
 
   void removeMember(String userId) {
@@ -43,12 +43,12 @@ class EditGroupInfoBloc {
     } else {
       String imageUrl;
       if (_file.value != null) {
-        imageUrl =
-            await StorageApi.uploadFile("multiUserMessagingLogo", _file.value);
+        imageUrl = await StorageRepository.uploadFile(
+            "multiUserMessagingLogo", _file.value);
       }
       print("image url ${imageUrl}");
 
-      ChatsApi.editGroup(
+      ChatsRepository.editGroup(
           chatId, _groupName.value, imageUrl, _participantInfo.value);
     }
   }

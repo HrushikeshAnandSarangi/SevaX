@@ -9,7 +9,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notifcation_values
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/widgets/APi/user_api.dart';
+import 'package:sevaexchange/repositories/user_repository.dart';
 
 class RequestAcceptedWidget extends StatelessWidget {
   final String userId;
@@ -22,7 +22,7 @@ class RequestAcceptedWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<UserModel>(
-      future: UserApi.fetchUserById(userId),
+      future: UserRepository.fetchUserById(userId),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Container();

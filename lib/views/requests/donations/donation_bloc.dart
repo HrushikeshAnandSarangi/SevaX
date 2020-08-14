@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/donation_approve_model.dart';
@@ -13,20 +11,21 @@ class DonationBloc {
   final _goodsDescription = BehaviorSubject<String>();
   final _amountPledged = BehaviorSubject<String>();
   final _errorMessage = BehaviorSubject<String>();
-  final _selectedList = BehaviorSubject<HashSet>.seeded(HashSet());
+  final _selectedList =
+      BehaviorSubject<Map<dynamic, dynamic>>.seeded(Map<dynamic, dynamic>());
 
   Stream<String> get goodsDescription => _goodsDescription.stream;
   Stream<String> get amountPledged => _amountPledged.stream;
   Stream<String> get errorMessage => _errorMessage.stream;
-  Stream<HashSet> get selectedList => _selectedList.stream;
+  Stream<Map<dynamic, dynamic>> get selectedList => _selectedList.stream;
 
   Function(String) get onDescriptionChange => _goodsDescription.sink.add;
   Function(String) get onAmountChange => _amountPledged.sink.add;
 
-  void addAddRemove({String selectedItem}) {
-    _selectedList.value.contains(selectedItem)
-        ? _selectedList.value.remove(selectedItem)
-        : _selectedList.value.add(selectedItem);
+  void addAddRemove({String selectedKey, String selectedValue}) {
+    _selectedList.value.containsKey(selectedKey)
+        ? _selectedList.value.remove(selectedKey)
+        : _selectedList.value[selectedKey] = selectedValue;
   }
 
   Future<bool> donateGoods(
@@ -61,6 +60,8 @@ class DonationBloc {
       donationModel.cashDetails.pledgedAmount = int.parse(_amountPledged.value);
       try {
         await FirestoreManager.createDonation(donationModel: donationModel);
+        await FirestoreManager.createDonation(donationModel: donationModel);
+
         return true;
       } on Exception catch (e) {
         _errorMessage.add("something went wrong try again later");
@@ -85,7 +86,7 @@ class DonationBloc {
         requestTitle: requestModel.title,
         donationType: donationType,
         donationDetails:
-            '${donor.fullname + ' donated' + donationType == 'Cash' ? donationModel.cashDetails.pledgedAmount.toString() : donationType == 'Goods' ? 'goods' : 'time'}');
+            '${donationType == 'Cash' ? donationModel.cashDetails.pledgedAmount.toString() : donationType == 'Goods' ? 'goods' : 'time'}');
     NotificationsModel notificationsModel = NotificationsModel(
       timebankId: donationModel.timebankId,
       communityId: donationModel.communityId,
@@ -102,6 +103,7 @@ class DonationBloc {
           : requestModel.timebankId,
       data: donationApproveModel.toMap(),
     );
+
     switch (requestModel.requestMode) {
       case RequestMode.TIMEBANK_REQUEST:
         await Firestore.instance

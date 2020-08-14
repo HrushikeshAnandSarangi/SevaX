@@ -7,15 +7,17 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/user_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_button.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notifcation_values.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
-import 'package:sevaexchange/widgets/APi/user_api.dart';
 
 class RequestCompleteWidget extends StatelessWidget {
   final RequestModel model;
@@ -29,7 +31,7 @@ class RequestCompleteWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<UserModel>(
-      future: UserApi.fetchUserById(userId),
+      future: UserRepository.fetchUserById(userId),
       builder: (_context, snapshot) {
         if (snapshot.hasError) return Container();
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -300,7 +302,7 @@ class RequestCompleteWidget extends StatelessWidget {
       Map results,
       String reviewer,
       String reviewed,
-      String requestId}) {
+      String requestId}) async {
     Firestore.instance.collection("reviews").add({
       "reviewer": reviewer,
       "reviewed": reviewed,
@@ -310,7 +312,68 @@ class RequestCompleteWidget extends StatelessWidget {
           ? results['comment']
           : S.of(context).no_comments)
     });
+    await sendMessageToMember(
+        requestModel: requestModel,
+        message: (results['didComment']
+            ? results['comment']
+            : S.of(context).no_comments),
+        loggedInUser: SevaCore.of(context).loggedInUser,
+        context: context);
+
     approveTransaction(requestModel, userId, notificationId, sevaCore);
+  }
+
+  Future<void> sendMessageToMember(
+      {UserModel loggedInUser,
+      RequestModel requestModel,
+      String message,
+      BuildContext context}) async {
+    TimebankModel timebankModel =
+        await getTimeBankForId(timebankId: requestModel.timebankId);
+    UserModel userModel = await FirestoreManager.getUserForId(
+        sevaUserId: requestModel.sevaUserId);
+    if (userModel != null && timebankModel != null) {
+      ParticipantInfo receiver = ParticipantInfo(
+        id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.sevaUserID
+            : requestModel.timebankId,
+        photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.photoURL
+            : timebankModel.photoUrl,
+        name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.fullname
+            : timebankModel.name,
+        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? ChatType.TYPE_PERSONAL
+            : timebankModel.parentTimebankId ==
+                    '73d0de2c-198b-4788-be64-a804700a88a4'
+                ? ChatType.TYPE_TIMEBANK
+                : ChatType.TYPE_GROUP,
+      );
+
+      ParticipantInfo sender = ParticipantInfo(
+        id: loggedInUser.sevaUserID,
+        photoUrl: loggedInUser.photoURL,
+        name: loggedInUser.fullname,
+        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? ChatType.TYPE_PERSONAL
+            : timebankModel.parentTimebankId ==
+                    '73d0de2c-198b-4788-be64-a804700a88a4'
+                ? ChatType.TYPE_TIMEBANK
+                : ChatType.TYPE_GROUP,
+      );
+      await sendBackgroundMessage(
+          messageContent: message,
+          reciever: receiver,
+          context: context,
+          isTimebankMessage:
+              requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                  ? true
+                  : false,
+          timebankId: requestModel.timebankId,
+          communityId: loggedInUser.currentCommunity,
+          sender: sender);
+    }
   }
 
   void approveTransaction(

@@ -4,7 +4,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notifcation_values.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/widgets/APi/notifications_api.dart';
+import 'package:sevaexchange/repositories/notifications_repository.dart';
 
 class RequestApproveWidget extends StatelessWidget {
   final RequestModel model;
@@ -21,7 +21,7 @@ class RequestApproveWidget extends StatelessWidget {
       key: Key(Utils.getUuid()),
       onDismissed: (direction) {
         String userEmail = SevaCore.of(context).loggedInUser.email;
-        NotificationsApi.readUserNotification(notificationId, userEmail);
+        NotificationsRepository.readUserNotification(notificationId, userEmail);
       },
       child: Container(
         margin: notificationPadding,
