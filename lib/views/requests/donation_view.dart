@@ -39,6 +39,7 @@ class _DonationViewState extends State<DonationView> {
   Color _checkColor = Colors.black;
   PageController pageController;
   DonationModel donationsModel;
+  UserModel sevaUser;
   @override
   void initState() {
     // TODO: implement initState
@@ -92,7 +93,7 @@ class _DonationViewState extends State<DonationView> {
   }
 
   void setUpModel() {
-    UserModel sevaUser = SevaCore.of(context).loggedInUser;
+    sevaUser = SevaCore.of(context).loggedInUser;
 
     donationsModel.timebankId = widget.requestModel.timebankId;
     donationsModel.communityId = sevaUser.currentCommunity;
@@ -170,6 +171,13 @@ class _DonationViewState extends State<DonationView> {
             style: subTitleStyle,
           ),
           SizedBox(
+            height: 10,
+          ),
+          Text(
+            'Please use the link down below to donate and once done take a pledge on how much you have donated.',
+            style: subTitleStyle,
+          ),
+          SizedBox(
             height: 20,
           ),
           GestureDetector(
@@ -194,10 +202,13 @@ class _DonationViewState extends State<DonationView> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               actionButton(
-                buttonTitle: 'Donated',
+                buttonTitle: 'Pledge',
                 onPressed: () {
                   donationBloc
-                      .donateAmount(donationModel: donationsModel)
+                      .donateAmount(
+                          donationModel: donationsModel,
+                          requestModel: widget.requestModel,
+                          donor: sevaUser)
                       .then((value) {
                     if (value) Navigator.pop(context);
                   });
@@ -207,7 +218,7 @@ class _DonationViewState extends State<DonationView> {
                 width: 20,
               ),
               actionButton(
-                buttonTitle: 'No later',
+                buttonTitle: 'Do it later',
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -233,7 +244,7 @@ class _DonationViewState extends State<DonationView> {
             maxLines: 2,
             decoration: InputDecoration(
               hintStyle: subTitleStyle,
-              hintText: 'Describe your goods or select from checkbox below',
+              hintText: 'Describe your goods and select from checkbox below',
             ),
           ),
           StreamBuilder<HashSet>(
@@ -290,7 +301,10 @@ class _DonationViewState extends State<DonationView> {
                       return;
                     }
                     donationBloc
-                        .donateGoods(donationModel: donationsModel)
+                        .donateGoods(
+                            donationModel: donationsModel,
+                            requestModel: widget.requestModel,
+                            donor: sevaUser)
                         .then((value) {
                       if (value) Navigator.of(context).pop();
                     });
@@ -354,5 +368,6 @@ class _DonationViewState extends State<DonationView> {
     // TODO: implement dispose
     super.dispose();
     pageController.dispose();
+    donationBloc.dispose();
   }
 }
