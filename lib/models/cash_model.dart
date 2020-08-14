@@ -19,7 +19,7 @@ class CashModel {
   int minAmount;
   int targetAmount;
 
-  factory CashModel.fromMap(Map<String, dynamic> json) => CashModel(
+  factory CashModel.fromMap(Map<dynamic, dynamic> json) => CashModel(
         amountRaised:
             json["amountRaised"] == null ? null : json["amountRaised"],
         donationInstructionLink: json["donationInstructionLink"] == null
@@ -38,7 +38,7 @@ class CashModel {
         "donationInstructionLink":
             donationInstructionLink == null ? null : donationInstructionLink,
         "donors":
-            donors == null ? null : List<dynamic>.from(donors.map((x) => x)),
+            donors == null ? [] : List<dynamic>.from(donors.map((x) => x)),
         "minAmount": minAmount == null ? null : minAmount,
         "targetAmount": targetAmount == null ? null : targetAmount,
       };

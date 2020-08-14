@@ -107,10 +107,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 shrinkWrap: true,
                 children: <Widget>[
                   SizedBox(height: 10),
-                  totalGoodsReceived,
-                  SizedBox(height: 10),
                   requestTitleComponent,
                   SizedBox(height: 10),
+                  totalGoodsReceived,
+                  // SizedBox(height: 10),
+                  cashDonationDetails,
                   timestampComponent,
                   addressComponent,
                   hostNameComponent,
@@ -480,10 +481,70 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get totalGoodsReceived {
     return CustomListTile(
-      title: Text('Total Goods Received'),
+      title: Text(
+        'Total Goods Received',
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       subtitle: Text(''),
-      // leading: Icon,
-      trailing: Text('Trailing'),
+      leading: Icon(
+        Icons.show_chart,
+        color: Colors.grey,
+      ),
+      trailing: Text(
+        '10',
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.black,
+          // fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget get cashDonationDetails {
+    return Column(
+      children: [
+        CustomListTile(
+          title: Text(
+            'Total amount raised',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          subtitle: Text('\$100'),
+          leading: Icon(
+            Icons.show_chart,
+            color: Colors.grey,
+          ),
+          trailing: Text(
+            '',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 30, bottom: 10),
+          child: ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            child: LinearProgressIndicator(
+              semanticsLabel: '20%',
+              backgroundColor: Colors.grey[200],
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+              minHeight: 10,
+              value: 0.4,
+            ),
+          ),
+        )
+      ],
     );
   }
 }
