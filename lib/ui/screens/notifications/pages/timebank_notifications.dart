@@ -4,6 +4,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/donation_approve_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
@@ -20,6 +21,7 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/notifications/notification_utils.dart';
+import 'package:sevaexchange/views/requests/donations/approve_donation_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_user_exit_dialog.dart';
 
@@ -72,7 +74,39 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   notification: notification,
                 );
                 break;
+              case NotificationType.TypeApproveDonation:
+                print("notification data ${notification.data}");
+                DonationApproveModel donationApproveModel =
+                    DonationApproveModel.fromMap(notification.data);
 
+                return NotificationCard(
+                  entityName: donationApproveModel.requestTitle.toLowerCase(),
+                  isDissmissible: true,
+                  onDismissed: () {
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return ApproveDonationDialog(
+                          donationApproveModel: donationApproveModel,
+                          timeBankId: notification.timebankId,
+                          notificationId: notification.id,
+                          userId: notification.senderUserId,
+                        );
+                      },
+                    );
+                  },
+                  photoUrl: donationApproveModel.donorPhotoUrl,
+                  subTitle:
+                      '${donationApproveModel.donorName.toLowerCase() + ' donated ' + donationApproveModel.donationType}, ${S.of(context).notifications_tap_to_view}',
+                  title: 'Donation approval',
+                );
+                break;
               case NotificationType.TypeMemberExitTimebank:
                 UserExitModel userExitModel =
                     UserExitModel.fromMap(notification.data);

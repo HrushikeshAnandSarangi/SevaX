@@ -9,6 +9,7 @@ String donationApproveModelToMap(DonationApproveModel data) =>
 class DonationApproveModel {
   DonationApproveModel({
     this.donorName,
+    this.donorEmail,
     this.donorPhotoUrl,
     this.requestTitle,
     this.requestId,
@@ -18,6 +19,7 @@ class DonationApproveModel {
   });
 
   String donorName;
+  String donorEmail;
   String donorPhotoUrl;
   String requestTitle;
   String requestId;
@@ -30,6 +32,7 @@ class DonationApproveModel {
         donorName: json["donorName"] == null ? null : json["donorName"],
         donorPhotoUrl:
             json["donorPhotoUrl"] == null ? null : json["donorPhotoUrl"],
+        donorEmail: json["donorEmail"] == null ? null : json["donorEmail"],
         requestTitle:
             json["requestTitle"] == null ? null : json["requestTitle"],
         requestId: json["requestId"] == null ? null : json["requestId"],
@@ -42,6 +45,7 @@ class DonationApproveModel {
 
   Map<String, dynamic> toMap() => {
         "donorName": donorName == null ? null : donorName,
+        "donorEmail": donorEmail == null ? null : donorEmail,
         "donorPhotoUrl": donorPhotoUrl == null ? null : donorPhotoUrl,
         "requestTitle": requestTitle == null ? null : requestTitle,
         "requestId": requestId == null ? null : requestId,

@@ -3,21 +3,20 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_approve_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class ApproveDonationDialog extends StatefulWidget {
   final DonationApproveModel donationApproveModel;
   final String timeBankId;
   final String notificationId;
-  final UserModel userModel;
+  final String userId;
 
-  ApproveDonationDialog(
-      {this.donationApproveModel,
-      this.timeBankId,
-      this.notificationId,
-      this.userModel});
+  ApproveDonationDialog({
+    this.donationApproveModel,
+    this.timeBankId,
+    this.notificationId,
+    this.userId,
+  });
 
   @override
   _ApproveDonationDialogState createState() => _ApproveDonationDialogState();
@@ -102,7 +101,7 @@ class _ApproveDonationDialogState extends State<ApproveDonationDialog> {
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
-                      //Once approved
+                      //donation approved
 
                       // showProgressDialog(context, 'Accepting Invitation');
 
@@ -127,7 +126,7 @@ class _ApproveDonationDialogState extends State<ApproveDonationDialog> {
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
-                      // request declined
+                      // donation declined
                       //   showProgressDialog(context, 'Rejecting Invitation');
 
                       if (progressContext != null) {
@@ -158,33 +157,20 @@ class _ApproveDonationDialogState extends State<ApproveDonationDialog> {
         });
   }
 
-  void declineInvitationbRequest({
+  void declineDonation({
     DonationApproveModel model,
     String notificationId,
-    UserModel userModel,
   }) {
-    rejectInviteRequest(
-      requestId: model.requestId,
-      rejectedUserId: userModel.sevaUserID,
-      notificationId: notificationId,
-    );
-
-    FirestoreManager.readUserNotification(notificationId, userModel.email);
+    FirestoreManager.readUserNotification(
+        notificationId, widget.donationApproveModel.donorEmail);
   }
 
-  void approveInvitationForVolunteerRequest({
+  void approveDonation({
     DonationApproveModel model,
     String notificationId,
-    UserModel user,
   }) {
-    acceptInviteRequest(
-      requestId: model.requestId,
-      acceptedUserEmail: user.email,
-      acceptedUserId: user.sevaUserID,
-      notificationId: notificationId,
-    );
-
-    FirestoreManager.readUserNotification(notificationId, user.email);
+    FirestoreManager.readUserNotification(
+        notificationId, widget.donationApproveModel.donorEmail);
   }
 
   Widget _getCloseButton(BuildContext context) {

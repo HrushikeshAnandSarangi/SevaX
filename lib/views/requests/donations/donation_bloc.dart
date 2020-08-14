@@ -98,6 +98,7 @@ class DonationBloc {
         donorPhotoUrl: donor.photoURL,
         requestId: requestModel.id,
         requestTitle: requestModel.title,
+        donorEmail: donor.email,
         donationType: donationType,
         donationDetails:
             '${donationType == 'Cash' ? donationModel.cashDetails.pledgedAmount.toString() : donationType == 'Goods' ? 'goods' : 'time'}');

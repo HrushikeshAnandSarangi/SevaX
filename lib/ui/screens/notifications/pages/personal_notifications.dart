@@ -497,7 +497,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                           donationApproveModel: donationApproveModel,
                           timeBankId: notification.timebankId,
                           notificationId: notification.id,
-                          userModel: user,
+                          userId: notification.senderUserId,
                         );
                       },
                     );

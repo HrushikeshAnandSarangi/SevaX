@@ -384,5 +384,6 @@ class _DonationViewState extends State<DonationView> {
     super.dispose();
     pageController.dispose();
     donationBloc.dispose();
+    amountEntered = 0;
   }
 }
