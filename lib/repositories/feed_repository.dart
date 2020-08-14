@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/models/news_model.dart';
 
-class FeedApi {
+class FeedsRepository {
   static Future<NewsModel> getFeedFromId(String newsId) async {
     NewsModel newsModel;
     await Firestore.instance

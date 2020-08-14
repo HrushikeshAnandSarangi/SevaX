@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/widgets/APi/user_api.dart';
+import 'package:sevaexchange/repositories/user_repository.dart';
 
 class BlockedMembersBloc {
   final _blockedMembers = BehaviorSubject<List<UserModel>>();
@@ -9,7 +9,7 @@ class BlockedMembersBloc {
   Stream<List<UserModel>> get blockedMembers => _blockedMembers.stream;
 
   void init(String userId) {
-    UserApi.getBlockedMembers(userId).listen((QuerySnapshot event) {
+    UserRepository.getBlockedMembers(userId).listen((QuerySnapshot event) {
       List<UserModel> blockedMembers = [];
       event.documents.forEach((DocumentSnapshot element) {
         blockedMembers
@@ -25,7 +25,7 @@ class BlockedMembersBloc {
     String unblockedUserId,
     String unblockedUserEmail,
   }) async {
-    return UserApi.unblockUser(
+    return UserRepository.unblockUser(
       loggedInUserEmail: loggedInUserEmail,
       userId: userId,
       unblockedUserId: unblockedUserId,

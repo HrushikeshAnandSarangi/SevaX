@@ -11,7 +11,7 @@ import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_bui
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/widgets/APi/storage_api.dart';
+import 'package:sevaexchange/repositories/storage_repository.dart';
 import 'package:sevaexchange/widgets/camera_icon.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
 
@@ -217,7 +217,7 @@ class CreateGroupPage extends StatelessWidget {
       progressDialog.hide();
     }
     String imageUrl = file != null
-        ? await StorageApi.uploadFile("multiUserMessagingLogo", file)
+        ? await StorageRepository.uploadFile("multiUserMessagingLogo", file)
         : null;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageUrl);
 

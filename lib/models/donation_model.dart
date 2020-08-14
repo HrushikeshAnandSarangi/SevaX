@@ -8,18 +8,19 @@ DonationModel donationModelFromMap(String str) =>
 String donationModelToMap(DonationModel data) => json.encode(data.toMap());
 
 class DonationModel {
-  DonationModel(
-      {this.communityId,
-      this.donorSevaUserId,
-      this.donatedTo,
-      this.donatedToTimebank,
-      this.donationInBetween,
-      this.donationType,
-      this.id,
-      this.requestId,
-      this.timebankId,
-      this.timestamp,
-      this.cashDetails});
+  DonationModel({
+    this.communityId,
+    this.donorSevaUserId,
+    this.donatedTo,
+    this.donatedToTimebank,
+    this.donationInBetween,
+    this.donationType,
+    this.id,
+    this.requestId,
+    this.timebankId,
+    this.timestamp,
+    this.cashDetails,
+  });
 
   String communityId;
   String donorSevaUserId;

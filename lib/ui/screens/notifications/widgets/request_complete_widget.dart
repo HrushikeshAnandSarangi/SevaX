@@ -15,7 +15,7 @@ import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
-import 'package:sevaexchange/widgets/APi/user_api.dart';
+import 'package:sevaexchange/repositories/user_repository.dart';
 
 class RequestCompleteWidget extends StatelessWidget {
   final RequestModel model;
@@ -29,7 +29,7 @@ class RequestCompleteWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<UserModel>(
-      future: UserApi.fetchUserById(userId),
+      future: UserRepository.fetchUserById(userId),
       builder: (_context, snapshot) {
         if (snapshot.hasError) return Container();
         if (snapshot.connectionState == ConnectionState.waiting) {

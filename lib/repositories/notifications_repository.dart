@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class NotificationsApi {
+class NotificationsRepository {
   static String _notificationCollection = "notifications";
   static final String _userCollection = "users";
   static final String _timebankCollection = "timebanknew";

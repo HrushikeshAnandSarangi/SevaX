@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 
-class StorageApi {
+class StorageRepository {
   ///[dirctory] where to store the file in cloud storage
   ///[fileName] name of the file [optional] defaults to [Timestamp] if null
   ///[Return] returns url of the uploaded image

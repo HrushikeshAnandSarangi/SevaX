@@ -3,7 +3,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/widgets/APi/notifications_api.dart';
+import 'package:sevaexchange/repositories/notifications_repository.dart';
 
 class UserAddedWidget extends StatelessWidget {
   final UserAddedModel userAddedModel;
@@ -26,7 +26,7 @@ class UserAddedWidget extends StatelessWidget {
       entityName: userAddedModel.adminName,
       isDissmissible: true,
       onDismissed: () {
-        NotificationsApi.readUserNotification(
+        NotificationsRepository.readUserNotification(
           notificationId,
           SevaCore.of(context).loggedInUser.email,
         );
