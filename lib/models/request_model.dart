@@ -258,7 +258,7 @@ class RequestModel extends DataModel {
     if (map.containsKey('requestType')) {
       if (map['requestType'] == "CASH") {
         this.requestType = RequestType.CASH;
-      } else if (map['requestMode'] == "GOODS") {
+      } else if (map['requestType'] == "GOODS") {
         this.requestType = RequestType.GOODS;
       } else {
         this.requestType = RequestType.TIME;
