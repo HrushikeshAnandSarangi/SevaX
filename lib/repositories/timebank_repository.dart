@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
-class TimebankApi {
+class TimebankRepository {
   static final CollectionReference _ref =
       Firestore.instance.collection("timebanknew");
   static Future<List<TimebankModel>> getTimebanksWhichUserIsPartOf(

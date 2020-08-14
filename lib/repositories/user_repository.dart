@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 
-class UserApi {
+class UserRepository {
   static CollectionReference ref = Firestore.instance.collection("users");
 
   //Fetch user details
@@ -33,7 +33,7 @@ class UserApi {
   }) async {
     String userToBeBlockedEmail;
     userToBeBlockedEmail =
-        blockedUserEmail ?? await UserApi.fetchUserEmailById(blockedUserId);
+        blockedUserEmail ?? await UserRepository.fetchUserEmailById(blockedUserId);
     WriteBatch batch = Firestore.instance.batch();
     batch.setData(
       ref.document(userToBeBlockedEmail),
@@ -61,7 +61,7 @@ class UserApi {
   }) async {
     String userToBeBlockedEmail;
     userToBeBlockedEmail =
-        unblockedUserEmail ?? await UserApi.fetchUserEmailById(unblockedUserId);
+        unblockedUserEmail ?? await UserRepository.fetchUserEmailById(unblockedUserId);
     WriteBatch batch = Firestore.instance.batch();
     batch.setData(
       ref.document(userToBeBlockedEmail),

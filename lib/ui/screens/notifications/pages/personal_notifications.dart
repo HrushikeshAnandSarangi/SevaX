@@ -31,9 +31,9 @@ import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/group_join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-import 'package:sevaexchange/widgets/APi/notifications_api.dart';
-import 'package:sevaexchange/widgets/APi/request_api.dart';
-import 'package:sevaexchange/widgets/APi/user_api.dart';
+import 'package:sevaexchange/repositories/notifications_repository.dart';
+import 'package:sevaexchange/repositories/request_repository.dart';
+import 'package:sevaexchange/repositories/user_repository.dart';
 
 class PersonalNotifications extends StatefulWidget {
   @override
@@ -103,7 +103,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 RequestModel model = RequestModel.fromMap(notification.data);
 
                 return FutureBuilder<RequestModel>(
-                  future: RequestApi.getRequestFutureById(model.id),
+                  future: RequestRepository.getRequestFutureById(model.id),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Container();
@@ -151,7 +151,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: userAddedModel.adminName,
                   isDissmissible: true,
                   onDismissed: () {
-                    NotificationsApi.readUserNotification(
+                    NotificationsRepository.readUserNotification(
                       notification.id,
                       user.email,
                     );
@@ -177,7 +177,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: 'DEMOTED',
                   onDismissed: () {
                     // Dismiss notification
-                    NotificationsApi.readUserNotification(
+                    NotificationsRepository.readUserNotification(
                       notification.id,
                       user.email,
                     );
@@ -196,7 +196,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: 'PROMOTED',
                   onDismissed: () {
                     // Dismiss notification
-                    NotificationsApi.readUserNotification(
+                    NotificationsRepository.readUserNotification(
                       notification.id,
                       user.email,
                     );
@@ -210,7 +210,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   title: model.title,
                   isDissmissible: true,
                   onDismissed: () {
-                    NotificationsApi.readUserNotification(
+                    NotificationsRepository.readUserNotification(
                       notification.id,
                       user.email,
                     );
@@ -227,7 +227,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 JoinRequestNotificationModel model =
                     JoinRequestNotificationModel.fromMap(notification.data);
                 return FutureBuilder<UserModel>(
-                  future: UserApi.fetchUserById(notification.senderUserId),
+                  future:
+                      UserRepository.fetchUserById(notification.senderUserId),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Container();
@@ -242,7 +243,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             title: S.of(context).notifications_join_request,
                             isDissmissible: true,
                             onDismissed: () {
-                              NotificationsApi.readUserNotification(
+                              NotificationsRepository.readUserNotification(
                                 notification.id,
                                 user.email,
                               );
@@ -269,7 +270,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               case NotificationType.RequestCompleted:
                 RequestModel model = RequestModel.fromMap(notification.data);
                 return FutureBuilder<RequestModel>(
-                  future: RequestApi.getRequestFutureById(model.id),
+                  future: RequestRepository.getRequestFutureById(model.id),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Container();
@@ -297,7 +298,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: model.fullName,
                   isDissmissible: true,
                   onDismissed: () {
-                    NotificationsApi.readUserNotification(
+                    NotificationsRepository.readUserNotification(
                       notification.id,
                       user.email,
                     );
@@ -316,7 +317,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   title: model.title,
                   isDissmissible: true,
                   onDismissed: () {
-                    NotificationsApi.readUserNotification(
+                    NotificationsRepository.readUserNotification(
                       notification.id,
                       user.email,
                     );
@@ -333,7 +334,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     TransactionModel.fromMap(notification.data);
 
                 return FutureBuilder<UserModel>(
-                  future: UserApi.fetchUserById(notification.senderUserId),
+                  future:
+                      UserRepository.fetchUserById(notification.senderUserId),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) return Container();
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -345,7 +347,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       entityName: user.fullname,
                       isDissmissible: true,
                       onDismissed: () {
-                        NotificationsApi.readUserNotification(
+                        NotificationsRepository.readUserNotification(
                           notification.id,
                           user.email,
                         );
@@ -364,7 +366,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     TransactionModel.fromMap(notification.data);
 
                 return FutureBuilder<UserModel>(
-                  future: UserApi.fetchUserById(notification.senderUserId),
+                  future:
+                      UserRepository.fetchUserById(notification.senderUserId),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) return Container();
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -376,7 +379,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       entityName: user.fullname,
                       isDissmissible: true,
                       onDismissed: () {
-                        NotificationsApi.readUserNotification(
+                        NotificationsRepository.readUserNotification(
                           notification.id,
                           user.email,
                         );
@@ -402,7 +405,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 OfferAcceptedNotificationModel acceptedOffer =
                     OfferAcceptedNotificationModel.fromMap(notification.data);
                 return FutureBuilder<UserModel>(
-                  future: UserApi.fetchUserById(acceptedOffer.acceptedBy),
+                  future:
+                      UserRepository.fetchUserById(acceptedOffer.acceptedBy),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Container();
@@ -416,7 +420,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       entityName: user.fullname,
                       isDissmissible: true,
                       onDismissed: () {
-                        NotificationsApi.readUserNotification(
+                        NotificationsRepository.readUserNotification(
                           notification.id,
                           user.email,
                         );
@@ -440,7 +444,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: requestInvitationModel.timebankName.toLowerCase(),
                   isDissmissible: true,
                   onDismissed: () {
-                    NotificationsApi.readUserNotification(
+                    NotificationsRepository.readUserNotification(
                       notification.id,
                       user.email,
                     );
@@ -473,7 +477,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: groupInviteUserModel.timebankName.toLowerCase(),
                   isDissmissible: true,
                   onDismissed: () {
-                    NotificationsApi.readUserNotification(
+                    NotificationsRepository.readUserNotification(
                         notification.id, user.email);
                   },
                   onPressed: () {
@@ -709,7 +713,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               results['didComment'] ? results['comment'] : "No comments",
         },
       );
-      NotificationsApi.readUserNotification(notificationId, email);
+      NotificationsRepository.readUserNotification(notificationId, email);
     }
   }
 

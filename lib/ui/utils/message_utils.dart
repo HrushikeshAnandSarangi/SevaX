@@ -3,7 +3,7 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/ui/screens/message/pages/chat_page.dart';
 import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart';
-import 'package:sevaexchange/widgets/APi/chats_api.dart';
+import 'package:sevaexchange/repositories/chats_repository.dart';
 
 ParticipantInfo getUserInfo(
     String userId, List<ParticipantInfo> participantInfo) {
@@ -41,7 +41,7 @@ Future<void> createAndOpenChat({
     ..id = "${participants[0]}*${participants[1]}*$communityId"
     ..isGroupMessage = false;
 
-  await ChatsApi.createNewChat(model, documentId: model.id);
+  await ChatsRepository.createNewChat(model, documentId: model.id);
   if (onChatCreate != null) {
     onChatCreate();
   }
@@ -80,7 +80,7 @@ Future<void> sendBackgroundMessage({
     ..id = "${participants[0]}*${participants[1]}*$communityId"
     ..isGroupMessage = false;
 
-  await ChatsApi.createNewChat(chatModel, documentId: chatModel.id);
+  await ChatsRepository.createNewChat(chatModel, documentId: chatModel.id);
 
   MessageModel messageModel = MessageModel(
     fromId: sender.id,

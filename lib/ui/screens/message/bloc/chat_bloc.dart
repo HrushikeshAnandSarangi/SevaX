@@ -5,8 +5,8 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/utils/data_managers/new_chat_manager.dart';
-import 'package:sevaexchange/widgets/APi/chats_api.dart';
-import 'package:sevaexchange/widgets/APi/user_api.dart';
+import 'package:sevaexchange/repositories/chats_repository.dart';
+import 'package:sevaexchange/repositories/user_repository.dart';
 
 class ChatBloc {
   final _messages = BehaviorSubject<List<MessageModel>>();
@@ -108,7 +108,7 @@ class ChatBloc {
     String userId,
     String blockedUserId,
   }) async {
-    return await UserApi.blockUser(
+    return await UserRepository.blockUser(
       loggedInUserEmail: loggedInUserEmail,
       userId: userId,
       blockedUserId: blockedUserId,
@@ -120,14 +120,14 @@ class ChatBloc {
     String userId,
     bool isCreator,
   ) async {
-    await ChatsApi.removeMember(chatId, userId);
+    await ChatsRepository.removeMember(chatId, userId);
     if (isCreator) {
-      await ChatsApi.transferOwnership(chatId);
+      await ChatsRepository.transferOwnership(chatId);
     }
   }
 
   Future<void> addMember(String chatId, ParticipantInfo participant) async {
-    return await ChatsApi.addMember(chatId, participant);
+    return await ChatsRepository.addMember(chatId, participant);
   }
 
   void dispose() {

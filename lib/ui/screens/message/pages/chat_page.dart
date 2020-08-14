@@ -20,7 +20,7 @@ import 'package:sevaexchange/ui/screens/message/widgets/message_input.dart';
 import 'package:sevaexchange/ui/utils/colors.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/widgets/APi/feed_api.dart';
+import 'package:sevaexchange/repositories/feed_repository.dart';
 import 'package:sevaexchange/widgets/camera/camera_page.dart';
 
 class ChatPage extends StatefulWidget {
@@ -356,7 +356,7 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _getSharedNewDetails({MessageModel messageModel}) {
     return FutureBuilder<Object>(
-      future: FeedApi.getFeedFromId(messageModel.message),
+      future: FeedsRepository.getFeedFromId(messageModel.message),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text(S.of(context).failed_to_load_post);
