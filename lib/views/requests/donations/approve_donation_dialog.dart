@@ -96,7 +96,7 @@ class _ApproveDonationDialogState extends State<ApproveDonationDialog> {
                   child: RaisedButton(
                     color: FlavorConfig.values.theme.primaryColor,
                     child: Text(
-                      S.of(context).accept,
+                      S.of(context).approve,
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
