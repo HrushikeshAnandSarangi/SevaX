@@ -31,8 +31,11 @@ class _DonationViewState extends State<DonationView> {
   bool _selected = false;
   Color _checkColor = Colors.black;
   PageController pageController;
-  DonationModel donationsModel;
-  UserModel sevaUser;
+  DonationModel donationsModel = DonationModel(
+      donorDetails: DonorDetails(),
+      cashDetails: CashDetails(),
+      goodsDetails: GoodsDetails());
+  UserModel sevaUser = UserModel();
   @override
   void initState() {
     // TODO: implement initState
@@ -121,8 +124,11 @@ class _DonationViewState extends State<DonationView> {
               builder: (context, snapshot) {
                 return TextField(
                   onChanged: (value) {
-                    donationBloc.onAmountChange;
-                    amountEntered = int.parse(value);
+                    donationBloc.onAmountChange(value);
+                    setState(() {
+                      amountEntered = int.parse(value);
+                    });
+                    print(amountEntered);
                   },
                   maxLines: 1,
                   keyboardType: TextInputType.number,
@@ -165,7 +171,7 @@ class _DonationViewState extends State<DonationView> {
             height: 10,
           ),
           Text(
-            '${'Great, you have choose to donate for' + widget.timabankName + ' a minimum donations is' + amountEntered.toString() + 'USD. Please click on the below link to fo the donation.'}',
+            '${'Great, you have choose to donate for ' + widget.timabankName + ' a minimum donations is ' + amountEntered.toString() + 'USD. Please click on the below link to fo the donation.'}',
             style: subTitleStyle,
           ),
           SizedBox(

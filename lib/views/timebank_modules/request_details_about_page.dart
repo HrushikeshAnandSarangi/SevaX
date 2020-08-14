@@ -11,6 +11,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
+import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 class RequestDetailsAboutPage extends StatefulWidget {
@@ -205,7 +206,16 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     ],
                   ),
                   onPressed: () {
-                    applyAction();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DonationView(
+                          timabankName: widget.timebankModel.name,
+                          requestModel: widget.requestItem,
+                        ),
+                      ),
+                    );
+                    //applyAction();
                   },
                 ),
               ),

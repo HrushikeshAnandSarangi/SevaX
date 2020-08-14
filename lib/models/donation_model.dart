@@ -81,7 +81,7 @@ class DonationModel {
         "donatedToTimebank":
             donatedToTimebank == null ? null : donatedToTimebank,
         "donationInBetween": donationInBetween == null
-            ? null
+            ? []
             : List<dynamic>.from(donationInBetween.map((x) => x)),
         "donationType": donationType == null
             ? null

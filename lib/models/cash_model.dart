@@ -15,7 +15,7 @@ class CashModel {
 
   int amountRaised;
   String donationInstructionLink;
-  List<dynamic> donors;
+  List<String> donors;
   int minAmount;
   int targetAmount;
 
@@ -26,8 +26,8 @@ class CashModel {
             ? null
             : json["donationInstructionLink"],
         donors: json["donors"] == null
-            ? null
-            : List<dynamic>.from(json["donors"].map((x) => x)),
+            ? []
+            : List<String>.from(json["donors"].map((x) => x)),
         minAmount: json["minAmount"] == null ? null : json["minAmount"],
         targetAmount:
             json["targetAmount"] == null ? null : json["targetAmount"],
@@ -37,8 +37,7 @@ class CashModel {
         "amountRaised": amountRaised == null ? null : amountRaised,
         "donationInstructionLink":
             donationInstructionLink == null ? null : donationInstructionLink,
-        "donors":
-            donors == null ? [] : List<dynamic>.from(donors.map((x) => x)),
+        "donors": donors == null ? [] : List<String>.from(donors.map((x) => x)),
         "minAmount": minAmount == null ? null : minAmount,
         "targetAmount": targetAmount == null ? null : targetAmount,
       };

@@ -39,6 +39,8 @@ class DonationBloc {
       requestModel.goodsDonationDetails.donors.add(donor.sevaUserID);
       try {
         await FirestoreManager.createDonation(donationModel: donationModel);
+        await FirestoreManager.updateRequest(requestModel: requestModel);
+
         await sendNotification(
             donationModel: donationModel,
             requestModel: requestModel,
@@ -65,10 +67,15 @@ class DonationBloc {
       donationModel.cashDetails.pledgedAmount = int.parse(_amountPledged.value);
 
       requestModel.cashModel.donors.add(donor.sevaUserID);
+      requestModel.cashModel.amountRaised =
+          requestModel.cashModel.amountRaised + int.parse(_amountPledged.value);
       try {
         await FirestoreManager.createDonation(donationModel: donationModel);
         await FirestoreManager.updateRequest(requestModel: requestModel);
-
+        await sendNotification(
+            donationModel: donationModel,
+            requestModel: requestModel,
+            donor: donor);
         return true;
       } on Exception catch (e) {
         _errorMessage.add("something went wrong try again later");
