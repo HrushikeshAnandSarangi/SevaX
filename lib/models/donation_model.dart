@@ -63,7 +63,11 @@ class DonationModel {
             : GoodsDetails.fromMap(json['goodsDetails']),
         donorDetails: json['donorDetails'] == null
             ? null
-            : DonorDetails.fromMap(json['donorDetails']),
+            : DonorDetails.fromMap(
+                Map<String, dynamic>.from(
+                  json['donorDetails'],
+                ),
+              ),
       );
 
   Map<String, dynamic> toMap() => {

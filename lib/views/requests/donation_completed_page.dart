@@ -6,7 +6,7 @@ import 'package:sevaexchange/views/requests/donations/donation_accepted_bloc.dar
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/participant_card.dart';
 
-class DonationParticipantPage extends StatelessWidget {
+class DonationCompletedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<DonationAcceptedBloc>(context);
@@ -27,7 +27,6 @@ class DonationParticipantPage extends StatelessWidget {
             return RequestParticipantCard(
               name: model.donorDetails.name,
               bio: model.donorDetails.bio,
-              imageUrl: model.donorDetails.photoUrl,
               buttonTitle: S.of(context).accepted,
             );
           },
