@@ -105,10 +105,6 @@ class _ApproveDonationDialogState extends State<ApproveDonationDialog> {
                       //Once approved
 
                       // showProgressDialog(context, 'Accepting Invitation');
-                      approveInvitationForVolunteerRequest(
-                          model: widget.donationApproveModel,
-                          notificationId: widget.notificationId,
-                          user: widget.userModel);
 
                       if (progressContext != null) {
                         Navigator.pop(progressContext);
@@ -133,11 +129,6 @@ class _ApproveDonationDialogState extends State<ApproveDonationDialog> {
                     onPressed: () async {
                       // request declined
                       //   showProgressDialog(context, 'Rejecting Invitation');
-
-                      declineInvitationbRequest(
-                          model: widget.donationApproveModel,
-                          notificationId: widget.notificationId,
-                          userModel: widget.userModel);
 
                       if (progressContext != null) {
                         Navigator.pop(progressContext);
