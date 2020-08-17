@@ -3,9 +3,12 @@ import 'dart:developer';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/donation_approve_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/requests/donations/approve_donation_dialog.dart';
 import 'package:sevaexchange/views/requests/donations/donation_accepted_bloc.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/participant_card.dart';
@@ -32,7 +35,7 @@ class DonationParticipantPage extends StatelessWidget {
           itemBuilder: (_, index) {
             DonationModel model = snapshot.data[index];
             DonationButtonActionModel buttonStatus =
-                buttonActionModel(context, model.donationStatus);
+                buttonActionModel(context, model);
             return RequestParticipantCard(
               name: model.donorDetails.name,
               bio: model.donorDetails.bio,
@@ -48,8 +51,8 @@ class DonationParticipantPage extends StatelessWidget {
   }
 
   DonationButtonActionModel buttonActionModel(
-      BuildContext context, DonationStatus status) {
-    switch (status) {
+      BuildContext context, DonationModel model) {
+    switch (model.donationStatus) {
       case DonationStatus.ACKNOWLEDGED:
         return DonationButtonActionModel(
           buttonColor: Theme.of(context).primaryColor,
@@ -60,7 +63,7 @@ class DonationParticipantPage extends StatelessWidget {
       case DonationStatus.PLEDGED:
         return DonationButtonActionModel(
           buttonColor: Colors.green,
-          onTap: onPledged,
+          onTap: () => onPledged(context, model),
           buttonText: 'ACKNOWLEDGE',
         );
         break;
@@ -68,40 +71,58 @@ class DonationParticipantPage extends StatelessWidget {
       case DonationStatus.MODIFIED:
         return DonationButtonActionModel(
           buttonColor: Colors.red,
-          onTap: onPledged,
+          // onTap: onPledged,
           buttonText: 'MODIFIED',
         );
         break;
       case DonationStatus.APPROVED_BY_DONOR:
         return DonationButtonActionModel(
           buttonColor: Colors.green,
-          onTap: onPledged,
+          // onTap: onPledged,
           buttonText: 'ACKNOWLEDGE',
         );
         break;
       case DonationStatus.APPROVED_BY_CREATOR:
         return DonationButtonActionModel(
           buttonColor: Colors.green,
-          onTap: onPledged,
+          // onTap: onPledged,
           buttonText: 'ACKNOWLEDGE',
         );
         break;
       default:
+        Crashlytics.instance.log(
+            'UnImplemented DonationStatus case ${model.donationStatus.toString()}');
+        log('UnImplemented DonationStatus case ${model.donationStatus.toString()}');
         return DonationButtonActionModel(
           buttonColor: Colors.grey,
-          onTap: unImplementedCase,
           buttonText: 'UN-IMPLEMENTED',
         );
     }
   }
 
-  void onPledged() {
-    print('pledged');
-  }
-
-  void unImplementedCase() {
-    Crashlytics.instance.log('UnImplemented DonationStatus case');
-    log('UnImplemented DonationStatus case');
+  void onPledged(BuildContext context, DonationModel model) {
+    showDialog(
+      context: context,
+      builder: (_context) {
+        return ApproveDonationDialog(
+          requestModel: requestModel,
+          donationApproveModel: DonationApproveModel(
+            donorName: model.donorDetails.name,
+            donorEmail: model.donorDetails.email,
+            donorPhotoUrl: model.donorDetails.photoUrl,
+            donationId: model.id,
+            donationDetails: 'String to be updated by umesh',
+            donationType: model.donationType,
+            requestId: requestModel.id,
+            requestTitle: requestModel.title,
+          ),
+          timeBankId: requestModel.timebankId,
+          notificationId: model.notificationId,
+          userId: SevaCore.of(context).loggedInUser.sevaUserID,
+          parentContext: context,
+        );
+      },
+    );
   }
 }
 

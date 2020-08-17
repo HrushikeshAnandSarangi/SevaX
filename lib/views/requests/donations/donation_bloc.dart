@@ -101,20 +101,21 @@ class DonationBloc {
       {DonationModel donationModel,
       RequestModel requestModel,
       UserModel donor}) async {
-    String donationType = donationModel.donationType == RequestType.CASH
-        ? 'Cash'
-        : donationModel.donationType == RequestType.GOODS ? 'Goods' : 'Time';
+    // String donationType = donationModel.donationType == RequestType.CASH
+    //     ? 'Cash'
+    //     : donationModel.donationType == RequestType.GOODS ? 'Goods' : 'Time';
 
     DonationApproveModel donationApproveModel = DonationApproveModel(
-        donationId: donationModel.id,
-        donorName: donor.fullname,
-        donorPhotoUrl: donor.photoURL,
-        requestId: requestModel.id,
-        requestTitle: requestModel.title,
-        donorEmail: donor.email,
-        donationType: donationType,
-        donationDetails:
-            '${donationType == 'Cash' ? donationModel.cashDetails.pledgedAmount.toString() : donationType == 'Goods' ? 'goods' : 'time'}');
+      donationId: donationModel.id,
+      donorName: donor.fullname,
+      donorPhotoUrl: donor.photoURL,
+      requestId: requestModel.id,
+      requestTitle: requestModel.title,
+      donorEmail: donor.email,
+      donationType: donationModel.donationType,
+      donationDetails:
+          '${donationModel.donationType == RequestType.CASH ? donationModel.cashDetails.pledgedAmount.toString() : donationModel.donationType == RequestType.GOODS ? 'goods' : 'time'}',
+    );
     NotificationsModel notificationsModel = NotificationsModel(
       timebankId: donationModel.timebankId,
       communityId: donationModel.communityId,
