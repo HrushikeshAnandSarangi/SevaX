@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/ui/screens/request/widgets/amount_raised_progress_indicator.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/requests/donations/donation_accepted_bloc.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -38,36 +39,22 @@ class DonationCompletedPage extends StatelessWidget {
             child: Text('No Donations Yet'),
           );
         }
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    child: LinearProgressIndicator(
-                      backgroundColor: Colors.grey[200],
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).primaryColor,
-                      ),
-                      minHeight: 16,
-                      value: totalAmountRaised /
-                          requestModel.cashModel.targetAmount,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('${totalAmountRaised}\$'),
-                      Text('${requestModel.cashModel.targetAmount}\$')
-                    ],
-                  ),
-                ],
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 20.0,
+                ),
+                child: AmountRaisedProgressIndicator(
+                  totalAmountRaised: totalAmountRaised,
+                  targetAmount: requestModel.cashModel.targetAmount,
+                ),
               ),
-            ),
-            Expanded(
-              child: ListView.builder(
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
                 itemCount: donations.length,
                 itemBuilder: (_, index) {
                   DonationModel model = donations[index];
@@ -80,8 +67,8 @@ class DonationCompletedPage extends StatelessWidget {
                   );
                 },
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
