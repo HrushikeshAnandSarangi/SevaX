@@ -48,8 +48,10 @@ class PersonalNotifications extends StatefulWidget {
 
 class _PersonalNotificationsState extends State<PersonalNotifications>
     with AutomaticKeepAliveClientMixin {
+  BuildContext parentContext;
   @override
   Widget build(BuildContext context) {
+    parentContext = context;
     super.build(context);
     final _bloc = BlocProvider.of<NotificationsBloc>(context);
     final UserModel user = SevaCore.of(context).loggedInUser;
@@ -511,6 +513,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               timeBankId: notification.timebankId,
                               notificationId: notification.id,
                               userId: notification.senderUserId,
+                              parentContext: parentContext,
                             );
                           },
                         );
@@ -643,8 +646,29 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 );
                 break;
 
-              case NotificationType.CASH_DONATION_ACKNOWLEDGED_BY_CREATOR:
+              case NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULY:
+              case NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY:
+                print("CASH_DONATION_COMPLETED_SUCCESSFULY");
+                return NotificationCard(
+                  entityName: "Doantion completed successfully",
+                  title: "Donation completed succesfully",
+                  subTitle: "You donation was completed successfully",
+                  onDismissed: onDismissed,
+                );
+
+              case NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR:
+              case NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR:
+                return NotificationCard(
+                  entityName: "Your pledged was modified",
+                  title: "Please click to see the details",
+                  subTitle: "Your pledged was modified",
+                  onDismissed: onDismissed,
+                  onPressed: () {},
+                );
+
               case NotificationType.CASH_DONATION_ACKNOWLEDGED_BY_DONOR:
+              case NotificationType.GOODS_DONATION_ACKNOWLEDGED_BY_DONOR:
+                //NOT SURE WHEATHER TO ADD THIS OR NOT
                 break;
 
               case NotificationType.TYPE_FEEDBACK_FROM_SIGNUP_MEMBER:
