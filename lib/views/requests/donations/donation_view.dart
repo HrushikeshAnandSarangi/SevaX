@@ -110,6 +110,7 @@ class _DonationViewState extends State<DonationView> {
     donationsModel.donorDetails.email = sevaUser.email;
     donationsModel.donorDetails.bio = sevaUser.bio;
     donationsModel.donationStatus = false;
+    donationsModel.notificationId = Utils.getUuid();
   }
 
   Widget amountWidget() {

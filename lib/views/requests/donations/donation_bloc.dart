@@ -5,7 +5,6 @@ import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/utils.dart';
 
 class DonationBloc {
   final _goodsDescription = BehaviorSubject<String>();
@@ -120,7 +119,7 @@ class DonationBloc {
       timebankId: donationModel.timebankId,
       communityId: donationModel.communityId,
       type: NotificationType.TypeApproveDonation,
-      id: Utils.getUuid(),
+      id: donationModel.notificationId,
       isRead: false,
       isTimebankNotification:
           requestModel.requestMode == RequestMode.PERSONAL_REQUEST
