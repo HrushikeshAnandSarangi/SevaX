@@ -11,6 +11,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
+import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 class RequestDetailsAboutPage extends StatefulWidget {
@@ -31,7 +32,33 @@ class RequestDetailsAboutPage extends StatefulWidget {
       _RequestDetailsAboutPageState();
 }
 
+enum UserMode {
+  APPROVED_MEMBER,
+  ACCEPTED_MEMBER,
+  COMPLETED_MEMBER,
+  REQUEST_CREATOR,
+  NOT_YET_SIGNED_UP,
+  TIMEBANK_ADMIN,
+  AWITING_FOR_APPROVAL_FROM_CREATOR,
+  AWAITING_FOR_CREDIT_APPROVAL,
+}
+
+enum GoodStatus {
+  GOODS_SUBMITTED,
+  GOODS_APPROVED,
+  GOODS_REJEJCTED,
+}
+
+enum CashStatus {
+  CASH_DEPOSITED,
+  CASH_CONFIRMED,
+}
+
 class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
+  UserMode userMode;
+  GoodStatus goodsStatus;
+  CashStatus cashStatus;
+
   String location = 'Location';
   TextStyle titleStyle = TextStyle(
     fontSize: 18,
@@ -42,22 +69,42 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     fontSize: 14,
     color: Colors.grey,
   );
-  bool isAdmin = false;
+
   @override
   void initState() {
     super.initState();
-    print("fullname ${widget.requestItem.fullName}");
+  }
 
-    //cut and paste this
-//    Navigator.push(
-//      context,
-//      MaterialPageRoute(
-//        builder: (context) => DonationView(
-//          timabankName: widget.timebankModel.name,
-//          requestModel: widget.requestItem,
-//        ),
-//      ),
-//    );
+  UserMode refreshUserViewMode() {
+    String loggedInUser = SevaCore.of(context).loggedInUser.sevaUserID;
+
+    switch (widget.requestItem.requestMode) {
+      case RequestMode.PERSONAL_REQUEST:
+        if (widget.requestItem.sevaUserId == loggedInUser)
+          return UserMode.REQUEST_CREATOR;
+        else if (widget.requestItem.acceptors.contains(loggedInUser) &&
+            !(widget.requestItem.approvedUsers.contains(loggedInUser)))
+          return UserMode.AWITING_FOR_APPROVAL_FROM_CREATOR;
+        else if (widget.requestItem.approvedUsers.contains(loggedInUser))
+          return UserMode.APPROVED_MEMBER;
+        else if (widget.requestItem.acceptors.contains(loggedInUser))
+          return UserMode.ACCEPTED_MEMBER;
+        else {
+          return UserMode.NOT_YET_SIGNED_UP;
+        }
+        break;
+
+      case RequestMode.TIMEBANK_REQUEST:
+        if (widget.timebankModel.admins.contains(loggedInUser))
+          return UserMode.TIMEBANK_ADMIN;
+        else
+          return UserMode.NOT_YET_SIGNED_UP;
+
+        break;
+
+      default:
+        return UserMode.NOT_YET_SIGNED_UP;
+    }
   }
 
   var futures = <Future>[];
@@ -80,8 +127,26 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     );
   }
 
+  Widget get getAppBarToUserMode {
+    switch (userMode) {
+      case UserMode.TIMEBANK_ADMIN:
+      case UserMode.REQUEST_CREATOR:
+        return null;
+
+      case UserMode.NOT_YET_SIGNED_UP:
+      case UserMode.APPROVED_MEMBER:
+      case UserMode.ACCEPTED_MEMBER:
+      case UserMode.COMPLETED_MEMBER:
+        return appBarForMembers;
+
+      default:
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    userMode = refreshUserViewMode();
     if (widget.requestItem.acceptors != null ||
         widget.requestItem.acceptors.length != 0 ||
         widget.requestItem.approvedUsers.length != 0 ||
@@ -90,6 +155,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       widget.requestItem.acceptors.forEach((memberEmail) {
         futures.add(getUserDetails(memberEmail: memberEmail));
       });
+
       isApplied = widget.requestItem.acceptors
               .contains(SevaCore.of(context).loggedInUser.email) ||
           widget.requestItem.approvedUsers
@@ -100,15 +166,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     } else {
       isApplied = false;
     }
-    if (widget.requestItem.sevaUserId ==
-            SevaCore.of(context).loggedInUser.sevaUserID ||
-        widget.timebankModel.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-      isAdmin = true;
-    }
 
     return Scaffold(
-      appBar: !isAdmin ? appBarForMembers : null,
+      appBar: getAppBarToUserMode,
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -120,9 +180,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   SizedBox(height: 10),
                   requestTitleComponent,
                   SizedBox(height: 10),
-                  totalGoodsReceived,
-                  // SizedBox(height: 10),
-                  cashDonationDetails,
+                  getRequestModeComponent,
                   timestampComponent,
                   addressComponent,
                   hostNameComponent,
@@ -134,11 +192,29 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 ],
               ),
             ),
-            getBottombar,
+            getBottomFrame,
           ],
         ),
       ),
     );
+  }
+
+  Widget get getRequestModeComponent {
+    print("= ==============${widget.requestItem.requestType}");
+
+    switch (widget.requestItem.requestType) {
+      case RequestType.CASH:
+        return cashDonationDetails;
+
+      case RequestType.GOODS:
+        return totalGoodsReceived;
+
+      case RequestType.TIME:
+        return Container();
+
+      default:
+        return Container();
+    }
   }
 
   Future<dynamic> getUserDetails({String memberEmail}) async {
@@ -151,79 +227,274 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   bool isApplied = false;
-  Widget get getBottombar {
+
+  Widget get getBottomFrame {
     return Container(
       decoration: BoxDecoration(color: Colors.white54, boxShadow: [
         BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
       ]),
       child: Padding(
         padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: RichText(
-                text: TextSpan(
-                  style: TextStyle(color: Colors.black),
-                  children: [
-                    TextSpan(
-                      text: widget.requestItem.sevaUserId ==
-                              SevaCore.of(context).loggedInUser.sevaUserID
-                          ? S.of(context).creator_of_request_message
-                          : isApplied
-                              ? S.of(context).applied_for_request
-                              : S.of(context).particpate_in_request_question,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: 'Europa',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Offstage(
-              offstage: widget.requestItem.sevaUserId ==
-                  SevaCore.of(context).loggedInUser.sevaUserID,
-              child: Container(
-                margin: EdgeInsets.only(right: 5),
-                width: 100,
-                height: 32,
-                child: FlatButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  padding: EdgeInsets.all(0),
-                  color:
-                      isApplied ? Theme.of(context).accentColor : Colors.green,
-                  child: Row(
-                    children: <Widget>[
-                      SizedBox(width: 1),
-                      Spacer(),
-                      Text(
-                        isApplied
-                            ? S.of(context).withdraw
-                            : S.of(context).apply,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      Spacer(
-                        flex: 1,
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    applyAction();
-                  },
-                ),
-              ),
-            )
-          ],
-        ),
+        child: getBottomFrameForUserMode,
       ),
+    );
+  }
+
+  Widget get getBottomFrameForUserMode {
+    switch (widget.requestItem.requestType) {
+      case RequestType.CASH:
+        return getBottomFrameForCashRequest;
+
+      case RequestType.GOODS:
+        return getBottomFrameForGoodRequest;
+
+      case RequestType.TIME:
+        return getBottomFrameForTimeRequest;
+
+      default:
+        return getBottomFrameForTimeRequest;
+    }
+  }
+
+  Widget get getBottomFrameForGoodRequest {
+    switch (goodsStatus) {
+      case GoodStatus.GOODS_APPROVED:
+      case GoodStatus.GOODS_REJEJCTED:
+      case GoodStatus.GOODS_SUBMITTED:
+        return goodsDonationSubmitted;
+
+      default:
+        return goodsDonationSubmitted;
+    }
+  }
+
+  Widget get getBottomFrameForCashRequest {
+    switch (cashStatus) {
+      case CashStatus.CASH_CONFIRMED:
+      case CashStatus.CASH_DEPOSITED:
+        return cashDeposited;
+
+      default:
+        return cashDeposited;
+    }
+  }
+
+  Widget get cashDeposited {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: 'Would you like to donate for this request.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Europa',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(right: 5),
+          width: 100,
+          height: 32,
+          child: FlatButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            padding: EdgeInsets.all(0),
+            color: isApplied ? Theme.of(context).accentColor : Colors.green,
+            child: Row(
+              children: <Widget>[
+                SizedBox(width: 1),
+                Spacer(),
+                Text(
+                  'Donate',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                Spacer(
+                  flex: 1,
+                ),
+              ],
+            ),
+            onPressed: () {
+              //cut and paste this
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DonationView(
+                    timabankName: widget.timebankModel.name,
+                    requestModel: widget.requestItem,
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget get goodsDonationSubmitted {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: 'Would you like to donate for this request.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Europa',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(right: 5),
+          width: 100,
+          height: 32,
+          child: FlatButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            padding: EdgeInsets.all(0),
+            color: isApplied ? Theme.of(context).accentColor : Colors.green,
+            child: Row(
+              children: <Widget>[
+                SizedBox(width: 1),
+                Spacer(),
+                Text(
+                  'Donate',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                Spacer(
+                  flex: 1,
+                ),
+              ],
+            ),
+            onPressed: () {
+              applyAction();
+            },
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget get getBottomFrameForTimeRequest {
+    switch (userMode) {
+      case UserMode.TIMEBANK_ADMIN:
+      case UserMode.REQUEST_CREATOR:
+        return getBottombarForCreator;
+
+      case UserMode.APPROVED_MEMBER:
+      case UserMode.ACCEPTED_MEMBER:
+      case UserMode.COMPLETED_MEMBER:
+      case UserMode.AWITING_FOR_APPROVAL_FROM_CREATOR:
+      case UserMode.NOT_YET_SIGNED_UP:
+        return getBottombarForParticipant;
+
+      default:
+        return getBottombarForParticipant;
+    }
+  }
+
+  Widget get getBottombarForCreator {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: RichText(
+            text: TextSpan(style: TextStyle(color: Colors.black), children: [
+              TextSpan(
+                text: S.of(context).creator_of_request_message,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'Europa',
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ]),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget get getBottombarForParticipant {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: isApplied
+                      ? S.of(context).applied_for_request
+                      : S.of(context).particpate_in_request_question,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Europa',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(right: 5),
+          width: 100,
+          height: 32,
+          child: FlatButton(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            padding: EdgeInsets.all(0),
+            color: isApplied ? Theme.of(context).accentColor : Colors.green,
+            child: Row(
+              children: <Widget>[
+                SizedBox(width: 1),
+                Spacer(),
+                Text(
+                  isApplied ? S.of(context).withdraw : S.of(context).apply,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                Spacer(
+                  flex: 1,
+                ),
+              ],
+            ),
+            onPressed: () {
+              applyAction();
+            },
+          ),
+        )
+      ],
     );
   }
 
@@ -506,7 +777,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         color: Colors.grey,
       ),
       trailing: Text(
-        '10',
+        widget.requestItem.goodsDonationDetails.requiredGoods.length.toString(),
         style: TextStyle(
           fontSize: 18,
           color: Colors.black,

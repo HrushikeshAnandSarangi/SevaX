@@ -479,33 +479,48 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 print("notification data ${notification.data}");
                 DonationApproveModel donationApproveModel =
                     DonationApproveModel.fromMap(notification.data);
+                return FutureBuilder<RequestModel>(
+                  future: RequestRepository.getRequestFutureById(
+                      donationApproveModel.requestId),
+                  builder: (_context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Container();
+                    }
 
-                return NotificationCard(
-                  entityName: donationApproveModel.requestTitle.toLowerCase(),
-                  isDissmissible: true,
-                  onDismissed: () {
-                    NotificationsRepository.readUserNotification(
-                      notification.id,
-                      user.email,
-                    );
-                  },
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return ApproveDonationDialog(
-                          donationApproveModel: donationApproveModel,
-                          timeBankId: notification.timebankId,
-                          notificationId: notification.id,
-                          userId: notification.senderUserId,
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    RequestModel model = snapshot.data;
+                    return NotificationCard(
+                      entityName:
+                          donationApproveModel.requestTitle.toLowerCase(),
+                      isDissmissible: true,
+                      onDismissed: () {
+                        NotificationsRepository.readUserNotification(
+                          notification.id,
+                          user.email,
                         );
                       },
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return ApproveDonationDialog(
+                              requestModel: model,
+                              donationApproveModel: donationApproveModel,
+                              timeBankId: notification.timebankId,
+                              notificationId: notification.id,
+                              userId: notification.senderUserId,
+                            );
+                          },
+                        );
+                      },
+                      photoUrl: donationApproveModel.donorPhotoUrl,
+                      subTitle:
+                          '${donationApproveModel.donorName.toLowerCase() + ' donated ' + donationApproveModel.donationType}, ${S.of(context).notifications_tap_to_view}',
+                      title: 'Donation approval',
                     );
                   },
-                  photoUrl: donationApproveModel.donorPhotoUrl,
-                  subTitle:
-                      '${donationApproveModel.donorName.toLowerCase() + ' donated ' + donationApproveModel.donationType}, ${S.of(context).notifications_tap_to_view}',
-                  title: 'Donation approval',
                 );
                 break;
               case NotificationType.GroupJoinInvite:

@@ -9,6 +9,7 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/image_caption_model.dart';
 import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/repositories/feed_repository.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/chat_model_sync_singleton.dart';
 import 'package:sevaexchange/ui/screens/message/pages/group_info.dart';
@@ -20,7 +21,6 @@ import 'package:sevaexchange/ui/screens/message/widgets/message_input.dart';
 import 'package:sevaexchange/ui/utils/colors.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/repositories/feed_repository.dart';
 import 'package:sevaexchange/widgets/camera/camera_page.dart';
 
 class ChatPage extends StatefulWidget {
@@ -168,7 +168,7 @@ class _ChatPageState extends State<ChatPage> {
           Expanded(
             child: StreamBuilder<List<MessageModel>>(
               stream: _bloc.messages,
-              builder: (BuildContext context,
+              builder: (BuildContext _context,
                   AsyncSnapshot<List<MessageModel>> snapshot) {
                 if (snapshot.hasError) {
                   _scrollToBottom();

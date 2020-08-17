@@ -2,175 +2,199 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/donation_approve_model.dart';
+import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
-class ApproveDonationDialog extends StatefulWidget {
+class ApproveDonationDialog extends StatelessWidget {
   final DonationApproveModel donationApproveModel;
   final String timeBankId;
   final String notificationId;
   final String userId;
+  final RequestModel requestModel;
+  final BuildContext parentContext;
 
   ApproveDonationDialog({
     this.donationApproveModel,
     this.timeBankId,
     this.notificationId,
     this.userId,
+    this.requestModel,
+    this.parentContext,
   });
 
   @override
-  _ApproveDonationDialogState createState() => _ApproveDonationDialogState();
-}
-
-class _ApproveDonationDialogState extends State<ApproveDonationDialog> {
-  _ApproveDonationDialogState();
-
-  BuildContext progressContext;
-
-  @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(25.0))),
-      content: Form(
-        //key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            _getCloseButton(context),
-            Container(
-              height: 70,
-              width: 70,
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    widget.donationApproveModel.donorPhotoUrl ??
-                        defaultUserImageURL),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(4.0),
-            ),
-            Padding(
-              padding: EdgeInsets.all(4.0),
-              child: Text(
-                widget.donationApproveModel.donorName ?? "Anonymous",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+    return Builder(
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(25.0))),
+        content: Form(
+          //key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              _getCloseButton(context),
+              Container(
+                height: 70,
+                width: 70,
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      donationApproveModel.donorPhotoUrl ??
+                          defaultUserImageURL),
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-              child: Text(
-                widget.donationApproveModel.requestTitle ??
-                    "Request title not updated",
+              Padding(
+                padding: EdgeInsets.all(4.0),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                widget.donationApproveModel.donationDetails ??
-                    "Description not yet updated",
-                maxLines: 5,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Center(
-              child: Text(
-                  "By accepting, ${widget.donationApproveModel.donorName} will be added to donors list.",
+              Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Text(
+                  donationApproveModel.donorName ?? "Anonymous",
                   style: TextStyle(
-                    fontStyle: FontStyle.italic,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
                   ),
-                  textAlign: TextAlign.center),
-            ),
-            Padding(
-              padding: EdgeInsets.all(5.0),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  child: RaisedButton(
-                    color: FlavorConfig.values.theme.primaryColor,
-                    child: Text(
-                      S.of(context).approve,
-                      style:
-                          TextStyle(color: Colors.white, fontFamily: 'Europa'),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                child: Text(
+                  donationApproveModel.requestTitle ??
+                      "Request title not updated",
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  donationApproveModel.donationDetails ??
+                      "Description not yet updated",
+                  maxLines: 5,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Center(
+                child: Text(
+                    "By accepting, ${donationApproveModel.donorName} will be added to donors list.",
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
                     ),
-                    onPressed: () async {
-                      //donation approved
+                    textAlign: TextAlign.center),
+              ),
+              Padding(
+                padding: EdgeInsets.all(5.0),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    width: double.infinity,
+                    child: RaisedButton(
+                      color: FlavorConfig.values.theme.primaryColor,
+                      child: Text(
+                        'Acknowledge',
+                        style: TextStyle(
+                            color: Colors.white, fontFamily: 'Europa'),
+                      ),
+                      onPressed: () async {
+                        //donation approved
 
-                      // showProgressDialog(context, 'Accepting Invitation');
+                        // showProgressDialog(context, 'Accepting Invitation');
 
-                      if (progressContext != null) {
-                        Navigator.pop(progressContext);
-                      }
-
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(4.0),
-                ),
-                Container(
-                  width: double.infinity,
-                  child: RaisedButton(
-                    color: Theme.of(context).accentColor,
-                    child: Text(
-                      S.of(context).decline,
-                      style:
-                          TextStyle(color: Colors.white, fontFamily: 'Europa'),
+                        Navigator.of(context).pop();
+                      },
                     ),
-                    onPressed: () async {
-                      // donation declined
-                      //   showProgressDialog(context, 'Rejecting Invitation');
-
-                      if (progressContext != null) {
-                        Navigator.pop(progressContext);
-                      }
-                      Navigator.of(context).pop();
-                    },
                   ),
-                ),
-              ],
-            )
-          ],
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    child: RaisedButton(
+                      color: FlavorConfig.values.theme.primaryColor,
+                      child: Text(
+                        'Modify',
+                        style: TextStyle(
+                            color: Colors.white, fontFamily: 'Europa'),
+                      ),
+                      onPressed: () async {
+                        //donation approved
+
+                        // showProgressDialog(context, 'Accepting Invitation');
+
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    child: RaisedButton(
+                      color: Theme.of(context).accentColor,
+                      child: Text(
+                        S.of(context).message,
+                        style: TextStyle(
+                            color: Colors.white, fontFamily: 'Europa'),
+                      ),
+                      onPressed: () async {
+                        // donation declined
+                        createChat(
+                            context: context,
+                            model: requestModel,
+                            notificationId: notificationId,
+                            userId: userId);
+//
+//                      if (progressContext != null) {
+//                        Navigator.pop(progressContext);
+//                      }
+//                      Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 
-  void showProgressDialog(BuildContext context, String message) {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (createDialogContext) {
-          progressContext = createDialogContext;
-          return AlertDialog(
-            title: Text(message),
-            content: LinearProgressIndicator(),
-          );
-        });
-  }
+//  void showProgressDialog(BuildContext context, String message) {
+//    showDialog(
+//        barrierDismissible: false,
+//        context: context,
+//        builder: (createDialogContext) {
+//          progressContext = createDialogContext;
+//          return AlertDialog(
+//            title: Text(message),
+//            content: LinearProgressIndicator(),
+//          );
+//        });
+//  }
 
-  void declineDonation({
+  void modifyDonation({
     DonationApproveModel model,
     String notificationId,
   }) {
     FirestoreManager.readUserNotification(
-        notificationId, widget.donationApproveModel.donorEmail);
+        notificationId, donationApproveModel.donorEmail);
   }
 
-  void approveDonation({
+  void acknowledgeDonation({
     DonationApproveModel model,
     String notificationId,
   }) {
     FirestoreManager.readUserNotification(
-        notificationId, widget.donationApproveModel.donorEmail);
+        notificationId, donationApproveModel.donorEmail);
   }
 
   Widget _getCloseButton(BuildContext context) {
@@ -200,4 +224,73 @@ class _ApproveDonationDialogState extends State<ApproveDonationDialog> {
       ),
     );
   }
+
+  Future createChat({
+    RequestModel model,
+    String userId,
+    BuildContext context,
+    String notificationId,
+  }) async {
+    TimebankModel timebankModel =
+        await getTimeBankForId(timebankId: model.timebankId);
+    UserModel user = await FirestoreManager.getUserForId(sevaUserId: userId);
+    UserModel loggedInUser =
+        await FirestoreManager.getUserForId(sevaUserId: model.sevaUserId);
+    print('loggedin ${loggedInUser}');
+    ParticipantInfo sender, reciever;
+    switch (requestModel.requestMode) {
+      case RequestMode.PERSONAL_REQUEST:
+        sender = ParticipantInfo(
+          id: loggedInUser.sevaUserID,
+          name: loggedInUser.fullname,
+          photoUrl: loggedInUser.photoURL,
+          type: ChatType.TYPE_PERSONAL,
+        );
+        break;
+
+      case RequestMode.TIMEBANK_REQUEST:
+        sender = ParticipantInfo(
+          id: timebankModel.id,
+          type: timebankModel.parentTimebankId ==
+                  FlavorConfig
+                      .values.timebankId //check if timebank is primary timebank
+              ? ChatType.TYPE_TIMEBANK
+              : ChatType.TYPE_GROUP,
+          name: timebankModel.name,
+          photoUrl: timebankModel.photoUrl,
+        );
+        break;
+    }
+
+    reciever = ParticipantInfo(
+      id: user.sevaUserID,
+      name: user.fullname,
+      photoUrl: user.photoURL,
+      type: ChatType.TYPE_PERSONAL,
+    );
+
+    createAndOpenChat(
+      isTimebankMessage:
+          requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+      context: parentContext,
+      timebankId: model.timebankId,
+      communityId: loggedInUser.currentCommunity,
+      sender: sender,
+      reciever: reciever,
+      isFromRejectCompletion: false,
+      onChatCreate: () {
+        Navigator.pop(context);
+      },
+    );
+  }
+
+//  if (requestModel.requestMode == RequestMode.PERSONAL_REQUEST) {
+//  FirestoreManager.readUserNotification(
+//  notificationId, SevaCore.of(context).loggedInUser.email);
+//  } else {
+//  readTimeBankNotification(
+//  notificationId: notificationId,
+//  timebankId: requestModel.timebankId,
+//  );
+//  }
 }

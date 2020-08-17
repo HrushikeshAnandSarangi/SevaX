@@ -148,9 +148,15 @@ class _DonationViewState extends State<DonationView> {
               actionButton(
                 buttonTitle: 'Done',
                 onPressed: () {
-                  pageController.animateToPage(2,
-                      curve: Curves.easeInOut,
-                      duration: Duration(milliseconds: 500));
+                  donationBloc
+                      .validateAmount(requestModel: widget.requestModel)
+                      .then((value) {
+                    if (value) {
+                      pageController.animateToPage(2,
+                          curve: Curves.easeInOut,
+                          duration: Duration(milliseconds: 500));
+                    }
+                  });
                 },
               ),
             ],
@@ -195,7 +201,7 @@ class _DonationViewState extends State<DonationView> {
               }
             },
             child: Text(
-              'www.sevaexchange.com',
+              widget.requestModel.cashModel.donationInstructionLink,
               style: TextStyle(color: Colors.blue),
             ),
           ),

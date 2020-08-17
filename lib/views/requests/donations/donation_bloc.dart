@@ -53,6 +53,20 @@ class DonationBloc {
     return false;
   }
 
+  Future<bool> validateAmount({RequestModel requestModel}) async {
+    if (_amountPledged.value.isEmpty) {
+      _amountPledged.addError('Enter valid amount');
+    } else if (int.parse(_amountPledged.value) <
+        requestModel.cashModel.minAmount) {
+      _amountPledged.addError(
+          'Minimum amount is ${requestModel.cashModel.minAmount.toString()}');
+    } else {
+      return true;
+    }
+
+    return false;
+  }
+
   Future<bool> donateAmount(
       {DonationModel donationModel,
       RequestModel requestModel,
