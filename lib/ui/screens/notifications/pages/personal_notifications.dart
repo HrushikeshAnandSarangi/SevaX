@@ -520,7 +520,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       },
                       photoUrl: donationApproveModel.donorPhotoUrl,
                       subTitle:
-                          '${donationApproveModel.donorName.toLowerCase() + ' donated ' + donationApproveModel.donationType}, ${S.of(context).notifications_tap_to_view}',
+                          '${donationApproveModel.donorName.toLowerCase() + ' donated ' + donationApproveModel.donationType.toString().split('.')[1]}, ${S.of(context).notifications_tap_to_view}',
                       title: 'Donation approval',
                     );
                   },

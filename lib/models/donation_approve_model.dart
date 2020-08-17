@@ -1,3 +1,5 @@
+import 'package:sevaexchange/models/request_model.dart';
+
 class DonationApproveModel {
   DonationApproveModel({
     this.donorName,
@@ -17,7 +19,7 @@ class DonationApproveModel {
   String requestId;
   String donationId;
   String donationDetails;
-  String donationType;
+  RequestType donationType;
 
   factory DonationApproveModel.fromMap(Map<String, dynamic> json) =>
       DonationApproveModel(
@@ -31,8 +33,9 @@ class DonationApproveModel {
         donationId: json["donationId"] == null ? null : json["donationId"],
         donationDetails:
             json["donationDetails"] == null ? null : json["donationDetails"],
-        donationType:
-            json["donationType"] == null ? null : json["donationType"],
+        donationType: json["donationType"] == null
+            ? null
+            : requestTypeMapper[json["donationType"]],
       );
 
   Map<String, dynamic> toMap() => {
@@ -43,6 +46,7 @@ class DonationApproveModel {
         "requestId": requestId == null ? null : requestId,
         "donationId": donationId == null ? null : donationId,
         "donationDetails": donationDetails == null ? null : donationDetails,
-        "donationType": donationType == null ? null : donationType,
+        "donationType":
+            donationType == null ? null : donationType.toString().split('.')[1],
       };
 }

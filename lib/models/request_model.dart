@@ -714,7 +714,16 @@ class GoodsDonationDetails {
 }
 
 enum RequestMode { PERSONAL_REQUEST, TIMEBANK_REQUEST }
-enum RequestType { CASH, TIME, GOODS }
-enum DonationType { CASH, TIME, GOODS }
+enum RequestType {
+  CASH,
+  TIME,
+  GOODS,
+}
 
 enum ContantsSeva { USER_DONATE_TOTIMEBANK }
+
+Map<String, RequestType> requestTypeMapper = {
+  "CASH": RequestType.CASH,
+  "TIME": RequestType.TIME,
+  "GOODS": RequestType.GOODS,
+};
