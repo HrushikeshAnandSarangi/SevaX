@@ -50,7 +50,6 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
     super.initState();
     getMembersList();
     ownerGroupsArr = widget.responseData['ownerGroupsArr'];
-    //  print("ownerGroupsArr==============" + ownerGroupsArr.toString());
   }
 
   void getMembersList() {

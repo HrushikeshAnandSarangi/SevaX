@@ -103,7 +103,6 @@ Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(
   var urlLink = FlavorConfig.values.cloudFunctionBaseURL +
       '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
 
-  print("==============$urlLink==============");
   var res = await http
       .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
   print('res--->$res');
@@ -132,7 +131,6 @@ Future<UserModelListMoreStatus>
   }
   var urlLink = FlavorConfig.values.cloudFunctionBaseURL +
       '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
-  print("==============$urlLink==============");
   var res = await http
       .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
   print('res--->$res');

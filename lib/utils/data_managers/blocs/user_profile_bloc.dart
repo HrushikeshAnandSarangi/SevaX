@@ -66,7 +66,6 @@ class UserProfileBloc {
 
   void setDefaultCommunity(
       String email, CommunityModel community, BuildContext context) {
-    print("======================+++ ${community.toString()}");
     _communityLoaded.add(false);
 
     if (community != null)
