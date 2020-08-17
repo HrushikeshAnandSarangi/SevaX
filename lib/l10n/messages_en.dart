@@ -19,25 +19,29 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static m0(count) => "${Intl.plural(count, one: 'Hour', other: 'Hours')}";
+  static m0(count) => "${Intl.plural(count, one: 'Day', other: 'Days')}";
 
-  static m1(count) => "${Intl.plural(count, one: 'member selected', other: 'members selected')}";
+  static m1(count) => "${Intl.plural(count, one: 'Hour', other: 'Hours')}";
 
-  static m2(count) => "${Intl.plural(count, one: 'Other', other: 'Others')}";
+  static m2(count) => "${Intl.plural(count, one: 'member selected', other: 'members selected')}";
 
-  static m3(count) => "${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects')}";
+  static m3(count) => "${Intl.plural(count, one: 'Other', other: 'Others')}";
 
-  static m4(count) => "${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests')}";
+  static m4(count) => "${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects')}";
 
-  static m5(count) => "${Intl.plural(count, one: 'Subscription', other: 'Subscriptions')}";
+  static m5(count) => "${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests')}";
 
-  static m6(count) => "${Intl.plural(count, one: 'Timebank Project', other: 'Timebank Projects')}";
+  static m6(count) => "${Intl.plural(count, one: 'Subscription', other: 'Subscriptions')}";
 
-  static m7(count) => "${Intl.plural(count, one: 'Timebank Request', other: 'Timebank Requests')}";
+  static m7(count) => "${Intl.plural(count, one: 'Timebank Project', other: 'Timebank Projects')}";
 
-  static m8(count) => "${Intl.plural(count, one: 'user', other: 'users')}";
+  static m8(count) => "${Intl.plural(count, one: 'Timebank Request', other: 'Timebank Requests')}";
 
-  static m9(count) => "${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected')}";
+  static m9(count) => "${Intl.plural(count, one: 'user', other: 'users')}";
+
+  static m10(count) => "${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected')}";
+
+  static m11(count) => "${Intl.plural(count, one: 'Year', other: 'Years')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -211,6 +215,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "date" : MessageLookupByLibrary.simpleMessage("Date"),
     "date_selection_issue" : MessageLookupByLibrary.simpleMessage("Date Selection issue"),
     "date_time" : MessageLookupByLibrary.simpleMessage("date & time"),
+    "day" : m0,
     "days_available" : MessageLookupByLibrary.simpleMessage("Days Available"),
     "decline" : MessageLookupByLibrary.simpleMessage("Decline"),
     "declined" : MessageLookupByLibrary.simpleMessage("Declined"),
@@ -324,7 +329,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "help_training_video" : MessageLookupByLibrary.simpleMessage("Training Video"),
     "help_version" : MessageLookupByLibrary.simpleMessage("Version"),
     "hosted_by" : MessageLookupByLibrary.simpleMessage("Hosted by"),
-    "hour" : m0,
+    "hour" : m1,
     "hours_worked" : MessageLookupByLibrary.simpleMessage("Hours worked"),
     "i_want_to_volunteer" : MessageLookupByLibrary.simpleMessage("I want to volunteer."),
     "image_url" : MessageLookupByLibrary.simpleMessage("Image Url"),
@@ -361,6 +366,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "large_file_size" : MessageLookupByLibrary.simpleMessage("Large file alert"),
     "left" : MessageLookupByLibrary.simpleMessage("left"),
     "less" : MessageLookupByLibrary.simpleMessage("Less"),
+    "lifetime" : MessageLookupByLibrary.simpleMessage("Lifetime"),
     "limit_badge_billing_failed" : MessageLookupByLibrary.simpleMessage("Billing Failed, Click below to configure billing"),
     "limit_badge_contact_admin" : MessageLookupByLibrary.simpleMessage("Action not allowed, please contact the admin"),
     "limit_badge_delete_in_progress" : MessageLookupByLibrary.simpleMessage("Your request to delete has been received by us. We are processing the request. You will be notified once it is completed."),
@@ -392,7 +398,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "member_reported" : MessageLookupByLibrary.simpleMessage("Member reported successfully"),
     "member_reporting_failed" : MessageLookupByLibrary.simpleMessage("Failed to report member! Try again"),
     "members" : MessageLookupByLibrary.simpleMessage("Members"),
-    "members_selected" : m1,
+    "members_selected" : m2,
     "message" : MessageLookupByLibrary.simpleMessage("Message"),
     "messaging_room" : MessageLookupByLibrary.simpleMessage("Messaging Room"),
     "messaging_room_name" : MessageLookupByLibrary.simpleMessage("Messaging Room Name"),
@@ -525,7 +531,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "open_settings" : MessageLookupByLibrary.simpleMessage("Open Settings"),
     "or" : MessageLookupByLibrary.simpleMessage("or"),
     "organizer" : MessageLookupByLibrary.simpleMessage("Organiser"),
-    "other" : m2,
+    "other" : m3,
     "ownership_success" : MessageLookupByLibrary.simpleMessage("Congratulations! You are now the new owner of the Timebank"),
     "ownership_transfer_error" : MessageLookupByLibrary.simpleMessage("Error occurred! Please come back later and try again."),
     "part_of" : MessageLookupByLibrary.simpleMessage("Part of"),
@@ -544,8 +550,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "personal" : MessageLookupByLibrary.simpleMessage("Personal"),
     "personal_max_seva_credit_message1" : MessageLookupByLibrary.simpleMessage("Seva Credits are required for this request. It will be debited from your balance. Note that each participant will receive a maximum of"),
     "personal_max_seva_credit_message2" : MessageLookupByLibrary.simpleMessage("credits for completing this request."),
-    "personal_project" : m3,
-    "personal_request" : m4,
+    "personal_project" : m4,
+    "personal_request" : m5,
     "phone_number" : MessageLookupByLibrary.simpleMessage("Phone Number"),
     "photo_credits" : MessageLookupByLibrary.simpleMessage("Photo Credits"),
     "plan_change" : MessageLookupByLibrary.simpleMessage("Plan change"),
@@ -679,7 +685,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "street_add2" : MessageLookupByLibrary.simpleMessage("Street Address 2"),
     "submit" : MessageLookupByLibrary.simpleMessage("Submit"),
     "submitting_request" : MessageLookupByLibrary.simpleMessage("Submitting request..."),
-    "subscription" : m5,
+    "subscription" : m6,
     "successfully" : MessageLookupByLibrary.simpleMessage("Successfully"),
     "switching_timebank" : MessageLookupByLibrary.simpleMessage("Switching Timebank"),
     "taking_to_new_timebank" : MessageLookupByLibrary.simpleMessage("Taking you to your new Timebank..."),
@@ -726,8 +732,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "timebank_offers" : MessageLookupByLibrary.simpleMessage("Timebank Offers"),
     "timebank_onboarding_message" : MessageLookupByLibrary.simpleMessage("You have been onboarded to"),
     "timebank_profile_info" : MessageLookupByLibrary.simpleMessage("Profile Information"),
-    "timebank_project" : m6,
-    "timebank_request" : m7,
+    "timebank_project" : m7,
+    "timebank_request" : m8,
     "timebank_select_tax_percentage" : MessageLookupByLibrary.simpleMessage("Select Tax percentage"),
     "timebank_seva_credit" : MessageLookupByLibrary.simpleMessage("Your timebank seva credits is"),
     "timebank_tell_more" : MessageLookupByLibrary.simpleMessage("Tell us more about your Timebank."),
@@ -765,7 +771,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "upload_cv_resume" : MessageLookupByLibrary.simpleMessage("Upload my CV/Resume"),
     "uploaded_successfully" : MessageLookupByLibrary.simpleMessage("Uploaded Successfully"),
     "uploading_csv" : MessageLookupByLibrary.simpleMessage("Uploading CSV File"),
-    "user" : m8,
+    "user" : m9,
     "user_has" : MessageLookupByLibrary.simpleMessage("User has"),
     "user_removal_success" : MessageLookupByLibrary.simpleMessage("User is successfully removed from the timebank"),
     "user_removed_from_group" : MessageLookupByLibrary.simpleMessage("User is successfully removed from the group"),
@@ -821,12 +827,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "view_requests" : MessageLookupByLibrary.simpleMessage("View requests"),
     "view_selected_plans" : MessageLookupByLibrary.simpleMessage("View selected plans"),
     "volunteers" : MessageLookupByLibrary.simpleMessage("Volunteer(s)"),
-    "volunteers_selected" : m9,
+    "volunteers_selected" : m10,
     "we_met" : MessageLookupByLibrary.simpleMessage("We met before"),
     "will_be_added_to_request" : MessageLookupByLibrary.simpleMessage("*** will be automatically added to the request."),
     "withdraw" : MessageLookupByLibrary.simpleMessage("Withdraw"),
     "withdraw_request_failure" : MessageLookupByLibrary.simpleMessage("You cannot withdraw request since already approved"),
     "would_be_unblocked" : MessageLookupByLibrary.simpleMessage("would be unblocked"),
+    "year" : m11,
     "yes" : MessageLookupByLibrary.simpleMessage("Yes"),
     "you_created_offer" : MessageLookupByLibrary.simpleMessage("You created this offer"),
     "you_have" : MessageLookupByLibrary.simpleMessage("You have"),
