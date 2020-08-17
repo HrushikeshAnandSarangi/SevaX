@@ -48,8 +48,10 @@ class PersonalNotifications extends StatefulWidget {
 
 class _PersonalNotificationsState extends State<PersonalNotifications>
     with AutomaticKeepAliveClientMixin {
+  BuildContext parentContext;
   @override
   Widget build(BuildContext context) {
+    parentContext = context;
     super.build(context);
     final _bloc = BlocProvider.of<NotificationsBloc>(context);
     final UserModel user = SevaCore.of(context).loggedInUser;
@@ -511,6 +513,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               timeBankId: notification.timebankId,
                               notificationId: notification.id,
                               userId: notification.senderUserId,
+                              parentContext: parentContext,
                             );
                           },
                         );
@@ -642,11 +645,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   onDismissed: onDismissed,
                 );
                 break;
-
-              case NotificationType.CASH_DONATION_ACKNOWLEDGED_BY_CREATOR:
-              case NotificationType.CASH_DONATION_ACKNOWLEDGED_BY_DONOR:
-                break;
-
               case NotificationType.TYPE_FEEDBACK_FROM_SIGNUP_MEMBER:
                 OneToManyNotificationDataModel data =
                     OneToManyNotificationDataModel.fromJson(notification.data);
