@@ -11,6 +11,7 @@ import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/models/reported_member_notification_model.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
+import 'package:sevaexchange/repositories/request_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_join_request_widget.dart';
@@ -36,8 +37,10 @@ class TimebankNotifications extends StatefulWidget {
 }
 
 class _TimebankNotificationsState extends State<TimebankNotifications> {
+  BuildContext parentContext;
   @override
   Widget build(BuildContext context) {
+    parentContext = context;
     final _bloc = BlocProvider.of<NotificationsBloc>(context);
     return StreamBuilder(
       stream: _bloc.timebankNotifications,
@@ -79,32 +82,49 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 DonationApproveModel donationApproveModel =
                     DonationApproveModel.fromMap(notification.data);
 
-                return NotificationCard(
-                  entityName: donationApproveModel.requestTitle.toLowerCase(),
-                  isDissmissible: true,
-                  onDismissed: () {
-                    FirestoreManager.readTimeBankNotification(
-                      notificationId: notification.id,
-                      timebankId: notification.timebankId,
-                    );
-                  },
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return ApproveDonationDialog(
-                          donationApproveModel: donationApproveModel,
-                          timeBankId: notification.timebankId,
+                return FutureBuilder<RequestModel>(
+                  future: RequestRepository.getRequestFutureById(
+                      donationApproveModel.requestId),
+                  builder: (_context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Container();
+                    }
+
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    RequestModel model = snapshot.data;
+                    return NotificationCard(
+                      entityName:
+                          donationApproveModel.requestTitle.toLowerCase(),
+                      isDissmissible: true,
+                      onDismissed: () {
+                        FirestoreManager.readTimeBankNotification(
                           notificationId: notification.id,
-                          userId: notification.senderUserId,
+                          timebankId: notification.timebankId,
                         );
                       },
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return ApproveDonationDialog(
+                              requestModel: model,
+                              donationApproveModel: donationApproveModel,
+                              timeBankId: notification.timebankId,
+                              notificationId: notification.id,
+                              userId: notification.senderUserId,
+                              parentContext: parentContext,
+                            );
+                          },
+                        );
+                      },
+                      photoUrl: donationApproveModel.donorPhotoUrl,
+                      subTitle:
+                          '${donationApproveModel.donorName.toLowerCase() + ' donated ' + donationApproveModel.donationType}, ${S.of(context).notifications_tap_to_view}',
+                      title: 'Donation approval',
                     );
                   },
-                  photoUrl: donationApproveModel.donorPhotoUrl,
-                  subTitle:
-                      '${donationApproveModel.donorName.toLowerCase() + ' donated ' + donationApproveModel.donationType}, ${S.of(context).notifications_tap_to_view}',
-                  title: 'Donation approval',
                 );
                 break;
               case NotificationType.TypeMemberExitTimebank:

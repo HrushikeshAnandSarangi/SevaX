@@ -15,6 +15,7 @@ class DonationModel {
       this.cashDetails,
       this.goodsDetails,
       this.donationStatus,
+      this.notificationId,
       this.donorDetails});
 
   String communityId;
@@ -26,6 +27,7 @@ class DonationModel {
   String id;
   String requestId;
   String timebankId;
+  String notificationId;
   int timestamp;
   DonationStatus donationStatus;
   CashDetails cashDetails;
@@ -33,6 +35,8 @@ class DonationModel {
   DonorDetails donorDetails;
   factory DonationModel.fromMap(Map<String, dynamic> json) => DonationModel(
         communityId: json["communityId"] == null ? null : json["communityId"],
+        notificationId:
+            json["notificationId"] == null ? null : json["notificationId"],
         donorSevaUserId:
             json["donorSevaUserId"] == null ? null : json["donorSevaUserId"],
         donatedTo: json["donatedTo"] == null ? null : json["donatedTo"],
@@ -77,6 +81,7 @@ class DonationModel {
 
   Map<String, dynamic> toMap() => {
         "communityId": communityId == null ? null : communityId,
+        "notificationId": notificationId == null ? null : notificationId,
         "donorSevaUserId": donorSevaUserId == null ? null : donorSevaUserId,
         "donatedTo": donatedTo == null ? null : donatedTo,
         "donatedToTimebank":

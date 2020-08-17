@@ -5,7 +5,6 @@ import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/utils.dart';
 
 class DonationBloc {
   final _goodsDescription = BehaviorSubject<String>();
@@ -50,6 +49,20 @@ class DonationBloc {
         _errorMessage.add("something went wrong try again later");
       }
     }
+    return false;
+  }
+
+  Future<bool> validateAmount({RequestModel requestModel}) async {
+    if (_amountPledged.value.isEmpty) {
+      _amountPledged.addError('Enter valid amount');
+    } else if (int.parse(_amountPledged.value) <
+        requestModel.cashModel.minAmount) {
+      _amountPledged.addError(
+          'Minimum amount is ${requestModel.cashModel.minAmount.toString()}');
+    } else {
+      return true;
+    }
+
     return false;
   }
 
@@ -106,7 +119,7 @@ class DonationBloc {
       timebankId: donationModel.timebankId,
       communityId: donationModel.communityId,
       type: NotificationType.TypeApproveDonation,
-      id: Utils.getUuid(),
+      id: donationModel.notificationId,
       isRead: false,
       isTimebankNotification:
           requestModel.requestMode == RequestMode.PERSONAL_REQUEST
