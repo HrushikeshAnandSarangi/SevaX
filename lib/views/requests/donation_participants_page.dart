@@ -1,12 +1,19 @@
+import 'dart:developer';
+
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
+import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/requests/donations/donation_accepted_bloc.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/participant_card.dart';
 
 class DonationParticipantPage extends StatelessWidget {
+  final RequestModel requestModel;
+
+  const DonationParticipantPage({Key key, this.requestModel}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<DonationAcceptedBloc>(context);
@@ -24,15 +31,84 @@ class DonationParticipantPage extends StatelessWidget {
           itemCount: snapshot.data.length,
           itemBuilder: (_, index) {
             DonationModel model = snapshot.data[index];
+            DonationButtonActionModel buttonStatus =
+                buttonActionModel(context, model.donationStatus);
             return RequestParticipantCard(
               name: model.donorDetails.name,
               bio: model.donorDetails.bio,
               imageUrl: model.donorDetails.photoUrl,
-              buttonTitle: S.of(context).accepted,
+              buttonTitle: buttonStatus.buttonText,
+              buttonColor: buttonStatus.buttonColor,
+              onTap: buttonStatus.onTap,
             );
           },
         );
       },
     );
   }
+
+  DonationButtonActionModel buttonActionModel(
+      BuildContext context, DonationStatus status) {
+    switch (status) {
+      case DonationStatus.ACKNOWLEDGED:
+        return DonationButtonActionModel(
+          buttonColor: Theme.of(context).primaryColor,
+          onTap: null,
+          buttonText: 'ACKLOWLEDGED',
+        );
+        break;
+      case DonationStatus.PLEDGED:
+        return DonationButtonActionModel(
+          buttonColor: Colors.green,
+          onTap: onPledged,
+          buttonText: 'ACKNOWLEDGE',
+        );
+        break;
+
+      case DonationStatus.MODIFIED:
+        return DonationButtonActionModel(
+          buttonColor: Colors.red,
+          onTap: onPledged,
+          buttonText: 'MODIFIED',
+        );
+        break;
+      case DonationStatus.APPROVED_BY_DONOR:
+        return DonationButtonActionModel(
+          buttonColor: Colors.green,
+          onTap: onPledged,
+          buttonText: 'ACKNOWLEDGE',
+        );
+        break;
+      case DonationStatus.APPROVED_BY_CREATOR:
+        return DonationButtonActionModel(
+          buttonColor: Colors.green,
+          onTap: onPledged,
+          buttonText: 'ACKNOWLEDGE',
+        );
+        break;
+      default:
+        return DonationButtonActionModel(
+          buttonColor: Colors.grey,
+          onTap: unImplementedCase,
+          buttonText: 'UN-IMPLEMENTED',
+        );
+    }
+  }
+
+  void onPledged() {
+    print('pledged');
+  }
+
+  void unImplementedCase() {
+    Crashlytics.instance.log('UnImplemented DonationStatus case');
+    log('UnImplemented DonationStatus case');
+  }
+}
+
+class DonationButtonActionModel {
+  final Color buttonColor;
+  final String buttonText;
+  final VoidCallback onTap;
+
+  DonationButtonActionModel({this.buttonColor, this.buttonText, this.onTap});
 }
