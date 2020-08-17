@@ -6,10 +6,11 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_approve_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/ui/screens/request/bloc/donation_accepted_bloc.dart';
+import 'package:sevaexchange/ui/screens/request/widgets/request_donation_acknowledge_dialog.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/approve_donation_dialog.dart';
-import 'package:sevaexchange/views/requests/donations/donation_accepted_bloc.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/participant_card.dart';
 
@@ -71,21 +72,21 @@ class DonationParticipantPage extends StatelessWidget {
       case DonationStatus.MODIFIED:
         return DonationButtonActionModel(
           buttonColor: Colors.red,
-          // onTap: onPledged,
+          //TODO: Update methods accordingly
           buttonText: 'MODIFIED',
         );
         break;
       case DonationStatus.APPROVED_BY_DONOR:
         return DonationButtonActionModel(
           buttonColor: Colors.green,
-          // onTap: onPledged,
+          //TODO: Update methods accordingly
           buttonText: 'ACKNOWLEDGE',
         );
         break;
       case DonationStatus.APPROVED_BY_CREATOR:
         return DonationButtonActionModel(
           buttonColor: Colors.green,
-          // onTap: onPledged,
+          //TODO: Update methods accordingly
           buttonText: 'ACKNOWLEDGE',
         );
         break;
@@ -120,6 +121,15 @@ class DonationParticipantPage extends StatelessWidget {
           notificationId: model.notificationId,
           userId: SevaCore.of(context).loggedInUser.sevaUserID,
           parentContext: context,
+          onTap: () {
+            log('show dialog');
+            Navigator.of(context, rootNavigator: true).pop();
+            showDialog(
+              context: context,
+              builder: (context) =>
+                  requestDonationAcknowledgementDialog(context),
+            );
+          },
         );
       },
     );

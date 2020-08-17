@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/ui/screens/request/bloc/donation_accepted_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/amount_raised_progress_indicator.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/views/requests/donations/donation_accepted_bloc.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/participant_card.dart';
 
@@ -63,7 +63,7 @@ class DonationCompletedPage extends StatelessWidget {
                     imageUrl: model.donorDetails.photoUrl,
                     bio: model.donorDetails.bio,
                     buttonTitle: 'ACKNOWLEDGED',
-                    buttonColor: Colors.green,
+                    buttonColor: Theme.of(context).primaryColor,
                   );
                 },
               ),
