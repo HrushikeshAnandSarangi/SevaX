@@ -45,8 +45,12 @@ class _DonationAcceptedPageState extends State<DonationAcceptedPage> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    DonationParticipantPage(),
-                    DonationCompletedPage(),
+                    DonationParticipantPage(
+                      requestModel: widget.model,
+                    ),
+                    DonationCompletedPage(
+                      requestModel: widget.model,
+                    ),
                   ],
                 ),
               ),

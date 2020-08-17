@@ -27,7 +27,7 @@ class DonationModel {
   String requestId;
   String timebankId;
   int timestamp;
-  bool donationStatus;
+  DonationStatus donationStatus;
   CashDetails cashDetails;
   GoodsDetails goodsDetails;
   DonorDetails donorDetails;
@@ -53,8 +53,9 @@ class DonationModel {
         requestId: json["requestId"] == null ? null : json["requestId"],
         timebankId: json["timebankId"] == null ? null : json["timebankId"],
         timestamp: json["timestamp"] == null ? null : json["timestamp"],
-        donationStatus:
-            json["donationStatus"] == null ? null : json["donationStatus"],
+        donationStatus: json["donationStatus"] == null
+            ? null
+            : _donationStatusMapper[json["donationStatus"]],
         cashDetails: json['cashDetails'] == null
             ? null
             : CashDetails.fromMap(
@@ -91,7 +92,9 @@ class DonationModel {
         "id": id == null ? null : id,
         "requestId": requestId == null ? null : requestId,
         "timebankId": timebankId == null ? null : timebankId,
-        "donationStatus": donationStatus == null ? null : donationStatus,
+        "donationStatus": donationStatus == null
+            ? null
+            : donationStatus.toString().split('.')[1],
         "timestamp": DateTime.now().millisecondsSinceEpoch,
         "cashDetails": cashDetails == null ? null : cashDetails.toMap(),
         "goodsDetails": goodsDetails == null ? null : goodsDetails.toMap(),
@@ -160,3 +163,19 @@ class DonorDetails {
         "bio": bio,
       };
 }
+
+enum DonationStatus {
+  PLEDGED,
+  ACKNOWLEDGED,
+  MODIFIED,
+  APPROVED_BY_DONOR,
+  APPROVED_BY_CREATOR,
+}
+
+Map<String, DonationStatus> _donationStatusMapper = {
+  "PLEDGED": DonationStatus.PLEDGED,
+  "ACKNOWLEDGED": DonationStatus.ACKNOWLEDGED,
+  "MODIFIED": DonationStatus.MODIFIED,
+  "APPROVED_BY_DONOR": DonationStatus.APPROVED_BY_DONOR,
+  "APPROVED_BY_CREATOR": DonationStatus.APPROVED_BY_CREATOR,
+};
