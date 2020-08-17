@@ -248,16 +248,22 @@ class _DonationViewState extends State<DonationView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           titleText(title: 'Tell us what you have donated'),
-          TextFormField(
-            keyboardType: TextInputType.text,
-            textCapitalization: TextCapitalization.sentences,
-            textInputAction: TextInputAction.done,
-            maxLines: 2,
-            decoration: InputDecoration(
-              hintStyle: subTitleStyle,
-              hintText: 'Describe your goods and select from checkbox below',
-            ),
-          ),
+          StreamBuilder<String>(
+              stream: donationBloc.comment,
+              builder: (context, snapshot) {
+                return TextFormField(
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputAction: TextInputAction.done,
+                  maxLines: 2,
+                  onChanged: donationBloc.onCommentChanged,
+                  decoration: InputDecoration(
+                    hintStyle: subTitleStyle,
+                    hintText:
+                        'Describe your goods and select from checkbox below',
+                  ),
+                );
+              }),
           StreamBuilder<Map<dynamic, dynamic>>(
               stream: donationBloc.selectedList,
               builder: (context, snapshot) {

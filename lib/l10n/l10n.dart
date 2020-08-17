@@ -4019,6 +4019,23 @@ class S {
         'Image Url',
         name: 'image_url',
       );
+
+  String day(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Day', other: 'Days', args: [count])}',
+        name: 'day',        
+        args: [count],
+      );
+
+  String year(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Year', other: 'Years', args: [count])}',
+        name: 'year',        
+        args: [count],
+      );
+
+  String get lifetime => Intl.message(
+        'Lifetime',
+        name: 'lifetime',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

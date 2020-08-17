@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
@@ -40,6 +41,31 @@ Future<void> updateUserLanguage({
       .updateData({
     'language': user.language,
   });
+}
+
+Future<int> getUserDonatedAmount(
+    {@required String sevaUserId,
+    @required int timeFrame,
+    bool isLifeTime}) async {
+  int donatedAmount = 0;
+  try {
+    await Firestore.instance
+        .collection('donations')
+        .where('donorDetails.donorSevaUserId', isEqualTo: sevaUserId)
+        .where('timestamp', isGreaterThan: isLifeTime ? 0 : timeFrame)
+        .getDocuments()
+        .then((data) {
+      data.documents.forEach((documentSnapshot) {
+        DonationModel donationModel =
+            DonationModel.fromMap(documentSnapshot.data);
+        donatedAmount += donationModel.cashDetails.pledgedAmount;
+        print('donated ${donatedAmount.toString()}');
+      });
+    });
+  } on Exception catch (e) {
+    print(e.toString());
+  }
+  return donatedAmount;
 }
 
 Future<Map<String, UserModel>> getUserForUserModels(
