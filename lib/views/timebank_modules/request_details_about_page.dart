@@ -177,7 +177,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 shrinkWrap: true,
                 children: <Widget>[
-                  SizedBox(height: 10),
+                  SizedBox(height: 20),
                   requestTitleComponent,
                   SizedBox(height: 10),
                   getRequestModeComponent,
@@ -200,8 +200,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get getRequestModeComponent {
-    print("= ==============${widget.requestItem.requestType}");
-
     switch (widget.requestItem.requestType) {
       case RequestType.CASH:
         return cashDonationDetails;
@@ -327,16 +325,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ],
             ),
             onPressed: () {
-              //cut and paste this
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DonationView(
-                    timabankName: widget.timebankModel.name,
-                    requestModel: widget.requestItem,
-                  ),
-                ),
-              );
+              navigateToDonations();
             },
           ),
         ),
@@ -392,11 +381,23 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ],
             ),
             onPressed: () {
-              applyAction();
+              navigateToDonations();
             },
           ),
         )
       ],
+    );
+  }
+
+  void navigateToDonations() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DonationView(
+          timabankName: widget.timebankModel.name,
+          requestModel: widget.requestItem,
+        ),
+      ),
     );
   }
 
@@ -799,7 +800,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          subtitle: Text('\$100'),
+          subtitle: Text('\$${widget.requestItem.cashModel.amountRaised}'),
           leading: Icon(
             Icons.show_chart,
             color: Colors.grey,
@@ -822,7 +823,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               valueColor:
                   AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
               minHeight: 10,
-              value: 0.4,
+              value: (widget.requestItem.cashModel.amountRaised /
+                  widget.requestItem.cashModel.targetAmount),
             ),
           ),
         )

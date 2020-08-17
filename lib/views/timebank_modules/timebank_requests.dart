@@ -1091,6 +1091,45 @@ class RequestListItemsState extends State<RequestListItems> {
     }
   }
 
+  Widget getAppropriateTag(RequestType requestType) {
+    switch (requestType) {
+      case RequestType.CASH:
+        return getTagMainFrame('Cash Request');
+
+      case RequestType.GOODS:
+        return getTagMainFrame('Goods Request');
+
+      case RequestType.TIME:
+        return getTagMainFrame('Time Request');
+
+      default:
+        return Container();
+    }
+  }
+
+  Widget getTagMainFrame(String tagTitle) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 3, right: 5, top: 5),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+        child: Container(
+          color: Theme.of(context).primaryColor,
+          child: Padding(
+            padding:
+                const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
+            child: Text(
+              tagTitle,
+              style: TextStyle(
+                fontSize: 11,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget getFromNormalRequest(
       {RequestModel model, String loggedintimezone, String userEmail}) {
     return Container(
@@ -1125,6 +1164,7 @@ class RequestListItemsState extends State<RequestListItems> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      getAppropriateTag(model.requestType),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[

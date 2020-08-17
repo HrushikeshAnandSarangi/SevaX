@@ -824,7 +824,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   }
 
   bool hasRegisteredLocation() {
-    print("Location ---========================= ${projectModel.address}");
     return location != null || projectModel.address != null;
   }
 

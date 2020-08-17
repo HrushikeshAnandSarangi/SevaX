@@ -1008,7 +1008,6 @@ class CreateEditCommunityViewFormState
   }
 
   bool hasRegisteredLocation() {
-    //  print("Location ---========================= ${timebankModel.address}");
     return location != null;
   }
 
