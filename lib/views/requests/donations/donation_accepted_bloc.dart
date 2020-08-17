@@ -16,7 +16,7 @@ class DonationAcceptedBloc extends BlocBase {
         DonationModel model = DonationModel.fromMap(element.data);
         temp.add(model);
       });
-      _donations.add(temp);
+      if (!_donations.isClosed) _donations.add(temp);
     });
   }
 

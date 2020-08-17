@@ -1,11 +1,3 @@
-import 'dart:convert';
-
-DonationApproveModel donationApproveModelFromMap(String str) =>
-    DonationApproveModel.fromMap(json.decode(str));
-
-String donationApproveModelToMap(DonationApproveModel data) =>
-    json.encode(data.toMap());
-
 class DonationApproveModel {
   DonationApproveModel({
     this.donorName,

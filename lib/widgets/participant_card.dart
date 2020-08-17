@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
+import 'package:sevaexchange/ui/utils/avatar.dart';
 
 class ParticipantCard extends StatelessWidget {
   final Padding padding;
@@ -209,6 +210,8 @@ class RequestParticipantCard extends StatelessWidget {
                                 fontSize: 12,
                               ),
                             ),
+                            disabledTextColor: Colors.white,
+                            disabledColor: onTap == null ? buttonColor : null,
                             onPressed: onTap,
                           ),
                         ),
@@ -227,10 +230,14 @@ class RequestParticipantCard extends StatelessWidget {
               child: ClipOval(
                 child: AspectRatio(
                   aspectRatio: 1,
-                  child: CustomNetworkImage(
-                    imageUrl ?? defaultUserImageURL,
-                    fit: BoxFit.cover,
-                  ),
+                  child: imageUrl != null
+                      ? CustomNetworkImage(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                        )
+                      : CustomAvatar(
+                          name: name,
+                        ),
                 ),
               ),
             ),

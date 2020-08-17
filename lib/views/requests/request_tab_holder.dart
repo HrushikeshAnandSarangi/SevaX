@@ -72,7 +72,7 @@ class RequestTabHolder extends StatelessWidget {
                           //   ),
                           // ),
                           Container(
-                            child: DonationAcceptedPage(),
+                            child: DonationAcceptedPage(model: requestModel),
                           ),
                           Container(
                             child: RequestAcceptedTabsViewHolder.of(
