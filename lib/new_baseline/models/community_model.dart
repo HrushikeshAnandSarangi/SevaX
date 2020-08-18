@@ -137,6 +137,7 @@ class CommunityModel extends DataModel {
 
   Map<String, dynamic> billingQuota;
   Map<String, dynamic> payment;
+  String parentTimebankId;
 
   CommunityModel(Map<String, dynamic> map) {
     this.transactionCount = map.containsKey('transactionCount')
@@ -179,6 +180,7 @@ class CommunityModel extends DataModel {
     this.location = getLocation(map);
     this.softDelete = map.containsKey('softDelete') ? map['softDelete'] : false;
     this.billMe = map.containsKey('billMe') ? map['billMe'] : false;
+    this.parentTimebankId = map.containsKey("parent_timebank_id") ? map["parent_timebank_id"] : '';
   }
   GeoFirePoint getLocation(map) {
     GeoFirePoint geoFirePoint;
@@ -256,6 +258,9 @@ class CommunityModel extends DataModel {
     if (key == 'primary_timebank') {
       this.primary_timebank = value;
     }
+    if (key == 'parentTimebankId') {
+      this.parentTimebankId = value;
+    }
   }
 
   Map<String, dynamic> toMap() {
@@ -332,6 +337,7 @@ class CommunityModel extends DataModel {
     }
 
     object['softDelete'] = this.softDelete;
+    object['parent_timebank_id'] = this.parentTimebankId == null ? null : this.parentTimebankId;
     return object;
   }
 
@@ -355,9 +361,10 @@ class CommunityModel extends DataModel {
         'coordinators: $coordinators,'
         ' members: $members, '
 //        'transactionCount: $transactionCount}'
-        'taxPercentage: $taxPercentage},'
-        'private: $private},'
-        'billMe: $billMe}';
+        'taxPercentage: $taxPercentage,'
+        'private: $private,'
+        'billMe: $billMe,'
+        'parentTimebankId: $parentTimebankId}';
   }
 }
 

@@ -1,25 +1,30 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/new_baseline/services/news/news_service.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/news/update_feed.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:emoji_picker/emoji_picker.dart';
 import '../../flavor_config.dart';
 
 class NewsCardView extends StatefulWidget {
   final NewsModel newsModel;
-
-  NewsCardView({Key key, @required this.newsModel}) : super(key: key);
+  bool isFocused = false;
+  NewsCardView({Key key, @required this.newsModel, this.isFocused}) : super(key: key);
 
   @override
   NewsCardViewState createState() {
@@ -29,6 +34,18 @@ class NewsCardView extends StatefulWidget {
 }
 
 class NewsCardViewState extends State<NewsCardView> {
+  TextEditingController _textEditingController = TextEditingController();
+  bool isShowSticker;
+  @override
+  void initState() {
+    super.initState();
+    isShowSticker = false;
+    if (this.widget.isFocused) {
+      setState(() {
+        SystemChannels.textInput.invokeMethod('TextInput.show');
+      });
+    }
+  }
   // assert(newsModel.title != null, 'News title cannot be null');
   // assert(newsModel.description != null, 'News description cannot be null');
   // assert(newsModel.fullName != null, 'Full name cannot be null');
@@ -84,30 +101,187 @@ class NewsCardViewState extends State<NewsCardView> {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          // padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              newsAuthorAndDate,
-              widget.newsModel.title == null ||
-                      widget.newsModel.title == "NoData"
-                  ? Offstage()
-                  : newsTitle,
-              newsImage,
-              photoCredits,
-              subHeadings,
-              document,
-              tags,
-              listOfHashTags,
-              listOfLinks
-            ],
-          ),
-        ),
+        child: Column(
+            children: <Widget> [
+              Expanded(child: SingleChildScrollView(
+                // padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    newsAuthorAndDate,
+                    widget.newsModel.title == null ||
+                        widget.newsModel.title == "NoData"
+                        ? Offstage()
+                        : newsTitle,
+                    newsImage,
+                    photoCredits,
+                    subHeadings,
+                    document,
+                    tags,
+                    listOfHashTags,
+                    listOfLinks,
+                    LikeComment(
+                      newsModel: widget.newsModel,
+                      userId: SevaCore.of(context).loggedInUser.email,
+                      isFromHome: false,
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.width / 1.0,
+                      padding: EdgeInsets.fromLTRB(8, 19, 8, 0),
+                      child: StreamBuilder<NewsModel>(
+                          stream: NewsService()
+                              .getCommentsByFeedId(id: widget.newsModel.id),
+                          builder: (context, snapshot) {
+                            if (snapshot.data == null || (snapshot.hasData && snapshot.data.comments.length == 0)) {
+                              return Center(
+                                child: Text("No data"),
+                              );
+                            }
+                            if (snapshot.hasData) {
+                              List<Comments> commentsList =
+                                  snapshot.data.comments;
+                              print(
+                                  "Printing CommentsList ${commentsList.length}");
+                              return ListView.builder(
+                                itemCount: commentsList.length,
+                                itemBuilder: (context, index) {
+                                  return InkWell(
+                                    onLongPress: () async {
+                                      if (commentsList[index]
+                                          .createdEmail == SevaCore.of(context).loggedInUser.email) {
+                                        final result = await showDialog(
+                                          context: context,
+                                          builder: (_) =>
+                                              DeleteCommentOverlay(
+                                                feed: widget.newsModel,
+                                                index: index,
+                                                isReply: false,
+                                              ),
+                                        );
+                                        return result;
+                                      }
+                                    },
+                                    child: Container(
+                                      child: CommentContainer(
+                                          commentsList[index], index),
+                                    ),
+                                  );
+                                },
+                                shrinkWrap: true,
+                              );
+                            }
+                          }),
+                    )
+                  ],
+                ),
+              )),
+              Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                new Divider(
+                  color: Colors.black38,
+                  height: 1,
+                  indent: 0,
+                ),
+                Card(
+                  elevation: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(3.0, 0.0,3.0,3.0),
+                    child: Row(
+                      children: <Widget>[
+                        Flexible(
+                          child: TextFormField(
+                            controller: _textEditingController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              hintStyle: TextStyle(color: Colors.grey),
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 3.0, top: 3.0, right: 8.0, bottom: 3.0),
+                                child: CircleAvatar(
+                                  backgroundImage:
+                                  NetworkImage(SevaCore.of(context).loggedInUser.photoURL),
+                                ),
+                              ),
+                              labelText: 'Add a comment...',
+                              isDense: true,
+                              contentPadding: EdgeInsets.all(3.0),
+                            ),
+                            autofocus:  this.widget.isFocused ? true : false,
+                            onTap: () => {
+                              setState(() {
+                                isShowSticker = false;
+                              }),
+                            },
+                          ),
+                        ),
+                        InkWell(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 5, right: 5),
+                            child: Image.asset(
+                              "lib/assets/images/send.png",
+                              height: 20,
+                              width: 20,
+                            ),
+                          ),
+                          onTap: () async {
+                            if (_textEditingController.text != "") {
+                              _saveComment(Comments(
+                                  feedId: widget.newsModel.id,
+                                  userPhotoURL: SevaCore.of(context).loggedInUser.photoURL,
+                                  fullName: SevaCore.of(context).loggedInUser.fullname != null
+                                      ? SevaCore.of(context).loggedInUser.fullname
+                                      : "Anonymous user",
+                                  createdEmail: SevaCore.of(context).loggedInUser.email,
+                                  createdAt: DateTime.now().millisecondsSinceEpoch,
+                                  comment: _textEditingController.text));
+                              _textEditingController.clear();
+                            }
+                          },
+                        ),
+                        IconButton(
+                            icon: Icon(
+                              Icons.sentiment_satisfied,
+                            ),
+                            iconSize: 30,
+                            onPressed: () => {
+                              setState(() {
+                                isShowSticker = !isShowSticker;
+                                if (isShowSticker) {
+                                  FocusScope.of(context).unfocus();
+                                } else {
+                                  isShowSticker = false;
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
+                                }
+                              }),
+                            }),
+                      ],
+                    ),
+                  ),
+                ),
+                (isShowSticker ? buildSticker() : Container())
+              ]),
+            ] ),
       ),
     );
   }
-
+  Widget buildSticker() {
+    return EmojiPicker(
+      rows: 3,
+      columns: 7,
+      buttonMode: ButtonMode.MATERIAL,
+      recommendKeywords: ["racing", "horse"],
+      numRecommended: 10,
+      onEmojiSelected: (emoji, category) {
+        _textEditingController.text += emoji.emoji;
+      },
+    );
+  }
   Widget get newsTitle {
     return Container(
       padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 20.0),
@@ -122,6 +296,12 @@ class NewsCardViewState extends State<NewsCardView> {
                       fontWeight: FontWeight.bold),
                 ),
     );
+  }
+  _saveComment(Comments comment) {
+    setState(() {
+      widget.newsModel.comments.add(comment);
+      NewsService().updateFeedById(newsModel: widget.newsModel);
+    });
   }
 
   Widget get listOfHashTags {
@@ -561,5 +741,1423 @@ class NewsCardViewState extends State<NewsCardView> {
     Navigator.of(context).pop();
 
     // Navigator.pop(context);
+  }
+  Widget CommentContainer(Comments commentsList, index) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          CircleAvatar(
+            backgroundImage: NetworkImage(
+                commentsList.userPhotoURL ?? defaultUserImageURL),
+            radius: 25,
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(8.0, 0.0, 0, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Text('${commentsList.fullName}',
+                    style: TextStyle(
+                        fontSize: 12,
+                        
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black)),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 2.0, 0, 0),
+                  child: Text(timeAgo.format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                          commentsList.createdAt),
+                      locale:
+                      Locale(AppConfig.prefs.getString('language_code'))
+                          .toLanguageTag()),
+                      style: TextStyle(
+                          fontSize: 11,
+
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromRGBO(0, 0, 0, 0.5))),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width - 100,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('${commentsList.comment}',
+                            style: TextStyle(
+                                fontSize: 12,
+                                
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black)),
+                        InkWell(
+                          onTap: () {
+                            Set<String> likesList =
+                            Set.from(commentsList.likes);
+                            commentsList.likes != null &&
+                                commentsList.likes
+                                    .contains(commentsList.createdEmail)
+                                ? likesList.remove(commentsList.createdEmail)
+                                : likesList.add(commentsList.createdEmail);
+                            // commentsList.likes = likesList.toList();
+                            widget.newsModel.comments[index].likes = likesList.toList();
+                            NewsService().updateFeed(newsModel: widget.newsModel);
+                            setState(() {});
+                          },
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: commentsList.likes != null &&
+                                commentsList.likes
+                                    .contains(commentsList.createdEmail)
+                                ? Icon(
+                              Icons.favorite,
+                              color: Color(0xFFec444b),
+                            )
+                                : Icon(
+                              Icons.favorite_border,
+                              size: 24,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Padding(
+                        padding: EdgeInsets.only(top: 0),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('${commentsList.likes.length}',
+                                // child: Text('1',
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromRGBO(0, 0, 0, 0.5))))),
+                    Padding(
+                        padding: EdgeInsets.only(left: 2, top: 0),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('likes',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  
+                                  color: Color.fromRGBO(0, 0, 0, 0.5),
+                                )))),
+                    Padding(
+                        padding: EdgeInsets.only(left: 12, top: 0),
+                        child: InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      RepliesView(commentsList, widget.newsModel, index)));
+                            },
+                            child: Text('Reply',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  
+                                  color: Color.fromRGBO(0, 0, 0, 0.5),
+                                )))),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: InkWell(
+                    onTap: () {
+                      if (commentsList.comments.length > 0) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                RepliesView(commentsList, widget.newsModel, index)));
+                      }
+                    },
+                    child: Text(
+                        commentsList.comments.length > 0
+                            ? 'View Previous Replies'
+                            : '',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          
+                          color: Color.fromRGBO(0, 0, 0, 0.5),
+                        )),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+
+class DetailDescription extends StatefulWidget {
+  NewsModel data = NewsModel();
+  UserModel userModel = UserModel();
+  List<String> moreList = List<String>();
+  String userId;
+  bool isFocused;
+  DetailDescription(this.data, {this.isFocused = false, this.userModel});
+  @override
+  _DetailDescriptionState createState() => _DetailDescriptionState();
+}
+
+class _DetailDescriptionState extends State<DetailDescription> {
+  NewsModel data = NewsModel();
+  bool isFocused;
+  _DetailDescriptionState();
+  TextEditingController _textEditingController = TextEditingController();
+  // List<Comments> comments = List<Comments>();
+  final dbRef = Firestore.instance;
+  bool isShowSticker;
+
+  @override
+  void initState() {
+    super.initState();
+    isShowSticker = false;
+    if (isFocused) {
+      setState(() {
+        SystemChannels.textInput.invokeMethod('TextInput.show');
+      });
+    }
+  }
+
+  _saveComment(Comments comment) {
+    setState(() {
+      data.comments.add(comment);
+      NewsService().updateFeedById(newsModel: data);
+    });
+  }
+
+  Widget buildSticker() {
+    return EmojiPicker(
+      rows: 3,
+      columns: 7,
+      buttonMode: ButtonMode.MATERIAL,
+      recommendKeywords: ["racing", "horse"],
+      numRecommended: 10,
+      onEmojiSelected: (emoji, category) {
+        _textEditingController.text += emoji.emoji;
+      },
+    );
+  }
+
+  void updateMoreList() {
+    widget.moreList.clear();
+//    widget.userModel.bookmarks.contains(data.id) == true
+//        ? widget.moreList.add('UnBookmark')
+//        : widget.moreList.add('Bookmark');
+//    widget.userModel.following.contains(data.createdUserId) == true
+//        ? widget.moreList.add('Unfollow')
+//        : widget.moreList.add('Follow');
+  }
+
+  Future<bool> _onBackPressed() {
+    if (isShowSticker) {
+      setState(() {
+        isShowSticker = (!isShowSticker);
+      });
+    } else {
+      Navigator.pop(context, true);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+          leading: IconButton(
+            padding: EdgeInsets.all(0),
+            icon: Icon(Icons.arrow_back),
+            color: Colors.black,
+            onPressed: () => Navigator.pop(context, false),
+          ),
+          elevation: 0.0,
+          backgroundColor: Colors.white,
+          titleSpacing: 0.0,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                  backgroundColor: Colors.grey,
+                  child: ClipOval(
+                    child: Image.network('${data.userPhotoURL}'),
+                  )),
+              Padding(
+                padding: EdgeInsets.only(left: 6.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${data.fullName}",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontFamily: 'Europa',
+                          color: Colors.black,
+                          letterSpacing: 0,
+                          fontSize: 12.0),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: Container(
+          padding: EdgeInsets.only(bottom: 100.0),
+          child: FloatingActionButton(
+              child: Icon(Icons.share),
+              backgroundColor: Colors.black,
+              onPressed: () {
+//                Share.share("Testing");
+              }),
+        ),
+        body: SafeArea(
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: ListView(children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 19, 12, 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                            padding: EdgeInsets.only(top: 20, bottom: 12),
+                            child: HashTagText(
+                              text: data.description,
+                              textStyle: TextStyle(
+                                fontWeight: FontWeight.normal, fontFamily: 'Europa',
+                                letterSpacing: 0,
+                                height: 2,
+                                fontSize: 12,
+                                color: Color.fromRGBO(34, 40, 49, 1),
+                              ),
+                              hashTagStyle: TextStyle(
+                                fontWeight: FontWeight.normal, fontFamily: 'Europa',
+                                letterSpacing: 0,
+                                height: 2,
+                                fontSize: 12,
+                                color: Colors.blue,
+                              ),
+                              onTap: (_) {},
+                            )
+                        ),
+                        Container(
+                          // padding: EdgeInsets.only(),
+                          child: Divider(),
+                        ),
+                        LikeComment(
+                          newsModel: data,
+                          isFromHome: false,
+                          userId: SevaCore.of(context).loggedInUser.email,
+                        ),
+                        Container(
+                          height: MediaQuery.of(context).size.width / 0.9,
+                          padding: EdgeInsets.fromLTRB(0, 19, 0, 0),
+                          child: StreamBuilder<NewsModel>(
+                              stream: NewsService()
+                                  .getCommentsByFeedId(id: data.id),
+                              builder: (context, snapshot) {
+                                if (snapshot.data == null) {
+                                  return Center(
+                                    child: Text("No data"),
+                                  );
+                                }
+                                if (snapshot.hasData) {
+                                  List<Comments> commentsList =
+                                      snapshot.data.comments;
+                                  print(
+                                      "Printing CommentsList ${commentsList.length}");
+                                  return ListView.builder(
+                                    itemCount: commentsList.length,
+                                    itemBuilder: (context, index) {
+                                      return InkWell(
+                                        onLongPress: () async {
+                                          if (commentsList[index]
+                                              .createdEmail == SevaCore.of(context).loggedInUser.email) {
+                                            final result = await showDialog(
+                                              context: context,
+                                              builder: (_) =>
+                                                  DeleteCommentOverlay(
+                                                    feed: data,
+                                                    index: index,
+                                                    isReply: false,
+                                                  ),
+                                            );
+                                            return result;
+                                          }
+                                        },
+                                        child: Container(
+                                          child: CommentContainer(
+                                              commentsList[index], index),
+                                        ),
+                                      );
+                                    },
+                                    shrinkWrap: true,
+                                  );
+                                }
+                              }),
+                        ),
+                      ],
+                    ),
+                  ),
+                ]),
+              ),
+              Card(
+                elevation: 0,
+                child: Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: TextFormField(
+                          controller: _textEditingController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintStyle: TextStyle(color: Colors.grey),
+                            prefixIcon: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 3.0, top: 3.0, right: 8.0, bottom: 3.0),
+                              child: CircleAvatar(
+                                  child: ClipOval(
+                                    child: widget.userModel.photoURL == null
+                                        ? Container(color: Colors.grey)
+                                        : Image.network(
+                                      widget.userModel.photoURL,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                              ),
+                            ),
+                            labelText: 'Add a comment...',
+                            isDense: true,
+                            contentPadding: EdgeInsets.all(3.0),
+                          ),
+                          autofocus: isFocused ? true : false,
+                          onTap: () => {
+                            setState(() {
+                              isShowSticker = false;
+                            }),
+                          },
+                        ),
+                      ),
+                      InkWell(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 5, right: 5),
+                          child: Image.asset(
+                            "lib/assets/images/send.png",
+                            height: 20,
+                            width: 20,
+                          ),
+                        ),
+                        onTap: () async {
+                          if (_textEditingController.text != "") {
+                            _saveComment(Comments(
+                                feedId: data.id,
+                                userPhotoURL: SevaCore.of(context).loggedInUser.photoURL,
+                                fullName: SevaCore.of(context).loggedInUser.fullname != null
+                                    ? SevaCore.of(context).loggedInUser.fullname
+                                    : "Anonymous user",
+                                createdEmail: SevaCore.of(context).loggedInUser.email,
+                                createdAt: DateTime.now().millisecondsSinceEpoch,
+                                comment: _textEditingController.text));
+                            _textEditingController.clear();
+                          }
+                        },
+                      ),
+                      IconButton(
+                          icon: Icon(
+                            Icons.sentiment_satisfied,
+                          ),
+                          iconSize: 30,
+                          onPressed: () => {
+                            setState(() {
+                              isShowSticker = !isShowSticker;
+                              if (isShowSticker) {
+                                FocusScope.of(context).unfocus();
+                              } else {
+                                isShowSticker = false;
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
+                              }
+                            }),
+                          }),
+                    ],
+                  ),
+                ),
+              ),
+              (isShowSticker ? buildSticker() : Container()),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget CommentContainer(Comments commentsList, index) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          CircleAvatar(
+            child: ClipOval(
+              child: widget.userModel.photoURL == null
+                  ? Container(color: Colors.grey)
+                  : Image.network(
+                widget.data.userPhotoURL ?? defaultUserImageURL,
+                fit: BoxFit.cover,
+              ),
+            ),
+            radius: 25,
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(8.0, 0.0, 0, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Text('${commentsList.fullName}',
+                    style: TextStyle(
+                        fontSize: 12,
+                        
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black)),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 2.0, 0, 0),
+                  child: Text(timeAgo.format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                          commentsList.createdAt),
+                      locale:
+                      Locale(AppConfig.prefs.getString('language_code'))
+                          .toLanguageTag()),
+                      style: TextStyle(
+                          fontSize: 11,
+                          
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromRGBO(0, 0, 0, 0.5))),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width - 100,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('${commentsList.comment}',
+                            style: TextStyle(
+                                fontSize: 12,
+                                
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black)),
+                        InkWell(
+                          onTap: () {
+                            Set<String> likesList =
+                            Set.from(commentsList.likes);
+                            commentsList.likes != null &&
+                                commentsList.likes
+                                    .contains(commentsList.createdEmail)
+                                ? likesList.remove(commentsList.createdEmail)
+                                : likesList.add(commentsList.createdEmail);
+                            // commentsList.likes = likesList.toList();
+                            data.comments[index].likes = likesList.toList();
+                            NewsService().updateFeed(newsModel: data);
+                            setState(() {});
+                          },
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: commentsList.likes != null &&
+                                commentsList.likes
+                                    .contains(commentsList.createdEmail)
+                                ? Icon(
+                              Icons.favorite,
+                              color: Color(0xFFec444b),
+                            )
+                                : Icon(
+                              Icons.favorite_border,
+                              size: 24,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Padding(
+                        padding: EdgeInsets.only(top: 0),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('${commentsList.likes.length}',
+                                // child: Text('1',
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromRGBO(0, 0, 0, 0.5))))),
+                    Padding(
+                        padding: EdgeInsets.only(left: 2, top: 0),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('likes',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  
+                                  color: Color.fromRGBO(0, 0, 0, 0.5),
+                                )))),
+                    Padding(
+                        padding: EdgeInsets.only(left: 12, top: 0),
+                        child: InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      RepliesView(commentsList, data, index)));
+                            },
+                            child: Text('Reply',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  
+                                  color: Color.fromRGBO(0, 0, 0, 0.5),
+                                )))),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: InkWell(
+                    onTap: () {
+                      if (commentsList.comments.length > 0) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                RepliesView(commentsList, data, index)));
+                      }
+                    },
+                    child: Text(
+                        commentsList.comments.length > 0
+                            ? 'View Previous Replies'
+                            : '',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          
+                          color: Color.fromRGBO(0, 0, 0, 0.5),
+                        )),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+class HashTagText extends StatelessWidget {
+  final String text;
+  final TextStyle textStyle;
+  final TextStyle hashTagStyle;
+  final Function(String) onTap;
+
+  const HashTagText({
+    Key key,
+    this.text,
+    this.textStyle,
+    this.hashTagStyle,
+    @required this.onTap,
+  })  : assert(onTap != null),
+        assert(text != null),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      text: _getHashTagTextSpan(
+        hashTagStyle ?? TextStyle(color: Colors.blue),
+        textStyle ?? TextStyle(color: Colors.black),
+        text,
+        onTap,
+      ),
+    );
+  }
+
+  TextSpan _getHashTagTextSpan(
+      TextStyle decoratedStyle,
+      TextStyle basicStyle,
+      String source,
+      Function(String) onTap,
+      ) {
+    final _annotations =
+    _Annotator(decoratedStyle: decoratedStyle, textStyle: basicStyle)
+        .getAnnotations(source);
+    if (_annotations.isEmpty) {
+      return TextSpan(text: source, style: basicStyle);
+    } else {
+      _annotations.sort();
+      final span = _annotations
+          .asMap()
+          .map(
+            (index, item) {
+          return MapEntry(
+            index,
+            TextSpan(
+              style: item.style,
+              text: item.range.textInside(source),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  final _annotation = _annotations[index];
+                  if (_annotation.style == decoratedStyle) {
+                    onTap(_annotation.range.textInside(source));
+                  }
+                },
+            ),
+          );
+        },
+      )
+          .values
+          .toList();
+      return TextSpan(children: span);
+    }
+  }
+}
+
+class _Annotation extends Comparable<_Annotation> {
+  _Annotation({@required this.range, this.style});
+
+  final TextRange range;
+  final TextStyle style;
+
+  @override
+  int compareTo(_Annotation other) {
+    return range.start.compareTo(other.range.start);
+  }
+}
+
+class _Annotator {
+  final TextStyle textStyle;
+  final TextStyle decoratedStyle;
+  static final hashTagRegExp = RegExp(
+    r'\B(\#[a-zA-Z]+\b)(?!;)',
+    multiLine: true,
+  );
+
+  _Annotator({this.textStyle, this.decoratedStyle});
+
+  List<_Annotation> _getSourceAnnotations(
+      List<RegExpMatch> tags, String copiedText) {
+    TextRange previousItem;
+    final result = List<_Annotation>();
+    for (var tag in tags) {
+      if (previousItem == null) {
+        if (tag.start > 0) {
+          result.add(
+            _Annotation(
+              range: TextRange(start: 0, end: tag.start),
+              style: textStyle,
+            ),
+          );
+        }
+      } else {
+        result.add(
+          _Annotation(
+            range: TextRange(start: previousItem.end, end: tag.start),
+            style: textStyle,
+          ),
+        );
+      }
+
+      result.add(
+        _Annotation(
+          range: TextRange(start: tag.start, end: tag.end),
+          style: decoratedStyle,
+        ),
+      );
+      previousItem = TextRange(start: tag.start, end: tag.end);
+    }
+
+    if (result.last.range.end < copiedText.length) {
+      result.add(_Annotation(
+          range:
+          TextRange(start: result.last.range.end, end: copiedText.length),
+          style: textStyle));
+    }
+    return result;
+  }
+
+  List<_Annotation> getAnnotations(String copiedText) {
+    final tags = hashTagRegExp.allMatches(copiedText).toList();
+    if (tags.isEmpty) {
+      return [];
+    }
+    final sourceAnnotations = _getSourceAnnotations(tags, copiedText);
+    return sourceAnnotations;
+  }
+}
+
+class LikeComment extends StatefulWidget {
+  final NewsModel newsModel;
+  final bool isFromHome;
+  final String userId;
+  LikeComment({this.newsModel, this.isFromHome, this.userId});
+  @override
+  _LikeCommentState createState() => _LikeCommentState();
+}
+
+class _LikeCommentState extends State<LikeComment> {
+  _LikeCommentState();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print(widget.newsModel.likes);
+    print(widget.userId);
+    print(widget.newsModel.likes.contains(widget.userId));
+    return Row(children: <Widget>[
+      Padding(
+        padding: const EdgeInsets.only(top: 10.0, left: 10),
+        child: InkWell(
+          onTap: () {
+            Set<String> likesList = Set.from(widget.newsModel.likes);
+            widget.newsModel.likes != null && widget.newsModel.likes.contains(widget.userId)
+                ? likesList.remove(widget.userId)
+                : likesList.add(widget.userId);
+            widget.newsModel.likes = likesList.toList();
+            NewsService().updateFeed(newsModel: widget.newsModel);
+            setState(() {});
+          },
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: widget.newsModel.likes != null &&
+                widget.newsModel.likes.contains(widget.userId)
+                ? Icon(
+              Icons.favorite,
+              color: Color(0xFFec444b),
+            )
+                : Icon(
+              Icons.favorite_border,
+              size: 20,
+              color: Colors.grey,
+            ),
+          ),
+        ),
+      ),
+      Padding(
+          padding: EdgeInsets.only(left: 6, top: 10),
+          child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text('${widget.newsModel.likes.length.toString()}',
+                  style: TextStyle(
+                      fontSize: 14,
+                      
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black)))),
+      Padding(
+          padding: EdgeInsets.only(left: 3, top: 10),
+          child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text('likes',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    
+                    color: Colors.black54,
+                  )))),
+      Padding(
+          padding: EdgeInsets.only(left: 20, top: 10),
+          child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text('${widget.newsModel.comments.length}',
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      
+                      color: Colors.black)))),
+      GestureDetector(
+        onTap: () {
+          widget.isFromHome
+              ? Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DetailDescription(
+                    widget.newsModel,
+                    isFocused: true,
+                  )))
+              : print("");
+        },
+        child: Padding(
+            padding: EdgeInsets.only(left: 3, top: 10),
+            child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text('comments',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      
+                      color: Colors.black54,
+                    )))),
+      ),
+      Flexible(fit: FlexFit.tight, child: SizedBox()),
+    ]);
+  }
+}
+
+
+class DeleteCommentOverlay extends StatefulWidget {
+  int comments;
+  NewsModel feed;
+  int index;
+  bool isReply;
+
+  DeleteCommentOverlay({this.feed,this.comments,this.index,this.isReply});
+
+  @override
+  State<StatefulWidget> createState() => DeleteCommentOverlayState();
+}
+
+class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
+    with SingleTickerProviderStateMixin {
+  AnimationController controller;
+  Animation<double> scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+    scaleAnimation =
+        CurvedAnimation(parent: controller, curve: Curves.elasticInOut);
+
+    controller.addListener(() {
+      setState(() {});
+    });
+
+    controller.forward();
+  }
+
+  _deleteReplyComment(int comment) {
+    setState(() {
+      widget.feed.comments[widget.index].comments.removeAt(comment);
+      print("length");
+      print(widget.feed.comments[widget.index].comments.length);
+      NewsService().updateFeedById(newsModel: widget.feed);
+    });
+  }
+  _deleteComment(int index) {
+    setState(() {
+      widget.feed.comments.removeAt(index);
+      print("length");
+//      print(widget.feed.comments[widget.index].comments.length);
+      NewsService().updateFeedById(newsModel: widget.feed);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Material(
+        color: Colors.transparent,
+        child: ScaleTransition(
+          scale: scaleAnimation,
+          child: Container(
+              margin: EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(15.0),
+              height: 180.0,
+
+              decoration: ShapeDecoration(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0))),
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            top: 30.0, left: 20.0, right: 20.0),
+                        child: Text(
+                          "Are you want to delete Reply?",
+                          style: TextStyle(color: Colors.black, fontSize: 16.0),
+                        ),
+                      )),
+                  Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: ButtonTheme(
+                                height: 35.0,
+                                minWidth: 110.0,
+                                child: RaisedButton(
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5.0)),
+                                  splashColor: Colors.white.withAlpha(40),
+                                  child: Text(
+                                    'Delete',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13.0),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      print("isreply value is === ${widget.isReply}");
+                                      if(widget.isReply) {
+                                        _deleteReplyComment(widget.comments);
+                                      }else{
+                                        _deleteComment(widget.index);
+                                      }
+                                      Navigator.pop(context);
+                                    });
+                                  },
+                                )),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20.0, right: 10.0, top: 10.0, bottom: 10.0),
+                              child:  ButtonTheme(
+                                  height: 35.0,
+                                  minWidth: 110.0,
+                                  child: RaisedButton(
+                                    color: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5.0)),
+                                    splashColor: Colors.white.withAlpha(40),
+                                    child: Text(
+                                      'Cancel',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13.0),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        Navigator.pop(context);
+                                      });
+                                    },
+                                  ))
+                          ),
+                        ],
+                      ))
+                ],
+              )),
+        ),
+      ),
+    );
+  }
+}
+
+
+class RepliesView extends StatefulWidget {
+  Comments comment;
+  NewsModel feed;
+  int index;
+
+  RepliesView(this.comment, this.feed, this.index);
+
+  @override
+  _RepliesViewState createState() => _RepliesViewState();
+}
+
+class _RepliesViewState extends State<RepliesView> {
+  TextEditingController _textEditingController = TextEditingController();
+  bool isFocused = true;
+  bool isShowSticker;
+  bool isKeyboardVisible;
+
+  @override
+  void initState() {
+    super.initState();
+    print("feed id");
+    isShowSticker = false;
+    isKeyboardVisible = false;
+
+    if (isFocused) {
+      setState(() {
+        SystemChannels.textInput.invokeMethod('TextInput.show');
+      });
+    }
+  }
+
+  _saveComment(Comments comment) {
+    setState(() {
+      if (widget.feed.comments[widget.index].comments == null) {
+        widget.feed.comments[widget.index].comments = [];
+      }
+      widget.feed.comments[widget.index].comments.add(comment);
+      NewsService().updateFeedById(newsModel: widget.feed);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          padding: EdgeInsets.all(0),
+          icon: Icon(Icons.arrow_back),
+          color: Colors.black,
+          onPressed: () => Navigator.pop(context, false),
+        ),
+        title: Container(
+          child: Center(
+              child: new Text(
+                "Replies",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18.0,
+                ),
+              )),
+          decoration: new BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(19.0)),
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: ListView(
+                children: <Widget>[
+                  Container(
+                      child: CommentContainer(
+                          widget.comment, 25, 100, true, widget.index)),
+                  Container(
+                    height: MediaQuery.of(context).size.width / 0.9,
+                    padding: EdgeInsets.only(left: 50),
+                    child: StreamBuilder<NewsModel>(
+                        stream: NewsService()
+                            .getCommentsByFeedId(id: widget.feed.id),
+                        builder: (context, snapshot) {
+                          if (snapshot.data == null) {
+                            return Center(
+                              child: Text("No data"),
+                            );
+                          }
+                          if (snapshot.hasData) {
+                            List<Comments> commentsList =
+                                snapshot.data.comments[widget.index].comments;
+                            return ListView.builder(
+                              itemCount: commentsList.length,
+                              itemBuilder: (context, index) {
+                                return InkWell(
+                                  onLongPress: () async {
+                                    print(
+                                        "user id === ${commentsList[index].createdEmail} ${await PreferenceManager.loggedInUserId}");
+                                    if (commentsList[index].createdEmail ==
+                                        await PreferenceManager
+                                            .loggedInUserId) {
+                                      final result = await showDialog(
+                                        context: context,
+                                        builder: (_) => DeleteCommentOverlay(
+                                            feed: widget.feed,
+                                            comments: index,
+                                            index: widget.index,
+                                            isReply: true),
+                                      );
+                                      return result;
+                                    }
+                                  },
+                                  child: Container(
+                                    child: CommentContainer(commentsList[index],
+                                        20, 150, false, index),
+                                  ),
+                                );
+                              },
+                              shrinkWrap: true,
+                            );
+                          }
+                        }),
+                  ),
+                ],
+              ),
+            ),
+            new Divider(
+              color: Colors.black38,
+              height: 1,
+              indent: 0,
+            ),
+            Card(
+              elevation: 0,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(3.0, 0.0,3.0,3.0),
+                child: Row(
+                  children: <Widget>[
+                    Flexible(
+                      child: TextFormField(
+                        controller: _textEditingController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          hintStyle: TextStyle(color: Colors.grey),
+                          prefixIcon: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 3.0, top: 3.0, right: 8.0, bottom: 3.0),
+                            child: CircleAvatar(
+                              backgroundImage: NetworkImage(SevaCore.of(context).loggedInUser.photoURL),
+                            ),
+                          ),
+                          labelText: 'Add a comment...',
+                          isDense: true,
+                          contentPadding: EdgeInsets.all(3.0),
+                        ),
+                        autofocus: isFocused ? true : false,
+                        onTap: () => {
+                          setState(() {
+                            isShowSticker = false;
+                          }),
+                        },
+                      ),
+                    ),
+                    InkWell(
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 5, right: 5),
+                        child: Image.asset(
+                          "lib/assets/images/send.png",
+                          height: 20,
+                          width: 20,
+                        ),
+                      ),
+                      onTap: () async {
+                        if (_textEditingController.text != "") {
+                          _saveComment(Comments(
+                              feedId: widget.feed.id,
+                              userPhotoURL: SevaCore.of(context).loggedInUser.photoURL,
+                              fullName: SevaCore.of(context).loggedInUser.fullname != null
+                                  ? SevaCore.of(context).loggedInUser.fullname
+                                  : "Anonymous user",
+                              createdEmail: SevaCore.of(context).loggedInUser.email,
+                              createdAt: DateTime.now().millisecondsSinceEpoch,
+                              comment: _textEditingController.text));
+                          _textEditingController.clear();
+                        }
+                      },
+                    ),
+                    IconButton(
+                        icon: Icon(
+                          Icons.sentiment_satisfied,
+                        ),
+                        iconSize: 30,
+                        onPressed: () => {
+                          setState(() {
+                            isShowSticker = !isShowSticker;
+                            if (isShowSticker) {
+                              FocusScope.of(context).unfocus();
+                            } else {
+                              isShowSticker = false;
+                              FocusScope.of(context)
+                                  .requestFocus(FocusNode());
+                            }
+                          }),
+                        }),
+                  ],
+                ),
+              ),
+            ),
+            (isShowSticker ? buildSticker() : Container()),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildSticker() {
+    return EmojiPicker(
+      rows: 3,
+      columns: 7,
+      buttonMode: ButtonMode.MATERIAL,
+      recommendKeywords: ["racing", "horse"],
+      numRecommended: 10,
+      onEmojiSelected: (emoji, category) {
+        _textEditingController.text += emoji.emoji;
+      },
+    );
+  }
+
+  Widget CommentContainer(Comments commentsList, double size, double width,
+      bool isParent, int index) {
+    return Padding(
+      padding: EdgeInsets.all(12.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          CircleAvatar(
+            child: ClipOval(
+              child: commentsList.userPhotoURL == null
+                  ? Container(color: Colors.grey)
+                  : Image.network(
+                commentsList.userPhotoURL ?? defaultUserImageURL,
+                fit: BoxFit.cover,
+              ),
+            ),
+            radius: size,
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(8.0, 0.0, 0, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('${commentsList.fullName}',
+                    style: TextStyle(
+                        fontSize: 12,
+                        
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black)),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 2.0, 0, 0),
+                  child: Text(timeAgo.format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                          commentsList.createdAt),
+                      locale:
+                      Locale(AppConfig.prefs.getString('language_code'))
+                          .toLanguageTag()),
+                      style: TextStyle(
+                          fontSize: 11,
+                          
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromRGBO(0, 0, 0, 0.5))),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width - width,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('${commentsList.comment}',
+                            style: TextStyle(
+                                fontSize: 12,
+                                
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black)),
+                        InkWell(
+                          onTap: () {
+                            Set<String> likesList =
+                            Set.from(commentsList.likes);
+                            commentsList.likes != null &&
+                                commentsList.likes
+                                    .contains(commentsList.createdEmail)
+                                ? likesList.remove(commentsList.createdEmail)
+                                : likesList.add(commentsList.createdEmail);
+                            commentsList.likes = likesList.toList();
+                            setState(() {
+                              isParent
+                                  ? widget.feed.comments[widget.index].likes =
+                                  likesList.toList()
+                                  : widget
+                                  .feed
+                                  .comments[widget.index]
+                                  .comments[index]
+                                  .likes = likesList.toList();
+                            });
+                            NewsService().updateFeed(newsModel: widget.feed);
+                            setState(() {});
+                          },
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: commentsList.likes != null &&
+                                commentsList.likes
+                                    .contains(commentsList.createdEmail)
+                                ? Icon(
+                              Icons.favorite,
+                              color: Color(0xFFec444b),
+                            )
+                                : Icon(
+                              Icons.favorite_border,
+                              size: 24,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Padding(
+                        padding: EdgeInsets.only(top: 0),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('${commentsList.likes.length}',
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromRGBO(0, 0, 0, 0.5))))),
+                    Padding(
+                        padding: EdgeInsets.only(left: 2, top: 0),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('likes',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  
+                                  color: Color.fromRGBO(0, 0, 0, 0.5),
+                                )))),
+                    Padding(
+                        padding: EdgeInsets.only(left: 12, top: 0),
+                        child: InkWell(
+                            onTap: () {},
+                            child: Text('Reply',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  
+                                  color: Color.fromRGBO(0, 0, 0, 0.5),
+                                )))),
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

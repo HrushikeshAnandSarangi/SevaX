@@ -480,6 +480,7 @@ class DiscussionListState extends State<DiscussionList> {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => NewsCreate(
                       timebankId: widget.timebankId,
+                      timebankModel: widget.timebankModel,
                     )));
           },
           child: Padding(
@@ -708,6 +709,7 @@ class DiscussionListState extends State<DiscussionList> {
             builder: (context) {
               return NewsCardView(
                 newsModel: news,
+                isFocused: false,
               );
             },
           ),
@@ -717,37 +719,79 @@ class DiscussionListState extends State<DiscussionList> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        elevation: 3,
+        elevation: 1,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 12.0, 0, 5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(left: 10.0, right: 12),
+                padding: const EdgeInsets.only(left: 12.0, right: 12),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    feedAddress != null
-                        ? Icon(
-                            Icons.location_on,
-                            color: Theme.of(context).primaryColor,
-                          )
-                        : Container(),
-                    feedAddress != null ? Text(feedAddress) : Container(),
-                    Spacer(),
-                    Text(
-                      timeAgo.format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              news.postTimestamp),
-                          locale:
-                              Locale(AppConfig.prefs.getString('language_code'))
-                                  .toLanguageTag()),
-                      style: TextStyle(color: Colors.grey),
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundImage: NetworkImage(
+                          news.userPhotoURL ?? defaultUserImageURL),
                     ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 3,
+                          ),
+                          Text(
+                            news.fullName != null && news.fullName != ""
+                                ? news.fullName.trim()
+                                : "User name not available",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 7,
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 5,),
+                              child: Row(
+                                children: <Widget>[
+                                  feedAddress != null
+                                      ? Icon(
+                                    Icons.location_on,
+                                    color: Theme
+                                        .of(context)
+                                        .primaryColor,
+                                  )
+                                      : Container(),
+                                  feedAddress != null
+                                      ? Text(feedAddress)
+                                      : Container(),
+                                  Spacer(),
+                                  Text(
+                                    timeAgo.format(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            news.postTimestamp),
+                                        locale:
+                                        Locale(AppConfig.prefs.getString(
+                                            'language_code'))
+                                            .toLanguageTag()),
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              )),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          document(newsModel: news),
+                          //  SizedBox(height: 10),
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),
-              // SizedBox(height: 16),
               //Pinning ui
               Padding(
                 padding: const EdgeInsets.only(left: 12.0, top: 10, bottom: 15),
@@ -806,44 +850,6 @@ class DiscussionListState extends State<DiscussionList> {
                             },
                           )
                         : Offstage(),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 12.0, right: 12),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Theme.of(context).primaryColor,
-                      backgroundImage: NetworkImage(
-                          news.userPhotoURL ?? defaultUserImageURL),
-                    ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(
-                            height: 3,
-                          ),
-                          Text(
-                            news.fullName != null && news.fullName != ""
-                                ? news.fullName.trim()
-                                : "User name not available",
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 7,
-                            style: TextStyle(fontSize: 16.0),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          document(newsModel: news),
-                          //  SizedBox(height: 10),
-                        ],
-                      ),
-                    )
                   ],
                 ),
               ),
@@ -1017,22 +1023,6 @@ class DiscussionListState extends State<DiscussionList> {
                               ),
                             ),
                             () {
-                              // bool isShare = true;
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) =>
-                              //         // NewChat(isShare, news),
-                              //         SelectMember.shareFeed(
-                              //       timebankId: SevaCore.of(context)
-                              //           .loggedInUser
-                              //           .currentTimebank,
-                              //       newsModel: news,
-                              //       isFromShare: isShare,
-                              //     ),
-                              //   ),
-                              // );
-
                               // SHARE ICON ON TAP
                               if (SevaCore.of(context)
                                       .loggedInUser
@@ -1078,12 +1068,12 @@ class DiscussionListState extends State<DiscussionList> {
                                         ? Icon(
                                             Icons.favorite,
                                             size: 24,
-                                            color: Colors.red[900],
+                                            color: Color(0xFFec444b),
                                           )
                                         : Icon(
                                             Icons.favorite_border,
                                             size: 24,
-                                            color: Colors.red[900],
+                                            color: Color(0xFFec444b),
                                           ),
                                   ),
                                 ),
@@ -1091,6 +1081,37 @@ class DiscussionListState extends State<DiscussionList> {
                                     style: TextStyle(
                                       fontSize: 14,
                                     )),
+                                Padding(
+                                    padding: EdgeInsets.only(left: 20),
+                                    child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text('${news.comments.length}',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black)))),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => NewsCardView(
+                                              newsModel: news,
+                                              isFocused: false,
+                                            )));
+                                  },
+                                  child: Padding(
+                                      padding: EdgeInsets.only(left: 3),
+                                      child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text('comments',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+
+                                                color: Colors.black54,
+                                              )))),
+                                ),
                               ],
                             ),
                             () {
@@ -1124,6 +1145,7 @@ class DiscussionListState extends State<DiscussionList> {
             builder: (context) {
               return NewsCardView(
                 newsModel: news,
+                isFocused: false,
               );
             },
           ),

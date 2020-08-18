@@ -298,6 +298,7 @@ class NewsListState extends State<NewsList> {
             builder: (context) {
               return NewsCardView(
                 newsModel: news,
+                isFocused: false,
               );
             },
           ),

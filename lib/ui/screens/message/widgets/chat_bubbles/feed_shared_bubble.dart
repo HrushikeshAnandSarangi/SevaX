@@ -66,7 +66,8 @@ class FeedBubble extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) {
-              return NewsCardView(newsModel: news);
+              return NewsCardView(newsModel: news,
+                isFocused: false);
             },
           ),
         );

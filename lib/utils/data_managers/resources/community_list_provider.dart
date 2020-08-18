@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' show Client, Response;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 
 class RequestApiProvider {
   Client client = Client();
@@ -193,6 +194,25 @@ class CommunityApiProvider {
       });
     }
     return communities;
+  }
+  Future<TimebankListModel> searchTimebankSiblingsByParentId(
+      String id, TimebankListModel timebanks) async {
+    timebanks.removeall();
+    if (id.isNotEmpty) {
+      await Firestore.instance
+          .collection('timebanknew')
+          .where('parent_timebank_id', isEqualTo: id)
+          .getDocuments()
+          .then((QuerySnapshot querySnapshot) {
+            print(id);
+        querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+          var timebank = TimebankModel(documentSnapshot.data);
+          print(timebank.name);
+          timebanks.add(timebank);
+        });
+      });
+    }
+    return timebanks;
   }
 
   Future<void> updateCommunityWithUserId(communityId, userId) async {

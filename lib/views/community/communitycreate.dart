@@ -34,6 +34,7 @@ import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
+import 'package:sevaexchange/widgets/parent_timebank_picker.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../switch_timebank.dart';
@@ -122,6 +123,7 @@ class CreateEditCommunityViewFormState
   bool protectedVal = false;
   GeoFirePoint location;
   String selectedAddress = '';
+  String selectedTimebank = '';
   String _billingDetailsError = '';
   String communityImageError = '';
   String enteredName = '';
@@ -655,6 +657,35 @@ class CreateEditCommunityViewFormState
                                 ),
                               ),
                             ],
+                          ),
+                        ),
+                        headingText(AppLocalizations.of(context)
+                            .translate('createtimebank', 'timebank_hasparent')),
+                        Text(
+                          AppLocalizations.of(context).translate(
+                              'createtimebank', 'timebank_location_hasparent_hinttext'),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Center(
+                          child: ParentTimebankPickerWidget(
+                            selectedTimebank: this.selectedTimebank,
+                            onChanged: (CommunityModel selectedTimebank) {
+                              log("received data model ");
+
+                              setState(() {
+                                this.selectedTimebank = selectedTimebank.name;
+                              });
+                              snapshot.data.timebank
+                                  .updateValueByKey(
+                                  'parentTimebankId', selectedTimebank.primary_timebank);
+                              timebankModel.parentTimebankId = selectedTimebank.primary_timebank;
+                              snapshot.data.community
+                                  .updateValueByKey(
+                                  'parentTimebankId', selectedTimebank.primary_timebank);
+                            },
                           ),
                         ),
                         widget.isCreateTimebank

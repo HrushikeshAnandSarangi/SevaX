@@ -149,7 +149,12 @@
     "community": "Community",
     "timebanks_around_you": "Please make sure you have GPS turned on to see the list of Timebanks around you",
     "create_timebank": "Create a Timebank",
-    "create_timebank_warn": "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks. In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank."
+    "create_timebank_warn": "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks. In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.",
+    "none": "None",
+    "look_for_existing_timebank_title": "Select Parent timebank",
+    "look_for_existing": "Find your parent timebank if you are part of",
+    "look_for_existing_siblings": "Feed is visible to following timebanks",
+    "look_for_existing_siblings_title": "Posting to"
   },
   "createtimebank": {
     "title": "Create a Timebank",
@@ -168,6 +173,8 @@
     "current_tax_percentage": "Current Tax Percentage",
     "timebank_location": "Your Timebank location.",
     "timebank_location_hinttext": "List the place or address where your community meets (such as a cafe, library, or church.).",
+    "timebank_hasparent": "Timebank has parent",
+    "timebank_location_hasparent_hinttext": "If your timebank is associated with a parent timebank select below",
     "timebank_exists_dialog": "Timebank name already exists !",
     "location_err_empty": "Please add the location of your Timebank",
     "logo_mandatory": "Timebank logo is mandatory",
@@ -1018,6 +1025,8 @@
   "image_picker": {
     "camera": "Camera",
     "gallery": "Gallery",
+    "stock_images": "Stock Images",
+    "choose_image": "Choose Image",
     "pdf_document": "PDF Document"
   },
   "search_page": {

@@ -23,12 +23,13 @@ class NewsModel extends DataModel {
   String placeAddress;
   bool isPinned;
   bool softDelete;
-
+  List<Comments> comments = List();
   List<String> urlsFromPost = List();
   List<String> hashTags = List();
 
   String userPhotoURL;
   String imageScraped = "NoData";
+  List<String> timebanksPosted = List();
 
   NewsModel(
       {this.id,
@@ -50,7 +51,10 @@ class NewsModel extends DataModel {
       this.userPhotoURL,
       this.newsDocumentName,
       this.newsDocumentUrl,
-      this.softDelete});
+      this.softDelete,
+      this.timebanksPosted,
+      this.comments,
+      });
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
@@ -134,6 +138,16 @@ class NewsModel extends DataModel {
     } else
       map['reports'] = [];
 
+    if (this.timebanksPosted != null) {
+      map['timebanksposted'] = this.timebanksPosted;
+    } else
+      map['timebanksposted'] = [];
+
+    if (this.comments != null && this.comments.isNotEmpty) {
+      map['comments'] = List<dynamic>.from(comments.map((x) => x.toMap()));
+    } else {
+      map['comments'] = [];
+    }
     if (this.newsDocumentName != null && this.newsDocumentName.isNotEmpty) {
       map['newsDocumentName'] = this.newsDocumentName;
     }
@@ -239,6 +253,24 @@ class NewsModel extends DataModel {
       this.reports = likesList;
     } else
       this.reports = [];
+
+    if (map.containsKey('timebanksposted')) {
+      List<String> timebanksPosted = List.castFrom(map['timebanksposted']);
+      this.timebanksPosted = timebanksPosted;
+    } else
+      this.timebanksPosted = [];
+
+    if (map.containsKey('comments')) {
+      List<Comments> commentsList = [];
+      List commentsDataList = List.castFrom(map['comments']);
+
+      commentsList = commentsDataList.map<Comments>((data) {
+        Map<String, dynamic> commentsmap = Map.castFrom(data);
+        return Comments.fromMap(commentsmap);
+      }).toList();
+
+      this.comments = commentsList;
+    }
   }
 
   NewsModel.fromMapElasticSearch(Map<String, dynamic> map) {
@@ -335,11 +367,29 @@ class NewsModel extends DataModel {
       this.reports = likesList;
     } else
       this.reports = [];
+
+    if (map.containsKey('timebanksposted')) {
+      List<String> timebanksPosted = List.castFrom(map['timebanksposted']);
+      this.timebanksPosted = timebanksPosted;
+    } else
+      this.timebanksPosted = [];
+
+    if (map.containsKey('comments')) {
+      List<Comments> commentsList = [];
+      List commentsDataList = List.castFrom(map['comments']);
+
+      commentsList = commentsDataList.map<Comments>((data) {
+        Map<String, dynamic> commentsmap = Map.castFrom(data);
+        return Comments.fromMap(commentsmap);
+      }).toList();
+
+      this.comments = commentsList;
+    }
   }
 
   @override
   String toString() {
-    return 'NewsModel{id: $id, title: $title, subheading: $subheading, description: $description, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, newsImageUrl: $newsImageUrl, photoCredits: $photoCredits, postTimestamp: $postTimestamp, location: $location, entity: $entity, likes: $likes, reports: $reports, root_timebank_id: $root_timebank_id, placeAddress: $placeAddress, isPinned: $isPinned, urlsFromPost: $urlsFromPost, hashTags: $hashTags, userPhotoURL: $userPhotoURL, imageScraped: $imageScraped}';
+    return 'NewsModel{id: $id, title: $title, subheading: $subheading, description: $description, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, newsImageUrl: $newsImageUrl, photoCredits: $photoCredits, postTimestamp: $postTimestamp, location: $location, entity: $entity, likes: $likes, reports: $reports, comments: $comments, timebanksPosted: $timebanksPosted, root_timebank_id: $root_timebank_id, placeAddress: $placeAddress, isPinned: $isPinned, urlsFromPost: $urlsFromPost, hashTags: $hashTags, userPhotoURL: $userPhotoURL, imageScraped: $imageScraped}';
   }
 }
 
@@ -414,3 +464,134 @@ class EntityModel extends DataModel {
 }
 
 enum EntityType { timebank, campaign, general }
+
+
+class Comments extends DataModel {
+  String userPhotoURL; // create photo URL
+  String createdEmail;
+  String fullName;
+  String comment;
+  String feedId;
+  List<String> mentions = List(); // user ids for future.
+  List<Comments> comments = List();
+  List<String> likes = List();
+  int createdAt;
+
+  Comments({
+    this.userPhotoURL,
+    this.createdEmail,
+    this.fullName,
+    this.comment,
+    this.feedId,
+    this.mentions,
+    this.comments,
+    this.likes,
+    this.createdAt,
+  }) {}
+
+  Comments.fromMap(Map<String, dynamic> map) {
+    if (map.containsKey('userPhotoURL')) {
+      this.userPhotoURL = map['userPhotoURL'];
+    }
+    if (map.containsKey('createdEmail')) {
+      this.createdEmail = map['createdEmail'];
+    }
+    if (map.containsKey('fullName')) {
+      this.fullName = map['fullName'];
+    }
+    if (map.containsKey('comment')) {
+      this.comment = map['comment'];
+    }
+    if (map.containsKey('feedId')) {
+      this.feedId = map['feedId'];
+    }
+    if (map.containsKey('createdAt')) {
+      this.createdAt = map['createdAt'];
+    }
+    if (map.containsKey('mentions')) {
+      List<String> mentions = List.castFrom(map['mentions']);
+      this.mentions = mentions;
+    } else {
+      this.mentions = List();
+    }
+    if (map.containsKey('comments')) {
+      List<Comments> commentsList = [];
+      List commentsDataList = List.castFrom(map['comments']);
+
+      commentsList = commentsDataList.map<Comments>((data) {
+        Map<String, dynamic> commentsmap = Map.castFrom(data);
+        return Comments.fromMap(commentsmap);
+      }).toList();
+
+      this.comments = commentsList;
+    } else {
+      this.comments = List();
+    }
+
+    if (map.containsKey('likes')) {
+      List<String> likesList = List.castFrom(map['likes']);
+      this.likes = likesList;
+    } else
+      this.likes = [];
+  }
+
+  @override
+  String toString() {
+    return 'Comments{userPhotoURL: $userPhotoURL, createdEmail: $createdEmail, fullName: $fullName, comment: $comment, feedId: $feedId, mentions: $mentions, comments: $comments, likes: $likes, createdAt: $createdAt}';
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> object = {};
+
+    if (this.userPhotoURL != null && this.userPhotoURL.isNotEmpty) {
+      object['userPhotoURL'] = this.userPhotoURL;
+    }
+    if (this.createdEmail != null && this.createdEmail.isNotEmpty) {
+      object['createdEmail'] = this.createdEmail;
+    }
+    if (this.comment != null && this.comment.isNotEmpty) {
+      object['comment'] = this.comment;
+    }
+    if (this.fullName != null && this.fullName.isNotEmpty) {
+      object['fullName'] = this.fullName;
+    }
+    if (this.feedId != null && this.feedId.isNotEmpty) {
+      object['feedId'] = this.feedId;
+    }
+    if (this.createdAt != null) {
+      object['createdAt'] = this.createdAt;
+    }
+    if (this.likes != null) {
+      object['likes'] = this.likes;
+    } else
+      object['likes'] = [];
+    if (this.mentions != null && this.mentions.isNotEmpty) {
+      object['mentions'] = this.mentions;
+    } else {
+      object['mentions'] = [];
+    }
+    if (this.comments != null && this.comments.isNotEmpty) {
+      object['comments'] = List<dynamic>.from(comments.map((x) => x.toMap()));
+    } else {
+      object['comments'] = [];
+    }
+    return object;
+  }
+}
+
+class CommentsList {
+  List<Comments> comments = [];
+  bool loading = false;
+  CommentsList();
+
+  add(comment) {
+    this.comments.add(comment);
+  }
+
+  removeall() {
+    this.comments = [];
+  }
+
+  List<Comments> get getComments => comments;
+}

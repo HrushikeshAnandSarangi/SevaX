@@ -11,16 +11,20 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 
 import '../resources/repository.dart';
 
 class CommunityFindBloc {
   final _repository = Repository();
   final _communitiesFetcher = PublishSubject<CommunityListModel>();
+  final _timebanksFetcher = PublishSubject<TimebankListModel>();
   final searchOnChange = BehaviorSubject<String>();
 
   Observable<CommunityListModel> get allCommunities =>
       _communitiesFetcher.stream;
+  Observable<TimebankListModel> get allSiblingTimebanks =>
+      _timebanksFetcher.stream;
 
   fetchCommunities(name) async {
     CommunityListModel communityListModel = CommunityListModel();
@@ -33,10 +37,39 @@ class CommunityFindBloc {
     _communitiesFetcher.sink.add(communityListModel);
   }
 
+  searchTimebankSiblingsByParentId(id, timebank) async {
+    TimebankListModel timebankListModel = TimebankListModel();
+    timebankListModel.loading = true;
+    _timebanksFetcher.sink.add(timebankListModel);
+    print('called1');
+    timebankListModel =
+    await _repository.searchTimebankSiblingsByParentId(id, timebankListModel);
+    timebankListModel.loading = false;
+    print(timebankListModel.timebanks.length);
+    timebankListModel.timebanks.insert(0, timebank);
+    _timebanksFetcher.sink.add(timebankListModel);
+  }
+
   dispose() {
     _communitiesFetcher.close();
     searchOnChange.close();
   }
+}
+
+class TimebankListModel {
+  List<TimebankModel> timebanks = [];
+  bool loading = false;
+  TimebankListModel();
+
+  void add(community) {
+    this.timebanks.add(community);
+  }
+
+  void removeall() {
+    this.timebanks = [];
+  }
+
+  List<TimebankModel> get getTimebanks => timebanks;
 }
 
 class VolunteerFindBloc {
@@ -110,7 +143,7 @@ class CommunityCreateEditController {
     this.timebank.updateValueByKey('protected', this.timebank.protected);
     this.timebank.updateValueByKey('private', this.timebank.private);
     this.timebank.updateValueByKey('emailId', user.email);
-    this.timebank.updateValueByKey('parentTimebankId', widget.timebankId);
+    this.timebank.updateValueByKey('parentTimebankId', this.timebank.parentTimebankId);
     this
         .timebank
         .updateValueByKey('rootTimebankId', FlavorConfig.values.timebankId);
