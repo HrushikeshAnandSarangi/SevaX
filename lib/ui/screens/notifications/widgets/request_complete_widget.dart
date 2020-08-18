@@ -11,6 +11,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_butto
 import 'package:sevaexchange/ui/screens/notifications/widgets/notifcation_values.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -279,6 +280,7 @@ class RequestCompleteWidget extends StatelessWidget {
     );
 
     if (results != null && results.containsKey('selection')) {
+      await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
       onActivityResult(
         sevaCore: sevaCore,
         requestModel: model,

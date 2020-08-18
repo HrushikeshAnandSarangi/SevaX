@@ -8,6 +8,7 @@ import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/claimedRequestStatus.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart'
@@ -887,6 +888,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     ));
 
     if (results != null && results.containsKey('selection')) {
+      await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
       onActivityResult(
         sevaCore: sevaCore,
         requestModel: model,

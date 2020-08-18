@@ -870,6 +870,7 @@ class NotificationsView extends State<NotificationViewHolder> {
     ));
 
     if (results != null && results.containsKey('selection')) {
+      await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
       onActivityResult(
         sevaCore: sevaCore,
         requestModel: model,

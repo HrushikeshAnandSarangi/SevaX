@@ -3,6 +3,9 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/qna-module/FeedbackConstants.dart';
+import 'package:flutter/foundation.dart';
+import 'dart:async';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 enum FeedbackType {
   FOR_REQUEST_VOLUNTEER,
@@ -25,10 +28,22 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 
   bool _validate = false;
 
-  var questionIndex = 0;
-  var totalScore = 0;
+  num questionIndex = 0;
+  num totalScore = 0;
   TextEditingController myCommentsController = TextEditingController();
-
+  final _debouncer = Debouncer(milliseconds: 500);
+  final _debouncerIng = Debouncer(milliseconds: 1500);
+  bool isLoading = false;
+  var ratings = {};
+  constructor() {
+    var temp = getQuestions(widget.feedbackType).length;
+    for (var i=0; i< temp; i++) {
+      ratings[i] = 0;
+    }
+    setState(() {
+      ratings = ratings;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -155,7 +170,13 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   }
 
   Widget getFeebackQuestions() {
-    return Column(
+    var widgettype;
+    if (widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER) {
+      widgettype = StarRating();
+    } else {
+      widgettype = getQuestionsWidget(widget, questionIndex);
+    }
+    return this.isLoading ? Center(child: CircularProgressIndicator()): Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -172,47 +193,80 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
             ),
           ),
         ),
-        ...(getQuestions(widget.feedbackType)[questionIndex]
-                [FeedbackConstants.ANSWERS] as List)
-            .map((answerModel) {
-          return Container(
-            margin: EdgeInsets.all(10),
-            width: double.infinity,
-            child: RaisedButton(
-              shape: StadiumBorder(),
-              color: Color(0x0FF766FE0),
-              child: Text(
-                answerModel[FeedbackConstants.ANSWER_TEXT],
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-              onPressed: () {
-                makeSelection(answerModel[FeedbackConstants.SCORE]);
-              },
-            ),
-          );
-        }).toList(),
+        widgettype
       ],
     );
   }
 
-  void makeSelection(int score) {
+  void makeSelection(num score) {
     setState(() {
       questionIndex++;
       totalScore = totalScore += score;
+      isLoading = false;
     });
   }
 
+  getQuestionsWidget(widget, questionIndex) {
+    return (getQuestions(widget.feedbackType)[questionIndex]
+    [FeedbackConstants.ANSWERS] as List)
+        .map((answerModel) {
+      return Container(
+        margin: EdgeInsets.all(10),
+        width: double.infinity,
+        child: RaisedButton(
+          shape: StadiumBorder(),
+          color: Color(0x0FF766FE0),
+          child: Text(
+            answerModel[FeedbackConstants.ANSWER_TEXT],
+            style:
+            TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+          onPressed: () {
+            makeSelection(answerModel[FeedbackConstants.SCORE]);
+          },
+        ),
+      );
+    }).toList();
+  }
   void finishState(BuildContext context) {
     Navigator.of(context).pop({
-      "selection": getRating(totalScore).toStringAsFixed(1),
+      "ratings": ratings,
+      "selection": getRating(totalScore, widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER ? 20: 15).toStringAsFixed(1),
       'didComment': myCommentsController.text.length > 0,
       'comment': myCommentsController.text
     });
   }
 
-  double getRating(int totalScore) {
-    return 5 * (totalScore / 15);
+  double getRating(num totalScore, totalscoredenominator) {
+    return 5 * (totalScore / totalscoredenominator);
+  }
+
+  Widget StarRating() {
+    return SmoothStarRating(
+        allowHalfRating: true,
+        onRated: (v) {
+          this.ratings[this.questionIndex] = v;
+          setState(() {
+            ratings = ratings;
+          });
+          _debouncerIng.run(() =>  {
+            setState(() {
+              isLoading = true;
+            }),
+            _debouncer.run(() =>  {
+              makeSelection(v),
+            })
+          });
+        },
+        starCount: 5,
+        rating: this.ratings[this.questionIndex] != null ? this.ratings[this.questionIndex]: 0,
+        size: 40.0,
+        filledIconData: Icons.star,
+        halfFilledIconData: Icons.star_half,
+        color: Colors.yellow,
+        borderColor: Colors.yellow,
+        spacing:0.0
+    );
   }
 
   Widget getTextFeedback(BuildContext context) {
@@ -278,5 +332,20 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
         ),
       ),
     );
+  }
+}
+class Debouncer {
+  final int milliseconds;
+  VoidCallback action;
+  Timer _timer;
+
+  Debouncer({ this.milliseconds });
+
+  run(VoidCallback action) {
+    if (_timer != null) {
+      _timer.cancel();
+    }
+
+    _timer = Timer(Duration(milliseconds: milliseconds), action);
   }
 }

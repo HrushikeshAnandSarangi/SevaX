@@ -19,6 +19,7 @@ import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
@@ -745,6 +746,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     ));
 
     if (results != null && results.containsKey('selection')) {
+      await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
       onActivityResult(
         sevaCore: sevaCore,
         requestModel: model,

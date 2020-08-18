@@ -25,6 +25,9 @@ class UserModel extends DataModel {
   String sevaUserID;
   List<String> invitedRequests;
   double currentBalance;
+  double trustworthinessscore;
+  double reliabilityscore;
+  int totalReviews;
   String timezone;
   String otp;
   String requestStatus;
@@ -73,6 +76,9 @@ class UserModel extends DataModel {
       this.sevaUserID,
       this.skills,
       this.currentBalance,
+      this.reliabilityscore,
+      this.trustworthinessscore,
+      this.totalReviews,
       this.calendar,
       this.otp,
       this.requestStatus,
@@ -228,6 +234,21 @@ class UserModel extends DataModel {
     } else {
       this.currentBalance = 0.0;
     }
+    if (map.containsKey('trustworthinessscore')) {
+      this.trustworthinessscore = map['trustworthinessscore'].toDouble();
+    } else {
+      this.trustworthinessscore = 0.0;
+    }
+    if (map.containsKey('reliabilityscore')) {
+      this.reliabilityscore = map['reliabilityscore'].toDouble();
+    } else {
+      this.reliabilityscore = 0.0;
+    }
+    if (map.containsKey('totalReviews')) {
+      this.totalReviews = map['totalReviews'];
+    } else {
+      this.totalReviews = 0;
+    }
     if (map.containsKey('requestStatus')) {
       this.requestStatus = map['requestStatus'];
     }
@@ -358,6 +379,22 @@ class UserModel extends DataModel {
     } else {
       object['currentBalance'] = 0;
     }
+    if (this.trustworthinessscore != null) {
+      object['trustworthinessscore'] = this.trustworthinessscore;
+    } else {
+      object['trustworthinessscore'] = 0;
+    }
+    if (this.reliabilityscore != null) {
+      object['reliabilityscore'] = this.reliabilityscore;
+    } else {
+      object['reliabilityscore'] = 0;
+    }
+    if (this.totalReviews != null) {
+      object['totalReviews'] = this.totalReviews;
+    } else {
+      object['totalReviews'] = 0;
+    }
+
     if (this.timezone != null) {
       object['timezone'] = this.timezone;
     } else {
@@ -410,6 +447,9 @@ class UserModel extends DataModel {
       ${this.sevaUserID.toString()},
       ${this.skills.toString()},
       ${this.currentBalance.toString()},
+      ${this.reliabilityscore.toString()},
+      ${this.totalReviews.toString()}, 
+      ${this.trustworthinessscore.toString()},
       ${this.calendar.toString()},
       ${this.otp.toString()},
       ${this.requestStatus.toString()},
