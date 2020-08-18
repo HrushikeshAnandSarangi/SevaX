@@ -7,7 +7,7 @@ import 'package:sevaexchange/models/donation_approve_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/donation_accepted_bloc.dart';
-import 'package:sevaexchange/ui/screens/request/widgets/request_donation_acknowledge_dialog.dart';
+import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/approve_donation_dialog.dart';
@@ -124,11 +124,16 @@ class DonationParticipantPage extends StatelessWidget {
           onTap: () {
             log('show dialog');
             Navigator.of(context, rootNavigator: true).pop();
-            showDialog(
-              context: context,
-              builder: (context) =>
-                  requestDonationAcknowledgementDialog(context),
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => RequestDonationDisputePage(),
+              ),
             );
+            // showDialog(
+            //   context: context,
+            //   builder: (context) =>
+            //       requestDonationAcknowledgementDialog(context),
+            // );
           },
         );
       },
