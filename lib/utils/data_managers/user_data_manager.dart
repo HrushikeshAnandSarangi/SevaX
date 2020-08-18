@@ -125,6 +125,7 @@ Stream<List<DonationModel>> getDonationList(
     data = Firestore.instance
         .collection('donations')
         .where('timebankId', isEqualTo: timebankId)
+        .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
         .where('donatedToTimebank', isEqualTo: true)
         .orderBy("timestamp", descending: true)
         .snapshots();

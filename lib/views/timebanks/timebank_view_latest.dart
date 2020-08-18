@@ -169,6 +169,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                       builder: (context) {
                         return UserDonationList(
                             type: "timebank",
+                            isGoods: false,
                             timebankid: widget.timebankModel.id);
                       },
                     ),
@@ -187,6 +188,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                       builder: (context) {
                         return UserDonationList(
                             type: "timebank",
+                            isGoods: true,
                             timebankid: widget.timebankModel.id);
                       },
                     ),
