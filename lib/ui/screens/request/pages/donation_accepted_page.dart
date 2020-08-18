@@ -19,7 +19,7 @@ class _DonationAcceptedPageState extends State<DonationAcceptedPage> {
 
   @override
   void initState() {
-    _bloc.init('123');
+    _bloc.init(widget.model.id);
     super.initState();
   }
 
