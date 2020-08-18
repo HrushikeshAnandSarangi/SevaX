@@ -151,7 +151,7 @@ class HandleModifiedAcknowlegementForDonation extends StatelessWidget {
                           notificationId: builder.notificationId,
                           userId: builder.userId,
                           creatorSevaUserId: builder.creatorSevaUserId,
-                          parentContext: context,
+                          parentContext: builder.parentContext,
                           requestMode: builder.requestMode,
                           timeBankId: builder.timeBankId,
                         );
@@ -250,15 +250,17 @@ class HandlerForModificationManager {
     @required RequestMode requestMode,
     @required BuildContext parentContext,
   }) async {
-    TimebankModel timebankModel =
-        await getTimeBankForId(timebankId: timeBankId);
     UserModel user = await FirestoreManager.getUserForId(sevaUserId: userId);
-    UserModel loggedInUser =
-        await FirestoreManager.getUserForId(sevaUserId: creatorSevaUserId);
+
     ParticipantInfo sender, reciever;
+
+    print("====================>   ${requestMode.toString()}");
+
     switch (requestMode) {
       case RequestMode.PERSONAL_REQUEST:
-        sender = ParticipantInfo(
+        UserModel loggedInUser =
+            await FirestoreManager.getUserForId(sevaUserId: creatorSevaUserId);
+        reciever = ParticipantInfo(
           id: loggedInUser.sevaUserID,
           name: loggedInUser.fullname,
           photoUrl: loggedInUser.photoURL,
@@ -267,7 +269,10 @@ class HandlerForModificationManager {
         break;
 
       case RequestMode.TIMEBANK_REQUEST:
-        sender = ParticipantInfo(
+        TimebankModel timebankModel =
+            await getTimeBankForId(timebankId: timeBankId);
+
+        reciever = ParticipantInfo(
           id: timebankModel.id,
           type: timebankModel.parentTimebankId ==
                   FlavorConfig
@@ -280,7 +285,7 @@ class HandlerForModificationManager {
         break;
     }
 
-    reciever = ParticipantInfo(
+    sender = ParticipantInfo(
       id: user.sevaUserID,
       name: user.fullname,
       photoUrl: user.photoURL,
@@ -291,7 +296,7 @@ class HandlerForModificationManager {
       isTimebankMessage: requestMode == RequestMode.TIMEBANK_REQUEST,
       context: parentContext,
       timebankId: timeBankId,
-      communityId: loggedInUser.currentCommunity,
+      communityId: user.currentCommunity,
       sender: sender,
       reciever: reciever,
       isFromRejectCompletion: false,
