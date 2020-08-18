@@ -10,6 +10,7 @@ class DonationModel {
       this.donationType,
       this.id,
       this.requestId,
+      this.requestTitle,
       this.timebankId,
       this.timestamp,
       this.cashDetails,
@@ -26,6 +27,7 @@ class DonationModel {
   RequestType donationType;
   String id;
   String requestId;
+  String requestTitle;
   String timebankId;
   String notificationId;
   int timestamp;
@@ -55,6 +57,8 @@ class DonationModel {
                     : RequestType.TIME,
         id: json["id"] == null ? null : json["id"],
         requestId: json["requestId"] == null ? null : json["requestId"],
+        requestTitle:
+            json["requestTitle"] == null ? null : json["requestTitle"],
         timebankId: json["timebankId"] == null ? null : json["timebankId"],
         timestamp: json["timestamp"] == null ? null : json["timestamp"],
         donationStatus: json["donationStatus"] == null
@@ -96,6 +100,7 @@ class DonationModel {
                 : donationType == RequestType.GOODS ? 'GOODS' : 'TIME',
         "id": id == null ? null : id,
         "requestId": requestId == null ? null : requestId,
+        "requestTitle": requestTitle == null ? null : requestTitle,
         "timebankId": timebankId == null ? null : timebankId,
         "donationStatus": donationStatus == null
             ? null

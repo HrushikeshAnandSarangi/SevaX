@@ -51,6 +51,7 @@ Future<int> getUserDonatedAmount(
   try {
     await Firestore.instance
         .collection('donations')
+        .where('donationType', isEqualTo: 'CASH')
         .where('donorDetails.donorSevaUserId', isEqualTo: sevaUserId)
         .where('timestamp', isGreaterThan: isLifeTime ? 0 : timeFrame)
         .getDocuments()
@@ -66,6 +67,38 @@ Future<int> getUserDonatedAmount(
     print(e.toString());
   }
   return donatedAmount;
+}
+
+Stream<List<DonationModel>> getDonationList(
+    {String userId, String timebankId}) async* {
+  var data;
+
+  if (userId != null) {
+    data = Firestore.instance
+        .collection('donations')
+        .where('donorDetails.donorSevaUserId', isEqualTo: userId)
+        .orderBy("timestamp", descending: true)
+        .snapshots();
+  } else {
+    data = Firestore.instance
+        .collection('donations')
+        .where('timebankId', isEqualTo: timebankId)
+        .where('donatedToTimebank', isEqualTo: true)
+        .orderBy("timestamp", descending: true)
+        .snapshots();
+  }
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<DonationModel>>.fromHandlers(
+      handleData: (snapshot, donationSink) {
+        List<DonationModel> donationsList = [];
+        snapshot.documents.forEach((document) {
+          DonationModel model = DonationModel.fromMap(document.data);
+          donationsList.add(model);
+        });
+        donationSink.add(donationsList);
+      },
+    ),
+  );
 }
 
 Future<Map<String, UserModel>> getUserForUserModels(
