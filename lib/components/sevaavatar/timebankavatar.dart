@@ -51,14 +51,20 @@ class _TimebankAvatarState extends State<TimebankAvatar>
   }
 
   @override
-  void userImage(File _image) {
-    setState(() {
-      this._image = _image;
-      this._isImageBeingUploaded = true;
-      _uploadImage().then((_) {
-        this._isImageBeingUploaded = false;
+  void userImage(dynamic _image, type) {
+    if (type == 'stock_image') {
+      setState(() {
+        globals.projectsAvtaarURL = _image;
       });
-    });
+    } else {
+      setState(() {
+        this._image = _image;
+        this._isImageBeingUploaded = true;
+        _uploadImage().then((_) {
+          this._isImageBeingUploaded = false;
+        });
+      });
+    }
   }
 
   @override

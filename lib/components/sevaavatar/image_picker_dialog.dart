@@ -100,6 +100,17 @@ class ImagePickerDialog extends StatelessWidget {
                       const Color(0xFF673AB7),
                       const Color(0xFFFFFFFF)),
                 ),
+                GestureDetector(
+                  onTap: () => _listener.openStockImages(context, (image) => {
+                    print(image)
+                  }),
+                  child: roundedButton(
+                      AppLocalizations.of(context)
+                          .translate('image_picker', 'stock_images'),
+                      EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                      const Color(0xFF673AB7),
+                      const Color(0xFFFFFFFF)),
+                ),
                 const SizedBox(height: 15.0),
                 GestureDetector(
                   onTap: () => dismissDialog(),
