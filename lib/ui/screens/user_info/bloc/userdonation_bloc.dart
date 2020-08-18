@@ -6,7 +6,7 @@ class UserDonationBloc {
       {@required String sevaUserId,
       @required int timeFrame,
       bool isLifeTime}) async {
-    FirestoreManager.getUserDonatedAmount(
+    FirestoreManager.getUserDonatedGoodsAndAmount(
             sevaUserId: sevaUserId,
             timeFrame: timeFrame,
             isLifeTime: isLifeTime)

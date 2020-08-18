@@ -43,16 +43,17 @@ Future<void> updateUserLanguage({
   });
 }
 
-Future<int> getUserDonatedAmount({
+Future<int> getUserDonatedGoodsAndAmount({
   @required String sevaUserId,
   @required int timeFrame,
   bool isLifeTime,
+  bool isGoods,
 }) async {
-  int donatedAmount = 0;
+  int totalGoodsOrAmount = 0;
   try {
     await Firestore.instance
         .collection('donations')
-        .where('donationType', isEqualTo: 'CASH')
+        .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
         .where('donorSevaUserId', isEqualTo: sevaUserId)
         .where('timestamp', isGreaterThan: isLifeTime ? 0 : timeFrame)
         .getDocuments()
@@ -60,25 +61,31 @@ Future<int> getUserDonatedAmount({
       data.documents.forEach((documentSnapshot) {
         DonationModel donationModel =
             DonationModel.fromMap(documentSnapshot.data);
-        donatedAmount += donationModel.cashDetails.pledgedAmount;
-        print('donated ${donatedAmount.toString()}');
+        if (donationModel.donationType == RequestType.CASH) {
+          totalGoodsOrAmount += donationModel.cashDetails.pledgedAmount;
+        } else {
+          totalGoodsOrAmount += donationModel.goodsDetails.donatedGoods.length;
+        }
+        print('donated ${totalGoodsOrAmount.toString()}');
       });
     });
   } on Exception catch (e) {
     print(e.toString());
   }
-  return donatedAmount;
+  return totalGoodsOrAmount;
 }
 
-Future<int> getTimebankRaisedAmount({
+Future<int> getTimebankRaisedAmountAndGoods({
   @required String timebankId,
   @required int timeFrame,
   bool isLifeTime,
+  bool isGoods,
 }) async {
-  int donatedAmount = 0;
+  int totalGoodsOrAmount = 0;
   try {
     await Firestore.instance
         .collection('donations')
+        .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
         .where('timebankId', isEqualTo: timebankId)
         .where('timestamp', isGreaterThan: isLifeTime ? 0 : timeFrame)
         .getDocuments()
@@ -86,33 +93,39 @@ Future<int> getTimebankRaisedAmount({
       data.documents.forEach((documentSnapshot) {
         DonationModel donationModel =
             DonationModel.fromMap(documentSnapshot.data);
-        if (donationModel.donatedToTimebank == true &&
-            donationModel.donationType == RequestType.CASH) {
-          donatedAmount += donationModel.cashDetails.pledgedAmount;
+        if (donationModel.donatedToTimebank) {
+          if (donationModel.donationType == RequestType.CASH) {
+            totalGoodsOrAmount += donationModel.cashDetails.pledgedAmount;
+          } else if (donationModel.donationType == RequestType.GOODS) {
+            totalGoodsOrAmount +=
+                donationModel.goodsDetails.donatedGoods.length;
+          }
         }
-        print('donated ${donatedAmount.toString()}');
+        print('donated ${totalGoodsOrAmount.toString()}');
       });
     });
   } on Exception catch (e) {
     print(e.toString());
   }
-  return donatedAmount;
+  return totalGoodsOrAmount;
 }
 
 Stream<List<DonationModel>> getDonationList(
-    {String userId, String timebankId}) async* {
+    {String userId, String timebankId, bool isGoods}) async* {
   var data;
 
   if (userId != null) {
     data = Firestore.instance
         .collection('donations')
         .where('donorSevaUserId', isEqualTo: userId)
+        .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
         .orderBy("timestamp", descending: true)
         .snapshots();
   } else {
     data = Firestore.instance
         .collection('donations')
         .where('timebankId', isEqualTo: timebankId)
+        .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
         .where('donatedToTimebank', isEqualTo: true)
         .orderBy("timestamp", descending: true)
         .snapshots();

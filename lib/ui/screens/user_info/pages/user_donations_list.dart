@@ -12,7 +12,8 @@ import 'package:sevaexchange/views/core.dart';
 class UserDonationList extends StatefulWidget {
   final String type;
   final String timebankid;
-  const UserDonationList({this.type, this.timebankid});
+  final bool isGoods;
+  const UserDonationList({this.type, this.timebankid, this.isGoods});
   @override
   _UserDonationListState createState() => _UserDonationListState();
 }
@@ -26,6 +27,7 @@ class _UserDonationListState extends State<UserDonationList> {
     super.didChangeDependencies();
     if (widget.type == 'user') {
       FirestoreManager.getDonationList(
+              isGoods: widget.isGoods,
               userId: SevaCore.of(context).loggedInUser.sevaUserID)
           .listen(
         (result) {
@@ -35,8 +37,10 @@ class _UserDonationListState extends State<UserDonationList> {
         },
       );
     } else if (widget.type == 'timebank') {
-      print('came here timebank id' + widget.timebankid.toString());
-      FirestoreManager.getDonationList(timebankId: widget.timebankid).listen(
+      FirestoreManager.getDonationList(
+        timebankId: widget.timebankid,
+        isGoods: widget.isGoods,
+      ).listen(
         (result) {
           if (!mounted) return;
           donationsList = result;
@@ -87,6 +91,7 @@ class _UserDonationListState extends State<UserDonationList> {
                       child: Card(
                         child: EarningListItem(
                             model: model,
+                            isGoods: widget.isGoods,
                             usertimezone: usertimezone,
                             viewtype: widget.type),
                       ),
@@ -103,7 +108,10 @@ class EarningListItem extends StatelessWidget {
   final DonationModel model;
   final viewtype;
   final usertimezone;
-  const EarningListItem({Key key, this.model, this.usertimezone, this.viewtype})
+  final bool isGoods;
+
+  const EarningListItem(
+      {Key key, this.model, this.usertimezone, this.viewtype, this.isGoods})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -128,11 +136,21 @@ class EarningListItem extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Text('\$' + '${model.cashDetails.pledgedAmount}',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                      )),
+                  !isGoods
+                      ? Text(
+                          '\$' + '${model.cashDetails.pledgedAmount}',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        )
+                      : Text(
+                          '${model.goodsDetails.donatedGoods.length.toString()} Items',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
 //                  Text(
 //                    S.of(context).seva_credits,
 //                    style: TextStyle(
@@ -144,6 +162,7 @@ class EarningListItem extends StatelessWidget {
                 ],
               ),
               subtitle: DonationItem(
+                  requestName: model.requestTitle,
                   name: viewtype == 'user'
                       ? snapshot.data.name + " (Timebank)"
                       : snapshot.data.fullname == null
@@ -157,9 +176,11 @@ class EarningListItem extends StatelessWidget {
 
 class DonationItem extends StatelessWidget {
   final name;
+  final String requestName;
   final timestamp;
   final usertimezone;
-  DonationItem({this.name, this.timestamp, this.usertimezone});
+  DonationItem(
+      {this.name, this.timestamp, this.usertimezone, this.requestName});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -172,20 +193,23 @@ class DonationItem extends StatelessWidget {
           '${name}',
           textAlign: TextAlign.start,
         ),
+        Text(
+          requestName,
+          textAlign: TextAlign.start,
+        ),
         SizedBox(
           height: 2,
         ),
         Text(
-          '${S.of(context).date} :  ' +
-              DateFormat(
-                      'MMMM dd, yyyy',
-                      Locale(AppConfig.prefs.getString('language_code'))
-                          .toLanguageTag())
-                  .format(
-                getDateTimeAccToUserTimezone(
-                    dateTime: DateTime.fromMillisecondsSinceEpoch(timestamp),
-                    timezoneAbb: usertimezone),
-              ),
+          DateFormat(
+                  'MMM dd, yyyy',
+                  Locale(AppConfig.prefs.getString('language_code'))
+                      .toLanguageTag())
+              .format(
+            getDateTimeAccToUserTimezone(
+                dateTime: DateTime.fromMillisecondsSinceEpoch(timestamp),
+                timezoneAbb: usertimezone),
+          ),
           textAlign: TextAlign.start,
         ),
         SizedBox(
@@ -228,13 +252,4 @@ class DonationImageItem extends StatelessWidget {
       );
     }
   }
-}
-
-String getTimeFormattedString(int timeInMilliseconds) {
-  DateFormat dateFormat = DateFormat('d MMM h:m a ',
-      Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
-  String dateOfTransaction = dateFormat.format(
-    DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds),
-  );
-  return dateOfTransaction;
 }
