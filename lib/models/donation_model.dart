@@ -10,6 +10,7 @@ class DonationModel {
       this.donationType,
       this.id,
       this.requestId,
+      this.requestTitle,
       this.timebankId,
       this.timestamp,
       this.cashDetails,
@@ -26,6 +27,7 @@ class DonationModel {
   RequestType donationType;
   String id;
   String requestId;
+  String requestTitle;
   String timebankId;
   String notificationId;
   int timestamp;
@@ -55,6 +57,8 @@ class DonationModel {
                     : RequestType.TIME,
         id: json["id"] == null ? null : json["id"],
         requestId: json["requestId"] == null ? null : json["requestId"],
+        requestTitle:
+            json["requestTitle"] == null ? null : json["requestTitle"],
         timebankId: json["timebankId"] == null ? null : json["timebankId"],
         timestamp: json["timestamp"] == null ? null : json["timestamp"],
         donationStatus: json["donationStatus"] == null
@@ -96,6 +100,7 @@ class DonationModel {
                 : donationType == RequestType.GOODS ? 'GOODS' : 'TIME',
         "id": id == null ? null : id,
         "requestId": requestId == null ? null : requestId,
+        "requestTitle": requestTitle == null ? null : requestTitle,
         "timebankId": timebankId == null ? null : timebankId,
         "donationStatus": donationStatus == null
             ? null
@@ -105,6 +110,11 @@ class DonationModel {
         "goodsDetails": goodsDetails == null ? null : goodsDetails.toMap(),
         "donorDetails": donorDetails == null ? null : donorDetails.toMap(),
       };
+
+  @override
+  String toString() {
+    return 'DonationModel{communityId: $communityId, donorSevaUserId: $donorSevaUserId, donatedTo: $donatedTo, donatedToTimebank: $donatedToTimebank, donationInBetween: $donationInBetween, donationType: $donationType, id: $id, requestId: $requestId, requestTitle: $requestTitle, timebankId: $timebankId, notificationId: $notificationId, timestamp: $timestamp, donationStatus: $donationStatus, cashDetails: $cashDetails, goodsDetails: $goodsDetails, donorDetails: $donorDetails}';
+  }
 }
 
 class CashDetails {
@@ -130,7 +140,7 @@ class GoodsDetails {
   String comments;
   Map<dynamic, dynamic> donatedGoods;
 
-  factory GoodsDetails.fromMap(Map<String, dynamic> json) => GoodsDetails(
+  factory GoodsDetails.fromMap(Map<dynamic, dynamic> json) => GoodsDetails(
       comments: json["comments"] == null ? null : json["comments"],
       donatedGoods: json.containsKey('donatedGoods')
           ? Map<dynamic, dynamic>.from(json["donatedGoods"])

@@ -15,6 +15,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/blocked_members/pages/blocked_members_page.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
+import 'package:sevaexchange/ui/screens/user_info/pages/user_donations_list.dart';
 import 'package:sevaexchange/utils/animations/fade_route.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
@@ -214,7 +215,18 @@ class _ProfilePageState extends State<ProfilePage> {
                         SizedBox(
                           height: 20,
                         ),
-                        UserDonations(),
+                        UserDonations(
+                            isTimeBank: false,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return UserDonationList(
+                                        type: "user", timebankid: "");
+                                  },
+                                ),
+                              );
+                            }),
                       ],
                     ),
                   ),
