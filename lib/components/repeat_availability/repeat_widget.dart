@@ -13,26 +13,9 @@ class RepeatWidget extends StatefulWidget {
 
 class RepeatWidgetState extends State<RepeatWidget> {
   List<String> dayNameList = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-  List<String> daysName = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday'
+  List<String> daysName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
   ];
-  List<String> occurenccesList = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '10'
+  List<String> occurenccesList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'
   ];
 
   static List<bool> _selected;
@@ -51,7 +34,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
   bool titleCheck = true;
   static int endType = 0;
   static String after = '1';
-  static String selectedDays = 'Monday';
+  static String selectedDays = '';
 
   double _result = 0.0;
 
