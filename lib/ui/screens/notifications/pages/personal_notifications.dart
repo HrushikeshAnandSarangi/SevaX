@@ -22,6 +22,7 @@ import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/repositories/request_repository.dart';
 import 'package:sevaexchange/repositories/user_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
+import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/change_ownership_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
@@ -87,7 +88,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               );
             }
 
-            print("========== ======" + notification.type.toString());
             switch (notification.type) {
               case NotificationType.RecurringRequestUpdated:
                 ReccuringRequestUpdated eventData =
@@ -98,10 +98,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification}"
                           .replaceFirst('***eventName', eventData.eventName)
                           .replaceFirst(
-                              '***eventDate',
-                              DateTime.fromMillisecondsSinceEpoch(
-                                eventData.eventDate,
-                              ).toString()),
+                            '***eventDate',
+                            DateTime.fromMillisecondsSinceEpoch(
+                              eventData.eventDate,
+                            ).toString(),
+                          ),
                   entityName: "Request Updated",
                   photoUrl: eventData.photoUrl,
                   onDismissed: onDismissed,
@@ -646,31 +647,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 );
                 break;
 
-              case NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULY:
-              case NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY:
-                print("CASH_DONATION_COMPLETED_SUCCESSFULY");
-                return NotificationCard(
-                  entityName: "Doantion completed successfully",
-                  title: "Donation completed succesfully",
-                  subTitle: "You donation was completed successfully",
-                  onDismissed: onDismissed,
-                );
-
-              case NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR:
-              case NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR:
-                return NotificationCard(
-                  entityName: "Your pledged was modified",
-                  title: "Please click to see the details",
-                  subTitle: "Your pledged was modified",
-                  onDismissed: onDismissed,
-                  onPressed: () {},
-                );
-
-              case NotificationType.CASH_DONATION_ACKNOWLEDGED_BY_DONOR:
-              case NotificationType.GOODS_DONATION_ACKNOWLEDGED_BY_DONOR:
-                //NOT SURE WHEATHER TO ADD THIS OR NOT
-                break;
-
               case NotificationType.TYPE_FEEDBACK_FROM_SIGNUP_MEMBER:
                 OneToManyNotificationDataModel data =
                     OneToManyNotificationDataModel.fromJson(notification.data);
@@ -759,6 +735,25 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   subTitle: "Seva coins has been debited from your account",
                   onDismissed: onDismissed,
                 );
+
+              case NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULY:
+              case NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY:
+                return PersonalNotificationsRedcerForDonations
+                    .getWidgetForSuccessfullDonation(onDismissed: onDismissed);
+
+              case NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR:
+              case NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR:
+                return PersonalNotificationsRedcerForDonations
+                    .getWidgetForDonationsModifiedByCreator(
+                  context: context,
+                  onDismissed: onDismissed,
+                  notificationsModel: notification,
+                );
+
+              case NotificationType.CASH_DONATION_ACKNOWLEDGED_BY_DONOR:
+              case NotificationType.GOODS_DONATION_ACKNOWLEDGED_BY_DONOR:
+                //NOT SURE WHEATHER TO ADD THIS OR NOT
+                break;
 
               default:
                 log("Unhandled user notification type ${notification.type} ${notification.id}");
