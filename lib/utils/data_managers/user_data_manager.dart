@@ -43,15 +43,17 @@ Future<void> updateUserLanguage({
   });
 }
 
-Future<int> getUserDonatedAmount(
-    {@required String sevaUserId,
-    @required int timeFrame,
-    bool isLifeTime}) async {
+Future<int> getUserDonatedAmount({
+  @required String sevaUserId,
+  @required int timeFrame,
+  bool isLifeTime,
+}) async {
   int donatedAmount = 0;
   try {
     await Firestore.instance
         .collection('donations')
-        .where('donorDetails.donorSevaUserId', isEqualTo: sevaUserId)
+        .where('donationType', isEqualTo: 'CASH')
+        .where('donorSevaUserId', isEqualTo: sevaUserId)
         .where('timestamp', isGreaterThan: isLifeTime ? 0 : timeFrame)
         .getDocuments()
         .then((data) {
@@ -66,6 +68,68 @@ Future<int> getUserDonatedAmount(
     print(e.toString());
   }
   return donatedAmount;
+}
+
+Future<int> getTimebankRaisedAmount({
+  @required String timebankId,
+  @required int timeFrame,
+  bool isLifeTime,
+}) async {
+  int donatedAmount = 0;
+  try {
+    await Firestore.instance
+        .collection('donations')
+        .where('timebankId', isEqualTo: timebankId)
+        .where('timestamp', isGreaterThan: isLifeTime ? 0 : timeFrame)
+        .getDocuments()
+        .then((data) {
+      data.documents.forEach((documentSnapshot) {
+        DonationModel donationModel =
+            DonationModel.fromMap(documentSnapshot.data);
+        if (donationModel.donatedToTimebank == true &&
+            donationModel.donationType == RequestType.CASH) {
+          donatedAmount += donationModel.cashDetails.pledgedAmount;
+        }
+        print('donated ${donatedAmount.toString()}');
+      });
+    });
+  } on Exception catch (e) {
+    print(e.toString());
+  }
+  return donatedAmount;
+}
+
+Stream<List<DonationModel>> getDonationList(
+    {String userId, String timebankId}) async* {
+  var data;
+
+  if (userId != null) {
+    data = Firestore.instance
+        .collection('donations')
+        .where('donorSevaUserId', isEqualTo: userId)
+        .orderBy("timestamp", descending: true)
+        .snapshots();
+  } else {
+    data = Firestore.instance
+        .collection('donations')
+        .where('timebankId', isEqualTo: timebankId)
+        .where('donatedToTimebank', isEqualTo: true)
+        .orderBy("timestamp", descending: true)
+        .snapshots();
+  }
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<DonationModel>>.fromHandlers(
+      handleData: (snapshot, donationSink) {
+        List<DonationModel> donationsList = [];
+        snapshot.documents.forEach((document) {
+          DonationModel model = DonationModel.fromMap(document.data);
+          print(model);
+          donationsList.add(model);
+        });
+        donationSink.add(donationsList);
+      },
+    ),
+  );
 }
 
 Future<Map<String, UserModel>> getUserForUserModels(

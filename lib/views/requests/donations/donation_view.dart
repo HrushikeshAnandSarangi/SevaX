@@ -111,6 +111,7 @@ class _DonationViewState extends State<DonationView> {
     donationsModel.donorDetails.bio = sevaUser.bio;
     donationsModel.donationStatus = DonationStatus.PLEDGED;
     donationsModel.notificationId = Utils.getUuid();
+    donationsModel.requestTitle = widget.requestModel.title;
   }
 
   Widget amountWidget() {
@@ -249,7 +250,7 @@ class _DonationViewState extends State<DonationView> {
         children: [
           titleText(title: 'Tell us what you have donated'),
           StreamBuilder<String>(
-              stream: donationBloc.comment,
+              stream: donationBloc.commentEntered,
               builder: (context, snapshot) {
                 return TextFormField(
                   keyboardType: TextInputType.text,
