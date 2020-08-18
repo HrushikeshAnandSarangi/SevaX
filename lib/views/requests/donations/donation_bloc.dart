@@ -10,16 +10,19 @@ class DonationBloc {
   final _goodsDescription = BehaviorSubject<String>();
   final _amountPledged = BehaviorSubject<String>();
   final _errorMessage = BehaviorSubject<String>();
+  final _comment = BehaviorSubject<String>();
   final _selectedList =
       BehaviorSubject<Map<dynamic, dynamic>>.seeded(Map<dynamic, dynamic>());
 
   Stream<String> get goodsDescription => _goodsDescription.stream;
   Stream<String> get amountPledged => _amountPledged.stream;
+  Stream<String> get commentEntered => _comment.stream;
   Stream<String> get errorMessage => _errorMessage.stream;
   Stream<Map<dynamic, dynamic>> get selectedList => _selectedList.stream;
 
   Function(String) get onDescriptionChange => _goodsDescription.sink.add;
   Function(String) get onAmountChange => _amountPledged.sink.add;
+  Function(String) get onCommentChanged => _comment.sink.add;
 
   void addAddRemove({String selectedKey, String selectedValue}) {
     _selectedList.value.containsKey(selectedKey)
@@ -35,6 +38,7 @@ class DonationBloc {
       _errorMessage.add('Select a goods category');
     } else {
       donationModel.goodsDetails.donatedGoods = _selectedList.value;
+      donationModel.goodsDetails.comments = _comment.value;
       requestModel.goodsDonationDetails.donors.add(donor.sevaUserID);
       try {
         await FirestoreManager.createDonation(donationModel: donationModel);
@@ -158,5 +162,6 @@ class DonationBloc {
     _amountPledged.close();
     _goodsDescription.close();
     _errorMessage.close();
+    _comment.close();
   }
 }

@@ -250,7 +250,7 @@ class _DonationViewState extends State<DonationView> {
         children: [
           titleText(title: 'Tell us what you have donated'),
           StreamBuilder<String>(
-              stream: donationBloc.comment,
+              stream: donationBloc.commentEntered,
               builder: (context, snapshot) {
                 return TextFormField(
                   keyboardType: TextInputType.text,
