@@ -216,13 +216,36 @@ class _ProfilePageState extends State<ProfilePage> {
                           height: 20,
                         ),
                         UserDonations(
+                            isGoods: false,
                             isTimeBank: false,
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) {
                                     return UserDonationList(
-                                        type: "user", timebankid: "");
+                                      type: "user",
+                                      timebankid: "",
+                                      isGoods: false,
+                                    );
+                                  },
+                                ),
+                              );
+                            }),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        UserDonations(
+                            isGoods: true,
+                            isTimeBank: false,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return UserDonationList(
+                                      type: "user",
+                                      timebankid: "",
+                                      isGoods: true,
+                                    );
                                   },
                                 ),
                               );
