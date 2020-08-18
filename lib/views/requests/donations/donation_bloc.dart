@@ -10,19 +10,16 @@ class DonationBloc {
   final _goodsDescription = BehaviorSubject<String>();
   final _amountPledged = BehaviorSubject<String>();
   final _errorMessage = BehaviorSubject<String>();
-  final _commentEntered = BehaviorSubject<String>();
   final _selectedList =
       BehaviorSubject<Map<dynamic, dynamic>>.seeded(Map<dynamic, dynamic>());
 
   Stream<String> get goodsDescription => _goodsDescription.stream;
   Stream<String> get amountPledged => _amountPledged.stream;
-  Stream<String> get comment => _commentEntered.stream;
   Stream<String> get errorMessage => _errorMessage.stream;
   Stream<Map<dynamic, dynamic>> get selectedList => _selectedList.stream;
 
   Function(String) get onDescriptionChange => _goodsDescription.sink.add;
   Function(String) get onAmountChange => _amountPledged.sink.add;
-  Function(String) get onCommentChanged => _commentEntered.sink.add;
 
   void addAddRemove({String selectedKey, String selectedValue}) {
     _selectedList.value.containsKey(selectedKey)
@@ -38,7 +35,6 @@ class DonationBloc {
       _errorMessage.add('Select a goods category');
     } else {
       donationModel.goodsDetails.donatedGoods = _selectedList.value;
-      donationModel.goodsDetails.comments = _commentEntered.value;
       requestModel.goodsDonationDetails.donors.add(donor.sevaUserID);
       try {
         await FirestoreManager.createDonation(donationModel: donationModel);
@@ -90,9 +86,10 @@ class DonationBloc {
         await FirestoreManager.createDonation(donationModel: donationModel);
         await FirestoreManager.updateRequest(requestModel: requestModel);
         await sendNotification(
-            donationModel: donationModel,
-            requestModel: requestModel,
-            donor: donor);
+          donationModel: donationModel,
+          requestModel: requestModel,
+          donor: donor,
+        );
         return true;
       } on Exception catch (e) {
         _errorMessage.add("something went wrong try again later");

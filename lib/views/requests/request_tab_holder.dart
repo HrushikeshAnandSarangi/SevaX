@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/request/pages/donation_accepted_page.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
-import 'package:sevaexchange/views/requests/donation_accepted_page.dart';
 import 'package:sevaexchange/views/requests/request_accepted_content_holder.dart';
+import 'package:sevaexchange/views/requests/request_users_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 
 class RequestTabHolder extends StatelessWidget {
@@ -66,20 +68,27 @@ class RequestTabHolder extends StatelessWidget {
                               applied: false,
                             ),
                           ),
-                          // Container(
-                          //   child: RequestUsersTabsViewHolder.of(
-                          //     requestItem: requestModel,
-                          //   ),
-                          // ),
                           Container(
-                            child: DonationAcceptedPage(model: requestModel),
-                          ),
-                          Container(
-                            child: RequestAcceptedTabsViewHolder.of(
+                            child: RequestUsersTabsViewHolder.of(
                               requestItem: requestModel,
-                              timebankModel: timebank,
                             ),
                           ),
+                          ...requestModel.requestType == RequestType.TIME
+                              ? <Widget>[
+                                  Container(
+                                    child: RequestAcceptedTabsViewHolder.of(
+                                      requestItem: requestModel,
+                                      timebankModel: timebank,
+                                    ),
+                                  ),
+                                ]
+                              : <Widget>[
+                                  Container(
+                                    child: DonationAcceptedPage(
+                                      model: requestModel,
+                                    ),
+                                  ),
+                                ],
                         ],
                       ),
                     ),

@@ -1,9 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/models/donation_approve_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -11,23 +10,30 @@ import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
-class ApproveDonationDialog extends StatelessWidget {
-  final DonationApproveModel donationApproveModel;
-  final String timeBankId;
-  final String notificationId;
-  final String userId;
-  final RequestModel requestModel;
-  final BuildContext parentContext;
-  final VoidCallback onTap;
+class HandleModifiedAcknowlegementForDonationBuilder {
+  String timeBankId;
+  String notificationId;
+  RequestMode requestMode;
+  String userId;
+  String communityId;
+  BuildContext parentContext;
 
-  ApproveDonationDialog({
-    this.donationApproveModel,
-    this.timeBankId,
-    this.notificationId,
-    this.userId,
-    this.requestModel,
-    this.parentContext,
-    this.onTap,
+  String entityTitle;
+  String entityImageURL;
+  String requestTitle;
+  String donationAmount;
+  String creatorSevaUserId;
+  String description;
+
+  String donationId;
+  String donorEmail;
+}
+
+class HandleModifiedAcknowlegementForDonation extends StatelessWidget {
+  final HandleModifiedAcknowlegementForDonationBuilder builder;
+
+  HandleModifiedAcknowlegementForDonation({
+    this.builder,
   });
 
   @override
@@ -35,19 +41,22 @@ class ApproveDonationDialog extends StatelessWidget {
     return Builder(
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(25.0))),
+          borderRadius: BorderRadius.all(
+            Radius.circular(25.0),
+          ),
+        ),
         content: Form(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              _getCloseButton(context),
+              HandlerForModificationManager.getCloseButton(context),
               Container(
                 height: 70,
                 width: 70,
                 child: CircleAvatar(
                   backgroundImage: NetworkImage(
-                      donationApproveModel.donorPhotoUrl ??
-                          defaultUserImageURL),
+                    builder.entityImageURL,
+                  ),
                 ),
               ),
               Padding(
@@ -56,7 +65,7 @@ class ApproveDonationDialog extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.all(4.0),
                 child: Text(
-                  donationApproveModel.donorName ?? "Anonymous",
+                  builder.entityTitle,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -66,23 +75,20 @@ class ApproveDonationDialog extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                 child: Text(
-                  donationApproveModel.requestTitle ??
-                      "Request title not updated",
+                  builder.requestTitle,
                 ),
               ),
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
-                  donationApproveModel.donationDetails ??
-                      "Description not yet updated",
+                  builder.description,
                   maxLines: 5,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                 ),
               ),
               Center(
-                child: Text(
-                    "By accepting, ${donationApproveModel.donorName} will be added to donors list.",
+                child: Text("By Accepting this amount will be finalized",
                     style: TextStyle(
                       fontStyle: FontStyle.italic,
                     ),
@@ -101,32 +107,30 @@ class ApproveDonationDialog extends StatelessWidget {
                       child: Text(
                         'Acknowledge',
                         style: TextStyle(
-                            color: Colors.white, fontFamily: 'Europa'),
+                          color: Colors.white,
+                          fontFamily: 'Europa',
+                        ),
                       ),
                       onPressed: () async {
-                        //donation approved
-                        onTap?.call();
+                        //update status of donation
+                        await HandlerForModificationManager
+                                .acknowledeModificationInDonation(
+                          donationId: builder.donationId,
+                          donorEmail: builder.donorEmail,
+                          notificationId: builder.notificationId,
+                        )
+                            .then(
+                              HandlerForModificationManager.handleSuuccess,
+                            )
+                            .catchError(
+                              HandlerForModificationManager.handleFailure,
+                            );
+                        Navigator.of(context).pop();
                       },
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.all(4.0),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    child: RaisedButton(
-                      color: FlavorConfig.values.theme.primaryColor,
-                      child: Text(
-                        'Modify',
-                        style: TextStyle(
-                            color: Colors.white, fontFamily: 'Europa'),
-                      ),
-                      onPressed: () async {
-                        //donation approved
-                        // update donation status
-                        Navigator.of(context).pop();
-                      },
-                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.all(4.0),
@@ -142,11 +146,15 @@ class ApproveDonationDialog extends StatelessWidget {
                       ),
                       onPressed: () async {
                         // donation declined
-                        createChat(
-                            context: context,
-                            model: requestModel,
-                            notificationId: notificationId,
-                            userId: userId);
+                        await HandlerForModificationManager.createChat(
+                          context: context,
+                          notificationId: builder.notificationId,
+                          userId: builder.userId,
+                          creatorSevaUserId: builder.creatorSevaUserId,
+                          parentContext: context,
+                          requestMode: builder.requestMode,
+                          timeBankId: builder.timeBankId,
+                        );
                       },
                     ),
                   ),
@@ -158,24 +166,10 @@ class ApproveDonationDialog extends StatelessWidget {
       ),
     );
   }
+}
 
-  void modifyDonation({
-    DonationApproveModel model,
-    String notificationId,
-  }) {
-    FirestoreManager.readUserNotification(
-        notificationId, donationApproveModel.donorEmail);
-  }
-
-  void acknowledgeDonation({
-    DonationApproveModel model,
-    String notificationId,
-  }) {
-    FirestoreManager.readUserNotification(
-        notificationId, donationApproveModel.donorEmail);
-  }
-
-  Widget _getCloseButton(BuildContext context) {
+class HandlerForModificationManager {
+  static Widget getCloseButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: Container(
@@ -203,20 +197,66 @@ class ApproveDonationDialog extends StatelessWidget {
     );
   }
 
-  Future createChat({
-    RequestModel model,
-    String userId,
-    BuildContext context,
+  static Function handleSuuccess = () {
+    print("OPeration completed Successfully");
+  };
+
+  static Function handleFailure = (e) {
+    print("Operation couldn't comlete due to $e");
+  };
+
+  static Future<bool> acknowledeModificationInDonation({
+    String donorEmail,
     String notificationId,
+    String donationId,
+  }) async {
+    return await _getBatchForUpdates(
+      donationId: donationId,
+      donorEmail: donorEmail,
+      notificationId: notificationId,
+    ).commit().then((value) => true).catchError((onError) => false);
+  }
+
+  static WriteBatch _getBatchForUpdates({
+    String donorEmail,
+    String notificationId,
+    String donationId,
+  }) {
+    ///This notification is always directed towards member
+    /// as member can only donate as of now
+
+    var db = Firestore.instance;
+    var batch = Firestore.instance.batch();
+    batch.updateData(
+        db
+            .collection('users')
+            .document(donorEmail)
+            .collection('notifications')
+            .document(notificationId),
+        {'isRead': true});
+
+    batch.updateData(db.collection('donations').document(donationId),
+        {'donationStatus': 'MEMBER_ACKNOWLEDGED_MODIFICATION'});
+
+    return batch;
+  }
+
+  static Future createChat({
+    @required String userId,
+    @required String creatorSevaUserId,
+    @required BuildContext context,
+    @required String notificationId,
+    @required String timeBankId,
+    @required RequestMode requestMode,
+    @required BuildContext parentContext,
   }) async {
     TimebankModel timebankModel =
-        await getTimeBankForId(timebankId: model.timebankId);
+        await getTimeBankForId(timebankId: timeBankId);
     UserModel user = await FirestoreManager.getUserForId(sevaUserId: userId);
     UserModel loggedInUser =
-        await FirestoreManager.getUserForId(sevaUserId: model.sevaUserId);
-    print('loggedin ${loggedInUser}');
+        await FirestoreManager.getUserForId(sevaUserId: creatorSevaUserId);
     ParticipantInfo sender, reciever;
-    switch (requestModel.requestMode) {
+    switch (requestMode) {
       case RequestMode.PERSONAL_REQUEST:
         sender = ParticipantInfo(
           id: loggedInUser.sevaUserID,
@@ -248,10 +288,9 @@ class ApproveDonationDialog extends StatelessWidget {
     );
 
     createAndOpenChat(
-      isTimebankMessage:
-          requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+      isTimebankMessage: requestMode == RequestMode.TIMEBANK_REQUEST,
       context: parentContext,
-      timebankId: model.timebankId,
+      timebankId: timeBankId,
       communityId: loggedInUser.currentCommunity,
       sender: sender,
       reciever: reciever,
@@ -261,14 +300,4 @@ class ApproveDonationDialog extends StatelessWidget {
       },
     );
   }
-
-//  if (requestModel.requestMode == RequestMode.PERSONAL_REQUEST) {
-//  FirestoreManager.readUserNotification(
-//  notificationId, SevaCore.of(context).loggedInUser.email);
-//  } else {
-//  readTimeBankNotification(
-//  notificationId: notificationId,
-//  timebankId: requestModel.timebankId,
-//  );
-//  }
 }
