@@ -13,6 +13,16 @@ class RequestDonationDisputeBloc {
 
   Function(String) get onAmountChanged => _cashAmount.sink.add;
 
+  void toggleGoodsReceived(String key, String value) {
+    var map = _goodsRecieved.value;
+    if (map.containsKey(key)) {
+      _goodsRecieved.add(map..remove(key));
+    } else {
+      map[key] = value;
+      _goodsRecieved.add(map);
+    }
+  }
+
   Future<bool> disputeCash(String donationId, double pledgedAmount) async {
     if (pledgedAmount == _cashAmount.value) {
       await _donationsRepository.acknowledgeDonation(donationId);
