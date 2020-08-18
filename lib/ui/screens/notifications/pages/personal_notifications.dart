@@ -80,6 +80,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               );
             }
 
+            print("========== ======" + notification.type.toString());
             switch (notification.type) {
               case NotificationType.RecurringRequestUpdated:
                 ReccuringRequestUpdated eventData =
@@ -164,6 +165,45 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       '${userAddedModel.adminName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'added_you')} ${userAddedModel.timebankName} ${AppLocalizations.of(context).translate('members', 'timebank')}',
                 );
                 break;
+
+              case NotificationType.MEMBER_DEMOTED_FROM_ADMIN:
+                bool isGroup = false;
+                String associatedName = notification.data['associatedName'];
+
+                // bool
+                String timebankTitle = notification.data['timebankName'];
+                return NotificationCard(
+                  title: 'You have been demoted from Admin',
+                  subTitle:
+                      '$associatedName has demoted you from being an Admin for the ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle}',
+                  entityName: 'DEMOTED',
+                  onDismissed: () {
+                    // Dismiss notification
+                    NotificationsApi.readUserNotification(
+                      notification.id,
+                      user.email,
+                    );
+                  },
+                );
+
+              case NotificationType.MEMBER_PROMOTED_AS_ADMIN:
+                String associatedName = notification.data['associatedName'];
+                bool isGroup = notification.data['isGroup'];
+                String timebankTitle = notification.data['timebankName'];
+
+                return NotificationCard(
+                  title: 'You have been promoted to Admin',
+                  subTitle:
+                      '$associatedName has promoted you to be the Admin for the ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle}',
+                  entityName: 'PROMOTED',
+                  onDismissed: () {
+                    // Dismiss notification
+                    NotificationsApi.readUserNotification(
+                      notification.id,
+                      user.email,
+                    );
+                  },
+                );
 
               case NotificationType.RequestReject:
                 RequestModel model = RequestModel.fromMap(notification.data);

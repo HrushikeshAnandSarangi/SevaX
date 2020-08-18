@@ -41,6 +41,8 @@ class NotificationsBloc extends BlocBase {
       });
       _personalNotificationCount.add(notifications.length);
       _personalNotifications.add(notifications);
+    }).onError((error) {
+      print("There is an error");
     });
 
     CombineLatestStream.combine2(

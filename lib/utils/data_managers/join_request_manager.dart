@@ -25,7 +25,6 @@ Future<void> updateJoinRequest({@required JoinRequestModel model}) async {
         .setData(model.toMap(), merge: true);
 
   //create a notification
-
   return await Firestore.instance
       .collection('join_requests')
       .document()
