@@ -106,10 +106,6 @@ class DonationBloc {
       {DonationModel donationModel,
       RequestModel requestModel,
       UserModel donor}) async {
-    // String donationType = donationModel.donationType == RequestType.CASH
-    //     ? 'Cash'
-    //     : donationModel.donationType == RequestType.GOODS ? 'Goods' : 'Time';
-
     DonationApproveModel donationApproveModel = DonationApproveModel(
       donationId: donationModel.id,
       donorName: donor.fullname,

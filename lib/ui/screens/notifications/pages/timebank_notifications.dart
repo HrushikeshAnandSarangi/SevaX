@@ -81,7 +81,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 print("notification data ${notification.data}");
                 DonationApproveModel donationApproveModel =
                     DonationApproveModel.fromMap(notification.data);
-
+                print("type ${donationApproveModel.donationType.toString()}");
                 return FutureBuilder<RequestModel>(
                   future: RequestRepository.getRequestFutureById(
                       donationApproveModel.requestId),

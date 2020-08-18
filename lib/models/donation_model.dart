@@ -110,6 +110,11 @@ class DonationModel {
         "goodsDetails": goodsDetails == null ? null : goodsDetails.toMap(),
         "donorDetails": donorDetails == null ? null : donorDetails.toMap(),
       };
+
+  @override
+  String toString() {
+    return 'DonationModel{communityId: $communityId, donorSevaUserId: $donorSevaUserId, donatedTo: $donatedTo, donatedToTimebank: $donatedToTimebank, donationInBetween: $donationInBetween, donationType: $donationType, id: $id, requestId: $requestId, requestTitle: $requestTitle, timebankId: $timebankId, notificationId: $notificationId, timestamp: $timestamp, donationStatus: $donationStatus, cashDetails: $cashDetails, goodsDetails: $goodsDetails, donorDetails: $donorDetails}';
+  }
 }
 
 class CashDetails {
@@ -135,7 +140,7 @@ class GoodsDetails {
   String comments;
   Map<dynamic, dynamic> donatedGoods;
 
-  factory GoodsDetails.fromMap(Map<String, dynamic> json) => GoodsDetails(
+  factory GoodsDetails.fromMap(Map<dynamic, dynamic> json) => GoodsDetails(
       comments: json["comments"] == null ? null : json["comments"],
       donatedGoods: json.containsKey('donatedGoods')
           ? Map<dynamic, dynamic>.from(json["donatedGoods"])

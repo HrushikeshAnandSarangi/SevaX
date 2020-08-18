@@ -7,6 +7,8 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
+import 'package:sevaexchange/ui/screens/user_info/pages/user_donations_list.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -154,6 +156,23 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                     loggedInUser: SevaCore.of(context).loggedInUser,
                     timebankData: widget.timebankModel)
                 : Offstage(),
+            SizedBox(
+              height: 15,
+            ),
+            UserDonations(
+                timebankId: widget.timebankModel.id,
+                isTimeBank: true,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return UserDonationList(
+                            type: "timebank",
+                            timebankid: widget.timebankModel.id);
+                      },
+                    ),
+                  );
+                }),
             SizedBox(
               height: 15,
             ),

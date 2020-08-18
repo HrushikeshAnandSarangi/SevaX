@@ -9,8 +9,6 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
-// TODO: Fix the hacks
-
 class UserDonationList extends StatefulWidget {
   final String type;
   final String timebankid;
@@ -55,67 +53,64 @@ class _UserDonationListState extends State<UserDonationList> {
 
   @override
   Widget build(BuildContext context) {
-    if (donationsList.length == 0) {
-      return Center(
-        child: Text(S.of(context).no_transactions_yet),
-      );
-    }
-    return FutureBuilder<Object>(
-        future: FirestoreManager.getUserForId(
-            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text(
-              S.of(context).general_stream_error,
-            );
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-          UserModel userModel = snapshot.data;
-          String usertimezone = userModel.timezone;
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              DonationModel model = donationsList.elementAt(index);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Donations',
+          style: TextStyle(fontSize: 18),
+        ),
+      ),
+      body: donationsList.length == 0
+          ? Center(
+              child: Text(S.of(context).no_transactions_yet),
+            )
+          : FutureBuilder<Object>(
+              future: FirestoreManager.getUserForId(
+                  sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text(
+                    S.of(context).general_stream_error,
+                  );
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                UserModel userModel = snapshot.data;
+                String usertimezone = userModel.timezone;
+                return ListView.builder(
+                  itemBuilder: (context, index) {
+                    DonationModel model = donationsList.elementAt(index);
 
-              return Container(
-                margin: EdgeInsets.all(1),
-                child: Card(
-                  child: EarningListItem(
-                      model: model,
-                      usertimezone: usertimezone,
-                      viewtype: widget.type),
-                ),
-              );
-            },
-            itemCount: donationsList.length,
-          );
-        });
+                    return Container(
+                      margin: EdgeInsets.all(1),
+                      child: Card(
+                        child: EarningListItem(
+                            model: model,
+                            usertimezone: usertimezone,
+                            viewtype: widget.type),
+                      ),
+                    );
+                  },
+                  itemCount: donationsList.length,
+                );
+              }),
+    );
   }
 }
 
-class EarningListItem extends StatefulWidget {
-  final model;
+class EarningListItem extends StatelessWidget {
+  final DonationModel model;
   final viewtype;
   final usertimezone;
   const EarningListItem({Key key, this.model, this.usertimezone, this.viewtype})
       : super(key: key);
   @override
-  _EarningListItemState createState() => _EarningListItemState();
-}
-
-class _EarningListItemState extends State<EarningListItem> {
-  @override
   Widget build(BuildContext context) {
-    var type = (widget.model.type != 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS' &&
-            widget.model.type != 'RequestMode.TIMEBANK_REQUEST' &&
-            widget.model.from != widget.model.timebankid)
-        ? 'user'
-        : 'timebank';
     return FutureBuilder(
-        future: type == 'user'
-            ? FirestoreManager.getUserForId(sevaUserId: widget.model.from)
-            : FirestoreManager.getTimeBankForId(timebankId: widget.model.from),
+        future: viewtype == 'user'
+            ? FirestoreManager.getTimeBankForId(timebankId: model.timebankId)
+            : FirestoreManager.getUserForId(sevaUserId: model.donorSevaUserId),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('');
@@ -124,43 +119,38 @@ class _EarningListItemState extends State<EarningListItem> {
             return Text('');
           }
           return ListTile(
-              leading:
-                  DonationImageItem(model: widget.model, snapshot: snapshot),
-              trailing: () {
-                String plus = widget.model.debitCreditSymbol(
-                    SevaCore.of(context).loggedInUser.sevaUserID,
-                    widget.model.timebankid,
-                    widget.viewtype);
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(plus + '${widget.model.credits}',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500,
-                        )),
-                    Text(S.of(context).seva_credits,
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -0.2,
-                        )),
-                  ],
-                );
-              }(),
+              leading: DonationImageItem(
+                model: model,
+                snapshot: snapshot,
+                type: viewtype,
+              ),
+              trailing: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text('\$' + '${model.cashDetails.pledgedAmount}',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                      )),
+//                  Text(
+//                    S.of(context).seva_credits,
+//                    style: TextStyle(
+//                      fontSize: 10,
+//                      fontWeight: FontWeight.w600,
+//                      letterSpacing: -0.2,
+//                    ),
+//                  ),
+                ],
+              ),
               subtitle: DonationItem(
-                  name: type == 'user'
-                      ? snapshot.data.fullname == null
+                  name: viewtype == 'user'
+                      ? snapshot.data.name + " (Timebank)"
+                      : snapshot.data.fullname == null
                           ? S.of(context).anonymous
-                          : widget.model.type == "USER_PAYLOAN_TOTIMEBANK"
-                              ? snapshot.data.fullname + ' - Loan Repayment'
-                              : snapshot.data.fullname
-                      : widget.model.type == "ADMIN_DONATE_TOUSER"
-                          ? snapshot.data.name + " (Timebank) Loan"
-                          : snapshot.data.name + " (Timebank)",
-                  timestamp: widget.model.timestamp,
-                  usertimezone: widget.usertimezone));
+                          : snapshot.data.fullname,
+                  timestamp: model.timestamp,
+                  usertimezone: usertimezone));
         });
   }
 }
@@ -188,7 +178,7 @@ class DonationItem extends StatelessWidget {
         Text(
           '${S.of(context).date} :  ' +
               DateFormat(
-                      'MMMM dd, yyyy @ h:mm a',
+                      'MMMM dd, yyyy',
                       Locale(AppConfig.prefs.getString('language_code'))
                           .toLanguageTag())
                   .format(
@@ -219,9 +209,7 @@ class DonationImageItem extends StatelessWidget {
     if (snapshot.connectionState == ConnectionState.waiting) {
       return CircleAvatar();
     }
-    if (model.type != 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS' &&
-        model.type != 'RequestMode.TIMEBANK_REQUEST' &&
-        model.from != model.timebankid) {
+    if (type == 'timebank') {
       UserModel user = snapshot.data;
       //Fallback in case the condition anyhow
       if (user == null)
