@@ -18,6 +18,7 @@ class ApproveDonationDialog extends StatelessWidget {
   final String userId;
   final RequestModel requestModel;
   final BuildContext parentContext;
+  final VoidCallback onTap;
 
   ApproveDonationDialog({
     this.donationApproveModel,
@@ -26,6 +27,7 @@ class ApproveDonationDialog extends StatelessWidget {
     this.userId,
     this.requestModel,
     this.parentContext,
+    this.onTap,
   });
 
   @override
@@ -35,7 +37,6 @@ class ApproveDonationDialog extends StatelessWidget {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(25.0))),
         content: Form(
-          //key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -103,7 +104,8 @@ class ApproveDonationDialog extends StatelessWidget {
                             color: Colors.white, fontFamily: 'Europa'),
                       ),
                       onPressed: () async {
-                        Navigator.of(context).pop();
+                        //donation approved
+                        onTap?.call();
                       },
                     ),
                   ),
