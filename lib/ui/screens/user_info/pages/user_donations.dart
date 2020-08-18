@@ -7,8 +7,9 @@ class UserDonations extends StatefulWidget {
   final Function onTap;
   final bool isTimeBank;
   final String timebankId;
+  final bool isGoods;
 
-  UserDonations({this.onTap, this.isTimeBank, this.timebankId});
+  UserDonations({this.onTap, this.isTimeBank, this.timebankId, this.isGoods});
 
   @override
   _UserDonationsState createState() => _UserDonationsState();
@@ -30,13 +31,15 @@ class _UserDonationsState extends State<UserDonations> {
     ];
     return FutureBuilder<int>(
       future: widget.isTimeBank
-          ? FirestoreManager.getTimebankRaisedAmount(
+          ? FirestoreManager.getTimebankRaisedAmountAndGoods(
               timebankId: widget.timebankId,
               timeFrame: timeStamp,
+              isGoods: widget.isGoods,
               isLifeTime: isLifeTime)
-          : FirestoreManager.getUserDonatedAmount(
+          : FirestoreManager.getUserDonatedGoodsAndAmount(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
               timeFrame: timeStamp,
+              isGoods: widget.isGoods,
               isLifeTime: isLifeTime),
       builder: (context, snapshot) {
         return GestureDetector(
@@ -47,23 +50,30 @@ class _UserDonationsState extends State<UserDonations> {
                 SizedBox(
                   width: 10,
                 ),
-                Icon(
-                  Icons.attach_money,
-                  color: Colors.orange,
+                Image.asset(
+                  !widget.isGoods
+                      ? 'lib/assets/images/dollar.jpeg'
+                      : 'lib/assets/images/goods.jpeg',
                 ),
-                Text(
-                  '${snapshot.data.toString() ?? 0.toString() + ' Donated'}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
+                !widget.isGoods
+                    ? Text(
+                        ' \$' +
+                            '${snapshot.data.toString() ?? 0.toString()} ${widget.isTimeBank ? ' Raised' : ' Donated'}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      )
+                    : Text(
+                        ' ${snapshot.data.toString() ?? 0.toString()} ${widget.isTimeBank ? ' Items Collected' : ' Items Donated'}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
                 Spacer(),
                 DropdownButtonHideUnderline(
                   child: DropdownButton<int>(
-//              style: TextStyle(color: Colors.black),
-//              focusColor: Colors.black,
-//              iconEnabledColor: Colors.black,
                     value: selectedItem,
                     onChanged: (value) {
                       switch (value) {
