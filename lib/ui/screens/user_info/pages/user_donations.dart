@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/core.dart';
 
 class GoodsAndAmountDonations extends StatefulWidget {
   final Function onTap;
   final bool isTimeBank;
   final String timebankId;
   final bool isGoods;
+  final String userId;
 
   GoodsAndAmountDonations(
-      {this.onTap, this.isTimeBank, this.timebankId, this.isGoods});
+      {this.onTap,
+      this.isTimeBank,
+      this.timebankId,
+      this.isGoods,
+      this.userId});
 
   @override
   _GoodsAndAmountDonationsState createState() =>
@@ -46,7 +51,7 @@ class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonations> {
               isGoods: widget.isGoods,
               isLifeTime: isLifeTime)
           : FirestoreManager.getUserDonatedGoodsAndAmount(
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+              sevaUserId: widget.userId,
               timeFrame: timeStamp,
               isGoods: widget.isGoods,
               isLifeTime: isLifeTime),
@@ -66,8 +71,10 @@ class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonations> {
                 ),
                 Image.asset(
                   !widget.isGoods
-                      ? 'lib/assets/images/dollar.png'
-                      : 'lib/assets/images/goods.png',
+                      ? SevaAssetIcon.donateCash
+                      : SevaAssetIcon.donateGood,
+                  height: 30,
+                  width: 30,
                 ),
                 !widget.isGoods
                     ? Text(

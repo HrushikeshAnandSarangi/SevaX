@@ -218,6 +218,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         GoodsAndAmountDonations(
                             isGoods: false,
                             isTimeBank: false,
+                            userId: user.sevaUserID,
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
@@ -237,6 +238,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         GoodsAndAmountDonations(
                             isGoods: true,
                             isTimeBank: false,
+                            userId: user.sevaUserID,
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
