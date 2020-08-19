@@ -165,6 +165,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GoodsAndAmountDonations(
+                          userId: SevaCore.of(context).loggedInUser.sevaUserID,
                           isGoods: false,
                           timebankId: widget.timebankModel.id,
                           isTimeBank: true,
@@ -184,6 +185,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                         height: 15,
                       ),
                       GoodsAndAmountDonations(
+                          userId: SevaCore.of(context).loggedInUser.sevaUserID,
                           isGoods: true,
                           timebankId: widget.timebankModel.id,
                           isTimeBank: true,
