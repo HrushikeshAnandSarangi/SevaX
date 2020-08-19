@@ -9,16 +9,17 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
-class UserDonationList extends StatefulWidget {
+class GoodsAndAmountDonationsList extends StatefulWidget {
   final String type;
   final String timebankid;
   final bool isGoods;
-  const UserDonationList({this.type, this.timebankid, this.isGoods});
+  const GoodsAndAmountDonationsList({this.type, this.timebankid, this.isGoods});
   @override
-  _UserDonationListState createState() => _UserDonationListState();
+  _GoodsAndAmountDonationsState createState() =>
+      _GoodsAndAmountDonationsState();
 }
 
-class _UserDonationListState extends State<UserDonationList> {
+class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonationsList> {
   List<DonationModel> donationsList = [];
   //List<UserModel> userList = [];
 
@@ -60,13 +61,13 @@ class _UserDonationListState extends State<UserDonationList> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Donations',
+          '${S.of(context).donations}',
           style: TextStyle(fontSize: 18),
         ),
       ),
       body: donationsList.length == 0
           ? Center(
-              child: Text(S.of(context).no_transactions_yet),
+              child: Text(S.of(context).no_donation_yet),
             )
           : FutureBuilder<Object>(
               future: FirestoreManager.getUserForId(
@@ -89,7 +90,7 @@ class _UserDonationListState extends State<UserDonationList> {
                     return Container(
                       margin: EdgeInsets.all(1),
                       child: Card(
-                        child: EarningListItem(
+                        child: DonationListItem(
                             model: model,
                             isGoods: widget.isGoods,
                             usertimezone: usertimezone,
@@ -104,13 +105,13 @@ class _UserDonationListState extends State<UserDonationList> {
   }
 }
 
-class EarningListItem extends StatelessWidget {
+class DonationListItem extends StatelessWidget {
   final DonationModel model;
   final viewtype;
   final usertimezone;
   final bool isGoods;
 
-  const EarningListItem(
+  const DonationListItem(
       {Key key, this.model, this.usertimezone, this.viewtype, this.isGoods})
       : super(key: key);
   @override
@@ -127,6 +128,9 @@ class EarningListItem extends StatelessWidget {
             return Text('');
           }
           return ListTile(
+              onTap: () {
+                isGoods ? null : null;
+              },
               leading: DonationImageItem(
                 model: model,
                 snapshot: snapshot,
@@ -145,7 +149,7 @@ class EarningListItem extends StatelessWidget {
                           ),
                         )
                       : Text(
-                          '${model.goodsDetails.donatedGoods.length.toString()} Items',
+                          '${model.goodsDetails.donatedGoods.length.toString()} ${S.of(context).items}',
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w500,
@@ -164,7 +168,7 @@ class EarningListItem extends StatelessWidget {
               subtitle: DonationItem(
                   requestName: model.requestTitle,
                   name: viewtype == 'user'
-                      ? snapshot.data.name + " (Timebank)"
+                      ? snapshot.data.name + " (${S.of(context).timebank})"
                       : snapshot.data.fullname == null
                           ? S.of(context).anonymous
                           : snapshot.data.fullname,

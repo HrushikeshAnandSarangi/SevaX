@@ -46,7 +46,9 @@ class _DonationViewState extends State<DonationView> {
       if (event.isNotEmpty && event != null) {
         _scaffoldKey.currentState.showSnackBar(
           SnackBar(
-            content: Text(event),
+            content: Text(event == 'net_error'
+                ? S.of(context).general_stream_error
+                : S.of(context).select_goods_category),
             action: SnackBarAction(
               label: S.of(context).dismiss,
               onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
@@ -68,7 +70,7 @@ class _DonationViewState extends State<DonationView> {
         leading: BackButton(
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Donations'),
+        title: Text(S.of(context).donations),
         centerTitle: true,
       ),
       body: PageView(
@@ -120,7 +122,7 @@ class _DonationViewState extends State<DonationView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          titleText(title: 'Amount Donated?'),
+          titleText(title: S.of(context).amount_donated),
           StreamBuilder<String>(
               stream: donationBloc.amountPledged,
               builder: (context, snapshot) {
@@ -130,14 +132,20 @@ class _DonationViewState extends State<DonationView> {
                     setState(() {
                       amountEntered = int.parse(value);
                     });
-                    print(amountEntered);
                   },
                   maxLines: 1,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    errorText: snapshot.error,
+                    errorText: snapshot.error == 'amount1'
+                        ? S.of(context).enter_valid_amount
+                        : snapshot.error == 'amount2'
+                            ? S.of(context).minmum_amount +
+                                ' ' +
+                                widget.requestModel.cashModel.minAmount
+                                    .toString()
+                            : '',
                     hintStyle: subTitleStyle,
-                    hintText: 'Add amount that you have donated.',
+                    hintText: S.of(context).add_amount_donated,
                   ),
                 );
               }),
@@ -148,10 +156,11 @@ class _DonationViewState extends State<DonationView> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               actionButton(
-                buttonTitle: 'Done',
+                buttonTitle: S.of(context).done,
                 onPressed: () {
                   donationBloc
-                      .validateAmount(requestModel: widget.requestModel)
+                      .validateAmount(
+                          minmumAmount: widget.requestModel.cashModel.minAmount)
                       .then((value) {
                     if (value) {
                       pageController.animateToPage(2,
@@ -174,19 +183,19 @@ class _DonationViewState extends State<DonationView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          titleText(title: 'Donations'),
+          titleText(title: S.of(context).donations),
           SizedBox(
             height: 10,
           ),
           Text(
-            '${'Great, you have choose to donate for ' + widget.timabankName + ' a minimum donations is ' + amountEntered.toString() + 'USD. Please click on the below link to fo the donation.'}',
+            '${S.of(context).donation_description_one + widget.timabankName + ' ${S.of(context).donation_description_two} ' + amountEntered.toString() + S.of(context).donation_description_three}',
             style: subTitleStyle,
           ),
           SizedBox(
             height: 10,
           ),
           Text(
-            'Please use the link down below to donate and once done take a pledge on how much you have donated.',
+            S.of(context).payment_link_description,
             style: subTitleStyle,
           ),
           SizedBox(
@@ -214,7 +223,7 @@ class _DonationViewState extends State<DonationView> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               actionButton(
-                buttonTitle: 'Pledge',
+                buttonTitle: S.of(context).pledge,
                 onPressed: () {
                   donationBloc
                       .donateAmount(
@@ -230,7 +239,7 @@ class _DonationViewState extends State<DonationView> {
                 width: 20,
               ),
               actionButton(
-                buttonTitle: 'Do it later',
+                buttonTitle: S.of(context).do_it_later,
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -248,7 +257,7 @@ class _DonationViewState extends State<DonationView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          titleText(title: 'Tell us what you have donated'),
+          titleText(title: S.of(context).tell_what_you_donated),
           StreamBuilder<String>(
               stream: donationBloc.commentEntered,
               builder: (context, snapshot) {
@@ -260,8 +269,7 @@ class _DonationViewState extends State<DonationView> {
                   onChanged: donationBloc.onCommentChanged,
                   decoration: InputDecoration(
                     hintStyle: subTitleStyle,
-                    hintText:
-                        'Describe your goods and select from checkbox below',
+                    hintText: S.of(context).describe_goods,
                   ),
                 );
               }),
@@ -313,7 +321,7 @@ class _DonationViewState extends State<DonationView> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               actionButton(
-                  buttonTitle: 'Donated',
+                  buttonTitle: S.of(context).donated,
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
@@ -342,7 +350,7 @@ class _DonationViewState extends State<DonationView> {
                 width: 20,
               ),
               actionButton(
-                  buttonTitle: 'Do it later',
+                  buttonTitle: S.of(context).do_it_later,
                   onPressed: () {
                     Navigator.of(context).pop();
                   }),

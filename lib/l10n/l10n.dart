@@ -4036,6 +4036,136 @@ class S {
         'Lifetime',
         name: 'lifetime',
       );
+
+  String get raised => Intl.message(
+        'Raised',
+        name: 'raised',
+      );
+
+  String get donated => Intl.message(
+        'Donated',
+        name: 'donated',
+      );
+
+  String get items_collected => Intl.message(
+        'Items collected',
+        name: 'items_collected',
+      );
+
+  String get items_donated => Intl.message(
+        'Items donated',
+        name: 'items_donated',
+      );
+
+  String get donations => Intl.message(
+        'Donations',
+        name: 'donations',
+      );
+
+  String get items => Intl.message(
+        'Items',
+        name: 'items',
+      );
+
+  String get enter_valid_amount => Intl.message(
+        'Enter valid amount',
+        name: 'enter_valid_amount',
+      );
+
+  String get minmum_amount => Intl.message(
+        'Minimum amount is',
+        name: 'minmum_amount',
+      );
+
+  String get select_goods_category => Intl.message(
+        'Select a goods category',
+        name: 'select_goods_category',
+      );
+
+  String get pledge => Intl.message(
+        'Pledge',
+        name: 'pledge',
+      );
+
+  String get do_it_later => Intl.message(
+        'Do it later',
+        name: 'do_it_later',
+      );
+
+  String get tell_what_you_donated => Intl.message(
+        'Tell us what you have donated',
+        name: 'tell_what_you_donated',
+      );
+
+  String get describe_goods => Intl.message(
+        'Describe your goods and select from checkbox below',
+        name: 'describe_goods',
+      );
+
+  String get payment_link_description => Intl.message(
+        'Please use the link down below to donate and once done take a pledge on how much you have donated.',
+        name: 'payment_link_description',
+      );
+
+  String get donation_description_one => Intl.message(
+        'Great, you have choose to donate for',
+        name: 'donation_description_one',
+      );
+
+  String get donation_description_two => Intl.message(
+        'a minimum donations is',
+        name: 'donation_description_two',
+      );
+
+  String get donation_description_three => Intl.message(
+        'USD. Please click on the below link to fo the donation.',
+        name: 'donation_description_three',
+      );
+
+  String get add_amount_donated => Intl.message(
+        'Add amount that you have donated.',
+        name: 'add_amount_donated',
+      );
+
+  String get amount_donated => Intl.message(
+        'Amount Donated?',
+        name: 'amount_donated',
+      );
+
+  String get acknowledge => Intl.message(
+        'Acknowledge',
+        name: 'acknowledge',
+      );
+
+  String get modify => Intl.message(
+        'Modify',
+        name: 'modify',
+      );
+
+  String get by_accepting => Intl.message(
+        'By accepting,',
+        name: 'by_accepting',
+      );
+
+  String get will_added_to_donors => Intl.message(
+        'will be added to donors list.',
+        name: 'will_added_to_donors',
+      );
+
+  String get no_donation_yet => Intl.message(
+        'No donations yet',
+        name: 'no_donation_yet',
+      );
+
+  String get donation_acknowledge => Intl.message(
+        'Donation acknowledge',
+        name: 'donation_acknowledge',
+      );
+
+  String get cv_resume => Intl.message(
+        'CV/Resume',
+        name: 'cv_resume',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

@@ -161,7 +161,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                         horizontal: 25,
                       ),
                       child: Text(
-                        S.of(context).upload_cv_resume,
+                        S.of(context).cv_resume,
                         style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w700,

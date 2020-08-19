@@ -215,14 +215,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         SizedBox(
                           height: 20,
                         ),
-                        UserDonations(
+                        GoodsAndAmountDonations(
                             isGoods: false,
                             isTimeBank: false,
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return UserDonationList(
+                                    return GoodsAndAmountDonationsList(
                                       type: "user",
                                       timebankid: "",
                                       isGoods: false,
@@ -234,14 +234,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         SizedBox(
                           height: 15,
                         ),
-                        UserDonations(
+                        GoodsAndAmountDonations(
                             isGoods: true,
                             isTimeBank: false,
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return UserDonationList(
+                                    return GoodsAndAmountDonationsList(
                                       type: "user",
                                       timebankid: "",
                                       isGoods: true,
