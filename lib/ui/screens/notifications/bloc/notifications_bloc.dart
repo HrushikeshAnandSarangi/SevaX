@@ -4,9 +4,9 @@ import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/repositories/timebank_repository.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 
 class NotificationsBloc extends BlocBase {
   final _personalNotificationCount = BehaviorSubject<int>.seeded(0);
@@ -39,8 +39,10 @@ class NotificationsBloc extends BlocBase {
       query.documents.forEach((DocumentSnapshot document) {
         notifications.add(NotificationsModel.fromMap(document.data));
       });
-      _personalNotificationCount.add(notifications.length);
-      _personalNotifications.add(notifications);
+      if (!_personalNotificationCount.isClosed)
+        _personalNotificationCount.add(notifications.length);
+      if (!_personalNotifications.isClosed)
+        _personalNotifications.add(notifications);
     }).onError((error) {
       print("There is an error");
     });

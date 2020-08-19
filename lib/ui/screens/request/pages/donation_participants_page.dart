@@ -8,11 +8,11 @@ import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/donation_accepted_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
+import 'package:sevaexchange/ui/screens/request/widgets/donation_participant_card.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/approve_donation_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-import 'package:sevaexchange/widgets/participant_card.dart';
 
 class DonationParticipantPage extends StatelessWidget {
   final RequestModel requestModel;
@@ -31,20 +31,58 @@ class DonationParticipantPage extends StatelessWidget {
         if (snapshot.hasError) {
           return Text(S.of(context).general_stream_error);
         }
-        return ListView.builder(
+        return ListView.separated(
+          padding: EdgeInsets.all(20),
           itemCount: snapshot.data.length,
           itemBuilder: (_, index) {
             DonationModel model = snapshot.data[index];
-            DonationButtonActionModel buttonStatus =
-                buttonActionModel(context, model);
-            return RequestParticipantCard(
+            // DonationButtonActionModel buttonStatus =
+            //     buttonActionModel(context, model);
+            // return RequestParticipantCard(
+            //   name: model.donorDetails.name,
+            //   bio: model.donorDetails.bio,
+            //   imageUrl: model.donorDetails.photoUrl,
+            //   buttonTitle: buttonStatus.buttonText,
+            //   buttonColor: buttonStatus.buttonColor,
+            //   onTap: buttonStatus.onTap,
+            // );
+            return DonationParticipantCard(
               name: model.donorDetails.name,
-              bio: model.donorDetails.bio,
-              imageUrl: model.donorDetails.photoUrl,
-              buttonTitle: buttonStatus.buttonText,
-              buttonColor: buttonStatus.buttonColor,
-              onTap: buttonStatus.onTap,
+              isCashDonation: model.donationType == RequestType.CASH,
+              goods: model.goodsDetails?.donatedGoods != null
+                  ? List<String>.from(model.goodsDetails.donatedGoods.values)
+                  : [],
+              photoUrl: model.donorDetails.photoUrl,
+              amount: model.cashDetails.pledgedAmount.toString(),
+              timestamp: model.timestamp,
+              child: model.donationStatus != DonationStatus.ACKNOWLEDGED
+                  ? Container(
+                      height: 20,
+                      child: RaisedButton(
+                        color: Colors.white,
+                        padding: EdgeInsets.zero,
+                        child: Text(
+                          'Acknowledge',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.black,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  RequestDonationDisputePage(model: model),
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                  : null,
             );
+          },
+          separatorBuilder: (context, index) {
+            return Divider();
           },
         );
       },

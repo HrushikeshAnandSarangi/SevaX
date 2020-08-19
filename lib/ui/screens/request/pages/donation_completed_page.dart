@@ -4,9 +4,9 @@ import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/donation_accepted_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/amount_raised_progress_indicator.dart';
+import 'package:sevaexchange/ui/screens/request/widgets/donation_participant_card.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-import 'package:sevaexchange/widgets/participant_card.dart';
 
 class DonationCompletedPage extends StatelessWidget {
   final RequestModel requestModel;
@@ -40,31 +40,35 @@ class DonationCompletedPage extends StatelessWidget {
           );
         }
         return SingleChildScrollView(
+          padding: EdgeInsets.all(20),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 20.0,
-                ),
-                child: AmountRaisedProgressIndicator(
-                  totalAmountRaised: totalAmountRaised,
-                  targetAmount: requestModel.cashModel.targetAmount,
-                ),
+              AmountRaisedProgressIndicator(
+                totalAmountRaised: totalAmountRaised,
+                targetAmount: requestModel.cashModel.targetAmount,
               ),
-              ListView.builder(
+              SizedBox(height: 8),
+              ListView.separated(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: donations.length,
                 itemBuilder: (_, index) {
                   DonationModel model = donations[index];
-                  return RequestParticipantCard(
+                  return DonationParticipantCard(
                     name: model.donorDetails.name,
-                    imageUrl: model.donorDetails.photoUrl,
-                    bio: model.donorDetails.bio,
-                    buttonTitle: 'ACKNOWLEDGED',
-                    buttonColor: Theme.of(context).primaryColor,
+                    isCashDonation: model.donationType == RequestType.CASH,
+                    goods: model.goodsDetails?.donatedGoods != null
+                        ? List<String>.from(
+                            model.goodsDetails.donatedGoods.values,
+                          )
+                        : [],
+                    photoUrl: model.donorDetails.photoUrl,
+                    amount: model.cashDetails.pledgedAmount.toString(),
+                    timestamp: model.timestamp,
                   );
+                },
+                separatorBuilder: (_, index) {
+                  return Divider();
                 },
               ),
             ],
