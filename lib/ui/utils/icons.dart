@@ -4,6 +4,11 @@ String createMessageIcon = "images/icons/create_message.png";
 String cameraIcon = "images/icons/camera.png";
 String groupIcon = "lib/assets/images/group_icon.png";
 
+class SevaAssetIcon {
+  static const String donateCash = 'images/icons/cash_donation.png';
+  static const String donateGood = 'images/icons/goods_donation.png';
+}
+
 class NavigationIcons {
   //Filled Icons
   static const String exploreFilled =
