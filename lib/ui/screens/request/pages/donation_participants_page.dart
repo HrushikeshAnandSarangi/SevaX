@@ -112,7 +112,8 @@ class DonationParticipantPage extends StatelessWidget {
             donorEmail: model.donorDetails.email,
             donorPhotoUrl: model.donorDetails.photoUrl,
             donationId: model.id,
-            donationDetails: 'String to be updated by umesh',
+            donationDetails:
+                '${model.donationType == RequestType.CASH ? model.cashDetails.pledgedAmount.toString() : model.donationType == RequestType.GOODS ? '${model.goodsDetails.donatedGoods.values} \n' + '\n' + model.goodsDetails.comments ?? ' ' : 'time'}',
             donationType: model.donationType,
             requestId: requestModel.id,
             requestTitle: requestModel.title,

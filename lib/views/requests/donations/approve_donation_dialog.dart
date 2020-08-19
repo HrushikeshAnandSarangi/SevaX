@@ -56,7 +56,7 @@ class ApproveDonationDialog extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.all(4.0),
                 child: Text(
-                  donationApproveModel.donorName ?? "Anonymous",
+                  donationApproveModel.donorName ?? S.of(context).anonymous,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -67,14 +67,14 @@ class ApproveDonationDialog extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                 child: Text(
                   donationApproveModel.requestTitle ??
-                      "Request title not updated",
+                      S.of(context).request_title,
                 ),
               ),
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
                   donationApproveModel.donationDetails ??
-                      "Description not yet updated",
+                      S.of(context).request_description,
                   maxLines: 5,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -82,7 +82,7 @@ class ApproveDonationDialog extends StatelessWidget {
               ),
               Center(
                 child: Text(
-                    "By accepting, ${donationApproveModel.donorName} will be added to donors list.",
+                    "${S.of(context).by_accepting} ${donationApproveModel.donorName}  ${S.of(context).will_added_to_donors}",
                     style: TextStyle(
                       fontStyle: FontStyle.italic,
                     ),
@@ -99,7 +99,7 @@ class ApproveDonationDialog extends StatelessWidget {
                     child: RaisedButton(
                       color: FlavorConfig.values.theme.primaryColor,
                       child: Text(
-                        'Acknowledge',
+                        S.of(context).acknowledge,
                         style: TextStyle(
                             color: Colors.white, fontFamily: 'Europa'),
                       ),
@@ -117,7 +117,7 @@ class ApproveDonationDialog extends StatelessWidget {
                     child: RaisedButton(
                       color: FlavorConfig.values.theme.primaryColor,
                       child: Text(
-                        'Modify',
+                        S.of(context).modify,
                         style: TextStyle(
                             color: Colors.white, fontFamily: 'Europa'),
                       ),

@@ -3,23 +3,32 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
-class UserDonations extends StatefulWidget {
+class GoodsAndAmountDonations extends StatefulWidget {
   final Function onTap;
   final bool isTimeBank;
   final String timebankId;
   final bool isGoods;
 
-  UserDonations({this.onTap, this.isTimeBank, this.timebankId, this.isGoods});
+  GoodsAndAmountDonations(
+      {this.onTap, this.isTimeBank, this.timebankId, this.isGoods});
 
   @override
-  _UserDonationsState createState() => _UserDonationsState();
+  _GoodsAndAmountDonationsState createState() =>
+      _GoodsAndAmountDonationsState();
 }
 
-class _UserDonationsState extends State<UserDonations> {
+class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonations> {
   bool isLifeTime = false;
   int timeStamp = 0;
   List<String> timeList = [];
   int selectedItem = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    timeStamp =
+        DateTime.now().subtract(Duration(days: 30)).millisecondsSinceEpoch;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +51,11 @@ class _UserDonationsState extends State<UserDonations> {
               isGoods: widget.isGoods,
               isLifeTime: isLifeTime),
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         return GestureDetector(
           onTap: widget.onTap,
           child: Card(
@@ -52,20 +66,20 @@ class _UserDonationsState extends State<UserDonations> {
                 ),
                 Image.asset(
                   !widget.isGoods
-                      ? 'lib/assets/images/dollar.jpeg'
-                      : 'lib/assets/images/goods.jpeg',
+                      ? 'lib/assets/images/dollar.png'
+                      : 'lib/assets/images/goods.png',
                 ),
                 !widget.isGoods
                     ? Text(
                         ' \$' +
-                            '${snapshot.data.toString() ?? 0.toString()} ${widget.isTimeBank ? ' Raised' : ' Donated'}',
+                            '${snapshot.data.toString() ?? 0.toString()} ${widget.isTimeBank ? ' ${S.of(context).raised}' : ' ${S.of(context).donated}'}',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
                       )
                     : Text(
-                        ' ${snapshot.data.toString() ?? 0.toString()} ${widget.isTimeBank ? ' Items Collected' : ' Items Donated'}',
+                        ' ${snapshot.data.toString() ?? 0.toString()} ${widget.isTimeBank ? ' ${S.of(context).items_collected}' : ' ${S.of(context).items_donated}'}',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
