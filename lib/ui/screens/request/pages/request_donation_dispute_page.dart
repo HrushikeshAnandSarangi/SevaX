@@ -10,7 +10,10 @@ enum _OperatingMode { CREATOR, USER }
 class RequestDonationDisputePage extends StatefulWidget {
   final DonationModel model;
 
-  const RequestDonationDisputePage({Key key, this.model}) : super(key: key);
+  const RequestDonationDisputePage({
+    Key key,
+    this.model,
+  }) : super(key: key);
   @override
   _RequestDonationDisputePageState createState() =>
       _RequestDonationDisputePageState();
@@ -44,50 +47,58 @@ class _RequestDonationDisputePageState
           style: TextStyle(fontSize: 18),
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ackType == _AckType.CASH
-                ? _CashFlow(
-                    bloc: _bloc,
-                    name: widget.model.donorDetails.name,
-                    currency: '\$',
-                    amount: widget.model.cashDetails.pledgedAmount.toString(),
-                  )
-                : _GoodsFlow(bloc: _bloc),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                RaisedButton(
-                  child: Text('Acknowledge'),
-                  onPressed: () {
-                    switch (ackType) {
-                      case _AckType.CASH:
-                        break;
-                      case _AckType.GOODS:
-                        break;
-                    }
-                  },
-                ),
-                SizedBox(width: 12),
-                RaisedButton(
-                  child: Text('Message'),
-                  onPressed: () {
-                    switch (ackType) {
-                      case _AckType.CASH:
-                        break;
-                      case _AckType.GOODS:
-                        break;
-                    }
-                  },
-                ),
-              ],
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ackType == _AckType.CASH
+                  ? _CashFlow(
+                      bloc: _bloc,
+                      name: widget.model.donorDetails.name,
+                      currency: '\$',
+                      amount: widget.model.cashDetails.pledgedAmount.toString(),
+                    )
+                  : _GoodsFlow(bloc: _bloc),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  RaisedButton(
+                    child: Text('Acknowledge'),
+                    onPressed: () {
+                      switch (ackType) {
+                        case _AckType.CASH:
+                          _bloc
+                              .disputeCash(
+                            widget.model.id,
+                            widget.model.cashDetails.pledgedAmount.toDouble(),
+                          )
+                              .then(
+                            (value) {
+                              print(value);
+                              if (value) {
+                                Navigator.of(context).pop();
+                              }
+                            },
+                          );
+                          break;
+                        case _AckType.GOODS:
+                          break;
+                      }
+                    },
+                  ),
+                  SizedBox(width: 12),
+                  RaisedButton(
+                    child: Text('Message'),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

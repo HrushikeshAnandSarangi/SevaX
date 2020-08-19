@@ -24,7 +24,7 @@ class RequestDonationDisputeBloc {
   }
 
   Future<bool> disputeCash(String donationId, double pledgedAmount) async {
-    if (pledgedAmount == _cashAmount.value) {
+    if (pledgedAmount == double.parse(_cashAmount.value)) {
       await _donationsRepository.acknowledgeDonation(donationId);
       return true;
     } else {

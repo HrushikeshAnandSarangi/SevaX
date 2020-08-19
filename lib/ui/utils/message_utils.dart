@@ -11,7 +11,9 @@ ParticipantInfo getUserInfo(
 }
 
 ParticipantInfo getSenderInfo(
-    String userId, List<ParticipantInfo> participantInfo) {
+  String userId,
+  List<ParticipantInfo> participantInfo,
+) {
   return participantInfo.firstWhere((element) => element.id != userId);
 }
 
@@ -27,9 +29,6 @@ Future<void> createAndOpenChat({
   String feedId,
   VoidCallback onChatCreate,
 }) async {
-  print(
-      "-------------------------------------$isFromShare--------------------------------------------");
-
   List<String> participants = [sender.id, reciever.id];
   participants.sort();
   ChatModel model = ChatModel(
