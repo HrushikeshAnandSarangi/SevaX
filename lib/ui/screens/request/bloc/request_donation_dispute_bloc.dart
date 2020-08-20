@@ -1,6 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:sevaexchange/components/get_location.dart';
+import 'package:sevaexchange/models/donation_model.dart';
+import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/repositories/donations_repository.dart';
+import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 
 class RequestDonationDisputeBloc {
   final DonationsRepository _donationsRepository = DonationsRepository();
@@ -23,26 +28,83 @@ class RequestDonationDisputeBloc {
     }
   }
 
-  Future<bool> disputeCash(String donationId, double pledgedAmount) async {
-    if (pledgedAmount == double.parse(_cashAmount.value)) {
-      await _donationsRepository.acknowledgeDonation(donationId);
-      return true;
-    } else {
-      return false;
-    }
+  Future<bool> disputeCash({
+    OperatingMode operationMode,
+    double pledgedAmount,
+    String donationId,
+    String notificationId,
+    DonationModel donationModel,
+    RequestMode requestMode,
+  }) async {
+    await _donationsRepository.acknowledgeDonation(
+      acknowledgementNotification: getAcknowlegementNotification(
+        model: donationModel,
+        operatorMode: operationMode,
+        requestMode: requestMode,
+        notificationType: pledgedAmount == double.parse(_cashAmount.value)
+            ? NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULY
+            : NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR,
+      ),
+      associatedId: operationMode == OperatingMode.USER
+          ? donationModel.timebankId
+          : donationModel.donorDetails.email,
+      donationId: donationId,
+      isTimebankNotification: operationMode == OperatingMode.USER,
+      notificationId: notificationId,
+    );
+    return true;
   }
 
-  Future<bool> disputeGoods(
-      String donationId, Map<String, String> donatedGoods) async {
-    if (listEquals(
-      List.from(donatedGoods.keys),
-      List.from(_goodsRecieved.value.keys),
-    )) {
-      await _donationsRepository.acknowledgeDonation(donationId);
-      return true;
-    } else {
-      return false;
-    }
+  NotificationsModel getAcknowlegementNotification({
+    DonationModel model,
+    OperatingMode operatorMode,
+    RequestMode requestMode,
+    NotificationType notificationType,
+  }) {
+    return NotificationsModel(
+      type: notificationType,
+      communityId: model.communityId,
+      data: model.toMap(),
+      id: Uuid().generateV4(),
+      isRead: false,
+      isTimebankNotification: requestMode == RequestMode.TIMEBANK_REQUEST,
+      senderUserId: requestMode == RequestMode.TIMEBANK_REQUEST
+          ? model.timebankId
+          : model.donatedTo,
+      targetUserId: operatorMode == OperatingMode.CREATOR
+          ? model.donorSevaUserId
+          : model.timebankId,
+      timebankId: model.timebankId,
+    );
+  }
+
+  Future<bool> disputeGoods({
+    OperatingMode operationMode,
+    String donationId,
+    String notificationId,
+    DonationModel donationModel,
+    RequestMode requestMode,
+    Map<String, String> donatedGoods,
+  }) async {
+    await _donationsRepository.acknowledgeDonation(
+      acknowledgementNotification: getAcknowlegementNotification(
+          model: donationModel,
+          operatorMode: operationMode,
+          requestMode: requestMode,
+          notificationType: listEquals(
+            List.from(donatedGoods.keys),
+            List.from(_goodsRecieved.value.keys),
+          )
+              ? NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY
+              : (operationMode == OperatingMode.CREATOR)),
+      associatedId: operationMode == OperatingMode.USER
+          ? donationModel.timebankId
+          : donationModel.donorDetails.email,
+      donationId: donationId,
+      isTimebankNotification: operationMode == OperatingMode.USER,
+      notificationId: notificationId,
+    );
+    return true;
   }
 
   void dispose() {

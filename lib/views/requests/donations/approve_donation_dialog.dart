@@ -143,10 +143,11 @@ class ApproveDonationDialog extends StatelessWidget {
                       onPressed: () async {
                         // donation declined
                         createChat(
-                            context: context,
-                            model: requestModel,
-                            notificationId: notificationId,
-                            userId: userId);
+                          context: context,
+                          model: requestModel,
+                          notificationId: notificationId,
+                          userId: userId,
+                        );
                       },
                     ),
                   ),
@@ -214,7 +215,6 @@ class ApproveDonationDialog extends StatelessWidget {
     UserModel user = await FirestoreManager.getUserForId(sevaUserId: userId);
     UserModel loggedInUser =
         await FirestoreManager.getUserForId(sevaUserId: model.sevaUserId);
-    print('loggedin ${loggedInUser}');
     ParticipantInfo sender, reciever;
     switch (requestModel.requestMode) {
       case RequestMode.PERSONAL_REQUEST:

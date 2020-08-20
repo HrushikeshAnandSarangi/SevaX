@@ -45,9 +45,6 @@ class DonationModel {
         donatedToTimebank: json["donatedToTimebank"] == null
             ? null
             : json["donatedToTimebank"],
-        donationInBetween: json["donationInBetween"] == null
-            ? null
-            : List<String>.from(json["donationInBetween"].map((x) => x)),
         donationType: json["donationType"] == null
             ? null
             : json["donationType"] == "CASH"
@@ -91,9 +88,7 @@ class DonationModel {
         "donatedTo": donatedTo == null ? null : donatedTo,
         "donatedToTimebank":
             donatedToTimebank == null ? null : donatedToTimebank,
-        "donationInBetween": donationInBetween == null
-            ? []
-            : List<dynamic>.from(donationInBetween.map((x) => x)),
+        "donationInBetween": [donatedTo, donorSevaUserId],
         "donationType": donationType == null
             ? null
             : donationType == RequestType.CASH
