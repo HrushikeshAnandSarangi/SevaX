@@ -12,6 +12,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'edit_super_admins_view.dart';
@@ -82,9 +83,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   }
 
   Widget get circularBar {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
+    return LoadingIndicator();
   }
 
   Widget getTimebackList(BuildContext context, String timebankId) {
@@ -103,9 +102,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
           return Text(snapshot.error.toString());
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return LoadingIndicator();
         }
         TimebankModel timebankModel = snapshot.data;
         return getDataScrollView(

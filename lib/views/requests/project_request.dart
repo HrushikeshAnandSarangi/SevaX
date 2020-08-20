@@ -517,9 +517,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
         child: Card(
           color: Colors.white,
           elevation: 2,
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
+          child: LoadingIndicator(),
         ));
   }
 

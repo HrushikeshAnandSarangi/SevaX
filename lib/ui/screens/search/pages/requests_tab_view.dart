@@ -11,6 +11,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class RequestsTabView extends StatelessWidget {
   @override
@@ -31,9 +32,7 @@ class RequestsTabView extends StatelessWidget {
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                return LoadingIndicator();
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 print("===>> ${snapshot.data}");

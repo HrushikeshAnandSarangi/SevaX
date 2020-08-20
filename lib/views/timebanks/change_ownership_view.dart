@@ -11,6 +11,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class ChangeOwnerShipView extends StatefulWidget {
   final String timebankId;
@@ -165,9 +166,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
                 ),
               ),
             )
-          : Center(
-              child: CircularProgressIndicator(),
-            ),
+          : LoadingIndicator(),
     );
   }
 

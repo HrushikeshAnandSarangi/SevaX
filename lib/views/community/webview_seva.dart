@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class AboutMode {
@@ -69,7 +70,7 @@ class _WebViewExampleState extends State<SevaWebView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                CircularProgressIndicator(),
+                LoadingIndicator(),
                 SizedBox(height: 4),
                 Text(S.of(context).loading),
               ],

@@ -19,6 +19,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
@@ -85,9 +86,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
   Widget get listItems {
     if (_avtars.length == 0) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
+      return LoadingIndicator();
     }
     return ListView.builder(
         itemCount: _avtars.length,
