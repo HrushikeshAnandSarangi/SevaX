@@ -781,7 +781,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => RecurringRequestList(model: model),
+                    builder: (context) => RecurringRequestList(requestModel: model, offerModel: null,timebankModel: null,),
                   ),
                 );
               } else {

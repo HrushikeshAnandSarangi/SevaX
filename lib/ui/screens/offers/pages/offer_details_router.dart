@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/models/offer_model.dart';
@@ -22,6 +24,9 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
 
   @override
   void initState() {
+
+    log("-----offerid---------------> ${widget.offerModel.id} - ${widget.offerModel.occurenceCount}");
+    print(widget.offerModel.toString());
     _bloc.offerModel = widget.offerModel;
     _bloc.init();
     super.initState();

@@ -19,7 +19,7 @@ import 'one_to_many_offer.dart';
 class OfferDetails extends StatelessWidget {
   final OfferModel offerModel;
   final TextStyle titleStyle = TextStyle(
-    fontSize: 18,
+    fontSize: 16,
     color: Colors.black,
   );
   final TextStyle subTitleStyle = TextStyle(
@@ -65,8 +65,7 @@ class OfferDetails extends StatelessWidget {
                     subtitle: Text(
                       DateFormat(
                               'EEEEEEE, MMMM dd h:mm a',
-                              Locale(AppConfig.prefs.getString('language_code'))
-                                  .toLanguageTag())
+                              "en")
                           .format(
                         getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
@@ -176,7 +175,7 @@ class OfferDetails extends StatelessWidget {
           ),
           Container(
             height: 30,
-            width: 100,
+            width: 90,
             child: FlatButton(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),

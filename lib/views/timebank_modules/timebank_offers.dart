@@ -124,39 +124,6 @@ class OffersState extends State<OffersModule> {
                 onPressed: showOffersWebPage,
               ),
             ),
-            // Container(
-            //   width: 120,
-            //   child: CupertinoSegmentedControl<int>(
-            //     selectedColor: Theme.of(context).primaryColor,
-            //     children: {
-            //       0: Text(
-            //         AppLocalizations.of(context).translate('shared', 'all'),
-            //         style: TextStyle(fontSize: 10.0),
-            //       ),
-            //       1: Text(
-            //         AppLocalizations.of(context).translate('shared', 'near_me'),
-            //         style: TextStyle(fontSize: 10.0),
-            //       ),
-            //     },
-            //     borderColor: Colors.grey,
-            //     padding: EdgeInsets.only(left: 0, right: 5.0),
-            //     groupValue: sharedValue,
-            //     onValueChanged: (int val) {
-            //       print(val);
-            //       if (val != sharedValue) {
-            //         setState(() {
-            //           if (isNearme == true)
-            //             isNearme = false;
-            //           else
-            //             isNearme = true;
-            //         });
-            //         setState(() {
-            //           sharedValue = val;
-            //         });
-            //       }
-            //     },
-            //   ),
-            // ),
             SizedBox(width: 5),
           ],
         ),
@@ -172,6 +139,7 @@ class OffersState extends State<OffersModule> {
             : OfferListItems(
                 parentContext: context,
                 timebankId: timebankId,
+                timebankModel: widget.timebankModel,
               )
       ],
     );

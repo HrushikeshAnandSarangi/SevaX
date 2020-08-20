@@ -57,7 +57,7 @@ class RequestsState extends State<RequestsModule> {
   @override
   void initState() {
     super.initState();
-    print("is commig from settings ${widget.isFromSettings}");
+    print("is coming from settings ${widget.isFromSettings}");
   }
 
   @override
@@ -171,39 +171,6 @@ class RequestsState extends State<RequestsModule> {
                   onPressed: showRequestsWebPage,
                 ),
               ),
-              // Container(
-              //   width: 120,
-              //   child: CupertinoSegmentedControl<int>(
-              //     selectedColor: Theme.of(context).primaryColor,
-              //     children: {
-              //       0: Text(
-              //         AppLocalizations.of(context).translate('shared', 'all'),
-              //         style: TextStyle(fontSize: 10.0),
-              //       ),
-              //       1: Text(
-              //         AppLocalizations.of(context)
-              //             .translate('shared', 'near_me'),
-              //         style: TextStyle(fontSize: 10.0),
-              //       ),
-              //     },
-              //     borderColor: Colors.grey,
-              //     padding: EdgeInsets.only(left: 0, right: 5.0),
-              //     groupValue: sharedValue,
-              //     onValueChanged: (int val) {
-              //       if (val != sharedValue) {
-              //         setState(() {
-              //           if (isNearme == true)
-              //             isNearme = false;
-              //           else
-              //             isNearme = true;
-              //         });
-              //         setState(() {
-              //           sharedValue = val;
-              //         });
-              //       }
-              //     },
-              //   ),
-              // ),
               Padding(
                 padding: EdgeInsets.only(right: 5),
               ),
@@ -262,7 +229,7 @@ class RequestsState extends State<RequestsModule> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(6,6,6,6),
+                  padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -271,12 +238,14 @@ class RequestsState extends State<RequestsModule> {
                           child: CircleAvatar(
                             backgroundColor: Colors.white,
                             radius: 40,
-                            child: Image.asset(
-                                "lib/assets/images/googlecal.png"),
+                            child:
+                                Image.asset("lib/assets/images/googlecal.png"),
                           ),
                           onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            String redirectUrl =
+                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }
@@ -290,18 +259,19 @@ class RequestsState extends State<RequestsModule> {
                                 ),
                               ),
                             );
-                          }
-                      ),
+                          }),
                       GestureDetector(
                           child: CircleAvatar(
                             backgroundColor: Colors.white,
                             radius: 40,
-                            child: Image.asset(
-                                "lib/assets/images/outlookcal.png"),
+                            child:
+                                Image.asset("lib/assets/images/outlookcal.png"),
                           ),
                           onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            String redirectUrl =
+                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }
@@ -315,20 +285,20 @@ class RequestsState extends State<RequestsModule> {
                                 ),
                               ),
                             );
-                          }
-                      ),
+                          }),
                       GestureDetector(
                           child: CircleAvatar(
                             backgroundColor: Colors.white,
                             radius: 40,
-                            child: Image.asset(
-                                "lib/assets/images/ical.png"),
+                            child: Image.asset("lib/assets/images/ical.png"),
                           ),
                           onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            String redirectUrl =
+                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
-                            await launch(authorizationUrl.toString());
+                              await launch(authorizationUrl.toString());
                             }
                             Navigator.of(bc).pop();
                             Navigator.push(
@@ -340,8 +310,7 @@ class RequestsState extends State<RequestsModule> {
                                 ),
                               ),
                             );
-                          }
-                      )
+                          })
                     ],
                   ),
                 ),
@@ -349,20 +318,23 @@ class RequestsState extends State<RequestsModule> {
                   children: <Widget>[
                     Spacer(),
                     FlatButton(
-                      child: Text("Do it later", style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
-                      onPressed: (){
-                        Navigator.of(bc).pop();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CreateRequest(
-                              timebankId: timebankId,
-                              projectId: '',
+                        child: Text(
+                          "Do it later",
+                          style: TextStyle(
+                              color: FlavorConfig.values.theme.primaryColor),
+                        ),
+                        onPressed: () {
+                          Navigator.of(bc).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateRequest(
+                                timebankId: timebankId,
+                                projectId: '',
+                              ),
                             ),
-                          ),
-                        );
-                      }
-                    ),
+                          );
+                        }),
                   ],
                 )
               ],
@@ -1319,7 +1291,7 @@ class RequestListItemsState extends State<RequestListItems> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               RecurringRequestList(
-                                                  model: model),
+                                                  requestModel: model, offerModel: null,timebankModel: null,),
                                         ),
                                       );
                                     },
@@ -1440,12 +1412,15 @@ class RequestListItemsState extends State<RequestListItems> {
     if (model.isRecurring) {
       print("is recurring ===== ${model.isRecurring}");
       Navigator.push(
-          widget.parentContext,
-          MaterialPageRoute(
-              builder: (context) => RecurringRequestList(
-                    model: model,
-                    timebankModel: widget.timebankModel,
-                  )));
+        widget.parentContext,
+        MaterialPageRoute(
+          builder: (context) => RecurringRequestList(
+            requestModel: model,
+            timebankModel: widget.timebankModel,
+            offerModel: null,
+          )
+        )
+      );
     } else if (model.sevaUserId ==
             SevaCore.of(context).loggedInUser.sevaUserID ||
         widget.timebankModel.admins
