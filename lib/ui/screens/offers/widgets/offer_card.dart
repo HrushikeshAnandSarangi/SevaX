@@ -80,7 +80,7 @@ class OfferCard extends StatelessWidget {
 //                                        context,
 //                                        MaterialPageRoute(
 //                                          builder: (context) =>
-//                                              RecurringRequestList(
+//                                              RecurringListing(
 //                                                  model: model),
 //                                        ),
 //                                      );

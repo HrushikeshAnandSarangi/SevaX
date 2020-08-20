@@ -1290,7 +1290,7 @@ class RequestListItemsState extends State<RequestListItems> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              RecurringRequestList(
+                                              RecurringListing(
                                                   requestModel: model, offerModel: null,timebankModel: null,),
                                         ),
                                       );
@@ -1414,7 +1414,7 @@ class RequestListItemsState extends State<RequestListItems> {
       Navigator.push(
         widget.parentContext,
         MaterialPageRoute(
-          builder: (context) => RecurringRequestList(
+          builder: (context) => RecurringListing(
             requestModel: model,
             timebankModel: widget.timebankModel,
             offerModel: null,

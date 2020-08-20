@@ -20,19 +20,19 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../flavor_config.dart';
 
 
-class RecurringRequestList extends StatefulWidget {
+class RecurringListing extends StatefulWidget {
   final RequestModel requestModel;
   final TimebankModel timebankModel;
   final OfferModel offerModel;
 
-  RecurringRequestList({Key key, @required this.requestModel, this.timebankModel, this.offerModel,})
+  RecurringListing({Key key, @required this.requestModel, this.timebankModel, this.offerModel,})
       : super(key: key);
 
   @override
-  _RecurringRequestListState createState() => _RecurringRequestListState();
+  _RecurringListingState createState() => _RecurringListingState();
 }
 
-class _RecurringRequestListState extends State<RecurringRequestList> {
+class _RecurringListingState extends State<RecurringListing> {
   TimebankModel timebankModel = null;
 
   void initState() {

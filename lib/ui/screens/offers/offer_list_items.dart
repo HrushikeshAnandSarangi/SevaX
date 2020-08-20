@@ -200,7 +200,7 @@ class OfferListItems extends StatelessWidget {
           Navigator.push(
               parentContext,
               MaterialPageRoute(
-                  builder: (context) => RecurringRequestList(
+                  builder: (context) => RecurringListing(
                     offerModel: model,
                     timebankModel: timebankModel,
                     requestModel: null,

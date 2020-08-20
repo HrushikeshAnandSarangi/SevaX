@@ -47,13 +47,18 @@ class RecurringListDataManager {
       StreamTransformer<QuerySnapshot, List<OfferModel>>.fromHandlers(
         handleData: (snapshot, offersSink) {
           List<OfferModel> offersList = [];
+          var currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
           snapshot.documents.forEach(
                 (documentSnapshot) {
                   OfferModel model = OfferModel.fromMap(documentSnapshot.data);
                   model.id = documentSnapshot.documentID;
-//                  if (model.approvedUsers.length <= model.numberOfApprovals) {
+                  if(model.offerType==OfferType.GROUP_OFFER){
+                    if(model.groupOfferDataModel.endDate >= currentTimeStamp) {
+                      offersList.add(model);
+                    }
+                  }else{
                     offersList.add(model);
-//                  }
+                  }
             },
           );
           offersSink.add(offersList);
