@@ -91,7 +91,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return LoadingIndicator();
                     }
                     RequestModel model = snapshot.data;
                     return NotificationCard(

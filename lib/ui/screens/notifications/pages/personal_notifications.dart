@@ -119,7 +119,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return LoadingIndicator();
                     }
                     RequestModel model = snapshot.data;
                     return RequestAcceptedWidget(
@@ -286,7 +286,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return LoadingIndicator();
                     }
                     RequestModel model = snapshot.data;
                     return RequestCompleteWidget(
@@ -491,7 +491,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return LoadingIndicator();
                     }
                     RequestModel model = snapshot.data;
                     return NotificationCard(

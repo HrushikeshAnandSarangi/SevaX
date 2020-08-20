@@ -30,6 +30,7 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -942,7 +943,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             return Text(snapshot.error.toString());
           }
           if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
           List<TimebankCodeModel> codeList = snapshot.data.reversed.toList();
 

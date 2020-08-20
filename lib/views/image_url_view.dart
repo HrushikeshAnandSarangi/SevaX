@@ -8,6 +8,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class ImageUrlView extends StatefulWidget {
   @override
@@ -131,7 +132,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
                               ),
                             )),
                         placeholder: (context, url) {
-                          return Center(child: CircularProgressIndicator());
+                          return LoadingIndicator();
                         },
                       ),
                     )

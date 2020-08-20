@@ -21,6 +21,7 @@ import 'package:sevaexchange/ui/screens/message/widgets/message_input.dart';
 import 'package:sevaexchange/ui/utils/colors.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/camera/camera_page.dart';
 
 class ChatPage extends StatefulWidget {
@@ -179,7 +180,7 @@ class _ChatPageState extends State<ChatPage> {
 
                 if (snapshot.connectionState == ConnectionState.waiting ||
                     snapshot.data == null) {
-                  return Center(child: CircularProgressIndicator());
+                  return LoadingIndicator();
                 }
 
                 if (snapshot.data.length == 0) {

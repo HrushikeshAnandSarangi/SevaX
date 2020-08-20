@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class UserCircleAvatarList extends StatelessWidget {
   final int sizeOfClass;
@@ -20,7 +21,7 @@ class UserCircleAvatarList extends StatelessWidget {
         }
         print(snapshot.data);
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return LoadingIndicator();
         }
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

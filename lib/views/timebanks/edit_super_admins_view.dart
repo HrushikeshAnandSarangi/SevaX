@@ -14,6 +14,7 @@ import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_join_request.dart';
 import 'package:sevaexchange/views/timebanks/timebankedit.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../flavor_config.dart';
 import 'edit_timebank_view.dart';
@@ -158,9 +159,7 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                   )
                 ],
               ),
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
+              body: LoadingIndicator(),
             );
             break;
           default:

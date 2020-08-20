@@ -8,6 +8,7 @@ import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class OffersTabView extends StatefulWidget {
   @override
@@ -33,9 +34,7 @@ class _OffersTabViewState extends State<OffersTabView> {
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                return LoadingIndicator();
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 return Center(

@@ -21,6 +21,7 @@ import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class HomeDashBoard extends StatefulWidget {
   @override
@@ -174,7 +175,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
               .getCurrentGroups(SevaCore.of(context).loggedInUser),
           builder: (context, snapshot) {
             if (snapshot.data == null || !snapshot.hasData) {
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             }
             if (snapshot.hasData && snapshot.data != null) {
               // print("asd" + snapshot.data.timebanks.length.toString());

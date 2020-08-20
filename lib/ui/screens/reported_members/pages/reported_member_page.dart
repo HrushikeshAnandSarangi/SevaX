@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/bloc/reported_member_bloc.dart';
 import 'package:sevaexchange/ui/screens/reported_members/widgets/reported_member_card.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class ReportedMembersPage extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -62,7 +63,7 @@ class _ReportedMembersPageState extends State<ReportedMembersPage> {
           stream: _bloc.reportedMembers,
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             }
 
             if (snapshot.data == null || snapshot.data.isEmpty) {

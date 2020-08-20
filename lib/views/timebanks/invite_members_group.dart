@@ -13,6 +13,7 @@ import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../flavor_config.dart';
 
@@ -184,9 +185,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
             return Text(S.of(context).try_later);
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+            return LoadingIndicator();
           }
           List<UserModel> userlist = snapshot.data;
           userlist.removeWhere((user) =>

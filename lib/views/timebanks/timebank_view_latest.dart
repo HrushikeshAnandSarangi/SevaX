@@ -13,8 +13,8 @@ import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_seva_coin.dart';
-// import 'package:sevaexchange/views/core.dart';
 
 class TimeBankAboutView extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -112,7 +112,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                       ),
                     )),
                 placeholder: (context, url) {
-                  return Center(child: CircularProgressIndicator());
+                  return LoadingIndicator();
                 },
               ),
             ),

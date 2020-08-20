@@ -11,6 +11,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'search_timebank_manager_page.dart';
@@ -192,9 +193,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   }
 
   Widget get circularBar {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
+    return LoadingIndicator();
   }
 
   int fetchItemsCount() {

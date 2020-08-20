@@ -10,6 +10,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/admin_personal_requests_view.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/admin_offer_requests_tab.dart';
 
 class BookmarkedOffers extends StatelessWidget {
@@ -29,7 +30,7 @@ class BookmarkedOffers extends StatelessWidget {
           .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return LoadingIndicator();
         }
         if (snapshot.data == null || snapshot.data?.documents?.length == 0) {
           return Center(

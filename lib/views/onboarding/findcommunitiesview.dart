@@ -20,6 +20,7 @@ import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class FindCommunitiesView extends StatefulWidget {
   final bool keepOnBackPress;
@@ -309,7 +310,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           } else {
             if (snapshot.data.length != 0) {
               List<CommunityModel> communityList = snapshot.data;
@@ -455,7 +456,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
           if (snapshot.hasData) {
             print('near by comminities ${snapshot.data}');

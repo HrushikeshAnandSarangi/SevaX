@@ -21,6 +21,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 @deprecated
@@ -139,7 +140,7 @@ class OfferCardViewState extends State<OfferCardView> {
               return Text('Error: ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             }
             UserModel userModel = snapshot.data;
             String usertimezone = userModel.timezone;

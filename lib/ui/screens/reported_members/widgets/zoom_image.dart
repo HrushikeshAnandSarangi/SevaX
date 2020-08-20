@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 // Given a canvas and an image, determine what size the image should be to be
 // contained in but not exceed the canvas while preserving its aspect ratio.
@@ -134,7 +135,7 @@ class _ZoomableImageState extends State<ZoomableImage> {
     }
 
     if (_image == null) {
-      return widget.placeholder ?? Center(child: CircularProgressIndicator());
+      return widget.placeholder ?? LoadingIndicator();
     }
 
     return LayoutBuilder(builder: (ctx, constraints) {

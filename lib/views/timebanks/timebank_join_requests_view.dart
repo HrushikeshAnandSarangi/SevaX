@@ -46,7 +46,7 @@
 //           if (snapshot.hasError) return Text('Error: ${snapshot.error}');
 //           switch (snapshot.connectionState) {
 //             case ConnectionState.waiting:
-//               return Center(child: CircularProgressIndicator());
+//               return LoadingIndicator();
 //             default:
 //               return Column(
 //                 children: snapshot.data.documents

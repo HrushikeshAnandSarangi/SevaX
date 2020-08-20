@@ -3,6 +3,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class GoodsAndAmountDonations extends StatefulWidget {
   final Function onTap;
@@ -67,9 +68,7 @@ class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonations> {
               isLifeTime: isLifeTime),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return LoadingIndicator();
         }
         return GestureDetector(
           onTap: widget.onTap,

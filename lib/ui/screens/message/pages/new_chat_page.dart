@@ -15,6 +15,7 @@ import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_bui
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/ui/utils/strings.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class NewChatPage extends StatefulWidget {
   final List<FrequentContactsModel> frequentContacts;
@@ -161,9 +162,7 @@ class _NewChatPageState extends State<NewChatPage> {
                   stream: _bloc.timebanksOfUser,
                   builder: (context, snapshot) {
                     if (snapshot.data == null) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return LoadingIndicator();
                     }
                     print(snapshot.data.length);
                     if (snapshot.data.length == 0) {

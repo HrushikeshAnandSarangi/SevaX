@@ -7,6 +7,7 @@ import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/member_card_with_single_action.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/seva_coin_star.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class OfferEarnings extends StatelessWidget {
   final OfferModel offerModel;
@@ -29,7 +30,7 @@ class OfferEarnings extends StatelessWidget {
               );
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
+              return LoadingIndicator();
             }
             DateTime _endTime = DateTime.fromMillisecondsSinceEpoch(
               offerModel.groupOfferDataModel.endDate,

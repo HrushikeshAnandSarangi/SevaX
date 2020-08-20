@@ -9,6 +9,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/views/timebanks/admin_view_request_status.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import 'core.dart';
 import 'group_models/GroupingStrategy.dart';
@@ -42,7 +43,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
                     return Text('Error: ${snapshot.error}');
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return LoadingIndicator();
                   }
                   UserModel user = snapshot.data;
                   String loggedintimezone = user.timezone;
@@ -59,7 +60,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
 
                       switch (requestListSnapshot.connectionState) {
                         case ConnectionState.waiting:
-                          return Center(child: CircularProgressIndicator());
+                          return LoadingIndicator();
                         default:
                           List<RequestModel> requestModelList =
                               requestListSnapshot.data;
@@ -104,7 +105,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
               return Text('Error: ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             }
             UserModel user = snapshot.data;
             String loggedintimezone = user.timezone;
@@ -118,7 +119,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
                 }
                 switch (requestListSnapshot.connectionState) {
                   case ConnectionState.waiting:
-                    return Center(child: CircularProgressIndicator());
+                    return LoadingIndicator();
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;

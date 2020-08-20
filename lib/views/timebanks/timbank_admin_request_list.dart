@@ -30,6 +30,7 @@ import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/invite_members.dart';
 import 'package:sevaexchange/views/timebanks/invite_members_group.dart';
 import 'package:sevaexchange/views/timebanks/transfer_ownership_view.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../switch_timebank.dart';
@@ -138,9 +139,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   }
 
   Widget get circularBar {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
+    return LoadingIndicator();
   }
 
   Widget getTimebackList(BuildContext context, String timebankId) {

@@ -111,7 +111,7 @@
 //                       return Container(
 //                         padding: EdgeInsets.only(
 //                             top: MediaQuery.of(context).size.height / 3),
-//                         child: Center(child: CircularProgressIndicator()),
+//                         child: LoadingIndicator(),
 //                       );
 
 //                       break;
@@ -161,7 +161,7 @@
 //                         return Text('Please make sure you have GPS turned on.');
 //                       switch (snapshot.connectionState) {
 //                         case ConnectionState.waiting:
-//                           return Center(child: CircularProgressIndicator());
+//                           return LoadingIndicator();
 //                           break;
 //                         default:
 //                           List<NewsModel> newsList = snapshot.data;
@@ -198,7 +198,7 @@
 //                                 'Please make sure you have GPS turned on.');
 //                           switch (snapshot.connectionState) {
 //                             case ConnectionState.waiting:
-//                               return Center(child: CircularProgressIndicator());
+//                               return LoadingIndicator();
 //                               break;
 //                             default:
 //                               List<NewsModel> newsList = snapshot.data;
