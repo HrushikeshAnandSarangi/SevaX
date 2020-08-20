@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/request_donation_dispute_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/checkbox_with_text.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/pledged_amount_card.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
+import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/requests/donations/accept_modified_acknowlegement.dart';
+
+import '../../../../flavor_config.dart';
 
 enum _AckType { CASH, GOODS }
-enum _OperatingMode { CREATOR, USER }
+enum OperatingMode { CREATOR, USER }
 
 class RequestDonationDisputePage extends StatefulWidget {
   final DonationModel model;
+  // final Requestoe
 
   const RequestDonationDisputePage({
     Key key,
@@ -24,7 +36,10 @@ class _RequestDonationDisputePageState
     extends State<RequestDonationDisputePage> {
   final RequestDonationDisputeBloc _bloc = RequestDonationDisputeBloc();
   _AckType ackType;
-  _OperatingMode operatingMode;
+  OperatingMode operatingMode;
+
+  ChatModeForDispute chatModeForDispute;
+
   @override
   void initState() {
     ackType = widget.model.donationType == RequestType.CASH
@@ -37,6 +52,27 @@ class _RequestDonationDisputePageState
   void dispose() {
     _bloc.dispose();
     super.dispose();
+  }
+
+  void createMessage(
+    isTimebankMessage,
+    timebankId,
+    communityId,
+    sender,
+    reciever,
+  ) {
+    createAndOpenChat(
+      isTimebankMessage: isTimebankMessage,
+      context: context,
+      timebankId: timebankId,
+      communityId: communityId,
+      sender: sender,
+      reciever: reciever,
+      isFromRejectCompletion: false,
+      onChatCreate: () {
+        Navigator.pop(context);
+      },
+    );
   }
 
   @override
@@ -74,8 +110,16 @@ class _RequestDonationDisputePageState
                         case _AckType.CASH:
                           _bloc
                               .disputeCash(
-                            widget.model.id,
-                            widget.model.cashDetails.pledgedAmount.toDouble(),
+                            pledgedAmount: widget
+                                .model.cashDetails.pledgedAmount
+                                .toDouble(),
+                            operationMode: operatingMode,
+                            donationId: widget.model.id,
+                            donationModel: widget.model,
+                            notificationId: widget.model.id,
+                            requestMode: widget.model.donatedToTimebank
+                                ? RequestMode.TIMEBANK_REQUEST
+                                : RequestMode.PERSONAL_REQUEST,
                           )
                               .then(
                             (value) {
@@ -87,6 +131,27 @@ class _RequestDonationDisputePageState
                           );
                           break;
                         case _AckType.GOODS:
+                          _bloc
+                              .disputeGoods(
+                            donatedGoods:
+                                widget.model.goodsDetails.donatedGoods,
+                            donationId: widget.model.id,
+                            donationModel: widget.model,
+                            notificationId: widget.model.notificationId,
+                            operationMode: operatingMode,
+                            requestMode: widget.model.donatedToTimebank
+                                ? RequestMode.TIMEBANK_REQUEST
+                                : RequestMode.PERSONAL_REQUEST,
+                          )
+                              .then(
+                            (value) {
+                              print(value);
+                              if (value) {
+                                Navigator.of(context).pop();
+                              }
+                            },
+                          );
+
                           break;
                       }
                     },
@@ -94,7 +159,126 @@ class _RequestDonationDisputePageState
                   SizedBox(width: 12),
                   RaisedButton(
                     child: Text('Message'),
-                    onPressed: () {},
+                    onPressed: () async {
+                      operatingMode = OperatingMode.CREATOR;
+
+                      switch (operatingMode) {
+                        case OperatingMode.CREATOR:
+                          if (widget.model.donatedToTimebank) {
+                            chatModeForDispute =
+                                ChatModeForDispute.TIMEBANK_TO_MEMBER;
+                          } else {
+                            chatModeForDispute =
+                                ChatModeForDispute.MEMBER_TO_MEMBER;
+                          }
+                          break;
+
+                        case OperatingMode.USER:
+                          if (widget.model.donatedToTimebank) {
+                            chatModeForDispute =
+                                ChatModeForDispute.MEMBER_TO_TIMEBANK;
+                          } else {
+                            chatModeForDispute =
+                                ChatModeForDispute.MEMBER_TO_MEMBER;
+                          }
+                          break;
+                      }
+
+                      switch (chatModeForDispute) {
+                        case ChatModeForDispute.MEMBER_TO_MEMBER:
+                          print("==========MEMBER_TO_MEMBER===============");
+                          UserModel fundRaiserDetails =
+                              await FirestoreManager.getUserForId(
+                            sevaUserId: widget.model.donatedTo,
+                          );
+                          var loggedInUser = SevaCore.of(context).loggedInUser;
+
+                          await HandlerForModificationManager
+                              .createChatForDispute(
+                            sender: ParticipantInfo(
+                              id: loggedInUser.sevaUserID,
+                              name: loggedInUser.fullname,
+                              photoUrl: loggedInUser.photoURL,
+                              type: ChatType.TYPE_PERSONAL,
+                            ),
+                            receiver: ParticipantInfo(
+                              id: fundRaiserDetails.sevaUserID,
+                              name: fundRaiserDetails.fullname,
+                              photoUrl: fundRaiserDetails.photoURL,
+                              type: ChatType.TYPE_PERSONAL,
+                            ),
+                            context: context,
+                            timeBankId: widget.model.timebankId,
+                            isTimebankMessage: false,
+                            communityId: loggedInUser.currentCommunity,
+                          );
+                          break;
+
+                        case ChatModeForDispute.MEMBER_TO_TIMEBANK:
+                          print("==========MEMBER_TO_TIMEBANK===============");
+                          TimebankModel timebankModel = await getTimeBankForId(
+                            timebankId: widget.model.timebankId,
+                          );
+                          var loggedInUser = SevaCore.of(context).loggedInUser;
+                          await HandlerForModificationManager
+                              .createChatForDispute(
+                            communityId: loggedInUser.currentCommunity,
+                            sender: ParticipantInfo(
+                              id: loggedInUser.sevaUserID,
+                              name: loggedInUser.fullname,
+                              photoUrl: loggedInUser.photoURL,
+                              type: ChatType.TYPE_PERSONAL,
+                            ),
+                            receiver: ParticipantInfo(
+                              id: timebankModel.id,
+                              type: timebankModel.parentTimebankId ==
+                                      FlavorConfig.values
+                                          .timebankId //check if timebank is primary timebank
+                                  ? ChatType.TYPE_TIMEBANK
+                                  : ChatType.TYPE_GROUP,
+                              name: timebankModel.name,
+                              photoUrl: timebankModel.photoUrl,
+                            ),
+                            context: context,
+                            timeBankId: widget.model.timebankId,
+                            isTimebankMessage: true,
+                          );
+                          break;
+
+                        case ChatModeForDispute.TIMEBANK_TO_MEMBER:
+                          print("==========TIMEBANK_TO_MEMBER===============");
+                          TimebankModel timebankModel = await getTimeBankForId(
+                            timebankId: widget.model.timebankId,
+                          );
+
+                          var loggedInUser = SevaCore.of(context).loggedInUser;
+
+                          await HandlerForModificationManager
+                              .createChatForDispute(
+                            communityId: loggedInUser.currentCommunity,
+                            isTimebankMessage: true,
+                            receiver: ParticipantInfo(
+                              id: loggedInUser.sevaUserID,
+                              name: loggedInUser.fullname,
+                              photoUrl: loggedInUser.photoURL,
+                              type: ChatType.TYPE_PERSONAL,
+                            ),
+                            sender: ParticipantInfo(
+                              id: timebankModel.id,
+                              type: timebankModel.parentTimebankId ==
+                                      FlavorConfig.values
+                                          .timebankId //check if timebank is primary timebank
+                                  ? ChatType.TYPE_TIMEBANK
+                                  : ChatType.TYPE_GROUP,
+                              name: timebankModel.name,
+                              photoUrl: timebankModel.photoUrl,
+                            ),
+                            context: context,
+                            timeBankId: widget.model.timebankId,
+                          );
+                          break;
+                      }
+                    },
                   ),
                 ],
               ),
@@ -104,6 +288,12 @@ class _RequestDonationDisputePageState
       ),
     );
   }
+}
+
+enum ChatModeForDispute {
+  MEMBER_TO_MEMBER,
+  MEMBER_TO_TIMEBANK,
+  TIMEBANK_TO_MEMBER,
 }
 
 class _CashFlow extends StatelessWidget {

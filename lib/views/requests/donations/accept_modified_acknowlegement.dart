@@ -9,6 +9,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/core.dart';
 
 class HandleModifiedAcknowlegementForDonationBuilder {
   String timeBankId;
@@ -154,6 +155,7 @@ class HandleModifiedAcknowlegementForDonation extends StatelessWidget {
                           parentContext: builder.parentContext,
                           requestMode: builder.requestMode,
                           timeBankId: builder.timeBankId,
+                          loggedInUser: SevaCore.of(context).loggedInUser,
                         );
                       },
                     ),
@@ -249,21 +251,20 @@ class HandlerForModificationManager {
     @required String timeBankId,
     @required RequestMode requestMode,
     @required BuildContext parentContext,
+    @required UserModel loggedInUser,
   }) async {
-    UserModel user = await FirestoreManager.getUserForId(sevaUserId: userId);
-
     ParticipantInfo sender, reciever;
-
-    print("====================>   ${requestMode.toString()}");
 
     switch (requestMode) {
       case RequestMode.PERSONAL_REQUEST:
-        UserModel loggedInUser =
+        print("Donated to  ========== " + creatorSevaUserId);
+        UserModel fundRaiserDetails =
             await FirestoreManager.getUserForId(sevaUserId: creatorSevaUserId);
+
         reciever = ParticipantInfo(
-          id: loggedInUser.sevaUserID,
-          name: loggedInUser.fullname,
-          photoUrl: loggedInUser.photoURL,
+          id: fundRaiserDetails.sevaUserID,
+          name: fundRaiserDetails.fullname,
+          photoUrl: fundRaiserDetails.photoURL,
           type: ChatType.TYPE_PERSONAL,
         );
         break;
@@ -286,9 +287,9 @@ class HandlerForModificationManager {
     }
 
     sender = ParticipantInfo(
-      id: user.sevaUserID,
-      name: user.fullname,
-      photoUrl: user.photoURL,
+      id: loggedInUser.sevaUserID,
+      name: loggedInUser.fullname,
+      photoUrl: loggedInUser.photoURL,
       type: ChatType.TYPE_PERSONAL,
     );
 
@@ -296,9 +297,31 @@ class HandlerForModificationManager {
       isTimebankMessage: requestMode == RequestMode.TIMEBANK_REQUEST,
       context: parentContext,
       timebankId: timeBankId,
-      communityId: user.currentCommunity,
+      communityId: loggedInUser.currentCommunity,
       sender: sender,
       reciever: reciever,
+      isFromRejectCompletion: false,
+      onChatCreate: () {
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  static Future createChatForDispute({
+    @required ParticipantInfo sender,
+    @required ParticipantInfo receiver,
+    @required BuildContext context,
+    @required String timeBankId,
+    @required bool isTimebankMessage,
+    @required String communityId,
+  }) async {
+    createAndOpenChat(
+      isTimebankMessage: isTimebankMessage,
+      context: context,
+      timebankId: timeBankId,
+      communityId: communityId,
+      sender: sender,
+      reciever: receiver,
       isFromRejectCompletion: false,
       onChatCreate: () {
         Navigator.pop(context);

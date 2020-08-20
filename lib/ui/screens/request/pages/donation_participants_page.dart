@@ -169,11 +169,6 @@ class DonationParticipantPage extends StatelessWidget {
                 builder: (context) => RequestDonationDisputePage(model: model),
               ),
             );
-            // showDialog(
-            //   context: context,
-            //   builder: (context) =>
-            //       requestDonationAcknowledgementDialog(context),
-            // );
           },
         );
       },
