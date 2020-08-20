@@ -1,9 +1,11 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_bloc.dart';
@@ -225,13 +227,17 @@ class _DonationViewState extends State<DonationView> {
               actionButton(
                 buttonTitle: S.of(context).pledge,
                 onPressed: () {
+                  showProgress();
                   donationBloc
                       .donateAmount(
                           donationModel: donationsModel,
                           requestModel: widget.requestModel,
                           donor: sevaUser)
                       .then((value) {
-                    if (value) Navigator.pop(context);
+                    if (value) {
+                      hideProgress();
+                      getSuccessDialog();
+                    }
                   });
                 },
               ),
@@ -249,6 +255,19 @@ class _DonationViewState extends State<DonationView> {
         ],
       ),
     );
+  }
+
+  void showProgress() {
+    progressDialog = ProgressDialog(
+      context,
+      type: ProgressDialogType.Normal,
+      isDismissible: false,
+    );
+    progressDialog.show();
+  }
+
+  void hideProgress() {
+    progressDialog.hide();
   }
 
   Widget donatedItems() {
@@ -337,13 +356,18 @@ class _DonationViewState extends State<DonationView> {
                       );
                       return;
                     }
+                    showProgress();
+
                     donationBloc
                         .donateGoods(
                             donationModel: donationsModel,
                             requestModel: widget.requestModel,
                             donor: sevaUser)
                         .then((value) {
-                      if (value) Navigator.of(context).pop();
+                      if (value) {
+                        hideProgress();
+                        getSuccessDialog();
+                      }
                     });
                   }),
               SizedBox(
@@ -399,6 +423,28 @@ class _DonationViewState extends State<DonationView> {
     fontSize: 13,
     color: Colors.grey,
   );
+  void getSuccessDialog() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          content:
+              Text(S.of(context).successfully + ' ' + S.of(context).pledged),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            FlatButton(
+              child: Text(S.of(context).ok),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void dispose() {

@@ -48,7 +48,7 @@ class GoodsDisplayPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
               child: Text(
-                'I have sent you clothes and books',
+                message,
                 style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
             ),

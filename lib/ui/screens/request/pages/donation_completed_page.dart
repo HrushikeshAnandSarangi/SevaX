@@ -71,6 +71,7 @@ class DonationCompletedPage extends StatelessWidget {
                     photoUrl: model.donorDetails.photoUrl,
                     amount: model.cashDetails.pledgedAmount.toString(),
                     timestamp: model.timestamp,
+                    comments: model.goodsDetails.comments,
                   );
                 },
                 separatorBuilder: (_, index) {

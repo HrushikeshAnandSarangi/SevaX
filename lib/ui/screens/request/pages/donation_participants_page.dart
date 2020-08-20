@@ -54,6 +54,7 @@ class DonationParticipantPage extends StatelessWidget {
                   : [],
               photoUrl: model.donorDetails.photoUrl,
               amount: model.cashDetails.pledgedAmount.toString(),
+              comments: model.goodsDetails.comments,
               timestamp: model.timestamp,
               child: model.donationStatus != DonationStatus.ACKNOWLEDGED
                   ? Container(
@@ -62,7 +63,7 @@ class DonationParticipantPage extends StatelessWidget {
                         color: Colors.white,
                         padding: EdgeInsets.zero,
                         child: Text(
-                          'Acknowledge',
+                          S.of(context).acknowledge,
                           style: TextStyle(
                             fontSize: 10,
                             color: Colors.black,

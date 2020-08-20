@@ -4,6 +4,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/screens/request/pages/goods_display_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -129,7 +130,25 @@ class DonationListItem extends StatelessWidget {
           }
           return ListTile(
               onTap: () {
-                isGoods ? null : null;
+                isGoods
+                    ? Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => GoodsDisplayPage(
+                            name: model.donorDetails.name,
+                            photoUrl: model.donorDetails.photoUrl,
+                            goods: model.goodsDetails?.donatedGoods != null
+                                ? List<String>.from(
+                                    model.goodsDetails.donatedGoods.values,
+                                  )
+                                : [],
+                            message: model.goodsDetails.comments ??
+                                S.of(context).donated +
+                                    ' ' +
+                                    S.of(context).goods.toLowerCase(),
+                          ),
+                        ),
+                      )
+                    : null;
               },
               leading: DonationImageItem(
                 model: model,
@@ -142,14 +161,15 @@ class DonationListItem extends StatelessWidget {
                 children: <Widget>[
                   !isGoods
                       ? Text(
-                          '\$' + '${model.cashDetails.pledgedAmount}',
+                          '\$' +
+                              '${model.cashDetails.pledgedAmount ?? 0.toString()}',
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w500,
                           ),
                         )
                       : Text(
-                          '${model.goodsDetails.donatedGoods.length.toString()} ${S.of(context).items}',
+                          '${model.goodsDetails?.donatedGoods != null ? model.goodsDetails.donatedGoods.values.length.toString() : 0.toString()} ${S.of(context).items}',
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w500,

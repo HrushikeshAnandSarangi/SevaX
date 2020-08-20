@@ -11,6 +11,7 @@ class DonationParticipantCard extends StatelessWidget {
   final List<String> goods;
   final String amount;
   final String currency;
+  final String comments;
 
   final Widget child;
 
@@ -24,6 +25,7 @@ class DonationParticipantCard extends StatelessWidget {
     this.amount,
     this.currency = '\$',
     this.child,
+    this.comments,
   })  : assert(name != null),
         assert(isCashDonation != null),
         super(key: key);
@@ -39,7 +41,7 @@ class DonationParticipantCard extends StatelessWidget {
                     name: name,
                     photoUrl: photoUrl,
                     goods: goods,
-                    message: '',
+                    message: comments,
                   ),
                 ),
               );

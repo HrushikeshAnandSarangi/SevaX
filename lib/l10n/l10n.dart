@@ -4166,6 +4166,21 @@ class S {
         'CV/Resume',
         name: 'cv_resume',
       );
+
+  String get pledged => Intl.message(
+        'Pledged',
+        name: 'pledged',
+      );
+
+  String get goods => Intl.message(
+        'Goods',
+        name: 'goods',
+      );
+
+  String get cash => Intl.message(
+        'Cash',
+        name: 'cash',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-08-19T10:01:15+00:00",
+    "@@last_modified": "2020-08-20T09:16:21+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -826,5 +826,8 @@
     "will_added_to_donors": "will be added to donors list.",
     "no_donation_yet": "No donations yet",
     "donation_acknowledge": "Donation acknowledge",
-    "cv_resume": "CV\/Resume"
+    "cv_resume": "CV\/Resume",
+    "pledged": "Pledged",
+    "goods": "Goods",
+    "cash": "Cash"
 }

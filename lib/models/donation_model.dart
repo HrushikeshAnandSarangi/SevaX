@@ -149,6 +149,7 @@ class GoodsDetails {
 
   Map<String, dynamic> toMap() => {
         "comments": comments == null ? null : comments,
+        "donatedGoods": donatedGoods == null ? null : donatedGoods
       };
 }
 
