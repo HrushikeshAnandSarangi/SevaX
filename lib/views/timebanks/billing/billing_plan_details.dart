@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/billing_plan_details.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/NoGlowScrollBehavior.dart';
 
 class BillingPlanDetails extends StatefulWidget {
@@ -81,7 +82,7 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
       ),
       body: _billingPlanDetailsModels == null ||
               _billingPlanDetailsModels.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? LoadingIndicator()
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,

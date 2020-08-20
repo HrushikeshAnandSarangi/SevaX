@@ -27,6 +27,7 @@ import 'package:sevaexchange/views/notifications/notification_alert_view.dart';
 import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import 'edit_profile.dart';
 import 'timezone.dart';
@@ -325,9 +326,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 );
                               return Container(
                                 height: 100,
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
+                                child: LoadingIndicator(),
                               );
                             },
                           ),

@@ -6,6 +6,7 @@ import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
@@ -81,7 +82,7 @@ class TimebankRequests extends StatelessWidget {
             return Text('Error: ${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
 
           List<JoinRequestModel> joinrequestModelList = snapshot.data;
@@ -101,7 +102,7 @@ class TimebankRequests extends StatelessWidget {
                         return Text('Error: ${snapshot.error}');
                       }
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return LoadingIndicator();
                       }
                       TimebankModel timebankModel = snapshot.data;
                       return Slidable(

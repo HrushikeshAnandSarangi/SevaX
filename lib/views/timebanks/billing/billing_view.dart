@@ -13,6 +13,7 @@ import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/payment_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/credit_card/utils/card_background.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
@@ -264,7 +265,7 @@ class BillingViewState extends State<BillingView> {
                 future: userCardDetails,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState != ConnectionState.done) {
-                    return Center(child: CircularProgressIndicator());
+                    return LoadingIndicator();
                   }
                   if (snapshot.hasError) {
                     return Center(

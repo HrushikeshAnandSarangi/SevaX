@@ -14,6 +14,7 @@ import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../flavor_config.dart';
 import '../core.dart';
@@ -111,9 +112,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
             ),
           )
         : Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: LoadingIndicator(),
           );
   }
 
@@ -128,7 +127,8 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
             if (communityCreateEditSnapshot.data != null &&
                 communityCreateEditSnapshot.data.loading) {
               return Expanded(
-                  child: Center(child: CircularProgressIndicator()));
+                child: LoadingIndicator(),
+              );
             } else {
               return timebankStreamBuilderJoin(
                   communityCreateEditSnapshot.data, context);

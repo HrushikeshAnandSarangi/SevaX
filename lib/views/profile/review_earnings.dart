@@ -7,6 +7,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class ReviewEarningsPage extends StatelessWidget {
   final String type;
@@ -90,7 +91,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
             );
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
           UserModel userModel = snapshot.data;
           String usertimezone = userModel.timezone;

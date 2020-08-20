@@ -7,6 +7,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/extensions.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 
 import '../spell_check_manager.dart';
@@ -177,9 +178,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
             ),
             SizedBox(height: 20),
             widget.isFromProfile && !isDataLoaded
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
+                ? LoadingIndicator()
                 : Expanded(
                     child: ListView(
                       shrinkWrap: true,

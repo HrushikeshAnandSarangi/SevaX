@@ -13,6 +13,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_view.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../flavor_config.dart';
 
@@ -82,9 +83,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                         builder: (parentContext, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
+                            return LoadingIndicator();
                           }
                           if (snapshot.hasData && snapshot.data != null) {
                             cardModel = snapshot.data;
@@ -264,9 +263,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             .snapshots(),
         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+            return LoadingIndicator();
           }
           if (snapshot.hasData && snapshot.data != null) {
             print('snap data ===>${snapshot.data.data}');

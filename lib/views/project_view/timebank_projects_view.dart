@@ -12,6 +12,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/project_view/projects_template_view.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 
 import '../requests/project_request.dart';
@@ -138,7 +139,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                 }
                 switch (projectListSnapshot.connectionState) {
                   case ConnectionState.waiting:
-                    return Center(child: CircularProgressIndicator());
+                    return LoadingIndicator();
                   default:
                     List<ProjectModel> projectModelList =
                         projectListSnapshot.data;

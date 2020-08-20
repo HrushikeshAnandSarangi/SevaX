@@ -18,6 +18,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 //TODO update bio and remove un-necessary stuff
 
@@ -72,7 +73,7 @@ class ProfileViewerState extends State<ProfileViewer> {
           if (snapshot.hasError) return Text('Error: ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             default:
               user = UserModel.fromMap(snapshot.data.data, 'profile_viewer');
 
@@ -237,9 +238,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                           }
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
+                            return LoadingIndicator();
                           }
 
                           List<RequestModel> requestList = snapshot.data;

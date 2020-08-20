@@ -22,6 +22,7 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'completed_list.dart';
@@ -57,7 +58,7 @@ class MyTasksList extends StatelessWidget {
             return Text(S.of(context).general_stream_error);
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
           UserModel userModel = snapshot.data;
           String usertimezone = userModel.timezone;
@@ -70,7 +71,7 @@ class MyTasksList extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Center(child: CircularProgressIndicator()),
+                  child: LoadingIndicator(),
                 );
               }
               List<RequestModel> requestModelList = snapshot.data;

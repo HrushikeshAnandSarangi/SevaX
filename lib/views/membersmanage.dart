@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class MembersManage extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -34,9 +35,7 @@ class MembersManageState extends State<MembersManage> {
         builder: (context, snapshots) {
           if (snapshots.hasError) return Text('Error: ${snapshots.error}');
           if (snapshots.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+            return LoadingIndicator();
           }
 
           TimebankModel timebankSnapshotModel = snapshots.data;
@@ -49,9 +48,7 @@ class MembersManageState extends State<MembersManage> {
                   if (userSnapshot.hasError)
                     return Text('Error: ${userSnapshot.error}');
                   if (userSnapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return LoadingIndicator();
                   }
 
                   UserModel userModel = userSnapshot.data;

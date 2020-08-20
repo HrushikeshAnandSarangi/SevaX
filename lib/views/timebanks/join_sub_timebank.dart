@@ -16,6 +16,7 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../timebank_content_holder.dart';
 
@@ -121,7 +122,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
           ? SingleChildScrollView(
               child: getTimebanks(context: context, bloc: _bloc),
             )
-          : Center(child: CircularProgressIndicator()),
+          : LoadingIndicator(),
     );
   }
 
@@ -141,7 +142,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
           if (snapshot.hasError)
             return Text('${S.of(context).general_stream_error}');
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
 
           if (snapshot.data.length == 0) {
@@ -280,9 +281,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                     child: Text(S.of(context).no_image_available),
                   ),
                   placeholder: (conext, url) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return LoadingIndicator();
                   },
                 ),
               ),
