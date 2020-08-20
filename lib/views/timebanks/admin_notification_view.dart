@@ -55,7 +55,7 @@
 //         }
 
 //         if (snapshot.connectionState == ConnectionState.waiting) {
-//           return Center(child: CircularProgressIndicator());
+//           return LoadingIndicator();
 //         }
 
 //         List<NotificationsModel> notifications = snapshot.data;
@@ -92,7 +92,7 @@
 //                       }
 
 //                       if (snapshot.connectionState == ConnectionState.waiting) {
-//                         return Center(child: CircularProgressIndicator());
+//                         return LoadingIndicator();
 //                       }
 //                       RequestModel model = snapshot.data;
 //                       return getNotificationAcceptedWidget(
@@ -169,7 +169,7 @@
 //                       }
 
 //                       if (snapshot.connectionState == ConnectionState.waiting) {
-//                         return Center(child: CircularProgressIndicator());
+//                         return LoadingIndicator();
 //                       }
 //                       RequestModel model = snapshot.data;
 //                       return getNotificationRequestCompletedWidget(

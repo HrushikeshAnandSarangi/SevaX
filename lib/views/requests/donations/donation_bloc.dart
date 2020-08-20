@@ -35,7 +35,7 @@ class DonationBloc {
       RequestModel requestModel,
       UserModel donor}) async {
     if (_selectedList.value.isEmpty) {
-      _errorMessage.add('Select a goods category');
+      _errorMessage.add('goods');
     } else {
       donationModel.goodsDetails.donatedGoods = _selectedList.value;
       donationModel.goodsDetails.comments = _comment.value;
@@ -50,19 +50,19 @@ class DonationBloc {
             donor: donor);
         return true;
       } on Exception catch (e) {
-        _errorMessage.add("something went wrong try again later");
+        _errorMessage.add("net_error");
       }
     }
     return false;
   }
 
-  Future<bool> validateAmount({RequestModel requestModel}) async {
-    if (_amountPledged.value.isEmpty) {
-      _amountPledged.addError('Enter valid amount');
-    } else if (int.parse(_amountPledged.value) <
-        requestModel.cashModel.minAmount) {
-      _amountPledged.addError(
-          'Minimum amount is ${requestModel.cashModel.minAmount.toString()}');
+  Future<bool> validateAmount({int minmumAmount}) async {
+    if (_amountPledged.value.isEmpty ||
+        _amountPledged.value == '' ||
+        _amountPledged.value == null) {
+      _amountPledged.addError('amount1');
+    } else if (int.parse(_amountPledged.value) < minmumAmount) {
+      _amountPledged.addError('amount2');
     } else {
       return true;
     }
@@ -74,31 +74,24 @@ class DonationBloc {
       {DonationModel donationModel,
       RequestModel requestModel,
       UserModel donor}) async {
-    if (_amountPledged.value.isEmpty || int.parse(_amountPledged.value) == 0) {
-      _amountPledged.addError('Enter valid amount');
-    } else if (int.parse(_amountPledged.value) <
-        requestModel.cashModel.minAmount) {
-      _amountPledged.addError(
-          'Minimum amount is ${requestModel.cashModel.minAmount.toString()}');
-    } else {
-      donationModel.cashDetails.pledgedAmount = int.parse(_amountPledged.value);
+    donationModel.cashDetails.pledgedAmount = int.parse(_amountPledged.value);
 
-      requestModel.cashModel.donors.add(donor.sevaUserID);
-      requestModel.cashModel.amountRaised =
-          requestModel.cashModel.amountRaised + int.parse(_amountPledged.value);
-      try {
-        await FirestoreManager.createDonation(donationModel: donationModel);
-        await FirestoreManager.updateRequest(requestModel: requestModel);
-        await sendNotification(
-          donationModel: donationModel,
-          requestModel: requestModel,
-          donor: donor,
-        );
-        return true;
-      } on Exception catch (e) {
-        _errorMessage.add("something went wrong try again later");
-      }
+    requestModel.cashModel.donors.add(donor.sevaUserID);
+    requestModel.cashModel.amountRaised =
+        requestModel.cashModel.amountRaised + int.parse(_amountPledged.value);
+    try {
+      await FirestoreManager.createDonation(donationModel: donationModel);
+      await FirestoreManager.updateRequest(requestModel: requestModel);
+      await sendNotification(
+        donationModel: donationModel,
+        requestModel: requestModel,
+        donor: donor,
+      );
+      return true;
+    } on Exception catch (e) {
+      _errorMessage.add('net_error');
     }
+
     return false;
   }
 
@@ -115,7 +108,7 @@ class DonationBloc {
       donorEmail: donor.email,
       donationType: donationModel.donationType,
       donationDetails:
-          '${donationModel.donationType == RequestType.CASH ? donationModel.cashDetails.pledgedAmount.toString() : donationModel.donationType == RequestType.GOODS ? 'goods' : 'time'}',
+          '${donationModel.donationType == RequestType.CASH ? donationModel.cashDetails.pledgedAmount.toString() : donationModel.donationType == RequestType.GOODS ? '${donationModel.goodsDetails.donatedGoods.values} \n' + '\n' + donationModel.goodsDetails.comments ?? ' ' : 'time'}',
     );
     NotificationsModel notificationsModel = NotificationsModel(
       timebankId: donationModel.timebankId,

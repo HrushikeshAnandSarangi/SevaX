@@ -9,6 +9,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class RecurringRequestList extends StatefulWidget {
   final RequestModel model;
@@ -50,7 +51,7 @@ class _RecurringRequestListState extends State<RecurringRequestList> {
                       .forEach((k) => print('snapshot id is ==> ${k.id}'));
                   return RecurringList(requestModelList, widget.timebankModel);
                 } else {
-                  return Center(child: CircularProgressIndicator());
+                  return LoadingIndicator();
                 }
               }),
         ));

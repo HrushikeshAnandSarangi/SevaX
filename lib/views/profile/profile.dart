@@ -27,6 +27,7 @@ import 'package:sevaexchange/views/notifications/notification_alert_view.dart';
 import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import 'edit_profile.dart';
 import 'timezone.dart';
@@ -215,14 +216,15 @@ class _ProfilePageState extends State<ProfilePage> {
                         SizedBox(
                           height: 20,
                         ),
-                        UserDonations(
+                        GoodsAndAmountDonations(
                             isGoods: false,
                             isTimeBank: false,
+                            userId: user.sevaUserID,
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return UserDonationList(
+                                    return GoodsAndAmountDonationsList(
                                       type: "user",
                                       timebankid: "",
                                       isGoods: false,
@@ -234,14 +236,15 @@ class _ProfilePageState extends State<ProfilePage> {
                         SizedBox(
                           height: 15,
                         ),
-                        UserDonations(
+                        GoodsAndAmountDonations(
                             isGoods: true,
                             isTimeBank: false,
+                            userId: user.sevaUserID,
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return UserDonationList(
+                                    return GoodsAndAmountDonationsList(
                                       type: "user",
                                       timebankid: "",
                                       isGoods: true,
@@ -323,9 +326,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 );
                               return Container(
                                 height: 100,
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
+                                child: LoadingIndicator(),
                               );
                             },
                           ),

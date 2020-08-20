@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/timebank_message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/message_card.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class TimebankMessagePage extends StatefulWidget {
   final AdminMessageWrapperModel adminMessageWrapperModel;
@@ -51,7 +52,7 @@ class _TimebankMessagePageState extends State<TimebankMessagePage> {
         stream: _bloc.messagelist,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
           if (snapshot.data.length == 0) {
             return Center(

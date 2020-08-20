@@ -11,6 +11,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class TimeBankSevaCoin extends StatefulWidget {
   final UserModel loggedInUser;
@@ -75,7 +76,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                     ))
               ]);
         }
-        return Center(child: CircularProgressIndicator());
+        return LoadingIndicator();
       },
     );
   }

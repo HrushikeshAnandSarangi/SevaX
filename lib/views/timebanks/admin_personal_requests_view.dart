@@ -12,6 +12,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../flavor_config.dart';
 import '../core.dart';
@@ -69,7 +70,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
               return Text('Somthing went wrong!');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             }
             return StreamBuilder<List<RequestModel>>(
               stream: FirestoreManager.getPersonalRequestListStream(
@@ -81,7 +82,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                 }
                 switch (requestListSnapshot.connectionState) {
                   case ConnectionState.waiting:
-                    return Center(child: CircularProgressIndicator());
+                    return LoadingIndicator();
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;

@@ -10,6 +10,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
     as FirestoreRequestManager;
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
@@ -90,7 +91,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
 
           if (snapshot.data.length == 0) {

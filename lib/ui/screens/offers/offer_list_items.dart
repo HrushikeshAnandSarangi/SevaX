@@ -9,6 +9,7 @@ import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class OfferListItems extends StatelessWidget {
   final String timebankId;
@@ -31,9 +32,7 @@ class OfferListItems extends StatelessWidget {
             return Text('${S.of(context).general_stream_error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return LoadingIndicator();
             default:
               List<OfferModel> offersList = snapshot.data;
               offersList = filterBlockedOffersContent(

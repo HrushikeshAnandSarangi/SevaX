@@ -13,8 +13,8 @@ import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_seva_coin.dart';
-// import 'package:sevaexchange/views/core.dart';
 
 class TimeBankAboutView extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -112,7 +112,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                       ),
                     )),
                 placeholder: (context, url) {
-                  return Center(child: CircularProgressIndicator());
+                  return LoadingIndicator();
                 },
               ),
             ),
@@ -159,44 +159,54 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             SizedBox(
               height: 15,
             ),
-            UserDonations(
-                isGoods: false,
-                timebankId: widget.timebankModel.id,
-                isTimeBank: true,
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return UserDonationList(
-                            type: "timebank",
-                            isGoods: false,
-                            timebankid: widget.timebankModel.id);
-                      },
-                    ),
-                  );
-                }),
-            SizedBox(
-              height: 15,
-            ),
-            UserDonations(
-                isGoods: true,
-                timebankId: widget.timebankModel.id,
-                isTimeBank: true,
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return UserDonationList(
-                            type: "timebank",
-                            isGoods: true,
-                            timebankid: widget.timebankModel.id);
-                      },
-                    ),
-                  );
-                }),
-            SizedBox(
-              height: 20,
-            ),
+            widget.timebankModel.admins
+                    .contains(SevaCore.of(context).loggedInUser.sevaUserID)
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GoodsAndAmountDonations(
+                          userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                          isGoods: false,
+                          timebankId: widget.timebankModel.id,
+                          isTimeBank: true,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return GoodsAndAmountDonationsList(
+                                      type: "timebank",
+                                      isGoods: false,
+                                      timebankid: widget.timebankModel.id);
+                                },
+                              ),
+                            );
+                          }),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      GoodsAndAmountDonations(
+                          userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                          isGoods: true,
+                          timebankId: widget.timebankModel.id,
+                          isTimeBank: true,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return GoodsAndAmountDonationsList(
+                                      type: "timebank",
+                                      isGoods: true,
+                                      timebankid: widget.timebankModel.id);
+                                },
+                              ),
+                            );
+                          }),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  )
+                : Offstage(),
             widget.timebankModel.members.contains(
               SevaCore.of(context).loggedInUser.sevaUserID,
             )

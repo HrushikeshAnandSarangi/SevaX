@@ -8,6 +8,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 //import 'package:timezone/timezone.dart';
 class TimezoneListData {
@@ -760,7 +761,7 @@ class TimezoneListState extends State<TimezoneList> {
             return Text('Error: ${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
           UserModel userModel = snapshot.data;
           isSelected = userModel.timezone;

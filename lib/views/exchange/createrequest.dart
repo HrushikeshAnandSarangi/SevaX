@@ -28,6 +28,7 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
@@ -74,7 +75,7 @@ class _CreateRequestState extends State<CreateRequest> {
                   S.of(context).general_stream_error,
                 );
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return LoadingIndicator();
               }
               if (snapshot.data != null) {
                 return RequestCreateForm(

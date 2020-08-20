@@ -7,6 +7,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../flavor_config.dart';
 
@@ -43,7 +44,7 @@ Widget getTimebanks(BuildContext context) {
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text('Error: ${snapshot.error}');
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return LoadingIndicator();
         }
         timebankList = snapshot.data;
         timebankList.forEach((t) {

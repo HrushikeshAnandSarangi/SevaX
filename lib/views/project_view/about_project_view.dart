@@ -10,6 +10,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 import 'create_edit_project.dart';
@@ -195,9 +196,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                 ],
               ),
             )
-          : Center(
-              child: CircularProgressIndicator(),
-            ),
+          : LoadingIndicator(),
     );
   }
 

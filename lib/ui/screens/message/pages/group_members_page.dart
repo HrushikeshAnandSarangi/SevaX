@@ -5,6 +5,7 @@ import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/member_card.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class GroupMembersPage extends StatelessWidget {
   @override
@@ -14,7 +15,7 @@ class GroupMembersPage extends StatelessWidget {
       stream: _bloc.timebanksOfUser,
       builder: (_, AsyncSnapshot<List<TimebankModel>> snapshot) {
         if (snapshot.data == null) {
-          return CircularProgressIndicator();
+          return LoadingIndicator();
         }
         return StreamBuilder<List<String>>(
             stream: _bloc.selectedMembers,

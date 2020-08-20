@@ -19,6 +19,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/explore_tabview.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../../../flavor_config.dart';
 import 'home_dashboard.dart';
@@ -170,7 +171,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                         ],
                       );
                     } else {
-                      return Center(child: CircularProgressIndicator());
+                      return LoadingIndicator();
                     }
                   },
                 ),

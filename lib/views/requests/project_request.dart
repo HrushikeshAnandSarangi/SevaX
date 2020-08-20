@@ -18,6 +18,7 @@ import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 
 import '../../flavor_config.dart';
@@ -418,7 +419,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
         }
         switch (requestListSnapshot.connectionState) {
           case ConnectionState.waiting:
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           default:
             List<RequestModel> requestModelList = requestListSnapshot.data;
             requestModelList = filterCompletedRequests(

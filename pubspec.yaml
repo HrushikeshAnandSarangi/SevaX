@@ -131,8 +131,6 @@ flutter:
     - lib/assets/images/image_02.png
     - lib/assets/images/search.png
     - lib/assets/images/csv.png
-    - lib/assets/images/dollar.jpeg
-    - lib/assets/images/goods.jpeg
     # - lib/assets/images/cv.png
     - lib/assets/i18n/
     - lib/assets/images/apple-id-outline-yes_2x.png
@@ -158,6 +156,8 @@ flutter:
     - images/icons/message.png
     - images/icons/remove_user.png
     - images/icons/camera.png
+    - images/icons/cash_donation.png
+    - images/icons/goods_donation.png
 
   fonts:
     # - family: Montserrat

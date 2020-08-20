@@ -52,7 +52,7 @@
 //       builder: (context, snapshot) {
 //         if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
 //         if (snapshot.connectionState == ConnectionState.waiting) {
-//           return Center(child: CircularProgressIndicator());
+//           return LoadingIndicator();
 //         }
 
 //         timebankList = snapshot.data;

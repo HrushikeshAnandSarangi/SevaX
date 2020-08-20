@@ -119,7 +119,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return LoadingIndicator();
                     }
                     RequestModel model = snapshot.data;
                     return RequestAcceptedWidget(
@@ -286,7 +286,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return LoadingIndicator();
                     }
                     RequestModel model = snapshot.data;
                     return RequestCompleteWidget(
@@ -491,7 +491,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return LoadingIndicator();
                     }
                     RequestModel model = snapshot.data;
                     return NotificationCard(
@@ -521,8 +521,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       },
                       photoUrl: donationApproveModel.donorPhotoUrl,
                       subTitle:
-                          '${donationApproveModel.donorName.toLowerCase() + ' donated ' + donationApproveModel.donationType.toString().split('.')[1]}, ${S.of(context).notifications_tap_to_view}',
-                      title: 'Donation approval',
+                          '${donationApproveModel.donorName.toLowerCase() + ' ${S.of(context).donated} ' + donationApproveModel.donationType.toString().split('.')[1]}, ${S.of(context).tap_to_view_details}',
+                      title: S.of(context).donation_acknowledge,
                     );
                   },
                 );

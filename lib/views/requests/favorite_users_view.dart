@@ -8,6 +8,7 @@ import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 enum FavoriteUserStatus { LOADING, LOADED, EMPTY }
 
@@ -105,7 +106,7 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
             },
           );
         }
-        return Center(child: CircularProgressIndicator());
+        return LoadingIndicator();
       },
     );
   }

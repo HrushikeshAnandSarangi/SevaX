@@ -5,6 +5,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
@@ -99,7 +100,7 @@ class TimebankRequestsState extends State<TimebankRequests> {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
 
           if (snapshot.data.length == 0) {
@@ -482,7 +483,7 @@ class ApprovedMembers extends StatelessWidget {
             return Text('Error: ${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
 
           if (snapshot.data.length == 0) {

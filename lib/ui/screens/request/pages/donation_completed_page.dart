@@ -3,10 +3,10 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/donation_accepted_bloc.dart';
-import 'package:sevaexchange/ui/screens/request/widgets/amount_raised_progress_indicator.dart';
+import 'package:sevaexchange/ui/screens/request/widgets/donation_participant_card.dart';
+import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-import 'package:sevaexchange/widgets/participant_card.dart';
 
 class DonationCompletedPage extends StatelessWidget {
   final RequestModel requestModel;
@@ -40,37 +40,115 @@ class DonationCompletedPage extends StatelessWidget {
           );
         }
         return SingleChildScrollView(
+          padding: EdgeInsets.all(20),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 20.0,
-                ),
-                child: AmountRaisedProgressIndicator(
-                  totalAmountRaised: totalAmountRaised,
-                  targetAmount: requestModel.cashModel.targetAmount,
-                ),
+              _DonationProgressWidget(
+                isCashDonation: requestModel.requestType == RequestType.CASH,
+                quantity: totalAmountRaised
+                    .toString(), //update to support goods quantity
               ),
-              ListView.builder(
+              // AmountRaisedProgressIndicator(
+              //   totalAmountRaised: totalAmountRaised,
+              //   targetAmount: requestModel.cashModel.targetAmount,
+              // ),
+              Divider(),
+              SizedBox(height: 8),
+              ListView.separated(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: donations.length,
                 itemBuilder: (_, index) {
                   DonationModel model = donations[index];
-                  return RequestParticipantCard(
+                  return DonationParticipantCard(
                     name: model.donorDetails.name,
-                    imageUrl: model.donorDetails.photoUrl,
-                    bio: model.donorDetails.bio,
-                    buttonTitle: 'ACKNOWLEDGED',
-                    buttonColor: Theme.of(context).primaryColor,
+                    isCashDonation: model.donationType == RequestType.CASH,
+                    goods: model.goodsDetails?.donatedGoods != null
+                        ? List<String>.from(
+                            model.goodsDetails.donatedGoods.values,
+                          )
+                        : [],
+                    photoUrl: model.donorDetails.photoUrl,
+                    amount: model.cashDetails.pledgedAmount.toString(),
+                    timestamp: model.timestamp,
+                    comments: model.goodsDetails.comments,
                   );
+                },
+                separatorBuilder: (_, index) {
+                  return Divider();
                 },
               ),
             ],
           ),
         );
       },
+    );
+  }
+}
+
+class _DonationProgressWidget extends StatelessWidget {
+  final bool isCashDonation;
+  final String quantity;
+  const _DonationProgressWidget({
+    Key key,
+    this.isCashDonation,
+    this.quantity,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Total ${isCashDonation ? 'Donations' : 'Goods'} Received',
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.grey,
+          ),
+        ),
+        SizedBox(height: 8),
+        Row(
+          children: [
+            Image.asset(
+              isCashDonation
+                  ? SevaAssetIcon.donateCash
+                  : SevaAssetIcon.donateGood,
+              width: 35,
+              height: 35,
+            ),
+            SizedBox(width: 12),
+            isCashDonation
+                ? Text(
+                    '\$$quantity',
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                : RichText(
+                    text: TextSpan(
+                      text: '$quantity',
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                      children: [
+                        TextSpan(text: ' '),
+                        TextSpan(
+                          text: 'Donations',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+          ],
+        ),
+      ],
     );
   }
 }

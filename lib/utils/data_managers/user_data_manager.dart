@@ -61,10 +61,13 @@ Future<int> getUserDonatedGoodsAndAmount({
       data.documents.forEach((documentSnapshot) {
         DonationModel donationModel =
             DonationModel.fromMap(documentSnapshot.data);
-        if (donationModel.donationType == RequestType.CASH) {
-          totalGoodsOrAmount += donationModel.cashDetails.pledgedAmount;
-        } else {
-          totalGoodsOrAmount += donationModel.goodsDetails.donatedGoods.length;
+        if (donationModel.donationStatus == DonationStatus.ACKNOWLEDGED) {
+          if (donationModel.donationType == RequestType.CASH) {
+            totalGoodsOrAmount += donationModel.cashDetails.pledgedAmount;
+          } else {
+            totalGoodsOrAmount +=
+                donationModel.goodsDetails.donatedGoods.values.length;
+          }
         }
         print('donated ${totalGoodsOrAmount.toString()}');
       });
@@ -93,7 +96,8 @@ Future<int> getTimebankRaisedAmountAndGoods({
       data.documents.forEach((documentSnapshot) {
         DonationModel donationModel =
             DonationModel.fromMap(documentSnapshot.data);
-        if (donationModel.donatedToTimebank) {
+        if (donationModel.donatedToTimebank &&
+            donationModel.donationStatus == DonationStatus.ACKNOWLEDGED) {
           if (donationModel.donationType == RequestType.CASH) {
             totalGoodsOrAmount += donationModel.cashDetails.pledgedAmount;
           } else if (donationModel.donationType == RequestType.GOODS) {
@@ -137,7 +141,8 @@ Stream<List<DonationModel>> getDonationList(
         snapshot.documents.forEach((document) {
           DonationModel model = DonationModel.fromMap(document.data);
           print(model);
-          donationsList.add(model);
+          if (model.donationStatus == DonationStatus.ACKNOWLEDGED)
+            donationsList.add(model);
         });
         donationSink.add(donationsList);
       },

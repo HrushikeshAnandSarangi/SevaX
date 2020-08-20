@@ -5,6 +5,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/request_donation_dispute_bloc.dart';
+import 'package:sevaexchange/ui/screens/request/widgets/checkbox_with_text.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/pledged_amount_card.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -385,22 +386,15 @@ class _GoodsFlow extends StatelessWidget {
               itemCount: goods.length,
               itemBuilder: (context, index) {
                 String key = keys[index];
-                return Row(
-                  children: [
-                    Checkbox(
-                      activeColor: Colors.black,
-                      checkColor: Colors.white,
-                      value: snapshot.data?.containsKey(key) ?? false,
-                      onChanged: (value) {
-                        _bloc.toggleGoodsReceived(
-                          key,
-                          goods[key],
-                        );
-                      },
-                    ),
-                    SizedBox(width: 12),
-                    Text('${goods[keys[index]]}')
-                  ],
+                return CheckboxWithText(
+                  value: snapshot.data?.containsKey(key) ?? false,
+                  onChanged: (value) {
+                    _bloc.toggleGoodsReceived(
+                      key,
+                      goods[key],
+                    );
+                  },
+                  text: goods[keys[index]],
                 );
               },
             );

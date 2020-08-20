@@ -28,6 +28,7 @@ import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/group_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../flavor_config.dart';
@@ -513,7 +514,7 @@ class DiscussionListState extends State<DiscussionList> {
                 return Container(
                   padding: EdgeInsets.only(
                       top: MediaQuery.of(context).size.height / 3),
-                  child: Center(child: CircularProgressIndicator()),
+                  child: LoadingIndicator(),
                 );
 
                 break;

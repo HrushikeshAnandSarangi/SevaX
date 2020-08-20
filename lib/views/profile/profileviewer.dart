@@ -12,11 +12,13 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/report_member_page.dart';
+import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 //TODO update bio and remove un-necessary stuff
 
@@ -71,7 +73,7 @@ class ProfileViewerState extends State<ProfileViewer> {
           if (snapshot.hasError) return Text('Error: ${snapshot.error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             default:
               user = UserModel.fromMap(snapshot.data.data, 'profile_viewer');
 
@@ -161,7 +163,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                         horizontal: 25,
                       ),
                       child: Text(
-                        S.of(context).upload_cv_resume,
+                        S.of(context).cv_resume,
                         style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w700,
@@ -207,6 +209,22 @@ class ProfileViewerState extends State<ProfileViewer> {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    GoodsAndAmountDonations(
+                        userId: user.sevaUserID,
+                        isGoods: false,
+                        isTimeBank: false,
+                        onTap: () {}),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    GoodsAndAmountDonations(
+                        userId: user.sevaUserID,
+                        isGoods: true,
+                        isTimeBank: false,
+                        onTap: () {}),
                     Padding(
                       padding:
                           EdgeInsets.symmetric(horizontal: 25, vertical: 20),
@@ -220,9 +238,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                           }
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
+                            return LoadingIndicator();
                           }
 
                           List<RequestModel> requestList = snapshot.data;

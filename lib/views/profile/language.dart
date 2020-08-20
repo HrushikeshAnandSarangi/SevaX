@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class LanguageListData {
   final languagelist = [
@@ -88,7 +89,7 @@ class LanguageListState extends State<LanguageList> {
             return Text('Error: ${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
           UserModel userModel = snapshot.data;
           isSelected = userModel.language;

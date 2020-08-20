@@ -12,6 +12,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 class RequestDetailsAboutPage extends StatefulWidget {
@@ -713,7 +714,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             '${S.of(context).general_stream_error}',
           );
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return LoadingIndicator();
         }
 
         if (widget.requestItem.approvedUsers.length == 0) {

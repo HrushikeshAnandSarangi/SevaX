@@ -11,6 +11,7 @@ import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/group_card.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class GroupTabView extends StatefulWidget {
   @override
@@ -44,9 +45,7 @@ class _GroupTabViewState extends State<GroupTabView> {
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                return LoadingIndicator();
               }
               if (snapshot.data.timebanks == null ||
                   snapshot.data.timebanks.isEmpty) {

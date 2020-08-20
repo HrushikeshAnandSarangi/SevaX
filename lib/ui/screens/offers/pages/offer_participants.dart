@@ -7,6 +7,7 @@ import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/participant_card.dart';
 
 class OfferParticipants extends StatelessWidget {
@@ -21,14 +22,13 @@ class OfferParticipants extends StatelessWidget {
         stream: _bloc.participants,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return LoadingIndicator();
           }
           if (snapshot.data == null || snapshot.data.isEmpty) {
             return Container(
               height: MediaQuery.of(context).size.height * 0.75,
               alignment: Alignment.center,
-              child: Text(S.of(context)
-                  .no_participants_yet),
+              child: Text(S.of(context).no_participants_yet),
             );
           }
           return ListView.builder(

@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/member_list_builder.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class TimebankMembersPage extends StatefulWidget {
   @override
@@ -27,7 +28,7 @@ class _TimebankMembersPageState extends State<TimebankMembersPage> {
           stream: _bloc.members,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
+              return LoadingIndicator();
             }
 
             if (snapshot.data.length == 0) {

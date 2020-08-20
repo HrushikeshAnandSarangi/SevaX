@@ -25,6 +25,7 @@ import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 
@@ -381,7 +382,7 @@ class _RequestCardViewState extends State<RequestCardView> {
               );
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             }
             UserModel userModel = snapshot.data;
             String usertimezone = userModel.timezone;
@@ -597,7 +598,7 @@ class NearRequestListItems extends StatelessWidget {
             return Text(S.of(context).general_stream_error);
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
           UserModel user = snapshot.data;
           String loggedintimezone = user.timezone;
@@ -617,7 +618,7 @@ class NearRequestListItems extends StatelessWidget {
               }
               switch (requestListSnapshot.connectionState) {
                 case ConnectionState.waiting:
-                  return Center(child: CircularProgressIndicator());
+                  return LoadingIndicator();
 
                 default:
                   List<RequestModel> requestModelList =
@@ -877,7 +878,7 @@ class RequestListItemsState extends State<RequestListItems> {
               return Text('${S.of(context).general_stream_error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             }
             UserModel user = snapshot.data;
             String loggedintimezone = user.timezone;
@@ -890,7 +891,7 @@ class RequestListItemsState extends State<RequestListItems> {
                       return Text('${S.of(context).general_stream_error}');
                     }
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return LoadingIndicator();
                     }
                     if (snapshot.hasData) {
                       List<RequestModel> requestModelList =
@@ -935,7 +936,7 @@ class RequestListItemsState extends State<RequestListItems> {
                   }
                   switch (requestListSnapshot.connectionState) {
                     case ConnectionState.waiting:
-                      return Center(child: CircularProgressIndicator());
+                      return LoadingIndicator();
                     default:
                       List<RequestModel> requestModelList =
                           requestListSnapshot.data;
@@ -971,7 +972,7 @@ class RequestListItemsState extends State<RequestListItems> {
               return Text('${S.of(context).general_stream_error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             }
             return StreamBuilder<List<RequestModel>>(
               stream: FirestoreManager.getAllRequestListStream(),
@@ -982,7 +983,7 @@ class RequestListItemsState extends State<RequestListItems> {
                 }
                 switch (requestListSnapshot.connectionState) {
                   case ConnectionState.waiting:
-                    return Center(child: CircularProgressIndicator());
+                    return LoadingIndicator();
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
