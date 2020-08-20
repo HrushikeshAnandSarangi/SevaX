@@ -148,11 +148,29 @@ class NotificationsView extends State<NotificationViewHolder> {
                         photoUrl: notification.data["requestorphotourl"],
                       );
                       break;
+                    case NotificationType.RecurringOfferUpdated:
+                      ReccuringOfferUpdated eventData =
+                      ReccuringOfferUpdated.fromMap(notification.data);
+                      return NotificationCard(
+                        title: "Offer Updated",
+                        subTitle:
+                        "${AppLocalizations.of(context).translate('notifications', 'you_signed_up_for')} ***eventName ${AppLocalizations.of(context).translate('notifications', 'on')} ***eventDate. ${AppLocalizations.of(context).translate('notifications', 'owner_changes')}"
+                            .replaceFirst('***eventName', eventData.eventName)
+                            .replaceFirst(
+                            '***eventDate',
+                            DateTime.fromMillisecondsSinceEpoch(
+                              eventData.eventDate,
+                            ).toString()),
+                        entityName: "Request Updated",
+                        photoUrl: eventData.photoUrl,
+                        onDismissed: onDismissed,
+                      );
+                      break;
                     case NotificationType.RecurringRequestUpdated:
                       ReccuringRequestUpdated eventData =
-                          ReccuringRequestUpdated.fromMap(notification.data);
+                      ReccuringRequestUpdated.fromMap(notification.data);
                       return NotificationCard(
-                        title: "Request Updated",
+                        title: "Offer Updated",
                         subTitle:
                             "${AppLocalizations.of(context).translate('notifications', 'you_signed_up_for')} ***eventName ${AppLocalizations.of(context).translate('notifications', 'on')} ***eventDate. ${AppLocalizations.of(context).translate('notifications', 'owner_changes')}"
                                 .replaceFirst(

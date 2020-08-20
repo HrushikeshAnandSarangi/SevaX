@@ -390,19 +390,6 @@ class RepeatWidgetState extends State<RepeatWidget> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Container(
-                                margin: EdgeInsets.all(8.0),
-                                child: InkWell(
-                                  onTap: _cancelOnAfter,
-                                  child: Text(
-                                      "${AppLocalizations.of(context).translate('create_request', 'repeat_cancel')}",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Europa',
-                                        color: Colors.black12,
-                                      )),
-                                )),
-                            Container(
                               margin: EdgeInsets.all(8.0),
                               child: InkWell(
                                 onTap: _selectOnAfter,
@@ -416,6 +403,19 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                     )),
                               ),
                             ),
+                            Container(
+                                margin: EdgeInsets.all(8.0),
+                                child: InkWell(
+                                  onTap: _cancelOnAfter,
+                                  child: Text(
+                                      "${AppLocalizations.of(context).translate('create_request', 'repeat_cancel')}",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Europa',
+                                        color: Colors.black12,
+                                      )),
+                                )),
                           ],
                         ),
                       ),
