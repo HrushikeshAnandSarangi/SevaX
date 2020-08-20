@@ -7,6 +7,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/MembersInvolved.dart';
 
 import '../../flavor_config.dart';
@@ -87,7 +88,7 @@ class RequestStatusViewState extends State<RequestStatusView> {
               return Text('Error ${snapshot.error}');
             }
             // By default, show a loading spinner.
-            return CircularProgressIndicator();
+            return LoadingIndicator();
           },
         )));
   }

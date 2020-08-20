@@ -9,6 +9,7 @@ import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class MembersTabView extends StatefulWidget {
   @override
@@ -53,9 +54,7 @@ class _MembersTabViewState extends State<MembersTabView> {
             builder: (context, snapshot) {
 //              print(snapshot.error);
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                return LoadingIndicator();
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 print("===>> ${snapshot.data}");

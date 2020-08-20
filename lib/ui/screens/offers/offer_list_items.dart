@@ -61,9 +61,7 @@ class OfferListItems extends StatelessWidget {
             return Text('${S.of(context).general_stream_error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return LoadingIndicator();
             default:
               List<OfferModel> offersList = snapshot.data;
               offersList = filterBlockedOffersContent(
@@ -218,9 +216,7 @@ class NearOfferListItems extends StatelessWidget {
             return Text('${S.of(context).general_stream_error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return LoadingIndicator();
             default:
               List<OfferModel> offersList = snapshot.data;
               offersList = filterBlockedOffersContent(
@@ -257,9 +253,7 @@ class NearOfferListItems extends StatelessWidget {
             return Text('${S.of(context).general_stream_error}');
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return LoadingIndicator();
             default:
               List<OfferModel> offersList = snapshot.data;
               offersList = filterBlockedOffersContent(

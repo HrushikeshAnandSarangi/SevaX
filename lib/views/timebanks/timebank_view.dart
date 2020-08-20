@@ -19,6 +19,7 @@ import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_join_request.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/views/timebanks/timebankedit.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../flavor_config.dart';
@@ -83,7 +84,7 @@ class _TimebankViewState extends State<TimebankView> {
                 ],
               ),
               body: Center(
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(),
               ),
             );
             break;

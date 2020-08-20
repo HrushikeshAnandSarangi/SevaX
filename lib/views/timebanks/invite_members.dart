@@ -170,7 +170,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             future: getTimebankDetails,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting)
-                return CircularProgressIndicator();
+                return LoadingIndicator();
               return inviteCodeWidget;
             },
           ),
