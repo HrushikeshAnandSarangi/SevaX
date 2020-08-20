@@ -3,8 +3,8 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/donation_accepted_bloc.dart';
-import 'package:sevaexchange/ui/screens/request/widgets/amount_raised_progress_indicator.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/donation_participant_card.dart';
+import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
@@ -43,10 +43,16 @@ class DonationCompletedPage extends StatelessWidget {
           padding: EdgeInsets.all(20),
           child: Column(
             children: [
-              AmountRaisedProgressIndicator(
-                totalAmountRaised: totalAmountRaised,
-                targetAmount: requestModel.cashModel.targetAmount,
+              _DonationProgressWidget(
+                isCashDonation: requestModel.requestType == RequestType.CASH,
+                quantity: totalAmountRaised
+                    .toString(), //update to support goods quantity
               ),
+              // AmountRaisedProgressIndicator(
+              //   totalAmountRaised: totalAmountRaised,
+              //   targetAmount: requestModel.cashModel.targetAmount,
+              // ),
+              Divider(),
               SizedBox(height: 8),
               ListView.separated(
                 shrinkWrap: true,
@@ -75,6 +81,73 @@ class DonationCompletedPage extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _DonationProgressWidget extends StatelessWidget {
+  final bool isCashDonation;
+  final String quantity;
+  const _DonationProgressWidget({
+    Key key,
+    this.isCashDonation,
+    this.quantity,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Total ${isCashDonation ? 'Donations' : 'Goods'} Received',
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.grey,
+          ),
+        ),
+        SizedBox(height: 8),
+        Row(
+          children: [
+            Image.asset(
+              isCashDonation
+                  ? SevaAssetIcon.donateCash
+                  : SevaAssetIcon.donateGood,
+              width: 35,
+              height: 35,
+            ),
+            SizedBox(width: 12),
+            isCashDonation
+                ? Text(
+                    '\$$quantity',
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                : RichText(
+                    text: TextSpan(
+                      text: '$quantity',
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                      children: [
+                        TextSpan(text: ' '),
+                        TextSpan(
+                          text: 'Donations',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+          ],
+        ),
+      ],
     );
   }
 }
