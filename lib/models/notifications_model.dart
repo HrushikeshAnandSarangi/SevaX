@@ -163,6 +163,8 @@ enum NotificationType {
   GOODS_DONATION_MODIFIED_BY_CREATOR, //donor
   CASH_DONATION_ACKNOWLEDGED_BY_DONOR, //creator and timebank
   GOODS_DONATION_ACKNOWLEDGED_BY_DONOR, //creator and timebank
+  CASH_DONATION_MODIFIED_BY_DONOR,
+  GOODS_DONATION_MODIFIED_BY_DONOR,
 }
 
 //Check the method
@@ -233,6 +235,10 @@ Map<String, NotificationType> typeMapper = {
       NotificationType.CASH_DONATION_ACKNOWLEDGED_BY_DONOR,
   "GOODS_DONATION_ACKNOWLEDGED_BY_DONOR":
       NotificationType.GOODS_DONATION_ACKNOWLEDGED_BY_DONOR,
+  "CASH_DONATION_MODIFIED_BY_DONOR":
+      NotificationType.CASH_DONATION_MODIFIED_BY_DONOR,
+  "GOODS_DONATION_MODIFIED_BY_DONOR":
+      NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR,
 };
 
 ClearNotificationModel clearNotificationModelFromJson(String str) =>

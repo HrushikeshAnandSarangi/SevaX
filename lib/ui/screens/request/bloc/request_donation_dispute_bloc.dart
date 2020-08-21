@@ -36,35 +36,50 @@ class RequestDonationDisputeBloc {
     DonationModel donationModel,
     RequestMode requestMode,
   }) async {
-    await _donationsRepository.acknowledgeDonation(
-      acknowledgementNotification: getAcknowlegementNotification(
-        model: donationModel,
-        operatorMode: operationMode,
-        requestMode: requestMode,
-        notificationType: pledgedAmount == double.parse(_cashAmount.value)
-            ? NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY
-            : NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR,
-      ),
-      associatedId: operationMode == OperatingMode.USER
-          ? donationModel.timebankId
-          : donationModel.donorDetails.email,
-      donationId: donationId,
-      isTimebankNotification: operationMode == OperatingMode.USER,
-      notificationId: notificationId,
-    );
-    return true;
+    var status = pledgedAmount == double.parse(_cashAmount.value);
+
+    return await _donationsRepository
+        .acknowledgeDonation(
+          donationStatus:
+              status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED,
+          associatedId: operationMode == OperatingMode.USER
+              ? donationModel.timebankId
+              : donationModel.donorDetails.email,
+          donationId: donationId,
+          isTimebankNotification: operationMode == OperatingMode.USER,
+          notificationId: notificationId,
+          acknowledgementNotification: getAcknowlegementNotification(
+            updatedAmount: pledgedAmount,
+            model: donationModel,
+            operatorMode: operationMode,
+            requestMode: requestMode,
+            notificationType: status
+                ? NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY
+                : OperatingMode == OperatingMode.CREATOR
+                    ? NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR
+                    : NotificationType.CASH_DONATION_MODIFIED_BY_DONOR,
+          ),
+        )
+        .then((value) => true)
+        .catchError((onError) => false);
   }
 
   NotificationsModel getAcknowlegementNotification({
+    double updatedAmount,
     DonationModel model,
     OperatingMode operatorMode,
     RequestMode requestMode,
     NotificationType notificationType,
+    Map<String, dynamic> customSelection,
   }) {
+    var updatedModel = model;
+    updatedModel.cashDetails.pledgedAmount = updatedAmount.toInt();
+    updatedModel.goodsDetails.donatedGoods = customSelection;
+
     return NotificationsModel(
       type: notificationType,
       communityId: model.communityId,
-      data: model.toMap(),
+      data: updatedModel.toMap(),
       id: Uuid().generateV4(),
       isRead: false,
       isTimebankNotification: requestMode == RequestMode.TIMEBANK_REQUEST,
@@ -79,6 +94,7 @@ class RequestDonationDisputeBloc {
   }
 
   Future<bool> disputeGoods({
+    Map<String, dynamic> customSelection,
     OperatingMode operationMode,
     String donationId,
     String notificationId,
@@ -86,17 +102,24 @@ class RequestDonationDisputeBloc {
     RequestMode requestMode,
     Map<String, String> donatedGoods,
   }) async {
+    var status = listEquals(
+      List.from(donatedGoods.keys),
+      List.from(_goodsRecieved.value.keys),
+    );
     await _donationsRepository.acknowledgeDonation(
+      donationStatus:
+          status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED,
       acknowledgementNotification: getAcknowlegementNotification(
-          model: donationModel,
-          operatorMode: operationMode,
-          requestMode: requestMode,
-          notificationType: listEquals(
-            List.from(donatedGoods.keys),
-            List.from(_goodsRecieved.value.keys),
-          )
-              ? NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY
-              : (operationMode == OperatingMode.CREATOR)),
+        model: donationModel,
+        operatorMode: operationMode,
+        requestMode: requestMode,
+        notificationType: status
+            ? NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY
+            : (operationMode == OperatingMode.CREATOR
+                ? NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR
+                : NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR),
+        customSelection: customSelection,
+      ),
       associatedId: operationMode == OperatingMode.USER
           ? donationModel.timebankId
           : donationModel.donorDetails.email,

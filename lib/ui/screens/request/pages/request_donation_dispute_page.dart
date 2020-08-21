@@ -7,7 +7,6 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/request_donation_dispute_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/checkbox_with_text.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/pledged_amount_card.dart';
-import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
@@ -21,8 +20,6 @@ enum OperatingMode { CREATOR, USER }
 
 class RequestDonationDisputePage extends StatefulWidget {
   final DonationModel model;
-  // final Requestoe
-
   const RequestDonationDisputePage({
     Key key,
     this.model,
@@ -52,27 +49,6 @@ class _RequestDonationDisputePageState
   void dispose() {
     _bloc.dispose();
     super.dispose();
-  }
-
-  void createMessage(
-    isTimebankMessage,
-    timebankId,
-    communityId,
-    sender,
-    reciever,
-  ) {
-    createAndOpenChat(
-      isTimebankMessage: isTimebankMessage,
-      context: context,
-      timebankId: timebankId,
-      communityId: communityId,
-      sender: sender,
-      reciever: reciever,
-      isFromRejectCompletion: false,
-      onChatCreate: () {
-        Navigator.pop(context);
-      },
-    );
   }
 
   @override
@@ -162,31 +138,11 @@ class _RequestDonationDisputePageState
                     onPressed: () async {
                       operatingMode = OperatingMode.CREATOR;
 
-                      switch (operatingMode) {
-                        case OperatingMode.CREATOR:
-                          if (widget.model.donatedToTimebank) {
-                            chatModeForDispute =
-                                ChatModeForDispute.TIMEBANK_TO_MEMBER;
-                          } else {
-                            chatModeForDispute =
-                                ChatModeForDispute.MEMBER_TO_MEMBER;
-                          }
-                          break;
-
-                        case OperatingMode.USER:
-                          if (widget.model.donatedToTimebank) {
-                            chatModeForDispute =
-                                ChatModeForDispute.MEMBER_TO_TIMEBANK;
-                          } else {
-                            chatModeForDispute =
-                                ChatModeForDispute.MEMBER_TO_MEMBER;
-                          }
-                          break;
-                      }
-
-                      switch (chatModeForDispute) {
+                      switch (getOperatingMode(
+                        operatingMode,
+                        widget.model.donatedToTimebank,
+                      )) {
                         case ChatModeForDispute.MEMBER_TO_MEMBER:
-                          print("==========MEMBER_TO_MEMBER===============");
                           UserModel fundRaiserDetails =
                               await FirestoreManager.getUserForId(
                             sevaUserId: widget.model.donatedTo,
@@ -287,6 +243,27 @@ class _RequestDonationDisputePageState
         ),
       ),
     );
+  }
+
+  ChatModeForDispute getOperatingMode(
+    OperatingMode operatingMode,
+    bool donatedToTimebank,
+  ) {
+    switch (operatingMode) {
+      case OperatingMode.CREATOR:
+        if (donatedToTimebank)
+          return ChatModeForDispute.TIMEBANK_TO_MEMBER;
+        else
+          return ChatModeForDispute.MEMBER_TO_MEMBER;
+
+        break;
+
+      case OperatingMode.USER:
+        if (donatedToTimebank)
+          return ChatModeForDispute.MEMBER_TO_TIMEBANK;
+        else
+          return ChatModeForDispute.MEMBER_TO_MEMBER;
+    }
   }
 }
 
