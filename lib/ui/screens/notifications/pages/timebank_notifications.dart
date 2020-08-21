@@ -77,7 +77,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   notification: notification,
                 );
                 break;
-              case NotificationType.TypeApproveDonation:
+              case NotificationType.ACKNOWLEDGE_DONOR_DONATION:
                 print("notification data ${notification.data}");
                 DonationApproveModel donationApproveModel =
                     DonationApproveModel.fromMap(notification.data);

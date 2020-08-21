@@ -4181,6 +4181,16 @@ class S {
         'Cash',
         name: 'cash',
       );
+
+  String get received => Intl.message(
+        'Received',
+        name: 'received',
+      );
+
+  String get total => Intl.message(
+        'Total',
+        name: 'total',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

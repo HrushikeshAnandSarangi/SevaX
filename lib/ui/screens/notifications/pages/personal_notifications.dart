@@ -478,7 +478,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 );
                 break;
 
-              case NotificationType.TypeApproveDonation:
+              case NotificationType.ACKNOWLEDGE_DONOR_DONATION:
                 print("notification data ${notification.data}");
                 DonationApproveModel donationApproveModel =
                     DonationApproveModel.fromMap(notification.data);
@@ -736,7 +736,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   onDismissed: onDismissed,
                 );
 
-              case NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULY:
+              case NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY:
               case NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY:
                 return PersonalNotificationsRedcerForDonations
                     .getWidgetForSuccessfullDonation(onDismissed: onDismissed);

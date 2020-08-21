@@ -42,7 +42,7 @@ class RequestDonationDisputeBloc {
         operatorMode: operationMode,
         requestMode: requestMode,
         notificationType: pledgedAmount == double.parse(_cashAmount.value)
-            ? NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULY
+            ? NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY
             : NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR,
       ),
       associatedId: operationMode == OperatingMode.USER

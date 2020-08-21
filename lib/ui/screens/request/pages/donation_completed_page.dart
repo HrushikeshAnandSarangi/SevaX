@@ -36,7 +36,7 @@ class DonationCompletedPage extends StatelessWidget {
         });
         if (donations.isEmpty) {
           return Center(
-            child: Text('No Donations Yet'),
+            child: Text(S.of(context).no_donation_yet),
           );
         }
         return SingleChildScrollView(
@@ -101,7 +101,7 @@ class _DonationProgressWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Total ${isCashDonation ? 'Donations' : 'Goods'} Received',
+          '${S.of(context).total} ${isCashDonation ? '${S.of(context).donations}' : S.of(context).goods} ${S.of(context).received}',
           style: TextStyle(
             fontSize: 18,
             color: Colors.grey,
@@ -137,7 +137,7 @@ class _DonationProgressWidget extends StatelessWidget {
                       children: [
                         TextSpan(text: ' '),
                         TextSpan(
-                          text: 'Donations',
+                          text: S.of(context).donations,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

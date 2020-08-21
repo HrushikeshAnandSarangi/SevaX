@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/models/donation_approve_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -99,21 +98,21 @@ class DonationBloc {
       {DonationModel donationModel,
       RequestModel requestModel,
       UserModel donor}) async {
-    DonationApproveModel donationApproveModel = DonationApproveModel(
-      donationId: donationModel.id,
-      donorName: donor.fullname,
-      donorPhotoUrl: donor.photoURL,
-      requestId: requestModel.id,
-      requestTitle: requestModel.title,
-      donorEmail: donor.email,
-      donationType: donationModel.donationType,
-      donationDetails:
-          '${donationModel.donationType == RequestType.CASH ? donationModel.cashDetails.pledgedAmount.toString() : donationModel.donationType == RequestType.GOODS ? '${donationModel.goodsDetails.donatedGoods.values} \n' + '\n' + donationModel.goodsDetails.comments ?? ' ' : 'time'}',
-    );
+//    DonationApproveModel donationApproveModel = DonationApproveModel(
+//      donationId: donationModel.id,
+//      donorName: donor.fullname,
+//      donorPhotoUrl: donor.photoURL,
+//      requestId: requestModel.id,
+//      requestTitle: requestModel.title,
+//      donorEmail: donor.email,
+//      donationType: donationModel.donationType,
+//      donationDetails:
+//          '${donationModel.donationType == RequestType.CASH ? donationModel.cashDetails.pledgedAmount.toString() : donationModel.donationType == RequestType.GOODS ? '${donationModel.goodsDetails.donatedGoods.values} \n' + '\n' + donationModel.goodsDetails.comments ?? ' ' : 'time'}',
+//    );
     NotificationsModel notificationsModel = NotificationsModel(
       timebankId: donationModel.timebankId,
       communityId: donationModel.communityId,
-      type: NotificationType.TypeApproveDonation,
+      type: NotificationType.ACKNOWLEDGE_DONOR_DONATION,
       id: donationModel.notificationId,
       isRead: false,
       isTimebankNotification:
@@ -124,7 +123,7 @@ class DonationBloc {
       targetUserId: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
           ? requestModel.sevaUserId
           : requestModel.timebankId,
-      data: donationApproveModel.toMap(),
+      data: donationModel.toMap(),
     );
 
     switch (requestModel.requestMode) {

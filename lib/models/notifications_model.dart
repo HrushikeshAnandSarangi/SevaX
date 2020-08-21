@@ -132,7 +132,6 @@ enum NotificationType {
   TypeChangeOwnership,
   TypeMemberAdded,
   GroupJoinInvite,
-  TypeApproveDonation,
   TYPE_DEBIT_FROM_OFFER,
   TYPE_CREDIT_FROM_OFFER_ON_HOLD,
   TYPE_CREDIT_FROM_OFFER_APPROVED,
@@ -157,12 +156,13 @@ enum NotificationType {
   MEMBER_DEMOTED_FROM_ADMIN,
 
   //Donation notifications
-  CASH_DONATION_COMPLETED_SUCCESSFULY,
-  GOODS_DONATION_COMPLETED_SUCCESSFULLY,
-  CASH_DONATION_MODIFIED_BY_CREATOR,
-  GOODS_DONATION_MODIFIED_BY_CREATOR,
-  CASH_DONATION_ACKNOWLEDGED_BY_DONOR,
-  GOODS_DONATION_ACKNOWLEDGED_BY_DONOR,
+  ACKNOWLEDGE_DONOR_DONATION, //creator and timebank
+  CASH_DONATION_COMPLETED_SUCCESSFULLY, //donor
+  GOODS_DONATION_COMPLETED_SUCCESSFULLY, //donor
+  CASH_DONATION_MODIFIED_BY_CREATOR, //donor
+  GOODS_DONATION_MODIFIED_BY_CREATOR, //donor
+  CASH_DONATION_ACKNOWLEDGED_BY_DONOR, //creator and timebank
+  GOODS_DONATION_ACKNOWLEDGED_BY_DONOR, //creator and timebank
 }
 
 //Check the method
@@ -192,7 +192,7 @@ Map<String, NotificationType> typeMapper = {
   "TypeMemberAdded": NotificationType.TypeMemberAdded,
   "TypeChangeOwnership": NotificationType.TypeChangeOwnership,
   "GroupJoinInvite": NotificationType.GroupJoinInvite,
-  "TypeApproveDonation": NotificationType.TypeApproveDonation,
+  "ACKNOWLEDGE_DONOR_DONATION": NotificationType.ACKNOWLEDGE_DONOR_DONATION,
   "TYPE_DEBIT_FROM_OFFER": NotificationType.TYPE_DEBIT_FROM_OFFER,
   "TYPE_CREDIT_FROM_OFFER_ON_HOLD":
       NotificationType.TYPE_CREDIT_FROM_OFFER_ON_HOLD,
@@ -222,7 +222,7 @@ Map<String, NotificationType> typeMapper = {
 
   //DONATIONS
   "CASH_DONATION_COMPLETED_SUCCESSFULY":
-      NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULY,
+      NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
   "GOODS_DONATION_COMPLETED_SUCCESSFULLY":
       NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY,
   "CASH_DONATION_MODIFIED_BY_CREATOR":

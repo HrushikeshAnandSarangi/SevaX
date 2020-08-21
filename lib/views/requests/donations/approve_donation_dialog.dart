@@ -109,25 +109,25 @@ class ApproveDonationDialog extends StatelessWidget {
                       },
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(4.0),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    child: RaisedButton(
-                      color: FlavorConfig.values.theme.primaryColor,
-                      child: Text(
-                        S.of(context).modify,
-                        style: TextStyle(
-                            color: Colors.white, fontFamily: 'Europa'),
-                      ),
-                      onPressed: () async {
-                        //donation approved
-                        // update donation status
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
+//                  Padding(
+//                    padding: EdgeInsets.all(4.0),
+//                  ),
+//                  Container(
+//                    width: double.infinity,
+//                    child: RaisedButton(
+//                      color: FlavorConfig.values.theme.primaryColor,
+//                      child: Text(
+//                        S.of(context).modify,
+//                        style: TextStyle(
+//                            color: Colors.white, fontFamily: 'Europa'),
+//                      ),
+//                      onPressed: () async {
+//                        //donation approved
+//                        // update donation status
+//                        Navigator.of(context).pop();
+//                      },
+//                    ),
+//                  ),
                   Padding(
                     padding: EdgeInsets.all(4.0),
                   ),
@@ -158,14 +158,6 @@ class ApproveDonationDialog extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void modifyDonation({
-    DonationApproveModel model,
-    String notificationId,
-  }) {
-    FirestoreManager.readUserNotification(
-        notificationId, donationApproveModel.donorEmail);
   }
 
   void acknowledgeDonation({
