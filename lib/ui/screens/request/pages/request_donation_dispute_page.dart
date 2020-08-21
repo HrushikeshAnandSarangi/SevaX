@@ -96,7 +96,7 @@ class _RequestDonationDisputePageState
                             operationMode: operatingMode,
                             donationId: widget.model.id,
                             donationModel: widget.model,
-                            notificationId: widget.model.id,
+                            notificationId: widget.model.notificationId,
                             requestMode: widget.model.donatedToTimebank
                                 ? RequestMode.TIMEBANK_REQUEST
                                 : RequestMode.PERSONAL_REQUEST,

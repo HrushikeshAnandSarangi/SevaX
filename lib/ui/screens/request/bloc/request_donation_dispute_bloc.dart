@@ -40,13 +40,17 @@ class RequestDonationDisputeBloc {
 
     return await _donationsRepository
         .acknowledgeDonation(
+          operatoreMode: operationMode,
+          requestType: donationModel.donationType,
           donationStatus:
               status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED,
-          associatedId: operationMode == OperatingMode.USER
+          associatedId: operationMode == OperatingMode.CREATOR &&
+                  donationModel.donatedToTimebank
               ? donationModel.timebankId
               : donationModel.donorDetails.email,
           donationId: donationId,
-          isTimebankNotification: operationMode == OperatingMode.USER,
+          isTimebankNotification: operationMode == OperatingMode.CREATOR &&
+              donationModel.donatedToTimebank,
           notificationId: notificationId,
           acknowledgementNotification: getAcknowlegementNotification(
             updatedAmount: pledgedAmount,
@@ -82,7 +86,8 @@ class RequestDonationDisputeBloc {
       data: updatedModel.toMap(),
       id: Uuid().generateV4(),
       isRead: false,
-      isTimebankNotification: requestMode == RequestMode.TIMEBANK_REQUEST,
+      isTimebankNotification:
+          operatorMode == OperatingMode.CREATOR && model.donatedToTimebank,
       senderUserId: requestMode == RequestMode.TIMEBANK_REQUEST
           ? model.timebankId
           : model.donatedTo,
