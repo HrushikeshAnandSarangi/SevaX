@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
-import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
-import 'package:sevaexchange/views/requests/donations/accept_modified_acknowlegement.dart';
 
 class PersonalNotificationsRedcerForDonations {
   static Widget getWidgetForDonationsModifiedByDonor({

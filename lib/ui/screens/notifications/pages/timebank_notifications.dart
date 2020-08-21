@@ -4,7 +4,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/donation_approve_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -12,8 +11,8 @@ import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/models/reported_member_notification_model.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
-import 'package:sevaexchange/repositories/request_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
+import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_join_request_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_request_complete_widget.dart';
@@ -24,7 +23,6 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/notifications/notification_utils.dart';
-import 'package:sevaexchange/views/requests/donations/approve_donation_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_user_exit_dialog.dart';
 
@@ -238,6 +236,19 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                         timebankId: notification.timebankId,
                         notificationId: notification.id);
                   },
+                );
+
+              case NotificationType.CASH_DONATION_MODIFIED_BY_DONOR:
+              case NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR:
+                return PersonalNotificationsRedcerForDonations
+                    .getWidgetForDonationsModifiedByDonor(
+                  context: context,
+                  onDismissed: () {
+                    dismissTimebankNotification(
+                        timebankId: notification.timebankId,
+                        notificationId: notification.id);
+                  },
+                  notificationsModel: notification,
                 );
 
               case NotificationType.DEBITED_SEVA_COINS_TIMEBANK:
