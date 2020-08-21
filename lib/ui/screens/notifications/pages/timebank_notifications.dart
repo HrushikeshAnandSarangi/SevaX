@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_approve_model.dart';
+import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
@@ -17,6 +18,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_join_request_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_request_complete_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_request_widget.dart';
+import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -78,55 +80,37 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 );
                 break;
               case NotificationType.ACKNOWLEDGE_DONOR_DONATION:
-                print("notification data ${notification.data}");
-                DonationApproveModel donationApproveModel =
-                    DonationApproveModel.fromMap(notification.data);
-                print("type ${donationApproveModel.donationType.toString()}");
-                return FutureBuilder<RequestModel>(
-                  future: RequestRepository.getRequestFutureById(
-                      donationApproveModel.requestId),
-                  builder: (_context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Container();
-                    }
+                DonationModel donationModel =
+                    DonationModel.fromMap(notification.data);
 
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return LoadingIndicator();
-                    }
-                    RequestModel model = snapshot.data;
-                    return NotificationCard(
-                      entityName:
-                          donationApproveModel.requestTitle.toLowerCase(),
-                      isDissmissible: true,
-                      onDismissed: () {
-                        FirestoreManager.readTimeBankNotification(
-                          notificationId: notification.id,
-                          timebankId: notification.timebankId,
-                        );
-                      },
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return ApproveDonationDialog(
-                              requestModel: model,
-                              donationApproveModel: donationApproveModel,
-                              timeBankId: notification.timebankId,
-                              notificationId: notification.id,
-                              userId: notification.senderUserId,
-                              parentContext: parentContext,
-                            );
-                          },
-                        );
-                      },
-                      photoUrl: donationApproveModel.donorPhotoUrl,
-                      subTitle:
-                          '${donationApproveModel.donorName.toLowerCase() + ' ${S.of(context).donated} ' + donationApproveModel.donationType.toString().split('.')[1]}, ${S.of(context).tap_to_view_details}',
-                      title: S.of(context).donation_acknowledge,
+                return NotificationCard(
+                  entityName: donationModel.donorDetails.name,
+                  isDissmissible: true,
+                  onDismissed: () {
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
                     );
                   },
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return RequestDonationDisputePage(
+                            model: donationModel,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  photoUrl: donationModel.donorDetails.photoUrl,
+                  subTitle:
+                      '${donationModel.donorDetails.name + ' ${S.of(context).donated} ' + donationModel.donationType.toString().split('.')[1]}, ${S.of(context).tap_to_view_details}',
+                  title: S.of(context).donation_acknowledge,
                 );
                 break;
+
               case NotificationType.TypeMemberExitTimebank:
                 UserExitModel userExitModel =
                     UserExitModel.fromMap(notification.data);

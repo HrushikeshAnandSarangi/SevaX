@@ -53,6 +53,10 @@ class _RequestDonationDisputePageState
 
   @override
   Widget build(BuildContext context) {
+    operatingMode = widget.model.donorSevaUserId ==
+            SevaCore.of(context).loggedInUser.sevaUserID
+        ? OperatingMode.USER
+        : OperatingMode.CREATOR;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -136,8 +140,6 @@ class _RequestDonationDisputePageState
                   RaisedButton(
                     child: Text('Message'),
                     onPressed: () async {
-                      operatingMode = OperatingMode.CREATOR;
-
                       switch (getOperatingMode(
                         operatingMode,
                         widget.model.donatedToTimebank,
