@@ -741,6 +741,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return PersonalNotificationsRedcerForDonations
                     .getWidgetForSuccessfullDonation(onDismissed: onDismissed);
 
+              case NotificationType.CASH_DONATION_MODIFIED_BY_DONOR:
+              case NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR:
+                return PersonalNotificationsRedcerForDonations
+                    .getWidgetForDonationsModifiedByDonor(
+                  context: context,
+                  onDismissed: onDismissed,
+                  notificationsModel: notification,
+                );
+
               case NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR:
               case NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR:
                 return PersonalNotificationsRedcerForDonations
