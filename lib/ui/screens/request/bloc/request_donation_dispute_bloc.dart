@@ -53,13 +53,13 @@ class RequestDonationDisputeBloc {
               donationModel.donatedToTimebank,
           notificationId: notificationId,
           acknowledgementNotification: getAcknowlegementNotification(
-            updatedAmount: pledgedAmount,
+            updatedAmount: double.parse(_cashAmount.value),
             model: donationModel,
             operatorMode: operationMode,
             requestMode: requestMode,
             notificationType: status
                 ? NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY
-                : OperatingMode == OperatingMode.CREATOR
+                : operationMode == OperatingMode.CREATOR
                     ? NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR
                     : NotificationType.CASH_DONATION_MODIFIED_BY_DONOR,
           ),
@@ -76,18 +76,22 @@ class RequestDonationDisputeBloc {
     NotificationType notificationType,
     Map<String, dynamic> customSelection,
   }) {
+    var notificationId = Uuid().generateV4();
     var updatedModel = model;
     updatedModel.cashDetails.pledgedAmount = updatedAmount.toInt();
     updatedModel.goodsDetails.donatedGoods = customSelection;
+    updatedModel.notificationId = notificationId;
 
     return NotificationsModel(
       type: notificationType,
       communityId: model.communityId,
       data: updatedModel.toMap(),
-      id: Uuid().generateV4(),
+      id: notificationId,
       isRead: false,
       isTimebankNotification:
-          operatorMode == OperatingMode.CREATOR && model.donatedToTimebank,
+          model.donationStatus != DonationStatus.ACKNOWLEDGED &&
+              operatorMode == OperatingMode.CREATOR &&
+              model.donatedToTimebank,
       senderUserId: requestMode == RequestMode.TIMEBANK_REQUEST
           ? model.timebankId
           : model.donatedTo,

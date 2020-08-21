@@ -28,74 +28,99 @@ class DonationsRepository {
     @required RequestType requestType,
     @required OperatingMode operatoreMode,
   }) async {
-    var donationModel = DonationModel.fromMap(acknowledgementNotification.data);
+    try {
+      var donationModel =
+          DonationModel.fromMap(acknowledgementNotification.data);
 
-    print("L1");
+      print("L1");
 
-    var batch = Firestore.instance.batch();
-    batch.updateData(_donation_ref.document(donationId), {
-      'donationStatus': donationStatus.toString().split('.')[1],
-      if (donationStatus == DonationStatus.ACKNOWLEDGED &&
-          requestType == RequestType.CASH)
-        'cashDetails.pledgedAmount': (donationModel).cashDetails.pledgedAmount,
-      if (donationStatus == DonationStatus.ACKNOWLEDGED &&
-          requestType == RequestType.CASH)
-        'goodsDetails.donatedGoods': (donationModel).goodsDetails.donatedGoods,
-    });
+      var batch = Firestore.instance.batch();
+      batch.updateData(_donation_ref.document(donationId), {
+        'donationStatus': donationStatus.toString().split('.')[1],
+        if (donationStatus == DonationStatus.ACKNOWLEDGED &&
+            requestType == RequestType.CASH)
+          'cashDetails.pledgedAmount':
+              (donationModel).cashDetails.pledgedAmount,
+        if (donationStatus == DonationStatus.ACKNOWLEDGED &&
+            requestType == RequestType.CASH)
+          'goodsDetails.donatedGoods':
+              (donationModel).goodsDetails.donatedGoods,
+      });
 
-    print("L2");
+      print("L2");
 
-    var notificationReference = Firestore.instance
-        .collection(
-            isTimebankNotification ? DBCollection.timebank : DBCollection.users)
-        .document(associatedId)
-        .collection(DBCollection.notifications);
-    batch.updateData(
-      notificationReference.document(notificationId),
-      {'isRead': true},
-    );
-    print("Cleared data " + donationStatus.toString());
-
-    //Create disputeNotification notification
-    var notificationReferenceForDonor;
-    if (donationStatus == DonationStatus.ACKNOWLEDGED) {
-      print("init ");
-
-      notificationReferenceForDonor = Firestore.instance
-          .collection(DBCollection.users)
-          .document(donationModel.donorDetails.email)
+      var notificationReference = Firestore.instance
+          .collection(isTimebankNotification
+              ? DBCollection.timebank
+              : DBCollection.users)
+          .document(associatedId)
           .collection(DBCollection.notifications);
-      //donor member reference
-    } else {
-      print("Else Mode");
+      batch.updateData(
+        notificationReference.document(notificationId),
+        {'isRead': true},
+      );
+      print("Cleared data " + donationStatus.toString());
 
-      if (operatoreMode == OperatingMode.CREATOR &&
-          donationModel.donatedToTimebank) {
+      //Create disputeNotification notification
+      var notificationReferenceForDonor;
+      if (donationStatus == DonationStatus.ACKNOWLEDGED) {
         print("init ");
 
-        notificationReferenceForDonor = Firestore.instance
-            .collection(DBCollection.timebank)
-            .document(donationModel.timebankId)
-            .collection(DBCollection.notifications);
-        // direct towards timebank
-      } else {
-        print("init ");
-
-        //direct it towards creator
         notificationReferenceForDonor = Firestore.instance
             .collection(DBCollection.users)
-            .document(donationModel.requestId.split('*')[0])
+            .document(donationModel.donorDetails.email)
             .collection(DBCollection.notifications);
+        //donor member reference
+      } else {
+        print("Else Mode");
+
+        if (operatoreMode == OperatingMode.CREATOR &&
+            donationModel.donatedToTimebank) {
+          print(
+              "init operatoreMode == OperatingMode.CREATOR && donationModel.donatedToTimebank");
+
+          notificationReferenceForDonor = Firestore.instance
+              .collection(DBCollection.users)
+              .document(donationModel.donorDetails.email)
+              .collection(DBCollection.notifications);
+          // direct towards timebank
+        } else {
+          print("init else ");
+
+          //direct it towards creator
+
+          if (donationModel.donatedToTimebank) {
+            print("init timebank for " + donationModel.timebankId);
+
+            notificationReferenceForDonor = Firestore.instance
+                .collection(DBCollection.timebank)
+                .document(donationModel.timebankId)
+                .collection(DBCollection.notifications);
+          } else {
+            print("init member creator ");
+
+            notificationReferenceForDonor = Firestore.instance
+                .collection(DBCollection.users)
+                .document(donationModel.requestId.split('*')[0])
+                .collection(DBCollection.notifications);
+          }
+        }
       }
+      log("=========== ");
+      batch.setData(
+        notificationReferenceForDonor.document(acknowledgementNotification.id),
+        acknowledgementNotification.toMap(),
+      );
+
+      log(acknowledgementNotification.id +
+          " <-------------------------> " +
+          acknowledgementNotification.toMap().toString());
+      await batch.commit().then((value) => print("Success")).catchError(
+            (onError) => print("FAILURE " + onError),
+          );
+    } catch (e) {
+      print(e);
     }
-    log("=========== ");
-
-    batch.setData(
-      notificationReferenceForDonor.document(acknowledgementNotification.id),
-      acknowledgementNotification.toMap(),
-    );
-
-    await batch.commit();
   }
 
   Future<void> createDisputeNotification({
