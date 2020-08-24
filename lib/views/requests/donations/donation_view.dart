@@ -162,7 +162,8 @@ class _DonationViewState extends State<DonationView> {
                 onPressed: () {
                   donationBloc
                       .validateAmount(
-                          minmumAmount: widget.requestModel.cashModel.minAmount)
+                    minmumAmount: widget.requestModel.cashModel.minAmount,
+                  )
                       .then((value) {
                     if (value) {
                       pageController.animateToPage(2,
@@ -205,8 +206,6 @@ class _DonationViewState extends State<DonationView> {
           ),
           GestureDetector(
             onTap: () async {
-              print("====>>>>> " + widget.requestModel.donationInstructionLink);
-
               if (await canLaunch(
                   widget.requestModel.donationInstructionLink)) {
                 await launch(

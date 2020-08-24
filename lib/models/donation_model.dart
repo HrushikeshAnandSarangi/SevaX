@@ -131,25 +131,28 @@ class CashDetails {
 }
 
 class GoodsDetails {
-  GoodsDetails({this.comments, this.donatedGoods});
+  GoodsDetails({this.comments, this.donatedGoods, this.requiredGoods});
 
   String comments;
   Map<String, String> donatedGoods;
+  Map<String, String> requiredGoods;
 
   factory GoodsDetails.fromMap(Map<dynamic, dynamic> json) {
-    print("===============" + json.toString());
-
     return GoodsDetails(
       comments: json["comments"] == null ? null : json["comments"],
       donatedGoods: json.containsKey('donatedGoods')
           ? Map<String, String>.from(json["donatedGoods"] ?? {})
+          : {},
+      requiredGoods: json.containsKey('requiredGoods')
+          ? Map<String, String>.from(json["requiredGoods"] ?? {})
           : {},
     );
   }
 
   Map<dynamic, dynamic> toMap() => {
         "comments": comments == null ? null : comments,
-        "donatedGoods": donatedGoods == null ? null : donatedGoods
+        "donatedGoods": donatedGoods == null ? null : donatedGoods,
+        "requiredGoods": requiredGoods == null ? null : requiredGoods,
       };
 }
 

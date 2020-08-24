@@ -44,16 +44,16 @@ class DonationBloc {
     } else {
       donationModel.goodsDetails.donatedGoods = _selectedList.value;
       donationModel.goodsDetails.comments = _comment.value;
+      donationModel.goodsDetails.requiredGoods =
+          requestModel.goodsDonationDetails.requiredGoods;
+
+      print("_+_+_+_+_+_+_+_+_+_+_+_+_" +
+          donationModel.goodsDetails.toMap().toString());
 
       var newDonors =
           new List<String>.from(requestModel.goodsDonationDetails.donors);
       newDonors.add(donor.sevaUserID);
-
-      // var updatedRequestModel = requestModel;
-
       requestModel.goodsDonationDetails.donors = newDonors;
-
-      // requestModel.goodsDonationDetails.donors.add(donor.sevaUserID);
       try {
         await FirestoreManager.createDonation(donationModel: donationModel);
         await FirestoreManager.updateRequest(requestModel: requestModel);

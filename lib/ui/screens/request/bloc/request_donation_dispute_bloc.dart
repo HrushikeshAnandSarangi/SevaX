@@ -30,6 +30,10 @@ class RequestDonationDisputeBloc {
     }
   }
 
+  void initGoodsReceived(Map<String, String> initialValue) {
+    _goodsRecieved.add(Map.from(initialValue));
+  }
+
   Future<bool> disputeCash({
     OperatingMode operationMode,
     double pledgedAmount,
@@ -76,21 +80,20 @@ class RequestDonationDisputeBloc {
     OperatingMode operatorMode,
     RequestMode requestMode,
     NotificationType notificationType,
-    Map<String, dynamic> customSelection,
+    Map<String, String> customSelection,
   }) {
     var notificationId = Uuid().generateV4();
-    var updatedModel = model;
     if (model.donationType == RequestType.CASH)
-      updatedModel.cashDetails.pledgedAmount = updatedAmount.toInt();
+      model.cashDetails.pledgedAmount = updatedAmount.toInt();
     else if (model.donationType == RequestType.GOODS)
-      updatedModel.goodsDetails.donatedGoods = customSelection;
+      model.goodsDetails.donatedGoods = customSelection;
 
-    updatedModel.notificationId = notificationId;
+    model.notificationId = notificationId;
 
     return NotificationsModel(
       type: notificationType,
       communityId: model.communityId,
-      data: updatedModel.toMap(),
+      data: model.toMap(),
       id: notificationId,
       isRead: false,
       isTimebankNotification:
@@ -108,7 +111,6 @@ class RequestDonationDisputeBloc {
   }
 
   Future<bool> disputeGoods({
-    Map<dynamic, dynamic> customSelection,
     OperatingMode operationMode,
     String donationId,
     String notificationId,
@@ -118,10 +120,14 @@ class RequestDonationDisputeBloc {
   }) async {
     var x = List.from(donatedGoods.keys);
     var y = List.from(_goodsRecieved.value.keys);
+
+    print("donatedGoods ---> " + x.toString());
+    print("_goodsRecieved ---> " + y.toString());
     x.sort();
     y.sort();
     var status = listEquals(x, y);
     log('the status is $status');
+
     await _donationsRepository.acknowledgeDonation(
       requestType: donationModel.donationType,
       operatoreMode: operationMode,
@@ -136,13 +142,15 @@ class RequestDonationDisputeBloc {
             : (operationMode == OperatingMode.CREATOR
                 ? NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR
                 : NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR),
-        customSelection: customSelection,
+        customSelection: _goodsRecieved.value,
       ),
-      associatedId: operationMode == OperatingMode.USER
+      associatedId: operationMode == OperatingMode.CREATOR &&
+              donationModel.donatedToTimebank
           ? donationModel.timebankId
           : donationModel.donorDetails.email,
       donationId: donationId,
-      isTimebankNotification: operationMode == OperatingMode.USER,
+      isTimebankNotification: operationMode == OperatingMode.USER &&
+          donationModel.donatedToTimebank,
       notificationId: notificationId,
     );
     return true;

@@ -31,17 +31,19 @@ class DonationsRepository {
     @required RequestType requestType,
     @required OperatingMode operatoreMode,
   }) async {
+    print("L0===============================");
+
     try {
       var donationModel =
           DonationModel.fromMap(acknowledgementNotification.data);
 
-      print("L1");
+      print("L1=============================== " +
+          donationModel.toMap().toString());
 
       var batch = Firestore.instance.batch();
       batch.updateData(_donationRef.document(donationId), {
         'donationStatus': donationStatus.toString().split('.')[1],
-        if (donationStatus == DonationStatus.ACKNOWLEDGED &&
-            requestType == RequestType.CASH)
+        if (requestType == RequestType.CASH)
           'cashDetails.pledgedAmount':
               (donationModel).cashDetails.pledgedAmount,
         if (donationStatus == DonationStatus.ACKNOWLEDGED &&
@@ -49,6 +51,8 @@ class DonationsRepository {
           'goodsDetails.donatedGoods':
               (donationModel).goodsDetails.donatedGoods,
       });
+
+      print("L2=============================== " + donationStatus.toString());
 
       //update request model with amount raised if donation is acknowledged
       if (donationStatus == DonationStatus.ACKNOWLEDGED &&
@@ -62,7 +66,7 @@ class DonationsRepository {
         );
       }
 
-      print("L2");
+      print("L3=============================== " + associatedId);
 
       var notificationReference = Firestore.instance
           .collection(
@@ -74,7 +78,7 @@ class DonationsRepository {
         notificationReference.document(notificationId),
         {'isRead': true},
       );
-      print("Cleared data " + donationStatus.toString());
+      print("L4===============================");
 
       //Create disputeNotification notification
       var notificationReferenceForDonor;
@@ -121,21 +125,24 @@ class DonationsRepository {
           }
         }
       }
+      print("L5===============================");
+
       log("=========== ");
       batch.setData(
         notificationReferenceForDonor.document(acknowledgementNotification.id),
         acknowledgementNotification.toMap(),
       );
 
-      log(acknowledgementNotification.id +
+      print(acknowledgementNotification.id +
           " <-------------------------> " +
-          acknowledgementNotification.toMap().toString());
-      await batch.commit().then((value) => print("Success")).catchError(
-            (onError) => print("FAILURE " + onError),
+          acknowledgementNotification.toString());
+      await batch.commit().then((value) => log("Success")).catchError(
+            (onError) => log("FAILURE " + onError.toString()),
           );
-    } catch (e) {
-      print("===================================" + e.toString());
+    } on Exception catch (e) {
+      print("ERROR ===================================" + e.toString());
     }
+    print("L6===============================");
   }
 
   Future<void> createDisputeNotification({

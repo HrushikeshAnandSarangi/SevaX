@@ -66,7 +66,7 @@ class NotificationsModel extends DataModel {
 
   @override
   String toString() {
-    return " type : ${this.type} -- ${this.data} -- ";
+    return "$communityId $targetUserId ";
   }
 
   @override
