@@ -11,7 +11,7 @@ class DonationBloc {
   final _errorMessage = BehaviorSubject<String>();
   final _comment = BehaviorSubject<String>();
   final _selectedList =
-      BehaviorSubject<Map<dynamic, dynamic>>.seeded(Map<dynamic, dynamic>());
+      BehaviorSubject<Map<String, String>>.seeded(Map<String, String>());
 
   Stream<String> get goodsDescription => _goodsDescription.stream;
   Stream<String> get amountPledged => _amountPledged.stream;
@@ -24,9 +24,15 @@ class DonationBloc {
   Function(String) get onCommentChanged => _comment.sink.add;
 
   void addAddRemove({String selectedKey, String selectedValue}) {
-    _selectedList.value.containsKey(selectedKey)
-        ? _selectedList.value.remove(selectedKey)
-        : _selectedList.value[selectedKey] = selectedValue;
+    var localMap = _selectedList.value;
+
+    localMap.containsKey(selectedKey)
+        ? localMap.remove(selectedKey)
+        : localMap[selectedKey] = selectedValue;
+
+    _selectedList.add(localMap);
+
+    print("map -> " + localMap.toString());
   }
 
   Future<bool> donateGoods(
@@ -38,15 +44,25 @@ class DonationBloc {
     } else {
       donationModel.goodsDetails.donatedGoods = _selectedList.value;
       donationModel.goodsDetails.comments = _comment.value;
-      requestModel.goodsDonationDetails.donors.add(donor.sevaUserID);
+      donationModel.goodsDetails.requiredGoods =
+          requestModel.goodsDonationDetails.requiredGoods;
+
+      print("_+_+_+_+_+_+_+_+_+_+_+_+_" +
+          donationModel.goodsDetails.toMap().toString());
+
+      var newDonors =
+          new List<String>.from(requestModel.goodsDonationDetails.donors);
+      newDonors.add(donor.sevaUserID);
+      requestModel.goodsDonationDetails.donors = newDonors;
       try {
         await FirestoreManager.createDonation(donationModel: donationModel);
         await FirestoreManager.updateRequest(requestModel: requestModel);
 
         await sendNotification(
-            donationModel: donationModel,
-            requestModel: requestModel,
-            donor: donor);
+          donationModel: donationModel,
+          requestModel: requestModel,
+          donor: donor,
+        );
         return true;
       } on Exception catch (e) {
         _errorMessage.add("net_error");
@@ -76,8 +92,8 @@ class DonationBloc {
     donationModel.cashDetails.pledgedAmount = int.parse(_amountPledged.value);
 
     requestModel.cashModel.donors.add(donor.sevaUserID);
-    requestModel.cashModel.amountRaised =
-        requestModel.cashModel.amountRaised + int.parse(_amountPledged.value);
+    // requestModel.cashModel.amountRaised =
+    //     requestModel.cashModel.amountRaised + int.parse(_amountPledged.value);
     try {
       await FirestoreManager.createDonation(donationModel: donationModel);
       await FirestoreManager.updateRequest(requestModel: requestModel);

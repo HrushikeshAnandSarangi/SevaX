@@ -1,23 +1,24 @@
 import 'package:sevaexchange/models/request_model.dart';
 
 class DonationModel {
-  DonationModel(
-      {this.communityId,
-      this.donorSevaUserId,
-      this.donatedTo,
-      this.donatedToTimebank,
-      this.donationInBetween,
-      this.donationType,
-      this.id,
-      this.requestId,
-      this.requestTitle,
-      this.timebankId,
-      this.timestamp,
-      this.cashDetails,
-      this.goodsDetails,
-      this.donationStatus,
-      this.notificationId,
-      this.donorDetails});
+  DonationModel({
+    this.communityId,
+    this.donorSevaUserId,
+    this.donatedTo,
+    this.donatedToTimebank,
+    this.donationInBetween,
+    this.donationType,
+    this.id,
+    this.requestId,
+    this.requestTitle,
+    this.timebankId,
+    this.timestamp,
+    this.cashDetails,
+    this.goodsDetails,
+    this.donationStatus,
+    this.notificationId,
+    this.donorDetails,
+  });
 
   String communityId;
   String donorSevaUserId;
@@ -131,20 +132,28 @@ class CashDetails {
 }
 
 class GoodsDetails {
-  GoodsDetails({this.comments, this.donatedGoods});
+  GoodsDetails({this.comments, this.donatedGoods, this.requiredGoods});
 
   String comments;
-  Map<dynamic, dynamic> donatedGoods;
+  Map<String, String> donatedGoods;
+  Map<String, String> requiredGoods;
 
-  factory GoodsDetails.fromMap(Map<dynamic, dynamic> json) => GoodsDetails(
+  factory GoodsDetails.fromMap(Map<dynamic, dynamic> json) {
+    return GoodsDetails(
       comments: json["comments"] == null ? null : json["comments"],
       donatedGoods: json.containsKey('donatedGoods')
-          ? Map<dynamic, dynamic>.from(json["donatedGoods"] ?? {})
-          : {});
+          ? Map<String, String>.from(json["donatedGoods"] ?? {})
+          : {},
+      requiredGoods: json.containsKey('requiredGoods')
+          ? Map<String, String>.from(json["requiredGoods"] ?? {})
+          : {},
+    );
+  }
 
-  Map<String, dynamic> toMap() => {
+  Map<dynamic, dynamic> toMap() => {
         "comments": comments == null ? null : comments,
-        "donatedGoods": donatedGoods == null ? null : donatedGoods
+        "donatedGoods": donatedGoods == null ? null : donatedGoods,
+        "requiredGoods": requiredGoods == null ? null : requiredGoods,
       };
 }
 
