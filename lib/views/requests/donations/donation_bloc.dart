@@ -76,8 +76,8 @@ class DonationBloc {
     donationModel.cashDetails.pledgedAmount = int.parse(_amountPledged.value);
 
     requestModel.cashModel.donors.add(donor.sevaUserID);
-    requestModel.cashModel.amountRaised =
-        requestModel.cashModel.amountRaised + int.parse(_amountPledged.value);
+    // requestModel.cashModel.amountRaised =
+    //     requestModel.cashModel.amountRaised + int.parse(_amountPledged.value);
     try {
       await FirestoreManager.createDonation(donationModel: donationModel);
       await FirestoreManager.updateRequest(requestModel: requestModel);

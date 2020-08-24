@@ -9,13 +9,16 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 
 class DonationsRepository {
-  static final CollectionReference _donation_ref =
-      Firestore.instance.collection(
+  static final CollectionReference _donationRef = Firestore.instance.collection(
     DBCollection.donations,
   );
 
+  static final CollectionReference _requestRef = Firestore.instance.collection(
+    DBCollection.requests,
+  );
+
   Stream<QuerySnapshot> getDonationsOfRequest(String requestId) {
-    return _donation_ref.where('requestId', isEqualTo: requestId).snapshots();
+    return _donationRef.where('requestId', isEqualTo: requestId).snapshots();
   }
 
   Future<void> acknowledgeDonation({
@@ -35,7 +38,7 @@ class DonationsRepository {
       print("L1");
 
       var batch = Firestore.instance.batch();
-      batch.updateData(_donation_ref.document(donationId), {
+      batch.updateData(_donationRef.document(donationId), {
         'donationStatus': donationStatus.toString().split('.')[1],
         if (donationStatus == DonationStatus.ACKNOWLEDGED &&
             requestType == RequestType.CASH)
@@ -46,6 +49,18 @@ class DonationsRepository {
           'goodsDetails.donatedGoods':
               (donationModel).goodsDetails.donatedGoods,
       });
+
+      //update request model with amount raised if donation is acknowledged
+      if (donationStatus == DonationStatus.ACKNOWLEDGED &&
+          requestType == RequestType.CASH) {
+        batch.updateData(
+          _requestRef.document(donationModel.requestId),
+          {
+            'cashModeDetails.amountRaised':
+                FieldValue.increment(donationModel.cashDetails.pledgedAmount),
+          },
+        );
+      }
 
       print("L2");
 
@@ -133,7 +148,7 @@ class DonationsRepository {
     // Make notificaiton as read for the moderator
 
     var batch = Firestore.instance.batch();
-    batch.updateData(_donation_ref.document(donationId), {
+    batch.updateData(_donationRef.document(donationId), {
       'donationStatus': DonationStatus.MODIFIED.toString().split('.')[1],
     });
     var notificationReference = Firestore.instance
