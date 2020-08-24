@@ -7,14 +7,12 @@ String cashModelToMap(CashModel data) => json.encode(data.toMap());
 class CashModel {
   CashModel({
     this.amountRaised = 0,
-    this.donationInstructionLink,
     this.donors,
     this.minAmount,
     this.targetAmount,
   });
 
   int amountRaised = 0;
-  String donationInstructionLink;
   List<String> donors;
   int minAmount;
   int targetAmount;

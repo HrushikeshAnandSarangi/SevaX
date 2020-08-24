@@ -702,7 +702,7 @@ class RequestModel extends DataModel {
 
 class GoodsDonationDetails {
   List<String> donors;
-  Map<String, String> requiredGoods;
+  Map<String, dynamic> requiredGoods;
   String address = '';
 
   GoodsDonationDetails({this.donors, this.address, this.requiredGoods});
@@ -720,7 +720,7 @@ class GoodsDonationDetails {
     }
 
     if (map.containsKey("requiredGoods")) {
-      Map<String, String> temp = Map<String, String>.from(map["requiredGoods"]);
+      Map<String, dynamic> temp = Map<String, dynamic>.from(map["requiredGoods"]);
       this.requiredGoods = temp;
     }
   }
