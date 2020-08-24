@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/get_location.dart';
@@ -26,6 +28,10 @@ class RequestDonationDisputeBloc {
       map[key] = value;
       _goodsRecieved.add(map);
     }
+  }
+
+  void initGoodsReceived(Map<String, String> initialValue) {
+    _goodsRecieved.add(Map.from(initialValue));
   }
 
   Future<bool> disputeCash({
@@ -74,18 +80,20 @@ class RequestDonationDisputeBloc {
     OperatingMode operatorMode,
     RequestMode requestMode,
     NotificationType notificationType,
-    Map<String, dynamic> customSelection,
+    Map<String, String> customSelection,
   }) {
     var notificationId = Uuid().generateV4();
-    var updatedModel = model;
-    updatedModel.cashDetails.pledgedAmount = updatedAmount.toInt();
-    updatedModel.goodsDetails.donatedGoods = customSelection;
-    updatedModel.notificationId = notificationId;
+    if (model.donationType == RequestType.CASH)
+      model.cashDetails.pledgedAmount = updatedAmount.toInt();
+    else if (model.donationType == RequestType.GOODS)
+      model.goodsDetails.donatedGoods = customSelection;
+
+    model.notificationId = notificationId;
 
     return NotificationsModel(
       type: notificationType,
       communityId: model.communityId,
-      data: updatedModel.toMap(),
+      data: model.toMap(),
       id: notificationId,
       isRead: false,
       isTimebankNotification:
@@ -103,7 +111,6 @@ class RequestDonationDisputeBloc {
   }
 
   Future<bool> disputeGoods({
-    Map<String, dynamic> customSelection,
     OperatingMode operationMode,
     String donationId,
     String notificationId,
@@ -111,11 +118,19 @@ class RequestDonationDisputeBloc {
     RequestMode requestMode,
     Map<String, String> donatedGoods,
   }) async {
-    var status = listEquals(
-      List.from(donatedGoods.keys),
-      List.from(_goodsRecieved.value.keys),
-    );
+    var x = List.from(donatedGoods.keys);
+    var y = List.from(_goodsRecieved.value.keys);
+
+    print("donatedGoods ---> " + x.toString());
+    print("_goodsRecieved ---> " + y.toString());
+    x.sort();
+    y.sort();
+    var status = listEquals(x, y);
+    log('the status is $status');
+
     await _donationsRepository.acknowledgeDonation(
+      requestType: donationModel.donationType,
+      operatoreMode: operationMode,
       donationStatus:
           status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED,
       acknowledgementNotification: getAcknowlegementNotification(
@@ -127,13 +142,15 @@ class RequestDonationDisputeBloc {
             : (operationMode == OperatingMode.CREATOR
                 ? NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR
                 : NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR),
-        customSelection: customSelection,
+        customSelection: _goodsRecieved.value,
       ),
-      associatedId: operationMode == OperatingMode.USER
+      associatedId: operationMode == OperatingMode.CREATOR &&
+              donationModel.donatedToTimebank
           ? donationModel.timebankId
           : donationModel.donorDetails.email,
       donationId: donationId,
-      isTimebankNotification: operationMode == OperatingMode.USER,
+      isTimebankNotification: operationMode == OperatingMode.CREATOR &&
+          donationModel.donatedToTimebank,
       notificationId: notificationId,
     );
     return true;

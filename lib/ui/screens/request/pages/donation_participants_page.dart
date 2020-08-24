@@ -166,7 +166,9 @@ class DonationParticipantPage extends StatelessWidget {
             Navigator.of(context, rootNavigator: true).pop();
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => RequestDonationDisputePage(model: model),
+                builder: (context) => RequestDonationDisputePage(
+                  model: model,
+                ),
               ),
             );
           },

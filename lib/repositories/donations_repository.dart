@@ -9,13 +9,16 @@ import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 
 class DonationsRepository {
-  static final CollectionReference _donation_ref =
-      Firestore.instance.collection(
+  static final CollectionReference _donationRef = Firestore.instance.collection(
     DBCollection.donations,
   );
 
+  static final CollectionReference _requestRef = Firestore.instance.collection(
+    DBCollection.requests,
+  );
+
   Stream<QuerySnapshot> getDonationsOfRequest(String requestId) {
-    return _donation_ref.where('requestId', isEqualTo: requestId).snapshots();
+    return _donationRef.where('requestId', isEqualTo: requestId).snapshots();
   }
 
   Future<void> acknowledgeDonation({
@@ -28,17 +31,19 @@ class DonationsRepository {
     @required RequestType requestType,
     @required OperatingMode operatoreMode,
   }) async {
+    log("L0===============================");
+
     try {
       var donationModel =
           DonationModel.fromMap(acknowledgementNotification.data);
 
-      print("L1");
+      print("L1=============================== " +
+          donationModel.toMap().toString());
 
       var batch = Firestore.instance.batch();
-      batch.updateData(_donation_ref.document(donationId), {
+      batch.updateData(_donationRef.document(donationId), {
         'donationStatus': donationStatus.toString().split('.')[1],
-        if (donationStatus == DonationStatus.ACKNOWLEDGED &&
-            requestType == RequestType.CASH)
+        if (requestType == RequestType.CASH)
           'cashDetails.pledgedAmount':
               (donationModel).cashDetails.pledgedAmount,
         if (donationStatus == DonationStatus.ACKNOWLEDGED &&
@@ -47,19 +52,33 @@ class DonationsRepository {
               (donationModel).goodsDetails.donatedGoods,
       });
 
-      print("L2");
+      print("L2=============================== " + donationStatus.toString());
+
+      //update request model with amount raised if donation is acknowledged
+      if (donationStatus == DonationStatus.ACKNOWLEDGED &&
+          requestType == RequestType.CASH) {
+        batch.updateData(
+          _requestRef.document(donationModel.requestId),
+          {
+            'cashModeDetails.amountRaised':
+                FieldValue.increment(donationModel.cashDetails.pledgedAmount),
+          },
+        );
+      }
+
+      log("L3=============================== " + associatedId);
 
       var notificationReference = Firestore.instance
-          .collection(isTimebankNotification
-              ? DBCollection.timebank
-              : DBCollection.users)
+          .collection(
+            isTimebankNotification ? DBCollection.timebank : DBCollection.users,
+          )
           .document(associatedId)
           .collection(DBCollection.notifications);
       batch.updateData(
         notificationReference.document(notificationId),
         {'isRead': true},
       );
-      print("Cleared data " + donationStatus.toString());
+      print("L4===============================");
 
       //Create disputeNotification notification
       var notificationReferenceForDonor;
@@ -106,21 +125,24 @@ class DonationsRepository {
           }
         }
       }
+      print("L5===============================");
+
       log("=========== ");
       batch.setData(
         notificationReferenceForDonor.document(acknowledgementNotification.id),
         acknowledgementNotification.toMap(),
       );
 
-      log(acknowledgementNotification.id +
+      print(acknowledgementNotification.id +
           " <-------------------------> " +
-          acknowledgementNotification.toMap().toString());
-      await batch.commit().then((value) => print("Success")).catchError(
-            (onError) => print("FAILURE " + onError),
+          acknowledgementNotification.toString());
+      await batch.commit().then((value) => log("Success")).catchError(
+            (onError) => log("FAILURE " + onError.toString()),
           );
-    } catch (e) {
-      print(e);
+    } on Exception catch (e) {
+      print("ERROR ===================================" + e.toString());
     }
+    print("L6===============================");
   }
 
   Future<void> createDisputeNotification({
@@ -133,7 +155,7 @@ class DonationsRepository {
     // Make notificaiton as read for the moderator
 
     var batch = Firestore.instance.batch();
-    batch.updateData(_donation_ref.document(donationId), {
+    batch.updateData(_donationRef.document(donationId), {
       'donationStatus': DonationStatus.MODIFIED.toString().split('.')[1],
     });
     var notificationReference = Firestore.instance
