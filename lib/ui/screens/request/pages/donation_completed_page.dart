@@ -27,13 +27,19 @@ class DonationCompletedPage extends StatelessWidget {
         }
 
         List<DonationModel> donations = [];
-        int totalAmountRaised = 0;
+        int totalQuantity = 0;
+
         snapshot.data.forEach((donation) {
           if (donation.donationStatus == DonationStatus.ACKNOWLEDGED) {
-            totalAmountRaised += donation.cashDetails.pledgedAmount;
+            if (requestModel.requestType == RequestType.CASH) {
+              totalQuantity += donation.cashDetails.pledgedAmount;
+            } else {
+              totalQuantity += donation.goodsDetails.donatedGoods.length;
+            }
             donations.add(donation);
           }
         });
+
         if (donations.isEmpty) {
           return Center(
             child: Text(S.of(context).no_donation_yet),
@@ -45,11 +51,11 @@ class DonationCompletedPage extends StatelessWidget {
             children: [
               _DonationProgressWidget(
                 isCashDonation: requestModel.requestType == RequestType.CASH,
-                quantity: totalAmountRaised
-                    .toString(), //update to support goods quantity
+                quantity:
+                    totalQuantity.toString(), //update to support goods quantity
               ),
               // AmountRaisedProgressIndicator(
-              //   totalAmountRaised: totalAmountRaised,
+              //   totalQuantity: totalQuantity,
               //   targetAmount: requestModel.cashModel.targetAmount,
               // ),
               Divider(),
