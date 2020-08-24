@@ -185,7 +185,7 @@ class _DonationViewState extends State<DonationView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          titleText(title: S.of(context).donations),
+          // titleText(title: S.of(context).donations),
           SizedBox(
             height: 10,
           ),
@@ -206,15 +206,16 @@ class _DonationViewState extends State<DonationView> {
           GestureDetector(
             onTap: () async {
               if (await canLaunch(
-                  widget.requestModel.cashModel.donationInstructionLink)) {
+                  widget.requestModel.donationInstructionLink)) {
                 await launch(
-                    widget.requestModel.cashModel.donationInstructionLink);
+                  widget.requestModel.donationInstructionLink,
+                );
               } else {
                 throw 'couldnt launch';
               }
             },
             child: Text(
-              widget.requestModel.cashModel.donationInstructionLink,
+              widget.requestModel.donationInstructionLink,
               style: TextStyle(color: Colors.blue),
             ),
           ),
