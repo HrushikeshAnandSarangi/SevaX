@@ -7,9 +7,8 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/request_donation_dispute_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/checkbox_with_text.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/pledged_amount_card.dart';
-import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/accept_modified_acknowlegement.dart';
 
@@ -77,7 +76,12 @@ class _RequestDonationDisputePageState
                       currency: '\$',
                       amount: widget.model.cashDetails.pledgedAmount.toString(),
                     )
-                  : _GoodsFlow(bloc: _bloc),
+                  : _GoodsFlow(
+                      bloc: _bloc,
+                      goods: Map<String, String>.from(
+                        widget.model.goodsDetails.donatedGoods,
+                      ),
+                    ),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -340,12 +344,12 @@ class _GoodsFlow extends StatelessWidget {
   _GoodsFlow({
     Key key,
     @required RequestDonationDisputeBloc bloc,
-    // this.goods,
+    this.goods,
   })  : _bloc = bloc,
         super(key: key);
 
   final RequestDonationDisputeBloc _bloc;
-  final Map<String, String> goods = {'1': 'Clothes', '2': 'Footwear'};
+  final Map<String, String> goods;
 
   @override
   Widget build(BuildContext context) {
