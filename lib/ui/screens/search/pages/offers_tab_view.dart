@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
@@ -8,6 +8,7 @@ import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class OffersTabView extends StatefulWidget {
   @override
@@ -23,9 +24,7 @@ class _OffersTabViewState extends State<OffersTabView> {
         stream: _bloc.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
-            return Center(
-                child: Text(AppLocalizations.of(context)
-                    .translate('search', 'search_something')));
+            return Center(child: Text(S.of(context).search_something));
           }
           return StreamBuilder<List<OfferModel>>(
             stream: Searches.searchOffers(
@@ -35,14 +34,11 @@ class _OffersTabViewState extends State<OffersTabView> {
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                return LoadingIndicator();
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 return Center(
-                  child: Text(AppLocalizations.of(context)
-                      .translate('search', 'no_data')),
+                  child: Text(S.of(context).no_data),
                 );
               }
 

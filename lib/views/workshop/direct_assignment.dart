@@ -4,11 +4,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
@@ -84,7 +85,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     var finalWidget = Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate('groups', 'select_vol'),
+          S.of(context).select_volunteer,
           style: TextStyle(fontSize: 20),
         ),
         elevation: 0,
@@ -102,7 +103,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               child: Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Text(
-                  AppLocalizations.of(context).translate('groups', 'save'),
+                  S.of(context).save,
                   style: prefix0.TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
@@ -165,18 +166,16 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     }
     if (_avtars.length == 0) {
       return Center(
-        child: Text(AppLocalizations.of(context).translate('groups', 'none')),
+        child: Text(S.of(context).no_volunteers_available),
       );
     }
     return Center(
-      child: Text(AppLocalizations.of(context).translate('groups', 'none')),
+      child: Text(S.of(context).no_volunteers_available),
     );
   }
 
   Widget get circularBar {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
+    return LoadingIndicator();
   }
 
   int fetchItemsCount() {
@@ -233,8 +232,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               }
               if (userModelList.length == 1 && user.email == widget.userEmail) {
                 return Center(
-                  child: Text(
-                      AppLocalizations.of(context).translate('groups', 'none')),
+                  child: Text(S.of(context).no_volunteers_available),
                 );
               }
               if (user.email == widget.userEmail) {

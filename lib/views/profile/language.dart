@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class LanguageListData {
   final languagelist = [
@@ -48,7 +49,7 @@ class _LanguageViewState extends State<LanguageView> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context).translate('settings', 'language'),
+            S.of(context).my_language,
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -88,7 +89,7 @@ class LanguageListState extends State<LanguageList> {
             return Text('Error: ${snapshot.error}');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
           UserModel userModel = snapshot.data;
           isSelected = userModel.language;

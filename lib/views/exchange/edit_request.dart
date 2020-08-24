@@ -7,19 +7,17 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.dart';
-import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
+    as RequestManager;
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
-    as RequestManager;
 
 class EditRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -64,10 +62,9 @@ class _EditRequestState extends State<EditRequest> {
     if (widget.requestModel.projectId == null ||
         widget.requestModel.projectId == "" ||
         widget.requestModel.projectId.isEmpty) {
-      return AppLocalizations.of(context).translate('create_request', 'edit');
+      return S.of(context).edit;
     }
-    return AppLocalizations.of(context)
-        .translate('create_request', 'edit_project');
+    return S.of(context).edit_project;
   }
 }
 
@@ -151,8 +148,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                AppLocalizations.of(context)
-                    .translate('create_request', 'request_title'),
+                S.of(context).request_title,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -162,8 +158,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)
-                      .translate('create_request', 'small_carpenty'),
+                  hintText: S.of(context).request_title_hint,
                   hintStyle: hintTextStyle,
                 ),
                 keyboardType: TextInputType.text,
@@ -174,16 +169,14 @@ class RequestEditFormState extends State<RequestEditForm> {
                 },
                 validator: (value) {
                   if (value.isEmpty) {
-                    return AppLocalizations.of(context)
-                        .translate('create_request', 'subject');
+                    return S.of(context).request_subject;
                   }
                   widget.requestModel.title = value;
                 },
               ),
               Text(' '),
               OfferDurationWidget(
-                  title: AppLocalizations.of(context)
-                      .translate('create_request', 'duration'),
+                  title: S.of(context).request_duration,
                   startTime: startDate,
                   endTime: endDate),
               SizedBox(height: 8),
@@ -202,8 +195,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 padding: EdgeInsets.all(10.0),
               ),
               Text(
-                AppLocalizations.of(context)
-                    .translate('create_request', 'desc'),
+                S.of(context).request_description,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -215,8 +207,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 textCapitalization: TextCapitalization.sentences,
                 initialValue: widget.requestModel.description,
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)
-                      .translate('create_request', 'request_hash'),
+                  hintText: S.of(context).request_description_hint,
                   hintStyle: hintTextStyle,
                 ),
                 keyboardType: TextInputType.multiline,
@@ -227,8 +218,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 },
                 validator: (value) {
                   if (value.isEmpty) {
-                    return AppLocalizations.of(context)
-                        .translate('create_request', 'request_hash_empty');
+                    return S.of(context).validation_error_general_text;
                   }
                   widget.requestModel.description = value;
                 },
@@ -237,8 +227,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 padding: EdgeInsets.all(10.0),
               ),
               Text(
-                AppLocalizations.of(context)
-                    .translate('create_request', 'no_of_volunteers'),
+                S.of(context).number_of_volunteers,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -249,8 +238,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               TextFormField(
                 initialValue: "${widget.requestModel.numberOfApprovals}",
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context)
-                      .translate('create_request', 'no_of_volunteers'),
+                  hintText: S.of(context).number_of_volunteers_required,
                   hintStyle: hintTextStyle,
                 ),
                 keyboardType: TextInputType.number,
@@ -259,14 +247,13 @@ class RequestEditFormState extends State<RequestEditForm> {
                 },
                 validator: (value) {
                   if (value.isEmpty) {
-                    return AppLocalizations.of(context)
-                        .translate('create_request', 'no_of_volunteers_zero');
+                    return S.of(context).validation_error_volunteer_count;
                   } else if (int.parse(value) < 0) {
-                    return AppLocalizations.of(context).translate(
-                        'create_request', 'no_of_volunteers_zero_err');
+                    return S
+                        .of(context)
+                        .validation_error_volunteer_count_negative;
                   } else if (int.parse(value) == 0) {
-                    return AppLocalizations.of(context).translate(
-                        'create_request', 'no_of_volunteers_zero_err1');
+                    return S.of(context).validation_error_volunteer_count_zero;
                   } else {
                     requestModel.numberOfApprovals = int.parse(value);
                     setState(() {});
@@ -364,9 +351,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                         if (OfferDurationWidgetState.starttimestamp ==
                             OfferDurationWidgetState.endtimestamp) {
                           showDialogForTitle(
-                              dialogTitle: AppLocalizations.of(context)
-                                  .translate(
-                                      'create_request', 'sam_date_time'));
+                              dialogTitle: S
+                                  .of(context)
+                                  .validation_error_same_start_date_end_date);
                           return;
                         }
 
@@ -389,12 +376,11 @@ class RequestEditFormState extends State<RequestEditForm> {
                                 return WillPopScope(
                                     onWillPop: () {},
                                     child: AlertDialog(
-                                        title:
-                                            Text("This is a repeating event"),
+                                        title:Text(S.of(context).this_is_repeating_event),
                                         actions: [
                                           FlatButton(
                                             child: Text(
-                                              "Edit this event only",
+                                              S.of(context).edit_this_event,
                                               style: TextStyle(
                                                   fontSize: 14,
                                                   color: Colors.red,
@@ -412,7 +398,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                                           ),
                                           FlatButton(
                                             child: Text(
-                                              "Edit subsequent events",
+                                              S.of(context).edit_subsequent_event,
                                               style: TextStyle(
                                                   fontSize: 14,
                                                   color: Colors.red,
@@ -429,24 +415,28 @@ class RequestEditFormState extends State<RequestEditForm> {
                                                       updatedRequestModel:
                                                           widget.requestModel);
 
-                                              Navigator.pop(dialogContext);
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                          FlatButton(
-                                            child: Text(
-                                              "cancel",
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.red,
-                                                  fontFamily: 'Europa'),
-                                            ),
-                                            onPressed: () async {
-                                              Navigator.pop(viewContext);
-                                            },
-                                          ),
-                                        ]));
-                              });
+                                        Navigator.pop(dialogContext);
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    FlatButton(
+                                      child: Text(
+                                        S.of(context).cancel,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.red,
+                                          fontFamily: 'Europa',
+                                        ),
+                                      ),
+                                      onPressed: () async {
+                                        Navigator.pop(viewContext);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
                         } else {
                           linearProgressForCreatingRequest();
 
@@ -458,11 +448,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                         }
                       },
                       child: Text(
-                        AppLocalizations.of(context)
-                            .translate(
-                                'create_request', 'update_request_button')
-                            .padLeft(10)
-                            .padRight(10),
+                        S.of(context).update_request.padLeft(10).padRight(10),
                         style: Theme.of(context).primaryTextTheme.button,
                       ),
                     ),
@@ -485,8 +471,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context)
-                      .translate('create_request', 'ok'),
+                  S.of(context).ok,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -507,8 +492,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text(AppLocalizations.of(context)
-                .translate('create_request', 'progress_update')),
+            title: Text(S.of(context).updating_request),
             content: LinearProgressIndicator(),
           );
         });
@@ -523,8 +507,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     if (selectedUsers == null) {
       selectedUsers = HashMap();
     }
-    memberAssignment = AppLocalizations.of(context)
-        .translate('create_request', 'assign_members');
+    memberAssignment = S.of(context).assign_to_volunteers;
     return Container(
       margin: EdgeInsets.all(10),
       width: double.infinity,
@@ -549,11 +532,10 @@ class RequestEditFormState extends State<RequestEditForm> {
             selectedUsers = onActivityResult['membersSelected'];
             setState(() {
               if (selectedUsers.length == 0)
-                memberAssignment = AppLocalizations.of(context)
-                    .translate('create_request', 'assign_to_vol');
+                memberAssignment = S.of(context).assign_to_volunteers;
               else
                 memberAssignment =
-                    "${selectedUsers.length} ${AppLocalizations.of(context).translate('create_request', 'vol_selected')}";
+                    "${selectedUsers.length} ${S.of(context).volunteers_selected(selectedUsers.length)}";
             });
             print("Data is present Selected users ${selectedUsers.length}");
           } else {
@@ -582,13 +564,11 @@ class RequestEditFormState extends State<RequestEditForm> {
         context: context,
         builder: (BuildContext viewContext) {
           return AlertDialog(
-            title: Text(AppLocalizations.of(context)
-                .translate('create_request', 'not_enough_seva')),
+            title: Text(S.of(context).insufficient_credits_for_request),
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context)
-                      .translate('create_request', 'ok'),
+                  S.of(context).ok,
                   style: TextStyle(
                     fontSize: 16,
                   ),

@@ -32,6 +32,10 @@ class NewsImagePickerHandler {
     _openFileExplorer();
   }
 
+  addImageUrl() async {
+    _listener.addWebImageUrl();
+  }
+
   void _openFileExplorer() async {
     //  bool _isDocumentBeingUploaded = false;
     //File _file;
@@ -104,4 +108,5 @@ class NewsImagePickerHandler {
 abstract class NewsImagePickerListener {
   void userImage(File _image);
   void userDoc(String _doc, String fileName);
+  addWebImageUrl();
 }

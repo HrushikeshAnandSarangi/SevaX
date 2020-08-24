@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class ReviewEarningsPage extends StatelessWidget {
   final String type;
@@ -17,7 +18,7 @@ class ReviewEarningsPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context).translate('earnings', 'title'),
+            S.of(context).review_earnings,
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -77,7 +78,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
   Widget build(BuildContext context) {
     if (requestList.length == 0) {
       return Center(
-        child: Text(AppLocalizations.of(context).translate('earnings', 'none')),
+        child: Text(S.of(context).no_transactions_yet),
       );
     }
     return FutureBuilder<Object>(
@@ -86,10 +87,11 @@ class _ReviewEarningState extends State<ReviewEarning> {
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text(
-                AppLocalizations.of(context).translate('earnings', 'wrong'));
+              S.of(context).general_stream_error,
+            );
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
           UserModel userModel = snapshot.data;
           String usertimezone = userModel.timezone;
@@ -159,9 +161,7 @@ class _EarningListItemState extends State<EarningListItem> {
                           fontSize: 17,
                           fontWeight: FontWeight.w500,
                         )),
-                    Text(
-                        AppLocalizations.of(context)
-                            .translate('earnings', 'credits'),
+                    Text(S.of(context).seva_credits,
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w600,
@@ -173,8 +173,7 @@ class _EarningListItemState extends State<EarningListItem> {
               subtitle: EarningItem(
                   name: type == 'user'
                       ? snapshot.data.fullname == null
-                          ? AppLocalizations.of(context)
-                              .translate('earnings', 'anonymous')
+                          ? S.of(context).anonymous
                           : widget.model.type == "USER_PAYLOAN_TOTIMEBANK"
                               ? snapshot.data.fullname + ' - Loan Repayment'
                               : snapshot.data.fullname
@@ -208,7 +207,7 @@ class EarningItem extends StatelessWidget {
           height: 2,
         ),
         Text(
-          '${AppLocalizations.of(context).translate('earnings', 'date')}  ' +
+          '${S.of(context).date} :  ' +
               DateFormat(
                       'MMMM dd, yyyy @ h:mm a',
                       Locale(AppConfig.prefs.getString('language_code'))

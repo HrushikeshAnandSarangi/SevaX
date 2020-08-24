@@ -1,12 +1,13 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../flavor_config.dart';
 
@@ -22,8 +23,7 @@ class SelectTimeBankForNewChatState extends State<SelectTimeBankForNewChat> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)
-              .translate('select_member', 'select_timebank'),
+          S.of(context).select_group,
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -44,7 +44,7 @@ Widget getTimebanks(BuildContext context) {
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text('Error: ${snapshot.error}');
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return LoadingIndicator();
         }
         timebankList = snapshot.data;
         timebankList.forEach((t) {
@@ -90,10 +90,8 @@ Widget getTimebanks(BuildContext context) {
                           child: Text(
                             timebank.parentTimebankId ==
                                     FlavorConfig.values.timebankId
-                                ? AppLocalizations.of(context)
-                                    .translate("members", "timebank")
-                                : AppLocalizations.of(context)
-                                    .translate("members", "group"),
+                                ? S.of(context).timebank
+                                : S.of(context).group,
                             style: TextStyle(fontSize: 8, color: Colors.white),
                           ),
                         ),

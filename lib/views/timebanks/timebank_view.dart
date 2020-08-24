@@ -17,13 +17,12 @@ import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_join_request.dart';
-import 'package:sevaexchange/views/timebanks/timebank_join_requests_view.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/views/timebanks/timebankedit.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../flavor_config.dart';
-import 'edit_super_admins_view.dart';
 
 class TimebankView extends StatefulWidget {
   final String timebankId;
@@ -85,7 +84,7 @@ class _TimebankViewState extends State<TimebankView> {
                 ],
               ),
               body: Center(
-                child: CircularProgressIndicator(),
+                child: LoadingIndicator(),
               ),
             );
             break;
@@ -389,12 +388,13 @@ class _TimebankViewState extends State<TimebankView> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => TimebankAdminPage(
-                                              timebankId: timebankModel.id,
-                                              userEmail: SevaCore.of(context)
-                                                  .loggedInUser
-                                                  .email,
-                                            )),
+                                      builder: (context) => TimebankAdminPage(
+                                        timebankId: timebankModel.id,
+                                        userEmail: SevaCore.of(context)
+                                            .loggedInUser
+                                            .email,
+                                      ),
+                                    ),
                                   );
                                 },
                               ),
@@ -537,47 +537,6 @@ class _TimebankViewState extends State<TimebankView> {
     );
   }
 
-  Widget _showCreateCampaignButton(BuildContext context) {
-    if (timebankModel.admins
-        .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-      return FlatButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => _whichRoute('campaigns'),
-            ),
-          );
-        },
-        child: _whichButton('campaigns'),
-      );
-    } else {
-      return Padding(
-        padding: EdgeInsets.all(0.0),
-      );
-    }
-  }
-
-  Widget _showJoinRequests(BuildContext context) {
-    if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
-      return FlatButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => _whichRoute('joinrequests'),
-            ),
-          );
-        },
-        child: _whichButton('joinrequests'),
-      );
-    } else {
-      return Padding(
-        padding: EdgeInsets.all(0.0),
-      );
-    }
-  }
-
   Widget _whichRoute(String section) {
     switch (section) {
       case 'timebanks':
@@ -592,20 +551,6 @@ class _TimebankViewState extends State<TimebankView> {
             owner: ownerModel,
           );
         }
-        break;
-
-      case 'edityanggang':
-        return EditSuperTimebankView(
-          timebankId: timebankModel.id,
-          superAdminTimebankModel: widget.superAdminTimebankModel,
-        );
-        break;
-
-        break;
-      case 'joinrequests':
-        return TimebankJoinRequestView(
-          timebankModel: timebankModel,
-        );
         break;
       default:
         return null;

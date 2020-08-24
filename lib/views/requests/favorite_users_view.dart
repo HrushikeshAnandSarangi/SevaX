@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
@@ -8,6 +8,7 @@ import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 enum FavoriteUserStatus { LOADING, LOADED, EMPTY }
 
@@ -72,14 +73,16 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
           List<UserModel> userList = [];
 
           snapshot.data.documents.forEach((userModel) {
-            UserModel model = UserModel.fromMap(userModel.data);
+            UserModel model = UserModel.fromMap(userModel.data, 'fav_users');
             userList.add(model);
           });
 
           userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
           if (userList.length == 0) {
-            return getEmptyWidget('Users',
-                AppLocalizations.of(context).translate('requests', 'no_users'));
+            return getEmptyWidget(
+              'Users',
+              S.of(context).no_user_found,
+            );
           }
           return ListView.builder(
             itemCount: userList.length,
@@ -103,7 +106,7 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
             },
           );
         }
-        return Center(child: CircularProgressIndicator());
+        return LoadingIndicator();
       },
     );
   }

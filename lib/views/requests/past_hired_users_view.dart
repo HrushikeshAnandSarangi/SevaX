@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../core.dart';
 //import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -66,9 +67,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
       (QuerySnapshot querysnapshot) {
         querysnapshot.documents.forEach(
           (DocumentSnapshot user) => users.add(
-            UserModel.fromMap(
-              user.data,
-            ),
+            UserModel.fromMap(user.data, 'past_hired'),
           ),
         );
         if (users.isEmpty) {
@@ -99,7 +98,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
           List<UserModel> userList = [];
 
           snapshot.data.documents.forEach((userModel) {
-            UserModel model = UserModel.fromMap(userModel.data);
+            UserModel model = UserModel.fromMap(userModel.data, 'past_hired');
             userList.add(model);
           });
 
@@ -108,10 +107,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
           //print("length ${userList.length}");
           if (userList.length == 0) {
             return Center(
-              child: getEmptyWidget(
-                  'Users',
-                  AppLocalizations.of(context)
-                      .translate('requests', 'no_users')),
+              child: getEmptyWidget('Users', S.of(context).no_user_found),
             );
           }
           return ListView.builder(
@@ -141,7 +137,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
             },
           );
         }
-        return Center(child: CircularProgressIndicator());
+        return LoadingIndicator();
       },
     );
   }

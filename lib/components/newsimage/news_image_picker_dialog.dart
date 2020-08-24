@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/views/image_url_view.dart';
 
 import 'news_image_picker_handler.dart';
 
@@ -14,6 +15,10 @@ class NewsImagePickerDialog extends StatelessWidget {
 
   Animation<double> _drawerContentsOpacity;
   Animation<Offset> _drawerDetailsPosition;
+
+  void refresh() {
+    _listener.addImageUrl();
+  }
 
   void initState() {
     _drawerContentsOpacity = CurvedAnimation(
@@ -85,8 +90,7 @@ class NewsImagePickerDialog extends StatelessWidget {
                 GestureDetector(
                   onTap: () => _listener.openCamera(),
                   child: roundedButton(
-                      AppLocalizations.of(context)
-                          .translate('image_picker', "camera"),
+                      S.of(context).camera,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0x0FF766FE0),
                       const Color(0xFFFFFFFF),
@@ -98,8 +102,7 @@ class NewsImagePickerDialog extends StatelessWidget {
                 GestureDetector(
                   onTap: () => _listener.openGallery(),
                   child: roundedButton(
-                      AppLocalizations.of(context)
-                          .translate('image_picker', "gallery"),
+                      S.of(context).gallery,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0x0FF766FE0),
                       const Color(0xFFFFFFFF),
@@ -109,10 +112,32 @@ class NewsImagePickerDialog extends StatelessWidget {
                       )),
                 ),
                 GestureDetector(
+                  onTap: () {
+                    dismissDialog();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return ImageUrlView();
+                        },
+                      ),
+                    ).then((value) {
+                      refresh();
+                    });
+                  },
+                  child: roundedButton(
+                      S.of(context).image_url,
+                      EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                      const Color(0x0FF766FE0),
+                      const Color(0xFFFFFFFF),
+                      Icon(
+                        Icons.language,
+                        color: Colors.white,
+                      )),
+                ),
+                GestureDetector(
                   onTap: () => _listener.openDocument(),
                   child: roundedButton(
-                      AppLocalizations.of(context)
-                          .translate('image_picker', "pdf_document"),
+                      S.of(context).pdf_document,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0x0FF766FE0),
                       const Color(0xFFFFFFFF),
@@ -127,8 +152,7 @@ class NewsImagePickerDialog extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
                     child: roundedButton(
-                        AppLocalizations.of(context)
-                            .translate('shared', "cancel"),
+                        S.of(context).cancel,
                         EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                         const Color(0x0FF766FE0),
                         const Color(0xFFFFFFFF),

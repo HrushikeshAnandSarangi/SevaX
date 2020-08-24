@@ -1,6 +1,6 @@
-import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
@@ -15,6 +15,9 @@ class IndividualOfferBloc extends BlocBase with Validators {
   final _location = BehaviorSubject<CustomLocation>();
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
 
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
+
   Function(String value) get onTitleChanged => _title.sink.add;
   Function(String) get onOfferDescriptionChanged => _offerDescription.sink.add;
   Function(String) get onAvailabilityChanged => _availabilty.sink.add;
@@ -28,7 +31,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
 
   ///[Function] to create offer
   void createOrUpdateOffer({UserModel user, String timebankId}) {
-    print(errorCheck());
+    //   print(errorCheck());
     if (!errorCheck()) {
       var timestamp = DateTime.now().millisecondsSinceEpoch;
       var id = '${user.email}*$timestamp';
@@ -108,13 +111,23 @@ class IndividualOfferBloc extends BlocBase with Validators {
     if (_title.value == null || _title.value == '') {
       _title.addError(ValidationErrors.titleError);
       flag = true;
+    } else if (profanityDetector.isProfaneString(_title.value)) {
+      _title.addError(ValidationErrors.profanityError);
+      flag = true;
     }
+
     if (_offerDescription.value == null || _offerDescription.value == '') {
       _offerDescription.addError(ValidationErrors.genericError);
+      flag = true;
+    } else if (profanityDetector.isProfaneString(_offerDescription.value)) {
+      _offerDescription.addError(ValidationErrors.profanityError);
       flag = true;
     }
     if (_availabilty.value == null || _availabilty.value == '') {
       _availabilty.addError(ValidationErrors.genericError);
+      flag = true;
+    } else if (profanityDetector.isProfaneString(_availabilty.value)) {
+      _availabilty.addError(ValidationErrors.profanityError);
       flag = true;
     }
 

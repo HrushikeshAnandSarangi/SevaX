@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 
 class RepeatWidget extends StatefulWidget {
   RepeatWidget();
@@ -135,7 +135,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
   Widget build(BuildContext context) {
     return Material(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.fromLTRB(4.0, 8.0, 0, 8.0),
         child: Container(
           alignment: Alignment.topLeft,
           child: Column(
@@ -154,8 +154,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                       });
                     },
                   ),
-                  Text(
-                      "${AppLocalizations.of(context).translate('create_request', 'repeat')}",
+                  Text("${S.of(context).repeat}",
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -198,14 +197,15 @@ class RepeatWidgetState extends State<RepeatWidget> {
                         alignment: Alignment.topLeft,
                         padding: const EdgeInsets.fromLTRB(12.0, 8.0, 8.0, 8.0),
                         child: Text(
-                            "${AppLocalizations.of(context).translate('create_request', 'repeat_on')}",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Europa',
-                              color: Colors.black,
-                            )),
+                          "${S.of(context).repeat_on}",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Europa',
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
                       Container(
                           height: 45.0,
@@ -251,8 +251,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                         alignment: Alignment.topLeft,
                         padding:
                             const EdgeInsets.fromLTRB(12.0, 12.0, 8.0, 8.0),
-                        child: Text(
-                            "${AppLocalizations.of(context).translate('create_request', 'ends')}",
+                        child: Text("${S.of(context).ends}",
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 16,
@@ -268,8 +267,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                             groupValue: endType,
                             onChanged: _handleRadioValueChange,
                           ),
-                          Text(
-                              "${AppLocalizations.of(context).translate('create_request', 'on')}",
+                          Text("${S.of(context).on}",
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -313,8 +311,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                             groupValue: endType,
                             onChanged: _handleRadioValueChange,
                           ),
-                          Text(
-                              "${AppLocalizations.of(context).translate('create_request', 'after')}",
+                          Text("${S.of(context).after}",
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -368,8 +365,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                     }).toList(),
                                   ),
                                 ),
-                                Text(
-                                    "${AppLocalizations.of(context).translate('create_request', 'occurences')}",
+                                Text("${S.of(context).occurences}",
                                     textAlign: TextAlign.end,
                                     style: TextStyle(
                                       fontSize: 16,
@@ -394,7 +390,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                               child: InkWell(
                                 onTap: _selectOnAfter,
                                 child: Text(
-                                    "${AppLocalizations.of(context).translate('create_request', 'repeat_done')}",
+                                    "${S.of(context).done}",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -408,7 +404,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                 child: InkWell(
                                   onTap: _cancelOnAfter,
                                   child: Text(
-                                      "${AppLocalizations.of(context).translate('create_request', 'repeat_cancel')}",
+                                      "${S.of(context).cancel}",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,

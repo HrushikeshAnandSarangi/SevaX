@@ -20,6 +20,7 @@ String newsImageURL;
 String newsDocumentURL;
 String newsDocumentName;
 String userExitReason;
+String webImageUrl;
 
 //DYNAMIC LISTS
 List<dynamic> interests = [];

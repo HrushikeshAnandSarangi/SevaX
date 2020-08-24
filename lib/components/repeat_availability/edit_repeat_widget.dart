@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class EditRepeatWidget extends StatefulWidget {
@@ -155,8 +155,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                     value: isRecurring,
                     onChanged: null,
                   ),
-                  Text(
-                      "${AppLocalizations.of(context).translate('create_request', 'repeat')}",
+                  Text("${S.of(context).repeat}",
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -198,8 +197,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                       Container(
                         alignment: Alignment.topLeft,
                         padding: const EdgeInsets.fromLTRB(12.0, 8.0, 8.0, 8.0),
-                        child: Text(
-                            "${AppLocalizations.of(context).translate('create_request', 'repeat_on')}",
+                        child: Text("${S.of(context).repeat_on}",
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 16,
@@ -252,8 +250,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                         alignment: Alignment.topLeft,
                         padding:
                             const EdgeInsets.fromLTRB(12.0, 12.0, 8.0, 8.0),
-                        child: Text(
-                            "${AppLocalizations.of(context).translate('create_request', 'ends')}",
+                        child: Text("${S.of(context).ends}",
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontSize: 16,
@@ -269,8 +266,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                             groupValue: endType,
                             onChanged: _handleRadioValueChange,
                           ),
-                          Text(
-                              "${AppLocalizations.of(context).translate('create_request', 'on')}",
+                          Text("${S.of(context).on}",
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -314,8 +310,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                             groupValue: endType,
                             onChanged: _handleRadioValueChange,
                           ),
-                          Text(
-                              "${AppLocalizations.of(context).translate('create_request', 'after')}",
+                          Text("${S.of(context).after}",
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -369,8 +364,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                                     }).toList(),
                                   ),
                                 ),
-                                Text(
-                                    "${AppLocalizations.of(context).translate('create_request', 'occurences')}",
+                                Text("${S.of(context).occurences}",
                                     textAlign: TextAlign.end,
                                     style: TextStyle(
                                       fontSize: 14,
@@ -395,7 +389,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                               child: InkWell(
                                 onTap: _selectOnAfter,
                                 child: Text(
-                                    "${AppLocalizations.of(context).translate('create_request', 'repeat_done')}",
+                                    "${S.of(context).done}",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -409,7 +403,7 @@ class EditRepeatWidgetState extends State<EditRepeatWidget> {
                                 child: InkWell(
                                   onTap: _cancelOnAfter,
                                   child: Text(
-                                      "${AppLocalizations.of(context).translate('create_request', 'repeat_cancel')}",
+                                      "${S.of(context).cancel}",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 
 import 'EULAgreement.dart';
 
 class EulaAgreement extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return EulaAgreementState();
   }
 }
@@ -34,7 +33,7 @@ class EulaAgreementState extends State<EulaAgreement> {
               },
             ),
             title: Text(
-              AppLocalizations.of(context).translate('eula', 'eula_title'),
+              S.of(context).eula_title,
               style: TextStyle(
                 fontSize: 18,
               ),
@@ -77,8 +76,7 @@ class EulaAgreementState extends State<EulaAgreement> {
                           ),
                           Expanded(
                             child: Text(
-                              AppLocalizations.of(context)
-                                  .translate('eula', 'i_agree'),
+                              S.of(context).eula_delcaration,
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                 fontSize: 15.0,
@@ -95,14 +93,12 @@ class EulaAgreementState extends State<EulaAgreement> {
                           child: RaisedButton(
                             onPressed: userAcceptanceStatus
                                 ? () {
-                                    print("Accepted EULA");
                                     Navigator.pop(
                                         context, {'response': 'ACCEPTED'});
                                   }
                                 : null,
                             child: Text(
-                              AppLocalizations.of(context)
-                                  .translate('eula', 'proceed'),
+                              S.of(context).proceed,
                               style: Theme.of(context).primaryTextTheme.button,
                             ),
                             // color: Theme.of(context).accentColor,

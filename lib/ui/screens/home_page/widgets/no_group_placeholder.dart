@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 
 class NoGroupPlaceHolder extends StatelessWidget {
   final Function navigateToCreateGroup;
@@ -28,11 +28,10 @@ class NoGroupPlaceHolder extends StatelessWidget {
               children: <TextSpan>[
                 TextSpan(
                   style: TextStyle(color: Colors.grey, fontSize: 14),
-                  text:
-                  AppLocalizations.of(context).translate('groups','no_groups_helptext'),
+                  text: S.of(context).no_group_message,
                 ),
                 TextSpan(
-                    text: AppLocalizations.of(context).translate('groups','create_one'),
+                    text: S.of(context).creating_one,
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                     ),

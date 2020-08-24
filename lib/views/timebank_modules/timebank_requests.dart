@@ -9,7 +9,7 @@ import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -25,6 +25,7 @@ import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -83,8 +84,7 @@ class RequestsState extends State<RequestsModule> {
                           FlatButton(
                             onPressed: () {},
                             child: Text(
-                              AppLocalizations.of(context)
-                                  .translate('requests', 'my_requests'),
+                              S.of(context).my_requests,
                               style: (TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 18)),
                             ),
@@ -201,8 +201,7 @@ class RequestsState extends State<RequestsModule> {
       return Scaffold(
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context)
-                .translate('requests', 'select_request'),
+            S.of(context).select_request,
             style: TextStyle(
               fontSize: 18,
             ),
@@ -350,15 +349,13 @@ class RequestsState extends State<RequestsModule> {
       builder: (BuildContext _context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('requests', 'protected_timebank')),
-          content: Text(AppLocalizations.of(context)
-              .translate('requests', 'cannot_post')),
+          title: Text(S.of(context).protected_timebank),
+          content:
+              Text(S.of(context).protected_timebank_request_creation_error),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
-              child: Text(
-                  AppLocalizations.of(context).translate('homepage', 'close')),
+              child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(_context).pop();
               },
@@ -372,13 +369,12 @@ class RequestsState extends State<RequestsModule> {
   void showRequestsWebPage() {
     var dynamicLinks = json.decode(
       AppConfig.remoteConfig.getString(
-        AppLocalizations.of(context).translate('links', 'linkToWeb'),
+        "links_${S.of(context).localeName}",
       ),
     );
     navigateToWebView(
       aboutMode: AboutMode(
-          title: AppLocalizations.of(context)
-              .translate('requests', 'requests_help'),
+          title: S.of(context).requests + ' ' + S.of(context).help,
           urlToHit: dynamicLinks['requestsInfoLink']),
       context: context,
     );
@@ -466,42 +462,41 @@ class _RequestCardViewState extends State<RequestCardView> {
                   icon: Icon(Icons.delete),
                   onPressed: () {
                     showDialog(
-                        context: context,
-                        builder: (BuildContext viewcontext) {
-                          return AlertDialog(
-                            title: Text(AppLocalizations.of(context).translate(
-                                'requests', 'delete_request_confirm')),
-                            actions: <Widget>[
-                              FlatButton(
-                                child: Text(
-                                  AppLocalizations.of(context)
-                                      .translate('requests', 'dont_delete'),
-                                  style: TextStyle(
-                                    fontSize: dialogButtonSize,
-                                  ),
+                      context: context,
+                      builder: (BuildContext viewcontext) {
+                        return AlertDialog(
+                          title: Text(S
+                              .of(context)
+                              .request_delete_confirmation_message),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text(
+                                S.of(context).no,
+                                style: TextStyle(
+                                  fontSize: dialogButtonSize,
                                 ),
-                                onPressed: () {
-                                  Navigator.pop(viewcontext);
-                                },
                               ),
-                              FlatButton(
-                                child: Text(
-                                  AppLocalizations.of(context)
-                                      .translate('requests', 'delete_request'),
-                                  style: TextStyle(
-                                    fontSize: dialogButtonSize,
-                                  ),
+                              onPressed: () {
+                                Navigator.pop(viewcontext);
+                              },
+                            ),
+                            FlatButton(
+                              child: Text(
+                                S.of(context).yes,
+                                style: TextStyle(
+                                  fontSize: dialogButtonSize,
                                 ),
-                                onPressed: () {
-                                  deleteRequest(
-                                      requestModel: widget.requestItem);
-                                  Navigator.pop(viewcontext);
-                                  Navigator.pop(context);
-                                },
                               ),
-                            ],
-                          );
-                        });
+                              onPressed: () {
+                                deleteRequest(requestModel: widget.requestItem);
+                                Navigator.pop(viewcontext);
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                 )
               : Offstage()
@@ -520,10 +515,11 @@ class _RequestCardViewState extends State<RequestCardView> {
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text(
-                  '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
+                S.of(context).general_stream_error,
+              );
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             }
             UserModel userModel = snapshot.data;
             String usertimezone = userModel.timezone;
@@ -556,13 +552,13 @@ class _RequestCardViewState extends State<RequestCardView> {
                           padding: EdgeInsets.all(8.0),
                           alignment: Alignment(-1.0, 0.0),
                           child: Text(
-                            '${AppLocalizations.of(context).translate('requests', 'from')}  ' +
+                            '${S.of(context).from}:  ' +
                                 DateFormat(
-                                        'MMMM dd, yyyy @ h:mm a',
-                                        Locale(AppConfig.prefs
-                                                .getString('language_code'))
-                                            .toLanguageTag())
-                                    .format(
+                                  'MMMM dd, yyyy @ h:mm a',
+                                  Locale(AppConfig.prefs
+                                          .getString('language_code'))
+                                      .toLanguageTag(),
+                                ).format(
                                   getDateTimeAccToUserTimezone(
                                       dateTime:
                                           DateTime.fromMillisecondsSinceEpoch(
@@ -575,7 +571,7 @@ class _RequestCardViewState extends State<RequestCardView> {
                           padding: EdgeInsets.all(8.0),
                           alignment: Alignment(-1.0, 0.0),
                           child: Text(
-                            '${AppLocalizations.of(context).translate('requests', 'untill')}  ' +
+                            '${S.of(context).until}:  ' +
                                 DateFormat(
                                         'MMMM dd, yyyy @ h:mm a',
                                         Locale(AppConfig.prefs
@@ -593,15 +589,14 @@ class _RequestCardViewState extends State<RequestCardView> {
                         Container(
                           padding: EdgeInsets.all(8.0),
                           alignment: Alignment(-1.0, 0.0),
-                          child: Text(
-                              '${AppLocalizations.of(context).translate('requests', 'posted_by')} ' +
-                                  widget.requestItem.fullName),
+                          child: Text('${S.of(context).posted_by}:' +
+                              widget.requestItem.fullName),
                         ),
                         Container(
                           padding: EdgeInsets.all(8.0),
                           alignment: Alignment(-1.0, 0.0),
                           child: Text(
-                            '${AppLocalizations.of(context).translate('requests', 'post_date')}  ' +
+                            '${S.of(context).posted_date}:  ' +
                                 DateFormat(
                                         'MMMM dd, yyyy @ h:mm a',
                                         Locale(AppConfig.prefs
@@ -620,8 +615,9 @@ class _RequestCardViewState extends State<RequestCardView> {
                           padding: EdgeInsets.all(8.0),
                           alignment: Alignment(-1.0, 0.0),
                           child: Text(
-                              '${AppLocalizations.of(context).translate('requests', 'required')} ' +
-                                  '${widget.requestItem.numberOfApprovals}'),
+                            '${S.of(context).number_of_volunteers_required} ' +
+                                '${widget.requestItem.numberOfApprovals}',
+                          ),
                         ),
                         Container(
                           padding: EdgeInsets.all(8.0),
@@ -646,10 +642,12 @@ class _RequestCardViewState extends State<RequestCardView> {
                             child: Text(
                               widget.requestItem.acceptors.contains(
                                       SevaCore.of(context).loggedInUser.email)
-                                  ? AppLocalizations.of(context)
-                                      .translate('requests', 'withdraw')
-                                  : AppLocalizations.of(context)
-                                      .translate('requests', 'accept'),
+                                  ? S.of(context).withdraw +
+                                      ' ' +
+                                      S.of(context).request
+                                  : S.of(context).accept +
+                                      ' ' +
+                                      S.of(context).request,
                               style: TextStyle(
                                 color: FlavorConfig.values.buttonTextColor,
                               ),
@@ -682,12 +680,8 @@ class _RequestCardViewState extends State<RequestCardView> {
                                         },
                                   child: Text(
                                     widget.requestItem.approvedUsers.length < 1
-                                        ? AppLocalizations.of(context)
-                                            .translate(
-                                                'requests', 'not_approved_yet')
-                                        : AppLocalizations.of(context)
-                                            .translate('requests',
-                                                'view_approved_members'),
+                                        ? S.of(context).no_approved_members
+                                        : S.of(context).view_approved_members,
                                     style: TextStyle(
                                       color:
                                           FlavorConfig.values.buttonTextColor,
@@ -738,11 +732,10 @@ class NearRequestListItems extends StatelessWidget {
         ),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text(AppLocalizations.of(context)
-                .translate('requests', 'something_wrong'));
+            return Text(S.of(context).general_stream_error);
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
           UserModel user = snapshot.data;
           String loggedintimezone = user.timezone;
@@ -758,12 +751,11 @@ class NearRequestListItems extends StatelessWidget {
             builder: (BuildContext context,
                 AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
               if (requestListSnapshot.hasError) {
-                return Text(
-                    '${AppLocalizations.of(context).translate('requests', 'error')} ${requestListSnapshot.error}');
+                return Text('${S.of(context).general_stream_error}');
               }
               switch (requestListSnapshot.connectionState) {
                 case ConnectionState.waiting:
-                  return Center(child: CircularProgressIndicator());
+                  return LoadingIndicator();
 
                 default:
                   List<RequestModel> requestModelList =
@@ -775,8 +767,10 @@ class NearRequestListItems extends StatelessWidget {
                     return Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Center(
-                          child: Text(AppLocalizations.of(context)
-                              .translate('requests', 'no_requests'))),
+                        child: Text(
+                          S.of(context).no + ' ' + S.of(context).requests,
+                        ),
+                      ),
                     );
                   }
 
@@ -808,17 +802,18 @@ class NearRequestListItems extends StatelessWidget {
   List<RequestModel> filterBlockedRequestsContent(
       {List<RequestModel> requestModelList, BuildContext context}) {
     List<RequestModel> filteredList = [];
-
-    requestModelList.forEach((request) => SevaCore.of(context)
-                .loggedInUser
-                .blockedMembers
-                .contains(request.sevaUserId) ||
-            SevaCore.of(context)
-                .loggedInUser
-                .blockedBy
-                .contains(request.sevaUserId)
-        ? AppLocalizations.of(context).translate('requests', 'filtering')
-        : filteredList.add(request));
+    requestModelList.forEach((request) {
+      if (!(SevaCore.of(context)
+              .loggedInUser
+              .blockedMembers
+              .contains(request.sevaUserId) ||
+          SevaCore.of(context)
+              .loggedInUser
+              .blockedBy
+              .contains(request.sevaUserId))) {
+        filteredList.add(request);
+      }
+    });
 
     return filteredList;
   }
@@ -922,8 +917,7 @@ class NearRequestListItems extends StatelessWidget {
                                     padding: EdgeInsets.all(0),
                                     color: Colors.green,
                                     child: Text(
-                                      AppLocalizations.of(context)
-                                          .translate('requests', 'applied'),
+                                      S.of(context).applied,
                                       style: TextStyle(
                                         color: Colors.white,
                                       ),
@@ -1018,11 +1012,10 @@ class RequestListItemsState extends State<RequestListItems> {
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Text(
-                  '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
+              return Text('${S.of(context).general_stream_error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             }
             UserModel user = snapshot.data;
             String loggedintimezone = user.timezone;
@@ -1032,11 +1025,10 @@ class RequestListItemsState extends State<RequestListItems> {
                   builder:
                       (context, AsyncSnapshot<TimebankController> snapshot) {
                     if (snapshot.hasError) {
-                      return Text(
-                          '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
+                      return Text('${S.of(context).general_stream_error}');
                     }
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return LoadingIndicator();
                     }
                     if (snapshot.hasData) {
                       List<RequestModel> requestModelList =
@@ -1048,8 +1040,10 @@ class RequestListItemsState extends State<RequestListItems> {
                         return Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Center(
-                              child: Text(AppLocalizations.of(context)
-                                  .translate('requests', 'no_requests'))),
+                            child: Text(S.of(context).no +
+                                ' ' +
+                                S.of(context).requests),
+                          ),
                         );
                       }
                       var consolidatedList =
@@ -1075,12 +1069,11 @@ class RequestListItemsState extends State<RequestListItems> {
                 builder: (BuildContext context,
                     AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
                   if (requestListSnapshot.hasError) {
-                    return Text(
-                        '${AppLocalizations.of(context).translate('requests', 'error')} ${requestListSnapshot.error}');
+                    return Text('${S.of(context).general_stream_error}');
                   }
                   switch (requestListSnapshot.connectionState) {
                     case ConnectionState.waiting:
-                      return Center(child: CircularProgressIndicator());
+                      return LoadingIndicator();
                     default:
                       List<RequestModel> requestModelList =
                           requestListSnapshot.data;
@@ -1091,8 +1084,10 @@ class RequestListItemsState extends State<RequestListItems> {
                         return Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Center(
-                              child: Text(AppLocalizations.of(context)
-                                  .translate('requests', 'no_requests'))),
+                            child: Text(S.of(context).no +
+                                ' ' +
+                                S.of(context).requests),
+                          ),
                         );
                       }
                       var consolidatedList =
@@ -1111,23 +1106,21 @@ class RequestListItemsState extends State<RequestListItems> {
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Text(
-                  '${AppLocalizations.of(context).translate('requests', 'error')} ${snapshot.error}');
+              return Text('${S.of(context).general_stream_error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             }
             return StreamBuilder<List<RequestModel>>(
               stream: FirestoreManager.getAllRequestListStream(),
               builder: (BuildContext context,
                   AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
                 if (requestListSnapshot.hasError) {
-                  return Text(
-                      '${AppLocalizations.of(context).translate('requests', 'error')} ${requestListSnapshot.error}');
+                  return Text('${S.of(context).general_stream_error}');
                 }
                 switch (requestListSnapshot.connectionState) {
                   case ConnectionState.waiting:
-                    return Center(child: CircularProgressIndicator());
+                    return LoadingIndicator();
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
@@ -1138,8 +1131,9 @@ class RequestListItemsState extends State<RequestListItems> {
                       return Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Center(
-                            child: Text(AppLocalizations.of(context)
-                                .translate('requests', 'no_requests'))),
+                          child: Text(
+                              S.of(context).no + ' ' + S.of(context).requests),
+                        ),
                       );
                     }
                     var consolidatedList =
@@ -1163,16 +1157,18 @@ class RequestListItemsState extends State<RequestListItems> {
   }) {
     List<RequestModel> filteredList = [];
 
-    requestModelList.forEach((request) => SevaCore.of(context)
-                .loggedInUser
-                .blockedMembers
-                .contains(request.sevaUserId) ||
-            SevaCore.of(context)
-                .loggedInUser
-                .blockedBy
-                .contains(request.sevaUserId)
-        ? AppLocalizations.of(context).translate('requests', 'filtering')
-        : filteredList.add(request));
+    requestModelList.forEach((request) {
+      if (!(SevaCore.of(context)
+              .loggedInUser
+              .blockedMembers
+              .contains(request.sevaUserId) ||
+          SevaCore.of(context)
+              .loggedInUser
+              .blockedBy
+              .contains(request.sevaUserId))) {
+        filteredList.add(request);
+      }
+    });
 
     return filteredList;
   }
@@ -1229,9 +1225,47 @@ class RequestListItemsState extends State<RequestListItems> {
         );
 
       default:
-        return Text(
-            AppLocalizations.of(context).translate('requests', 'default'));
+        return Text(S.of(context).default_text.toUpperCase());
     }
+  }
+
+  Widget getAppropriateTag(RequestType requestType) {
+    switch (requestType) {
+      case RequestType.CASH:
+        return getTagMainFrame('Cash Request');
+
+      case RequestType.GOODS:
+        return getTagMainFrame('Goods Request');
+
+      case RequestType.TIME:
+        return getTagMainFrame('Time Request');
+
+      default:
+        return Container();
+    }
+  }
+
+  Widget getTagMainFrame(String tagTitle) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 3, right: 5, top: 5),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+        child: Container(
+          color: Theme.of(context).primaryColor,
+          child: Padding(
+            padding:
+                const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
+            child: Text(
+              tagTitle,
+              style: TextStyle(
+                fontSize: 11,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget getFromNormalRequest(
@@ -1268,6 +1302,7 @@ class RequestListItemsState extends State<RequestListItems> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      getAppropriateTag(model.requestType),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -1365,8 +1400,7 @@ class RequestListItemsState extends State<RequestListItems> {
                                     padding: EdgeInsets.all(0),
                                     color: Colors.green,
                                     child: Text(
-                                      AppLocalizations.of(context)
-                                          .translate('requests', 'applied'),
+                                      S.of(context).applied,
                                       style: TextStyle(
                                         color: Colors.white,
                                       ),

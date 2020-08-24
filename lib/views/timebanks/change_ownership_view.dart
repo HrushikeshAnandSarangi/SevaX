@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
@@ -11,6 +11,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class ChangeOwnerShipView extends StatefulWidget {
   final String timebankId;
@@ -25,7 +26,7 @@ class ChangeOwnerShipView extends StatefulWidget {
 class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
   SuggestionsBoxController controller = SuggestionsBoxController();
   TextEditingController _textEditingController = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
   var groupMembersList = List<String>();
   var ownerGroupsArr;
   UserModel selectedNewOwner = null;
@@ -40,10 +41,8 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
   List<String> invtitedUsers = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getMembersList();
-    //  print("ownerGroupsArr==============" + ownerGroupsArr.toString());
   }
 
   void getMembersList() {
@@ -73,8 +72,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
         ),
 //      automaticallyImplyLeading: true,
         title: Text(
-          AppLocalizations.of(context)
-              .translate('change_ownership', 'change_ownership_title'),
+          S.of(context).change_ownership,
           style: TextStyle(
               fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Europa'),
         ),
@@ -100,11 +98,11 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
                       height: 15,
                     ),
                     Text(
-                      AppLocalizations.of(context)
-                              .translate('change_ownership', 'change_hint') +
+                      S.of(context).changing_ownership_of +
+                          ' ' +
                           tbmodel.name +
-                          AppLocalizations.of(context).translate(
-                              'change_ownership', 'change_hint_three'),
+                          ' ' +
+                          S.of(context).to_other_admin,
                       style: TextStyle(
                         fontSize: 18,
                         fontFamily: 'Europa',
@@ -122,8 +120,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
 //                height: 15,
 //              ),
                     Text(
-                      AppLocalizations.of(context)
-                          .translate('change_ownership', 'change_hint_two'),
+                      S.of(context).change_to,
                       style: TextStyle(
                         fontSize: 14,
                         fontFamily: 'Europa',
@@ -134,8 +131,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
                       height: 10,
                     ),
                     Text(
-                      AppLocalizations.of(context)
-                          .translate('change_ownership', 'search_admin'),
+                      S.of(context).search_admin,
                       style: TextStyle(
                         fontSize: 14,
                         fontFamily: 'Europa',
@@ -170,9 +166,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
                 ),
               ),
             )
-          : Center(
-              child: CircularProgressIndicator(),
-            ),
+          : LoadingIndicator(),
     );
   }
 
@@ -185,31 +179,26 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
             Navigator.pop(context);
           },
           child: Text(
-            AppLocalizations.of(context).translate('shared', 'cancel'),
+            S.of(context).cancel,
             style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa'),
           ),
           textColor: Colors.grey,
         ),
         FlatButton(
-          child: Text(
-              AppLocalizations.of(context)
-                  .translate('change_ownership', 'change'),
+          child: Text(S.of(context).change,
               style:
                   TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa')),
           textColor: FlavorConfig.values.theme.primaryColor,
           onPressed: () async {
             if (selectedNewOwner == null) {
               setState(() {
-                user_error = AppLocalizations.of(context)
-                    .translate('change_ownership', 'users_empty');
+                user_error = S.of(context).select_user;
               });
             } else if (invtitedUsers.contains(selectedNewOwner.email)) {
               dialogBox(
-                  message: AppLocalizations.of(context)
-                      .translate('change_ownership', 'already_invited'));
+                  message: S.of(context).change_ownership_already_invited);
             } else {
-              showProgressDialog(AppLocalizations.of(context)
-                  .translate('members', 'sending_invitation'));
+              showProgressDialog(S.of(context).sending_invitation);
               Map<String, dynamic> responseObj =
                   await checkChangeOwnershipStatus(
                       sevauserid: loggedInUser.sevaUserID,
@@ -227,19 +216,17 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
                     Navigator.pop(progressContext);
                   }
                   dialogBox(
-                      message: AppLocalizations.of(context)
-                          .translate('change_ownership', 'pending_task'));
+                      message:
+                          S.of(context).change_ownership_pending_task_message);
                 } else if (responseObj['pendingPaymentsCheck'] == false) {
                   if (progressContext != null) {
                     Navigator.pop(progressContext);
                   }
                   dialogBox(
-                      message: AppLocalizations.of(context).translate(
-                                  'change_ownership', 'pending_payment') +
+                      message: S.of(context).change_ownership_pending_payment1 +
                               responseObj['planName'] ??
-                          '' +
-                              AppLocalizations.of(context).translate(
-                                  'change_ownership', 'pending_payment_two'));
+                          ' ' +
+                              S.of(context).change_ownership_pending_payment2);
                 } else {
                   if (progressContext != null) {
                     Navigator.pop(progressContext);
@@ -263,13 +250,11 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: Text(AppLocalizations.of(context)
-              .translate('change_ownership', 'ownership_suceess')),
+          content: Text(S.of(context).ownership_success),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
-              child: Text(
-                  AppLocalizations.of(context).translate('homepage', 'ok')),
+              child: Text(S.of(context).ok),
               onPressed: () {
                 //  resetAndLoad();
                 // Navigator.of(context).pop();
@@ -305,8 +290,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
-              child: Text(AppLocalizations.of(context)
-                  .translate('billing_plans', 'close')),
+              child: Text(S.of(context).close),
               textColor: Colors.red,
               onPressed: () {
                 Navigator.of(context).pop();
@@ -326,8 +310,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
       textFieldConfiguration: TextFieldConfiguration(
         controller: _textEditingController,
         decoration: InputDecoration(
-          hintText:
-              AppLocalizations.of(context).translate('search_page', 'search'),
+          hintText: S.of(context).search,
           filled: true,
           fillColor: Colors.grey[300],
           focusedBorder: OutlineInputBorder(
@@ -388,7 +371,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            AppLocalizations.of(context).translate('requests', 'no_users'),
+            S.of(context).no_user_found,
             style: TextStyle(fontSize: 16, color: Colors.grey),
           ),
         );
@@ -444,19 +427,19 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: Text(AppLocalizations.of(context)
-                  .translate('change_ownership', 'invitation_sent') +
-              timebankName +
-              AppLocalizations.of(context)
-                  .translate('change_ownership', 'invitation_sent_two') +
-              admin +
-              AppLocalizations.of(context)
-                  .translate('change_ownership', 'invitation_sent_three')),
+          content: Text(
+            S.of(context).invitation_sent1 +
+                ' ' +
+                timebankName +
+                S.of(context).invitation_sent2 +
+                ' ' +
+                admin +
+                S.of(context).invitation_sent3,
+          ),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
-              child: Text(AppLocalizations.of(context)
-                  .translate('billing_plans', 'close')),
+              child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(parentContext).pop();
@@ -474,13 +457,11 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: Text(AppLocalizations.of(context)
-              .translate('transfer_ownership', 'transfer_error')),
+          content: Text(S.of(context).ownership_transfer_error),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
-              child: Text(AppLocalizations.of(context)
-                  .translate('billing_plans', 'close')),
+              child: Text(S.of(context).close),
               textColor: Colors.red,
               onPressed: () {
                 Navigator.of(context).pop();
@@ -497,11 +478,11 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
         creatorPhotoUrl: loggedInUser.photoURL,
         creatorEmail: loggedInUser.email,
         timebank: tbmodel.name,
-        message: AppLocalizations.of(context)
-                .translate('change_ownership', 'change_message') +
+        message: S.of(context).change_ownership_message1 +
+            ' ' +
             tbmodel.name +
-            AppLocalizations.of(context)
-                .translate('change_ownership', 'change_message_two'),
+            ' ' +
+            S.of(context).change_ownership_message2,
         creatorName: loggedInUser.fullname);
 
     NotificationsModel notification = NotificationsModel(

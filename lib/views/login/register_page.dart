@@ -3,24 +3,35 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:connectivity/connectivity.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_drawing/path_drawing.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/views/profile/edit_profile.dart';
 import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 import 'package:sevaexchange/views/splash_view.dart' as DefaultSplashView;
+
+import '../../globals.dart' as globals;
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -41,8 +52,9 @@ class _RegisterPageState extends State<RegisterPage>
 
   String fullName;
   String password;
-  String email;
+  String email = '';
   String imageUrl;
+  String webImageUrl;
   String confirmPassword;
   File selectedImage;
   String isImageSelected;
@@ -50,6 +62,19 @@ class _RegisterPageState extends State<RegisterPage>
   ImagePickerHandler imagePicker;
   bool isEmailVerified = false;
   bool sentOTP = false;
+  bool _isDocumentBeingUploaded = false;
+  final int tenMegaBytes = 10485760;
+  ProfanityImageModel profanityImageModel = ProfanityImageModel();
+  ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
+  String _fileName;
+  String _path;
+  String cvName;
+  String cvUrl;
+  String cvFileError = '';
+
+  BuildContext parentContext;
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
 
   @override
   void initState() {
@@ -66,15 +91,14 @@ class _RegisterPageState extends State<RegisterPage>
 
   @override
   Widget build(BuildContext context) {
-    isImageSelected =
-        AppLocalizations.of(context).translate('signup', 'add_photo');
+    isImageSelected = S.of(context).add_photo;
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
         elevation: 0.5,
         title: Text(
-          AppLocalizations.of(context).translate('signup', 'your_details'),
+          S.of(context).your_details,
           style: TextStyle(
             fontSize: 18,
           ),
@@ -98,6 +122,10 @@ class _RegisterPageState extends State<RegisterPage>
                             SizedBox(height: 16),
                             _imagePicker,
                             _formFields,
+                            cvUpload(
+                              title: S.of(context).upload_cv_resume,
+                              text: S.of(context).cv_message,
+                            ),
                             SizedBox(height: 24),
                             registerButton,
                             SizedBox(height: 8),
@@ -129,6 +157,182 @@ class _RegisterPageState extends State<RegisterPage>
     setState(() => this._isLoading = isLoading);
   }
 
+  Widget cvUpload({
+    String title,
+    String text,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(
+          height: 8,
+        ),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 15.0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(height: 10),
+        Text(
+          text ?? "",
+          style: TextStyle(color: Colors.grey),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        GestureDetector(
+          onTap: () {
+            _openFileExplorer();
+          },
+          child: Container(
+            height: 150,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: DashPathBorder.all(
+                dashArray: CircularIntervalList<double>(<double>[5.0, 2.5]),
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'lib/assets/images/cv.png',
+                  height: 50,
+                  width: 50,
+                  color: FlavorConfig.values.theme.primaryColor,
+                ),
+                Text(
+                  S.of(context).choose_pdf_file,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey),
+                ),
+                _isDocumentBeingUploaded
+                    ? Container(
+                        margin: EdgeInsets.only(top: 20),
+                        child: Center(
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                      )
+                    : Container(
+                        child: cvName == null
+                            ? Offstage()
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Card(
+                                  color: Colors.grey[100],
+                                  child: ListTile(
+                                    leading: Icon(Icons.attachment),
+                                    title: Text(
+                                      cvName ?? "cv not available",
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    trailing: IconButton(
+                                      icon: Icon(Icons.clear),
+                                      onPressed: () => setState(() {
+                                        cvName = null;
+                                        cvUrl = null;
+                                      }),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                      ),
+              ],
+            ),
+          ),
+        ),
+        Text(
+          S.of(context).validation_error_cv_size,
+          style: TextStyle(color: Colors.grey),
+        ),
+//        Text(
+//          cvFileError,
+//          style: TextStyle(color: Colors.red),
+//        ),
+//        Row(
+//          mainAxisAlignment: MainAxisAlignment.end,
+//          children: <Widget>[
+//            Padding(
+//              padding: const EdgeInsets.only(top: 5),
+//              child: Container(
+//                height: 30,
+//                child: RaisedButton(
+//                  onPressed: () async {
+//                    var connResult = await Connectivity().checkConnectivity();
+//                    if (connResult == ConnectivityResult.none) {
+//                      _scaffoldKey.currentState.showSnackBar(
+//                        SnackBar(
+//                          content: Text(AppLocalizations.of(context)
+//                              .translate('shared', 'check_internet')),
+//                          action: SnackBarAction(
+//                            label: AppLocalizations.of(context)
+//                                .translate('shared', 'dismiss'),
+//                            onPressed: () =>
+//                                _scaffoldKey.currentState.hideCurrentSnackBar(),
+//                          ),
+//                        ),
+//                      );
+//                      return;
+//                    }
+//                    if (cvUrl == null ||
+//                        cvUrl == '' ||
+//                        cvName == '' ||
+//                        cvName == null) {
+//                      setState(() {
+//                        this.cvFileError = AppLocalizations.of(context)
+//                            .translate('cv', 'cv_error');
+//                      });
+//                    } else {
+//                      await updateCV();
+//                      _scaffoldKey.currentState.showSnackBar(
+//                        SnackBar(
+//                          content: Text(
+//                            AppLocalizations.of(context)
+//                                .translate('upload_csv', 'upload_success'),
+//                          ),
+//                          action: SnackBarAction(
+//                            label: AppLocalizations.of(context)
+//                                .translate('shared', 'dismiss'),
+//                            onPressed: () =>
+//                                _scaffoldKey.currentState.hideCurrentSnackBar(),
+//                          ),
+//                        ),
+//                      );
+//                      setState(() {
+//                        this.cvFileError = '';
+//                        this.canuploadCV = false;
+//                      });
+//                    }
+//                  },
+//                  child: Text(
+//                    AppLocalizations.of(context)
+//                        .translate('upload_csv', 'upload'),
+//                    textAlign: TextAlign.center,
+//                    style: TextStyle(
+//                      fontSize: 12,
+//                    ),
+//                  ),
+//                  color: Colors.grey[300],
+//                  shape: StadiumBorder(),
+//                ),
+//              ),
+//            ),
+//          ],
+//        ),
+        SizedBox(
+          height: 15,
+        ),
+      ],
+    );
+  }
+
   Widget get _imagePicker {
     return GestureDetector(
       onTap: () {
@@ -138,7 +342,7 @@ class _RegisterPageState extends State<RegisterPage>
         height: 150,
         width: 150,
         child: Container(
-          child: selectedImage == null
+          child: selectedImage == null && webImageUrl == null
               ? Container(
                   width: 150.0,
                   height: 150.0,
@@ -153,7 +357,10 @@ class _RegisterPageState extends State<RegisterPage>
               : Container(
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: FileImage(selectedImage), fit: BoxFit.cover),
+                          image: webImageUrl == null
+                              ? FileImage(selectedImage)
+                              : Image.network(webImageUrl),
+                          fit: BoxFit.cover),
                       borderRadius: BorderRadius.all(Radius.circular(75.0)),
                       boxShadow: [
                         BoxShadow(blurRadius: 7.0, color: Colors.black12)
@@ -167,7 +374,8 @@ class _RegisterPageState extends State<RegisterPage>
                               BorderRadius.all(Radius.circular(50.0))),
                       child: Icon(Icons.add_a_photo),
                     ),
-                  )),
+                  ),
+                ),
         ),
       ),
     );
@@ -184,11 +392,16 @@ class _RegisterPageState extends State<RegisterPage>
               FocusScope.of(context).requestFocus(emailFocus);
             },
             shouldRestrictLength: true,
-            hint: AppLocalizations.of(context).translate('signup', 'full_name'),
-            validator: (value) => value.isEmpty
-                ? AppLocalizations.of(context)
-                    .translate('signup', 'full_name_err')
-                : null,
+            hint: S.of(context).full_name,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_full_name;
+              } else if (profanityDetector.isProfaneString(value)) {
+                return S.of(context).profanity_text_alert;
+              } else {
+                return null;
+              }
+            },
             capitalization: TextCapitalization.words,
             onSave: (value) => this.fullName = value,
           ),
@@ -198,12 +411,10 @@ class _RegisterPageState extends State<RegisterPage>
               FocusScope.of(context).requestFocus(pwdFocus);
             },
             shouldRestrictLength: false,
-            hint: AppLocalizations.of(context)
-                .translate('signup', 'email_address'),
+            hint: S.of(context).email.firstWordUpperCase(),
             validator: (value) {
               if (!isValidEmail(value.trim())) {
-                return AppLocalizations.of(context)
-                    .translate('signup', 'email_address_err');
+                return S.of(context).validation_error_invalid_email;
               }
               return null;
             },
@@ -216,13 +427,12 @@ class _RegisterPageState extends State<RegisterPage>
               FocusScope.of(context).requestFocus(confirmPwdFocus);
             },
             shouldRestrictLength: false,
-            hint: AppLocalizations.of(context).translate('signup', 'password'),
+            hint: S.of(context).password.firstWordUpperCase(),
             shouldObscure: shouldObscurePassword,
             validator: (value) {
               this.password = '';
               if (value.length < 6) {
-                return AppLocalizations.of(context)
-                    .translate('signup', 'password_err');
+                return S.of(context).validation_error_invalid_password;
               }
               this.password = value;
               return null;
@@ -250,17 +460,16 @@ class _RegisterPageState extends State<RegisterPage>
               FocusScope.of(context).requestFocus(FocusNode());
             },
             shouldRestrictLength: false,
-            hint: AppLocalizations.of(context)
-                .translate('signup', 'confirm_password'),
+            hint: S.of(context).confirm.firstWordUpperCase() +
+                ' ' +
+                S.of(context).password.firstWordUpperCase(),
             shouldObscure: shouldObscureConfirmPassword,
             validator: (value) {
               if (value.length < 6) {
-                return AppLocalizations.of(context)
-                    .translate('signup', 'confirm_password_err');
+                return S.of(context).validation_error_invalid_password;
               }
               if (value != password) {
-                return AppLocalizations.of(context)
-                    .translate('signup', 'confirm_password_err2');
+                return S.of(context).validation_error_password_mismatch;
               }
               return null;
             },
@@ -299,11 +508,24 @@ class _RegisterPageState extends State<RegisterPage>
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: TextFormField(
+        autovalidate: autoValidateText,
         focusNode: focusNode,
         onFieldSubmitted: onFieldSubmittedCB,
         enabled: !isLoading,
+        onChanged: (value) {
+          if (value.length > 1) {
+            setState(() {
+              autoValidateText = true;
+            });
+          } else {
+            setState(() {
+              autoValidateText = false;
+            });
+          }
+        },
         decoration: InputDecoration(
           labelText: hint,
+          errorMaxLines: 2,
           suffix: suffix,
           labelStyle: TextStyle(color: Colors.black),
           suffixStyle: TextStyle(color: Colors.black),
@@ -340,11 +562,9 @@ class _RegisterPageState extends State<RegisterPage>
                 if (connResult == ConnectivityResult.none) {
                   _scaffoldKey.currentState.showSnackBar(
                     SnackBar(
-                      content: Text(AppLocalizations.of(context)
-                          .translate('shared', 'check_internet')),
+                      content: Text(S.of(context).check_internet),
                       action: SnackBarAction(
-                        label: AppLocalizations.of(context)
-                            .translate('shared', 'dismiss'),
+                        label: S.of(context).dismiss,
                         onPressed: () =>
                             _scaffoldKey.currentState.hideCurrentSnackBar(),
                       ),
@@ -367,19 +587,17 @@ class _RegisterPageState extends State<RegisterPage>
                       return WillPopScope(
                         onWillPop: () {},
                         child: AlertDialog(
-                          title: Text(AppLocalizations.of(context)
-                              .translate('signup', 'add_photo')),
-                          content: Text(AppLocalizations.of(context)
-                              .translate('signup', 'add_photo_des')),
+                          title: Text(S.of(context).add_photo),
+                          content: Text(S.of(context).add_photo_hint),
                           actions: <Widget>[
                             FlatButton(
                               child: Text(
-                                AppLocalizations.of(context)
-                                    .translate('signup', 'skip_register'),
+                                S.of(context).skip_and_register,
                                 style: TextStyle(
-                                    fontSize: dialogButtonSize,
-                                    color: Colors.red,
-                                    fontFamily: 'Europa'),
+                                  fontSize: dialogButtonSize,
+                                  color: Colors.red,
+                                  fontFamily: 'Europa',
+                                ),
                               ),
                               onPressed: () async {
                                 Navigator.pop(viewContext);
@@ -388,7 +606,8 @@ class _RegisterPageState extends State<RegisterPage>
                                   return;
                                 }
                                 _formKey.currentState.save();
-                                await createUser();
+
+                                await profanityCheck();
                                 isLoading = false;
                               },
                             ),
@@ -397,11 +616,11 @@ class _RegisterPageState extends State<RegisterPage>
                               color: Theme.of(context).accentColor,
                               textColor: FlavorConfig.values.buttonTextColor,
                               child: Text(
-                                AppLocalizations.of(context)
-                                    .translate('signup', 'add_photo'),
+                                S.of(context).add_photo,
                                 style: TextStyle(
-                                    fontSize: dialogButtonSize,
-                                    fontFamily: 'Europa'),
+                                  fontSize: dialogButtonSize,
+                                  fontFamily: 'Europa',
+                                ),
                               ),
                               onPressed: () {
                                 Navigator.pop(viewContext);
@@ -421,12 +640,12 @@ class _RegisterPageState extends State<RegisterPage>
                     return;
                   }
                   _formKey.currentState.save();
-                  await createUser();
+                  await profanityCheck();
                   isLoading = false;
                 }
               },
         child: Text(
-          AppLocalizations.of(context).translate('login', 'signup'),
+          S.of(context).sign_up,
           style: TextStyle(
             color: Colors.white,
             fontSize: 18,
@@ -447,8 +666,7 @@ class _RegisterPageState extends State<RegisterPage>
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text(AppLocalizations.of(context)
-                .translate('signup', 'create_account')),
+            title: Text(S.of(context).creating_account),
             content: LinearProgressIndicator(),
           );
         });
@@ -460,23 +678,72 @@ class _RegisterPageState extends State<RegisterPage>
     return regex.hasMatch(email);
   }
 
-  Future createUser() async {
+  @override
+  addWebImageUrl() {
+    // TODO: implement addWebImageUrl
+    if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
+      webImageUrl = globals.webImageUrl;
+      setState(() {});
+    }
+  }
+
+  Future<void> profanityCheck() async {
+    // _newsImageURL = imageURL;
     showDialogForAccountCreation();
+    if (webImageUrl != null && webImageUrl.isNotEmpty) {
+      createUser(imageUrl: webImageUrl);
+    } else {
+      if (this.selectedImage != null) {
+        String imageUrl = await uploadImage(email);
+        profanityImageModel = await checkProfanityForImage(imageUrl: imageUrl);
+        profanityStatusModel =
+            await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+        if (profanityStatusModel.isProfane) {
+          if (dialogContext != null) {
+            Navigator.pop(dialogContext);
+          }
+          showProfanityImageAlert(
+                  context: context, content: profanityStatusModel.category)
+              .then((status) {
+            if (status == 'Proceed') {
+              FirebaseStorage.instance
+                  .getReferenceFromUrl(imageUrl)
+                  .then((reference) {
+                reference.delete();
+
+                setState(() {});
+              }).catchError((e) => print(e));
+            } else {
+              print('error');
+            }
+          });
+        } else {
+          createUser(imageUrl: imageUrl);
+        }
+      } else {
+        createUser(imageUrl: defaultUserImageURL);
+      }
+    }
+  }
+
+  Future createUser({String imageUrl}) async {
     var appLanguage = AppLanguage();
     log('Called createUser');
+    if (cvName != null) {
+      await uploadDocument();
+    }
     Auth auth = AuthProvider.of(context).auth;
+
     try {
       UserModel user = await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
         displayName: fullName,
       );
-      if (this.selectedImage != null) {
-        String imageUrl = await uploadImage(user.email);
-        user.photoURL = imageUrl;
-      } else {
-        user.photoURL = defaultUserImageURL;
-      }
+
+      user.photoURL = imageUrl;
+
       user.timezone =
           TimezoneListData().getTimeZoneByCodeData(DateTime.now().timeZoneName);
       var _sysLng = ui.window.locale.languageCode;
@@ -484,6 +751,16 @@ class _RegisterPageState extends State<RegisterPage>
           LanguageListData().getLanguageSupported(_sysLng.toString());
       appLanguage.changeLanguage(Locale(language.code));
       user.language = language.code;
+      print("cv name ${cvName}");
+
+      if (cvName != null) {
+        user.cvName = cvName;
+        user.cvUrl = cvUrl;
+        print("cv details ${cvName + '' + cvUrl}");
+        print("cv details ${user.cvUrl + '' + user.cvName}");
+      }
+
+      print("cv details ${cvName + '' + cvUrl}");
       await FirestoreManager.updateUser(user: user);
 
       Navigator.pop(dialogContext);
@@ -496,7 +773,7 @@ class _RegisterPageState extends State<RegisterPage>
         SnackBar(
           content: Text(error.message),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            label: S.of(context).dismiss,
             onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
           ),
         ),
@@ -517,8 +794,7 @@ class _RegisterPageState extends State<RegisterPage>
     if (_image == null) return;
     setState(() {
       this.selectedImage = _image;
-      isImageSelected =
-          AppLocalizations.of(context).translate('signup', 'upload_photo');
+      isImageSelected = S.of(context).update_photo;
     });
   }
 
@@ -567,6 +843,70 @@ class _RegisterPageState extends State<RegisterPage>
     );
   }
 
+  void _openFileExplorer() async {
+    //  bool _isDocumentBeingUploaded = false;
+    //File _file;
+    //List<File> _files;
+    String _fileName;
+    String _path;
+    Map<String, String> _paths;
+    try {
+      _paths = null;
+      _path = await FilePicker.getFilePath(
+          type: FileType.custom, allowedExtensions: ['pdf']);
+    } on PlatformException catch (e) {
+      print("Unsupported operation" + e.toString());
+    }
+    //   if (!mounted) return;
+    if (_path != null) {
+      _fileName = _path.split('/').last;
+      print("FIle  name $_fileName");
+
+      userDoc(_path, _fileName);
+    }
+  }
+
+  void userDoc(String _doc, String fileName) {
+    // TODO: implement userDoc
+    setState(() {
+      this._path = _doc;
+      this._fileName = fileName;
+      this.cvName = _fileName;
+      // this._isDocumentBeingUploaded = true;
+    });
+    checkFileSize();
+    return null;
+  }
+
+  void checkFileSize() async {
+    var file = File(_path);
+    final bytes = await file.lengthSync();
+    if (bytes > tenMegaBytes) {
+      getAlertDialog(parentContext);
+    }
+  }
+
+  Future<String> uploadDocument() async {
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+    String timestampString = timestamp.toString();
+    String name = email + timestampString + _fileName;
+    StorageReference ref =
+        FirebaseStorage.instance.ref().child('cv_files').child(name);
+    StorageUploadTask uploadTask = ref.putFile(
+      File(_path),
+      StorageMetadata(
+        contentLanguage: 'en',
+        customMetadata: <String, String>{'activity': 'CV File'},
+      ),
+    );
+    String documentURL =
+        await (await uploadTask.onComplete).ref.getDownloadURL();
+
+    cvName = _fileName;
+    cvUrl = documentURL;
+    return documentURL;
+  }
+
   Widget get signUpWithGoogle {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -575,7 +915,7 @@ class _RegisterPageState extends State<RegisterPage>
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             horizontalLine(),
-            Text(AppLocalizations.of(context).translate('signup', 'or')),
+            Text(S.of(context).or),
             horizontalLine()
           ],
         ),
@@ -708,8 +1048,7 @@ class _RegisterPageState extends State<RegisterPage>
   Widget get googleLoginiPhone {
     return signInButton(
       imageRef: 'lib/assets/google-logo-png-open-2000.png',
-      msg:
-          AppLocalizations.of(context).translate('login', 'signin_with_google'),
+      msg: S.of(context).sign_in_with_google,
       operation: useGoogleSignIn,
     );
   }
@@ -717,7 +1056,7 @@ class _RegisterPageState extends State<RegisterPage>
   Widget get appleLoginiPhone {
     return signInButton(
       imageRef: 'lib/assets/images/apple-logo.png',
-      msg: AppLocalizations.of(context).translate('login', 'signin_with_apple'),
+      msg: S.of(context).sign_in_with_apple,
       operation: appleLogIn,
     );
   }
@@ -727,10 +1066,9 @@ class _RegisterPageState extends State<RegisterPage>
     if (connResult == ConnectivityResult.none) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)
-              .translate('shared', 'check_internet')),
+          content: Text(S.of(context).check_internet),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            label: S.of(context).dismiss,
             onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
           ),
         ),
@@ -766,10 +1104,9 @@ class _RegisterPageState extends State<RegisterPage>
     if (connResult == ConnectivityResult.none) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)
-              .translate('shared', 'check_internet')),
+          content: Text(S.of(context).check_internet),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            label: S.of(context).dismiss,
             onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
           ),
         ),
@@ -786,11 +1123,9 @@ class _RegisterPageState extends State<RegisterPage>
       if (erorr.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
         _scaffoldKey.currentState.showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)
-                .translate('signup', 'already_registered')),
+            content: Text(S.of(context).validation_error_email_registered),
             action: SnackBarAction(
-              label:
-                  AppLocalizations.of(context).translate('shared', 'dismiss'),
+              label: S.of(context).dismiss,
               onPressed: () {
                 _scaffoldKey.currentState.hideCurrentSnackBar();
               },
@@ -828,7 +1163,7 @@ class _RegisterPageState extends State<RegisterPage>
         SnackBar(
           content: Text(error.message),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            label: S.of(context).dismiss,
             onPressed: () {
               _scaffoldKey.currentState.hideCurrentSnackBar();
             },
@@ -840,8 +1175,7 @@ class _RegisterPageState extends State<RegisterPage>
         SnackBar(
           content: Text(error.message),
           action: SnackBarAction(
-            label: AppLocalizations.of(context)
-                .translate('shared', 'change_password'),
+            label: S.of(context).change_password,
             onPressed: () {
               resetPassword(email);
               _scaffoldKey.currentState.hideCurrentSnackBar();
@@ -852,10 +1186,9 @@ class _RegisterPageState extends State<RegisterPage>
     } else if (error.message.contains("already")) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)
-              .translate('shared', 'already_registered')),
+          content: Text(S.of(context).validation_error_email_registered),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+            label: S.of(context).dismiss,
             onPressed: () {
               _scaffoldKey.currentState.hideCurrentSnackBar();
             },
@@ -870,10 +1203,9 @@ class _RegisterPageState extends State<RegisterPage>
         .sendPasswordResetEmail(email: email)
         .then((onValue) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)
-            .translate('signup', 'sent_reset_link')),
+        content: Text(S.of(context).reset_password_message),
         action: SnackBarAction(
-          label: AppLocalizations.of(context).translate('shared', 'dismiss'),
+          label: S.of(context).dismiss,
           onPressed: () {
             _scaffoldKey.currentState.hideCurrentSnackBar();
           },

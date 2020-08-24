@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
@@ -21,6 +21,7 @@ import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class HomeDashBoard extends StatefulWidget {
   @override
@@ -73,6 +74,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
 
   @override
   Widget build(BuildContext context) {
+    log('${S.of(context).localeName}');
     log("home dashboard page build");
     final _user = BlocProvider.of<UserDataBloc>(context);
     // print("user bloc ${_user.user.email}");
@@ -142,8 +144,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                         ),
                       ),
                     )
-                  : Text(AppLocalizations.of(context)
-                      .translate('main', 'loading'));
+                  : Text(S.of(context).loading);
             },
           ),
           actions: <Widget>[
@@ -174,7 +175,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
               .getCurrentGroups(SevaCore.of(context).loggedInUser),
           builder: (context, snapshot) {
             if (snapshot.data == null || !snapshot.hasData) {
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             }
             if (snapshot.hasData && snapshot.data != null) {
               // print("asd" + snapshot.data.timebanks.length.toString());
@@ -200,8 +201,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
 
                 tabs.add(
                   Tab(
-                    text: AppLocalizations.of(context)
-                        .translate('main', 'manage'),
+                    text: S.of(context).manage,
                   ),
                 );
               }
@@ -235,6 +235,9 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                         timebankModel: primaryTimebank,
                       ),
                       // TimebankFeeds(),
+//                      DonationView(
+//                        initialScreen: 0,
+//                      ),
                       RequestsModule.of(
                         timebankId: primaryTimebank.id,
                         timebankModel: primaryTimebank,
@@ -279,13 +282,13 @@ class _HomeDashBoardState extends State<HomeDashBoard>
 
   void buildTabs() {
     tabs = [
-      Tab(text: AppLocalizations.of(context).translate('main', 'timebank')),
-      Tab(text: AppLocalizations.of(context).translate('main', 'feeds')),
-      Tab(text: AppLocalizations.of(context).translate('main', 'projects')),
-      Tab(text: AppLocalizations.of(context).translate('main', 'requests')),
-      Tab(text: AppLocalizations.of(context).translate('main', 'offers')),
-      Tab(text: AppLocalizations.of(context).translate('main', 'about')),
-      Tab(text: AppLocalizations.of(context).translate('main', 'members'))
+      Tab(text: S.of(context).timebank),
+      Tab(text: S.of(context).feeds),
+      Tab(text: S.of(context).projects),
+      Tab(text: S.of(context).requests),
+      Tab(text: S.of(context).offers),
+      Tab(text: S.of(context).about),
+      Tab(text: S.of(context).members)
     ];
   }
 }

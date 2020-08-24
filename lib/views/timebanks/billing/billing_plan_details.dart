@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/billing_plan_details.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/NoGlowScrollBehavior.dart';
 
 class BillingPlanDetails extends StatefulWidget {
@@ -38,8 +39,8 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
     // await remoteConfig.activateFetched();
     // print("====> ${AppConfig.remoteConfig.getString("billing_plans")}");
     _billingPlanDetailsModels = billingPlanDetailsModelFromJson(
-      AppConfig.remoteConfig.getString(AppLocalizations.of(context)
-          .translate('billing_plans', 'remote_config')),
+      AppConfig.remoteConfig
+          .getString('billing_plans_${S.of(context).localeName}'),
     );
     if (widget.isPrivateTimebank) {
       _billingPlanDetailsModels
@@ -73,7 +74,7 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate('billing_plans', 'title'),
+          S.of(context).choose_suitable_plan,
           style: TextStyle(fontSize: 20),
         ),
         centerTitle: !widget.isPlanActive,
@@ -81,7 +82,7 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
       ),
       body: _billingPlanDetailsModels == null ||
               _billingPlanDetailsModels.isEmpty
-          ? Center(child: CircularProgressIndicator())
+          ? LoadingIndicator()
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,

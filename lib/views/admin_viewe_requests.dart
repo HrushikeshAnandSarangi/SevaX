@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -9,6 +9,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/views/timebanks/admin_view_request_status.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import 'core.dart';
 import 'group_models/GroupingStrategy.dart';
@@ -26,8 +27,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
       return Scaffold(
           appBar: AppBar(
             title: Text(
-              AppLocalizations.of(context)
-                  .translate('requests', 'select_request'),
+              S.of(context).select_request,
               style: TextStyle(
                 fontSize: 18,
               ),
@@ -43,7 +43,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
                     return Text('Error: ${snapshot.error}');
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return LoadingIndicator();
                   }
                   UserModel user = snapshot.data;
                   String loggedintimezone = user.timezone;
@@ -60,7 +60,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
 
                       switch (requestListSnapshot.connectionState) {
                         case ConnectionState.waiting:
-                          return Center(child: CircularProgressIndicator());
+                          return LoadingIndicator();
                         default:
                           List<RequestModel> requestModelList =
                               requestListSnapshot.data;
@@ -74,8 +74,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
                               padding: const EdgeInsets.all(16.0),
                               child: Center(
                                 child: Text(
-                                  AppLocalizations.of(context)
-                                      .translate('requests', 'no_requests'),
+                                  S.of(context).no_requests,
                                 ),
                               ),
                             );
@@ -106,7 +105,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
               return Text('Error: ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             }
             UserModel user = snapshot.data;
             String loggedintimezone = user.timezone;
@@ -120,7 +119,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
                 }
                 switch (requestListSnapshot.connectionState) {
                   case ConnectionState.waiting:
-                    return Center(child: CircularProgressIndicator());
+                    return LoadingIndicator();
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
@@ -133,8 +132,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
                         padding: const EdgeInsets.all(16.0),
                         child: Center(
                           child: Text(
-                            AppLocalizations.of(context)
-                                .translate('requests', 'no_requests'),
+                            S.of(context).no_requests,
                           ),
                         ),
                       );
@@ -178,7 +176,6 @@ class ViewRequestsForAdmin extends StatelessWidget {
         child: ListView.builder(
           itemCount: consolidatedList.length,
           itemBuilder: (context, index) {
-            // return Text("Insider");
             return getRequestView(consolidatedList[index], loggedintimezone);
           },
         ),

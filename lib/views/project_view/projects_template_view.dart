@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/project_view/create_edit_project.dart';
@@ -53,12 +53,6 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
     });
   }
 
-//  void getTemplate() async {
-//    selectedProjectTemplate = await FirestoreManager.getProjectTemplateById(
-//      templateId: "69ab639b-0966-4d91-858a-aa27e0c3c043",
-//    );
-//  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,8 +62,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
           child: Padding(
             padding: const EdgeInsets.only(left: 8),
             child: Center(
-              child: Text(
-                  AppLocalizations.of(context).translate("shared", 'cancel'),
+              child: Text(S.of(context).cancel,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -79,12 +72,14 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
           ),
         ),
         title: Text(
-            AppLocalizations.of(context).translate("projects", 'new_project'),
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontFamily: 'Europa',
-                fontWeight: FontWeight.bold)),
+          S.of(context).new_project,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontFamily: 'Europa',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
         actions: <Widget>[
           FlatButton(
@@ -109,7 +104,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
               }
             },
             child: Text(
-              AppLocalizations.of(context).translate("shared", 'next'),
+              S.of(context).next,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -122,8 +117,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
       body: Column(
         children: <Widget>[
           _optionRadioButton(
-            title: AppLocalizations.of(context)
-                .translate("project_template", 'create_new_project'),
+            title: S.of(context).create_new_project,
             value: 0,
             onChanged: (newValue) => setState(() {
               _groupValue = newValue;
@@ -131,8 +125,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
             }),
           ),
           _optionRadioButton(
-            title: AppLocalizations.of(context)
-                .translate("project_template", 'create_project_template'),
+            title: S.of(context).create_project_from_template,
             value: 1,
             onChanged: (newValue) => setState(() {
               _groupValue = newValue;
@@ -151,7 +144,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
       return Container();
     } else if (searchTextController.text.trim().length < 3) {
       return getEmptyWidget(
-          AppLocalizations.of(context).translate('requests', 'min_search_err'));
+          S.of(context).validation_error_search_min_characters);
     } else {
       return StreamBuilder<List<ProjectTemplateModel>>(
         stream: SearchManager.searchProjectTemplate(
@@ -173,8 +166,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
           List<ProjectTemplateModel> projectTemplateList = snapshot.data;
 
           if (projectTemplateList.length == 0) {
-            return getEmptyWidget(AppLocalizations.of(context)
-                .translate('project_template', 'no_templates'));
+            return getEmptyWidget(S.of(context).no_templates_found);
           }
           return ListView.builder(
             shrinkWrap: true,
@@ -230,8 +222,7 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
           isDense: true,
 
           // labelText: "Enter Email",
-          hintText: AppLocalizations.of(context)
-              .translate("project_template", 'search_template_hint'),
+          hintText: S.of(context).search_template_hint,
           fillColor: Colors.white,
 
           alignLabelWithHint: true,
@@ -305,15 +296,12 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('project_template', 'template_alert')),
-          content: Text(AppLocalizations.of(context)
-              .translate('project_template', 'empty_template')),
+          title: Text(S.of(context).template_alert),
+          content: Text(S.of(context).select_template),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
-              child: Text(AppLocalizations.of(context)
-                  .translate('billing_plans', 'close')),
+              child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
               },

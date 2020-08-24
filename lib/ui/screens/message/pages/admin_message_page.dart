@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/admin_message_card.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class AdminMessagePage extends StatelessWidget {
   @override
@@ -11,10 +13,10 @@ class AdminMessagePage extends StatelessWidget {
       stream: _bloc.adminMessage,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return LoadingIndicator();
         }
         if (snapshot.data.length == 0) {
-          return Center(child: Text("No message"));
+          return Center(child: Text(S.of(context).no_message));
         }
         return ListView.builder(
           padding: EdgeInsets.symmetric(vertical: 10),

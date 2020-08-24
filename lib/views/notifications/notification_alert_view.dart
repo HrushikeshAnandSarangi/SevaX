@@ -1,12 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-
 import 'package:sevaexchange/widgets/notification_switch.dart';
 
 class NotificationAlert extends StatefulWidget {
@@ -20,7 +18,6 @@ class NotificationAlert extends StatefulWidget {
 
 class _NotificationAlertState extends State<NotificationAlert> {
   bool isTurnedOn = false;
-  final _firestore = Firestore.instance;
   Stream settingsStreamer;
   Map<dynamic, dynamic> notificationSetting;
   @override
@@ -45,7 +42,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate('profile', 'notifications'),
+          S.of(context).notification_alerts,
           style: TextStyle(fontFamily: 'Europa', fontSize: 18),
         ),
       ),
@@ -61,8 +58,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
               children: <Widget>[
                 NotificationWidgetSwitch(
                   isTurnedOn: getCurrentStatus('RequestAccept'),
-                  title: AppLocalizations.of(context)
-                      .translate('external_notifications', 'request_accepted'),
+                  title: S.of(context).request_accepted,
                   onPressed: (bool status) {
                     NotificationWidgetSwitch.updatePersonalNotifications(
                       userEmail: SevaCore.of(context).loggedInUser.email,
@@ -74,8 +70,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                 lineDivider,
                 NotificationWidgetSwitch(
                   isTurnedOn: getCurrentStatus('RequestCompleted'),
-                  title: AppLocalizations.of(context)
-                      .translate('external_notifications', 'request_completed'),
+                  title: S.of(context).request_completed,
                   onPressed: (bool status) {
                     NotificationWidgetSwitch.updatePersonalNotifications(
                       userEmail: SevaCore.of(context).loggedInUser.email,
@@ -87,8 +82,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                 lineDivider,
                 NotificationWidgetSwitch(
                   isTurnedOn: getCurrentStatus('TYPE_DEBIT_FROM_OFFER'),
-                  title: AppLocalizations.of(context)
-                      .translate('external_notifications', 'offer_debit'),
+                  title: S.of(context).offer_debit,
                   onPressed: (bool status) {
                     NotificationWidgetSwitch.updatePersonalNotifications(
                       userEmail: SevaCore.of(context).loggedInUser.email,
@@ -100,8 +94,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                 NotificationWidgetSwitch(
                   isTurnedOn: getCurrentStatus(
                       'TYPE_CREDIT_NOTIFICATION_FROM_TIMEBANK'),
-                  title: AppLocalizations.of(context)
-                      .translate('external_notifications', 'credit_request'),
+                  title: S.of(context).recieved_credits_one_to_many,
                   onPressed: (bool status) {
                     NotificationWidgetSwitch.updatePersonalNotifications(
                       userEmail: SevaCore.of(context).loggedInUser.email,
@@ -124,7 +117,32 @@ class _NotificationAlertState extends State<NotificationAlert> {
                     );
                   },
                 ),
-                lineDivider
+                lineDivider,
+                NotificationWidgetSwitch(
+                  isTurnedOn:
+                      getCurrentStatus('TYPE_FEEDBACK_FROM_SIGNUP_MEMBER'),
+                  title: "Promotion to admin",
+                  onPressed: (bool status) {
+                    NotificationWidgetSwitch.updatePersonalNotifications(
+                      userEmail: SevaCore.of(context).loggedInUser.email,
+                      notificationType: 'MEMBER_PROMOTED_AS_ADMIN',
+                      status: status,
+                    );
+                  },
+                ),
+                lineDivider,
+                NotificationWidgetSwitch(
+                  isTurnedOn:
+                      getCurrentStatus('TYPE_FEEDBACK_FROM_SIGNUP_MEMBER'),
+                  title: "Demotion from admin to member",
+                  onPressed: (bool status) {
+                    NotificationWidgetSwitch.updatePersonalNotifications(
+                      userEmail: SevaCore.of(context).loggedInUser.email,
+                      notificationType: 'MEMBER_DEMOTED_FROM_ADMIN',
+                      status: status,
+                    );
+                  },
+                ),
               ],
             );
           }),

@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
+
 class Validators {
   var titleValidator = StreamTransformer<String, String>.fromHandlers(
     handleData: (title, sink) {
@@ -51,6 +54,43 @@ class ValidationErrors {
   static const String sizeOfClassIsNotInt = "size_of_class_not_int";
   static const String sizeOfClassError = "size_of_class_error";
   static const String offerCreditError = "offer_credit_error";
+  static const String profanityError = "profanity_error";
 
   // static const String titleError = 'Please enter the subject of your offer';
+}
+
+String getValidationError(BuildContext context, String errorCode) {
+  S error = S.of(context);
+  switch (errorCode) {
+    case ValidationErrors.titleError:
+      return error.validation_error_offer_title;
+      break;
+    case ValidationErrors.genericError:
+      return error.validation_error_general_text;
+      break;
+    case ValidationErrors.classHours:
+      return error.validation_error_offer_class_hours;
+      break;
+    case ValidationErrors.hoursNotInt:
+      return error.validation_error_hours_not_int;
+      break;
+    case ValidationErrors.preprationTimeError:
+      return error.validation_error_offer_prep_hour;
+      break;
+    case ValidationErrors.locationError:
+      return error.validation_error_location;
+      break;
+    case ValidationErrors.sizeOfClassIsNotInt:
+      return error.validation_error_class_size_int;
+      break;
+    case ValidationErrors.sizeOfClassError:
+      return error.validation_error_class_size;
+      break;
+    case ValidationErrors.offerCreditError:
+      return error.validation_error_offer_credit;
+      break;
+    default:
+      return null;
+      break;
+  }
 }

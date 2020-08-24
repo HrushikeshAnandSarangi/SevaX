@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
@@ -50,7 +50,6 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
     super.initState();
     getMembersList();
     ownerGroupsArr = widget.responseData['ownerGroupsArr'];
-    //  print("ownerGroupsArr==============" + ownerGroupsArr.toString());
   }
 
   void getMembersList() {
@@ -82,10 +81,8 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
 //      automaticallyImplyLeading: true,
         title: Text(
           widget.isComingFromExit
-              ? AppLocalizations.of(context)
-                  .translate('transfer_ownership', 'exit_user')
-              : AppLocalizations.of(context)
-                  .translate('transfer_ownership', 'remove_user'),
+              ? S.of(context).exit_user
+              : S.of(context).remove_user,
           style: TextStyle(
               fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Europa'),
         ),
@@ -110,8 +107,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                 height: 15,
               ),
               Text(
-                AppLocalizations.of(context)
-                    .translate('transfer_ownership', 'transfer_hint'),
+                S.of(context).transfer_data_hint,
                 style: TextStyle(
                   fontSize: 18,
                   fontFamily: 'Europa',
@@ -129,8 +125,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
 //                height: 15,
 //              ),
               Text(
-                AppLocalizations.of(context)
-                    .translate('transfer_ownership', 'transfer_hint_two'),
+                S.of(context).transfer_to,
                 style: TextStyle(
                   fontSize: 14,
                   fontFamily: 'Europa',
@@ -141,8 +136,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
                 height: 10,
               ),
               Text(
-                AppLocalizations.of(context)
-                    .translate('transfer_ownership', 'search_user'),
+                S.of(context).search_user,
                 style: TextStyle(
                   fontSize: 14,
                   fontFamily: 'Europa',
@@ -178,7 +172,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
             Navigator.pop(context);
           },
           child: Text(
-            AppLocalizations.of(context).translate('shared', 'cancel'),
+            S.of(context).cancel,
             style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa'),
           ),
           textColor: Colors.grey,
@@ -186,8 +180,8 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
         FlatButton(
           child: Text(
               widget.isComingFromExit
-                  ? AppLocalizations.of(context).translate('members', 'exit')
-                  : AppLocalizations.of(context).translate('members', 'Remove'),
+                  ? S.of(context).exit
+                  : S.of(context).remove,
               style:
                   TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa')),
           textColor: FlavorConfig.values.theme.primaryColor,
@@ -289,8 +283,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
       textFieldConfiguration: TextFieldConfiguration(
         controller: _textEditingController,
         decoration: InputDecoration(
-          hintText:
-              AppLocalizations.of(context).translate('search_page', 'search'),
+          hintText: S.of(context).search,
           filled: true,
           fillColor: Colors.grey[300],
           focusedBorder: OutlineInputBorder(
@@ -351,7 +344,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            AppLocalizations.of(context).translate('requests', 'no_users'),
+            S.of(context).no_user_found,
             style: TextStyle(fontSize: 16, color: Colors.grey),
           ),
         );
@@ -383,8 +376,7 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
           height: 30,
           width: 30,
         ),
-        title: Text(AppLocalizations.of(context)
-            .translate('transfer_ownership', 'transfer_hint_three')),
+        title: Text(S.of(context).transer_hint_data_deletion),
       ),
     );
   }
@@ -405,13 +397,11 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: Text(AppLocalizations.of(context)
-              .translate('transfer_ownership', 'removed_success')),
+          content: Text(S.of(context).user_removal_success),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
-              child: Text(AppLocalizations.of(context)
-                  .translate('billing_plans', 'close')),
+              child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -428,13 +418,11 @@ class _TransferOwnerShipViewState extends State<TransferOwnerShipView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: Text(AppLocalizations.of(context)
-              .translate('transfer_ownership', 'transfer_error')),
+          content: Text(S.of(context).error_occured),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
-              child: Text(AppLocalizations.of(context)
-                  .translate('billing_plans', 'close')),
+              child: Text(S.of(context).close),
               textColor: Colors.red,
               onPressed: () {
                 Navigator.of(context).pop();

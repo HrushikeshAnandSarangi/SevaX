@@ -8,6 +8,7 @@ import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../core.dart';
@@ -139,9 +140,7 @@ class _ResultViewState extends State<ResultView> {
           }
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return LoadingIndicator();
             default:
               prefix0.TimebankModel timebankModel = snapshot.data;
               List<String> memberList = timebankModel.members;

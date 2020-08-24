@@ -12,7 +12,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/ui/screens/location/widgets/location_confirmation_card.dart';
 
@@ -76,8 +76,7 @@ class _LocationPickerState extends State<LocationPicker> {
     if (SchedulerBinding.instance.schedulerPhase ==
         SchedulerPhase.persistentCallbacks) {
       SchedulerBinding.instance.addPostFrameCallback((_) => () => {
-            address = AppLocalizations.of(context)
-                .translate('shared', 'fetching_location'),
+            address = S.of(context).fetching_location,
             _addMarker(latLng: defaultLatLng)
           });
     }
@@ -149,7 +148,7 @@ class _LocationPickerState extends State<LocationPicker> {
         // iconTheme: IconThemeData(color: Colors.black),
         // backgroundColor: Colors.white,
         title: Text(
-          AppLocalizations.of(context).translate('shared', 'add_location'),
+          S.of(context).add_location,
           style: TextStyle(fontSize: 18),
         ),
         actions: <Widget>[
@@ -163,8 +162,8 @@ class _LocationPickerState extends State<LocationPicker> {
                 context,
                 MaterialPageRoute(
                   builder: (BuildContext context) => CustomSearchScaffold(
-                      AppLocalizations.of(context)
-                          .translate('interests', 'search')),
+                    S.of(context).search,
+                  ),
                   fullscreenDialog: true,
                 ),
               );
@@ -246,8 +245,7 @@ class _LocationPickerState extends State<LocationPicker> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('shared', 'missing_permission')),
+          title: Text(S.of(context).missing_permission),
           content: Text(
               '${FlavorConfig.values.appName} requires permission to access your location.'),
           actions: <Widget>[
@@ -255,8 +253,7 @@ class _LocationPickerState extends State<LocationPicker> {
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               child: Text(
-                AppLocalizations.of(context)
-                    .translate('shared', 'open_settings'),
+                S.of(context).open_settings,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: dialogButtonSize,
@@ -268,7 +265,7 @@ class _LocationPickerState extends State<LocationPicker> {
             ),
             FlatButton(
               child: Text(
-                AppLocalizations.of(context).translate('shared', 'cancel'),
+                S.of(context).cancel,
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                   color: Colors.red,
@@ -358,8 +355,7 @@ class _LocationPickerState extends State<LocationPicker> {
         return "$locality*${place.name}${locality.notNullLocation}${place.subAdministrativeArea.notNullLocation}${place.administrativeArea.notNullLocation}${place.country.notNullLocation}";
       } catch (e) {
         log(e.toString());
-        return AppLocalizations.of(context)
-            .translate('shared', 'fetching_location_failed');
+        return S.of(context).failed_to_fetch_location;
       }
     } else {
       return address;
@@ -394,7 +390,8 @@ class _LocationPickerState extends State<LocationPicker> {
       position: latLng ?? target,
       icon: BitmapDescriptor.defaultMarker,
       infoWindow: InfoWindow(
-          title: AppLocalizations.of(context).translate('shared', 'marker')),
+        title: S.of(context).marker,
+      ),
     );
     loadInitialAddress(marker);
   }

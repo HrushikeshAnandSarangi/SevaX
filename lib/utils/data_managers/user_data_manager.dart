@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 
 import '../../flavor_config.dart';
 
@@ -41,6 +43,113 @@ Future<void> updateUserLanguage({
   });
 }
 
+Future<int> getUserDonatedGoodsAndAmount({
+  @required String sevaUserId,
+  @required int timeFrame,
+  bool isLifeTime,
+  bool isGoods,
+}) async {
+  int totalGoodsOrAmount = 0;
+  try {
+    await Firestore.instance
+        .collection('donations')
+        .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
+        .where('donorSevaUserId', isEqualTo: sevaUserId)
+        .where('timestamp', isGreaterThan: isLifeTime ? 0 : timeFrame)
+        .getDocuments()
+        .then((data) {
+      data.documents.forEach((documentSnapshot) {
+        DonationModel donationModel =
+            DonationModel.fromMap(documentSnapshot.data);
+        if (donationModel.donationStatus == DonationStatus.ACKNOWLEDGED) {
+          if (donationModel.donationType == RequestType.CASH) {
+            totalGoodsOrAmount += donationModel.cashDetails.pledgedAmount;
+          } else {
+            totalGoodsOrAmount +=
+                donationModel.goodsDetails.donatedGoods.values.length;
+          }
+        }
+        print('donated ${totalGoodsOrAmount.toString()}');
+      });
+    });
+  } on Exception catch (e) {
+    print(e.toString());
+  }
+  return totalGoodsOrAmount;
+}
+
+Future<int> getTimebankRaisedAmountAndGoods({
+  @required String timebankId,
+  @required int timeFrame,
+  bool isLifeTime,
+  bool isGoods,
+}) async {
+  int totalGoodsOrAmount = 0;
+  try {
+    await Firestore.instance
+        .collection('donations')
+        .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
+        .where('timebankId', isEqualTo: timebankId)
+        .where('timestamp', isGreaterThan: isLifeTime ? 0 : timeFrame)
+        .getDocuments()
+        .then((data) {
+      data.documents.forEach((documentSnapshot) {
+        DonationModel donationModel =
+            DonationModel.fromMap(documentSnapshot.data);
+        if (donationModel.donatedToTimebank &&
+            donationModel.donationStatus == DonationStatus.ACKNOWLEDGED) {
+          if (donationModel.donationType == RequestType.CASH) {
+            totalGoodsOrAmount += donationModel.cashDetails.pledgedAmount;
+          } else if (donationModel.donationType == RequestType.GOODS) {
+            totalGoodsOrAmount +=
+                donationModel.goodsDetails.donatedGoods.length;
+          }
+        }
+        print('donated ${totalGoodsOrAmount.toString()}');
+      });
+    });
+  } on Exception catch (e) {
+    print(e.toString());
+  }
+  return totalGoodsOrAmount;
+}
+
+Stream<List<DonationModel>> getDonationList(
+    {String userId, String timebankId, bool isGoods}) async* {
+  var data;
+
+  if (userId != null) {
+    data = Firestore.instance
+        .collection('donations')
+        .where('donorSevaUserId', isEqualTo: userId)
+        .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
+        .orderBy("timestamp", descending: true)
+        .snapshots();
+  } else {
+    data = Firestore.instance
+        .collection('donations')
+        .where('timebankId', isEqualTo: timebankId)
+        .where('donationType', isEqualTo: isGoods ? 'GOODS' : 'CASH')
+        .where('donatedToTimebank', isEqualTo: true)
+        .orderBy("timestamp", descending: true)
+        .snapshots();
+  }
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<DonationModel>>.fromHandlers(
+      handleData: (snapshot, donationSink) {
+        List<DonationModel> donationsList = [];
+        snapshot.documents.forEach((document) {
+          DonationModel model = DonationModel.fromMap(document.data);
+          print(model);
+          if (model.donationStatus == DonationStatus.ACKNOWLEDGED)
+            donationsList.add(model);
+        });
+        donationSink.add(donationsList);
+      },
+    ),
+  );
+}
+
 Future<Map<String, UserModel>> getUserForUserModels(
     {@required List<String> admins}) async {
   var map = Map<String, UserModel>();
@@ -62,7 +171,7 @@ Future<UserModel> getUserForId({@required String sevaUserId}) async {
       .getDocuments()
       .then((QuerySnapshot querySnapshot) {
     querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-      userModel = UserModel.fromMap(documentSnapshot.data);
+      userModel = UserModel.fromMap(documentSnapshot.data, 'user_data_manager');
     });
   });
 
@@ -82,7 +191,7 @@ Future<UserModel> getUserForEmail({
   if (documentSnapshot == null || documentSnapshot.data == null) {
     return null;
   }
-  userModel = UserModel.fromMap(documentSnapshot.data);
+  userModel = UserModel.fromMap(documentSnapshot.data, 'user_data_manager');
   return userModel;
 }
 
@@ -102,7 +211,6 @@ Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(
   var urlLink = FlavorConfig.values.cloudFunctionBaseURL +
       '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
 
-  print("==============$urlLink==============");
   var res = await http
       .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
   print('res--->$res');
@@ -111,8 +219,9 @@ Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(
     print(res.body);
     var rest = data["result"] as List;
     var useModelStatus = UserModelListMoreStatus();
-    useModelStatus.userModelList =
-        rest.map<UserModel>((json) => UserModel.fromMap(json)).toList();
+    useModelStatus.userModelList = rest
+        .map<UserModel>((json) => UserModel.fromMap(json, 'user_data_manager'))
+        .toList();
     useModelStatus.lastPage = (data["lastPage"] as bool);
     return useModelStatus;
   }
@@ -130,7 +239,6 @@ Future<UserModelListMoreStatus>
   }
   var urlLink = FlavorConfig.values.cloudFunctionBaseURL +
       '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
-  print("==============$urlLink==============");
   var res = await http
       .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
   print('res--->$res');
@@ -139,8 +247,9 @@ Future<UserModelListMoreStatus>
     print(res.body);
     var rest = data["result"] as List;
     var useModelStatus = UserModelListMoreStatus();
-    useModelStatus.userModelList =
-        rest.map<UserModel>((json) => UserModel.fromMap(json)).toList();
+    useModelStatus.userModelList = rest
+        .map<UserModel>((json) => UserModel.fromMap(json, 'user_data_manager'))
+        .toList();
     useModelStatus.lastPage = (data["lastPage"] as bool);
     return useModelStatus;
   }
@@ -165,8 +274,9 @@ Future<UserModelListMoreStatus> getUsersForTimebankId(
     var data = json.decode(res.body);
     var rest = data["result"] as List;
     var useModelStatus = UserModelListMoreStatus();
-    useModelStatus.userModelList =
-        rest.map<UserModel>((json) => UserModel.fromMap(json)).toList();
+    useModelStatus.userModelList = rest
+        .map<UserModel>((json) => UserModel.fromMap(json, 'user_data_manager'))
+        .toList();
     useModelStatus.lastPage = (data["lastPage"] as bool);
     return useModelStatus;
   }
@@ -185,7 +295,8 @@ Stream<UserModel> getUserForIdStream({@required String sevaUserId}) async* {
     StreamTransformer<QuerySnapshot, UserModel>.fromHandlers(
       handleData: (snapshot, userSink) async {
         DocumentSnapshot documentSnapshot = snapshot.documents[0];
-        UserModel model = UserModel.fromMap(documentSnapshot.data);
+        UserModel model =
+            UserModel.fromMap(documentSnapshot.data, 'user_data_manager');
 
         model.sevaUserID = sevaUserId;
         userSink.add(model);
@@ -203,7 +314,8 @@ Future<UserModel> getUserForIdFuture({@required String sevaUserId}) async {
       .getDocuments()
       .then((snapshot) {
     DocumentSnapshot documentSnapshot = snapshot.documents[0];
-    UserModel model = UserModel.fromMap(documentSnapshot.data);
+    UserModel model =
+        UserModel.fromMap(documentSnapshot.data, 'user_data_manager');
     return model;
   }).catchError((onError) {
     return UserModel();
@@ -222,7 +334,7 @@ Stream<UserModel> getUserForEmailStream(String userEmailAddress) async* {
   yield* userDataStream.transform(
     StreamTransformer<DocumentSnapshot, UserModel>.fromHandlers(
       handleData: (snapshot, userSink) {
-        UserModel model = UserModel.fromMap(snapshot.data);
+        UserModel model = UserModel.fromMap(snapshot.data, 'user_data_manager');
         // model.sevaUserID = snapshot.documentID;
         userSink.add(model);
       },
@@ -265,6 +377,19 @@ Future<Map<String, dynamic>> checkChangeOwnershipStatus(
   print("result ${result}");
   var data = json.decode(result.body);
   return data;
+}
+
+Future<ProfanityImageModel> checkProfanityForImage({String imageUrl}) async {
+  var result = await http.post(
+    "${FlavorConfig.values.cloudFunctionBaseURL}/visionApi",
+    body: {"imageURL": imageUrl},
+  );
+  print("result ${result.body.toString()}");
+  print("result code ${result.statusCode}");
+  var data = json.decode(result.body);
+  ProfanityImageModel profanityImageModel =
+      ProfanityImageModel.fromMap(json.decode(result.body));
+  return profanityImageModel;
 }
 
 Future<String> updateChangeOwnerDetails(

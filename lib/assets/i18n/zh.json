@@ -1030,6 +1030,7 @@
     "members": "会员"
   },
   "validation_errors": {
+    "profanity_error": "SevaX应用程序的政策不允许使用亵渎或露骨的语言。请修改您的文字。",
     "title_error": "请输入您的要约的标的",
     "generic_error": "请输入一些文字",
     "class_hours": "请输入类所需的时间",
@@ -1142,7 +1143,8 @@
     "type_message": "键入消息",
     "add_caption": "添加字幕",
     "tap_for_photo": "水龙头照片",
-    "name_error": "名称不能为空"
+    "name_error": "名称不能为空",
+    "profanity": "SevaX应用程序的政策不允许使用亵渎或露骨的语言。请修改您的文字。"
   },
   "add_location": {
     "confirm_location_label": "确认位置下"
@@ -1238,6 +1240,20 @@
     "change_advisory": " 您需要提供此时间银行的帐单详细信息-包括新的帐单地址。在完成所有权转移之前，不会完成所有权转移。",
     "ownership_suceess": "恭喜你！您现在是该帐户的新所有者 时间银行 ",
     "already_invited": " 已受邀。"
+  },
+  "reason": {
+    "enter_reason": "输入删除原因",
+    "reason_err": "请输入删除原因"
+  },
+  "profanity": {
+    "alert": "SevaX应用程序的政策不允许使用亵渎或露骨的语言。请修改您的文字。",
+    "image_alert": "SevaX应用程序的政策不允许出现亵渎，露骨或暴力图像。请使用其他图像.",
+    "alert_title": "亵渎警报"
+  },
+  "cv": {
+    "cv": "Upload my CV/Resume",
+    "cv_info": "CV will help out to provide more details",
+    "replace_cv": "Replace CV"
   },
   "blocked_members": {
     "blocked_members": "封锁成员",

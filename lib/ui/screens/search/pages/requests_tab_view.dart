@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
@@ -11,6 +11,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class RequestsTabView extends StatelessWidget {
   @override
@@ -21,7 +22,7 @@ class RequestsTabView extends StatelessWidget {
         stream: _bloc.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
-            return Center(child: Text(AppLocalizations.of(context).translate('search','search_something')));
+            return Center(child: Text(S.of(context).search_something));
           }
           return StreamBuilder<List<RequestModel>>(
             stream: Searches.searchRequests(
@@ -31,14 +32,12 @@ class RequestsTabView extends StatelessWidget {
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                return LoadingIndicator();
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 print("===>> ${snapshot.data}");
                 return Center(
-                  child: Text(AppLocalizations.of(context).translate('search','no_data')),
+                  child: Text(S.of(context).no_data),
                 );
               }
 
@@ -55,7 +54,7 @@ class RequestsTabView extends StatelessWidget {
                       requestModel: request,
                     ),
                     child: TimebankRequestCard(
-                      isRecurring:request.isRecurring,
+                      isRecurring: request.isRecurring,
                       photoUrl: request.photoUrl,
                       title: request.title,
                       subtitle: request.description,
@@ -64,7 +63,8 @@ class RequestsTabView extends StatelessWidget {
                       isApplied: request.acceptors.contains(
                               SevaCore.of(context).loggedInUser.email) ||
                           request.approvedUsers.contains(
-                              SevaCore.of(context).loggedInUser.email) || false,
+                              SevaCore.of(context).loggedInUser.email) ||
+                          false,
                     ),
                   );
                 },
@@ -88,16 +88,16 @@ class RequestsTabView extends StatelessWidget {
       isAdmin = true;
     }
 
-    if(requestModel.isRecurring){
+    if (requestModel.isRecurring) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => RecurringListing(requestModel: requestModel, offerModel: null,),
         ),
       );
-    }else{
+    } else {
       if (requestModel.sevaUserId ==
-          SevaCore.of(context).loggedInUser.sevaUserID ||
+              SevaCore.of(context).loggedInUser.sevaUserID ||
           timebankModel.admins
               .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
         timeBankBloc.setSelectedRequest(requestModel);
@@ -111,8 +111,7 @@ class RequestsTabView extends StatelessWidget {
             ),
           ),
         );
-      }
-      else {
+      } else {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -126,6 +125,5 @@ class RequestsTabView extends StatelessWidget {
         );
       }
     }
-
   }
 }

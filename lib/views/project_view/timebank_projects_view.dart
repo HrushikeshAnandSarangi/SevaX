@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/project_card.dart';
@@ -12,6 +12,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/project_view/projects_template_view.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 
 import '../requests/project_request.dart';
@@ -51,10 +52,11 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                       FlatButton(
                         onPressed: () {},
                         child: Text(
-                          AppLocalizations.of(context)
-                              .translate('projects', 'title'),
-                          style: (TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18)),
+                          S.of(context).projects,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
                       ),
                       Positioned(
@@ -133,12 +135,11 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
               builder: (BuildContext context,
                   AsyncSnapshot<List<ProjectModel>> projectListSnapshot) {
                 if (projectListSnapshot.hasError) {
-                  return Text(
-                      '${AppLocalizations.of(context).translate('tasks', 'error')} ${projectListSnapshot.error}');
+                  return Text(S.of(context).general_stream_error);
                 }
                 switch (projectListSnapshot.connectionState) {
                   case ConnectionState.waiting:
-                    return Center(child: CircularProgressIndicator());
+                    return LoadingIndicator();
                   default:
                     List<ProjectModel> projectModelList =
                         projectListSnapshot.data;
@@ -153,18 +154,19 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                               children: <TextSpan>[
                                 TextSpan(
                                   style: TextStyle(
-                                      color: Colors.grey, fontSize: 14),
-                                  text:
-                                      '${AppLocalizations.of(context).translate('projects', 'no_available')} ',
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                  ),
+                                  text: '${S.of(context).no_projects_message} ',
                                 ),
                                 TextSpan(
-                                    text: AppLocalizations.of(context)
-                                        .translate('projects', 'create_one'),
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = navigateToCreateProject),
+                                  text: S.of(context).creating_one,
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = navigateToCreateProject,
+                                ),
                               ],
                             ),
                           ),
@@ -214,29 +216,6 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
     );
   }
 
-  // void _showAdminAccessMessage() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text(
-  //             AppLocalizations.of(context).translate('projects', 'alert')),
-  //         content: Text(
-  //             AppLocalizations.of(context).translate('projects', 'admin_can')),
-  //         actions: <Widget>[
-  //           FlatButton(
-  //             child: Text(
-  //                 AppLocalizations.of(context).translate('shared', 'close')),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
   void navigateToCreateProject() {
     Navigator.push(
       context,
@@ -253,12 +232,12 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
   void showProjectsWebPage() {
     var dynamicLinks = json.decode(
       AppConfig.remoteConfig.getString(
-        AppLocalizations.of(context).translate('links', 'linkToWeb'),
+        "links_${S.of(context).localeName}",
       ),
     );
     navigateToWebView(
       aboutMode: AboutMode(
-          title: AppLocalizations.of(context).translate('projects', 'help'),
+          title: S.of(context).projects + ' ' + S.of(context).help,
           urlToHit: dynamicLinks['projectsInfoLink']),
       context: context,
     );
@@ -305,7 +284,7 @@ void showInfoOfConcept({String dialogTitle, BuildContext mContext}) {
           actions: <Widget>[
             FlatButton(
               child: Text(
-                AppLocalizations.of(mContext).translate('projects', 'ok'),
+                S.of(mContext).ok,
                 style: TextStyle(
                   fontSize: 16,
                 ),

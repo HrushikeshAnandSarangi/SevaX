@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -14,6 +14,7 @@ import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../flavor_config.dart';
 import '../core.dart';
@@ -86,13 +87,10 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
 
   @override
   Widget build(BuildContext context) {
-    JOIN = AppLocalizations.of(context).translate('jointimebankcode', 'join');
-    JOINED =
-        AppLocalizations.of(context).translate('jointimebankcode', 'joined');
-    REQUESTED =
-        AppLocalizations.of(context).translate('jointimebankcode', 'requested');
-    REJECTED =
-        AppLocalizations.of(context).translate('jointimebankcode', 'rejected');
+    JOIN = S.of(context).join.toUpperCase();
+    JOINED = S.of(context).joined.toUpperCase();
+    REQUESTED = S.of(context).requested.toUpperCase();
+    REJECTED = S.of(context).rejected.toUpperCase();
     return isDataLoaded
         ? Scaffold(
             key: _scaffold,
@@ -100,8 +98,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 ? AppBar(
                     centerTitle: true,
                     title: Text(
-                      AppLocalizations.of(context)
-                          .translate('jointimebankcode', 'join_timebank'),
+                      S.of(context).join + ' ' + S.of(context).timebank,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 18,
@@ -115,9 +112,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
             ),
           )
         : Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: LoadingIndicator(),
           );
   }
 
@@ -132,7 +127,8 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
             if (communityCreateEditSnapshot.data != null &&
                 communityCreateEditSnapshot.data.loading) {
               return Expanded(
-                  child: Center(child: CircularProgressIndicator()));
+                child: LoadingIndicator(),
+              );
             } else {
               return timebankStreamBuilderJoin(
                   communityCreateEditSnapshot.data, context);
@@ -169,8 +165,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                     left: 50.0, right: 50.0, top: 10.0, bottom: 25.0),
                 child: Text(
                   //'Enter the code you received from your ${FlavorConfig.values.timebankTitle} Coordinator to see the exchange opportunities for your group.',
-                  AppLocalizations.of(context)
-                      .translate('jointimebankcode', 'desc'),
+                  S.of(context).join_timebank_code_message,
                   textDirection: TextDirection.ltr,
                   textAlign: TextAlign.center,
 
@@ -238,8 +233,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   ? Column(
                       children: <Widget>[
                         Text(
-                          AppLocalizations.of(context).translate(
-                              'jointimebankcode', 'request_invite_hint'),
+                          S.of(context).join_timebank_request_invite_hint,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.black54,
@@ -249,8 +243,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                         ),
                         FlatButton(
                           child: Text(
-                            AppLocalizations.of(context).translate(
-                                'jointimebankcode', 'request_invite'),
+                            S.of(context).join_timebank_request_invite,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Theme.of(context).accentColor,
@@ -266,8 +259,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                       ],
                     )
                   : Text(
-                      AppLocalizations.of(context)
-                          .translate('jointimebankcode', 'already_joined'),
+                      S.of(context).join_timbank_already_requested,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.black54,
@@ -289,8 +281,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 this._checkFields();
               },
               child: Text(
-                AppLocalizations.of(context)
-                    .translate('jointimebankcode', 'join_button'),
+                S.of(context).join,
                 style: Theme.of(context).primaryTextTheme.button,
               ),
               shape: StadiumBorder(),
@@ -384,8 +375,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       builder: (BuildContext dialogContext) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-                  .translate('jointimebankcode', 'alert_desc') +
+          title: Text(S.of(context).join_timebank_question +
               " ${FlavorConfig.values.timebankTitle}? "),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -394,11 +384,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 key: formkey,
                 child: TextFormField(
                   decoration: InputDecoration(
-                    labelText: AppLocalizations.of(context)
-                        .translate('jointimebankcode', 'alert_label'),
-                    // labelStyle: textStyle,
-                    // labelStyle: textStyle,
-                    // labelText: 'Description',
+                    labelText: S.of(context).reason,
                     border: OutlineInputBorder(
                       borderRadius: const BorderRadius.all(
                         const Radius.circular(20.0),
@@ -413,10 +399,10 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   maxLines: 1,
                   validator: (value) {
                     if (value.isEmpty) {
-                      return AppLocalizations.of(context)
-                          .translate('jointimebankcode', 'alert_warn');
+                      return S.of(context).validation_error_general_text;
                     }
                     reasonToJoin = value;
+                    return null;
                   },
                 ),
               ),
@@ -430,8 +416,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('jointimebankcode', 'send_request'),
+                      S.of(context).send_request,
                       style: TextStyle(
                           fontSize: dialogButtonSize, fontFamily: 'Europa'),
                     ),
@@ -454,8 +439,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   ),
                   FlatButton(
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('shared', 'cancel'),
+                      S.of(context).cancel,
                       style: TextStyle(
                           color: Colors.red,
                           fontSize: 16,
@@ -532,39 +516,40 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 _showDialog(
                     activityContext: context,
                     mode: TimeBankResponseModes.NO_CODE,
-                    dialogTitle: AppLocalizations.of(context)
-                        .translate('jointimebankcode', 'dialog_title_1'),
+                    dialogTitle: S.of(context).code_not_found,
                     dialogSubTitle:
-                        "${AppLocalizations.of(context).translate('jointimebankcode', 'timebank')} ${AppLocalizations.of(context).translate('jointimebankcode', 'not_found')}")
+                        "${S.of(context).timebank} ${S.of(context).validation_error_wrong_timebank_code}")
               }
             else if (state == 'code_expired')
               {
                 _showDialog(
-                    activityContext: context,
-                    mode: TimeBankResponseModes.CODE_EXPIRED,
-                    dialogTitle: AppLocalizations.of(context)
-                        .translate('jointimebankcode', 'expired!'),
-                    dialogSubTitle:
-                        "${AppLocalizations.of(context).translate('jointimebankcode', 'timebank')}  ${AppLocalizations.of(context).translate('jointimebankcode', 'request_new_err')}")
+                  activityContext: context,
+                  mode: TimeBankResponseModes.CODE_EXPIRED,
+                  dialogTitle: S.of(context).code_expired,
+                  dialogSubTitle:
+                      "${S.of(context).timebank}  ${S.of(context).join_code_expired_hint}",
+                )
               }
             else if (state == 'code_already_redeemed')
               {
                 _showDialog(
-                    activityContext: context,
-                    mode: TimeBankResponseModes.CODE_ALREADY_REDEEMED,
-                    dialogTitle: AppLocalizations.of(context).translate(
-                        'jointimebankcode', 'code_redeemed_already_title'),
-                    dialogSubTitle: AppLocalizations.of(context).translate(
-                        'jointimebankcode', 'code_redeemed_already_body'))
+                  activityContext: context,
+                  mode: TimeBankResponseModes.CODE_ALREADY_REDEEMED,
+                  dialogTitle: S
+                      .of(context)
+                      .validation_error_timebank_join_code_redeemed,
+                  dialogSubTitle: S
+                      .of(context)
+                      .validation_error_timebank_join_code_redeemed_self,
+                )
               }
             else
               {
                 response = _showDialog(
                     mode: TimeBankResponseModes.ONBOARDED,
-                    dialogTitle: AppLocalizations.of(context)
-                        .translate('jointimebankcode', 'awesome'),
+                    dialogTitle: S.of(context).awesome,
                     dialogSubTitle:
-                        "${AppLocalizations.of(context).translate('jointimebankcode', 'hint_text_joined')} ${state.toString()} ${AppLocalizations.of(context).translate('jointimebankcode', 'successfull')}"),
+                        "${S.of(context).timebank_onboarding_message} ${state.toString()} ${S.of(context).successfully}"),
                 response.then((onValue) async {
                   print("onboadrd");
                   // Navigator.popUntil(context, ModalRoute.withName(Navigator.));
@@ -611,9 +596,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       );
     } else {
       if (controller.text.length != 6) {
-        setError(
-            errorMessage: AppLocalizations.of(context)
-                .translate('jointimebankcode', 'err_reenter'));
+        setError(errorMessage: S.of(context).enter_code_to_verify);
       }
     }
   }
@@ -670,7 +653,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
             // usually buttons at the bottom of the dialog
             FlatButton(
               child: Text(
-                AppLocalizations.of(context).translate('shared', 'dismiss'),
+                S.of(context).dismiss,
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                   color: Colors.red,
@@ -728,8 +711,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
         builder: (createDialogContext) {
           dialogLoadingContext = createDialogContext;
           return AlertDialog(
-            title: Text(AppLocalizations.of(context)
-                .translate('jointimebankcode', 'create_join_request')),
+            title: Text(S.of(context).creating_join_request),
             content: LinearProgressIndicator(),
           );
         });

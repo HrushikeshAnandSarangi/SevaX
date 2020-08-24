@@ -9,11 +9,13 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/blocked_members/pages/blocked_members_page.dart';
+import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
+import 'package:sevaexchange/ui/screens/user_info/pages/user_donations_list.dart';
 import 'package:sevaexchange/utils/animations/fade_route.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
@@ -25,6 +27,7 @@ import 'package:sevaexchange/views/notifications/notification_alert_view.dart';
 import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import 'edit_profile.dart';
 import 'timezone.dart';
@@ -147,8 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           splashColor: Colors.transparent,
                           onTap: navigateToSettings,
                           child: Hero(
-                            tag: AppLocalizations.of(context)
-                                .translate('profile', 'image_hint'),
+                            tag: 'ProfileImage',
                             child: Container(
                               padding: EdgeInsets.all(1),
                               decoration: BoxDecoration(
@@ -191,11 +193,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             if (connResult == ConnectivityResult.none) {
                               Scaffold.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(AppLocalizations.of(context)
-                                      .translate('shared', 'check_internet')),
+                                  content: Text(S.of(context).check_internet),
                                   action: SnackBarAction(
-                                    label: AppLocalizations.of(context)
-                                        .translate('shared', 'dismiss'),
+                                    label: S.of(context).dismiss,
                                     onPressed: () => Scaffold.of(context)
                                         .hideCurrentSnackBar(),
                                   ),
@@ -213,6 +213,46 @@ class _ProfilePageState extends State<ProfilePage> {
                             );
                           },
                         ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        GoodsAndAmountDonations(
+                            isGoods: false,
+                            isTimeBank: false,
+                            userId: user.sevaUserID,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return GoodsAndAmountDonationsList(
+                                      type: "user",
+                                      timebankid: "",
+                                      isGoods: false,
+                                    );
+                                  },
+                                ),
+                              );
+                            }),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        GoodsAndAmountDonations(
+                            isGoods: true,
+                            isTimeBank: false,
+                            userId: user.sevaUserID,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return GoodsAndAmountDonationsList(
+                                      type: "user",
+                                      timebankid: "",
+                                      isGoods: true,
+                                    );
+                                  },
+                                ),
+                              );
+                            }),
                       ],
                     ),
                   ),
@@ -230,8 +270,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Padding(
                               padding: EdgeInsets.only(left: 10),
                               child: Text(
-                                AppLocalizations.of(context)
-                                    .translate('profile', 'select_timebank'),
+                                S.of(context).select_timebank,
                                 style: TextStyle(fontSize: 18),
                               ),
                             ),
@@ -239,13 +278,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               icon: Icon(Icons.add_circle_outline),
                               onPressed: () async {
                                 var timebankAdvisory =
-                                    AppLocalizations.of(context)
-                                        .translate('profile', 'dialog_text');
+                                    S.of(context).create_timebank_confirmation;
                                 Map<String, bool> onActivityResult =
                                     await showTimebankAdvisory(
                                         dialogTitle: timebankAdvisory);
                                 if (onActivityResult['PROCEED']) {
-                                  print("YES PROCEED WITH TIMEBANK CREATION");
                                   createEditCommunityBloc.updateUserDetails(
                                       SevaCore.of(context).loggedInUser);
                                   Navigator.push(
@@ -263,9 +300,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                     ),
                                   );
-                                } else {
-                                  print(
-                                      "NO CANCEL MY PLAN OF CREATING A TIMEBANK");
                                 }
                               },
                             ),
@@ -292,17 +326,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                 );
                               return Container(
                                 height: 100,
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
+                                child: LoadingIndicator(),
                               );
                             },
                           ),
                         ),
                         SizedBox(height: 10),
                         ProfileSettingsCard(
-                          title: AppLocalizations.of(context)
-                              .translate('profile', 'help'),
+                          title: S.of(context).help,
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -314,8 +345,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                         ),
                         ProfileSettingsCard(
-                          title: AppLocalizations.of(context)
-                              .translate('profile', 'notifications'),
+                          title: S.of(context).notification_alerts,
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -327,8 +357,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                         ),
                         ProfileSettingsCard(
-                          title: AppLocalizations.of(context)
-                              .translate('blocked_members', 'blocked_members'),
+                          title: S.of(context).blocked_members,
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -338,8 +367,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                         ),
                         ProfileSettingsCard(
-                          title: AppLocalizations.of(context)
-                              .translate('profile', 'timezone'),
+                          title: S.of(context).my_timezone,
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -351,8 +379,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                         ),
                         ProfileSettingsCard(
-                          title: AppLocalizations.of(context)
-                              .translate('settings', 'language'),
+                          title: S.of(context).my_language,
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -376,8 +403,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: <Widget>[
                   CircularProgressIndicator(),
                   SizedBox(height: 5),
-                  Text(AppLocalizations.of(context)
-                      .translate('profile', 'loading')),
+                  Text(S.of(context).loading + '...'),
                 ],
               ),
             ),
@@ -412,7 +438,7 @@ class _ProfilePageState extends State<ProfilePage> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('shared', 'cancel'),
+                  S.of(context).cancel,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -423,7 +449,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               FlatButton(
                 child: Text(
-                  AppLocalizations.of(context).translate('profile', 'proceed'),
+                  S.of(context).proceed,
                   style: TextStyle(
                     fontSize: 16,
                   ),

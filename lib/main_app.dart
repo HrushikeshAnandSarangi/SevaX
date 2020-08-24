@@ -3,15 +3,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/utils/connectivity.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
@@ -102,7 +101,7 @@ class MainApplication extends StatelessWidget {
                 Locale('zh', 'CN')
               ],
               localizationsDelegates: [
-                AppLocalizations.delegate,
+                S.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,

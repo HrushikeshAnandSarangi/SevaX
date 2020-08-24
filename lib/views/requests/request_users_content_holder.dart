@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
-import 'package:sevaexchange/models/timebank_model.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/favorite_users_view.dart';
 import 'package:sevaexchange/views/requests/find_volunteers_view.dart';
@@ -23,12 +21,9 @@ class RequestUsersTabsViewHolder extends StatefulWidget {
 
 class _RequestUsersTabsViewHolderState
     extends State<RequestUsersTabsViewHolder> {
-
   @override
   void initState() {
-
     super.initState();
-
   }
 
   @override
@@ -48,9 +43,7 @@ class TabarView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    sevaUserId=SevaCore
-        .of(context)
-        .loggedInUser.sevaUserID;
+    sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
     return Scaffold(
       body: DefaultTabController(
         length: 4,
@@ -63,25 +56,25 @@ class TabarView extends StatelessWidget {
             tabs: [
               Tab(
                 child: Text(
-                  AppLocalizations.of(context).translate('requests','find_volunteers'),
+                  S.of(context).find_volunteers,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               Tab(
                 child: Text(
-                  AppLocalizations.of(context).translate('requests','invited'),
+                  S.of(context).invited,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               Tab(
                 child: Text(
-                  AppLocalizations.of(context).translate('requests','favourites'),
+                  S.of(context).favourites,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               Tab(
                 child: Text(
-                  AppLocalizations.of(context).translate('requests','past_hired'),
+                  S.of(context).past_hired,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),

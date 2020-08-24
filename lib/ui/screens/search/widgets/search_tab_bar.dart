@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
-import 'package:sevaexchange/ui/utils/strings.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 
 class SearchTabBar extends StatelessWidget {
   const SearchTabBar({
@@ -13,6 +12,15 @@ class SearchTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> searchLabels = [
+      S.of(context).feeds,
+      S.of(context).requests,
+      S.of(context).offers,
+      S.of(context).projects,
+      S.of(context).groups,
+      S.of(context).members,
+    ];
+
     return TabBar(
       isScrollable: true,
       controller: _tabController,
@@ -31,11 +39,10 @@ class SearchTabBar extends StatelessWidget {
       indicatorColor: Theme.of(context).primaryColor,
       labelPadding: EdgeInsets.symmetric(horizontal: 10),
       tabs: List.generate(
-        SearchPageLabels.tabContent.length,
+        searchLabels.length,
         (index) => Tab(
           child: Text(
-            AppLocalizations.of(context)
-                .translate('search_page', SearchPageLabels.tabContent[index]),
+            searchLabels[index],
           ),
         ),
       ),

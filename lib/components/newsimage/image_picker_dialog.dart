@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/views/image_url_view.dart';
 
 import './image_picker_handler.dart';
 
@@ -14,8 +15,10 @@ class ImagePickerDialog extends StatelessWidget {
 
   Animation<double> _drawerContentsOpacity;
   Animation<Offset> _drawerDetailsPosition;
+  bool isShowWebImageUrl = false;
 
-  void initState() {
+  void initState(bool isAspectRatioFixed) {
+    isShowWebImageUrl = isAspectRatioFixed;
     _drawerContentsOpacity = CurvedAnimation(
       parent: ReverseAnimation(_controller),
       curve: Curves.fastOutSlowIn,
@@ -67,6 +70,10 @@ class ImagePickerDialog extends StatelessWidget {
     startTime();
   }
 
+  void refresh() {
+    _listener.addImageUrl();
+  }
+
   BuildContext dialogContext;
 
   @override
@@ -85,8 +92,7 @@ class ImagePickerDialog extends StatelessWidget {
                 GestureDetector(
                   onTap: () => _listener.openCamera(),
                   child: roundedButton(
-                      AppLocalizations.of(context)
-                          .translate('image_picker', 'camera'),
+                      S.of(context).camera,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0x0FF766FE0),
                       const Color(0xFFFFFFFF),
@@ -98,8 +104,7 @@ class ImagePickerDialog extends StatelessWidget {
                 GestureDetector(
                   onTap: () => _listener.openGallery(),
                   child: roundedButton(
-                      AppLocalizations.of(context)
-                          .translate('image_picker', 'gallery'),
+                      S.of(context).gallery,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0x0FF766FE0),
                       const Color(0xFFFFFFFF),
@@ -108,14 +113,38 @@ class ImagePickerDialog extends StatelessWidget {
                         color: Colors.white,
                       )),
                 ),
+                isShowWebImageUrl
+                    ? GestureDetector(
+                        onTap: () {
+                          dismissDialog();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return ImageUrlView();
+                              },
+                            ),
+                          ).then((value) {
+                            refresh();
+                          });
+                        },
+                        child: roundedButton(
+                            S.of(context).image_url,
+                            EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                            const Color(0x0FF766FE0),
+                            const Color(0xFFFFFFFF),
+                            Icon(
+                              Icons.language,
+                              color: Colors.white,
+                            )),
+                      )
+                    : Offstage(),
                 const SizedBox(height: 15.0),
                 GestureDetector(
                   onTap: () => dismissDialog(),
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
                     child: roundedButton(
-                        AppLocalizations.of(context)
-                            .translate('shared', 'cancel'),
+                        S.of(context).cancel,
                         EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                         const Color(0x0FF766FE0),
                         const Color(0xFFFFFFFF),

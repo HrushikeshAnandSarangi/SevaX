@@ -1,15 +1,17 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
+import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
+import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
@@ -37,7 +39,10 @@ class NewsImage extends StatefulWidget {
 
 @override
 class NewsImageState extends State<NewsImage>
-    with TickerProviderStateMixin, NewsImagePickerListener {
+    with
+        TickerProviderStateMixin,
+        NewsImagePickerListener,
+        WidgetsBindingObserver {
   bool _isImageBeingUploaded = false;
   // Function(LocationDataModel) onLocationDataModelUpdate;
   String selectedAddress;
@@ -45,19 +50,15 @@ class NewsImageState extends State<NewsImage>
   NewsImagePickerHandler imagePicker;
   //document related variables
   bool _isDocumentBeingUploaded = false;
-  File _file;
-  List<File> _files;
+
   String _fileName;
   String _path;
-  Map<String, String> _paths;
-  String _extension;
-  bool _loadingPath = false;
-  bool _multiPick = false;
-  FileType _pickingType = FileType.custom;
+
   final int tenMegaBytes = 10485760;
   final int hundreKb = 14857;
   BuildContext parentContext;
-
+  ProfanityImageModel profanityImageModel = ProfanityImageModel();
+  ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
   File _image;
   AnimationController _controller;
 
@@ -78,12 +79,38 @@ class NewsImageState extends State<NewsImage>
     );
     String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
 
-    // _newsImageURL = imageURL;
-    globals.newsImageURL = imageURL;
+    await profanityCheck(imageURL: imageURL);
 
     // _setAvatarURL();
     // _updateDB();
     return imageURL;
+  }
+
+  Future<void> profanityCheck({String imageURL}) async {
+    // _newsImageURL = imageURL;
+    profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
+
+    profanityStatusModel =
+        await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+    if (profanityStatusModel.isProfane) {
+      showProfanityImageAlert(
+              context: context, content: profanityStatusModel.category)
+          .then((status) {
+        if (status == 'Proceed') {
+          FirebaseStorage.instance
+              .getReferenceFromUrl(imageURL)
+              .then((reference) {
+            reference.delete();
+            globals.newsImageURL = null;
+          }).catchError((e) => print(e));
+        } else {
+          print('error');
+        }
+      });
+    } else {
+      globals.newsImageURL = imageURL;
+    }
   }
 
   void userImage(File _image) {
@@ -125,15 +152,12 @@ class NewsImageState extends State<NewsImage>
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('create_feed', 'size_alert_title')),
-          content: Text(AppLocalizations.of(context)
-              .translate('create_feed', 'size_alert')),
+          title: Text(S.of(context).large_file_alert),
+          content: Text(S.of(context).validation_error_file_size),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
-              child:
-                  Text(AppLocalizations.of(context).translate('help', 'close')),
+              child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -166,6 +190,7 @@ class NewsImageState extends State<NewsImage>
     // _newsImageURL = imageURL;
     globals.newsDocumentURL = documentURL;
     globals.newsDocumentName = _fileName;
+
     // _setAvatarURL();
     // _updateDB();
     return documentURL;
@@ -176,6 +201,7 @@ class NewsImageState extends State<NewsImage>
     if (widget.geoFirePointLocation == null) _fetchCurrentlocation;
 
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     selectedAddress = widget.selectedAddress;
     _controller = AnimationController(
       vsync: this,
@@ -188,8 +214,20 @@ class NewsImageState extends State<NewsImage>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
+        globals.newsImageURL = globals.webImageUrl;
+        print('${globals.newsImageURL}');
+        setState(() {});
+      }
+    }
   }
 
   @override
@@ -230,6 +268,7 @@ class NewsImageState extends State<NewsImage>
                                 ),
                               ),
                             ),
+                            //Text(profanityImageModel.toString()),
                             Container(
                               padding: EdgeInsets.fromLTRB(
                                   MediaQuery.of(context).size.width / 4,
@@ -241,8 +280,7 @@ class NewsImageState extends State<NewsImage>
                                     ? widget.photoCredits
                                     : '',
                                 decoration: InputDecoration(
-                                  hintText:
-                                      '+ ${AppLocalizations.of(context).translate('create_feed', 'image_hint')}',
+                                  hintText: '+ ${S.of(context).photo_credits}',
                                 ),
                                 keyboardType: TextInputType.text,
                                 textAlign: TextAlign.center,
@@ -296,10 +334,8 @@ class NewsImageState extends State<NewsImage>
               padding: EdgeInsets.symmetric(horizontal: 8),
               child: Text(
                 globals.newsDocumentURL != null || globals.newsImageURL != null
-                    ? AppLocalizations.of(context)
-                        .translate('create_feed', 'change_attachment')
-                    : AppLocalizations.of(context)
-                        .translate('create_feed', 'add_attachment'),
+                    ? S.of(context).change_attachment
+                    : S.of(context).add_attachment,
               ),
             ),
             onPressed: () {
@@ -368,6 +404,18 @@ class NewsImageState extends State<NewsImage>
         //error = e.message;
       }
     }
+  }
+
+  @override
+  addWebImageUrl() {
+    // TODO: implement addWebImageUrl
+    setState(() {
+      if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
+        globals.newsImageURL = globals.webImageUrl;
+        print('${globals.newsImageURL}');
+        setState(() {});
+      }
+    });
   }
 }
 

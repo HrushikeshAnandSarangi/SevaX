@@ -1,14 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_full_pdf_viewer/flutter_full_pdf_viewer.dart';
 import 'package:share_extend/share_extend.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PDFScreen extends StatelessWidget {
   String pathPDF = "";
-  File pdf;
   String docName = "";
-  PDFScreen({this.pathPDF, this.docName, this.pdf});
+  bool isFromFeeds = false;
+  String pdfUrl = '';
+  PDFScreen({this.pathPDF, this.docName, this.isFromFeeds, this.pdfUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +21,17 @@ class PDFScreen extends StatelessWidget {
           ),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.share),
-              onPressed: () {
-                ShareExtend.share(pathPDF, "file");
+              icon: Icon(isFromFeeds ? Icons.share : Icons.file_download),
+              onPressed: () async {
+                if (isFromFeeds) {
+                  ShareExtend.share(pathPDF, "file");
+                } else {
+                  if (await canLaunch(pdfUrl)) {
+                    launch(pdfUrl);
+                  } else {
+                    print("could not launch");
+                  }
+                }
               },
             ),
           ],

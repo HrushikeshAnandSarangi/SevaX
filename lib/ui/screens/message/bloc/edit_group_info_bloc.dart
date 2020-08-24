@@ -1,15 +1,17 @@
 import 'dart:io';
 
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/widgets/APi/chats_api.dart';
-import 'package:sevaexchange/widgets/APi/storage_api.dart';
+import 'package:sevaexchange/repositories/chats_repository.dart';
+import 'package:sevaexchange/repositories/storage_repository.dart';
 
 class EditGroupInfoBloc {
   final _chatModel = BehaviorSubject<ChatModel>();
   final _file = BehaviorSubject<File>();
   final _groupName = BehaviorSubject<String>();
   final _participantInfo = BehaviorSubject<List<ParticipantInfo>>();
+  final profanityDetector = ProfanityDetector();
 
   Stream<String> get groupName => _groupName.stream;
   Stream<File> get image => _file.stream;
@@ -24,7 +26,7 @@ class EditGroupInfoBloc {
       _participantInfo.sink.add;
 
   Future<ChatModel> getChatModel(String chatId) async {
-    return await ChatsApi.getChatModel(chatId);
+    return await ChatsRepository.getChatModel(chatId);
   }
 
   void removeMember(String userId) {
@@ -36,13 +38,17 @@ class EditGroupInfoBloc {
   Future<void> editGroupDetails(String chatId) async {
     if (_groupName.value == null || _groupName.value.isEmpty) {
       _groupName.addError("Group name cannot be empty");
+    } else if (profanityDetector.isProfaneString(_groupName.value)) {
+      _groupName.addError('profanity');
     } else {
       String imageUrl;
       if (_file.value != null) {
-        imageUrl =
-            await StorageApi.uploadFile("multiUserMessagingLogo", _file.value);
+        imageUrl = await StorageRepository.uploadFile(
+            "multiUserMessagingLogo", _file.value);
       }
-      ChatsApi.editGroup(
+      print("image url ${imageUrl}");
+
+      ChatsRepository.editGroup(
           chatId, _groupName.value, imageUrl, _participantInfo.value);
     }
   }

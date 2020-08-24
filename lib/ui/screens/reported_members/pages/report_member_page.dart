@@ -1,9 +1,14 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/bloc/report_member_bloc.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
 
 class ReportMemberPage extends StatefulWidget {
@@ -53,7 +58,11 @@ class ReportMemberPage extends StatefulWidget {
 class _ReportMemberPageState extends State<ReportMemberPage> {
   final ReportMemberBloc _bloc = ReportMemberBloc();
   final FocusNode messageNode = FocusNode();
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  ProfanityImageModel profanityImageModel = ProfanityImageModel();
+  ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
+  FirebaseStorage _storage = FirebaseStorage();
 
   @override
   void initState() {
@@ -75,7 +84,7 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate('reported_members', 'reported_member'),
+          S.of(context).report_members,
           style: TextStyle(fontSize: 18),
         ),
         centerTitle: true,
@@ -88,12 +97,12 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
         child: ListView(
           children: <Widget>[
             Text(
-              AppLocalizations.of(context).translate('reported_members', 'inform'),
+              S.of(context).report_member_inform,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
             Text(
-              AppLocalizations.of(context).translate('reported_members', 'details'),
+              S.of(context).report_member_provide_details,
             ),
             StreamBuilder<String>(
               stream: _bloc.message,
@@ -102,12 +111,15 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                   onChanged: _bloc.onMessageChanged,
                   focusNode: messageNode,
                   decoration: InputDecoration(
+                    errorMaxLines: 2,
                     border: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     errorBorder: InputBorder.none,
                     disabledBorder: InputBorder.none,
-                    errorText: snapshot.error,
+                    errorText: snapshot.error.toString().contains('profanity')
+                        ? S.of(context).profanity_text_alert
+                        : snapshot.error,
                   ),
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
@@ -121,11 +133,14 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
               child: StreamBuilder<File>(
                 stream: _bloc.image,
                 builder: (context, snapshot) {
+                  if (snapshot.hasError) {}
                   return snapshot.data == null
                       ? ImagePickerWidget(
                           isAspectRatioFixed: false,
                           onChanged: (File file) {
-                            _bloc.uploadImage(file);
+                            if (file != null) {
+                              profanityCheck(file: file, bloc: _bloc);
+                            }
                           },
                           child: Container(
                             width: 70,
@@ -190,12 +205,13 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                 bool isEnabled =
                     snapshot.data ?? false; //(snapshot.data?.length ?? 0) > 10;
                 return RaisedButton(
-                  child: Text(AppLocalizations.of(context).translate('reported_members', 'report'),
+                  child: Text(
+                    S.of(context).report,
                   ),
                   onPressed: isEnabled
                       ? () {
                           _showSnackBar(
-                            AppLocalizations.of(context).translate('reported_members', 'reporting_member'),
+                            S.of(context).reporting_member,
                             isLongDuration: true,
                           );
                           _bloc
@@ -207,13 +223,14 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
                             isTimebankReport: widget.isFromTimebank,
                           )
                               .then((status) {
-                            _showSnackBar(AppLocalizations.of(context).translate('reported_members', 'success'));
+                            _showSnackBar(S.of(context).member_reported);
                             Future.delayed(
                               Duration(seconds: 1),
                               () => Navigator.of(context).pop(),
                             );
                           }).catchError((e) {
-                            _showSnackBar(AppLocalizations.of(context).translate('reported_members', 'failed'));
+                            _showSnackBar(
+                                S.of(context).member_reporting_failed);
                           });
                         }
                       : null,
@@ -224,6 +241,57 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
         ),
       ),
     );
+  }
+
+  Future<void> profanityCheck({
+    File file,
+    ReportMemberBloc bloc,
+  }) async {
+    progressDialog = ProgressDialog(
+      context,
+      type: ProgressDialogType.Normal,
+      isDismissible: false,
+    );
+    // _newsImageURL = imageURL;
+    progressDialog.show();
+
+    String filePath = DateTime.now().toString();
+    if (file == null) {
+      progressDialog.hide();
+    }
+    StorageUploadTask _uploadTask =
+        _storage.ref().child("reports/$filePath.png").putFile(file);
+    StorageTaskSnapshot snapshot = await _uploadTask.onComplete;
+
+    String imageURL = await snapshot.ref.getDownloadURL();
+    profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
+
+    profanityStatusModel =
+        await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+    if (profanityStatusModel.isProfane) {
+      progressDialog.hide();
+
+      showProfanityImageAlert(
+              context: context, content: profanityStatusModel.category)
+          .then((status) {
+        if (status == 'Proceed') {
+          FirebaseStorage.instance
+              .getReferenceFromUrl(imageURL)
+              .then((reference) {
+            reference.delete();
+          }).catchError((e) => print(e));
+        } else {
+          print('error');
+        }
+      });
+    } else {
+      FirebaseStorage.instance.getReferenceFromUrl(imageURL).then((reference) {
+        reference.delete();
+      }).catchError((e) => print(e));
+      bloc.uploadImage(file);
+      progressDialog.hide();
+    }
   }
 
   void _showSnackBar(String message, {bool isLongDuration = false}) {

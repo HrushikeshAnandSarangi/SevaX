@@ -3,9 +3,13 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/change_ownership_model.dart';
+import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/donation_approve_model.dart';
+import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -15,17 +19,26 @@ import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
+import 'package:sevaexchange/repositories/notifications_repository.dart';
+import 'package:sevaexchange/repositories/request_repository.dart';
+import 'package:sevaexchange/repositories/user_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
+import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/change_ownership_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_approve_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_complete_widget.dart';
+import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/views/requests/donations/approve_donation_dialog.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/group_join_reject_dialog.dart';
@@ -44,8 +57,10 @@ class PersonalNotifications extends StatefulWidget {
 
 class _PersonalNotificationsState extends State<PersonalNotifications>
     with AutomaticKeepAliveClientMixin {
+  BuildContext parentContext;
   @override
   Widget build(BuildContext context) {
+    parentContext = context;
     super.build(context);
     final _bloc = BlocProvider.of<NotificationsBloc>(context);
     final UserModel user = SevaCore.of(context).loggedInUser;
@@ -62,8 +77,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: Text(
-                AppLocalizations.of(context)
-                    .translate('notifications', 'no_notifications'),
+                S.of(context).no_notifications,
               ),
             ),
           );
@@ -107,13 +121,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   title: "Request Updated",
                   subTitle:
-                      "${AppLocalizations.of(context).translate('notifications', 'you_signed_up_for')} ***eventName ${AppLocalizations.of(context).translate('notifications', 'on')} ***eventDate. ${AppLocalizations.of(context).translate('notifications', 'owner_changes')}"
+                      "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification}"
                           .replaceFirst('***eventName', eventData.eventName)
                           .replaceFirst(
-                              '***eventDate',
-                              DateTime.fromMillisecondsSinceEpoch(
-                                eventData.eventDate,
-                              ).toString()),
+                            '***eventDate',
+                            DateTime.fromMillisecondsSinceEpoch(
+                              eventData.eventDate,
+                            ).toString(),
+                          ),
                   entityName: "Request Updated",
                   photoUrl: eventData.photoUrl,
                   onDismissed: onDismissed,
@@ -123,14 +138,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 RequestModel model = RequestModel.fromMap(notification.data);
 
                 return FutureBuilder<RequestModel>(
-                  future: RequestApi.getRequestFutureById(model.id),
+                  future: RequestRepository.getRequestFutureById(model.id),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Container();
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return LoadingIndicator();
                     }
                     RequestModel model = snapshot.data;
                     return RequestAcceptedWidget(
@@ -171,19 +186,57 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: userAddedModel.adminName,
                   isDissmissible: true,
                   onDismissed: () {
-                    NotificationsApi.readUserNotification(
+                    NotificationsRepository.readUserNotification(
                       notification.id,
                       user.email,
                     );
                   },
                   onPressed: null,
                   photoUrl: userAddedModel.timebankImage,
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'timebank_join'),
+                  title: S.of(context).notification_timebank_join,
                   subTitle:
-                      '${userAddedModel.adminName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'added_you')} ${userAddedModel.timebankName} ${AppLocalizations.of(context).translate('members', 'timebank')}',
+                      '${userAddedModel.adminName.toLowerCase()} ${S.of(context).notifications_added_you} ${userAddedModel.timebankName} ${S.of(context).timebank}',
                 );
                 break;
+
+              case NotificationType.MEMBER_DEMOTED_FROM_ADMIN:
+                bool isGroup = false;
+                String associatedName = notification.data['associatedName'];
+
+                // bool
+                String timebankTitle = notification.data['timebankName'];
+                return NotificationCard(
+                  title: 'You have been demoted from Admin',
+                  subTitle:
+                      '$associatedName has demoted you from being an Admin for the ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle}',
+                  entityName: 'DEMOTED',
+                  onDismissed: () {
+                    // Dismiss notification
+                    NotificationsRepository.readUserNotification(
+                      notification.id,
+                      user.email,
+                    );
+                  },
+                );
+
+              case NotificationType.MEMBER_PROMOTED_AS_ADMIN:
+                String associatedName = notification.data['associatedName'];
+                bool isGroup = notification.data['isGroup'];
+                String timebankTitle = notification.data['timebankName'];
+
+                return NotificationCard(
+                  title: 'You have been promoted to Admin',
+                  subTitle:
+                      '$associatedName has promoted you to be the Admin for the ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle}',
+                  entityName: 'PROMOTED',
+                  onDismissed: () {
+                    // Dismiss notification
+                    NotificationsRepository.readUserNotification(
+                      notification.id,
+                      user.email,
+                    );
+                  },
+                );
 
               case NotificationType.RequestReject:
                 RequestModel model = RequestModel.fromMap(notification.data);
@@ -192,7 +245,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   title: model.title,
                   isDissmissible: true,
                   onDismissed: () {
-                    NotificationsApi.readUserNotification(
+                    NotificationsRepository.readUserNotification(
                       notification.id,
                       user.email,
                     );
@@ -200,7 +253,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   onPressed: null,
                   photoUrl: model.photoUrl,
                   subTitle:
-                      '${AppLocalizations.of(context).translate('notifications', 'rejected_by')} ${model.fullName}',
+                      '${S.of(context).notifications_request_rejected_by} ${model.fullName}',
                 );
 
                 break;
@@ -209,7 +262,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 JoinRequestNotificationModel model =
                     JoinRequestNotificationModel.fromMap(notification.data);
                 return FutureBuilder<UserModel>(
-                  future: UserApi.fetchUserById(notification.senderUserId),
+                  future:
+                      UserRepository.fetchUserById(notification.senderUserId),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Container();
@@ -221,11 +275,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     return user != null && user.fullname != null
                         ? NotificationCard(
                             entityName: user.fullname,
-                            title: AppLocalizations.of(context)
-                                .translate('notifications', 'join_request'),
+                            title: S.of(context).notifications_join_request,
                             isDissmissible: true,
                             onDismissed: () {
-                              NotificationsApi.readUserNotification(
+                              NotificationsRepository.readUserNotification(
                                 notification.id,
                                 user.email,
                               );
@@ -242,7 +295,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             },
                             photoUrl: user.photoURL,
                             subTitle:
-                                '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'requested_join')} ${model.timebankTitle}, ${AppLocalizations.of(context).translate('notifications', 'tap_toview')}',
+                                '${user.fullname.toLowerCase()} ${S.of(context).notifications_requested_join} ${model.timebankTitle}, ${S.of(context).notifications_tap_to_view}',
                           )
                         : Container();
                   },
@@ -252,14 +305,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               case NotificationType.RequestCompleted:
                 RequestModel model = RequestModel.fromMap(notification.data);
                 return FutureBuilder<RequestModel>(
-                  future: RequestApi.getRequestFutureById(model.id),
+                  future: RequestRepository.getRequestFutureById(model.id),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Container();
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return LoadingIndicator();
                     }
                     RequestModel model = snapshot.data;
                     return RequestCompleteWidget(
@@ -280,7 +333,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: model.fullName,
                   isDissmissible: true,
                   onDismissed: () {
-                    NotificationsApi.readUserNotification(
+                    NotificationsRepository.readUserNotification(
                       notification.id,
                       user.email,
                     );
@@ -288,7 +341,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   onPressed: null,
                   photoUrl: model.photoUrl,
                   subTitle:
-                      '${model.fullName} ${AppLocalizations.of(context).translate('notifications', 'approved_for')}  ${transactionModel.credits} ${AppLocalizations.of(context).translate('notifications', 'hours')}',
+                      '${model.fullName} ${S.of(context).notifications_approved_for}  ${transactionModel.credits} ${S.of(context).hour(2)}',
                   title: model.title,
                 );
                 break;
@@ -299,7 +352,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   title: model.title,
                   isDissmissible: true,
                   onDismissed: () {
-                    NotificationsApi.readUserNotification(
+                    NotificationsRepository.readUserNotification(
                       notification.id,
                       user.email,
                     );
@@ -307,7 +360,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   onPressed: null,
                   photoUrl: model.photoUrl,
                   subTitle:
-                      '${AppLocalizations.of(context).translate('notifications', 'task_rejected_by')} ${model.fullName}',
+                      '${S.of(context).notifications_task_rejected_by} ${model.fullName}',
                 );
                 break;
 
@@ -316,7 +369,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     TransactionModel.fromMap(notification.data);
 
                 return FutureBuilder<UserModel>(
-                  future: UserApi.fetchUserById(notification.senderUserId),
+                  future:
+                      UserRepository.fetchUserById(notification.senderUserId),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) return Container();
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -328,17 +382,16 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       entityName: user.fullname,
                       isDissmissible: true,
                       onDismissed: () {
-                        NotificationsApi.readUserNotification(
+                        NotificationsRepository.readUserNotification(
                           notification.id,
                           user.email,
                         );
                       },
                       onPressed: null,
                       photoUrl: user.photoURL,
-                      title: AppLocalizations.of(context)
-                          .translate('notifications', 'credited'),
+                      title: S.of(context).notifications_credited,
                       subTitle:
-                          ' ${AppLocalizations.of(context).translate('notifications', 'congrats')}! ${model.credits} ${AppLocalizations.of(context).translate('notifications', 'credited_to')}.',
+                          ' ${S.of(context).congrats}! ${model.credits} ${S.of(context).notifications_credited_to}.',
                     );
                   },
                 );
@@ -348,7 +401,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     TransactionModel.fromMap(notification.data);
 
                 return FutureBuilder<UserModel>(
-                  future: UserApi.fetchUserById(notification.senderUserId),
+                  future:
+                      UserRepository.fetchUserById(notification.senderUserId),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) return Container();
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -360,17 +414,16 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       entityName: user.fullname,
                       isDissmissible: true,
                       onDismissed: () {
-                        NotificationsApi.readUserNotification(
+                        NotificationsRepository.readUserNotification(
                           notification.id,
                           user.email,
                         );
                       },
                       onPressed: null,
                       photoUrl: user.photoURL,
-                      title: AppLocalizations.of(context)
-                          .translate('notifications', 'debited'),
+                      title: S.of(context).notifications_debited,
                       subTitle:
-                          "${model.credits} ${AppLocalizations.of(context).translate('notifications', 'debited_to')}",
+                          "${model.credits} ${S.of(context).notifications_debited_to}",
                     );
                   },
                 );
@@ -387,7 +440,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 OfferAcceptedNotificationModel acceptedOffer =
                     OfferAcceptedNotificationModel.fromMap(notification.data);
                 return FutureBuilder<UserModel>(
-                  future: UserApi.fetchUserById(acceptedOffer.acceptedBy),
+                  future:
+                      UserRepository.fetchUserById(acceptedOffer.acceptedBy),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Container();
@@ -401,17 +455,16 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       entityName: user.fullname,
                       isDissmissible: true,
                       onDismissed: () {
-                        NotificationsApi.readUserNotification(
+                        NotificationsRepository.readUserNotification(
                           notification.id,
                           user.email,
                         );
                       },
                       onPressed: null,
                       photoUrl: user.photoURL,
-                      title: AppLocalizations.of(context)
-                          .translate('notifications', 'offer_accepted'),
+                      title: S.of(context).notifications_offer_accepted,
                       subTitle:
-                          '${user.fullname.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'show_interest')}',
+                          '${user.fullname.toLowerCase()} ${S.of(context).notifications_shown_interest}',
                     );
                   },
                 );
@@ -425,7 +478,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: requestInvitationModel.timebankName.toLowerCase(),
                   isDissmissible: true,
                   onDismissed: () {
-                    NotificationsApi.readUserNotification(
+                    NotificationsRepository.readUserNotification(
                       notification.id,
                       user.email,
                     );
@@ -450,10 +503,43 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   },
                   photoUrl: requestInvitationModel.timebankImage,
                   subTitle:
-                      '${requestInvitationModel.timebankName.toLowerCase()} ${AppLocalizations.of(context).translate('notifications', 'requested_join')} ${requestInvitationModel.requestTitle}, ${AppLocalizations.of(context).translate('notifications', 'tap_toview')}',
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'join_request'),
+                      '${requestInvitationModel.timebankName.toLowerCase()} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestTitle}, ${S.of(context).notifications_tap_to_view}',
+                  title: S.of(context).notifications_join_request,
                 );
+                break;
+
+              case NotificationType.ACKNOWLEDGE_DONOR_DONATION:
+                print("notification data ${notification.data}");
+                DonationModel donationModel =
+                    DonationModel.fromMap(notification.data);
+                return NotificationCard(
+                  entityName: donationModel.requestTitle.toLowerCase(),
+                  isDissmissible: true,
+                  onDismissed: () {
+                    NotificationsRepository.readUserNotification(
+                      notification.id,
+                      user.email,
+                    );
+                  },
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => RequestDonationDisputePage(
+                          model: donationModel,
+                        ),
+                      ),
+                    );
+                  },
+                  photoUrl: donationModel.donorDetails.photoUrl,
+                  subTitle: donationModel.donorDetails.name +
+                      " " +
+                      S.of(context).donated +
+                      " " +
+                      donationModel.donationType.toString() +
+                      S.of(context).tap_to_view_details,
+                  title: S.of(context).donation_acknowledge,
+                );
+
                 break;
               case NotificationType.GroupJoinInvite:
                 print("notification data ${notification.data}");
@@ -464,7 +550,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: groupInviteUserModel.timebankName.toLowerCase(),
                   isDissmissible: true,
                   onDismissed: () {
-                    NotificationsApi.readUserNotification(
+                    NotificationsRepository.readUserNotification(
                         notification.id, user.email);
                   },
                   onPressed: () {
@@ -482,9 +568,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   },
                   photoUrl: groupInviteUserModel.timebankImage,
                   subTitle:
-                      '${groupInviteUserModel.adminName.toLowerCase()} ${AppLocalizations.of(context).translate('members', 'invited_you')} ${groupInviteUserModel.timebankName}, ${AppLocalizations.of(context).translate('notifications', 'tap_to_view')}',
-                  title:
-                      "${AppLocalizations.of(context).translate('notifications', 'group_invite')}",
+                      '${groupInviteUserModel.adminName.toLowerCase()} ${S.of(context).notifications_invited_to_join} ${groupInviteUserModel.timebankName}, ${S.of(context).notifications_tap_to_view}',
+                  title: "${S.of(context).notifications_group_join_invite}",
                 );
                 break;
 
@@ -494,8 +579,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                 return NotificationCard(
                   photoUrl: '',
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'credited'),
+                  title: S.of(context).notifications_credited,
                   subTitle: UserNotificationMessage.CREDIT_FROM_OFFER
                       .replaceFirst(
                         '*n',
@@ -513,8 +597,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                 return NotificationCard(
                   photoUrl: data.participantDetails.photourl,
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'new_member_signup'),
+                  title: S.of(context).notifications_new_member_signup,
                   subTitle: UserNotificationMessage.NEW_MEMBER_SIGNUP_OFFER
                       .replaceFirst(
                         '*name',
@@ -531,7 +614,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   photoUrl: '',
                   title:
-                      "${AppLocalizations.of(context).translate('notifications', 'creditsfor')} ${data.classDetails.classTitle}",
+                      "${S.of(context).notifications_credits_for} ${data.classDetails.classTitle}",
                   subTitle: UserNotificationMessage.OFFER_FULFILMENT_ACHIEVED
                       .replaceFirst(
                         '*n',
@@ -550,8 +633,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                 return NotificationCard(
                   photoUrl: data.participantDetails.photourl,
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'debited'),
+                  title: S.of(context).notifications_debited,
                   subTitle: UserNotificationMessage.DEBIT_FROM_OFFER
                       .replaceFirst(
                         '*n',
@@ -568,8 +650,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                 return NotificationCard(
                   photoUrl: data.participantDetails.photourl,
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'signup_for_class'),
+                  title: S.of(context).notifications_signed_for_class,
                   subTitle: UserNotificationMessage.OFFER_SUBSCRIPTION_COMPLETED
                       .replaceFirst(
                         '*class',
@@ -579,14 +660,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   onDismissed: onDismissed,
                 );
                 break;
+
               case NotificationType.TYPE_FEEDBACK_FROM_SIGNUP_MEMBER:
                 OneToManyNotificationDataModel data =
                     OneToManyNotificationDataModel.fromJson(notification.data);
 
                 return NotificationCard(
                   photoUrl: data.participantDetails.photourl,
-                  title: AppLocalizations.of(context)
-                      .translate('notifications', 'feedback_request'),
+                  title: S.of(context).notifications_feedback_request,
                   subTitle: UserNotificationMessage.FEEDBACK_FROM_SIGNUP_MEMBER
                       .replaceFirst(
                     '*class',
@@ -610,16 +691,17 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: requestData.entityTitle ?? "Deletion Request",
                   photoUrl: null,
                   title: requestData.requestAccepted
-                      ? "${requestData.entityTitle} ${AppLocalizations.of(context).translate('soft_delete', 'was_deleted')}"
-                      : "${requestData.entityTitle} ${AppLocalizations.of(context).translate('soft_delete', 'could_not_delete')}",
+                      ? "${requestData.entityTitle} ${S.of(context).notifications_was_deleted}"
+                      : "${requestData.entityTitle} ${S.of(context).notifications_could_not_delete}",
                   subTitle: requestData.requestAccepted
-                      ? AppLocalizations.of(context)
-                          .translate('soft_delete', 'deleted_successfully')
+                      ? S
+                          .of(context)
+                          .notifications_successfully_deleted
                           .replaceAll(
                             '***',
                             requestData.entityTitle,
                           )
-                      : "${requestData.entityTitle} ${AppLocalizations.of(context).translate('soft_delete', 'could_not_deleted')}",
+                      : "${requestData.entityTitle} ${S.of(context).notifications_could_not_deleted}",
                   onPressed: () => !requestData.requestAccepted
                       ? showDialogForIncompleteTransactions(
                           context,
@@ -628,6 +710,73 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       : null,
                   onDismissed: onDismissed,
                 );
+
+              case NotificationType.APPROVED_MEMBER_WITHDRAWING_REQUEST:
+                var body = WithdrawnRequestBody.fromMap(notification.data);
+                return NotificationCard(
+                  entityName: body.fullName,
+                  photoUrl: null,
+                  title: "Member withdrawn",
+                  subTitle:
+                      "${body.fullName} has withdrawn from ${body.requestTite}.",
+                  onDismissed: onDismissed,
+                );
+
+              case NotificationType.OFFER_CANCELLED_BY_CREATOR:
+                // var body = WithdrawnRequestBody.fromMap(notification.data);
+                return NotificationCard(
+                  entityName: "",
+                  photoUrl: null,
+                  title: "One to many offer Cancelled",
+                  subTitle: "Offer cancelled by Creator",
+                  onDismissed: onDismissed,
+                );
+
+              case NotificationType.SEVA_COINS_CREDITED:
+                return NotificationCard(
+                  entityName: "CR",
+                  photoUrl: null,
+                  title: "Seva coins has been creited to your account",
+                  subTitle: "Seva coins has been credited to your account",
+                  onDismissed: onDismissed,
+                );
+
+              case NotificationType.SEVA_COINS_DEBITED:
+                return NotificationCard(
+                  entityName: "CR",
+                  photoUrl: null,
+                  title: "Seva coins has been debited from your account",
+                  subTitle: "Seva coins has been debited from your account",
+                  onDismissed: onDismissed,
+                );
+
+              case NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY:
+              case NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY:
+                return PersonalNotificationsRedcerForDonations
+                    .getWidgetForSuccessfullDonation(onDismissed: onDismissed);
+
+              case NotificationType.CASH_DONATION_MODIFIED_BY_DONOR:
+              case NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR:
+                return PersonalNotificationsRedcerForDonations
+                    .getWidgetForDonationsModifiedByDonor(
+                  context: context,
+                  onDismissed: onDismissed,
+                  notificationsModel: notification,
+                );
+
+              case NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR:
+              case NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR:
+                return PersonalNotificationsRedcerForDonations
+                    .getWidgetForDonationsModifiedByCreator(
+                  context: context,
+                  onDismissed: onDismissed,
+                  notificationsModel: notification,
+                );
+
+              case NotificationType.CASH_DONATION_ACKNOWLEDGED_BY_DONOR:
+              case NotificationType.GOODS_DONATION_ACKNOWLEDGED_BY_DONOR:
+                //NOT SURE WHEATHER TO ADD THIS OR NOT
+                break;
 
               default:
                 log("Unhandled user notification type ${notification.type} ${notification.id}");
@@ -798,26 +947,117 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               results['didComment'] ? results['comment'] : "No comments",
         },
       );
-      NotificationsApi.readUserNotification(notificationId, email);
+      await sendMessageOfferCreator(
+          loggedInUser: SevaCore.of(context).loggedInUser,
+          message: results['didComment'] ? results['comment'] : "No comments",
+          creatorId: data.classDetails.sevauserid);
+      NotificationsRepository.readUserNotification(notificationId, email);
+    }
+  }
+
+  Future<void> sendMessageOfferCreator({
+    UserModel loggedInUser,
+    String creatorId,
+    String message,
+  }) async {
+    UserModel userModel =
+        await FirestoreManager.getUserForId(sevaUserId: creatorId);
+    if (userModel != null) {
+      ParticipantInfo receiver = ParticipantInfo(
+        id: userModel.sevaUserID,
+        photoUrl: userModel.photoURL,
+        name: userModel.fullname,
+        type: ChatType.TYPE_PERSONAL,
+      );
+
+      ParticipantInfo sender = ParticipantInfo(
+        id: loggedInUser.sevaUserID,
+        photoUrl: loggedInUser.photoURL,
+        name: loggedInUser.fullname,
+        type: ChatType.TYPE_PERSONAL,
+      );
+      await sendBackgroundMessage(
+          messageContent: message,
+          reciever: receiver,
+          context: context,
+          isTimebankMessage: false,
+          timebankId: '',
+          communityId: loggedInUser.currentCommunity,
+          sender: sender);
+    }
+  }
+
+  Future<void> sendMessageToMember({
+    UserModel loggedInUser,
+    RequestModel requestModel,
+    String message,
+  }) async {
+    TimebankModel timebankModel =
+        await getTimeBankForId(timebankId: requestModel.timebankId);
+    UserModel userModel = await FirestoreManager.getUserForId(
+        sevaUserId: requestModel.sevaUserId);
+    if (userModel != null && timebankModel != null) {
+      ParticipantInfo receiver = ParticipantInfo(
+        id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.sevaUserID
+            : requestModel.timebankId,
+        photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.photoURL
+            : timebankModel.photoUrl,
+        name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.fullname
+            : timebankModel.name,
+        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? ChatType.TYPE_PERSONAL
+            : timebankModel.parentTimebankId ==
+                    '73d0de2c-198b-4788-be64-a804700a88a4'
+                ? ChatType.TYPE_TIMEBANK
+                : ChatType.TYPE_GROUP,
+      );
+
+      ParticipantInfo sender = ParticipantInfo(
+        id: loggedInUser.sevaUserID,
+        photoUrl: loggedInUser.photoURL,
+        name: loggedInUser.fullname,
+        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? ChatType.TYPE_PERSONAL
+            : timebankModel.parentTimebankId ==
+                    '73d0de2c-198b-4788-be64-a804700a88a4'
+                ? ChatType.TYPE_TIMEBANK
+                : ChatType.TYPE_GROUP,
+      );
+      await sendBackgroundMessage(
+          messageContent: message,
+          reciever: receiver,
+          context: context,
+          isTimebankMessage:
+              requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                  ? true
+                  : false,
+          timebankId: requestModel.timebankId,
+          communityId: loggedInUser.currentCommunity,
+          sender: sender);
     }
   }
 
   void showDialogForIncompleteTransactions(
       BuildContext context, SoftDeleteRequestDataHolder deletionRequest) {
-    var reason = AppLocalizations.of(context)
-        .translate('soft_delete', 'incomplete_transaction')
-        .replaceAll('***', deletionRequest.entityTitle);
+    var reason = S
+            .of(context)
+            .notifications_incomplete_transaction
+            .replaceAll('***', deletionRequest.entityTitle) +
+        '\n';
     if (deletionRequest.noOfOpenOffers > 0) {
       reason +=
-          '${deletionRequest.noOfOpenOffers} ${AppLocalizations.of(context).translate('soft_delete', 'one_to_many_offers')}';
+          '${deletionRequest.noOfOpenOffers} ${S.of(context).one_to_many_offers}\n';
     }
     if (deletionRequest.noOfOpenProjects > 0) {
       reason +=
-          '${deletionRequest.noOfOpenProjects} ${AppLocalizations.of(context).translate('soft_delete', 'projects')}';
+          '${deletionRequest.noOfOpenProjects} ${S.of(context).projects}\n';
     }
     if (deletionRequest.noOfOpenRequests > 0) {
       reason +=
-          '${deletionRequest.noOfOpenRequests} ${AppLocalizations.of(context).translate('soft_delete', 'open_requests')}';
+          '${deletionRequest.noOfOpenRequests} ${S.of(context).open_requests}\n';
     }
 
     showDialog(
@@ -829,8 +1069,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           actions: <Widget>[
             FlatButton(
               child: Text(
-                AppLocalizations.of(context)
-                    .translate('soft_delete', 'dismiss'),
+                S.of(context).dismiss,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.red,
@@ -848,4 +1087,22 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
   @override
   bool get wantKeepAlive => true;
+}
+
+class WithdrawnRequestBody {
+  String fullName;
+  String requestId;
+  String requestTite;
+
+  WithdrawnRequestBody.fromMap(Map<dynamic, dynamic> body) {
+    if (body.containsKey('fullName')) {
+      this.fullName = body['fullName'];
+    }
+    if (body.containsKey('requestId')) {
+      this.requestId = body['requestId'];
+    }
+    if (body.containsKey('requestTite')) {
+      this.requestTite = body['requestTite'];
+    }
+  }
 }

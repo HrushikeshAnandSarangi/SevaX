@@ -18,10 +18,10 @@ import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 @deprecated
@@ -140,7 +140,7 @@ class OfferCardViewState extends State<OfferCardView> {
               return Text('Error: ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             }
             UserModel userModel = snapshot.data;
             String usertimezone = userModel.timezone;
@@ -558,31 +558,31 @@ class OfferCardViewState extends State<OfferCardView> {
     );
   }
 
-  Future<String> _getLocation(double lat, double lng) async {
-    String address = await LocationUtility().getFormattedAddress(lat, lng);
-    return address;
-  }
+  // Future<String> _getLocation(double lat, double lng) async {
+  //   String address = await LocationUtility().getFormattedAddress(lat, lng);
+  //   return address;
+  // }
 
-  void _showProtectedTimebankMessage() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Protected Timebank"),
-          content: Text(
-              "Admins or Co-Ordinators can only accept offers in a protected timebank"),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("Close"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // void _showProtectedTimebankMessage() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text(S.of(context).protected_timebank),
+  //         content: Text(
+  //             "Admins or Co-Ordinators can only accept offers in a protected timebank"),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             child: Text(S.of(context).close),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   Future<void> deleteOffer({
     @required OfferModel offerModel,

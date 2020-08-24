@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/blocked_members/bloc/blocked_members_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
@@ -35,8 +35,7 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)
-              .translate('blocked_members', 'blocked_members'),
+          S.of(context).blocked_members,
           style: TextStyle(fontSize: 18),
         ),
         titleSpacing: 0,
@@ -54,8 +53,7 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
           if (snapshot.data.isEmpty)
             return Center(
               child: Text(
-                AppLocalizations.of(context)
-                    .translate('blocked_members', 'no_blocked_members'),
+                S.of(context).no_blocked_members,
               ),
             );
 
@@ -116,7 +114,7 @@ class _BlockedMembersPageState extends State<BlockedMembersPage> {
                   ? LoadingIndicator()
                   : FlatButton(
                       child: Text(
-                        "${AppLocalizations.of(context).translate('blocked_members', 'unblock')} $name?",
+                        "${S.of(context).unblock} $name?",
                         style: TextStyle(
                           fontSize: 16,
                           color: Theme.of(context).accentColor,

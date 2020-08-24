@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 
 class SearchField extends StatelessWidget {
@@ -31,8 +31,7 @@ class SearchField extends StatelessWidget {
             decoration: InputDecoration(
               contentPadding: EdgeInsets.only(bottom: 15, top: 10),
               errorText: snapshot.error,
-              hintText: AppLocalizations.of(context)
-                  .translate("search_page", "search"),
+              hintText: S.of(context).search,
               prefixIcon: Icon(Icons.search),
               suffixIcon: Offstage(
                 offstage: !(snapshot.hasData ?? false),

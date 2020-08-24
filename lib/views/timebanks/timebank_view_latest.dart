@@ -3,16 +3,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
+import 'package:sevaexchange/ui/screens/user_info/pages/user_donations_list.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_seva_coin.dart';
-// import 'package:sevaexchange/views/core.dart';
 
 class TimeBankAboutView extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -105,13 +107,12 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                     height: 80,
                     child: Center(
                       child: Text(
-                        AppLocalizations.of(context)
-                            .translate('timebank_about', 'no_image'),
+                        S.of(context).no_image_available,
                         textAlign: TextAlign.center,
                       ),
                     )),
                 placeholder: (context, url) {
-                  return Center(child: CircularProgressIndicator());
+                  return LoadingIndicator();
                 },
               ),
             ),
@@ -124,13 +125,11 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 text:
                     TextSpan(style: TextStyle(color: Colors.black), children: [
                   TextSpan(
-                    text: AppLocalizations.of(context)
-                        .translate('timebank_about', 'part_of'),
+                    text: S.of(context).part_of,
                     style: TextStyle(fontSize: 16, fontFamily: 'Europa'),
                   ),
                   TextSpan(
-                    text:
-                        " ${AppLocalizations.of(context).translate('timebank_about', 'global_banks')}.",
+                    text: " ${S.of(context).global_timebank}.",
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -160,6 +159,54 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             SizedBox(
               height: 15,
             ),
+            widget.timebankModel.admins
+                    .contains(SevaCore.of(context).loggedInUser.sevaUserID)
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GoodsAndAmountDonations(
+                          userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                          isGoods: false,
+                          timebankId: widget.timebankModel.id,
+                          isTimeBank: true,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return GoodsAndAmountDonationsList(
+                                      type: "timebank",
+                                      isGoods: false,
+                                      timebankid: widget.timebankModel.id);
+                                },
+                              ),
+                            );
+                          }),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      GoodsAndAmountDonations(
+                          userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                          isGoods: true,
+                          timebankId: widget.timebankModel.id,
+                          isTimeBank: true,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return GoodsAndAmountDonationsList(
+                                      type: "timebank",
+                                      isGoods: true,
+                                      timebankid: widget.timebankModel.id);
+                                },
+                              ),
+                            );
+                          }),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  )
+                : Offstage(),
             widget.timebankModel.members.contains(
               SevaCore.of(context).loggedInUser.sevaUserID,
             )
@@ -173,18 +220,14 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                                 ConnectionState.waiting) {
                               return Container(
                                 margin: EdgeInsets.only(left: 15),
-                                child: Text(AppLocalizations.of(context)
-                                    .translate('timebank_about',
-                                        'getting_volunteers')),
+                                child: Text(S.of(context).getting_volunteers),
                               );
                             }
 
                             if (widget.timebankModel.members.length == 0) {
                               return Container(
                                 margin: EdgeInsets.only(left: 15),
-                                child: Text(AppLocalizations.of(context)
-                                    .translate(
-                                        'timebank_about', 'no_volunteers')),
+                                child: Text(S.of(context).no_volunteers_yet),
                               );
                             }
 
@@ -280,9 +323,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               padding: const EdgeInsets.only(top: 10.0, left: 20),
               child: Text(
                 widget.timebankModel.members.length.toString() +
-                        ' ${AppLocalizations.of(context).translate('timebank_about', 'volunteers')}' ??
-                    AppLocalizations.of(context)
-                        .translate('timebank_about', 'zero_volunteers'),
+                    ' ${S.of(context).volunteers}',
                 style: TextStyle(
                   fontFamily: 'Europa',
                   fontSize: 16,
@@ -310,8 +351,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             Padding(
               padding: const EdgeInsets.only(left: 20, top: 0, bottom: 5),
               child: Text(
-                AppLocalizations.of(context)
-                    .translate('timebank_about', 'about'),
+                S.of(context).help_about_us,
                 style: TextStyle(
                   fontFamily: 'Europa',
                   fontSize: 16,
@@ -345,8 +385,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                             children: <Widget>[
                               descTextShowFlag
                                   ? Text(
-                                      AppLocalizations.of(context).translate(
-                                          'timebank_about', 'read_less'),
+                                      S.of(context).read_less,
                                       style: TextStyle(
                                         fontFamily: 'Europa',
                                         fontSize: 16,
@@ -355,8 +394,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                                       ),
                                     )
                                   : Text(
-                                      AppLocalizations.of(context).translate(
-                                          'timebank_about', 'read_more'),
+                                      S.of(context).read_more,
                                       style: TextStyle(
                                         fontFamily: 'Europa',
                                         fontSize: 16,
@@ -380,8 +418,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             Padding(
               padding: const EdgeInsets.only(left: 20),
               child: Text(
-                AppLocalizations.of(context)
-                    .translate('timebank_about', 'organizers'),
+                S.of(context).organizer,
                 style: TextStyle(
                   fontFamily: 'Europa',
                   fontSize: 22,
@@ -411,17 +448,14 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                                           fontFamily: 'Europa'),
                                     ),
                                     TextSpan(
-                                      text:
-                                          '  ${AppLocalizations.of(context).translate('timebank_about', 'and_others')}',
+                                      text: '  ${S.of(context).and_others}',
                                       style: TextStyle(
                                           fontSize: 16, fontFamily: 'Europa'),
                                     ),
                                   ]),
                             )
                           : Container(
-                              child: Text(AppLocalizations.of(context)
-                                  .translate(
-                                      'timebank_about', 'admin_not_available')),
+                              child: Text(S.of(context).admin_not_available),
                             ),
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
@@ -440,8 +474,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                             }
                           },
                           child: Text(
-                            AppLocalizations.of(context)
-                                .translate('timebank_about', 'message'),
+                            S.of(context).message,
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontFamily: 'Europa',
@@ -493,13 +526,11 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('timebank_about', 'admin_cannot')),
-          // content:  Text("Khud he ko message kyu kar rha hai?"),
+          title: Text(S.of(context).admin_cannot_create_message),
           actions: <Widget>[
             FlatButton(
               child: Text(
-                AppLocalizations.of(context).translate('homepage', 'close'),
+                S.of(context).close,
                 style: TextStyle(
                   color: Colors.red,
                 ),

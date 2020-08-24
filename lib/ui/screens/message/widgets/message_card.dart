@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/ui/screens/message/pages/chat_page.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
@@ -29,7 +29,7 @@ class MessageCard extends StatelessWidget {
     String userId = SevaCore.of(context).loggedInUser.sevaUserID;
     String senderId = model.isTimebankMessage ? timebankId : userId;
     ParticipantInfo info = getSenderInfo(
-      senderId,
+      userId,
       model.participantInfo,
     );
     int unreadCount =
@@ -98,8 +98,7 @@ class MessageCard extends StatelessWidget {
                       ),
                       Text(
                         exp.hasMatch(model.lastMessage ?? '')
-                            ? AppLocalizations.of(context)
-                                .translate('chat', 'shared_post')
+                            ? S.of(context).shared_post
                             : model.lastMessage ?? '',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -156,13 +155,13 @@ class MessageCard extends StatelessWidget {
         return "Personal";
         break;
       case ChatType.TYPE_TIMEBANK:
-        return AppLocalizations.of(context).translate("members", "timebank");
+        return S.of(context).timebank;
         break;
       case ChatType.TYPE_GROUP:
-        return AppLocalizations.of(context).translate("members", "group");
+        return S.of(context).group;
         break;
       case ChatType.TYPE_MULTI_USER_MESSAGING:
-        return AppLocalizations.of(context).translate("messages", "multi_user");
+        return S.of(context).messaging_room;
         break;
     }
     return "";

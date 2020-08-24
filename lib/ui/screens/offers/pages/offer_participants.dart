@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_participants_model.dart';
@@ -7,6 +7,7 @@ import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/participant_card.dart';
 
 class OfferParticipants extends StatelessWidget {
@@ -21,13 +22,13 @@ class OfferParticipants extends StatelessWidget {
         stream: _bloc.participants,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return LoadingIndicator();
           }
           if (snapshot.data == null || snapshot.data.isEmpty) {
             return Container(
               height: MediaQuery.of(context).size.height * 0.75,
               alignment: Alignment.center,
-              child: Text(AppLocalizations.of(context).translate('offers','no_participants')),
+              child: Text(S.of(context).no_participants_yet),
             );
           }
           return ListView.builder(

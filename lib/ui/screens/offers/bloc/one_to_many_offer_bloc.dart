@@ -1,6 +1,6 @@
-import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
@@ -27,6 +27,7 @@ class OneToManyOfferBloc extends BlocBase {
   final _location = BehaviorSubject<CustomLocation>();
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
   final _classSizeError = BehaviorSubject<String>();
+  final profanityDetector = ProfanityDetector();
 
   Function(String value) get onTitleChanged => _title.sink.add;
   Function(String) get onPreparationHoursChanged => _preparationHours.sink.add;
@@ -186,10 +187,20 @@ class OneToManyOfferBloc extends BlocBase {
     if (_title.value == null || _title.value == '') {
       _title.addError(ValidationErrors.titleError);
       flag = true;
+    } else {
+      if (profanityDetector.isProfaneString(_title.value)) {
+        _title.addError(ValidationErrors.profanityError);
+        flag = true;
+      }
     }
     if (_classDescription.value == null || _classDescription.value == '') {
       _classDescription.addError(ValidationErrors.genericError);
       flag = true;
+    } else {
+      if (profanityDetector.isProfaneString(_classDescription.value)) {
+        _classDescription.addError(ValidationErrors.profanityError);
+        flag = true;
+      }
     }
     if (_classHours.value == null ||
         !numberCheck.hasMatch(_classHours.value.replaceAll('__*__', ''))) {

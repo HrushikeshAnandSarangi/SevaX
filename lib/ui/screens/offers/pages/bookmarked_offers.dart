@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -10,6 +10,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/admin_personal_requests_view.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/admin_offer_requests_tab.dart';
 
 class BookmarkedOffers extends StatelessWidget {
@@ -29,12 +30,12 @@ class BookmarkedOffers extends StatelessWidget {
           .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return LoadingIndicator();
         }
         if (snapshot.data == null || snapshot.data?.documents?.length == 0) {
           return Center(
             child: Text(
-              AppLocalizations.of(context).translate('offers', 'no_bookmarked'),
+              S.of(context).no_bookmarked_offers,
             ),
           );
         }
@@ -54,7 +55,6 @@ class BookmarkedOffers extends StatelessWidget {
                 model: _offer,
                 parentContext: context,
               ),
-              // onActionPressed: () => offerActions(parentContext, model),
             );
           },
         );
@@ -107,14 +107,18 @@ class BookmarkedOffers extends StatelessWidget {
                   children: <Widget>[
                     Container(
                       height: 30,
-                      child: Text("Something went wrong!"),
+                      child: Text(
+                        S.of(context).general_stream_error,
+                      ),
                     ),
                   ],
                 ),
               );
             }
-            UserModel userModel =
-                UserModel.fromMap(snapshot.data.documents[0].data);
+            UserModel userModel = UserModel.fromMap(
+              snapshot.data.documents[0].data,
+              'bookmarked_offers',
+            );
             return AlertDialog(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
@@ -150,7 +154,7 @@ class BookmarkedOffers extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.all(0.0),
                       child: Text(
-                        "About ${userModel.fullname}",
+                        S.of(context).about + " " + userModel.fullname,
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
@@ -159,10 +163,13 @@ class BookmarkedOffers extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                  getBio(userModel),
+                  getBio(context, userModel),
                   Center(
                     child: Text(
-                        "${userModel.fullname} will be automatically added to the request.",
+                        S
+                            .of(context)
+                            .will_be_added_to_request
+                            .replaceFirst('***', userModel.fullname),
                         style: TextStyle(
                           fontStyle: FontStyle.italic,
                         ),
@@ -178,7 +185,7 @@ class BookmarkedOffers extends StatelessWidget {
                         child: Container(
                           width: double.infinity,
                           child: Text(
-                            'Create Request',
+                            S.of(context).create_request,
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.white),
                           ),
@@ -289,7 +296,7 @@ class BookmarkedOffers extends StatelessWidget {
     );
   }
 
-  Widget getBio(UserModel userModel) {
+  Widget getBio(BuildContext context, UserModel userModel) {
     if (userModel.bio != null) {
       if (userModel.bio.length < 100) {
         return Container(
@@ -318,7 +325,7 @@ class BookmarkedOffers extends StatelessWidget {
     }
     return Padding(
       padding: EdgeInsets.all(8.0),
-      child: Text("Bio not yet updated"),
+      child: Text(S.of(context).bio_not_updated),
     );
   }
 

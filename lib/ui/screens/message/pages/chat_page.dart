@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/image_caption_model.dart';
 import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/repositories/feed_repository.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/chat_model_sync_singleton.dart';
 import 'package:sevaexchange/ui/screens/message/pages/group_info.dart';
@@ -19,7 +21,7 @@ import 'package:sevaexchange/ui/screens/message/widgets/message_input.dart';
 import 'package:sevaexchange/ui/utils/colors.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/widgets/APi/feed_api.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/camera/camera_page.dart';
 
 class ChatPage extends StatefulWidget {
@@ -55,7 +57,9 @@ class _ChatPageState extends State<ChatPage> {
   Map<String, ParticipantInfo> participantsInfoById = {};
   ChatModel chatModel;
   bool exitFromChatPage = false;
-
+  final profanityDetector = ProfanityDetector();
+  bool isProfane = false;
+  String errorText = '';
   @override
   void initState() {
     chatModel = widget.chatModel;
@@ -72,8 +76,7 @@ class _ChatPageState extends State<ChatPage> {
     _scrollController = ScrollController();
 
     if (widget.isFromRejectCompletion)
-      textcontroller.text =
-          '${AppLocalizations.of(context).translate('chat', 'rejecting_becz')} ';
+      textcontroller.text = '${S.of(context).reject_task_completion} ';
 
     if (widget.isFromShare) {
       print("Pushing new message from share");
@@ -166,25 +169,24 @@ class _ChatPageState extends State<ChatPage> {
           Expanded(
             child: StreamBuilder<List<MessageModel>>(
               stream: _bloc.messages,
-              builder: (BuildContext context,
+              builder: (BuildContext _context,
                   AsyncSnapshot<List<MessageModel>> snapshot) {
                 if (snapshot.hasError) {
                   _scrollToBottom();
                   return Text(
-                    '${AppLocalizations.of(context).translate('chat', 'error')}',
+                    '${S.of(context).general_stream_error}',
                   );
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting ||
                     snapshot.data == null) {
-                  return Center(child: CircularProgressIndicator());
+                  return LoadingIndicator();
                 }
 
                 if (snapshot.data.length == 0) {
                   return Center(
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('chat', 'no_messages'),
+                      S.of(context).no_message,
                     ),
                   );
                 }
@@ -250,15 +252,21 @@ class _ChatPageState extends State<ChatPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 5),
             child: MessageInput(
               handleSubmitted: (value) {},
               textController: textcontroller,
+              errorText: errorText,
               handleChange: (String value) {
+                if (value.length < 2) {
+                  setState(() {
+                    isProfane = false;
+                    errorText = '';
+                  });
+                }
                 messageContent = value;
               },
-              hintText: AppLocalizations.of(context)
-                  .translate('messages', 'type_message'),
+              hintText: S.of(context).type_message,
               onCameraPressed: () async {
                 List<CameraDescription> cameras = await availableCameras();
                 Navigator.of(context)
@@ -281,14 +289,37 @@ class _ChatPageState extends State<ChatPage> {
               },
               onSend: () {
                 if (textcontroller.text != null &&
-                    textcontroller.text.isNotEmpty)
-                  pushNewMessage(
-                    messageContent: messageContent,
-                    type: MessageType.MESSAGE,
-                  );
+                    textcontroller.text.isNotEmpty) {
+                  if (profanityDetector.isProfaneString(textcontroller.text)) {
+                    setState(() {
+                      isProfane = true;
+                      errorText = S.of(context).profanity_text_alert;
+                    });
+                  } else {
+                    setState(() {
+                      isProfane = false;
+                      errorText = '';
+                    });
+                    pushNewMessage(
+                      messageContent: messageContent,
+                      type: MessageType.MESSAGE,
+                    );
+                  }
+                }
               },
             ),
           ),
+          isProfane
+              ? Container(
+                  margin: EdgeInsets.only(left: 20),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    errorText,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 12, color: Colors.red),
+                  ),
+                )
+              : Offstage(),
         ],
       ),
     );
@@ -326,11 +357,10 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _getSharedNewDetails({MessageModel messageModel}) {
     return FutureBuilder<Object>(
-      future: FeedApi.getFeedFromId(messageModel.message),
+      future: FeedsRepository.getFeedFromId(messageModel.message),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Text(
-              AppLocalizations.of(context).translate('chat', 'couldnt_post'));
+          return Text(S.of(context).failed_to_load_post);
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container();

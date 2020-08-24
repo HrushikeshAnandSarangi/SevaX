@@ -16,7 +16,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/csv_file_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
@@ -30,6 +30,7 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/TimebankCodeModel.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -156,11 +157,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          FlavorConfig.values.timebankName == "Yang 2020"
-              ? AppLocalizations.of(context)
-                  .translate('members', 'yang_yang_codes')
-              : AppLocalizations.of(context)
-                  .translate('members', 'invite_members'),
+          S.of(context).invite_members,
           style: TextStyle(
             fontSize: 18,
           ),
@@ -173,7 +170,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             future: getTimebankDetails,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting)
-                return CircularProgressIndicator();
+                return LoadingIndicator();
               return inviteCodeWidget;
             },
           ),
@@ -225,13 +222,13 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                 enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                     borderRadius: BorderRadius.circular(25.7)),
-                hintText: AppLocalizations.of(context)
-                    .translate('members', 'invite_via_email'),
+                hintText: S.of(context).invite_via_email,
                 hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
           ),
         ),
         headingTitle(
-            AppLocalizations.of(context).translate('members', 'members')),
+          S.of(context).members,
+        ),
         buildList(),
         Padding(
           padding: const EdgeInsets.all(5.0),
@@ -255,8 +252,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     child: Row(
                       children: <Widget>[
                         Text(
-                          AppLocalizations.of(context)
-                              .translate('members', 'invite_via_code'),
+                          S.of(context).invite_via_code,
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -301,17 +297,15 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         headingTitle(
-            AppLocalizations.of(context).translate('upload_csv', 'csv_title')),
+          S.of(context).bulk_invite_users_csv,
+        ),
         RichText(
           text: TextSpan(
             style: TextStyle(color: Colors.grey),
             children: [
+              TextSpan(text: "${S.of(context).csv_message1}  "),
               TextSpan(
-                  text:
-                      "${AppLocalizations.of(context).translate('upload_csv', 'csv_hint_one')}  "),
-              TextSpan(
-                text: AppLocalizations.of(context)
-                    .translate('upload_csv', 'csv_hint_two'),
+                text: S.of(context).csv_message2 + ' ',
                 style: TextStyle(
                     color: Colors.grey,
                     fontSize: 14,
@@ -319,9 +313,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     fontWeight: FontWeight.bold,
                     fontStyle: FontStyle.italic),
               ),
-              TextSpan(
-                  text:
-                      "${AppLocalizations.of(context).translate('upload_csv', 'csv_hint_three')}  "),
+              TextSpan(text: " ${S.of(context).csv_message3}  "),
             ],
           ),
         ),
@@ -334,11 +326,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             if (connResult == ConnectivityResult.none) {
               _scaffoldKey.currentState.showSnackBar(
                 SnackBar(
-                  content: Text(AppLocalizations.of(context)
-                      .translate('shared', 'check_internet')),
+                  content: Text(S.of(context).check_internet),
                   action: SnackBarAction(
-                    label: AppLocalizations.of(context)
-                        .translate('shared', 'dismiss'),
+                    label: S.of(context).dismiss,
                     onPressed: () =>
                         _scaffoldKey.currentState.hideCurrentSnackBar(),
                   ),
@@ -354,8 +344,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             // requestPermission();
           },
           child: Text(
-            AppLocalizations.of(context)
-                .translate('upload_csv', 'download_csv'),
+            S.of(context).download_sample_csv,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,
@@ -389,8 +378,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                   // color: FlavorConfig.values.theme.primaryColor,
                 ),
                 Text(
-                  AppLocalizations.of(context)
-                      .translate('upload_csv', 'choose_csv'),
+                  S.of(context).choose_csv,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey),
                 ),
@@ -434,8 +422,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           ),
         ),
         Text(
-          AppLocalizations.of(context)
-              .translate('upload_csv', 'csv_size_limit'),
+          S.of(context).csv_size_limit,
           style: TextStyle(color: Colors.grey),
         ),
         Text(
@@ -455,11 +442,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     if (connResult == ConnectivityResult.none) {
                       _scaffoldKey.currentState.showSnackBar(
                         SnackBar(
-                          content: Text(AppLocalizations.of(context)
-                              .translate('shared', 'check_internet')),
+                          content: Text(S.of(context).check_internet),
                           action: SnackBarAction(
-                            label: AppLocalizations.of(context)
-                                .translate('shared', 'dismiss'),
+                            label: S.of(context).dismiss,
                             onPressed: () =>
                                 _scaffoldKey.currentState.hideCurrentSnackBar(),
                           ),
@@ -472,12 +457,10 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                         csvFileModel.csvTitle == '' ||
                         csvFileModel.csvTitle == null) {
                       setState(() {
-                        this.csvFileError = AppLocalizations.of(context)
-                            .translate('upload_csv', 'csv_error');
+                        this.csvFileError = S.of(context).csv_error;
                       });
                     } else {
-                      showProgressDialog(AppLocalizations.of(context)
-                          .translate('upload_csv', 'csv_progress'));
+                      showProgressDialog(S.of(context).uploading_csv);
 
                       csvFileModel.timebankId = widget.timebankId;
                       csvFileModel.communityId =
@@ -497,12 +480,10 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                       _scaffoldKey.currentState.showSnackBar(
                         SnackBar(
                           content: Text(
-                            AppLocalizations.of(context)
-                                .translate('upload_csv', 'upload_success'),
+                            S.of(context).uploaded_successfully,
                           ),
                           action: SnackBarAction(
-                            label: AppLocalizations.of(context)
-                                .translate('shared', 'dismiss'),
+                            label: S.of(context).dismiss,
                             onPressed: () =>
                                 _scaffoldKey.currentState.hideCurrentSnackBar(),
                           ),
@@ -516,8 +497,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                     }
                   },
                   child: Text(
-                    AppLocalizations.of(context)
-                        .translate('upload_csv', 'upload'),
+                    S.of(context).upload,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 12,
@@ -614,15 +594,12 @@ class InviteAddMembersState extends State<InviteAddMembers> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('create_feed', 'size_alert_title')),
-          content: Text(AppLocalizations.of(context)
-              .translate('upload_csv', 'csv_file_alert')),
+          title: Text(S.of(context).large_file_alert),
+          content: Text(S.of(context).csv_large_file_message),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
-              child:
-                  Text(AppLocalizations.of(context).translate('help', 'close')),
+              child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -640,8 +617,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         ),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text(AppLocalizations.of(context)
-                .translate('members', 'please_try_later'));
+            return Text(S.of(context).try_later);
           }
           if (!snapshot.hasData) {
             return Center(
@@ -672,7 +648,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               child: Center(
                 child: searchTextController.text.length > 1
                     ? Text(
-                        "${searchTextController.text} ${AppLocalizations.of(context).translate('members', 'not_found')}")
+                        "${searchTextController.text} ${S.of(context).not_found}")
                     : Container(),
               ),
             );
@@ -811,8 +787,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     return RaisedButton(
       onPressed: () async {
         inivitationManager.showProgress(
-            title: AppLocalizations.of(context)
-                .translate('members', 'sending_invitation'));
+          title: S.of(context).sending_invitation,
+        );
         await inivitationManager.inviteMemberToTimebankViaLink(
           invitation: InvitationViaLink.createInvitation(
             timebankTitle: timebankModel.name,
@@ -826,7 +802,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         inivitationManager.hideProgress();
         setState(() {});
       },
-      child: Text(AppLocalizations.of(context).translate('members', 'invite')),
+      child: Text(S.of(context).invite),
       color: Colors.indigo,
       textColor: Colors.white,
       shape: StadiumBorder(),
@@ -852,8 +828,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
     return RaisedButton(
       onPressed: () async {
         inivitationManager.showProgress(
-            title: AppLocalizations.of(context)
-                .translate('members', 'sending_invitation'));
+            title: S.of(context).sending_invitation);
         await inivitationManager.resendInvitationToMember(
           invitation: invitation,
         );
@@ -862,7 +837,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         setState(() {});
       },
       child: Text(
-        AppLocalizations.of(context).translate('members', 'resend_invite'),
+        S.of(context).resend_invite,
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 10,
@@ -877,7 +852,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Widget gettigStatus() {
     return RaisedButton(
       onPressed: null,
-      child: Text(AppLocalizations.of(context).translate('members', 'dots')),
+      child: Text('...'),
       color: Colors.indigo,
       textColor: Colors.white,
       shape: StadiumBorder(),
@@ -939,11 +914,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                 });
                               }
                             : null,
-                        child: Text(isJoined
-                            ? AppLocalizations.of(context)
-                                .translate('members', 'joined')
-                            : AppLocalizations.of(context)
-                                .translate('members', 'add')),
+                        child: Text(
+                          isJoined ? S.of(context).joined : S.of(context).add,
+                        ),
                         color: FlavorConfig.values.theme.primaryColor,
                         textColor: Colors.white,
                         shape: StadiumBorder(),
@@ -970,7 +943,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             return Text(snapshot.error.toString());
           }
           if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
           List<TimebankCodeModel> codeList = snapshot.data.reversed.toList();
 
@@ -978,8 +951,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Text(AppLocalizations.of(context)
-                    .translate('members', 'no_codes')),
+                child: Text(S.of(context).no_codes_generated),
               ),
             );
           }
@@ -991,20 +963,12 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                 String length = "0";
 
                 TimebankCodeModel timebankCode = codeList.elementAt(index);
-                if (timebankCode.usersOnBoarded == null) {
-                  length = AppLocalizations.of(context)
-                      .translate('members', 'no_yet_redeemed');
+                if (timebankCode.usersOnBoarded == null ||
+                    timebankCode.usersOnBoarded.length == 0) {
+                  length = S.of(context).not_yet_redeemed;
                 } else {
-                  if (timebankCode.usersOnBoarded.length == 1) {
-                    length = AppLocalizations.of(context)
-                        .translate('members', 'by_1');
-                  } else if (timebankCode.usersOnBoarded.length > 1) {
-                    length =
-                        "${AppLocalizations.of(context).translate('members', 'by_n')} ${timebankCode.usersOnBoarded.length} ${AppLocalizations.of(context).translate('members', 'users')}";
-                  } else {
-                    length = AppLocalizations.of(context)
-                        .translate('members', 'no_yet_redeemed');
-                  }
+                  length =
+                      "${S.of(context).redeemed_by} ${timebankCode.usersOnBoarded.length} ${S.of(context).user(timebankCode.usersOnBoarded.length)}";
                 }
                 return GestureDetector(
                   child: Card(
@@ -1015,21 +979,16 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(FlavorConfig.values.timebankName == "Yang 2020"
-                              ? AppLocalizations.of(context)
-                                      .translate('members', 'yang_code') +
-                                  timebankCode.timebankCode
-                              : AppLocalizations.of(context)
-                                      .translate('members', 'timebank_code') +
-                                  timebankCode.timebankCode),
+                          Text(
+                            S.of(context).timebank_code +
+                                timebankCode.timebankCode,
+                          ),
                           Text(length),
                           Text(
                             DateTime.now().millisecondsSinceEpoch >
                                     timebankCode.validUpto
-                                ? AppLocalizations.of(context)
-                                    .translate('members', 'expired')
-                                : AppLocalizations.of(context)
-                                    .translate('members', 'active'),
+                                ? S.of(context).expired
+                                : S.of(context).active,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1041,8 +1000,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                                 child: Container(
                                   margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
                                   child: Text(
-                                    AppLocalizations.of(context)
-                                        .translate('members', 'share_code'),
+                                    S.of(context).share_code,
                                     style: TextStyle(color: Colors.blue),
                                   ),
                                 ),
@@ -1074,7 +1032,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
 
   String shareText(TimebankCodeModel timebankCode) {
     var text =
-        "${SevaCore.of(context).loggedInUser.fullname} ${AppLocalizations.of(context).translate('members', 'invited_you')} \"${timebankModel.name}\" ${AppLocalizations.of(context).translate('members', 'invite_text')} \"${timebankCode.timebankCode}\" ${AppLocalizations.of(context).translate('members', 'prompt_text')}";
+        "${SevaCore.of(context).loggedInUser.fullname} ${S.of(context).notifications_invited_to_join} ${timebankModel.name}\" ${S.of(context).timebank}. ${S.of(context).invite_message} ${timebankCode} ${S.of(context).invite_prompt}";
     return text;
   }
 
@@ -1104,20 +1062,18 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Future<String> _asyncInputDialog(BuildContext context) async {
     String timebankCode = createCryptoRandomString();
 
-    String teamName = '';
     return showDialog<String>(
       context: context,
       barrierDismissible:
           false, // dialog is dismissible with a tap on the barrier
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('members', 'code_generated')),
+          title: Text(S.of(context).code_generated),
           content: Row(
             children: <Widget>[
-              Text(timebankCode +
-                  " " +
-                  AppLocalizations.of(context).translate('members', 'is_code')),
+              Text(
+                timebankCode + " " + S.of(context).is_your_code,
+              ),
             ],
           ),
           actions: <Widget>[
@@ -1126,8 +1082,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
               child: Text(
-                AppLocalizations.of(context)
-                    .translate('members', 'publish_code'),
+                S.of(context).publish_code,
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                 ),
@@ -1147,7 +1102,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
             ),
             FlatButton(
               child: Text(
-                AppLocalizations.of(context).translate('shared', 'cancel'),
+                S.of(context).cancel,
                 style: TextStyle(color: Colors.red, fontSize: dialogButtonSize),
               ),
               onPressed: () {

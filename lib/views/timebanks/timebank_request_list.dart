@@ -3,6 +3,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../core.dart';
 import 'timbank_admin_request_list.dart';
@@ -32,9 +33,7 @@ class TimeBankRequestList extends StatelessWidget {
           return Text(snapshot.error.toString());
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return LoadingIndicator();
         }
         List<TimebankModel> reportedList = snapshot.data;
         return Container(

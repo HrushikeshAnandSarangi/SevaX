@@ -1,7 +1,10 @@
 import 'dart:collection';
+import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 
 import '../flavor_config.dart';
 
@@ -29,6 +32,10 @@ class UserModel extends DataModel {
   String lat_lng;
   bool emailSent;
   String language;
+  String cvUrl;
+  String cvName;
+
+  NearBySettings nearBySettings;
 
   int notificationsRead;
   Map<dynamic, dynamic> notificationsReadCount;
@@ -59,8 +66,7 @@ class UserModel extends DataModel {
   int calendarAccId;
   String calendarAccessToken;
 
-  UserModel(
-      {
+  UserModel({
         this.calendarAccessToken,
         this.calendarId,
         this.calendarAccId,
@@ -94,7 +100,9 @@ class UserModel extends DataModel {
         this.communities,
         this.emailSent,
         this.language,
-        this.notificationAlerts
+        this.notificationAlerts,
+        this.cvUrl,
+        this.cvName
       });
 
   UserModel.fromMap(Map<String, dynamic> map) {
@@ -107,6 +115,21 @@ class UserModel extends DataModel {
     if (map.containsKey('calendarAccessToken')) {
       this.calendarAccessToken = map['calendarAccessToken'];
     }
+    if (map.containsKey('nearbySettings')) {
+      Map<dynamic, dynamic> _neabySetting = map['nearbySettings'];
+      this.nearBySettings = NearBySettings()
+        ..isMiles = _neabySetting.containsKey('isMiles')
+            ? _neabySetting['isMiles']
+            : true
+        ..radius =
+            _neabySetting.containsKey('radius') ? _neabySetting['radius'] : 10;
+      // log("Found nearby settings " +
+      //     nearBySettings.toString() +
+      //     DateTime.now().toString());
+    } else {
+      log("Nearby Settings for user not found....");
+    }
+
     if (map.containsKey('tokens')) {
       this.tokens = map['tokens'];
     } else {
@@ -152,6 +175,7 @@ class UserModel extends DataModel {
       List<String> communities = List.castFrom(map['communities']);
       this.communities = communities;
     } else {
+      ///TODO Why this asdfadf ?
       this.communities = List();
       this.communities.add('asdfadf');
     }
@@ -271,6 +295,16 @@ class UserModel extends DataModel {
     } else {
       this.notificationAlerts = true;
     }
+    if (map.containsKey('cvName')) {
+      this.cvName = map['cvName'];
+    }
+    if (map.containsKey('cvUrl')) {
+      this.cvUrl = map['cvUrl'];
+    }
+
+//    else{
+//      this.cvUrl='';
+//    }
   }
 
   UserModel.fromDynamic(dynamic user) {
@@ -396,6 +430,13 @@ class UserModel extends DataModel {
     // if (this.notificationAlerts != null) {
     //   this.notificationAlerts = object['notificationAlerts'];
     // }
+    if (this.cvUrl != null) {
+      object['cvUrl'] = this.cvUrl;
+    }
+
+    if (this.cvName != null) {
+      object['cvName'] = this.cvName;
+    }
     return object;
   }
 
@@ -427,6 +468,7 @@ class UserModel extends DataModel {
       ${this.acceptedEULA.toString()},
       ${this.currentTimebank.toString()},
       ${this.notificationAlerts.toString()},
+      ${this.cvUrl.toString()},
       Communities:${this.communities.toString()},
     ''';
   }

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 // import '../components/member.dart';
 
 class AddMembersEdit extends StatefulWidget {
@@ -59,7 +60,7 @@ class _AddMembersEditState extends State<AddMembersEdit> {
             if (snapshot.hasError) return Text('Error: ${snapshot.error}');
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
-                return Center(child: CircularProgressIndicator());
+                return LoadingIndicator();
               default:
                 return ListView(
                   children:
@@ -76,8 +77,9 @@ class _AddMembersEditState extends State<AddMembersEdit> {
                                 //   padding: EdgeInsets.all(5.0),
                                 // ),
                                 CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(document['photourl'] ?? defaultUserImageURL),
+                                  backgroundImage: NetworkImage(
+                                      document['photourl'] ??
+                                          defaultUserImageURL),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(right: 20.0),
@@ -123,4 +125,3 @@ class _AddMembersEditState extends State<AddMembersEdit> {
     );
   }
 }
-

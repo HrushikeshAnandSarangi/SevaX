@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -46,7 +47,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
   final GlobalKey<FormState> _billingInformationKey = GlobalKey();
   BuildContext progressContext;
   var scollContainer = ScrollController();
-
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
   @override
   void initState() {
     super.initState();
@@ -94,8 +96,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                AppLocalizations.of(widget.parentContext)
-                    .translate('change_ownership', 'change_ownership_title'),
+                S.of(context).change_ownership,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -119,11 +120,11 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                AppLocalizations.of(widget.parentContext)
-                        .translate('change_ownership', 'change_message') +
+                S.of(context).change_ownership_message1 +
+                    ' ' +
                     changeOwnershipModel.timebank +
-                    AppLocalizations.of(widget.parentContext)
-                        .translate('change_ownership', 'change_message_two'),
+                    ' ' +
+                    S.of(context).change_ownership_message2,
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
@@ -131,12 +132,12 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             ),
             Center(
               child: Text(
-                  AppLocalizations.of(widget.parentContext)
-                      .translate('change_ownership', 'change_alert'),
-                  style: TextStyle(
-                    fontStyle: FontStyle.italic,
-                  ),
-                  textAlign: TextAlign.center),
+                S.of(context).by_accepting_owner_timebank,
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
             Padding(
               padding: EdgeInsets.all(5.0),
@@ -149,8 +150,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                   child: RaisedButton(
                     color: FlavorConfig.values.theme.primaryColor,
                     child: Text(
-                      AppLocalizations.of(widget.parentContext)
-                          .translate('change_ownership', 'accept'),
+                      S.of(context).accept,
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
@@ -180,8 +180,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                   child: RaisedButton(
                     color: Theme.of(context).accentColor,
                     child: Text(
-                      AppLocalizations.of(widget.parentContext)
-                          .translate('notifications', 'decline'),
+                      S.of(context).decline,
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
@@ -207,8 +206,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
     if (communityModel.payment["planId"] != null &&
             communityModel.payment["planId"] == 'community_plan' ||
         communityModel.billMe == true) {
-      showProgressDialog(AppLocalizations.of(context)
-          .translate('createtimebank', 'updating_details'));
+      showProgressDialog(S.of(context).updating_details);
       changeOwnership(
               primaryTimebank: communityModel.primary_timebank,
               adminId: loggedInUser.sevaUserID,
@@ -280,13 +278,11 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: Text(AppLocalizations.of(widget.parentContext)
-              .translate('change_ownership', 'ownership_suceess')),
+          content: Text(S.of(context).ownership_success),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
-              child: Text(AppLocalizations.of(widget.parentContext)
-                  .translate('homepage', 'ok')),
+              child: Text(S.of(context).ok),
               onPressed: () {
                 resetAndLoad();
                 // Navigator.of(context).pop();
@@ -307,19 +303,17 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(AppLocalizations.of(widget.parentContext)
-                      .translate('change_ownership', 'change_message') +
+              Text(S.of(context).change_ownership_message1 +
+                  ' ' +
                   timebankName +
-                  AppLocalizations.of(widget.parentContext)
-                      .translate('change_ownership', 'change_advisory')),
+                  ' ' +
+                  S.of(context).change_ownership_advisory),
               SizedBox(height: 15),
               Row(
                 children: [
                   Spacer(),
                   FlatButton(
-                    child: Text(
-                        AppLocalizations.of(widget.parentContext)
-                            .translate('shared', 'cancel'),
+                    child: Text(S.of(context).cancel,
                         style: TextStyle(
                             fontSize: dialogButtonSize, color: Colors.red)),
                     onPressed: () {
@@ -330,8 +324,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                     color: Theme.of(mContext).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: Text(
-                      AppLocalizations.of(widget.parentContext)
-                          .translate('homepage', 'ok'),
+                      S.of(context).ok,
                       style: TextStyle(
                         fontSize: dialogButtonSize,
                       ),
@@ -472,20 +465,29 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             // FocusScope.of(bc).requestFocus(focusNodes[0]);
             FocusScope.of(bc).unfocus();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             print(value);
             communityModel.billing_address.city = value;
           },
           focusNode: focusNodes[0],
           validator: (value) {
             return value.isEmpty
-                ? AppLocalizations.of(widget.parentContext)
-                    .translate('createtimebank', 'err_empty')
-                : null;
+                ? S.of(context).validation_error_required_fields
+                : (profanityDetector.isProfaneString(value))
+                    ? S.of(context).profanity_text_alert
+                    : null;
           },
-          decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(widget.parentContext)
-                  .translate('createtimebank', 'city')),
+          decoration: getInputDecoration(fieldTitle: S.of(context).city),
         ),
       );
     }
@@ -500,19 +502,28 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             // FocusScope.of(bc).requestFocus(focusNodes[1]);
             FocusScope.of(bc).unfocus();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             communityModel.billing_address.state = value;
           },
           validator: (value) {
             return value.isEmpty
-                ? AppLocalizations.of(widget.parentContext)
-                    .translate('createtimebank', 'err_empty')
-                : null;
+                ? S.of(context).validation_error_required_fields
+                : (profanityDetector.isProfaneString(value))
+                    ? S.of(context).profanity_text_alert
+                    : null;
           },
           focusNode: focusNodes[1],
-          decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(widget.parentContext)
-                  .translate('createtimebank', 'state')),
+          decoration: getInputDecoration(fieldTitle: S.of(context).state),
         ),
       );
     }
@@ -532,16 +543,13 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           },
           validator: (value) {
             return value.isEmpty
-                ? AppLocalizations.of(widget.parentContext)
-                    .translate('createtimebank', 'err_empty')
+                ? S.of(context).validation_error_required_fields
                 : null;
           },
           focusNode: focusNodes[3],
           keyboardType: TextInputType.number,
           maxLength: 15,
-          decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(widget.parentContext)
-                  .translate('createtimebank', 'zip')),
+          decoration: getInputDecoration(fieldTitle: S.of(context).zip),
         ),
       );
     }
@@ -554,14 +562,18 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           onFieldSubmitted: (input) {
             scrollToBottom();
           },
+          validator: (value) {
+            return (profanityDetector.isProfaneString(value))
+                ? S.of(context).profanity_text_alert
+                : null;
+          },
           onChanged: (value) {
             communityModel.billing_address.additionalnotes = value;
           },
           focusNode: focusNodes[7],
           textInputAction: TextInputAction.done,
-          decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(widget.parentContext)
-                  .translate('createtimebank', 'additional_notes')),
+          decoration:
+              getInputDecoration(fieldTitle: S.of(context).additional_notes),
         ),
       );
     }
@@ -574,20 +586,29 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
           onFieldSubmitted: (input) {
             FocusScope.of(bc).unfocus();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             communityModel.billing_address.street_address1 = value;
           },
           validator: (value) {
             return value.isEmpty
-                ? AppLocalizations.of(widget.parentContext)
-                    .translate('createtimebank', 'err_empty')
-                : null;
+                ? S.of(context).validation_error_required_fields
+                : (profanityDetector.isProfaneString(value))
+                    ? S.of(context).profanity_text_alert
+                    : null;
           },
           focusNode: focusNodes[4],
           textInputAction: TextInputAction.next,
-          decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(widget.parentContext)
-                  .translate('createtimebank', 'street_add1')),
+          decoration: getInputDecoration(fieldTitle: S.of(context).street_add1),
         ),
       );
     }
@@ -601,14 +622,28 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
               // FocusScope.of(bc).requestFocus(focusNodes[6]);
               FocusScope.of(bc).unfocus();
             },
+            autovalidate: autoValidateText,
+            validator: (value) {
+              return (profanityDetector.isProfaneString(value))
+                  ? S.of(context).profanity_text_alert
+                  : null;
+            },
             onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateText = false;
+                });
+              }
               communityModel.billing_address.street_address2 = value;
             },
             focusNode: focusNodes[5],
             textInputAction: TextInputAction.next,
             decoration: getInputDecoration(
-              fieldTitle: AppLocalizations.of(widget.parentContext)
-                  .translate('createtimebank', 'street_add2'),
+              fieldTitle: S.of(context).street_add2,
             )),
       );
     }
@@ -623,19 +658,29 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             // FocusScope.of(bc).requestFocus(focusNodes[2]);
             FocusScope.of(bc).unfocus();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             communityModel.billing_address.country = value;
           },
           validator: (value) {
             return value.isEmpty
-                ? AppLocalizations.of(widget.parentContext)
-                    .translate('createtimebank', 'err_empty')
-                : null;
+                ? S.of(context).validation_error_required_fields
+                : (profanityDetector.isProfaneString(value))
+                    ? S.of(context).profanity_text_alert
+                    : null;
           },
           focusNode: focusNodes[2],
           decoration: getInputDecoration(
-            fieldTitle: AppLocalizations.of(widget.parentContext)
-                .translate('createtimebank', 'country_name'),
+            fieldTitle: S.of(context).company_name,
           ),
         ),
       );
@@ -646,22 +691,32 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           textCapitalization: TextCapitalization.sentences,
-
           onFieldSubmitted: (input) {
             // FocusScope.of(bc).requestFocus(focusNodes[7]);
             FocusScope.of(bc).unfocus();
           },
+          autovalidate: autoValidateText,
           onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateText = false;
+              });
+            }
             communityModel.billing_address.companyname = value;
           },
-          // validator: (value) {
-          //   return value.isEmpty ? 'Field cannot be left blank*' : null;
-          // },
+          validator: (value) {
+            return (profanityDetector.isProfaneString(value))
+                ? S.of(context).profanity_text_alert
+                : null;
+          },
           focusNode: focusNodes[6],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
-            fieldTitle: AppLocalizations.of(widget.parentContext)
-                .translate('createtimebank', 'company_name'),
+            fieldTitle: S.of(context).company_name,
           ),
         ),
       );
@@ -672,8 +727,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
         padding: const EdgeInsets.fromLTRB(100, 10, 100, 20),
         child: RaisedButton(
           child: Text(
-            AppLocalizations.of(widget.parentContext)
-                .translate('createtimebank', 'continue'),
+            S.of(context).continue_text,
             style: Theme.of(bc).primaryTextTheme.button,
           ),
           onPressed: () async {
@@ -734,8 +788,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
             Column(
               children: <Widget>[
                 Text(
-                  AppLocalizations.of(widget.parentContext)
-                      .translate('createtimebank', 'profile_info_title'),
+                  S.of(context).timebank_profile_info,
                   style: TextStyle(
                       color: FlavorConfig.values.theme.primaryColor,
                       fontSize: 20,
@@ -798,6 +851,8 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
 
   InputDecoration getInputDecoration({String fieldTitle}) {
     return InputDecoration(
+      errorMaxLines: 2,
+
       errorStyle: TextStyle(
         color: Colors.red,
         wordSpacing: 2.0,

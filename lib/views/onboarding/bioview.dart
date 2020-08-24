@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 
 typedef StringCallback = void Function(String bio);
@@ -21,7 +23,8 @@ class _BioViewState extends State<BioView> {
     borderSide: BorderSide(color: Color(0x0FFC7C7CC)),
   );
   String bio = '';
-
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -42,7 +45,7 @@ class _BioViewState extends State<BioView> {
             ),
             elevation: 0.5,
             title: Text(
-              'Bio',
+              S.of(context).bio,
               style: TextStyle(fontSize: 18),
             ),
             centerTitle: true,
@@ -58,7 +61,7 @@ class _BioViewState extends State<BioView> {
                       padding: const EdgeInsets.only(
                           left: 0.0, top: 0.0, bottom: 10.0),
                       child: Text(
-                        'Please tell us a little about yourself in a few sentences. For example, what makes you unique.',
+                        S.of(context).bio_description,
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 16,
@@ -73,35 +76,51 @@ class _BioViewState extends State<BioView> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           TextFormField(
-                              textCapitalization: TextCapitalization.sentences,
-                              style: TextStyle(
-                                  fontSize: 16.0, color: Colors.black54),
-                              decoration: InputDecoration(
-                                fillColor: Colors.grey[300],
-                                filled: true,
-                                hintText: 'Tell us a little about yourself.',
-                                border: textFieldBorder,
-                                enabledBorder: textFieldBorder,
-                                focusedBorder: textFieldBorder,
-                              ),
-                              keyboardType: TextInputType.multiline,
-                              minLines: 6,
-                              maxLines: 50,
-                              maxLength: 150,
-                              validator: (value) {
-                                if (value.trim().isEmpty) {
-                                  return 'It\'s easy, please fill few words about you.';
-                                }
-                                if (value.length < 50) {
-                                  this.bio = value;
-                                  return 'Min 50 characters *';
-                                }
+                            textCapitalization: TextCapitalization.sentences,
+                            style: TextStyle(
+                                fontSize: 16.0, color: Colors.black54),
+                            decoration: InputDecoration(
+                              errorMaxLines: 2,
+                              fillColor: Colors.grey[300],
+                              filled: true,
+                              hintText: S.of(context).bio_hint,
+                              border: textFieldBorder,
+                              enabledBorder: textFieldBorder,
+                              focusedBorder: textFieldBorder,
+                            ),
+                            keyboardType: TextInputType.multiline,
+                            autovalidate: autoValidateText,
+                            minLines: 6,
+                            maxLines: 50,
+                            maxLength: 150,
+                            onChanged: (value) {
+                              if (value.length > 1) {
+                                setState(() {
+                                  autoValidateText = true;
+                                });
+                              } else {
+                                setState(() {
+                                  autoValidateText = false;
+                                });
+                              }
+                            },
+                            validator: (value) {
+                              if (value.trim().isEmpty) {
+                                return S.of(context).validation_error_bio_empty;
+                              }
+                              if (value.length < 50) {
                                 this.bio = value;
-                              }),
-                          // Text(
-                          //   '*min 100 characters',
-                          //   style: TextStyle(color: Colors.red),
-                          // )
+                                return S
+                                    .of(context)
+                                    .validation_error_bio_min_characters;
+                              }
+                              if (profanityDetector.isProfaneString(value)) {
+                                return S.of(context).profanity_text_alert;
+                              }
+                              this.bio = value;
+                              return null;
+                            },
+                          ),
                         ],
                       ),
                     )

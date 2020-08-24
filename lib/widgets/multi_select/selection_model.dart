@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class SelectionModal extends StatefulWidget {
@@ -190,8 +190,7 @@ class _SelectionModalState extends State<SelectionModal> {
                       Navigator.pop(context, null);
                     },
                     child: Text(
-                      AppLocalizations.of(context)
-                          .translate('shared', 'cancel'),
+                      S.of(context).cancel,
                       style: Theme.of(context).primaryTextTheme.button,
                     ),
                   ),
@@ -220,9 +219,7 @@ class _SelectionModalState extends State<SelectionModal> {
                         Theme.of(context).primaryColor,
                     textColor: widget.saveButtonTextColor ?? Colors.white,
                     label: Text(
-                      widget.saveButtonText ??
-                          AppLocalizations.of(context)
-                              .translate('create_request', 'done'),
+                      widget.saveButtonText ?? S.of(context).done,
                       style: Theme.of(context).primaryTextTheme.button,
                     ),
                   )
@@ -251,9 +248,8 @@ class _SelectionModalState extends State<SelectionModal> {
               maxWidth: MediaQuery.of(context).size.width - 80.0),
           child: Text(existingItem['text'], overflow: TextOverflow.ellipsis),
         ),
-        deleteButtonTooltipMessage: widget.deleteButtonTooltipText ??
-            AppLocalizations.of(context)
-                .translate('create_request', 'tap_to_delete'),
+        deleteButtonTooltipMessage:
+            widget.deleteButtonTooltipText ?? S.of(context).tap_to_delete,
         deleteIcon: widget.deleteIcon ?? Icon(Icons.cancel),
         deleteIconColor: widget.deleteIconColor ?? Colors.grey,
         onDeleted: () {
@@ -272,7 +268,7 @@ class _SelectionModalState extends State<SelectionModal> {
               children: <Widget>[
                 Text(
                   widget.selectedOptionsInfoText ??
-                      '${AppLocalizations.of(context).translate('create_request', 'selected_hint')} ${selectedOptions.length}  ${AppLocalizations.of(context).translate('create_request', 'tap_to_remove')}', // use languageService here
+                      '${S.of(context).currently_selected} ${selectedOptions.length}  ${S.of(context).tap_to_remove_tooltip}', // use languageService here
                   style: TextStyle(
                       color:
                           widget.selectedOptionsInfoTextColor ?? Colors.black87,
@@ -329,13 +325,11 @@ class _SelectionModalState extends State<SelectionModal> {
             selectedColor: Theme.of(context).primaryColor,
             children: {
               0: Text(
-                AppLocalizations.of(context)
-                    .translate('shared', 'timebank_projects'),
+                S.of(context).timebank_project(3),
                 style: TextStyle(fontSize: 12.0),
               ),
               1: Text(
-                AppLocalizations.of(context)
-                    .translate('shared', 'personal_projects'),
+                S.of(context).personal_project(3),
                 style: TextStyle(fontSize: 12.0),
               ),
             },
@@ -383,30 +377,31 @@ class _SelectionModalState extends State<SelectionModal> {
                 keyboardAppearance: Brightness.light,
                 onChanged: searchOperation,
                 decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.only(left: 8.0, right: 8.0, bottom: 10.0),
-                    border: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(6.0),
-                      ),
+                  contentPadding:
+                      EdgeInsets.only(left: 8.0, right: 8.0, bottom: 10.0),
+                  border: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(6.0),
                     ),
-                    filled: true,
-                    hintText: widget.searchBoxHintText ??
-                        "${AppLocalizations.of(context).translate('requests', 'search')}...",
-                    fillColor: widget.searchBoxFillColor ?? Colors.white,
-                    suffix: SizedBox(
-                        height: 15.0,
-                        child: IconButton(
-                          padding: EdgeInsets.only(top: 8),
-                          icon: widget.searchBoxIcon ?? Icon(Icons.clear),
-                          onPressed: () {
-                            _controller.clear();
-                            searchOperation('');
-                          },
-                          tooltip: widget.searchBoxToolTipText ??
-                              AppLocalizations.of(context)
-                                  .translate('shared', 'clear'),
-                        ))),
+                  ),
+                  filled: true,
+                  hintText:
+                      widget.searchBoxHintText ?? "${S.of(context).search}...",
+                  fillColor: widget.searchBoxFillColor ?? Colors.white,
+                  suffix: SizedBox(
+                    height: 15.0,
+                    child: IconButton(
+                      padding: EdgeInsets.only(top: 8),
+                      icon: widget.searchBoxIcon ?? Icon(Icons.clear),
+                      onPressed: () {
+                        _controller.clear();
+                        searchOperation('');
+                      },
+                      tooltip:
+                          widget.searchBoxToolTipText ?? S.of(context).clear,
+                    ),
+                  ),
+                ),
               )
             ],
           )),

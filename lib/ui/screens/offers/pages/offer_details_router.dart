@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -68,16 +68,16 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
                         tabs: _isCreator
                             ? <Widget>[
                                 Tab(
-                                    child: Text(AppLocalizations.of(context)
-                                        .translate('offers', 'details'))),
+                                  child: Text(S.of(context).details),
+                                ),
                                 Tab(
-                                    child: Text(AppLocalizations.of(context)
-                                        .translate('offers', 'accepted'))),
+                                  child: Text(S.of(context).accepted),
+                                ),
                               ]
                             : <Widget>[
                                 Tab(
-                                    child: Text(AppLocalizations.of(context)
-                                        .translate('offers', 'details'))),
+                                  child: Text(S.of(context).details),
+                                ),
                               ],
                       ),
                     ),

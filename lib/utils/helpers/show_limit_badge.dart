@@ -1,7 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
@@ -31,10 +29,8 @@ class ShowLimitBadge extends StatelessWidget {
                 isAdmin
                     ? (_userBloc.community.payment['message'] != null
                         ? _userBloc.community.payment['message']
-                        : AppLocalizations.of(context)
-                            .translate('homepage', 'payment_data_syncing'))
-                    : AppLocalizations.of(context)
-                        .translate('homepage', 'actions_not_allowed'),
+                        : S.of(context).payment_data_syncing)
+                    : S.of(context).actions_not_allowed,
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -118,8 +114,7 @@ class TransactionLimitCheck extends StatelessWidget {
                 child: FlatButton(
                   color: Theme.of(context).accentColor,
                   child: Text(
-                    AppLocalizations.of(context)
-                        .translate('homepage', 'configure'),
+                    S.of(context).configure_billing,
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
@@ -142,8 +137,7 @@ class TransactionLimitCheck extends StatelessWidget {
               FlatButton(
                 color: Theme.of(context).accentColor,
                 child: Text(
-                  AppLocalizations.of(context)
-                      .translate('billing_plans', 'close'),
+                  S.of(context).close,
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () {
@@ -165,17 +159,14 @@ String getMessage({
   bool isSoftDeleteRequested,
 }) {
   if (isBillingFailed) {
-    log("Billing failed isAdmin: $isAdmin");
     return isAdmin
-        ? AppLocalizations.of(context).translate('homepage', 'failed')
-        : AppLocalizations.of(context).translate('homepage', 'contact_admin');
+        ? S.of(context).limit_badge_billing_failed
+        : S.of(context).limit_badge_contact_admin;
   }
   if (isSoftDeleteRequested) {
-    log("soft delete isAdmin: $isAdmin");
     return isAdmin
-        ? AppLocalizations.of(context)
-            .translate('soft_delete', 'request_in_progress_body')
-        : AppLocalizations.of(context).translate('homepage', 'contact_admin');
+        ? S.of(context).limit_badge_delete_in_progress
+        : S.of(context).limit_badge_contact_admin;
   }
   return 'Something went wrong!';
 }

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/invitation_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -13,6 +13,7 @@ import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../flavor_config.dart';
 
@@ -87,7 +88,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate('members', 'invite_members'),
+          S.of(context).invite_members,
           style: TextStyle(
             fontSize: 18,
           ),
@@ -105,41 +106,44 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
                 style: TextStyle(color: Colors.black),
                 controller: searchTextController,
                 decoration: InputDecoration(
-                    suffixIcon: Offstage(
-                      offstage: searchTextController.text.length == 0,
-                      child: IconButton(
-                        splashColor: Colors.transparent,
-                        icon: Icon(
-                          Icons.clear,
-                          color: Colors.black54,
-                        ),
-                        onPressed: () {
-                          //searchTextController.clear();
-                          WidgetsBinding.instance.addPostFrameCallback(
-                              (_) => searchTextController.clear());
-                        },
+                  suffixIcon: Offstage(
+                    offstage: searchTextController.text.length == 0,
+                    child: IconButton(
+                      splashColor: Colors.transparent,
+                      icon: Icon(
+                        Icons.clear,
+                        color: Colors.black54,
                       ),
+                      onPressed: () {
+                        //searchTextController.clear();
+                        WidgetsBinding.instance.addPostFrameCallback(
+                            (_) => searchTextController.clear());
+                      },
                     ),
-                    hasFloatingPlaceholder: false,
-                    alignLabelWithHint: true,
-                    isDense: true,
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                    ),
-                    contentPadding: EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 3.0),
-                    filled: true,
-                    fillColor: Colors.grey[300],
-                    focusedBorder: OutlineInputBorder(
+                  ),
+                  hasFloatingPlaceholder: false,
+                  alignLabelWithHint: true,
+                  isDense: true,
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
+                  contentPadding: EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 3.0),
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(25.7),
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(25.7)),
-                    hintText: AppLocalizations.of(context)
-                        .translate('members', 'searchby_email'),
-                    hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
+                      borderRadius: BorderRadius.circular(25.7)),
+                  hintText: S.of(context).search_by_email_name,
+                  hintStyle: TextStyle(
+                    color: Colors.black45,
+                    fontSize: 13,
+                  ),
+                ),
               ),
             ),
             Padding(
@@ -147,7 +151,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
               child: Container(
                 height: 25,
                 child: Text(
-                  AppLocalizations.of(context).translate('members', 'members'),
+                  S.of(context).members,
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -178,13 +182,10 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
             validItems: parentTimebankMembersList),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text(AppLocalizations.of(context)
-                .translate('members', 'please_try_later'));
+            return Text(S.of(context).try_later);
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+            return LoadingIndicator();
           }
           List<UserModel> userlist = snapshot.data;
           userlist.removeWhere((user) =>
@@ -193,8 +194,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
             return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Center(
-                  child: Text(AppLocalizations.of(context)
-                      .translate('members', 'no_member_found')),
+                  child: Text(S.of(context).no_member_found),
                 ));
           }
           return Padding(
@@ -238,27 +238,25 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
           if (groupInviteUserModel.declined == true) {
             groupInviteStatus = GroupInviteStatus.DECLINED;
             return userWidget(
-                user: userModel,
-                status: AppLocalizations.of(context)
-                    .translate('members', 'declined'),
-                groupInviteUserModel: groupInviteUserModel,
-                groupInviteStatus: groupInviteStatus);
+              user: userModel,
+              status: S.of(context).declined,
+              groupInviteUserModel: groupInviteUserModel,
+              groupInviteStatus: groupInviteStatus,
+            );
           }
           groupInviteStatus = GroupInviteStatus.INVITED;
           return userWidget(
               groupInviteStatus: groupInviteStatus,
               user: userModel,
               groupInviteUserModel: groupInviteUserModel,
-              status:
-                  AppLocalizations.of(context).translate('members', 'invited'));
+              status: S.of(context).invited);
         } else {
           print("----------------- no data");
 
           groupInviteStatus = GroupInviteStatus.INVITE;
           return userWidget(
               user: userModel,
-              status:
-                  AppLocalizations.of(context).translate('members', 'invite'),
+              status: S.of(context).invite,
               groupInviteStatus: groupInviteStatus);
         }
       },
@@ -433,8 +431,7 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
             });
           }
         },
-        child: Text(
-            AppLocalizations.of(context).translate('members', 'resend_invite'),
+        child: Text(S.of(context).resend_invite,
             style: TextStyle(fontFamily: 'Europa')),
         color: FlavorConfig.values.theme.primaryColor,
         textColor: Colors.white,
@@ -447,8 +444,8 @@ class _InviteMembersGroupState extends State<InviteMembersGroup> {
             sendInvitationNotification(userModel: user);
           });
         },
-        child: Text(AppLocalizations.of(context).translate('members', 'invite'),
-            style: TextStyle(fontFamily: 'Europa')),
+        child:
+            Text(S.of(context).invite, style: TextStyle(fontFamily: 'Europa')),
         color: FlavorConfig.values.theme.primaryColor,
         textColor: Colors.white,
         shape: StadiumBorder(),

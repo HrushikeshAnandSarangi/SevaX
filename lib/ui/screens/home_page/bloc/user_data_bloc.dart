@@ -38,7 +38,8 @@ class UserDataBloc extends BlocBase {
             .snapshots(),
         (u, c) => HomeRouterModel(user: u, community: c),
       ).listen((HomeRouterModel model) {
-        if (!_user.isClosed) _user.add(UserModel.fromMap(model.user.data));
+        if (!_user.isClosed)
+          _user.add(UserModel.fromMap(model.user.data, 'user_data_bloc'));
         if (!_community.isClosed)
           _community.add(CommunityModel(model.community.data));
       });

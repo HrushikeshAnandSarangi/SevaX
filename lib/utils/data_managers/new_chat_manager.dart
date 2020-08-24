@@ -39,16 +39,6 @@ Future<void> updateChat({@required ChatModel chat, String userId}) async {
     },
     merge: true,
   );
-
-  // .setData(
-  //   {
-  //     'notificationId' : {
-  //       'userId' : {
-  //         'claimedId' : "xyz"
-  //       }
-  //     }
-
-  //   }
 }
 
 Future<void> createNewChat({

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
@@ -7,6 +7,7 @@ import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/project_card.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/requests/project_request.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class ProjectsTabView extends StatefulWidget {
   @override
@@ -22,7 +23,7 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
         stream: _bloc.searchText,
         builder: (context, search) {
           if (search.data == null || search.data == "") {
-            return Center(child: Text(AppLocalizations.of(context).translate('search','search_something')));
+            return Center(child: Text(S.of(context).search_something));
           }
           return StreamBuilder<List<ProjectModel>>(
             stream: Searches.searchProjects(
@@ -32,20 +33,17 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+                return LoadingIndicator();
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
                 print("===>> ${snapshot.data}");
                 return Center(
-                  child: Text(AppLocalizations.of(context).translate('search', 'no_data')),
+                  child: Text(S.of(context).no_data),
                 );
               }
 
               return Center(
                 child: ListView.builder(
-                  
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {

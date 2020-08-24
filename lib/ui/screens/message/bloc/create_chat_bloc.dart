@@ -2,14 +2,15 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/widgets/APi/chats_api.dart';
-import 'package:sevaexchange/widgets/APi/storage_api.dart';
-import 'package:sevaexchange/widgets/APi/timebank_api.dart';
-import 'package:sevaexchange/widgets/APi/user_api.dart';
+import 'package:sevaexchange/repositories/chats_repository.dart';
+import 'package:sevaexchange/repositories/storage_repository.dart';
+import 'package:sevaexchange/repositories/timebank_repository.dart';
+import 'package:sevaexchange/repositories/user_repository.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -28,6 +29,7 @@ class CreateChatBloc extends BlocBase {
   final _file = BehaviorSubject<File>();
   final Map<String, List<ParticipantInfo>> sortedMembers = {};
   final Map<String, int> scrollOffset = {};
+  final profanityDetector = ProfanityDetector();
 
   Function(String) get onSearchChanged => _searchText.sink.add;
   Function(String) get onGroupNameChanged => _groupName.sink.add;
@@ -50,7 +52,8 @@ class CreateChatBloc extends BlocBase {
 
   Future<void> getMembers(String userId, String communityId) async {
     List<ParticipantInfo> users =
-        await UserApi.getShortDetailsOfAllMembersOfCommunity(communityId);
+        await UserRepository.getShortDetailsOfAllMembersOfCommunity(
+            communityId);
     users.removeWhere((ParticipantInfo info) => info.id == userId);
     users.forEach((ParticipantInfo info) {
       allMembers[info.id] = info;
@@ -73,7 +76,8 @@ class CreateChatBloc extends BlocBase {
     print(scrollOffset);
 
     List<TimebankModel> timebanks =
-        await TimebankApi.getTimebanksWhichUserIsPartOf(userId, communityId);
+        await TimebankRepository.getTimebanksWhichUserIsPartOf(
+            userId, communityId);
     timebanks.removeWhere(
       (TimebankModel model) =>
           model.members.length == 1 ||
@@ -84,10 +88,15 @@ class CreateChatBloc extends BlocBase {
   }
 
   Future<ChatModel> createMultiUserMessaging(UserModel creator) async {
-    if (_groupName.value != null) {
+    if (profanityDetector.isProfaneString(_groupName.value)) {
+      _groupName.addError("profanity");
+      return null;
+    } else if (_groupName.value != null) {
       String imageUrl = _file.value != null
-          ? await StorageApi.uploadFile("multiUserMessagingLogo", _file.value)
+          ? await StorageRepository.uploadFile(
+              "multiUserMessagingLogo", _file.value)
           : null;
+
       MultiUserMessagingModel groupDetails = MultiUserMessagingModel(
         name: _groupName.value,
         imageUrl: imageUrl,
@@ -116,10 +125,10 @@ class CreateChatBloc extends BlocBase {
         isGroupMessage: true,
         groupDetails: groupDetails,
       );
-      String chatId = await ChatsApi.createNewChat(model);
+      String chatId = await ChatsRepository.createNewChat(model);
       return model..id = chatId;
     } else {
-      _groupName.addError("name_error");
+      _groupName.addError("validation_error_room_name");
       return null;
     }
   }

@@ -8,16 +8,21 @@ import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'completed_list.dart';
@@ -50,11 +55,10 @@ class MyTasksList extends StatelessWidget {
             sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text(
-                '${AppLocalizations.of(context).translate('tasks', 'error')} ${snapshot.error}');
+            return Text(S.of(context).general_stream_error);
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return LoadingIndicator();
           }
           UserModel userModel = snapshot.data;
           String usertimezone = userModel.timezone;
@@ -67,7 +71,7 @@ class MyTasksList extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Center(child: CircularProgressIndicator()),
+                  child: LoadingIndicator(),
                 );
               }
               List<RequestModel> requestModelList = snapshot.data;
@@ -79,17 +83,14 @@ class MyTasksList extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(top: 58.0),
                   child: Text(
-                    AppLocalizations.of(context)
-                        .translate('tasks', 'no_pending'),
+                    S.of(context).no_pending_task,
                     textAlign: TextAlign.center,
                   ),
                 );
               }
               return ListView.builder(
                 itemCount: requestModelList.length,
-                // physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (listContext, index) {
-                  // TODO needs flow correction to tasks model
                   RequestModel model = requestModelList[index];
 
                   return getTaskWidget(model, usertimezone);
@@ -441,7 +442,7 @@ class TaskCardViewState extends State<TaskCardView> {
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
-                        '${AppLocalizations.of(context).translate('tasks', 'from')}  ' +
+                        '${S.of(context).from}  ' +
                             DateFormat(
                                     'MMMM dd, yyyy @ h:mm a',
                                     Locale(AppConfig.prefs
@@ -459,7 +460,7 @@ class TaskCardViewState extends State<TaskCardView> {
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
-                        '${AppLocalizations.of(context).translate('tasks', 'untill')}  ' +
+                        '${S.of(context).until}  ' +
                             DateFormat(
                                     'MMMM dd, yyyy @ h:mm a',
                                     Locale(AppConfig.prefs
@@ -476,15 +477,14 @@ class TaskCardViewState extends State<TaskCardView> {
                     Container(
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
-                      child: Text(
-                          '${AppLocalizations.of(context).translate('tasks', 'posted_by')} ' +
-                              requestModel.fullName),
+                      child: Text('${S.of(context).posted_by} ' +
+                          requestModel.fullName),
                     ),
                     Container(
                       padding: EdgeInsets.all(8.0),
                       alignment: Alignment(-1.0, 0.0),
                       child: Text(
-                        '${AppLocalizations.of(context).translate('tasks', 'posted_date')}  ' +
+                        '${S.of(context).posted_date}  ' +
                             DateFormat(
                                     'MMMM dd, yyyy @ h:mm a',
                                     Locale(AppConfig.prefs
@@ -524,18 +524,15 @@ class TaskCardViewState extends State<TaskCardView> {
                                           EdgeInsets.only(bottom: 20)),
                                   validator: (value) {
                                     if (value == null) {
-                                      return AppLocalizations.of(context)
-                                          .translate('tasks', 'enterhours');
+                                      return S.of(context).enter_hours;
                                     }
                                     if (value.isEmpty) {
-                                      return AppLocalizations.of(context)
-                                          .translate('tasks', 'selecthours');
+                                      S.of(context).select_hours;
                                     }
                                     this.selectedHourValue = value;
                                   },
                                 ),
-                                Text(AppLocalizations.of(context)
-                                    .translate('tasks', 'hours')),
+                                Text(S.of(context).hour(3)),
                               ],
                             ),
                           ),
@@ -558,13 +555,10 @@ class TaskCardViewState extends State<TaskCardView> {
                               children: <Widget>[
                                 DropdownButtonFormField<String>(
                                   validator: (value) {
-                                    if (value == null) {
-                                      return AppLocalizations.of(context)
-                                          .translate('tasks', 'minutes_null');
-                                    }
-                                    if (value.isEmpty) {
-                                      return AppLocalizations.of(context)
-                                          .translate('tasks', 'minutes_empty');
+                                    if (value == null || value.isEmpty) {
+                                      return S
+                                          .of(context)
+                                          .validation_error_invalid_hours;
                                     }
                                     selectedMinuteValue = value;
                                   },
@@ -579,8 +573,7 @@ class TaskCardViewState extends State<TaskCardView> {
                                   },
                                   value: selectedMinuteValue,
                                 ),
-                                Text(AppLocalizations.of(context)
-                                    .translate('tasks', 'minutes')),
+                                Text(S.of(context).minutes),
                               ],
                             ),
                           ),
@@ -596,8 +589,7 @@ class TaskCardViewState extends State<TaskCardView> {
                           subject.add(0);
                         },
                         child: Text(
-                          AppLocalizations.of(context)
-                              .translate('tasks', 'completed'),
+                          S.of(context).completed,
                           style: Theme.of(context).primaryTextTheme.button,
                         ),
                       ),
@@ -621,8 +613,7 @@ class TaskCardViewState extends State<TaskCardView> {
             content: Text(content),
             actions: <Widget>[
               FlatButton(
-                child: Text(AppLocalizations.of(context)
-                    .translate('homepage', 'close')),
+                child: Text(S.of(context).close),
                 onPressed: () {
                   Navigator.of(buildContext).pop();
                 },
@@ -645,33 +636,35 @@ class TaskCardViewState extends State<TaskCardView> {
 
     if (creditRequest > maxClaim) {
       showDialogFoInfo(
-        title:
-            AppLocalizations.of(context).translate('tasks', 'limit_exceeded'),
+        title: S.of(context).limit_exceeded,
         content:
-            "${AppLocalizations.of(context).translate('tasks', 'only_request')} $maxClaim ${AppLocalizations.of(context).translate('tasks', 'hours_of_credit')}",
+            "${S.of(context).task_max_request_message} $maxClaim ${S.of(context).task_max_hours_of_credit}",
       );
       return;
       //show dialog
     } else if (creditRequest == 0) {
       showDialogFoInfo(
-        title: AppLocalizations.of(context).translate('tasks', 'enter_hours'),
-        content: AppLocalizations.of(context)
-            .translate('tasks', 'enter_valid_hours'),
+        title: S.of(context).enter_hours,
+        content: S.of(context).validation_error_invalid_hours,
       );
       return;
     }
 
-    Map results = await Navigator.of(context).push(MaterialPageRoute(
-      builder: (BuildContext context) {
-        return ReviewFeedback(
-          feedbackType: FeedbackType.FOR_REQUEST_CREATOR,
-        );
-      },
-    ));
+    Map results = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return ReviewFeedback(
+            feedbackType: FeedbackType.FOR_REQUEST_CREATOR,
+          );
+        },
+      ),
+    );
 
     if (results != null && results.containsKey('selection')) {
       showProgressForCreditRetrieval();
-      onActivityResult(results);
+      onActivityResult(
+        results,
+      );
     } else {}
   }
 
@@ -683,8 +676,7 @@ class TaskCardViewState extends State<TaskCardView> {
         builder: (BuildContext context) {
           creditRequestDialogContext = context;
           return AlertDialog(
-            title:
-                Text(AppLocalizations.of(context).translate('tasks', 'wait')),
+            title: Text(S.of(context).please_wait),
             content: LinearProgressIndicator(),
           );
         });
@@ -696,11 +688,68 @@ class TaskCardViewState extends State<TaskCardView> {
       "reviewer": SevaCore.of(context).loggedInUser.email,
       "reviewed": requestModel.email,
       "ratings": results['selection'],
+      "device_info": results['device_info'],
       "requestId": requestModel.id,
       "comments": (results['didComment'] ? results['comment'] : "No comments")
     });
-
+    sendMessageToMember(
+        message: results['didComment'] ? results['comment'] : "No comments",
+        requestModel: requestModel,
+        loggedInUser: SevaCore.of(context).loggedInUser);
     startTransaction();
+  }
+
+  Future<void> sendMessageToMember({
+    UserModel loggedInUser,
+    RequestModel requestModel,
+    String message,
+  }) async {
+    TimebankModel timebankModel =
+        await getTimeBankForId(timebankId: requestModel.timebankId);
+    UserModel userModel = await FirestoreManager.getUserForId(
+        sevaUserId: requestModel.sevaUserId);
+    if (userModel != null && timebankModel != null) {
+      ParticipantInfo receiver = ParticipantInfo(
+        id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.sevaUserID
+            : requestModel.timebankId,
+        photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.photoURL
+            : timebankModel.photoUrl,
+        name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? userModel.fullname
+            : timebankModel.name,
+        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? ChatType.TYPE_PERSONAL
+            : timebankModel.parentTimebankId ==
+                    '73d0de2c-198b-4788-be64-a804700a88a4'
+                ? ChatType.TYPE_TIMEBANK
+                : ChatType.TYPE_GROUP,
+      );
+
+      ParticipantInfo sender = ParticipantInfo(
+        id: loggedInUser.sevaUserID,
+        photoUrl: loggedInUser.photoURL,
+        name: loggedInUser.fullname,
+        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+            ? ChatType.TYPE_PERSONAL
+            : timebankModel.parentTimebankId ==
+                    '73d0de2c-198b-4788-be64-a804700a88a4'
+                ? ChatType.TYPE_TIMEBANK
+                : ChatType.TYPE_GROUP,
+      );
+      await sendBackgroundMessage(
+          messageContent: message,
+          reciever: receiver,
+          context: context,
+          isTimebankMessage:
+              requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+                  ? true
+                  : false,
+          timebankId: requestModel.timebankId,
+          communityId: loggedInUser.currentCommunity,
+          sender: sender);
+    }
   }
 
   void startTransaction() async {
@@ -740,6 +789,7 @@ class TaskCardViewState extends State<TaskCardView> {
               : RequestMode.PERSONAL_REQUEST.toString(),
           this.requestModel.id,
           this.requestModel.timebankId);
+
       FirestoreManager.createTaskCompletedNotification(
         model: NotificationsModel(
           id: utils.Utils.getUuid(),

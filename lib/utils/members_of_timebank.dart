@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart' as prefix;
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -11,6 +11,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'search_timebank_manager_page.dart';
@@ -97,7 +98,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
     var finalWidget = Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate('members', 'select_volunteer'),
+          S.of(context).select_volunteer,
           style: TextStyle(fontSize: 18),
         ),
         elevation: 0,
@@ -164,9 +165,9 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   Widget getContent(BuildContext context, TimebankModel model) {
     if (_avtars.length == 0 && _lastReached) {
       return Center(
-        child: Text(
-            AppLocalizations.of(context).translate('members', 'no_volunteers')),
-      );
+          child: Text(
+        S.of(context).no_volunteers_available,
+      ));
     } else if (_avtars.length == 0 && _showMoreItems && !_isLoading) {
       return circularBar;
     } else {
@@ -192,9 +193,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   }
 
   Widget get circularBar {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
+    return LoadingIndicator();
   }
 
   int fetchItemsCount() {

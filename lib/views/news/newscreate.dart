@@ -1,10 +1,11 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
@@ -27,7 +28,7 @@ class NewsCreate extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context).translate('create_feed', 'title'),
+            S.of(context).create_feed,
             style: TextStyle(fontSize: 18),
           ),
           centerTitle: false,
@@ -88,7 +89,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   DataModel selectedEntity;
   GeoFirePoint location;
   String selectedAddress;
-
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
   Future<void> writeToDB() async {
     // print("Credit goes to ${}");
 
@@ -124,6 +126,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     globals.newsImageURL = null;
     globals.newsDocumentURL = null;
     globals.newsDocumentName = null;
+    globals.webImageUrl = null;
+
     if (dialogContext != null) {
       Navigator.pop(dialogContext);
     }
@@ -185,12 +189,11 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             controller: subheadingController,
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
+                              errorMaxLines: 2,
                               labelStyle: TextStyle(color: Colors.grey),
                               alignLabelWithHint: false,
-                              hintText: AppLocalizations.of(context)
-                                  .translate('create_feed', 'hint'),
-                              labelText: AppLocalizations.of(context)
-                                  .translate('create_feed', 'placeholder'),
+                              hintText: S.of(context).create_feed_hint,
+                              labelText: S.of(context).create_feed_placeholder,
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(12.0),
@@ -230,10 +233,26 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             ),
                             keyboardType: TextInputType.text,
                             maxLines: 5,
+                            autovalidate: autoValidateText,
+                            onChanged: (value) {
+                              if (value.length > 1) {
+                                setState(() {
+                                  autoValidateText = true;
+                                });
+                              } else {
+                                setState(() {
+                                  autoValidateText = false;
+                                });
+                              }
+                            },
                             validator: (value) {
                               if (value.isEmpty) {
-                                return AppLocalizations.of(context)
-                                    .translate('create_feed', 'empty_err');
+                                return S
+                                    .of(context)
+                                    .validation_error_general_text;
+                              }
+                              if (profanityDetector.isProfaneString(value)) {
+                                return S.of(context).profanity_text_alert;
                               }
                               newsObject.subheading = value;
                               // print("object");
@@ -243,8 +262,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       ],
                     ),
                   ),
-
-                  // Text(""),
                   Padding(
                     padding: const EdgeInsets.only(top: 0),
                     child: Center(
@@ -278,66 +295,60 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
               Container(
                 child: SizedBox(
-                    width: 200,
-                    child: RaisedButton(
-                      onPressed: () async {
-                        var connResult =
-                            await Connectivity().checkConnectivity();
-                        if (connResult == ConnectivityResult.none) {
-                          Scaffold.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(AppLocalizations.of(context)
-                                  .translate('shared', 'check_internet')),
-                              action: SnackBarAction(
-                                label: AppLocalizations.of(context)
-                                    .translate('shared', 'dismiss'),
-                                onPressed: () =>
-                                    Scaffold.of(context).hideCurrentSnackBar(),
-                              ),
+                  width: 200,
+                  child: RaisedButton(
+                    onPressed: () async {
+                      var connResult = await Connectivity().checkConnectivity();
+                      if (connResult == ConnectivityResult.none) {
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(S.of(context).check_internet),
+                            action: SnackBarAction(
+                              label: S.of(context).dismiss,
+                              onPressed: () =>
+                                  Scaffold.of(context).hideCurrentSnackBar(),
                             ),
-                          );
-                          return;
-                        }
-                        if (location != null) {
-                          if (formKey.currentState.validate()) {
-                            // If the form is valid, we want to show a Snackbar
-                            showDialog(
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (createDialogContext) {
-                                  dialogContext = createDialogContext;
-                                  return AlertDialog(
-                                    title: Text(AppLocalizations.of(context)
-                                        .translate('create_feed', 'progress')),
-                                    content: LinearProgressIndicator(),
-                                  );
-                                });
-                            scrapeURLFromSubheading(subheadingController.text);
-                            scrapeHashTagsFromSubHeadings(
-                                subheadingController.text);
+                          ),
+                        );
+                        return;
+                      }
+                      if (location != null) {
+                        if (formKey.currentState.validate()) {
+                          // If the form is valid, we want to show a Snackbar
+                          showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (createDialogContext) {
+                                dialogContext = createDialogContext;
+                                return AlertDialog(
+                                  title: Text(S.of(context).creating_feed),
+                                  content: LinearProgressIndicator(),
+                                );
+                              });
+                          scrapeURLFromSubheading(subheadingController.text);
+                          scrapeHashTagsFromSubHeadings(
+                              subheadingController.text);
 
-                            if (newsObject.urlsFromPost.length > 0) {
-                              await scrapeURLDetails(subheadingController.text);
-                            }
-
-                            writeToDB();
+                          if (newsObject.urlsFromPost.length > 0) {
+                            await scrapeURLDetails(subheadingController.text);
                           }
-                        } else {
-                          Scaffold.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(AppLocalizations.of(context)
-                                  .translate(
-                                      'create_feed', 'location_notadded')),
-                            ),
-                          );
+
+                          writeToDB();
                         }
-                      },
-                      child: Text(
-                        AppLocalizations.of(context)
-                            .translate('create_feed', 'create_button'),
-                        style: Theme.of(context).primaryTextTheme.button,
-                      ),
-                    )),
+                      } else {
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(S.of(context).location_not_added),
+                          ),
+                        );
+                      }
+                    },
+                    child: Text(
+                      S.of(context).create_feed,
+                      style: Theme.of(context).primaryTextTheme.button,
+                    ),
+                  ),
+                ),
               ),
               // Text(sevaUserID),
             ],
@@ -381,66 +392,66 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject = await fetchPosts(
         url: newsObject.urlsFromPost[0], newsObject: newsObject);
   }
-
-  Widget get entityDropdown {
-    return Container(
-      padding: EdgeInsets.only(bottom: 20.0),
-      child: DropdownButtonFormField<DataModel>(
-        decoration: InputDecoration.collapsed(
-          hintText:
-              '+ ${AppLocalizations.of(context).translate('create_feed', 'category')}',
-          hintStyle: Theme.of(context).textTheme.title.copyWith(
-                color: Theme.of(context).hintColor,
-              ),
-        ),
-        validator: (value) {
-          if (value == null) {
-            return AppLocalizations.of(context)
-                .translate('create_feed', 'select_category');
-          }
-        },
-        items: dataList.map((dataModel) {
-          if (dataModel.runtimeType == EntityModel) {
-            return DropdownMenuItem<DataModel>(
-              child: Text(
-                  AppLocalizations.of(context).translate('homepage', 'general'),
-                  style: textStyle),
-              value: dataModel,
-            );
-          } else if (dataModel.runtimeType == TimebankModel) {
-            TimebankModel model = dataModel;
-            return DropdownMenuItem<DataModel>(
-              child: Text(
-                '${model.name}',
-                style: textStyle,
-              ),
-              value: model,
-            );
-          } else if (dataModel.runtimeType == CampaignModel) {
-            CampaignModel model = dataModel;
-            return DropdownMenuItem<DataModel>(
-              child: Text(
-                '${model.name}',
-                style: textStyle,
-              ),
-              value: model,
-            );
-          }
-          return DropdownMenuItem<DataModel>(
-            child: Text(
-              AppLocalizations.of(context).translate('homepage', 'undefined'),
-              style: textStyle,
-            ),
-            value: null,
-          );
-        }).toList(),
-        value: selectedEntity,
-        onChanged: (dataModel) {
-          setState(() {
-            this.selectedEntity = dataModel;
-          });
-        },
-      ),
-    );
-  }
 }
+
+//   Widget get entityDropdown {
+//     return Container(
+//       padding: EdgeInsets.only(bottom: 20.0),
+//       child: DropdownButtonFormField<DataModel>(
+//         decoration: InputDecoration.collapsed(
+//           hintText:
+//               '+ ${S.of(context).category}',
+//           hintStyle: Theme.of(context).textTheme.title.copyWith(
+//                 color: Theme.of(context).hintColor,
+//               ),
+//         ),
+//         validator: (value) {
+//           if (value == null) {
+//             return S.of(context).select_category;
+//           }
+//         },
+//         items: dataList.map((dataModel) {
+//           if (dataModel.runtimeType == EntityModel) {
+//             return DropdownMenuItem<DataModel>(
+//               child: Text(
+//                   AppLocalizations.of(context).translate('homepage', 'general'),
+//                   style: textStyle),
+//               value: dataModel,
+//             );
+//           } else if (dataModel.runtimeType == TimebankModel) {
+//             TimebankModel model = dataModel;
+//             return DropdownMenuItem<DataModel>(
+//               child: Text(
+//                 '${model.name}',
+//                 style: textStyle,
+//               ),
+//               value: model,
+//             );
+//           } else if (dataModel.runtimeType == CampaignModel) {
+//             CampaignModel model = dataModel;
+//             return DropdownMenuItem<DataModel>(
+//               child: Text(
+//                 '${model.name}',
+//                 style: textStyle,
+//               ),
+//               value: model,
+//             );
+//           }
+//           return DropdownMenuItem<DataModel>(
+//             child: Text(
+//               AppLocalizations.of(context).translate('homepage', 'undefined'),
+//               style: textStyle,
+//             ),
+//             value: null,
+//           );
+//         }).toList(),
+//         value: selectedEntity,
+//         onChanged: (dataModel) {
+//           setState(() {
+//             this.selectedEntity = dataModel;
+//           });
+//         },
+//       ),
+//     );
+//   }
+// }

@@ -4,9 +4,9 @@ import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/repositories/notifications_repository.dart';
+import 'package:sevaexchange/repositories/timebank_repository.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/widgets/APi/notifications_api.dart';
-import 'package:sevaexchange/widgets/APi/timebank_api.dart';
 
 class NotificationsBloc extends BlocBase {
   final _personalNotificationCount = BehaviorSubject<int>.seeded(0);
@@ -33,19 +33,23 @@ class NotificationsBloc extends BlocBase {
       );
 
   void init(String userEmail, String userId, String communityId) {
-    NotificationsApi.getUserNotifications(userEmail, communityId)
+    NotificationsRepository.getUserNotifications(userEmail, communityId)
         .listen((QuerySnapshot query) {
       List<NotificationsModel> notifications = [];
       query.documents.forEach((DocumentSnapshot document) {
         notifications.add(NotificationsModel.fromMap(document.data));
       });
-      _personalNotificationCount.add(notifications.length);
-      _personalNotifications.add(notifications);
+      if (!_personalNotificationCount.isClosed)
+        _personalNotificationCount.add(notifications.length);
+      if (!_personalNotifications.isClosed)
+        _personalNotifications.add(notifications);
+    }).onError((error) {
+      print("There is an error");
     });
 
     CombineLatestStream.combine2(
-        NotificationsApi.getAllTimebankNotifications(communityId),
-        TimebankApi.getAllTimebanksUserIsAdminOf(userId, communityId),
+        NotificationsRepository.getAllTimebankNotifications(communityId),
+        TimebankRepository.getAllTimebanksUserIsAdminOf(userId, communityId),
         (QuerySnapshot notificationSnapshot, QuerySnapshot timebankSnapshot) {
       Map<String, List<NotificationsModel>> _adminNotificationsMap = {};
       Map<String, TimebankModel> _adminTimebanks = {};
@@ -82,7 +86,7 @@ class NotificationsBloc extends BlocBase {
   }
 
   Future clearNotification({String email, String notificationId}) {
-    return NotificationsApi.readUserNotification(
+    return NotificationsRepository.readUserNotification(
       notificationId,
       email,
     );

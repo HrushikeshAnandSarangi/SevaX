@@ -1,7 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/nav_bar_model.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/message_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
@@ -23,18 +23,23 @@ class CustomBottomNavigationBar extends StatelessWidget {
     final _messageBloc = BlocProvider.of<MessageBloc>(context);
     final _notificationBloc = BlocProvider.of<NotificationsBloc>(context);
     return StreamBuilder<NavBarBadgeModel>(
-      stream: CombineLatestStream.combine2(
-        _notificationBloc.notificationCount,
+      stream: CombineLatestStream.combine3(
+        _notificationBloc.personalNotificationCount,
+        _notificationBloc.timebankNotificationCount,
         _messageBloc.messageCount,
-        (n, m) => NavBarBadgeModel(notificationCount: n, chatCount: m),
+        (p, t, m) => NavBarBadgeModel(notificationCount: p + t, chatCount: m),
       ),
       builder: (context, AsyncSnapshot<NavBarBadgeModel> snapshot) {
         int notificationCount = 0;
         int chatCount = 0;
+
+        print(snapshot.error);
+
         if (snapshot.hasData && snapshot.data != null) {
           notificationCount = snapshot.data.notificationCount;
           chatCount = snapshot.data.chatCount;
         }
+        // log('notification count -> ${snapshot.data.notificationCount}');
         return CurvedNavigationBar(
           key: Key((notificationCount + chatCount).toString()),
           animationDuration: Duration(milliseconds: 300),
@@ -45,36 +50,35 @@ class CustomBottomNavigationBar extends StatelessWidget {
           items: <CustomNavigationItem>[
             CustomNavigationItem(
               primaryIcon: Icons.explore,
-              title: AppLocalizations.of(context).translate('tabs', 'explore'),
+              title: S.of(context).bottom_nav_explore,
               isSelected: selected == 0,
             ),
             CustomNavigationItem(
               key: UniqueKey(),
               primaryIcon: Icons.notifications,
               secondaryIcon: Icons.notifications_none,
-              title: AppLocalizations.of(context)
-                  .translate('tabs', 'notifications'),
+              title: S.of(context).bottom_nav_notifications,
               isSelected: selected == 1,
               showBadge: notificationCount > 0,
               count: notificationCount.toString(),
             ),
             CustomNavigationItem(
               primaryIcon: Icons.home,
-              title: AppLocalizations.of(context).translate('tabs', 'home'),
+              title: S.of(context).bottom_nav_home,
               isSelected: selected == 2,
             ),
             CustomNavigationItem(
               key: UniqueKey(),
               primaryIcon: Icons.chat_bubble,
               secondaryIcon: Icons.chat_bubble_outline,
-              title: AppLocalizations.of(context).translate('tabs', 'messages'),
+              title: S.of(context).bottom_nav_messages,
               isSelected: selected == 3,
               showBadge: chatCount > 0,
               count: chatCount.toString(),
             ),
             CustomNavigationItem(
               primaryIcon: Icons.settings,
-              title: AppLocalizations.of(context).translate('tabs', 'profile'),
+              title: S.of(context).bottom_nav_profile,
               isSelected: selected == 4,
             ),
           ],

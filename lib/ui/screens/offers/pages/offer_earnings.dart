@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/member_card_with_single_action.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/seva_coin_star.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class OfferEarnings extends StatelessWidget {
   final OfferModel offerModel;
@@ -24,10 +25,12 @@ class OfferEarnings extends StatelessWidget {
           stream: _bloc.participants,
           builder: (context, snapshot) {
             if (snapshot.data == null || snapshot.data.isEmpty) {
-              return Center(child: Text(AppLocalizations.of(context).translate('offers','no_data')));
+              return Center(
+                child: Text(S.of(context).no_offers),
+              );
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
+              return LoadingIndicator();
             }
             DateTime _endTime = DateTime.fromMillisecondsSinceEpoch(
               offerModel.groupOfferDataModel.endDate,
@@ -41,7 +44,7 @@ class OfferEarnings extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     SevaCoinStarWidget(
-                      title: AppLocalizations.of(context).translate('offers','your_earnings'),
+                      title: S.of(context).your_earnings,
                       amount: offerModel.groupOfferDataModel.creditStatus == 1
                           ? (offerModel.groupOfferDataModel.numberOfClassHours +
                                   offerModel.groupOfferDataModel
@@ -50,7 +53,7 @@ class OfferEarnings extends StatelessWidget {
                           : '0',
                     ),
                     SevaCoinStarWidget(
-                      title: AppLocalizations.of(context).translate('offers','timebank_earnings'),
+                      title: S.of(context).timebank_earnings,
                       amount: offerModel.groupOfferDataModel.creditStatus == 1
                           ? (offerModel.groupOfferDataModel.creditsApproved -
                                   (offerModel.groupOfferDataModel

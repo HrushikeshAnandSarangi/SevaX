@@ -4,7 +4,7 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
@@ -99,34 +99,37 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
               onChanged: _search,
               autocorrect: true,
               decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                      icon: Icon(
-                        Icons.clear,
-                        color: Colors.black54,
-                      ),
-                      onPressed: () {
-                        searchTextController.clear();
-                      }),
-                  hasFloatingPlaceholder: false,
-                  alignLabelWithHint: true,
-                  isDense: true,
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.grey,
-                  ),
-                  contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                  focusedBorder: OutlineInputBorder(
+                suffixIcon: IconButton(
+                    icon: Icon(
+                      Icons.clear,
+                      color: Colors.black54,
+                    ),
+                    onPressed: () {
+                      searchTextController.clear();
+                    }),
+                hasFloatingPlaceholder: false,
+                alignLabelWithHint: true,
+                isDense: true,
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                ),
+                contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                filled: true,
+                fillColor: Colors.grey[200],
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(15.7),
+                ),
+                enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(15.7),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(15.7)),
-                  hintText: AppLocalizations.of(context)
-                      .translate('requests', 'type_team_member_name'),
-                  hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
+                    borderRadius: BorderRadius.circular(15.7)),
+                hintText: S.of(context).type_team_member_name,
+                hintStyle: TextStyle(
+                  color: Colors.black45,
+                  fontSize: 14,
+                ),
+              ),
             ),
           ),
           Expanded(
@@ -226,8 +229,8 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         ),
       );
     } else if (widget.controller.text.trim().length < 3) {
-      return getEmptyWidget('Users',
-          AppLocalizations.of(context).translate('requests', 'min_search_err'));
+      return getEmptyWidget(
+          'Users', S.of(context).validation_error_search_min_characters);
     }
     return StreamBuilder<List<UserModel>>(
       stream: SearchManager.searchForUserWithTimebankId(
@@ -250,8 +253,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
 
         if (userList.length == 0) {
-          return getEmptyWidget('Users',
-              AppLocalizations.of(context).translate('requests', 'no_users'));
+          return getEmptyWidget('Users', S.of(context).no_user_found);
         }
         return ListView.builder(
           itemCount: userList.length,

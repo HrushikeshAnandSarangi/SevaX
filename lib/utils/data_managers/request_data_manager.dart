@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -30,6 +31,20 @@ Future<void> createRequest({@required RequestModel requestModel}) async {
       .collection('requests')
       .document(requestModel.id)
       .setData(requestModel.toMap());
+}
+
+Future<void> updateRequest({@required RequestModel requestModel}) async {
+  return await Firestore.instance
+      .collection('requests')
+      .document(requestModel.id)
+      .updateData(requestModel.toMap());
+}
+
+Future<void> createDonation({@required DonationModel donationModel}) async {
+  return await Firestore.instance
+      .collection('donations')
+      .document(donationModel.id)
+      .setData(donationModel.toMap());
 }
 
 Future<int> createRecurringEvents({@required RequestModel requestModel}) async {
@@ -309,7 +324,11 @@ Future<void> updateRecurrenceRequestsFrontEnd(
         temp.requestStart = eventStartDate.millisecondsSinceEpoch;
         temp.requestEnd = eventEndDate.millisecondsSinceEpoch;
         temp.postTimestamp = DateTime.now().millisecondsSinceEpoch;
-        temp.id = temp.email +"*" + temp.postTimestamp.toString() + "*" +temp.requestStart.toString();
+        temp.id = temp.email +
+            "*" +
+            temp.postTimestamp.toString() +
+            "*" +
+            temp.requestStart.toString();
         temp.occurenceCount = occurenceCount;
         occurenceCount++;
         temp.softDelete = false;
@@ -780,6 +799,8 @@ Future<void> sendOfferRequest({
 }
 
 Future<void> acceptRequest({
+  @required UserModel loggedInUser,
+  @required bool isAlreadyApproved,
   @required RequestModel requestModel,
   @required String senderUserId,
   bool isWithdrawal = false,
@@ -811,8 +832,9 @@ Future<void> acceptRequest({
 
     if (isWithdrawal)
       await utils.withdrawAcceptRequestNotification(
-        notificationsModel: model,
-      );
+          notificationsModel: model,
+          isAlreadyApproved: isAlreadyApproved,
+          loggedInUser: loggedInUser);
     else
       await utils.createAcceptRequestNotification(
         notificationsModel: model,
@@ -947,8 +969,6 @@ Future<void> approveRequestCompletion({
     communityId: communityId,
   );
 
-  print("========================================================== Step2");
-
   Map<String, dynamic> transactionData = model.transactions
       .where((transactionModel) {
         if (transactionModel.from == model.sevaUserId &&
@@ -960,8 +980,6 @@ Future<void> approveRequestCompletion({
       })
       .elementAt(0)
       .toMap();
-
-  print("========================================================== Step3");
 
   //Create transaction record for timebank
 
@@ -990,8 +1008,6 @@ Future<void> approveRequestCompletion({
   }
 
   // }
-
-  print("========================================================== Step6");
 
   // await Firestore.instance
   //     .collection('users')
@@ -1029,15 +1045,12 @@ Future<void> approveRequestCompletion({
     data: transactionData,
   );
 
-  print(
-      "========================================================== Step7 processing loans");
   // processing loans from the user who gets credits to timebank (both for personal and timebank approvals if users loans are pending just return it
   await utils.processLoans(
       timebankId: model.timebankId,
       userId: userId,
       to: editedTransaction.to,
       credits: editedTransaction.credits);
-  print("========================================================== Step8");
 
   await utils.createTaskCompletedApprovedNotification(model: notification);
   await utils.createTransactionNotification(model: creditnotification);

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/reported_members_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/reported_members/bloc/reported_member_bloc.dart';
 import 'package:sevaexchange/ui/screens/reported_members/widgets/reported_member_card.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class ReportedMembersPage extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -53,7 +54,7 @@ class _ReportedMembersPageState extends State<ReportedMembersPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context).translate('reported_members', 'reported_members'),
+          S.of(context).reported_members,
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -62,11 +63,11 @@ class _ReportedMembersPageState extends State<ReportedMembersPage> {
           stream: _bloc.reportedMembers,
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return LoadingIndicator();
             }
 
             if (snapshot.data == null || snapshot.data.isEmpty) {
-              return Center(child: Text(AppLocalizations.of(context).translate('reported_members', 'no_data')));
+              return Center(child: Text(S.of(context).no_data));
             }
 
             return ListView.builder(
