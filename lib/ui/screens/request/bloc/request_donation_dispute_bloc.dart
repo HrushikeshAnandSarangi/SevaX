@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/get_location.dart';
@@ -112,12 +114,14 @@ class RequestDonationDisputeBloc {
     String notificationId,
     DonationModel donationModel,
     RequestMode requestMode,
-    Map<dynamic, dynamic> donatedGoods,
+    Map<String, String> donatedGoods,
   }) async {
-    var status = listEquals(
-      List.from(donatedGoods.keys),
-      List.from(_goodsRecieved.value.keys),
-    );
+    var x = List.from(donatedGoods.keys);
+    var y = List.from(_goodsRecieved.value.keys);
+    x.sort();
+    y.sort();
+    var status = listEquals(x, y);
+    log('the status is $status');
     await _donationsRepository.acknowledgeDonation(
       requestType: donationModel.donationType,
       operatoreMode: operationMode,

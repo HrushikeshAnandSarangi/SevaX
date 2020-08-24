@@ -117,8 +117,8 @@ class _RequestDonationDisputePageState
                         case _AckType.GOODS:
                           _bloc
                               .disputeGoods(
-                            donatedGoods:
-                                widget.model.goodsDetails.donatedGoods,
+                            donatedGoods: Map<String, String>.from(
+                                widget.model.goodsDetails.donatedGoods),
                             donationId: widget.model.id,
                             donationModel: widget.model,
                             notificationId: widget.model.notificationId,

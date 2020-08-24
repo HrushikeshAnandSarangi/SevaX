@@ -134,7 +134,7 @@ class GoodsDetails {
   GoodsDetails({this.comments, this.donatedGoods});
 
   String comments;
-  Map<dynamic, dynamic> donatedGoods;
+  Map<String, String> donatedGoods;
 
   factory GoodsDetails.fromMap(Map<dynamic, dynamic> json) {
     print("===============" + json.toString());
@@ -142,7 +142,7 @@ class GoodsDetails {
     return GoodsDetails(
       comments: json["comments"] == null ? null : json["comments"],
       donatedGoods: json.containsKey('donatedGoods')
-          ? Map<dynamic, dynamic>.from(json["donatedGoods"] ?? {})
+          ? Map<String, String>.from(json["donatedGoods"] ?? {})
           : {},
     );
   }

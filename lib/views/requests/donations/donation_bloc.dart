@@ -11,7 +11,7 @@ class DonationBloc {
   final _errorMessage = BehaviorSubject<String>();
   final _comment = BehaviorSubject<String>();
   final _selectedList =
-      BehaviorSubject<Map<dynamic, dynamic>>.seeded(Map<dynamic, dynamic>());
+      BehaviorSubject<Map<String, String>>.seeded(Map<String, String>());
 
   Stream<String> get goodsDescription => _goodsDescription.stream;
   Stream<String> get amountPledged => _amountPledged.stream;
