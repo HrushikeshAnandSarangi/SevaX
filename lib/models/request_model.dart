@@ -185,8 +185,8 @@ class RequestModel extends DataModel {
 
   RequestMode requestMode;
   RequestType requestType;
-  CashModel cashModel;
-  GoodsDonationDetails goodsDonationDetails;
+  CashModel cashModel = new CashModel();
+  GoodsDonationDetails goodsDonationDetails = new GoodsDonationDetails();
 
   RequestModel({
     this.id,
@@ -380,7 +380,7 @@ class RequestModel extends DataModel {
     if (map.containsKey('cashModeDetails')) {
       this.cashModel = CashModel.fromMap(map['cashModeDetails']);
     } else {
-      cashModel = null;
+      this.cashModel = new CashModel();
     }
   }
 
@@ -530,7 +530,7 @@ class RequestModel extends DataModel {
     if (map.containsKey('cashModeDetails')) {
       this.cashModel = CashModel.fromMap(map['cashModeDetails']);
     } else {
-      cashModel = null;
+      this.cashModel = new CashModel();
     }
   }
 
@@ -683,6 +683,9 @@ class RequestModel extends DataModel {
     if (this.cashModel != null) {
       object['cashModeDetails'] = this.cashModel.toMap();
     }
+    if (this.goodsDonationDetails != null) {
+      object['goodsDonationDetails'] = this.goodsDonationDetails.toMap();
+    }
     return object;
   }
 
@@ -693,9 +696,15 @@ class RequestModel extends DataModel {
 }
 
 class GoodsDonationDetails {
-  List<String> donors;
+  List<String> donors = [];
+  String address = '';
   Map<dynamic, dynamic> requiredGoods;
 
+  GoodsDonationDetails({
+    this.donors,
+    this.address,
+    this.requiredGoods
+  });
   String toString() {
     return this.donors.toString() + "   " + requiredGoods.toString();
   }
@@ -705,12 +714,21 @@ class GoodsDonationDetails {
       this.donors = List.castFrom(map['donors']);
     }
 
+    if (map.containsKey('address')) {
+      this.address = map['address'];
+    }
+
     if (map.containsKey("requiredGoods")) {
       Map<dynamic, dynamic> temp =
           Map<dynamic, dynamic>.from(map["requiredGoods"]);
       this.requiredGoods = temp;
     }
   }
+  Map<String, dynamic> toMap() => {
+    "address": address == null ? null : address,
+    "donors": donors == null ? [] : List<String>.from(donors.map((x) => x)),
+    "requiredGoods": requiredGoods == null ? null : requiredGoods
+  };
 }
 
 enum RequestMode { PERSONAL_REQUEST, TIMEBANK_REQUEST }

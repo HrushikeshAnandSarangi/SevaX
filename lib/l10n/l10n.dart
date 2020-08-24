@@ -1527,7 +1527,22 @@ class S {
         'Click to Set Duration',
         name: 'set_duration',
       );
-
+  String get request_type => Intl.message(
+    'Request type*',
+    name: 'request_type',
+  );
+  String get request_type_time => Intl.message(
+    'Time',
+    name: 'request_type_time'
+  );
+  String get request_type_cash => Intl.message(
+    'Cash',
+    name: 'request_type_cash'
+  );
+  String get request_type_goods => Intl.message(
+    'Goods',
+    name: 'request_type_goods'
+  );
   String get request_title => Intl.message(
         'Request title*',
         name: 'request_title',
@@ -1558,10 +1573,96 @@ class S {
         name: 'request_description_hint',
       );
 
+  String get request_description_hint_cash => Intl.message(
+    'Ex: Specify the cause of fund raising and any #hashtags',
+    name: 'request_description_hint_goods',
+  );
+  String get request_description_hint_goods => Intl.message(
+    'Ex: Specify the cause of requesting goods and any #hashtags',
+    name: 'request_description_hint_goods',
+  );
+
   String get number_of_volunteers => Intl.message(
         'No. of volunteers*',
         name: 'number_of_volunteers',
       );
+
+  String get request_target_donation => Intl.message(
+    'Target Donation*',
+    name: 'request_target_donation',
+  );
+
+  String get request_target_donation_hint => Intl.message(
+    'Ex: \$100',
+    name: 'request_target_donation_hint',
+  );
+
+  String get request_min_donation => Intl.message(
+    'Minimum amount per member*',
+    name: 'request_min_donation',
+  );
+  String get request_goods_description => Intl.message(
+      'Select list of goods for donation*',
+      name: 'request_goods_description'
+  );
+  String get request_goods_address => Intl.message(
+      'Which address goods to be received*',
+      name: 'request_goods_address'
+  );
+  String get request_goods_address_hint => Intl.message(
+      'Donors will use the below given address to send the items. Add additional details to the request details specify address only here.',
+      name: 'request_goods_address_hint'
+  );
+  String get request_goods_address_inputhint => Intl.message(
+      'Address Only',
+      name: 'request_goods_address_inputhint'
+  );
+  String get request_payment_description => Intl.message(
+      'Payment Details*',
+      name: 'request_payment_description',
+  );
+  String get request_payment_description_hint => Intl.message(
+      'SevaX doesn\'t process any payment you should have your own address for collection of payments, Plese provide one of the below paypal, zelpay (or) ACH details',
+      name: 'request_payment_description_hint',
+  );
+  String get request_payment_description_inputhint => Intl.message(
+      'Ex: https://www.paypal.com/johndoe',
+      name: 'request_payment_description_inputhint',
+  );
+  String get request_min_donation_hint => Intl.message(
+    'Ex: \$10',
+    name: 'request_min_donation_hint',
+  );
+
+  String get validation_error_target_donation_count => Intl.message(
+    'Please enter the number of target donation needed',
+    name: 'validation_error_target_donation_count',
+  );
+
+  String get validation_error_target_donation_count_negative => Intl.message(
+    'Please enter the number of target donation needed',
+    name: 'validation_error_target_donation_count_negative',
+  );
+
+  String get validation_error_target_donation_count_zero => Intl.message(
+    'Please enter the number of target donation needed',
+    name: 'validation_error_target_donation_count_zero',
+  );
+
+  String get validation_error_min_donation_count => Intl.message(
+    'Please enter the number of min donation needed',
+    name: 'validation_error_min_donation_count',
+  );
+
+  String get validation_error_min_donation_count_negative => Intl.message(
+    'Please enter the number of min donation needed',
+    name: 'validation_error_min_donation_count_negative',
+  );
+
+  String get validation_error_min_donation_count_zero => Intl.message(
+    'Please enter the number of min donation needed',
+    name: 'validation_error_min_donation_count_zero',
+  );
 
   String get validation_error_volunteer_count => Intl.message(
         'Please enter the number of volunteers needed',
