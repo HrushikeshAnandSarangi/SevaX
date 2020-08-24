@@ -24,9 +24,15 @@ class DonationBloc {
   Function(String) get onCommentChanged => _comment.sink.add;
 
   void addAddRemove({String selectedKey, String selectedValue}) {
-    _selectedList.value.containsKey(selectedKey)
-        ? _selectedList.value.remove(selectedKey)
-        : _selectedList.value[selectedKey] = selectedValue;
+    var localMap = _selectedList.value;
+
+    localMap.containsKey(selectedKey)
+        ? localMap.remove(selectedKey)
+        : localMap[selectedKey] = selectedValue;
+
+    _selectedList.add(localMap);
+
+    print("map -> " + localMap.toString());
   }
 
   Future<bool> donateGoods(
@@ -38,15 +44,25 @@ class DonationBloc {
     } else {
       donationModel.goodsDetails.donatedGoods = _selectedList.value;
       donationModel.goodsDetails.comments = _comment.value;
-      requestModel.goodsDonationDetails.donors.add(donor.sevaUserID);
+
+      var newDonors =
+          new List<String>.from(requestModel.goodsDonationDetails.donors);
+      newDonors.add(donor.sevaUserID);
+
+      // var updatedRequestModel = requestModel;
+
+      requestModel.goodsDonationDetails.donors = newDonors;
+
+      // requestModel.goodsDonationDetails.donors.add(donor.sevaUserID);
       try {
         await FirestoreManager.createDonation(donationModel: donationModel);
         await FirestoreManager.updateRequest(requestModel: requestModel);
 
         await sendNotification(
-            donationModel: donationModel,
-            requestModel: requestModel,
-            donor: donor);
+          donationModel: donationModel,
+          requestModel: requestModel,
+          donor: donor,
+        );
         return true;
       } on Exception catch (e) {
         _errorMessage.add("net_error");

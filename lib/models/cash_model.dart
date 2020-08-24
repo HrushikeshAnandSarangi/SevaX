@@ -7,14 +7,12 @@ String cashModelToMap(CashModel data) => json.encode(data.toMap());
 class CashModel {
   CashModel({
     this.amountRaised,
-    this.donationInstructionLink,
     this.donors,
     this.minAmount,
     this.targetAmount,
   });
 
   int amountRaised;
-  String donationInstructionLink;
   List<String> donors;
   int minAmount;
   int targetAmount;
@@ -22,9 +20,6 @@ class CashModel {
   factory CashModel.fromMap(Map<dynamic, dynamic> json) => CashModel(
         amountRaised:
             json["amountRaised"] == null ? null : json["amountRaised"],
-        donationInstructionLink: json["donationInstructionLink"] == null
-            ? null
-            : json["donationInstructionLink"],
         donors: json["donors"] == null
             ? []
             : List<String>.from(json["donors"].map((x) => x)),
@@ -35,8 +30,6 @@ class CashModel {
 
   Map<String, dynamic> toMap() => {
         "amountRaised": amountRaised == null ? null : amountRaised,
-        "donationInstructionLink":
-            donationInstructionLink == null ? null : donationInstructionLink,
         "donors": donors == null ? [] : List<String>.from(donors.map((x) => x)),
         "minAmount": minAmount == null ? null : minAmount,
         "targetAmount": targetAmount == null ? null : targetAmount,

@@ -185,7 +185,7 @@ class _DonationViewState extends State<DonationView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // titleText(title: S.of(context).donations),
+          titleText(title: S.of(context).donations),
           SizedBox(
             height: 10,
           ),
@@ -205,6 +205,8 @@ class _DonationViewState extends State<DonationView> {
           ),
           GestureDetector(
             onTap: () async {
+              print("====>>>>> " + widget.requestModel.donationInstructionLink);
+
               if (await canLaunch(
                   widget.requestModel.donationInstructionLink)) {
                 await launch(
@@ -303,17 +305,15 @@ class _DonationViewState extends State<DonationView> {
                   itemCount: widget
                       .requestModel.goodsDonationDetails.requiredGoods.length,
                   itemBuilder: (context, index) {
+                    print("===> " + snapshot.data.toString());
+
                     return Row(
                       children: [
                         Checkbox(
-                          value: snapshot.data?.containsKey(widget
-                                  .requestModel
-                                  .goodsDonationDetails
-                                  .requiredGoods[keys[index]]) ??
-                              false,
+                          value:
+                              snapshot.data?.containsKey(keys[index]) ?? false,
                           checkColor: _checkColor,
                           onChanged: (bool value) {
-                            print(value);
                             donationBloc.addAddRemove(
                               selectedValue: widget
                                   .requestModel
