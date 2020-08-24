@@ -549,7 +549,31 @@ class _LoginPageState extends State<LoginPage> {
           height: 20,
         ),
         socialMediaLogin,
+        FlavorConfig.appFlavor == Flavor.SEVA_DEV
+            ? directDevLogin
+            : Container(),
       ],
+    );
+  }
+
+  List<String> emails = ['user15ec27@gmail.com', 'burhan@uipep.com'];
+  Widget get directDevLogin {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: Column(
+        children: emails
+            .map(
+              (e) => FlatButton(
+                child: Text(e),
+                onPressed: () {
+                  emailId = e;
+                  password = '123456';
+                  signInWithEmailAndPassword(validate: false);
+                },
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 
@@ -750,10 +774,10 @@ class _LoginPageState extends State<LoginPage> {
     _processLogin(user);
   }
 
-  void signInWithEmailAndPassword() async {
-    if (!_formKey.currentState.validate()) return;
-    FocusScope.of(context).requestFocus(FocusNode());
-    _formKey.currentState.save();
+  void signInWithEmailAndPassword({validate = true}) async {
+    if (!_formKey.currentState.validate() && validate) return;
+    FocusScope.of(context).unfocus();
+    if (validate) _formKey.currentState.save();
     Auth auth = AuthProvider.of(context).auth;
     UserModel user;
     isLoading = true;
