@@ -149,7 +149,7 @@ class RequestDonationDisputeBloc {
           ? donationModel.timebankId
           : donationModel.donorDetails.email,
       donationId: donationId,
-      isTimebankNotification: operationMode == OperatingMode.USER &&
+      isTimebankNotification: operationMode == OperatingMode.CREATOR &&
           donationModel.donatedToTimebank,
       notificationId: notificationId,
     );

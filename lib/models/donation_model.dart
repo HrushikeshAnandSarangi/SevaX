@@ -1,23 +1,24 @@
 import 'package:sevaexchange/models/request_model.dart';
 
 class DonationModel {
-  DonationModel(
-      {this.communityId,
-      this.donorSevaUserId,
-      this.donatedTo,
-      this.donatedToTimebank,
-      this.donationInBetween,
-      this.donationType,
-      this.id,
-      this.requestId,
-      this.requestTitle,
-      this.timebankId,
-      this.timestamp,
-      this.cashDetails,
-      this.goodsDetails,
-      this.donationStatus,
-      this.notificationId,
-      this.donorDetails});
+  DonationModel({
+    this.communityId,
+    this.donorSevaUserId,
+    this.donatedTo,
+    this.donatedToTimebank,
+    this.donationInBetween,
+    this.donationType,
+    this.id,
+    this.requestId,
+    this.requestTitle,
+    this.timebankId,
+    this.timestamp,
+    this.cashDetails,
+    this.goodsDetails,
+    this.donationStatus,
+    this.notificationId,
+    this.donorDetails,
+  });
 
   String communityId;
   String donorSevaUserId;

@@ -31,7 +31,7 @@ class DonationsRepository {
     @required RequestType requestType,
     @required OperatingMode operatoreMode,
   }) async {
-    print("L0===============================");
+    log("L0===============================");
 
     try {
       var donationModel =
@@ -66,7 +66,7 @@ class DonationsRepository {
         );
       }
 
-      print("L3=============================== " + associatedId);
+      log("L3=============================== " + associatedId);
 
       var notificationReference = Firestore.instance
           .collection(
