@@ -224,7 +224,7 @@ class RequestsState extends State<RequestsModule> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
                   child: Text(
-                    "Would you like to link your calendar with Sevax before proceeding ?",
+                    "You can sync the calendar for SevaX events with your Google, Outlook or iCal calendars. Select the appropriate icon to sync the calendar.",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
