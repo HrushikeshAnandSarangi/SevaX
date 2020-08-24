@@ -78,8 +78,11 @@ class RequestDonationDisputeBloc {
   }) {
     var notificationId = Uuid().generateV4();
     var updatedModel = model;
-    updatedModel.cashDetails.pledgedAmount = updatedAmount.toInt();
-    updatedModel.goodsDetails.donatedGoods = customSelection;
+    if (model.donationType == RequestType.CASH)
+      updatedModel.cashDetails.pledgedAmount = updatedAmount.toInt();
+    else if (model.donationType == RequestType.GOODS)
+      updatedModel.goodsDetails.donatedGoods = customSelection;
+
     updatedModel.notificationId = notificationId;
 
     return NotificationsModel(
@@ -103,19 +106,21 @@ class RequestDonationDisputeBloc {
   }
 
   Future<bool> disputeGoods({
-    Map<String, dynamic> customSelection,
+    Map<dynamic, dynamic> customSelection,
     OperatingMode operationMode,
     String donationId,
     String notificationId,
     DonationModel donationModel,
     RequestMode requestMode,
-    Map<String, String> donatedGoods,
+    Map<dynamic, dynamic> donatedGoods,
   }) async {
     var status = listEquals(
       List.from(donatedGoods.keys),
       List.from(_goodsRecieved.value.keys),
     );
     await _donationsRepository.acknowledgeDonation(
+      operatoreMode: operationMode,
+      // requestType: ,
       donationStatus:
           status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED,
       acknowledgementNotification: getAcknowlegementNotification(

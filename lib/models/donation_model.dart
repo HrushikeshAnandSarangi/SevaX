@@ -136,13 +136,18 @@ class GoodsDetails {
   String comments;
   Map<dynamic, dynamic> donatedGoods;
 
-  factory GoodsDetails.fromMap(Map<dynamic, dynamic> json) => GoodsDetails(
+  factory GoodsDetails.fromMap(Map<dynamic, dynamic> json) {
+    print("===============" + json.toString());
+
+    return GoodsDetails(
       comments: json["comments"] == null ? null : json["comments"],
       donatedGoods: json.containsKey('donatedGoods')
           ? Map<dynamic, dynamic>.from(json["donatedGoods"] ?? {})
-          : {});
+          : {},
+    );
+  }
 
-  Map<String, dynamic> toMap() => {
+  Map<dynamic, dynamic> toMap() => {
         "comments": comments == null ? null : comments,
         "donatedGoods": donatedGoods == null ? null : donatedGoods
       };
