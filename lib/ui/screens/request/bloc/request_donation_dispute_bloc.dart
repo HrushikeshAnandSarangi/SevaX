@@ -119,8 +119,8 @@ class RequestDonationDisputeBloc {
       List.from(_goodsRecieved.value.keys),
     );
     await _donationsRepository.acknowledgeDonation(
+      requestType: donationModel.donationType,
       operatoreMode: operationMode,
-      // requestType: ,
       donationStatus:
           status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED,
       acknowledgementNotification: getAcknowlegementNotification(

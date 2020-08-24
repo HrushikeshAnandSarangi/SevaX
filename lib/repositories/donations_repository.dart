@@ -65,9 +65,9 @@ class DonationsRepository {
       print("L2");
 
       var notificationReference = Firestore.instance
-          .collection(isTimebankNotification
-              ? DBCollection.timebank
-              : DBCollection.users)
+          .collection(
+            isTimebankNotification ? DBCollection.timebank : DBCollection.users,
+          )
           .document(associatedId)
           .collection(DBCollection.notifications);
       batch.updateData(
@@ -134,7 +134,7 @@ class DonationsRepository {
             (onError) => print("FAILURE " + onError),
           );
     } catch (e) {
-      print(e);
+      print("===================================" + e.toString());
     }
   }
 
