@@ -338,7 +338,7 @@ class PersonalNotificationsRedcerForDonations {
     final holder = DonationModel.fromMap(notificationsModel.data);
 
     return NotificationCard(
-      entityName: "Your pledged was modified by donor",
+      entityName: "Your pledged was modified by donorr",
       title: "Please click to see the details",
       subTitle: "Your pledged was modifiedby donor \n $timestampVal",
       onDismissed: onDismissed,
