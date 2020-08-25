@@ -370,6 +370,7 @@ class _DonationViewState extends State<DonationView> {
                       if (value) {
                         hideProgress();
                         getSuccessDialog().then(
+                          //to pop the screen
                           (_) => Navigator.of(context).pop(),
                         );
                       }
