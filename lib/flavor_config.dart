@@ -48,7 +48,7 @@ class FlavorConfig {
         return FlavorValues(
           bundleId: 'com.sevaexchange.dev',
           packageName: 'com.sevaexchange.dev',
-          elasticSearchBaseURL: "http://35.227.68.255",
+          elasticSearchBaseURL: "https://dev-es.sevaexchange.com",
           stripePublishableKey: "pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832",
           androidPayMode: "test",
           cloudFunctionBaseURL:
@@ -125,7 +125,7 @@ class FlavorConfig {
         return FlavorValues(
           bundleId: 'com.sevaexchange.app',
           packageName: 'com.sevaexchange.sevax',
-          elasticSearchBaseURL: "http://35.227.18.55",
+          elasticSearchBaseURL: "https://es.sevaexchange.com",
           cloudFunctionBaseURL:
               "https://us-central1-sevaxproject4sevax.cloudfunctions.net",
           androidPayMode: "production",
