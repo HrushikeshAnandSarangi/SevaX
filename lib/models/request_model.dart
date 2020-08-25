@@ -720,7 +720,8 @@ class GoodsDonationDetails {
     }
 
     if (map.containsKey("requiredGoods")) {
-      Map<String, dynamic> temp = Map<String, dynamic>.from(map["requiredGoods"]);
+      Map<String, dynamic> temp =
+          Map<String, dynamic>.from(map["requiredGoods"]);
       this.requiredGoods = temp;
     }
   }
