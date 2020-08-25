@@ -190,7 +190,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   timestampComponent,
                   addressComponent,
                   hostNameComponent,
-                  SizedBox(height: 20),
                   membersEngagedComponent,
                   SizedBox(height: 10),
                   engagedMembersPicturesScroll,
@@ -558,13 +557,21 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get membersEngagedComponent {
-    return Text(
-      '${widget.requestItem.approvedUsers.length} / ${widget.requestItem.numberOfApprovals} Accepted',
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
-      ),
-    );
+    if (widget.requestItem.requestType == RequestType.TIME)
+      return Column(
+        children: [
+          SizedBox(height: 20),
+          Text(
+            '${widget.requestItem.approvedUsers.length} / ${widget.requestItem.numberOfApprovals} Accepted',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      );
+
+    return Offstage();
   }
 
   Widget get hostNameComponent {
@@ -869,9 +876,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     ],
                   ),
                   onPressed: () {
-                    if(SevaCore.of(context).loggedInUser.calendarId==null) {
+                    if (SevaCore.of(context).loggedInUser.calendarId == null) {
                       _settingModalBottomSheet(context);
-                    }else{
+                    } else {
                       applyAction();
                     }
                   },
@@ -925,7 +932,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(6,6,6,6),
+                  padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -934,53 +941,55 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                           child: CircleAvatar(
                             backgroundColor: Colors.white,
                             radius: 40,
-                            child: Image.asset(
-                                "lib/assets/images/googlecal.png"),
+                            child:
+                                Image.asset("lib/assets/images/googlecal.png"),
                           ),
                           onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            String redirectUrl =
+                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }
                             applyAction();
                             Navigator.of(bc).pop();
-                          }
-                      ),
+                          }),
                       GestureDetector(
                           child: CircleAvatar(
                             backgroundColor: Colors.white,
                             radius: 40,
-                            child: Image.asset(
-                                "lib/assets/images/outlookcal.png"),
+                            child:
+                                Image.asset("lib/assets/images/outlookcal.png"),
                           ),
                           onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            String redirectUrl =
+                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }
                             applyAction();
                             Navigator.of(bc).pop();
-                          }
-                      ),
+                          }),
                       GestureDetector(
                           child: CircleAvatar(
                             backgroundColor: Colors.white,
                             radius: 40,
-                            child: Image.asset(
-                                "lib/assets/images/ical.png"),
+                            child: Image.asset("lib/assets/images/ical.png"),
                           ),
                           onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            String redirectUrl =
+                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }
                             applyAction();
                             Navigator.of(bc).pop();
-                          }
-                      )
+                          })
                     ],
                   ),
                 ),
@@ -988,12 +997,15 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   children: <Widget>[
                     Spacer(),
                     FlatButton(
-                        child: Text(S.of(context).do_it_later, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
+                        child: Text(
+                          S.of(context).do_it_later,
+                          style: TextStyle(
+                              color: FlavorConfig.values.theme.primaryColor),
+                        ),
                         onPressed: () async {
                           applyAction();
                           Navigator.of(bc).pop();
-                        }
-                    ),
+                        }),
                   ],
                 )
               ],
@@ -1005,26 +1017,24 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   void _showAlreadyApprovedMessage() {
     // flutter defined function
     showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: Text(S.of(context).already_approved),
-          content: Text(S.of(context).withdraw_request_failure),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            FlatButton(
-              child: Text(
-                  S.of(context).close),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      });
-
-}
+        context: context,
+        builder: (BuildContext context) {
+          // return object of type Dialog
+          return AlertDialog(
+            title: Text(S.of(context).already_approved),
+            content: Text(S.of(context).withdraw_request_failure),
+            actions: <Widget>[
+              // usually buttons at the bottom of the dialog
+              FlatButton(
+                child: Text(S.of(context).close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
 
   Widget get cashDonationDetails {
     return Column(
@@ -1059,7 +1069,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               semanticsLabel: '20%',
               backgroundColor: Colors.grey[200],
               valueColor:
-              AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                  AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
               minHeight: 10,
               value: (widget.requestItem.cashModel.amountRaised /
                   widget.requestItem.cashModel.targetAmount),
