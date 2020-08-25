@@ -184,9 +184,21 @@ class RequestCardWidget extends StatelessWidget {
                           ? null
                           : () async {
                               await timeBankBloc.updateInvitedUsersForRequest(
-                                  requestModel.id, userModel.sevaUserID);
+                                requestModel.id,
+                                userModel.sevaUserID,
+                              );
 
-                              //showProgressDialog(context);
+                              switch (requestModel.requestType) {
+                                case RequestType.CASH:
+                                  break;
+
+                                case RequestType.TIME:
+                                  break;
+
+                                case RequestType.GOODS:
+                                  break;
+                              }
+
                               sendNotification(
                                 requestModel: requestModel,
                                 userModel: userModel,
@@ -218,21 +230,20 @@ class RequestCardWidget extends StatelessWidget {
     TimebankModel timebankModel,
   }) async {
     RequestInvitationModel requestInvitationModel = RequestInvitationModel(
-        timebankImage: timebankModel.photoUrl,
-        timebankName: timebankModel.name,
-        requestDesc: requestModel.description,
-        requestId: requestModel.id,
-        requestTitle: requestModel.title);
+      requestModel: requestModel,
+      timebankModel: timebankModel,
+    );
 
     NotificationsModel notification = NotificationsModel(
-        id: utils.Utils.getUuid(),
-        timebankId: FlavorConfig.values.timebankId,
-        data: requestInvitationModel.toMap(),
-        isRead: false,
-        type: NotificationType.RequestInvite,
-        communityId: currentCommunity,
-        senderUserId: sevaUserID,
-        targetUserId: userModel.sevaUserID);
+      id: utils.Utils.getUuid(),
+      timebankId: FlavorConfig.values.timebankId,
+      data: requestInvitationModel.toMap(),
+      isRead: false,
+      type: NotificationType.RequestInvite,
+      communityId: currentCommunity,
+      senderUserId: sevaUserID,
+      targetUserId: userModel.sevaUserID,
+    );
 
     await Firestore.instance
         .collection('users')

@@ -121,12 +121,9 @@ class RequestDonationDisputeBloc {
     var x = List.from(donatedGoods.keys);
     var y = List.from(_goodsRecieved.value.keys);
 
-    print("donatedGoods ---> " + x.toString());
-    print("_goodsRecieved ---> " + y.toString());
     x.sort();
     y.sort();
     var status = listEquals(x, y);
-    log('the status is $status');
 
     await _donationsRepository.acknowledgeDonation(
       requestType: donationModel.donationType,

@@ -711,7 +711,6 @@ class GoodsDonationDetails {
   }
 
   GoodsDonationDetails.fromMap(Map<dynamic, dynamic> map) {
-    print(map.toString() + "<<<<<<<<<<<<<<<");
     if (map.containsKey('donors')) {
       this.donors = List.castFrom(map['donors']);
     }
