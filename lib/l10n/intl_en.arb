@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-08-25T07:36:54+00:00",
+    "@@last_modified": "2020-08-25T15:16:22+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -880,5 +880,8 @@
     "validation_error_min_donation_count": "Please enter the number of min donation needed",
     "validation_error_min_donation_count_negative": "Please enter the number of min donation needed",
     "validation_error_min_donation_count_zero": "Please enter the number of min donation needed",
-    "request_description_hint_cash": "Ex: Specify the cause of fund raising and any #hashtags"
+    "request_description_hint_cash": "Ex: Specify the cause of fund raising and any #hashtags",
+    "demotion_from_admin_to_member": "Demotion from admin to member",
+    "promotion_to_admin_from_member": "Promotion to admin from member",
+    "feedback_one_to_many_offer": "Feedback for One-to-many offer"
 }

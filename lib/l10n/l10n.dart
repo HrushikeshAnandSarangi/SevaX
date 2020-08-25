@@ -4436,6 +4436,21 @@ class S {
         'Ex: Specify the cause of fund raising and any #hashtags',
         name: 'request_description_hint_cash',
       );
+
+  String get demotion_from_admin_to_member => Intl.message(
+        'Demotion from admin to member',
+        name: 'demotion_from_admin_to_member',
+      );
+
+  String get promotion_to_admin_from_member => Intl.message(
+        'Promotion to admin from member',
+        name: 'promotion_to_admin_from_member',
+      );
+
+  String get feedback_one_to_many_offer => Intl.message(
+        'Feedback for One-to-many offer',
+        name: 'feedback_one_to_many_offer',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

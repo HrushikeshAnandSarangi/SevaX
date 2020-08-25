@@ -239,7 +239,9 @@ class _DonationViewState extends State<DonationView> {
                       .then((value) {
                     if (value) {
                       hideProgress();
-                      getSuccessDialog();
+                      getSuccessDialog().then(
+                        (_) => Navigator.of(context).pop(),
+                      );
                     }
                   });
                 },
@@ -367,7 +369,9 @@ class _DonationViewState extends State<DonationView> {
                         .then((value) {
                       if (value) {
                         hideProgress();
-                        getSuccessDialog();
+                        getSuccessDialog().then(
+                          (_) => Navigator.of(context).pop(),
+                        );
                       }
                     });
                   }),
@@ -424,8 +428,8 @@ class _DonationViewState extends State<DonationView> {
     fontSize: 13,
     color: Colors.grey,
   );
-  void getSuccessDialog() {
-    showDialog(
+  Future<bool> getSuccessDialog() async {
+    await showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
@@ -445,6 +449,7 @@ class _DonationViewState extends State<DonationView> {
         );
       },
     );
+    return true;
   }
 
   @override
