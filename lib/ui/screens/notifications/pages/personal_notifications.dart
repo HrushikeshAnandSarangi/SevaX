@@ -33,6 +33,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/request_complete_w
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -44,6 +45,7 @@ import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/group_join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../../../../flavor_config.dart';
 
@@ -100,7 +102,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   title: "Offer Updated",
                   subTitle:
-                  "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification}"
+                  "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} \n ${getNotificationTimestamp(notification.timestamp)}"
                       .replaceFirst('***eventName', eventData.eventName)
                       .replaceFirst(
                       '***eventDate',
@@ -118,7 +120,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   title: "Request Updated",
                   subTitle:
-                      "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification}"
+                      "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} \n ${getNotificationTimestamp(notification.timestamp)}"
                           .replaceFirst('***eventName', eventData.eventName)
                           .replaceFirst(
                             '***eventDate',
@@ -192,7 +194,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   photoUrl: userAddedModel.timebankImage,
                   title: S.of(context).notification_timebank_join,
                   subTitle:
-                      '${userAddedModel.adminName.toLowerCase()} ${S.of(context).notifications_added_you} ${userAddedModel.timebankName} ${S.of(context).timebank}',
+                      '${userAddedModel.adminName.toLowerCase()} ${S.of(context).notifications_added_you} ${userAddedModel.timebankName} ${S.of(context).timebank} \n ${getNotificationTimestamp(notification.timestamp)}',
                 );
                 break;
 
@@ -205,7 +207,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   title: '${S.of(context).notifications_demoted_title}',
                   subTitle:
-                      '$associatedName ${S.of(context).notifications_demoted_subtitle_phrase} ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle}',
+                      '$associatedName ${S.of(context).notifications_demoted_subtitle_phrase} ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle} \n ${getNotificationTimestamp(notification.timestamp)}',
                   entityName: 'DEMOTED',
                   onDismissed: () {
                     // Dismiss notification
@@ -224,7 +226,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   title: '${S.of(context).notifications_promoted_title}',
                   subTitle:
-                      '$associatedName ${S.of(context).notifications_promoted_subtitle_phrase} ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle}',
+                      '$associatedName ${S.of(context).notifications_promoted_subtitle_phrase} ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle} \n ${getNotificationTimestamp(notification.timestamp)}',
                   entityName: 'PROMOTED',
                   onDismissed: () {
                     // Dismiss notification
@@ -250,7 +252,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   onPressed: null,
                   photoUrl: model.photoUrl,
                   subTitle:
-                      '${S.of(context).notifications_request_rejected_by} ${model.fullName}',
+                      '${S.of(context).notifications_request_rejected_by} ${model.fullName} \n ${getNotificationTimestamp(notification.timestamp)}',
                 );
 
                 break;
@@ -292,7 +294,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                             },
                             photoUrl: user.photoURL,
                             subTitle:
-                                '${user.fullname.toLowerCase()} ${S.of(context).notifications_requested_join} ${model.timebankTitle}, ${S.of(context).notifications_tap_to_view}',
+                                '${user.fullname.toLowerCase()} ${S.of(context).notifications_requested_join} ${model.timebankTitle}, ${S.of(context).notifications_tap_to_view} \n ${getNotificationTimestamp(notification.timestamp)}',
                           )
                         : Container();
                   },
@@ -338,7 +340,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   onPressed: null,
                   photoUrl: model.photoUrl,
                   subTitle:
-                      '${model.fullName} ${S.of(context).notifications_approved_for}  ${transactionModel.credits} ${S.of(context).hour(2)}',
+                      '${model.fullName} ${S.of(context).notifications_approved_for}  ${transactionModel.credits} ${S.of(context).hour(2)} \n ${getNotificationTimestamp(notification.timestamp)}',
                   title: model.title,
                 );
                 break;
@@ -357,7 +359,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   onPressed: null,
                   photoUrl: model.photoUrl,
                   subTitle:
-                      '${S.of(context).notifications_task_rejected_by} ${model.fullName}',
+                      '${S.of(context).notifications_task_rejected_by} ${model.fullName} \n ${getNotificationTimestamp(notification.timestamp)}',
                 );
                 break;
 
@@ -388,7 +390,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       photoUrl: user.photoURL,
                       title: S.of(context).notifications_credited,
                       subTitle:
-                          ' ${S.of(context).congrats}! ${model.credits} ${S.of(context).notifications_credited_to}.',
+                          ' ${S.of(context).congrats}! ${model.credits} ${S.of(context).notifications_credited_to}. \n ${getNotificationTimestamp(notification.timestamp)}',
                     );
                   },
                 );
@@ -420,7 +422,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       photoUrl: user.photoURL,
                       title: S.of(context).notifications_debited,
                       subTitle:
-                          "${model.credits} ${S.of(context).notifications_debited_to}",
+                          "${model.credits} ${S.of(context).notifications_debited_to} \n ${getNotificationTimestamp(notification.timestamp)}",
                     );
                   },
                 );
@@ -461,7 +463,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       photoUrl: user.photoURL,
                       title: S.of(context).notifications_offer_accepted,
                       subTitle:
-                          '${user.fullname.toLowerCase()} ${S.of(context).notifications_shown_interest}',
+                          '${user.fullname.toLowerCase()} ${S.of(context).notifications_shown_interest} \n ${getNotificationTimestamp(notification.timestamp)}',
                     );
                   },
                 );
@@ -500,7 +502,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   },
                   photoUrl: requestInvitationModel.timebankImage,
                   subTitle:
-                      '${requestInvitationModel.timebankName.toLowerCase()} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestTitle}, ${S.of(context).notifications_tap_to_view}',
+                      '${requestInvitationModel.timebankName.toLowerCase()} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestTitle}, ${S.of(context).notifications_tap_to_view} \n ${getNotificationTimestamp(notification.timestamp)}',
                   title: S.of(context).notifications_join_request,
                 );
                 break;
@@ -533,7 +535,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       S.of(context).donated +
                       " " +
                       donationModel.donationType.toString() +
-                      S.of(context).tap_to_view_details,
+                      S.of(context).tap_to_view_details+"  \n ${getNotificationTimestamp(notification.timestamp)}",
                   title: S.of(context).donation_acknowledge,
                 );
 
@@ -565,7 +567,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   },
                   photoUrl: groupInviteUserModel.timebankImage,
                   subTitle:
-                      '${groupInviteUserModel.adminName.toLowerCase()} ${S.of(context).notifications_invited_to_join} ${groupInviteUserModel.timebankName}, ${S.of(context).notifications_tap_to_view}',
+                      '${groupInviteUserModel.adminName.toLowerCase()} ${S.of(context).notifications_invited_to_join} ${groupInviteUserModel.timebankName}, ${S.of(context).notifications_tap_to_view} \n ${getNotificationTimestamp(notification.timestamp)}',
                   title: "${S.of(context).notifications_group_join_invite}",
                 );
                 break;
@@ -584,7 +586,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 data.classDetails.numberOfPreperationHours)
                             .toString(),
                       )
-                      .replaceFirst('*class', data.classDetails.classTitle),
+                      .replaceFirst('*class', data.classDetails.classTitle) +" \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
                 break;
@@ -600,7 +602,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         '*name',
                         data.participantDetails.fullname,
                       )
-                      .replaceFirst('*class', data.classDetails.classTitle),
+                      .replaceFirst('*class', data.classDetails.classTitle)+" \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
                 break;
@@ -619,7 +621,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                                 data.classDetails.numberOfPreperationHours)
                             .toString(),
                       )
-                      .replaceFirst('*class', data.classDetails.classTitle),
+                      .replaceFirst('*class', data.classDetails.classTitle)+" \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
                 break;
@@ -636,7 +638,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         '*n',
                         data.classDetails.numberOfClassHours.toString(),
                       )
-                      .replaceFirst('*class', data.classDetails.classTitle),
+                      .replaceFirst('*class', data.classDetails.classTitle)+" \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
                 break;
@@ -653,7 +655,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                         '*class',
                         data.classDetails.classTitle,
                       )
-                      .replaceFirst('*class', data.classDetails.classTitle),
+                      .replaceFirst('*class', data.classDetails.classTitle)+" \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
                 break;
@@ -669,7 +671,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       .replaceFirst(
                     '*class',
                     data.classDetails.classTitle,
-                  ),
+                  )+" \n ${getNotificationTimestamp(notification.timestamp)}",
                   onPressed: () => _handleFeedBackNotificationAction(
                     context,
                     data,
@@ -697,8 +699,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                           .replaceAll(
                             '***',
                             requestData.entityTitle,
-                          )
-                      : "${requestData.entityTitle} ${S.of(context).notifications_could_not_deleted}",
+                          )+" \n ${getNotificationTimestamp(notification.timestamp)}"
+                      : "${requestData.entityTitle} ${S.of(context).notifications_could_not_deleted}  \n ${getNotificationTimestamp(notification.timestamp)}",
                   onPressed: () => !requestData.requestAccepted
                       ? showDialogForIncompleteTransactions(
                           context,
@@ -715,7 +717,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   photoUrl: null,
                   title: "${S.of(context).notifications_approved_withdrawn_title}",
                   subTitle:
-                      "${body.fullName} ${S.of(context).notifications_approved_withdrawn_subtitle} ${body.requestTite}.",
+                      "${body.fullName} ${S.of(context).notifications_approved_withdrawn_subtitle} ${body.requestTite}.  \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
 
@@ -725,7 +727,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: "",
                   photoUrl: null,
                   title: "${S.of(context).otm_offer_cancelled_title}",
-                  subTitle: "${S.of(context).otm_offer_cancelled_subtitle}",
+                  subTitle: "${S.of(context).otm_offer_cancelled_subtitle} \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
 
@@ -734,7 +736,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: "CR",
                   photoUrl: null,
                   title: "${S.of(context).notifications_credited_msg}",
-                  subTitle: "${S.of(context).notifications_credited_msg}",
+                  subTitle: "${S.of(context).notifications_credited_msg} \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
 
@@ -743,14 +745,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: "CR",
                   photoUrl: null,
                   title: "${S.of(context).notifications_debited_msg}",
-                  subTitle: "${S.of(context).notifications_debited_msg}",
+                  subTitle: "${S.of(context).notifications_debited_msg} \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
 
               case NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY:
               case NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY:
                 return PersonalNotificationsRedcerForDonations
-                    .getWidgetForSuccessfullDonation(onDismissed: onDismissed);
+                    .getWidgetForSuccessfullDonation(onDismissed: onDismissed, timestampVal: getNotificationTimestamp(notification.timestamp));
 
               case NotificationType.CASH_DONATION_MODIFIED_BY_DONOR:
               case NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR:
@@ -758,7 +760,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     .getWidgetForDonationsModifiedByDonor(
                   context: context,
                   onDismissed: onDismissed,
-                  notificationsModel: notification,
+                  notificationsModel: notification, timestampVal: getNotificationTimestamp(notification.timestamp)
                 );
 
               case NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR:
@@ -768,6 +770,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   context: context,
                   onDismissed: onDismissed,
                   notificationsModel: notification,
+                  timestampVal: getNotificationTimestamp(notification.timestamp)
                 );
 
               case NotificationType.CASH_DONATION_ACKNOWLEDGED_BY_DONOR:
@@ -1085,6 +1088,17 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
   @override
   bool get wantKeepAlive => true;
+}
+
+String getNotificationTimestamp(timeStampVal){
+  return timeAgo.format(
+  DateTime
+      .fromMillisecondsSinceEpoch(
+  timeStampVal,
+  ),
+  locale: Locale(AppConfig.prefs
+      .getString('language_code'))
+      .toLanguageTag());
 }
 
 class WithdrawnRequestBody {
