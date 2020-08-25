@@ -4,6 +4,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
+import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -453,8 +454,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
       if (_bloc.recurringDays.length == 0) {
         errorDialog(
             context: context,
-            error: AppLocalizations.of(context)
-                .translate('create_request', 'recurringDays_err'));
+            error: S.of(context).recurringDays_err);
         return;
       }
     }
@@ -475,8 +475,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
       if (_bloc.recurringDays.length == 0) {
         errorDialog(
             context: context,
-            error: AppLocalizations.of(context)
-                .translate('create_request', 'recurringDays_err'));
+            error: S.of(context).recurringDays_err);
         return;
       }
     }

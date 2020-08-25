@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/repeat_availability/recurring_list_data_manager.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
@@ -57,7 +58,7 @@ class _RecurringListingState extends State<RecurringListing> {
       return Scaffold(
           appBar: AppBar(
             title: Text(
-              "Recurring list",
+              "${S.of(context).recurring_list_heading}",
               style: TextStyle(fontSize: 18),
             ),
           ),
@@ -83,7 +84,7 @@ class _RecurringListingState extends State<RecurringListing> {
       return Scaffold(
           appBar: AppBar(
             title: Text(
-              "Recurring list",
+              "${S.of(context).recurring_list_heading}",
               style: TextStyle(fontSize: 18),
             ),
           ),
@@ -397,7 +398,7 @@ class _RecurringListState extends State<RecurringList> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
                   child: Text(
-                    "You can sync the calendar for SevaX events with your Google, Outlook or iCal calendars. Select the appropriate icon to sync the calendar.",
+                    S.of(context).calendars_popup_desc,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -462,7 +463,7 @@ class _RecurringListState extends State<RecurringList> {
                   children: <Widget>[
                     Spacer(),
                     FlatButton(
-                        child: Text("Do it later", style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
+                        child: Text(S.of(context).do_it_later, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
                         onPressed: (){
                           Navigator.of(bc).pop();
                           offerActions(context, model);

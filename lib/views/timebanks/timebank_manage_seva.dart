@@ -312,33 +312,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         );
       },
       child: Text(
-        "Invoice and Reports",
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          color: Colors.red,
-        ),
-      ),
-    );
-  }
-
-  Widget oauthview({BuildContext context}) {
-
-    return GestureDetector(
-      onTap: () async{
-        String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-        String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
-        if (await canLaunch(authorizationUrl.toString())) {
-        await launch(authorizationUrl.toString());
-        }
-//        final linksStream = getLinksStream().listen((Uri uri) async {
-//        if (uri.toString().startsWith(redirectUrl)) {
-//        var responseUrl = uri;
-//        }
-//        });
-      },
-      child: Text(
-        "oauth",
+        "${S.of(context).invoice_and_reports}",
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
@@ -358,111 +332,6 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
       ),
     );
   }
-
-//  viewBillingPage({BuildContext context}) {
-//    return GestureDetector(
-//      onTap: () {
-//        Navigator.of(context).push(
-//          MaterialPageRoute(
-//            builder: (context) => TimeBankBillingAdminView(),
-//          ),
-//        );
-//      },
-//      child: Container(
-//        margin: EdgeInsets.only(top: 20),
-//        child: Text(
-//          'Admin Billing',
-//          style: TextStyle(
-//            fontSize: 14,
-//            fontWeight: FontWeight.bold,
-//            color: Colors.blue,
-//          ),
-//        ),
-//      ),
-//    );
-//  }
-
-//  Widget get bodyWidget {
-//    return IndexedStack(
-//      index: _indextab,
-//      children: <Widget>[
-//        CreateEditCommunityView(
-//          isCreateTimebank: false,
-//          isFromFind: false,
-//          timebankId: widget.timebankModel.id,
-//        ),
-//        // SingleChildScrollView(
-//        //   child: Column(
-//        //     crossAxisAlignment: CrossAxisAlignment.center,
-//        //     children: <Widget>[
-//        //       Padding(
-//        //         padding: EdgeInsets.all(40),
-//        //         child: Image.asset(
-//        //           'lib/assets/images/startup.png',
-//        //           height: 150,
-//        //         ),
-//        //       ),
-//        //       getTile(
-//        //         address: 'lib/assets/images/drawing-tablet.svg',
-//        //         title: 'Unlimited groups',
-//        //         subtitle: 'No limit on groups your team can create',
-//        //       ),
-//        //       getTile(
-//        //         address: 'lib/assets/images/add-user.svg',
-//        //         title: 'Unlimited users',
-//        //         subtitle: 'No limit on users for your timebank',
-//        //       ),
-//        //       getTile(
-//        //         address: 'lib/assets/images/bars.svg',
-//        //         title: 'Pay as you go',
-//        //         subtitle: 'Pay as per total members in your team',
-//        //       ),
-//        //       getTile(
-//        //         address: 'lib/assets/images/megaphone.svg',
-//        //         title: 'Absolute control on public post',
-//        //         subtitle: 'Control on data your team public posts',
-//        //       ),
-//        //       getTile(
-//        //         address: 'lib/assets/images/lightbulb.svg',
-//        //         title: 'Organize your spendings',
-//        //         subtitle: 'Have a holistic view on your spending',
-//        //       ),
-//        //       getTile(
-//        //         address: 'lib/assets/images/levels.svg',
-//        //         title: 'Settings',
-//        //         subtitle: 'Manage your child timebanks',
-//        //       ),
-//        //       getTile(
-//        //         address: 'lib/assets/images/color-palette.svg',
-//        //         title: 'Themes',
-//        //         subtitle: 'Customize your own look',
-//        //       ),
-//        //       Padding(
-//        //         padding: EdgeInsets.only(top: 50, bottom: 50),
-//        //         child: Column(
-//        //           children: <Widget>[
-//        //             Text(
-//        //               '5\$ \/ user \/ month',
-//        //             ),
-//        //             RaisedButton(
-//        //               color: Colors.red,
-//        //               child: Text(
-//        //                 'Upgrade',
-//        //                 style: TextStyle(color: Colors.white),
-//        //               ),
-//        //               onPressed: () async {},
-//        //             ),
-//        //           ],
-//        //         ),
-//        //       )
-//        //     ],
-//        //   ),
-//        // ),
-//        TimeBankBillingAdminView(),
-//        Settings,
-//      ],
-//    );
-//  }
 
   Widget get Settings {
     return Container(
@@ -484,8 +353,6 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
               : Container(),
 
           viewInvoice(context: context),
-//          SizedBox(height: 20),
-//          oauthview(context: context),
           SizedBox(height: 20),
           viewReportedMembers(context: context),
           SizedBox(height: 20),
@@ -494,37 +361,10 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                   SevaCore.of(context).loggedInUser.sevaUserID
               ? deleteTimebank
               : Container(),
-
-          // viewAcceptedOffers(context: context),
-          // manageTimebankCodes(context: context),
-//          billingView(context: context),
         ],
       ),
     );
   }
-
-//  Widget getTile({String address, String title, String subtitle}) {
-//    return ListTile(
-//      leading: SvgPicture.asset(
-//        address,
-//        height: 24,
-//        width: 24,
-//      ),
-//      title: Text(
-//        title,
-//        style: TextStyle(
-//          fontSize: 14,
-//        ),
-//      ),
-//      subtitle: Text(
-//        subtitle,
-//        style: TextStyle(
-//          fontSize: 12,
-//        ),
-//      ),
-//    );
-//  }
-//}
 }
 
 class NotificationSetting {

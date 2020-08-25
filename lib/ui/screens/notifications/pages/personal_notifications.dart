@@ -43,9 +43,6 @@ import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/group_join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-import 'package:sevaexchange/widgets/APi/notifications_api.dart';
-import 'package:sevaexchange/widgets/APi/request_api.dart';
-import 'package:sevaexchange/widgets/APi/user_api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../flavor_config.dart';
@@ -103,7 +100,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   title: "Offer Updated",
                   subTitle:
-                  "${AppLocalizations.of(context).translate('notifications', 'you_signed_up_for')} ***eventName ${AppLocalizations.of(context).translate('notifications', 'on')} ***eventDate. ${AppLocalizations.of(context).translate('notifications', 'owner_changes')}"
+                  "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification}"
                       .replaceFirst('***eventName', eventData.eventName)
                       .replaceFirst(
                       '***eventDate',
@@ -206,9 +203,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 // bool
                 String timebankTitle = notification.data['timebankName'];
                 return NotificationCard(
-                  title: 'You have been demoted from Admin',
+                  title: '${S.of(context).notifications_demoted_title}',
                   subTitle:
-                      '$associatedName has demoted you from being an Admin for the ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle}',
+                      '$associatedName ${S.of(context).notifications_demoted_subtitle_phrase} ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle}',
                   entityName: 'DEMOTED',
                   onDismissed: () {
                     // Dismiss notification
@@ -225,9 +222,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 String timebankTitle = notification.data['timebankName'];
 
                 return NotificationCard(
-                  title: 'You have been promoted to Admin',
+                  title: '${S.of(context).notifications_promoted_title}',
                   subTitle:
-                      '$associatedName has promoted you to be the Admin for the ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle}',
+                      '$associatedName ${S.of(context).notifications_promoted_subtitle_phrase} ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle}',
                   entityName: 'PROMOTED',
                   onDismissed: () {
                     // Dismiss notification
@@ -716,9 +713,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   entityName: body.fullName,
                   photoUrl: null,
-                  title: "Member withdrawn",
+                  title: "${S.of(context).notifications_approved_withdrawn_title}",
                   subTitle:
-                      "${body.fullName} has withdrawn from ${body.requestTite}.",
+                      "${body.fullName} ${S.of(context).notifications_approved_withdrawn_subtitle} ${body.requestTite}.",
                   onDismissed: onDismissed,
                 );
 
@@ -727,8 +724,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   entityName: "",
                   photoUrl: null,
-                  title: "One to many offer Cancelled",
-                  subTitle: "Offer cancelled by Creator",
+                  title: "${S.of(context).otm_offer_cancelled_title}",
+                  subTitle: "${S.of(context).otm_offer_cancelled_subtitle}",
                   onDismissed: onDismissed,
                 );
 
@@ -736,8 +733,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   entityName: "CR",
                   photoUrl: null,
-                  title: "Seva coins has been creited to your account",
-                  subTitle: "Seva coins has been credited to your account",
+                  title: "${S.of(context).notifications_credited_msg}",
+                  subTitle: "${S.of(context).notifications_credited_msg}",
                   onDismissed: onDismissed,
                 );
 
@@ -745,8 +742,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   entityName: "CR",
                   photoUrl: null,
-                  title: "Seva coins has been debited from your account",
-                  subTitle: "Seva coins has been debited from your account",
+                  title: "${S.of(context).notifications_debited_msg}",
+                  subTitle: "${S.of(context).notifications_debited_msg}",
                   onDismissed: onDismissed,
                 );
 
@@ -776,6 +773,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               case NotificationType.CASH_DONATION_ACKNOWLEDGED_BY_DONOR:
               case NotificationType.GOODS_DONATION_ACKNOWLEDGED_BY_DONOR:
                 //NOT SURE WHEATHER TO ADD THIS OR NOT
+                  return Container();
                 break;
 
               default:
@@ -800,7 +798,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
                   child: Text(
-                    "You can sync the calendar for SevaX events with your Google, Outlook or iCal calendars. Select the appropriate icon to sync the calendar.",
+                    S.of(context).calendars_popup_desc,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -898,7 +896,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   children: <Widget>[
                     Spacer(),
                     FlatButton(
-                        child: Text("Do it later", style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
+                        child: Text(S.of(context).do_it_later, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
                         onPressed: () async {
                           Navigator.of(bc).pop();
                           showDialog(

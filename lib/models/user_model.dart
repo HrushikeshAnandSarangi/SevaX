@@ -105,7 +105,7 @@ class UserModel extends DataModel {
         this.cvName
       });
 
-  UserModel.fromMap(Map<String, dynamic> map) {
+  UserModel.fromMap(Map<String, dynamic> map, @required String from) {
     if(map.containsKey('calendarId')){
       this.calendarId = map['calendarId'];
     }

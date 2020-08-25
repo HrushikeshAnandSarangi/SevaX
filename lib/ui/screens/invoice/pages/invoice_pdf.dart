@@ -13,19 +13,7 @@ import 'package:sevaexchange/ui/screens/invoice/pages/invoice_screen.dart';
 class InvoicePdf {
   void invoicePdf(context, InvoiceModel model, CommunityModel communityModel, String date, Map<String, dynamic> myPlan ) async {
     final Document pdf = Document();
-    List<String> monthsArr = [
-      "January",
-      "Febuary",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"
+    List<String> monthsArr = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
     ];
     PdfImage _logo = PdfImage.file(
       pdf.document,

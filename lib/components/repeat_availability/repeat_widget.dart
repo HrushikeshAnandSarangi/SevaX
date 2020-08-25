@@ -176,7 +176,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                         child: InkWell(
                             onTap: _selectOnAfter,
                             child: Text(
-                                "Weekly on ${selectedDays == "" || selectedDays == " " ? "..." : selectedDays}",
+                                "${S.of(context).recuring_weekly_on} ${selectedDays == "" || selectedDays == " " ? "..." : selectedDays}",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: 14,

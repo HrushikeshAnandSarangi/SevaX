@@ -364,7 +364,7 @@ class OfferDetails extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
                   child: Text(
-                    "You can sync the calendar for SevaX events with your Google, Outlook or iCal calendars. Select the appropriate icon to sync the calendar.",
+                    S.of(context).calendars_popup_desc,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -435,7 +435,7 @@ class OfferDetails extends StatelessWidget {
                   children: <Widget>[
                     Spacer(),
                     FlatButton(
-                        child: Text("Do it later", style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
+                        child: Text(S.of(context).do_it_later, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
                         onPressed: (){
                           Navigator.of(bc).pop();
                           offerActions(context, offerModel)

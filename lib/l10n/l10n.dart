@@ -852,7 +852,7 @@ class S {
       );
 
   String get notifications_event_modification => Intl.message(
-        '. The Event Owner has modified this event. Make sure the changes made are right for you and apply again.',
+        'The Event Owner has modified this event. Make sure the changes made are right for you and apply again.',
         name: 'notifications_event_modification',
       );
 
@@ -1527,22 +1527,7 @@ class S {
         'Click to Set Duration',
         name: 'set_duration',
       );
-  String get request_type => Intl.message(
-    'Request type*',
-    name: 'request_type',
-  );
-  String get request_type_time => Intl.message(
-    'Time',
-    name: 'request_type_time'
-  );
-  String get request_type_cash => Intl.message(
-    'Cash',
-    name: 'request_type_cash'
-  );
-  String get request_type_goods => Intl.message(
-    'Goods',
-    name: 'request_type_goods'
-  );
+
   String get request_title => Intl.message(
         'Request title*',
         name: 'request_title',
@@ -1573,96 +1558,10 @@ class S {
         name: 'request_description_hint',
       );
 
-  String get request_description_hint_cash => Intl.message(
-    'Ex: Specify the cause of fund raising and any #hashtags',
-    name: 'request_description_hint_goods',
-  );
-  String get request_description_hint_goods => Intl.message(
-    'Ex: Specify the cause of requesting goods and any #hashtags',
-    name: 'request_description_hint_goods',
-  );
-
   String get number_of_volunteers => Intl.message(
         'No. of volunteers*',
         name: 'number_of_volunteers',
       );
-
-  String get request_target_donation => Intl.message(
-    'Target Donation*',
-    name: 'request_target_donation',
-  );
-
-  String get request_target_donation_hint => Intl.message(
-    'Ex: \$100',
-    name: 'request_target_donation_hint',
-  );
-
-  String get request_min_donation => Intl.message(
-    'Minimum amount per member*',
-    name: 'request_min_donation',
-  );
-  String get request_goods_description => Intl.message(
-      'Select list of goods for donation*',
-      name: 'request_goods_description'
-  );
-  String get request_goods_address => Intl.message(
-      'Which address goods to be received*',
-      name: 'request_goods_address'
-  );
-  String get request_goods_address_hint => Intl.message(
-      'Donors will use the below given address to send the items. Add additional details to the request details specify address only here.',
-      name: 'request_goods_address_hint'
-  );
-  String get request_goods_address_inputhint => Intl.message(
-      'Address Only',
-      name: 'request_goods_address_inputhint'
-  );
-  String get request_payment_description => Intl.message(
-      'Payment Details*',
-      name: 'request_payment_description',
-  );
-  String get request_payment_description_hint => Intl.message(
-      'SevaX doesn\'t process any payment you should have your own address for collection of payments, Plese provide one of the below paypal, zelpay (or) ACH details',
-      name: 'request_payment_description_hint',
-  );
-  String get request_payment_description_inputhint => Intl.message(
-      'Ex: https://www.paypal.com/johndoe',
-      name: 'request_payment_description_inputhint',
-  );
-  String get request_min_donation_hint => Intl.message(
-    'Ex: \$10',
-    name: 'request_min_donation_hint',
-  );
-
-  String get validation_error_target_donation_count => Intl.message(
-    'Please enter the number of target donation needed',
-    name: 'validation_error_target_donation_count',
-  );
-
-  String get validation_error_target_donation_count_negative => Intl.message(
-    'Please enter the number of target donation needed',
-    name: 'validation_error_target_donation_count_negative',
-  );
-
-  String get validation_error_target_donation_count_zero => Intl.message(
-    'Please enter the number of target donation needed',
-    name: 'validation_error_target_donation_count_zero',
-  );
-
-  String get validation_error_min_donation_count => Intl.message(
-    'Please enter the number of min donation needed',
-    name: 'validation_error_min_donation_count',
-  );
-
-  String get validation_error_min_donation_count_negative => Intl.message(
-    'Please enter the number of min donation needed',
-    name: 'validation_error_min_donation_count_negative',
-  );
-
-  String get validation_error_min_donation_count_zero => Intl.message(
-    'Please enter the number of min donation needed',
-    name: 'validation_error_min_donation_count_zero',
-  );
 
   String get validation_error_volunteer_count => Intl.message(
         'Please enter the number of volunteers needed',
@@ -4291,6 +4190,251 @@ class S {
   String get total => Intl.message(
         'Total',
         name: 'total',
+      );
+
+  String get recurringDays_err => Intl.message(
+        'Recurring days cannot be empty',
+        name: 'recurringDays_err',
+      );
+
+  String get calendars_popup_desc => Intl.message(
+        'You can sync the calendar for SevaX events with your Google, Outlook or iCal calendars. Select the appropriate icon to sync the calendar.',
+        name: 'calendars_popup_desc',
+      );
+
+  String get notifications_demoted_title => Intl.message(
+        'You have been demoted from Admin',
+        name: 'notifications_demoted_title',
+      );
+
+  String get notifications_demoted_subtitle_phrase => Intl.message(
+        'has demoted you from being an Admin for the',
+        name: 'notifications_demoted_subtitle_phrase',
+      );
+
+  String get notifications_promoted_title => Intl.message(
+        'You have been promoted to Admin',
+        name: 'notifications_promoted_title',
+      );
+
+  String get notifications_promoted_subtitle_phrase => Intl.message(
+        'has promoted you to be the Admin for the',
+        name: 'notifications_promoted_subtitle_phrase',
+      );
+
+  String get notifications_approved_withdrawn_title => Intl.message(
+        'Member withdrawn',
+        name: 'notifications_approved_withdrawn_title',
+      );
+
+  String get notifications_approved_withdrawn_subtitle => Intl.message(
+        'has withdrawn from',
+        name: 'notifications_approved_withdrawn_subtitle',
+      );
+
+  String get otm_offer_cancelled_title => Intl.message(
+        'One to many offer Cancelled',
+        name: 'otm_offer_cancelled_title',
+      );
+
+  String get otm_offer_cancelled_subtitle => Intl.message(
+        'Offer cancelled by Creator',
+        name: 'otm_offer_cancelled_subtitle',
+      );
+
+  String get notifications_credited_msg => Intl.message(
+        'Seva coins has been credited to your account',
+        name: 'notifications_credited_msg',
+      );
+
+  String get notifications_debited_msg => Intl.message(
+        'Seva coinsMoMonthlyed from your account',
+        name: 'notifications_debited_msg',
+      );
+
+  String get recurring_list_heading => Intl.message(
+        'Recurring list',
+        name: 'recurring_list_heading',
+      );
+
+  String get recuring_weekly_on => Intl.message(
+        'Weekly on',
+        name: 'recuring_weekly_on',
+      );
+
+  String get invoice_and_reports => Intl.message(
+        'Invoice and Reports',
+        name: 'invoice_and_reports',
+      );
+
+  String get invoice_reports_list => Intl.message(
+        'Invoice/Reports List',
+        name: 'invoice_reports_list',
+      );
+
+  String get invoice_note1 => Intl.message(
+        'This invoice is for the billing period of',
+        name: 'invoice_note1',
+      );
+
+  String get invoice_note2 => Intl.message(
+        'Greetings from ***companyname. Here is the invoice for your usage of ***appname services for the period above. Additional information about your individual service charges and billing history is available in the billing section under the Manage tab.',
+        name: 'invoice_note2',
+      );
+
+  String get initial_charges => Intl.message(
+        'Initial Charges',
+        name: 'initial_charges',
+      );
+
+  String get additional_billable_transactions => Intl.message(
+        'Additional Billable Transactions',
+        name: 'additional_billable_transactions',
+      );
+
+  String get discounted_transactions_msg => Intl.message(
+        'Discounted Billable Transactions as per your current plan',
+        name: 'discounted_transactions_msg',
+      );
+
+  String get address_header => Intl.message(
+        'Bill to Address',
+        name: 'address_header',
+      );
+
+  String get account_no => Intl.message(
+        'Account Number',
+        name: 'account_no',
+      );
+
+  String get billing_stmt => Intl.message(
+        'Billing Statement',
+        name: 'billing_stmt',
+      );
+
+  String get billing_stmt_no => Intl.message(
+        'Statement Number',
+        name: 'billing_stmt_no',
+      );
+
+  String get billing_stmt_date => Intl.message(
+        'Statement Date',
+        name: 'billing_stmt_date',
+      );
+
+  String get request_type => Intl.message(
+        'Request type*',
+        name: 'request_type',
+      );
+
+  String get request_type_time => Intl.message(
+        'Time',
+        name: 'request_type_time',
+      );
+
+  String get request_type_cash => Intl.message(
+        'Cash',
+        name: 'request_type_cash',
+      );
+
+  String get request_type_goods => Intl.message(
+        'Goods',
+        name: 'request_type_goods',
+      );
+
+  String get request_description_hint_goods => Intl.message(
+        'Ex: Specify the cause of requesting goods and any #hashtags',
+        name: 'request_description_hint_goods',
+      );
+
+  String get request_target_donation => Intl.message(
+        'Target Donation*',
+        name: 'request_target_donation',
+      );
+
+  String get request_target_donation_hint => Intl.message(
+        'Ex: \$100',
+        name: 'request_target_donation_hint',
+      );
+
+  String get request_min_donation => Intl.message(
+        'Minimum amount per member*',
+        name: 'request_min_donation',
+      );
+
+  String get request_goods_description => Intl.message(
+        'Select list of goods for donation*',
+        name: 'request_goods_description',
+      );
+
+  String get request_goods_address => Intl.message(
+        'Which address goods to be received*',
+        name: 'request_goods_address',
+      );
+
+  String get request_goods_address_hint => Intl.message(
+        'Donors will use the below given address to send the items. Add additional details to the request details specify address only here.',
+        name: 'request_goods_address_hint',
+      );
+
+  String get request_goods_address_inputhint => Intl.message(
+        'Address Only',
+        name: 'request_goods_address_inputhint',
+      );
+
+  String get request_payment_description => Intl.message(
+        'Payment Details*',
+        name: 'request_payment_description',
+      );
+
+  String get request_payment_description_hint => Intl.message(
+        'SevaX doesn\'t process any payment you should have your own address for collection of payments, Plese provide one of the below paypal, zelpay (or) ACH details',
+        name: 'request_payment_description_hint',
+      );
+
+  String get request_payment_description_inputhint => Intl.message(
+        'Ex: https://www.paypal.com/johndoe',
+        name: 'request_payment_description_inputhint',
+      );
+
+  String get request_min_donation_hint => Intl.message(
+        'Ex: \$10',
+        name: 'request_min_donation_hint',
+      );
+
+  String get validation_error_target_donation_count => Intl.message(
+        'Please enter the number of target donation needed',
+        name: 'validation_error_target_donation_count',
+      );
+
+  String get validation_error_target_donation_count_negative => Intl.message(
+        'Please enter the number of target donation needed',
+        name: 'validation_error_target_donation_count_negative',
+      );
+
+  String get validation_error_target_donation_count_zero => Intl.message(
+        'Please enter the number of target donation needed',
+        name: 'validation_error_target_donation_count_zero',
+      );
+
+  String get validation_error_min_donation_count => Intl.message(
+        'Please enter the number of min donation needed',
+        name: 'validation_error_min_donation_count',
+      );
+
+  String get validation_error_min_donation_count_negative => Intl.message(
+        'Please enter the number of min donation needed',
+        name: 'validation_error_min_donation_count_negative',
+      );
+
+  String get validation_error_min_donation_count_zero => Intl.message(
+        'Please enter the number of min donation needed',
+        name: 'validation_error_min_donation_count_zero',
+      );
+
+  String get request_description_hint_cash => Intl.message(
+        'Ex: Specify the cause of fund raising and any #hashtags',
+        name: 'request_description_hint_cash',
       );
 }
 

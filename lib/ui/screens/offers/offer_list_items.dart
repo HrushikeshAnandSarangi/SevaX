@@ -211,7 +211,6 @@ class OfferListItems extends StatelessWidget {
         }else{
           offerActions(parentContext, model);
         }
-
       },
     );
   }
@@ -226,7 +225,7 @@ class OfferListItems extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
                   child: Text(
-                    "You can sync the calendar for SevaX events with your Google, Outlook or iCal calendars. Select the appropriate icon to sync the calendar.",
+                    S.of(context).calendars_popup_desc,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -291,7 +290,7 @@ class OfferListItems extends StatelessWidget {
                   children: <Widget>[
                     Spacer(),
                     FlatButton(
-                        child: Text("Do it later", style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
+                        child: Text(S.of(context).do_it_later, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
                         onPressed: (){
                           Navigator.of(bc).pop();
                           offerActions(parentContext, model);
@@ -409,14 +408,8 @@ class NearOfferListItems extends StatelessWidget {
       {List<OfferModel> requestModelList, BuildContext context}) {
     List<OfferModel> filteredList = [];
     requestModelList.forEach((request) {
-      if (!(SevaCore.of(context)
-              .loggedInUser
-              .blockedMembers
-              .contains(request.sevaUserId) ||
-          SevaCore.of(context)
-              .loggedInUser
-              .blockedBy
-              .contains(request.sevaUserId))) {
+      if (!(SevaCore.of(context).loggedInUser.blockedMembers.contains(request.sevaUserId) ||
+          SevaCore.of(context).loggedInUser.blockedBy.contains(request.sevaUserId))) {
         filteredList.add(request);
       }
     });
@@ -437,8 +430,7 @@ class NearOfferListItems extends StatelessWidget {
       offerType: model.offerType,
       startDate: model?.groupOfferDataModel?.startDate,
       selectedAddress: model.selectedAdrress,
-      actionButtonLabel: getButtonLabel(
-          model, SevaCore.of(parentContext).loggedInUser.sevaUserID),
+      actionButtonLabel: getButtonLabel(model, SevaCore.of(parentContext).loggedInUser.sevaUserID),
       buttonColor: isParticipant(parentContext, model)
           ? Colors.grey
           : Theme.of(parentContext).primaryColor,

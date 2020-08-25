@@ -9,6 +9,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
@@ -793,15 +794,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     );
   }
 
-  Future<dynamic> getUserDetails({String memberEmail}) async {
-    var user = await Firestore.instance
-        .collection("users")
-        .document(memberEmail)
-        .get();
-
-    return user.data;
-  }
-
   Future<String> _getLocation(double lat, double lng) async {
     String address = await LocationUtility().getFormattedAddress(lat, lng);
     // log('_getLocation: $address');
@@ -812,7 +804,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     return address;
   }
 
-  bool isApplied = false;
   Widget getBottombar() {
     return Container(
       decoration: BoxDecoration(color: Colors.white54, boxShadow: [
@@ -831,13 +822,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     TextSpan(
                       text: widget.requestItem.sevaUserId ==
                               SevaCore.of(context).loggedInUser.sevaUserID
-                          ? AppLocalizations.of(context)
-                              .translate('requests', 'creator_you')
+                          ? S.of(context).creator_of_request_message
                           : isApplied
-                              ? AppLocalizations.of(context)
-                                  .translate('requests', 'applied_you')
-                              : AppLocalizations.of(context)
-                                  .translate('requests', 'want_part'),
+                              ? S.of(context).applied_for_request
+                              : S.of(context).particpate_in_request_question,
                       style: TextStyle(
                         fontSize: 16,
                         fontFamily: 'Europa',
@@ -868,10 +856,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       Spacer(),
                       Text(
                         isApplied
-                            ? AppLocalizations.of(context)
-                                .translate('requests', 'withdraw_button')
-                            : AppLocalizations.of(context)
-                                .translate('requests', 'apply'),
+                            ? S.of(context).withdraw
+                            : S.of(context).apply,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
@@ -905,16 +891,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('requests', 'protected_alert')),
-          content: Text(AppLocalizations.of(context)
-              .translate('requests', 'projected_alert_dialog')),
+          title: Text(S.of(context).protected_timebank),
+          content: Text(S.of(context).protected_timebank_alert_dialog),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
               textColor: Colors.red,
               child: Text(
-                AppLocalizations.of(context).translate('shared', 'close'),
+                S.of(context).close,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -924,58 +908,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         );
       },
     );
-  }
-
-  void applyAction() async {
-    if (isApplied) {
-      print("Withraw request");
-      _withdrawRequest();
-    } else {
-      print("Accept request");
-      await _acceptRequest();
-      Navigator.pop(context);
-    }
-  }
-
-  void _acceptRequest() async {
-
-    Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
-    acceptorList.add(SevaCore.of(context).loggedInUser.email);
-
-    widget.requestItem.acceptors = acceptorList.toList();
-    await acceptRequest(
-      requestModel: widget.requestItem,
-      senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-      directToMember: !widget.timebankModel.protected,
-    );
-  }
-
-  void _withdrawRequest() async {
-    var assosciatedEmail = SevaCore.of(context).loggedInUser.email;
-    // if (widget.requestItem.approvedUsers
-    //     .contains(SevaCore.of(context).loggedInUser.email)) {
-    //   _showAlreadyApprovedMessage();
-    // } else {}
-
-    Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
-    acceptorList.remove(assosciatedEmail);
-    widget.requestItem.acceptors = acceptorList.toList();
-
-    if (widget.requestItem.approvedUsers.contains(assosciatedEmail)) {
-      Set<String> approvedUsers = Set.from(widget.requestItem.approvedUsers);
-      approvedUsers.remove(SevaCore.of(context).loggedInUser.email);
-      widget.requestItem.approvedUsers = approvedUsers.toList();
-    }
-
-    await acceptRequest(
-      requestModel: widget.requestItem,
-      senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-      isWithdrawal: true,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-      directToMember: !widget.timebankModel.protected,
-    );
-    Navigator.pop(context);
   }
 
   void _settingModalBottomSheet(context) {
@@ -988,7 +920,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
                   child: Text(
-                    "You can sync the calendar for SevaX events with your Google, Outlook or iCal calendars. Select the appropriate icon to sync the calendar.",
+                    S.of(context).calendars_popup_desc,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -1056,7 +988,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   children: <Widget>[
                     Spacer(),
                     FlatButton(
-                        child: Text("Do it later", style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
+                        child: Text(S.of(context).do_it_later, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
                         onPressed: () async {
                           applyAction();
                           Navigator.of(bc).pop();
@@ -1077,22 +1009,23 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)
-              .translate('requests', 'already_approved')),
-          content: Text(AppLocalizations.of(context)
-              .translate('requests', 'cant_withdraw')),
+          title: Text(S.of(context).already_approved),
+          content: Text(S.of(context).withdraw_request_failure),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
               child: Text(
-                  AppLocalizations.of(context).translate('shared', 'close')),
+                  S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
           ],
         );
-      },
+      });
+
+}
+
   Widget get cashDonationDetails {
     return Column(
       children: [
@@ -1126,7 +1059,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               semanticsLabel: '20%',
               backgroundColor: Colors.grey[200],
               valueColor:
-                  AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+              AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
               minHeight: 10,
               value: (widget.requestItem.cashModel.amountRaised /
                   widget.requestItem.cashModel.targetAmount),
