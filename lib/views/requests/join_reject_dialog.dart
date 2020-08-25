@@ -44,7 +44,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               width: 70,
               child: CircleAvatar(
                 backgroundImage: NetworkImage(
-                    widget.requestInvitationModel.timebankImage ??
+                    widget.requestInvitationModel.timebankModel.photoUrl ??
                         defaultUserImageURL),
               ),
             ),
@@ -54,7 +54,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                widget.requestInvitationModel.requestTitle ?? "Anonymous",
+                widget.requestInvitationModel.requestModel.title ?? "Anonymous",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -64,7 +64,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
-                widget.requestInvitationModel.timebankName ??
+                widget.requestInvitationModel.timebankModel.name ??
                     "Timebank name not updated",
               ),
             ),
@@ -79,7 +79,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                widget.requestInvitationModel.requestDesc ??
+                widget.requestInvitationModel.requestModel.description ??
                     "Description not yet updated",
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
@@ -88,7 +88,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             ),
             Center(
               child: Text(
-                  "By accepting, ${widget.requestInvitationModel.requestTitle} will be added to the tasks.",
+                  "By accepting, ${widget.requestInvitationModel.requestModel.title} will be added to the tasks.",
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                   ),
@@ -111,8 +111,6 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                     ),
                     onPressed: () async {
                       //Once approved
-
-                      // showProgressDialog(context, 'Accepting Invitation');
                       approveInvitationForVolunteerRequest(
                           model: widget.requestInvitationModel,
                           notificationId: widget.notificationId,
@@ -181,7 +179,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
     UserModel userModel,
   }) {
     rejectInviteRequest(
-      requestId: model.requestId,
+      requestId: model.requestModel.id,
       rejectedUserId: userModel.sevaUserID,
       notificationId: notificationId,
     );
@@ -195,7 +193,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
     UserModel user,
   }) {
     acceptInviteRequest(
-      requestId: model.requestId,
+      requestId: model.requestModel.id,
       acceptedUserEmail: user.email,
       acceptedUserId: user.sevaUserID,
       notificationId: notificationId,
