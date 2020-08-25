@@ -86,7 +86,6 @@ dependencies:
   logger: ^0.9.1
   pdf: ^1.10.0
   arbify: ^0.0.9
-  recase: ^3.0.0
 
   device_info: ^0.4.2+4
 dev_dependencies:
