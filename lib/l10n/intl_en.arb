@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-08-25T15:16:22+00:00",
+    "@@last_modified": "2020-08-25T16:10:30+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -883,5 +883,12 @@
     "request_description_hint_cash": "Ex: Specify the cause of fund raising and any #hashtags",
     "demotion_from_admin_to_member": "Demotion from admin to member",
     "promotion_to_admin_from_member": "Promotion to admin from member",
-    "feedback_one_to_many_offer": "Feedback for One-to-many offer"
+    "feedback_one_to_many_offer": "Feedback for One-to-many offer",
+    "sure_to_cancel_one_to_many_offer": "Are you sure you would like to cancel this One-to-Many offer",
+    "proceed_with_cancellation": "Click OK to proceed with the cancelation, Otherwise, press cancel",
+    "members_signed_up_advisory": "People have already signed up for the offer. Canceling the offer would result in these users getting back the SevaCredits. Click OK to proceed with the cancelation. Otherwise, press cancel.",
+    "notification_one_to_many_offer_canceled_title": "A One-to-Many offer that you signed up for is canceled",
+    "notification_one_to_many_offer_canceled_subtitle": "You had signed up for ***offerTItle. Due to unforeseen circumstances, ***name had to cancel this offer. You will receive credits for any unused SevaCredits.",
+    "nearby_settings_title": "Distance that I am willing to travel",
+    "nearby_settings_content": "This indicates the distance that the user is willing to travel to complete a Request for a Timebank or participate in a Project"
 }

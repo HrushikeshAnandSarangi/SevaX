@@ -190,20 +190,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   timestampComponent,
                   addressComponent,
                   hostNameComponent,
+                  membersEngagedComponent,
                   SizedBox(height: 10),
-                  widget.requestItem.requestType == RequestType.TIME
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              membersEngagedComponent,
-                              SizedBox(height: 10),
-                              engagedMembersPicturesScroll,
-                            ],
-                          ),
-                        )
-                      : Container(),
+                  engagedMembersPicturesScroll,
                   requestDescriptionComponent,
                 ],
               ),
@@ -568,13 +557,21 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get membersEngagedComponent {
-    return Text(
-      '${widget.requestItem.approvedUsers.length} / ${widget.requestItem.numberOfApprovals} Accepted',
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
-      ),
-    );
+    if (widget.requestItem.requestType == RequestType.TIME)
+      return Column(
+        children: [
+          SizedBox(height: 20),
+          Text(
+            '${widget.requestItem.approvedUsers.length} / ${widget.requestItem.numberOfApprovals} Accepted',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      );
+
+    return Offstage();
   }
 
   Widget get hostNameComponent {
