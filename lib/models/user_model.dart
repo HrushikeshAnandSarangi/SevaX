@@ -62,44 +62,59 @@ class UserModel extends DataModel {
   LocationData currentPosition;
   bool notificationAlerts;
 
-  UserModel(
-      {this.bio,
-      this.email,
-      this.fullname,
-      this.photoURL,
-      this.interests,
-      this.membershipCampaigns,
-      this.membershipTimebanks,
-      this.favoriteByMember,
-      this.favoriteByTimeBank,
-      this.sevaUserID,
-      this.skills,
-      this.currentBalance,
-      this.calendar,
-      this.otp,
-      this.requestStatus,
-      //this.availability,
-      this.currentTimebank,
-      this.timezone,
-      this.tokens,
-      this.reportedUsers,
-      this.blockedMembers,
-      this.acceptedEULA,
-      this.completedIntro,
-      this.pastHires,
-      this.blockedBy,
-      this.currentPosition,
-      this.currentCommunity,
-      this.communities,
-      this.emailSent,
-      this.language,
-      this.notificationAlerts,
-      this.cvUrl,
-      this.cvName});
+  String calendarId;
+  int calendarAccId;
+  String calendarAccessToken;
+
+  UserModel({
+        this.calendarAccessToken,
+        this.calendarId,
+        this.calendarAccId,
+        this.bio,
+        this.email,
+        this.fullname,
+        this.photoURL,
+        this.interests,
+        this.membershipCampaigns,
+        this.membershipTimebanks,
+        this.favoriteByMember,
+        this.favoriteByTimeBank,
+        this.sevaUserID,
+        this.skills,
+        this.currentBalance,
+        this.calendar,
+        this.otp,
+        this.requestStatus,
+        //this.availability,
+        this.currentTimebank,
+        this.timezone,
+        this.tokens,
+        this.reportedUsers,
+        this.blockedMembers,
+        this.acceptedEULA,
+        this.completedIntro,
+        this.pastHires,
+        this.blockedBy,
+        this.currentPosition,
+        this.currentCommunity,
+        this.communities,
+        this.emailSent,
+        this.language,
+        this.notificationAlerts,
+        this.cvUrl,
+        this.cvName
+      });
 
   UserModel.fromMap(Map<String, dynamic> map, @required String from) {
-    log("Called from $from");
-
+    if(map.containsKey('calendarId')){
+      this.calendarId = map['calendarId'];
+    }
+    if(map.containsKey('calendarAccId')){
+      this.calendarAccId = map['calendarAccId'];
+    }
+    if (map.containsKey('calendarAccessToken')) {
+      this.calendarAccessToken = map['calendarAccessToken'];
+    }
     if (map.containsKey('nearbySettings')) {
       Map<dynamic, dynamic> _neabySetting = map['nearbySettings'];
       this.nearBySettings = NearBySettings()
@@ -311,6 +326,15 @@ class UserModel extends DataModel {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> object = {};
 
+    if (this.calendarId != null && this.calendarId.isNotEmpty) {
+      object['calendarId'] = this.calendarId;
+    }
+    if (this.calendarAccessToken != null) {
+      object['calendarAccessToken'] = this.calendarAccessToken;
+    }
+    if (this.calendarAccId != null) {
+      object['calendarAccId'] = this.calendarAccId;
+    }
     if (this.bio != null && this.bio.isNotEmpty) {
       object['bio'] = this.bio;
     }

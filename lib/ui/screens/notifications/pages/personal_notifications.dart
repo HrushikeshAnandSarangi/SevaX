@@ -43,6 +43,9 @@ import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/group_join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../../../flavor_config.dart';
 
 class PersonalNotifications extends StatefulWidget {
   @override
@@ -91,9 +94,27 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
             }
 
             switch (notification.type) {
+              case NotificationType.RecurringOfferUpdated:
+                ReccuringOfferUpdated eventData =
+                ReccuringOfferUpdated.fromMap(notification.data);
+                return NotificationCard(
+                  title: "Offer Updated",
+                  subTitle:
+                  "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification}"
+                      .replaceFirst('***eventName', eventData.eventName)
+                      .replaceFirst(
+                      '***eventDate',
+                      DateTime.fromMillisecondsSinceEpoch(
+                        eventData.eventDate,
+                      ).toString()),
+                  entityName: "Request Updated",
+                  photoUrl: eventData.photoUrl,
+                  onDismissed: onDismissed,
+                );
+                break;
               case NotificationType.RecurringRequestUpdated:
                 ReccuringRequestUpdated eventData =
-                    ReccuringRequestUpdated.fromMap(notification.data);
+                ReccuringRequestUpdated.fromMap(notification.data);
                 return NotificationCard(
                   title: "Request Updated",
                   subTitle:
@@ -182,9 +203,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 // bool
                 String timebankTitle = notification.data['timebankName'];
                 return NotificationCard(
-                  title: 'You have been demoted from Admin',
+                  title: '${S.of(context).notifications_demoted_title}',
                   subTitle:
-                      '$associatedName has demoted you from being an Admin for the ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle}',
+                      '$associatedName ${S.of(context).notifications_demoted_subtitle_phrase} ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle}',
                   entityName: 'DEMOTED',
                   onDismissed: () {
                     // Dismiss notification
@@ -201,9 +222,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 String timebankTitle = notification.data['timebankName'];
 
                 return NotificationCard(
-                  title: 'You have been promoted to Admin',
+                  title: '${S.of(context).notifications_promoted_title}',
                   subTitle:
-                      '$associatedName has promoted you to be the Admin for the ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle}',
+                      '$associatedName ${S.of(context).notifications_promoted_subtitle_phrase} ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle}',
                   entityName: 'PROMOTED',
                   onDismissed: () {
                     // Dismiss notification
@@ -450,7 +471,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 print("notification data ${notification.data}");
                 RequestInvitationModel requestInvitationModel =
                     RequestInvitationModel.fromMap(notification.data);
-
                 return NotificationCard(
                   entityName: requestInvitationModel.timebankName.toLowerCase(),
                   isDissmissible: true,
@@ -461,17 +481,22 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     );
                   },
                   onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return JoinRejectDialogView(
-                          requestInvitationModel: requestInvitationModel,
-                          timeBankId: notification.timebankId,
-                          notificationId: notification.id,
-                          userModel: user,
-                        );
-                      },
-                    );
+                    if(SevaCore.of(context).loggedInUser.calendarId == null) {
+                     _settingModalBottomSheet(context, requestInvitationModel, notification.timebankId, notification.id, user);
+                    }else{
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return JoinRejectDialogView(
+                            requestInvitationModel: requestInvitationModel,
+                            timeBankId: notification.timebankId,
+                            notificationId: notification.id,
+                            userModel: user,
+                          );
+                        },
+                      );
+                    }
+
                   },
                   photoUrl: requestInvitationModel.timebankImage,
                   subTitle:
@@ -688,9 +713,9 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   entityName: body.fullName,
                   photoUrl: null,
-                  title: "Member withdrawn",
+                  title: "${S.of(context).notifications_approved_withdrawn_title}",
                   subTitle:
-                      "${body.fullName} has withdrawn from ${body.requestTite}.",
+                      "${body.fullName} ${S.of(context).notifications_approved_withdrawn_subtitle} ${body.requestTite}.",
                   onDismissed: onDismissed,
                 );
 
@@ -699,8 +724,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   entityName: "",
                   photoUrl: null,
-                  title: "One to many offer Cancelled",
-                  subTitle: "Offer cancelled by Creator",
+                  title: "${S.of(context).otm_offer_cancelled_title}",
+                  subTitle: "${S.of(context).otm_offer_cancelled_subtitle}",
                   onDismissed: onDismissed,
                 );
 
@@ -708,8 +733,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   entityName: "CR",
                   photoUrl: null,
-                  title: "Seva coins has been creited to your account",
-                  subTitle: "Seva coins has been credited to your account",
+                  title: "${S.of(context).notifications_credited_msg}",
+                  subTitle: "${S.of(context).notifications_credited_msg}",
                   onDismissed: onDismissed,
                 );
 
@@ -717,8 +742,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   entityName: "CR",
                   photoUrl: null,
-                  title: "Seva coins has been debited from your account",
-                  subTitle: "Seva coins has been debited from your account",
+                  title: "${S.of(context).notifications_debited_msg}",
+                  subTitle: "${S.of(context).notifications_debited_msg}",
                   onDismissed: onDismissed,
                 );
 
@@ -748,6 +773,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               case NotificationType.CASH_DONATION_ACKNOWLEDGED_BY_DONOR:
               case NotificationType.GOODS_DONATION_ACKNOWLEDGED_BY_DONOR:
                 //NOT SURE WHEATHER TO ADD THIS OR NOT
+                  return Container();
                 break;
 
               default:
@@ -760,6 +786,138 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         );
       },
     );
+  }
+
+  void _settingModalBottomSheet(BuildContext context, RequestInvitationModel requestInvitationModel, String timebankId, String id, UserModel user) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: new Wrap(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+                  child: Text(
+                    S.of(context).calendars_popup_desc,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(6,6,6,6),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/googlecal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return JoinRejectDialogView(
+                                  requestInvitationModel: requestInvitationModel,
+                                  timeBankId: timebankId,
+                                  notificationId: id,
+                                  userModel: user,
+                                );
+                              },
+                            );
+                          }
+                      ),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/outlookcal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return JoinRejectDialogView(
+                                  requestInvitationModel: requestInvitationModel,
+                                  timeBankId: timebankId,
+                                  notificationId: id,
+                                  userModel: user,
+                                );
+                              },
+                            );
+                          }
+                      ),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/ical.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return JoinRejectDialogView(
+                                  requestInvitationModel: requestInvitationModel,
+                                  timeBankId: timebankId,
+                                  notificationId: id,
+                                  userModel: user,
+                                );
+                              },
+                            );
+                          }
+                      )
+                    ],
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Spacer(),
+                    FlatButton(
+                        child: Text(S.of(context).do_it_later, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
+                        onPressed: () async {
+                          Navigator.of(bc).pop();
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return JoinRejectDialogView(
+                                requestInvitationModel: requestInvitationModel,
+                                timeBankId: timebankId,
+                                notificationId: id,
+                                userModel: user,
+                              );
+                            },
+                          );
+                        }
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
   }
 
   void _handleFeedBackNotificationAction(

@@ -92,7 +92,7 @@ class RequestsTabView extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => RecurringRequestList(model: requestModel),
+          builder: (context) => RecurringListing(requestModel: requestModel, offerModel: null,),
         ),
       );
     } else {

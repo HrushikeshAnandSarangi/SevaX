@@ -1441,8 +1441,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   }
 
   Widget getCoordinationList(BuildContext context, TimebankModel model) {
-    if (model.coordinators == null || model.coordinators.isEmpty)
-      return Container();
+    if (model.coordinators == null || model.coordinators.isEmpty) return Container();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

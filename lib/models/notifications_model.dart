@@ -115,6 +115,7 @@ class NotificationsModel extends DataModel {
 enum NotificationType {
   RequestScheduleReminder,
   RecurringRequestUpdated,
+  RecurringOfferUpdated,
   RequestAccept,
   RequestApprove,
   RequestInvite,
@@ -175,8 +176,9 @@ NotificationType stringToNotificationType(String str) {
 }
 
 Map<String, NotificationType> typeMapper = {
-  "RequestScheduleReminder": NotificationType.RequestScheduleReminder,
-  "RecurringRequestUpdated": NotificationType.RecurringRequestUpdated,
+  "RequestScheduleReminder":NotificationType.RequestScheduleReminder,
+  "RecurringRequestUpdated":NotificationType.RecurringRequestUpdated,
+  "RecurringOfferUpdated":NotificationType.RecurringOfferUpdated,
   "RequestAccept": NotificationType.RequestAccept,
   "RequestApprove": NotificationType.RequestApprove,
   "RequestInvite": NotificationType.RequestInvite,
@@ -282,6 +284,31 @@ class ReccuringRequestUpdated {
 
     if (map.containsKey('requestId')) {
       this.requestId = map['requestId'];
+    }
+  }
+}
+
+class ReccuringOfferUpdated {
+  String eventName;
+  int eventDate;
+  String photoUrl;
+  String offerId;
+
+  ReccuringOfferUpdated.fromMap(Map<String, dynamic> map) {
+    if (map.containsKey('eventName')) {
+      this.eventName = map['eventName'];
+    }
+
+    if (map.containsKey('eventDate')) {
+      this.eventDate = map['eventDate'];
+    }
+
+    if (map.containsKey('photoUrl')) {
+      this.photoUrl = map['photoUrl'];
+    }
+
+    if (map.containsKey('requestId')) {
+      this.offerId = map['offerId'];
     }
   }
 }

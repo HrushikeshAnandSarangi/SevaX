@@ -13,26 +13,9 @@ class RepeatWidget extends StatefulWidget {
 
 class RepeatWidgetState extends State<RepeatWidget> {
   List<String> dayNameList = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-  List<String> daysName = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday'
+  List<String> daysName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
   ];
-  List<String> occurenccesList = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '10'
+  List<String> occurenccesList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'
   ];
 
   static List<bool> _selected;
@@ -51,7 +34,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
   bool titleCheck = true;
   static int endType = 0;
   static String after = '1';
-  static String selectedDays = 'Monday';
+  static String selectedDays = '';
 
   double _result = 0.0;
 
@@ -193,7 +176,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
                         child: InkWell(
                             onTap: _selectOnAfter,
                             child: Text(
-                                "Weekly on ${selectedDays == "" || selectedDays == " " ? "..." : selectedDays}",
+                                "${S.of(context).recuring_weekly_on} ${selectedDays == "" || selectedDays == " " ? "..." : selectedDays}",
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: 14,
@@ -403,22 +386,11 @@ class RepeatWidgetState extends State<RepeatWidget> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Container(
-                                margin: EdgeInsets.all(8.0),
-                                child: InkWell(
-                                  onTap: _cancelOnAfter,
-                                  child: Text("${S.of(context).cancel}",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Europa',
-                                        color: Colors.black12,
-                                      )),
-                                )),
-                            Container(
                               margin: EdgeInsets.all(8.0),
                               child: InkWell(
                                 onTap: _selectOnAfter,
-                                child: Text("${S.of(context).done}",
+                                child: Text(
+                                    "${S.of(context).done}",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -427,6 +399,19 @@ class RepeatWidgetState extends State<RepeatWidget> {
                                     )),
                               ),
                             ),
+                            Container(
+                                margin: EdgeInsets.all(8.0),
+                                child: InkWell(
+                                  onTap: _cancelOnAfter,
+                                  child: Text(
+                                      "${S.of(context).cancel}",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Europa',
+                                        color: Colors.black12,
+                                      )),
+                                )),
                           ],
                         ),
                       ),
