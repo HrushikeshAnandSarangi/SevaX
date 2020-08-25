@@ -452,7 +452,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                     RequestInvitationModel.fromMap(notification.data);
 
                 return NotificationCard(
-                  entityName: requestInvitationModel.timebankName.toLowerCase(),
+                  entityName: requestInvitationModel.timebankModel.name,
                   isDissmissible: true,
                   onDismissed: () {
                     NotificationsRepository.readUserNotification(
@@ -460,6 +460,10 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       user.email,
                     );
                   },
+                  photoUrl: requestInvitationModel.timebankModel.photoUrl,
+                  subTitle:
+                      '${requestInvitationModel.timebankModel.name} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel.title}, ${S.of(context).notifications_tap_to_view}',
+                  title: S.of(context).notifications_join_request,
                   onPressed: () {
                     showDialog(
                       context: context,
@@ -473,10 +477,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       },
                     );
                   },
-                  photoUrl: requestInvitationModel.timebankImage,
-                  subTitle:
-                      '${requestInvitationModel.timebankName.toLowerCase()} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestTitle}, ${S.of(context).notifications_tap_to_view}',
-                  title: S.of(context).notifications_join_request,
                 );
                 break;
 
