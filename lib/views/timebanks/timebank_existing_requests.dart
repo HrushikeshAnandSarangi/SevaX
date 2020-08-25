@@ -426,11 +426,9 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
     TimebankModel timebankModel,
   }) async {
     RequestInvitationModel requestInvitationModel = RequestInvitationModel(
-        timebankImage: timebankModel.photoUrl,
-        timebankName: timebankModel.name,
-        requestDesc: requestModel.description,
-        requestId: requestModel.id,
-        requestTitle: requestModel.title);
+      requestModel: requestModel,
+      timebankModel: timebankModel,
+    );
 
     NotificationsModel notification = NotificationsModel(
         id: utils.Utils.getUuid(),

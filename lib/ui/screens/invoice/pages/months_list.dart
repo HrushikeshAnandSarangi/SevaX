@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/invoice_model.dart';
 import 'package:sevaexchange/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -29,19 +30,7 @@ class _MonthsListingState extends State<MonthsListing> {
   String communityId = "";
   CommunityModel communityModel = null;
   String planId = "";
-  List<String> monthsArr = [
-    "January",
-    "Febuary",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
+  List<String> monthsArr = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
   ];
 
   Map<String, dynamic> plans = {
@@ -154,7 +143,7 @@ class _MonthsListingState extends State<MonthsListing> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Text(
-          "Invoice/Reports List",
+          "${S.of(context).invoice_reports_list}",
           style: TextStyle(fontSize: 18),
         ),
         centerTitle: true,

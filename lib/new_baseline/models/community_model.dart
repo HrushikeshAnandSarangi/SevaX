@@ -134,6 +134,8 @@ class CommunityModel extends DataModel {
   GeoFirePoint location;
   bool softDelete;
   bool billMe;
+  String billingStmtNo;
+  String sevaxAccountNo;
 
   Map<String, dynamic> billingQuota;
   Map<String, dynamic> payment;
@@ -168,6 +170,7 @@ class CommunityModel extends DataModel {
     this.created_at = map.containsKey('created_at') ? map['created_at'] : '';
     this.primary_timebank =
         map.containsKey('primary_timebank') ? map['primary_timebank'] : '';
+
     this.timebanks =
         map.containsKey('timebanks') ? List.castFrom(map['timebanks']) : [];
     this.admins = map.containsKey('admins') ? List.castFrom(map['admins']) : [];
@@ -179,6 +182,10 @@ class CommunityModel extends DataModel {
     this.location = getLocation(map);
     this.softDelete = map.containsKey('softDelete') ? map['softDelete'] : false;
     this.billMe = map.containsKey('billMe') ? map['billMe'] : false;
+    this.billingStmtNo =
+    map.containsKey('billingStmtNo') ? map['billingStmtNo'] : '';
+    this.sevaxAccountNo =
+    map.containsKey('sevaxAccountNo') ? map['sevaxAccountNo'] : '';
   }
   GeoFirePoint getLocation(map) {
     GeoFirePoint geoFirePoint;
@@ -202,6 +209,12 @@ class CommunityModel extends DataModel {
   }
 
   void updateValueByKey(String key, dynamic value) {
+    if (key == 'billingStmtNo') {
+      this.id = value;
+    }
+    if (key == 'sevaxAccountNo') {
+      this.id = value;
+    }
     if (key == 'id') {
       this.id = value;
     }
@@ -271,7 +284,12 @@ class CommunityModel extends DataModel {
     if (this.name != null && this.name.isNotEmpty) {
       object['name'] = this.name;
     }
-
+    if (this.billingStmtNo != null || this.billingStmtNo.isNotEmpty) {
+      object['billingStmtNo'] = this.billingStmtNo;
+    }
+    if (this.sevaxAccountNo != null || this.sevaxAccountNo.isNotEmpty) {
+      object['sevaxAccountNo'] = this.sevaxAccountNo;
+    }
     if (this.about != null && this.about.isNotEmpty) {
       object['about'] = this.about;
     }
@@ -338,6 +356,8 @@ class CommunityModel extends DataModel {
   @override
   String toString() {
     return 'CommunityModel{id: $id, '
+        'billingStmtNo: $billingStmtNo, '
+        'sevaxAccountNo: $sevaxAccountNo, '
         'name: $name, '
         'primary_email: $primary_email, '
         'about: $about, '

@@ -28,6 +28,7 @@ import 'package:sevaexchange/views/timebank_modules/request_details_about_page.d
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../core.dart';
 
@@ -57,7 +58,7 @@ class RequestsState extends State<RequestsModule> {
   @override
   void initState() {
     super.initState();
-    print("is commig from settings ${widget.isFromSettings}");
+    print("is coming from settings ${widget.isFromSettings}");
   }
 
   @override
@@ -134,15 +135,22 @@ class RequestsState extends State<RequestsModule> {
                                   }
                                   _showProtectedTimebankMessage();
                                 } else {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => CreateRequest(
-                                        timebankId: timebankId,
-                                        projectId: '',
+                                  if (SevaCore.of(context)
+                                          .loggedInUser
+                                          .calendarId ==
+                                      null) {
+                                    _settingModalBottomSheet(context);
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CreateRequest(
+                                          timebankId: timebankId,
+                                          projectId: '',
+                                        ),
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  }
                                 }
                               },
                             ),
@@ -203,6 +211,135 @@ class RequestsState extends State<RequestsModule> {
       );
     }
     return body;
+  }
+
+  void _settingModalBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: new Wrap(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+                  child: Text(
+                    S.of(context).calendars_popup_desc,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child:
+                                Image.asset("lib/assets/images/googlecal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl =
+                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CreateRequest(
+                                  timebankId: timebankId,
+                                  projectId: '',
+                                ),
+                              ),
+                            );
+                          }),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child:
+                                Image.asset("lib/assets/images/outlookcal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl =
+                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CreateRequest(
+                                  timebankId: timebankId,
+                                  projectId: '',
+                                ),
+                              ),
+                            );
+                          }),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset("lib/assets/images/ical.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl =
+                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CreateRequest(
+                                  timebankId: timebankId,
+                                  projectId: '',
+                                ),
+                              ),
+                            );
+                          })
+                    ],
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Spacer(),
+                    FlatButton(
+                        child: Text(
+                          S.of(context).do_it_later,
+                          style: TextStyle(
+                              color: FlavorConfig.values.theme.primaryColor),
+                        ),
+                        onPressed: () {
+                          Navigator.of(bc).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateRequest(
+                                timebankId: timebankId,
+                                projectId: '',
+                              ),
+                            ),
+                          );
+                        }),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
   }
 
   void _showProtectedTimebankMessage() {
@@ -1188,8 +1325,8 @@ class RequestListItemsState extends State<RequestListItems> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              RecurringRequestList(
-                                                  model: model),
+                                              RecurringListing(
+                                                  requestModel: model, offerModel: null,timebankModel: null,),
                                         ),
                                       );
                                     },
@@ -1309,12 +1446,15 @@ class RequestListItemsState extends State<RequestListItems> {
     if (model.isRecurring) {
       print("is recurring ===== ${model.isRecurring}");
       Navigator.push(
-          widget.parentContext,
-          MaterialPageRoute(
-              builder: (context) => RecurringRequestList(
-                    model: model,
-                    timebankModel: widget.timebankModel,
-                  )));
+        widget.parentContext,
+        MaterialPageRoute(
+          builder: (context) => RecurringListing(
+            requestModel: model,
+            timebankModel: widget.timebankModel,
+            offerModel: null,
+          )
+        )
+      );
     } else if (model.sevaUserId ==
             SevaCore.of(context).loggedInUser.sevaUserID ||
         widget.timebankModel.admins

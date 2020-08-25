@@ -341,6 +341,7 @@ class SearchManager {
   }) async* {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxusers/sevaxuser/_search';
+
     dynamic body = json.encode(
       {
         "query": {
@@ -363,6 +364,9 @@ class SearchManager {
         }
       },
     );
+
+    print(url + "   ==========  " + body);
+
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
     List<UserModel> userList = [];
