@@ -180,8 +180,6 @@ class PersonalNotificationReducerForRequests {
         );
 
       case RequestType.GOODS:
-        print("=======>>>>>> CASH");
-
         return _getNotificationCardForGoodsInvitationRequest(
           notification: notification,
           user: user,
@@ -191,7 +189,6 @@ class PersonalNotificationReducerForRequests {
         break;
 
       case RequestType.CASH:
-        print("=======>>>>>> CASH");
         return _getNotificationCardForCashInvitationRequest(
           notification: notification,
           user: user,
@@ -226,25 +223,20 @@ class PersonalNotificationReducerForRequests {
       },
       photoUrl: requestInvitationModel.timebankModel.photoUrl,
       subTitle:
-          '${requestInvitationModel.timebankModel.name} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel.title}, ${S.of(context).notifications_tap_to_view}',
+          '${requestInvitationModel.timebankModel.name} has requested you to donate goods. Tap to donate',
       title: "Has requested for goods donation",
       onPressed: () {
-        if (SevaCore.of(context).loggedInUser.calendarId == null) {
-          _settingModalBottomSheet(context, requestInvitationModel,
-              notification.timebankId, notification.id, user);
-        } else {
-          showDialog(
-            context: context,
+        Navigator.push(
+          context,
+          MaterialPageRoute(
             builder: (context) {
-              return JoinRejectDialogView(
-                requestInvitationModel: requestInvitationModel,
-                timeBankId: notification.timebankId,
-                notificationId: notification.id,
-                userModel: user,
+              return DonationView(
+                requestModel: requestInvitationModel.requestModel,
+                timabankName: requestInvitationModel.timebankModel.name,
               );
             },
-          );
-        }
+          ),
+        );
       },
     );
   }

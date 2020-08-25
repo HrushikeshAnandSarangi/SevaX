@@ -4436,6 +4436,56 @@ class S {
         'Ex: Specify the cause of fund raising and any #hashtags',
         name: 'request_description_hint_cash',
       );
+
+  String get demotion_from_admin_to_member => Intl.message(
+        'Demotion from admin to member',
+        name: 'demotion_from_admin_to_member',
+      );
+
+  String get promotion_to_admin_from_member => Intl.message(
+        'Promotion to admin from member',
+        name: 'promotion_to_admin_from_member',
+      );
+
+  String get feedback_one_to_many_offer => Intl.message(
+        'Feedback for One-to-many offer',
+        name: 'feedback_one_to_many_offer',
+      );
+
+  String get sure_to_cancel_one_to_many_offer => Intl.message(
+        'Are you sure you would like to cancel this One-to-Many offer',
+        name: 'sure_to_cancel_one_to_many_offer',
+      );
+
+  String get proceed_with_cancellation => Intl.message(
+        'Click OK to proceed with the cancelation, Otherwise, press cancel',
+        name: 'proceed_with_cancellation',
+      );
+
+  String get members_signed_up_advisory => Intl.message(
+        'People have already signed up for the offer. Canceling the offer would result in these users getting back the SevaCredits. Click OK to proceed with the cancelation. Otherwise, press cancel.',
+        name: 'members_signed_up_advisory',
+      );
+
+  String get notification_one_to_many_offer_canceled_title => Intl.message(
+        'A One-to-Many offer that you signed up for is canceled',
+        name: 'notification_one_to_many_offer_canceled_title',
+      );
+
+  String get notification_one_to_many_offer_canceled_subtitle => Intl.message(
+        'You had signed up for ***offerTItle. Due to unforeseen circumstances, ***name had to cancel this offer. You will receive credits for any unused SevaCredits.',
+        name: 'notification_one_to_many_offer_canceled_subtitle',
+      );
+
+  String get nearby_settings_title => Intl.message(
+        'Distance that I am willing to travel',
+        name: 'nearby_settings_title',
+      );
+
+  String get nearby_settings_content => Intl.message(
+        'This indicates the distance that the user is willing to travel to complete a Request for a Timebank or participate in a Project',
+        name: 'nearby_settings_content',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
