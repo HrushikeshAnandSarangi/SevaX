@@ -541,7 +541,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     .validation_error_general_text;
               } else {
                 print(requestModel);
-                requestModel.cashModel.donationInstructionLink = value;
+                requestModel.donationInstructionLink = value;
 //                setState(() {});
               }
               return null;
