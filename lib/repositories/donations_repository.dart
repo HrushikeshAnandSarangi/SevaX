@@ -7,6 +7,7 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/repositories/firestore_keys.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
+import 'package:sevaexchange/utils/helpers/mailer.dart';
 
 class DonationsRepository {
   static final CollectionReference _donationRef = Firestore.instance.collection(
@@ -55,15 +56,18 @@ class DonationsRepository {
       print("L2=============================== " + donationStatus.toString());
 
       //update request model with amount raised if donation is acknowledged
-      if (donationStatus == DonationStatus.ACKNOWLEDGED &&
-          requestType == RequestType.CASH) {
-        batch.updateData(
-          _requestRef.document(donationModel.requestId),
-          {
-            'cashModeDetails.amountRaised':
-                FieldValue.increment(donationModel.cashDetails.pledgedAmount),
-          },
-        );
+      if (donationStatus == DonationStatus.ACKNOWLEDGED) {
+        if (requestType == RequestType.CASH) {
+          batch.updateData(
+            _requestRef.document(donationModel.requestId),
+            {
+              'cashModeDetails.amountRaised':
+                  FieldValue.increment(donationModel.cashDetails.pledgedAmount),
+            },
+          );
+        }
+        //send acknowledgement reciept
+        await MailDonationReciept().sendReciept(donationModel);
       }
 
       log("L3=============================== " + associatedId);

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:sevaexchange/models/donation_model.dart';
 
 import '../../flavor_config.dart';
 
@@ -41,4 +42,20 @@ class MailContent {
     this.mailSubject,
     this.mailContent,
   });
+}
+
+class MailDonationReciept {
+  Future<void> sendReciept(DonationModel donationModel) async {
+    try {
+      var result = await http.post(
+        '${FlavorConfig.values.cloudFunctionBaseURL}/sendReceiptToDonor',
+        body: {
+          "donationModel": donationModel.toMap(),
+        },
+      );
+      print(result);
+    } catch (e) {
+      print(e);
+    }
+  }
 }
