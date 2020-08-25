@@ -163,8 +163,8 @@ enum NotificationType {
   GOODS_DONATION_MODIFIED_BY_CREATOR, //donor
   CASH_DONATION_ACKNOWLEDGED_BY_DONOR, //creator and timebank
   GOODS_DONATION_ACKNOWLEDGED_BY_DONOR, //creator and timebank
-  CASH_DONATION_MODIFIED_BY_DONOR,
-  GOODS_DONATION_MODIFIED_BY_DONOR,
+  CASH_DONATION_MODIFIED_BY_DONOR, //creator and timebank
+  GOODS_DONATION_MODIFIED_BY_DONOR, //creator and timebank
 }
 
 //Check the method
