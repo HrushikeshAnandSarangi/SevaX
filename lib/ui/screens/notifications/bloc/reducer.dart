@@ -9,13 +9,14 @@ class PersonalNotificationsRedcerForDonations {
     Function onDismissed,
     BuildContext context,
     NotificationsModel notificationsModel,
+    String timestampVal
   }) {
     final holder = DonationModel.fromMap(notificationsModel.data);
 
     return NotificationCard(
       entityName: "Your pledged was modified by donor",
       title: "Please click to see the details",
-      subTitle: "Your pledged was modifiedby donor",
+      subTitle: "Your pledged was modifiedby donor \n $timestampVal",
       onDismissed: onDismissed,
       onPressed: () {
         Navigator.of(context).push(
@@ -30,12 +31,12 @@ class PersonalNotificationsRedcerForDonations {
   }
 
   static Widget getWidgetForSuccessfullDonation({
-    Function onDismissed,
+    Function onDismissed,timestampVal
   }) {
     return NotificationCard(
       entityName: "Doantion completed successfully",
       title: "Donation completed succesfully",
-      subTitle: "You donation was completed successfully",
+      subTitle: "You donation was completed successfully  \n $timestampVal",
       onDismissed: onDismissed,
     );
   }
@@ -44,13 +45,14 @@ class PersonalNotificationsRedcerForDonations {
     Function onDismissed,
     BuildContext context,
     NotificationsModel notificationsModel,
+    String timestampVal
   }) {
     final holder = DonationModel.fromMap(notificationsModel.data);
 
     return NotificationCard(
       entityName: "Your pledged was modified",
       title: "Please click to see the details",
-      subTitle: "Your pledged was modified",
+      subTitle: "Your pledged was modified \n $timestampVal",
       onDismissed: onDismissed,
       onPressed: () {
         Navigator.of(context).push(

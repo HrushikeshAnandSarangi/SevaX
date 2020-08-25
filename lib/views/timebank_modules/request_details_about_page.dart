@@ -9,11 +9,16 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../flavor_config.dart';
+// import 'package:timezone/browser.dart';
 
 class RequestDetailsAboutPage extends StatefulWidget {
   final RequestModel requestItem;
@@ -789,6 +794,238 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     );
   }
 
+  Future<String> _getLocation(double lat, double lng) async {
+    String address = await LocationUtility().getFormattedAddress(lat, lng);
+    // log('_getLocation: $address');
+    // setState(() {
+    //   this.selectedAddress = address;
+    // });
+
+    return address;
+  }
+
+  Widget getBottombar() {
+    return Container(
+      decoration: BoxDecoration(color: Colors.white54, boxShadow: [
+        BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
+      ]),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: RichText(
+                text: TextSpan(
+                  style: TextStyle(color: Colors.black),
+                  children: [
+                    TextSpan(
+                      text: widget.requestItem.sevaUserId ==
+                              SevaCore.of(context).loggedInUser.sevaUserID
+                          ? S.of(context).creator_of_request_message
+                          : isApplied
+                              ? S.of(context).applied_for_request
+                              : S.of(context).particpate_in_request_question,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Europa',
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Offstage(
+              offstage: widget.requestItem.sevaUserId ==
+                  SevaCore.of(context).loggedInUser.sevaUserID,
+              child: Container(
+                margin: EdgeInsets.only(right: 5),
+                width: 100,
+                height: 32,
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: EdgeInsets.all(0),
+                  color:
+                      isApplied ? Theme.of(context).accentColor : Colors.green,
+                  child: Row(
+                    children: <Widget>[
+                      SizedBox(width: 1),
+                      Spacer(),
+                      Text(
+                        isApplied
+                            ? S.of(context).withdraw
+                            : S.of(context).apply,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Spacer(
+                        flex: 1,
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    if(SevaCore.of(context).loggedInUser.calendarId==null) {
+                      _settingModalBottomSheet(context);
+                    }else{
+                      applyAction();
+                    }
+                  },
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showProtectedTimebankMessage() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: Text(S.of(context).protected_timebank),
+          content: Text(S.of(context).protected_timebank_alert_dialog),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            FlatButton(
+              textColor: Colors.red,
+              child: Text(
+                S.of(context).close,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _settingModalBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: new Wrap(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+                  child: Text(
+                    S.of(context).calendars_popup_desc,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(6,6,6,6),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/googlecal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            applyAction();
+                            Navigator.of(bc).pop();
+                          }
+                      ),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/outlookcal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            applyAction();
+                            Navigator.of(bc).pop();
+                          }
+                      ),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/ical.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            applyAction();
+                            Navigator.of(bc).pop();
+                          }
+                      )
+                    ],
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Spacer(),
+                    FlatButton(
+                        child: Text(S.of(context).do_it_later, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
+                        onPressed: () async {
+                          applyAction();
+                          Navigator.of(bc).pop();
+                        }
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
+  }
+
+  void _showAlreadyApprovedMessage() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: Text(S.of(context).already_approved),
+          content: Text(S.of(context).withdraw_request_failure),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            FlatButton(
+              child: Text(
+                  S.of(context).close),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      });
+
+}
+
   Widget get cashDonationDetails {
     return Column(
       children: [
@@ -822,7 +1059,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               semanticsLabel: '20%',
               backgroundColor: Colors.grey[200],
               valueColor:
-                  AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+              AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
               minHeight: 10,
               value: (widget.requestItem.cashModel.amountRaised /
                   widget.requestItem.cashModel.targetAmount),

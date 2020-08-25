@@ -13,19 +13,7 @@ import 'package:sevaexchange/ui/screens/invoice/pages/invoice_screen.dart';
 class InvoicePdf {
   void invoicePdf(context, InvoiceModel model, CommunityModel communityModel, String date, Map<String, dynamic> myPlan ) async {
     final Document pdf = Document();
-    List<String> monthsArr = [
-      "January",
-      "Febuary",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"
+    List<String> monthsArr = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
     ];
     PdfImage _logo = PdfImage.file(
       pdf.document,
@@ -127,13 +115,13 @@ class InvoicePdf {
                     "Account Number:",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-                  Text("3630943624", style: TextStyle(fontSize: 14)),
+                  Text("${communityModel.sevaxAccountNo}", style: TextStyle(fontSize: 14)),
                   SizedBox(height: 8),
                   Text(
                     "BILLING STATEMENT:",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-                  Text("Statement Number: 142544581",
+                  Text("Statement Number: ${communityModel.billingStmtNo}",
                       style: TextStyle(fontSize: 14)),
                   Text("Statement Date: 29th ${monthsArr[int.parse(date.split('_')[0])-1]}, ${date.split('_')[1]}",
                       style: TextStyle(fontSize: 14)),

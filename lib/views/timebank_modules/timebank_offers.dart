@@ -10,9 +10,11 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../flavor_config.dart';
 import '../../ui/screens/offers/pages/create_offer.dart' as prefix0;
+import '../core.dart';
 
 class OffersModule extends StatefulWidget {
   final String communityId;
@@ -83,15 +85,19 @@ class OffersState extends State<OffersModule> {
                         widget.timebankModel.requestedSoftDelete,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => prefix0.CreateOffer(
-                              timebankId: timebankId,
-                              // communityId: widget.communityId,
+                        if(SevaCore.of(context).loggedInUser.calendarId==null){
+                          _settingModalBottomSheet(context);
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => prefix0.CreateOffer(
+                                timebankId: timebankId,
+                                // communityId: widget.communityId,
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        }
                       },
                       child: Container(
                           margin: EdgeInsets.only(left: 0),
@@ -132,9 +138,134 @@ class OffersState extends State<OffersModule> {
             : OfferListItems(
                 parentContext: context,
                 timebankId: timebankId,
+                timebankModel: widget.timebankModel,
               )
       ],
     );
+  }
+
+  void _settingModalBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: new Wrap(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+                  child: Text(
+                    S.of(context).calendars_popup_desc,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(6,6,6,6),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/googlecal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => prefix0.CreateOffer(
+                                  timebankId: timebankId,
+                                  // communityId: widget.communityId,
+                                ),
+                              ),
+                            );
+                          }
+                      ),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/outlookcal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => prefix0.CreateOffer(
+                                  timebankId: timebankId,
+                                  // communityId: widget.communityId,
+                                ),
+                              ),
+                            );
+                          }
+                      ),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/ical.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => prefix0.CreateOffer(
+                                  timebankId: timebankId,
+                                  // communityId: widget.communityId,
+                                ),
+                              ),
+                            );
+                          }
+                      )
+                    ],
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Spacer(),
+                    FlatButton(
+                        child: Text(S.of(context).do_it_later, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
+                        onPressed: (){
+                          Navigator.of(bc).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => prefix0.CreateOffer(
+                                timebankId: timebankId,
+                                // communityId: widget.communityId,
+                              ),
+                            ),
+                          );
+                        }
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
   }
 
   void showOffersWebPage() {

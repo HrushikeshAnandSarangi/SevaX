@@ -10,14 +10,16 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../flavor_config.dart';
 import 'individual_offer.dart';
 import 'one_to_many_offer.dart';
 
 class OfferDetails extends StatelessWidget {
   final OfferModel offerModel;
   final TextStyle titleStyle = TextStyle(
-    fontSize: 18,
+    fontSize: 16,
     color: Colors.black,
   );
   final TextStyle subTitleStyle = TextStyle(
@@ -62,8 +64,7 @@ class OfferDetails extends StatelessWidget {
                     subtitle: Text(
                       DateFormat(
                               'EEEEEEE, MMMM dd h:mm a',
-                              Locale(AppConfig.prefs.getString('language_code'))
-                                  .toLanguageTag())
+                              "en")
                           .format(
                         getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
@@ -171,7 +172,7 @@ class OfferDetails extends StatelessWidget {
           ),
           Container(
             height: 30,
-            width: 100,
+            width: 90,
             child: FlatButton(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
@@ -336,8 +337,14 @@ class OfferDetails extends StatelessWidget {
                       ),
                     ],
                   ),
-                  onPressed: () => offerActions(context, offerModel)
-                      .then((_) => Navigator.of(context).pop()),
+                  onPressed: () async {
+                    if(SevaCore.of(context).loggedInUser.calendarId==null) {
+                      _settingModalBottomSheet(context, offerModel);
+                    }else{
+                      offerActions(context, offerModel)
+                          .then((_) => Navigator.of(context).pop());
+                    }
+                  },
                 ),
               ),
             )
@@ -345,5 +352,101 @@ class OfferDetails extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _settingModalBottomSheet(BuildContext context, OfferModel offerModel) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: new Wrap(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+                  child: Text(
+                    S.of(context).calendars_popup_desc,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(6,6,6,6),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/googlecal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            offerActions(context, offerModel)
+                                .then((_) => Navigator.of(context).pop());
+                          }
+                      ),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/outlookcal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            offerActions(context, offerModel)
+                                .then((_) => Navigator.of(context).pop());
+                          }
+                      ),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset(
+                                "lib/assets/images/ical.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            offerActions(context, offerModel)
+                                .then((_) => Navigator.of(context).pop());
+                          }
+                      )
+                    ],
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Spacer(),
+                    FlatButton(
+                        child: Text(S.of(context).do_it_later, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
+                        onPressed: (){
+                          Navigator.of(bc).pop();
+                          offerActions(context, offerModel)
+                              .then((_) => Navigator.of(context).pop());
+                        }
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
   }
 }

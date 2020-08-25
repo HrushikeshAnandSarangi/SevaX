@@ -52,9 +52,10 @@ String getFormatedTimeFromTimeStamp(
 }
 
 bool isOfferVisible(OfferModel offerModel, String userId) {
+  var currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
   if (offerModel.offerType == OfferType.GROUP_OFFER) {
-    if (offerModel.groupOfferDataModel.signedUpMembers.length ==
-        offerModel.groupOfferDataModel.sizeOfClass) {
+    if (offerModel.groupOfferDataModel.signedUpMembers.length == offerModel.groupOfferDataModel.sizeOfClass ||
+        offerModel.groupOfferDataModel.endDate < currentTimeStamp) {
       if (offerModel.groupOfferDataModel.signedUpMembers.contains(userId)) {
         return false;
       } else if (offerModel.sevaUserId == userId) {

@@ -75,20 +75,10 @@ Future<int> createRecurringEvents({@required RequestModel requestModel}) async {
     int occurenceCount = 2;
     var numTemp = 0;
     while (lastRound == false) {
-      eventStartDate = DateTime(
-          eventStartDate.year,
-          eventStartDate.month,
-          eventStartDate.day + 1,
-          eventStartDate.hour,
-          eventStartDate.minute,
-          eventStartDate.second);
-      eventEndDate = DateTime(
-          eventEndDate.year,
-          eventEndDate.month,
-          eventEndDate.day + 1,
-          eventEndDate.hour,
-          eventEndDate.minute,
-          eventEndDate.second);
+
+      eventStartDate = DateTime(eventStartDate.year, eventStartDate.month, eventStartDate.day + 1, eventStartDate.hour, eventStartDate.minute, eventStartDate.second);
+      eventEndDate = DateTime(eventEndDate.year, eventEndDate.month, eventEndDate.day + 1, eventEndDate.hour, eventEndDate.minute, eventEndDate.second);
+
       if (eventStartDate.millisecondsSinceEpoch <= requestModel.end.on &&
           occurenceCount < 11) {
         numTemp = eventStartDate.weekday % 7;
@@ -835,6 +825,7 @@ Future<void> acceptRequest({
       isRead: false,
       senderUserId: senderUserId,
       communityId: communityId,
+      isTimebankNotification: true
     );
 
     print("Creating notificationss model $requestModel");

@@ -125,7 +125,7 @@ class FlavorConfig {
         return FlavorValues(
           bundleId: 'com.sevaexchange.app',
           packageName: 'com.sevaexchange.sevax',
-          elasticSearchBaseURL: "http://35.227.18.55",
+          elasticSearchBaseURL: "https://es.sevaexchange.com",
           cloudFunctionBaseURL:
               "https://us-central1-sevaxproject4sevax.cloudfunctions.net",
           androidPayMode: "production",
