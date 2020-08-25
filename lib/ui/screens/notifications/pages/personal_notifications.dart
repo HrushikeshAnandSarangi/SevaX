@@ -469,44 +469,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 );
                 break;
 
-              case NotificationType.RequestInvite:
-                print("notification data ${notification.data}");
-                RequestInvitationModel requestInvitationModel =
-                    RequestInvitationModel.fromMap(notification.data);
-                return NotificationCard(
-                  entityName: requestInvitationModel.timebankModel.name,
-                  isDissmissible: true,
-                  onDismissed: () {
-                    NotificationsRepository.readUserNotification(
-                      notification.id,
-                      user.email,
-                    );
-                  },
-                  photoUrl: requestInvitationModel.timebankModel.photoUrl,
-                  subTitle:
-                      '${requestInvitationModel.timebankModel.name} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestModel.title}, ${S.of(context).notifications_tap_to_view}',
-                  title: S.of(context).notifications_join_request,
-                  onPressed: () {
-                    if (SevaCore.of(context).loggedInUser.calendarId == null) {
-                      _settingModalBottomSheet(context, requestInvitationModel,
-                          notification.timebankId, notification.id, user);
-                    } else {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return JoinRejectDialogView(
-                            requestInvitationModel: requestInvitationModel,
-                            timeBankId: notification.timebankId,
-                            notificationId: notification.id,
-                            userModel: user,
-                          );
-                        },
-                      );
-                    }
-                  },
-                );
-                break;
-
               case NotificationType.ACKNOWLEDGE_DONOR_DONATION:
                 print("notification data ${notification.data}");
                 DonationModel donationModel =
@@ -788,11 +750,20 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               case NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR:
                 return PersonalNotificationsRedcerForDonations
                     .getWidgetForDonationsModifiedByCreator(
-                        context: context,
-                        onDismissed: onDismissed,
-                        notificationsModel: notification,
-                        timestampVal:
-                            getNotificationTimestamp(notification.timestamp));
+                  context: context,
+                  onDismissed: onDismissed,
+                  notificationsModel: notification,
+                  timestampVal:
+                      getNotificationTimestamp(notification.timestamp),
+                );
+
+              case NotificationType.RequestInvite:
+                return PersonalNotificationReducerForRequests
+                    .getInvitationForRequest(
+                  notification: notification,
+                  user: user,
+                  context: context,
+                );
 
               case NotificationType.CASH_DONATION_ACKNOWLEDGED_BY_DONOR:
               case NotificationType.GOODS_DONATION_ACKNOWLEDGED_BY_DONOR:
@@ -810,151 +781,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         );
       },
     );
-  }
-
-  void _settingModalBottomSheet(
-      BuildContext context,
-      RequestInvitationModel requestInvitationModel,
-      String timebankId,
-      String id,
-      UserModel user) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return Container(
-            child: new Wrap(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
-                  child: Text(
-                    S.of(context).calendars_popup_desc,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      GestureDetector(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 40,
-                            child:
-                                Image.asset("lib/assets/images/googlecal.png"),
-                          ),
-                          onTap: () async {
-                            String redirectUrl =
-                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl =
-                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
-                            if (await canLaunch(authorizationUrl.toString())) {
-                              await launch(authorizationUrl.toString());
-                            }
-                            Navigator.of(bc).pop();
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return JoinRejectDialogView(
-                                  requestInvitationModel:
-                                      requestInvitationModel,
-                                  timeBankId: timebankId,
-                                  notificationId: id,
-                                  userModel: user,
-                                );
-                              },
-                            );
-                          }),
-                      GestureDetector(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 40,
-                            child:
-                                Image.asset("lib/assets/images/outlookcal.png"),
-                          ),
-                          onTap: () async {
-                            String redirectUrl =
-                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl =
-                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
-                            if (await canLaunch(authorizationUrl.toString())) {
-                              await launch(authorizationUrl.toString());
-                            }
-                            Navigator.of(bc).pop();
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return JoinRejectDialogView(
-                                  requestInvitationModel:
-                                      requestInvitationModel,
-                                  timeBankId: timebankId,
-                                  notificationId: id,
-                                  userModel: user,
-                                );
-                              },
-                            );
-                          }),
-                      GestureDetector(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 40,
-                            child: Image.asset("lib/assets/images/ical.png"),
-                          ),
-                          onTap: () async {
-                            String redirectUrl =
-                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl =
-                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
-                            if (await canLaunch(authorizationUrl.toString())) {
-                              await launch(authorizationUrl.toString());
-                            }
-                            Navigator.of(bc).pop();
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return JoinRejectDialogView(
-                                  requestInvitationModel:
-                                      requestInvitationModel,
-                                  timeBankId: timebankId,
-                                  notificationId: id,
-                                  userModel: user,
-                                );
-                              },
-                            );
-                          })
-                    ],
-                  ),
-                ),
-                Row(
-                  children: <Widget>[
-                    Spacer(),
-                    FlatButton(
-                        child: Text(
-                          S.of(context).do_it_later,
-                          style: TextStyle(
-                              color: FlavorConfig.values.theme.primaryColor),
-                        ),
-                        onPressed: () async {
-                          Navigator.of(bc).pop();
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return JoinRejectDialogView(
-                                requestInvitationModel: requestInvitationModel,
-                                timeBankId: timebankId,
-                                notificationId: id,
-                                userModel: user,
-                              );
-                            },
-                          );
-                        }),
-                  ],
-                )
-              ],
-            ),
-          );
-        });
   }
 
   void _handleFeedBackNotificationAction(

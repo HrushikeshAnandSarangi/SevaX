@@ -180,7 +180,7 @@ class TimebankModel extends DataModel {
     }
   }
 
-  factory TimebankModel.fromMap(Map<String, dynamic> json) {
+  factory TimebankModel.fromMap(Map<dynamic, dynamic> json) {
     TimebankModel timebankModel = TimebankModel(json);
     if (json.containsKey('location')) {
       if (json['location']['geopoint'] is GeoPoint) {

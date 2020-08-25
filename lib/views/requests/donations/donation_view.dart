@@ -216,7 +216,8 @@ class _DonationViewState extends State<DonationView> {
               }
             },
             child: Text(
-              widget.requestModel.donationInstructionLink,
+              widget.requestModel.donationInstructionLink ??
+                  "Link not registered!",
               style: TextStyle(color: Colors.blue),
             ),
           ),

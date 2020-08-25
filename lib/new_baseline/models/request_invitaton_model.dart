@@ -21,7 +21,7 @@ class RequestInvitationModel extends DataModel {
     return object;
   }
 
-  RequestInvitationModel.fromMap(Map<String, dynamic> map) {
+  RequestInvitationModel.fromMap(Map<dynamic, dynamic> map) {
     this.requestModel = RequestModel.fromMap(map['requestModel']);
     this.timebankModel = TimebankModel.fromMap(map['timebankModel']);
   }
