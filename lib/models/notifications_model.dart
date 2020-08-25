@@ -66,7 +66,7 @@ class NotificationsModel extends DataModel {
 
   @override
   String toString() {
-    return " type : ${this.type} -- ${this.data} -- ";
+    return "$communityId $targetUserId ";
   }
 
   @override
@@ -223,7 +223,7 @@ Map<String, NotificationType> typeMapper = {
   "MEMBER_DEMOTED_FROM_ADMIN": NotificationType.MEMBER_DEMOTED_FROM_ADMIN,
 
   //DONATIONS
-  "CASH_DONATION_COMPLETED_SUCCESSFULY":
+  "CASH_DONATION_COMPLETED_SUCCESSFULLY":
       NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
   "GOODS_DONATION_COMPLETED_SUCCESSFULLY":
       NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY,

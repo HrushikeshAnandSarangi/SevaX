@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/get_location.dart';
@@ -28,6 +30,10 @@ class RequestDonationDisputeBloc {
     }
   }
 
+  void initGoodsReceived(Map<String, String> initialValue) {
+    _goodsRecieved.add(Map.from(initialValue));
+  }
+
   Future<bool> disputeCash({
     OperatingMode operationMode,
     double pledgedAmount,
@@ -40,22 +46,26 @@ class RequestDonationDisputeBloc {
 
     return await _donationsRepository
         .acknowledgeDonation(
+          operatoreMode: operationMode,
+          requestType: donationModel.donationType,
           donationStatus:
               status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED,
-          associatedId: operationMode == OperatingMode.USER
+          associatedId: operationMode == OperatingMode.CREATOR &&
+                  donationModel.donatedToTimebank
               ? donationModel.timebankId
               : donationModel.donorDetails.email,
           donationId: donationId,
-          isTimebankNotification: operationMode == OperatingMode.USER,
+          isTimebankNotification: operationMode == OperatingMode.CREATOR &&
+              donationModel.donatedToTimebank,
           notificationId: notificationId,
           acknowledgementNotification: getAcknowlegementNotification(
-            updatedAmount: pledgedAmount,
+            updatedAmount: double.parse(_cashAmount.value),
             model: donationModel,
             operatorMode: operationMode,
             requestMode: requestMode,
             notificationType: status
                 ? NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY
-                : OperatingMode == OperatingMode.CREATOR
+                : operationMode == OperatingMode.CREATOR
                     ? NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR
                     : NotificationType.CASH_DONATION_MODIFIED_BY_DONOR,
           ),
@@ -70,19 +80,26 @@ class RequestDonationDisputeBloc {
     OperatingMode operatorMode,
     RequestMode requestMode,
     NotificationType notificationType,
-    Map<String, dynamic> customSelection,
+    Map<String, String> customSelection,
   }) {
-    var updatedModel = model;
-    updatedModel.cashDetails.pledgedAmount = updatedAmount.toInt();
-    updatedModel.goodsDetails.donatedGoods = customSelection;
+    var notificationId = Uuid().generateV4();
+    if (model.donationType == RequestType.CASH)
+      model.cashDetails.pledgedAmount = updatedAmount.toInt();
+    else if (model.donationType == RequestType.GOODS)
+      model.goodsDetails.donatedGoods = customSelection;
+
+    model.notificationId = notificationId;
 
     return NotificationsModel(
       type: notificationType,
       communityId: model.communityId,
-      data: updatedModel.toMap(),
-      id: Uuid().generateV4(),
+      data: model.toMap(),
+      id: notificationId,
       isRead: false,
-      isTimebankNotification: requestMode == RequestMode.TIMEBANK_REQUEST,
+      isTimebankNotification:
+          model.donationStatus != DonationStatus.ACKNOWLEDGED &&
+              operatorMode == OperatingMode.CREATOR &&
+              model.donatedToTimebank,
       senderUserId: requestMode == RequestMode.TIMEBANK_REQUEST
           ? model.timebankId
           : model.donatedTo,
@@ -94,7 +111,6 @@ class RequestDonationDisputeBloc {
   }
 
   Future<bool> disputeGoods({
-    Map<String, dynamic> customSelection,
     OperatingMode operationMode,
     String donationId,
     String notificationId,
@@ -102,11 +118,19 @@ class RequestDonationDisputeBloc {
     RequestMode requestMode,
     Map<String, String> donatedGoods,
   }) async {
-    var status = listEquals(
-      List.from(donatedGoods.keys),
-      List.from(_goodsRecieved.value.keys),
-    );
+    var x = List.from(donatedGoods.keys);
+    var y = List.from(_goodsRecieved.value.keys);
+
+    print("donatedGoods ---> " + x.toString());
+    print("_goodsRecieved ---> " + y.toString());
+    x.sort();
+    y.sort();
+    var status = listEquals(x, y);
+    log('the status is $status');
+
     await _donationsRepository.acknowledgeDonation(
+      requestType: donationModel.donationType,
+      operatoreMode: operationMode,
       donationStatus:
           status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED,
       acknowledgementNotification: getAcknowlegementNotification(
@@ -118,13 +142,15 @@ class RequestDonationDisputeBloc {
             : (operationMode == OperatingMode.CREATOR
                 ? NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR
                 : NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR),
-        customSelection: customSelection,
+        customSelection: _goodsRecieved.value,
       ),
-      associatedId: operationMode == OperatingMode.USER
+      associatedId: operationMode == OperatingMode.CREATOR &&
+              donationModel.donatedToTimebank
           ? donationModel.timebankId
           : donationModel.donorDetails.email,
       donationId: donationId,
-      isTimebankNotification: operationMode == OperatingMode.USER,
+      isTimebankNotification: operationMode == OperatingMode.CREATOR &&
+          donationModel.donatedToTimebank,
       notificationId: notificationId,
     );
     return true;

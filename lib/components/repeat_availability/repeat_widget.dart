@@ -152,7 +152,7 @@ class RepeatWidgetState extends State<RepeatWidget> {
   Widget build(BuildContext context) {
     return Material(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.fromLTRB(4.0, 8.0, 0, 8.0),
         child: Container(
           alignment: Alignment.topLeft,
           child: Column(

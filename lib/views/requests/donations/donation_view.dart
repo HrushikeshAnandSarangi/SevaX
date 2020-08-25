@@ -162,7 +162,8 @@ class _DonationViewState extends State<DonationView> {
                 onPressed: () {
                   donationBloc
                       .validateAmount(
-                          minmumAmount: widget.requestModel.cashModel.minAmount)
+                    minmumAmount: widget.requestModel.cashModel.minAmount,
+                  )
                       .then((value) {
                     if (value) {
                       pageController.animateToPage(2,
@@ -206,15 +207,16 @@ class _DonationViewState extends State<DonationView> {
           GestureDetector(
             onTap: () async {
               if (await canLaunch(
-                  widget.requestModel.cashModel.donationInstructionLink)) {
+                  widget.requestModel.donationInstructionLink)) {
                 await launch(
-                    widget.requestModel.cashModel.donationInstructionLink);
+                  widget.requestModel.donationInstructionLink,
+                );
               } else {
                 throw 'couldnt launch';
               }
             },
             child: Text(
-              widget.requestModel.cashModel.donationInstructionLink,
+              widget.requestModel.donationInstructionLink,
               style: TextStyle(color: Colors.blue),
             ),
           ),
@@ -302,17 +304,15 @@ class _DonationViewState extends State<DonationView> {
                   itemCount: widget
                       .requestModel.goodsDonationDetails.requiredGoods.length,
                   itemBuilder: (context, index) {
+                    print("===> " + snapshot.data.toString());
+
                     return Row(
                       children: [
                         Checkbox(
-                          value: snapshot.data?.containsKey(widget
-                                  .requestModel
-                                  .goodsDonationDetails
-                                  .requiredGoods[keys[index]]) ??
-                              false,
+                          value:
+                              snapshot.data?.containsKey(keys[index]) ?? false,
                           checkColor: _checkColor,
                           onChanged: (bool value) {
-                            print(value);
                             donationBloc.addAddRemove(
                               selectedValue: widget
                                   .requestModel

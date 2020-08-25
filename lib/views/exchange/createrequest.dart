@@ -3,11 +3,13 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
@@ -16,6 +18,7 @@ import 'package:sevaexchange/components/duration_picker/offer_duration_widget.da
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
@@ -27,11 +30,15 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
+import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
+import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
+import 'package:usage/uuid/uuid.dart';
+
 
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -130,9 +137,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
 
-  RequestModel requestModel = RequestModel();
+  RequestModel requestModel = RequestModel(requestType: RequestType.TIME, cashModel: CashModel(), goodsDonationDetails: GoodsDonationDetails());
   End end = End();
-  var focusNodes = List.generate(5, (_) => FocusNode());
+  var focusNodes = List.generate(12, (_) => FocusNode());
 
   GeoFirePoint location;
 
@@ -148,9 +155,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   TimebankModel timebankModel;
   final profanityDetector = ProfanityDetector();
   bool autoValidateText = false;
+  bool autoValidateCashText = false;
   @override
   void initState() {
     super.initState();
+    print(requestModel);
     _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
     this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
@@ -228,17 +237,41 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     super.didChangeDependencies();
   }
 
+  TextStyle hintTextStyle = TextStyle(
+    fontSize: 14,
+    // fontWeight: FontWeight.bold,
+    color: Colors.grey,
+    fontFamily: 'Europa',
+  );
+  Widget addToProjectContainer(snapshot, projectModelList, requestModel) {
+    if (snapshot.hasError) return Text(snapshot.error.toString());
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return Container();
+    }
+    timebankModel = snapshot.data;
+    if (snapshot.data.admins
+        .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+      return ProjectSelection(
+          requestModel: requestModel,
+          projectModelList: projectModelList,
+          selectedProject: null,
+          admin: snapshot.data.admins
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID));
+    } else {
+      this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+      this.requestModel.requestType = RequestType.TIME;
+      return ProjectSelection(
+        requestModel: requestModel,
+        projectModelList: projectModelList,
+        selectedProject: null,
+        admin: false,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     hoursMessage = S.of(context).set_duration;
-
-    TextStyle hintTextStyle = TextStyle(
-      fontSize: 14,
-      // fontWeight: FontWeight.bold,
-      color: Colors.grey,
-      fontFamily: 'Europa',
-    );
-
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     this.requestModel.email = loggedInUser.email;
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
@@ -254,32 +287,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         return requestSwitch();
       } else {
         this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+        this.requestModel.requestType = RequestType.TIME;
         return Container();
-      }
-    }
-
-    Widget addToProjectContainer(snapshot, projectModelList, requestModel) {
-      if (snapshot.hasError) return Text(snapshot.error.toString());
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Container();
-      }
-      timebankModel = snapshot.data;
-      if (snapshot.data.admins
-          .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-        return ProjectSelection(
-            requestModel: requestModel,
-            projectModelList: projectModelList,
-            selectedProject: null,
-            admin: snapshot.data.admins
-                .contains(SevaCore.of(context).loggedInUser.sevaUserID));
-      } else {
-        this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-        return ProjectSelection(
-          requestModel: requestModel,
-          projectModelList: projectModelList,
-          selectedProject: null,
-          admin: false,
-        );
       }
     }
 
@@ -301,6 +310,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             headerContainer(snapshot),
+                            RequestTypeWidget(),
                             Text(
                               S.of(context).request_title,
                               style: TextStyle(
@@ -359,140 +369,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                             OfferDurationWidget(
                               title: S.of(context).request_duration,
                             ),
-                            SizedBox(height: 12),
-                            RepeatWidget(),
-                            SizedBox(height: 20),
-                            Text(
-                              S.of(context).request_description,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Europa',
-                                color: Colors.black,
-                              ),
-                            ),
-                            TextFormField(
-                              autovalidate: autoValidateText,
-                              onChanged: (value) {
-                                if (value.length > 1) {
-                                  setState(() {
-                                    autoValidateText = true;
-                                  });
-                                } else {
-                                  setState(() {
-                                    autoValidateText = false;
-                                  });
-                                }
-                              },
-                              focusNode: focusNodes[0],
-                              onFieldSubmitted: (v) {
-                                FocusScope.of(context)
-                                    .requestFocus(focusNodes[1]);
-                              },
-                              textInputAction: TextInputAction.next,
-                              decoration: InputDecoration(
-                                errorMaxLines: 2,
-                                hintText:
-                                    S.of(context).request_description_hint,
-                                hintStyle: hintTextStyle,
-                              ),
-                              initialValue:
-                                  widget.offer != null && widget.isOfferRequest
-                                      ? getOfferDescription(
-                                          offerDataModel: widget.offer,
-                                        )
-                                      : "",
-                              keyboardType: TextInputType.multiline,
-                              maxLines: 1,
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return S
-                                      .of(context)
-                                      .validation_error_general_text;
-                                }
-                                if (profanityDetector.isProfaneString(value)) {
-                                  return S.of(context).profanity_text_alert;
-                                }
-                                requestModel.description = value;
-                              },
-                            ),
-                            SizedBox(height: 20),
-                            isFromRequest(
-                              projectId: widget.projectId,
-                            )
-                                ? addToProjectContainer(
-                                    snapshot,
-                                    projectModelList,
-                                    requestModel,
-                                  )
-                                : Container(),
-                            SizedBox(height: 20),
-                            Text(
-                              S.of(context).number_of_volunteers,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Europa',
-                                color: Colors.black,
-                              ),
-                            ),
-                            TextFormField(
-                              focusNode: focusNodes[2],
-                              onFieldSubmitted: (v) {
-                                FocusScope.of(context).unfocus();
-                              },
-                              onChanged: (v) {
-                                if (v.isNotEmpty && int.parse(v) >= 0) {
-                                  requestModel.numberOfApprovals = int.parse(v);
-                                  setState(() {});
-                                }
-                              },
-                              decoration: InputDecoration(
-                                hintText: S.of(context).number_of_volunteers,
-                                hintStyle: hintTextStyle,
-                                // labelText: 'No. of volunteers',
-                              ),
-                              keyboardType: TextInputType.number,
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return S
-                                      .of(context)
-                                      .validation_error_volunteer_count;
-                                } else if (int.parse(value) < 0) {
-                                  return S
-                                      .of(context)
-                                      .validation_error_volunteer_count_negative;
-                                } else if (int.parse(value) == 0) {
-                                  return S
-                                      .of(context)
-                                      .validation_error_volunteer_count_zero;
-                                } else {
-                                  requestModel.numberOfApprovals =
-                                      int.parse(value);
-                                  setState(() {});
-                                  return null;
-                                }
-                              },
-                            ),
-                            TotalCredits(
-                                context,
-                                requestModel,
-                                OfferDurationWidgetState.starttimestamp,
-                                OfferDurationWidgetState.endtimestamp),
-                            SizedBox(height: 40),
-                            Center(
-                              child: LocationPickerWidget(
-                                selectedAddress: selectedAddress,
-                                location: location,
-                                onChanged: (LocationDataModel dataModel) {
-                                  log("received data model");
-                                  setState(() {
-                                    location = dataModel.geoPoint;
-                                    this.selectedAddress = dataModel.location;
-                                  });
-                                },
-                              ),
-                            ),
+                            requestModel.requestType == RequestType.TIME ? TimeRequest(snapshot, projectModelList): requestModel.requestType == RequestType.CASH ? CashRequest(snapshot, projectModelList): GoodsRequest(snapshot, projectModelList),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 30.0),
@@ -502,8 +379,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                   child: RaisedButton(
                                     onPressed: createRequest,
                                     child: Text(
-                                      S
-                                          .of(context)
+                                      S.of(context)
                                           .create_request
                                           .padLeft(10)
                                           .padRight(10),
@@ -524,11 +400,497 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               });
         });
   }
-
+  Widget RequestGoodsDescriptionData() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            S.of(context)
+                .request_goods_description,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          GoodsDynamicSelection(onSelectedGoods: (goods) => {
+            print(goods),
+            requestModel.goodsDonationDetails.requiredGoods = goods
+          }),
+          Text(
+            S.of(context)
+                .request_goods_address,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          Text(
+            S.of(context).request_goods_address_hint,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+            ),
+          ),
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[8],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context)
+                  .requestFocus(focusNodes[8]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).request_goods_address_inputhint,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue:
+            widget.offer != null && widget.isOfferRequest
+                ? getOfferDescription(
+              offerDataModel: widget.offer,
+            )
+                : "",
+            keyboardType: TextInputType.multiline,
+            maxLines: 3,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S
+                    .of(context)
+                    .validation_error_general_text;
+              } else {
+                print(requestModel);
+                requestModel.goodsDonationDetails.address = value;
+//                setState(() {});
+              }
+              return null;
+            },
+          ),
+        ]);
+  }
+  Widget RequestPaymentDescriptionData() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            S.of(context).request_payment_description,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          Text(
+            S.of(context).request_payment_description_hint,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+            ),
+          ),
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[7],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context)
+                  .requestFocus(focusNodes[7]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).request_payment_description_inputhint,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue:
+            widget.offer != null && widget.isOfferRequest
+                ? getOfferDescription(
+              offerDataModel: widget.offer,
+            )
+                : "",
+            keyboardType: TextInputType.multiline,
+            maxLines: 3,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S
+                    .of(context)
+                    .validation_error_general_text;
+              } else {
+                print(requestModel);
+                requestModel.donationInstructionLink = value;
+//                setState(() {});
+              }
+              return null;
+            },
+          ),
+        ]);
+  }
+  Widget RequestDescriptionData (hintTextDesc) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            S.of(context).request_description,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidate: autoValidateText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[0],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context)
+                  .requestFocus(focusNodes[1]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: hintTextDesc,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue:
+            widget.offer != null && widget.isOfferRequest
+                ? getOfferDescription(
+              offerDataModel: widget.offer,
+            )
+                : "",
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S
+                    .of(context)
+                    .validation_error_general_text;
+              }
+              if (profanityDetector.isProfaneString(value)) {
+                return S.of(context).profanity_text_alert;
+              }
+              requestModel.description = value;
+            },
+          ),
+        ]);
+  }
+  Widget RequestTypeWidget () {
+    return requestModel.requestMode == RequestMode.TIMEBANK_REQUEST ?
+    Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          S.of(context).request_type,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.black,
+          ),
+        ),
+         Column(
+          children: <Widget>[
+            _optionRadioButton(
+              title: S.of(context).request_type_time,
+              value: RequestType.TIME,
+              onChanged: (value) {
+                requestModel.requestType = value;
+                setState(()=>{});
+              },
+            ),
+            _optionRadioButton(
+                title: S.of(context).request_type_cash,
+                value: RequestType.CASH,
+                onChanged:(value) {
+                  requestModel.requestType = value;
+                  setState(()=>{});
+                }
+            ),
+            _optionRadioButton(
+                title: S.of(context).request_type_goods,
+                value: RequestType.GOODS,
+                onChanged:(value) {
+                  requestModel.requestType = value;
+                  setState(()=>{});
+                }
+            ),
+          ],
+        )
+      ],
+    ): Container();
+  }
+  Widget TimeRequest(snapshot, projectModelList) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        RepeatWidget(),
+        SizedBox(height: 20),
+        RequestDescriptionData(S.of(context).request_description_hint),
+        SizedBox(height: 20),
+        isFromRequest(
+          projectId: widget.projectId,
+        ) ? addToProjectContainer(
+          snapshot,
+          projectModelList,
+          requestModel,
+        )
+            : Container(),
+        SizedBox(height: 20),
+        Text(
+          S.of(context).number_of_volunteers,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.black,
+          ),
+        ),
+        TextFormField(
+          focusNode: focusNodes[2],
+          onFieldSubmitted: (v) {
+            FocusScope.of(context).unfocus();
+          },
+          onChanged: (v) {
+            if (v.isNotEmpty && int.parse(v) >= 0) {
+              requestModel.numberOfApprovals = int.parse(v);
+              setState(() {});
+            }
+          },
+          decoration: InputDecoration(
+            hintText: S.of(context).number_of_volunteers,
+            hintStyle: hintTextStyle,
+            // labelText: 'No. of volunteers',
+          ),
+          keyboardType: TextInputType.number,
+          validator: (value) {
+            if (value.isEmpty) {
+              return S
+                  .of(context)
+                  .validation_error_volunteer_count;
+            } else if (int.parse(value) < 0) {
+              return S
+                  .of(context)
+                  .validation_error_volunteer_count_negative;
+            } else if (int.parse(value) == 0) {
+              return S
+                  .of(context)
+                  .validation_error_volunteer_count_zero;
+            } else {
+              requestModel.numberOfApprovals =
+                  int.parse(value);
+              setState(() {});
+              return null;
+            }
+          },
+        ),
+        TotalCredits(
+            context,
+            requestModel,
+            OfferDurationWidgetState.starttimestamp,
+            OfferDurationWidgetState.endtimestamp),
+        SizedBox(height: 40),
+        Center(
+          child: LocationPickerWidget(
+            selectedAddress: selectedAddress,
+            location: location,
+            onChanged: (LocationDataModel dataModel) {
+              log("received data model");
+              setState(() {
+                location = dataModel.geoPoint;
+                this.selectedAddress = dataModel.location;
+              });
+            },
+          ),
+        )]
+    );
+  }
+  Widget CashRequest(snapshot, projectModelList) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(height: 20),
+          Text(
+            S.of(context).request_target_donation,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            focusNode: focusNodes[5],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).unfocus();
+            },
+            onChanged: (v) {
+              print(v);
+              if (v.isNotEmpty && int.parse(v) >= 0) {
+                print('hey');
+                print(requestModel.cashModel);
+                requestModel.cashModel.targetAmount = int.parse(v);
+                print(requestModel.cashModel);
+                setState(() {});
+              }
+            },
+            decoration: InputDecoration(
+              hintText: S.of(context).request_target_donation_hint,
+              hintStyle: hintTextStyle,
+              // labelText: 'No. of volunteers',
+            ),
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S
+                    .of(context)
+                    .validation_error_target_donation_count;
+              } else if (int.parse(value) < 0) {
+                return S
+                    .of(context)
+                    .validation_error_target_donation_count_negative;
+              } else if (int.parse(value) == 0) {
+                return S
+                    .of(context)
+                    .validation_error_target_donation_count_zero;
+              } else {
+                requestModel.cashModel.targetAmount =
+                    int.parse(value);
+                setState(() {});
+                return null;
+              }
+            },
+          ),
+          SizedBox(height: 20),
+          Text(
+            S.of(context).request_min_donation,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            focusNode: focusNodes[6],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).unfocus();
+            },
+            onChanged: (v) {
+              if (v.isNotEmpty && int.parse(v) >= 0) {
+                requestModel.cashModel.minAmount = int.parse(v);
+                print(requestModel.cashModel);
+                setState(() {});
+              }
+            },
+            decoration: InputDecoration(
+              hintText: S.of(context).request_min_donation_hint,
+              hintStyle: hintTextStyle,
+              // labelText: 'No. of volunteers',
+            ),
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S
+                    .of(context)
+                    .validation_error_min_donation_count;
+              } else if (int.parse(value) < 0) {
+                return S
+                    .of(context)
+                    .validation_error_min_donation_count_negative;
+              } else if (int.parse(value) == 0) {
+                return S
+                    .of(context)
+                    .validation_error_min_donation_count_zero;
+              } else {
+                requestModel.cashModel.minAmount =
+                    int.parse(value);
+                setState(() {});
+                return null;
+              }
+            },
+          ),
+          SizedBox(height: 20),
+          RequestDescriptionData(S.of(context).request_description_hint_cash),
+          SizedBox(height: 20),
+          isFromRequest(
+            projectId: widget.projectId,
+          ) ? addToProjectContainer(
+            snapshot,
+            projectModelList,
+            requestModel,
+          ) : Container(),
+          SizedBox(height: 20),
+          RequestPaymentDescriptionData(),
+        ]
+    );
+  }
+  Widget GoodsRequest(snapshot, projectModelList) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(height: 20),
+          RequestDescriptionData(S.of(context).request_description_hint_goods),
+          SizedBox(height: 20),
+          isFromRequest(
+            projectId: widget.projectId,
+          ) ? addToProjectContainer(
+            snapshot,
+            projectModelList,
+            requestModel,
+          ) : Container(),
+          SizedBox(height: 20),
+          RequestGoodsDescriptionData(),
+        ]
+    );
+  }
   bool isFromRequest({String projectId}) {
     return projectId == null || projectId.isEmpty || projectId == "";
   }
-
+  Widget _optionRadioButton({String title, RequestType value, Function onChanged}) {
+    return ListTile(
+      contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
+      title: Text(title),
+      leading: Radio(
+        value: value,
+        groupValue: requestModel.requestType,
+        onChanged: onChanged
+      ),
+    );
+  }
   Widget requestSwitch() {
     if (widget.projectId == null ||
         widget.projectId.isEmpty ||
@@ -559,6 +921,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
                 } else {
                   requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+                  requestModel.requestType = RequestType.TIME;
                 }
                 sharedValue = val;
               });
@@ -573,6 +936,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
         } else {
           requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+          requestModel.requestType = RequestType.TIME;
         }
       }
       return Container();
@@ -672,6 +1036,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           requestModel.photoUrl = timebankModel.photoUrl;
           break;
       }
+      print(requestModel.goodsDonationDetails);
       linearProgressForCreatingRequest();
       int resVar = await _writeToDB();
       await _updateProjectModel();
@@ -1049,4 +1414,274 @@ class ProjectSelectionState extends State<ProjectSelection> {
 //    final FormState form = _formKey.currentState;
 //    form.save();
 //  }
+}
+
+typedef StringMapCallback = void Function(Map<String, dynamic> goods);
+
+class GoodsDynamicSelection extends StatefulWidget {
+  final bool automaticallyImplyLeading;
+  final StringMapCallback onSelectedGoods;
+
+  GoodsDynamicSelection({
+    @required this.onSelectedGoods,
+    this.automaticallyImplyLeading = true
+  });
+  @override
+  _GoodsDynamicSelectionState createState() => _GoodsDynamicSelectionState();
+}
+
+class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
+  SuggestionsBoxController controller = SuggestionsBoxController();
+  TextEditingController _textEditingController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  bool autovalidate = false;
+  Map<String, dynamic> goods = {};
+  Map<String, dynamic> _selectedGoods = {};
+  bool isDataLoaded = false;
+
+  @override
+  void initState() {
+    Firestore.instance
+        .collection('donationCategories')
+        .getDocuments()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.documents.forEach((DocumentSnapshot data) {
+        // suggestionText.add(data['name']);
+        // suggestionID.add(data.documentID);
+        goods[data.documentID] = data['goodTitle'];
+
+        // ids[data['name']] = data.documentID;
+      });
+      setState(() {
+        isDataLoaded = true;
+      });
+    });
+
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+     return ConstrainedBox(
+       constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.25),
+       child: Column(
+       crossAxisAlignment: CrossAxisAlignment.start,
+       children: <Widget>[
+         SizedBox(height: 8),
+         TypeAheadField<String>(
+               suggestionsBoxDecoration: SuggestionsBoxDecoration(
+                 // color: Colors.red,
+                 borderRadius: BorderRadius.circular(8),
+                 // shape: RoundedRectangleBorder(),
+               ),
+               hideOnError: true,
+               textFieldConfiguration: TextFieldConfiguration(
+                 controller: _textEditingController,
+                 decoration: InputDecoration(
+                   hintText: S
+                       .of(context)
+                       .search,
+                   filled: true,
+                   fillColor: Colors.grey[300],
+                   focusedBorder: OutlineInputBorder(
+                     borderSide: BorderSide(color: Colors.white),
+                     borderRadius: BorderRadius.circular(25.7),
+                   ),
+                   enabledBorder: UnderlineInputBorder(
+                       borderSide: BorderSide(color: Colors.white),
+                       borderRadius: BorderRadius.circular(25.7)),
+                   contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                   prefixIcon: Icon(
+                     Icons.search,
+                     color: Colors.grey,
+                   ),
+                   suffixIcon: InkWell(
+                     splashColor: Colors.transparent,
+                     child: Icon(
+                       Icons.clear,
+                       color: Colors.grey,
+                       // color: _textEditingController.text.length > 1
+                       //     ? Colors.black
+                       //     : Colors.grey,
+                     ),
+                     onTap: () {
+                       _textEditingController.clear();
+                       controller.close();
+                     },
+                   ),
+                 ),
+               ),
+               suggestionsBoxController: controller,
+               suggestionsCallback: (pattern) async {
+                 List<String> dataCopy = [];
+                 goods.forEach((id, skill) => dataCopy.add(skill));
+                 dataCopy.retainWhere(
+                         (s) =>
+                         s.toLowerCase().contains(pattern.toLowerCase()));
+
+                 return await Future.value(dataCopy);
+               },
+               itemBuilder: (context, suggestion) {
+                 return Padding(
+                   padding: const EdgeInsets.all(8.0),
+                   child: Text(
+                     suggestion,
+                     style: TextStyle(
+                       fontSize: 16,
+                     ),
+                   ),
+                 );
+               },
+               noItemsFoundBuilder: (context) {
+                 return searchUserDefinedEntity(
+                   keyword: _textEditingController.text,
+                   language: 'en',
+                 );
+               },
+               onSuggestionSelected: (suggestion) {
+                 _textEditingController.clear();
+                 if (!_selectedGoods.containsValue(suggestion)) {
+                   controller.close();
+                   String id =
+                   goods.keys.firstWhere((k) => goods[k] == suggestion);
+                   _selectedGoods[id] = suggestion;
+//                   List<String> selectedID = [];
+//                   _selectedGoods.forEach((id, _) => selectedID.add(id));
+//                   print(selectedID);
+                   widget.onSelectedGoods(_selectedGoods);
+                   setState(() {});
+                 }
+               },
+             ),
+         SizedBox(height: 20),
+         !isDataLoaded
+             ? LoadingIndicator()
+             : Expanded(
+           child: ListView(
+             shrinkWrap: true,
+             scrollDirection: Axis.vertical,
+             children: <Widget>[
+               Wrap(
+                 runSpacing: 5.0,
+                 spacing: 5.0,
+                 children: _selectedGoods.values
+                     .toList()
+                     .map(
+                       (value) => value == null
+                       ? Container()
+                       : CustomChip(
+                     title: value,
+                     onDelete: () {
+                       String id = goods.keys.firstWhere(
+                               (k) => goods[k] == value);
+                       _selectedGoods.remove(id);
+                       setState(() {});
+                     },
+                   ),
+                 )
+                     .toList(),
+               ),
+             ],
+           ),
+         ),
+         //   Spacer(),
+       ],
+     ));
+  }
+  FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
+    String keyword,
+    String language,
+  }) {
+    return FutureBuilder<SpellCheckResult>(
+      future: SpellCheckManager.evaluateSpellingFor(
+        keyword,
+        language: language,
+      ),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return getLinearLoading;
+        }
+
+        return getSuggestionLayout(
+          suggestion:
+          !snapshot.data.hasErros ? snapshot.data.correctSpelling : keyword,
+        );
+      },
+    );
+  }
+
+  Widget get getLinearLoading {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: LinearProgressIndicator(
+        backgroundColor: Colors.grey,
+        valueColor: AlwaysStoppedAnimation<Color>(
+          Theme.of(context).primaryColor,
+        ),
+      ),
+    );
+  }
+  static Future<void> addGoodsToDb({
+    String goodsId,
+    String goodsTitle,
+    String goodsLanguage,
+  }) async {
+    await Firestore.instance.collection('donationCategories').document(goodsId).setData(
+      {'goodTitle': goodsTitle, 'lang': goodsLanguage},
+    );
+  }
+  Padding getSuggestionLayout({
+    String suggestion,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.all(18.0),
+      child: GestureDetector(
+        onTap: () async {
+          _textEditingController.clear();
+          controller.close();
+          var goodsId = Uuid().generateV4();
+          await addGoodsToDb(
+            goodsId: goodsId,
+            goodsLanguage: 'en',
+            goodsTitle: suggestion,
+          );
+          goods[goodsId] = suggestion;
+
+          if (!_selectedGoods.containsValue(suggestion)) {
+            controller.close();
+            String id = goods.keys.firstWhere((k) => goods[k] == suggestion);
+            _selectedGoods[id] = suggestion;
+            setState(() {});
+          }
+        },
+        child: Container(
+            height: 40,
+            alignment: Alignment.centerLeft,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${S.of(context).add.toUpperCase()} \"${suggestion}\"",
+                        style: TextStyle(fontSize: 16, color: Colors.blue),
+                      ),
+                      Text(
+                        S.of(context).no_data,
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.add,
+                  color: Colors.grey,
+                ),
+              ],
+            )),
+      ),
+    );
+  }
 }

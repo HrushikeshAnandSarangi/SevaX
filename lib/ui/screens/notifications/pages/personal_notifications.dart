@@ -7,6 +7,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/donation_approve_model.dart';
+import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -29,6 +30,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimm
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_approve_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_complete_widget.dart';
+import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -480,52 +482,36 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
               case NotificationType.ACKNOWLEDGE_DONOR_DONATION:
                 print("notification data ${notification.data}");
-                DonationApproveModel donationApproveModel =
-                    DonationApproveModel.fromMap(notification.data);
-                return FutureBuilder<RequestModel>(
-                  future: RequestRepository.getRequestFutureById(
-                      donationApproveModel.requestId),
-                  builder: (_context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Container();
-                    }
-
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return LoadingIndicator();
-                    }
-                    RequestModel model = snapshot.data;
-                    return NotificationCard(
-                      entityName:
-                          donationApproveModel.requestTitle.toLowerCase(),
-                      isDissmissible: true,
-                      onDismissed: () {
-                        NotificationsRepository.readUserNotification(
-                          notification.id,
-                          user.email,
-                        );
-                      },
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return ApproveDonationDialog(
-                              requestModel: model,
-                              donationApproveModel: donationApproveModel,
-                              timeBankId: notification.timebankId,
-                              notificationId: notification.id,
-                              userId: notification.senderUserId,
-                              parentContext: parentContext,
-                            );
-                          },
-                        );
-                      },
-                      photoUrl: donationApproveModel.donorPhotoUrl,
-                      subTitle:
-                          '${donationApproveModel.donorName.toLowerCase() + ' ${S.of(context).donated} ' + donationApproveModel.donationType.toString().split('.')[1]}, ${S.of(context).tap_to_view_details}',
-                      title: S.of(context).donation_acknowledge,
+                DonationModel donationModel =
+                    DonationModel.fromMap(notification.data);
+                return NotificationCard(
+                  entityName: donationModel.requestTitle.toLowerCase(),
+                  isDissmissible: true,
+                  onDismissed: () {
+                    NotificationsRepository.readUserNotification(
+                      notification.id,
+                      user.email,
                     );
                   },
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => RequestDonationDisputePage(
+                          model: donationModel,
+                        ),
+                      ),
+                    );
+                  },
+                  photoUrl: donationModel.donorDetails.photoUrl,
+                  subTitle: donationModel.donorDetails.name +
+                      " " +
+                      S.of(context).donated +
+                      " " +
+                      donationModel.donationType.toString() +
+                      S.of(context).tap_to_view_details,
+                  title: S.of(context).donation_acknowledge,
                 );
+
                 break;
               case NotificationType.GroupJoinInvite:
                 print("notification data ${notification.data}");
@@ -740,6 +726,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
               case NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY:
                 return PersonalNotificationsRedcerForDonations
                     .getWidgetForSuccessfullDonation(onDismissed: onDismissed);
+
+              case NotificationType.CASH_DONATION_MODIFIED_BY_DONOR:
+              case NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR:
+                return PersonalNotificationsRedcerForDonations
+                    .getWidgetForDonationsModifiedByDonor(
+                  context: context,
+                  onDismissed: onDismissed,
+                  notificationsModel: notification,
+                );
 
               case NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR:
               case NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR:

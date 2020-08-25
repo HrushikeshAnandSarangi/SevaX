@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
@@ -7,9 +9,8 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/request_donation_dispute_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/checkbox_with_text.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/pledged_amount_card.dart';
-import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/accept_modified_acknowlegement.dart';
 
@@ -22,7 +23,7 @@ class RequestDonationDisputePage extends StatefulWidget {
   final DonationModel model;
   const RequestDonationDisputePage({
     Key key,
-    this.model,
+    @required this.model,
   }) : super(key: key);
   @override
   _RequestDonationDisputePageState createState() =>
@@ -43,6 +44,8 @@ class _RequestDonationDisputePageState
         ? _AckType.CASH
         : _AckType.GOODS;
     super.initState();
+    widget.model.goodsDetails.donatedGoods;
+    _bloc.initGoodsReceived(widget.model.goodsDetails.donatedGoods);
   }
 
   @override
@@ -53,6 +56,10 @@ class _RequestDonationDisputePageState
 
   @override
   Widget build(BuildContext context) {
+    operatingMode = widget.model.donorSevaUserId ==
+            SevaCore.of(context).loggedInUser.sevaUserID
+        ? OperatingMode.USER
+        : OperatingMode.CREATOR;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -73,7 +80,13 @@ class _RequestDonationDisputePageState
                       currency: '\$',
                       amount: widget.model.cashDetails.pledgedAmount.toString(),
                     )
-                  : _GoodsFlow(bloc: _bloc),
+                  : _GoodsFlow(
+                      bloc: _bloc,
+                      // goods: Map<String, String>.from(
+                      //   widget.model.goodsDetails.donatedGoods,
+                      // ),
+                      requiredGoods: widget.model.goodsDetails.requiredGoods,
+                    ),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -92,7 +105,7 @@ class _RequestDonationDisputePageState
                             operationMode: operatingMode,
                             donationId: widget.model.id,
                             donationModel: widget.model,
-                            notificationId: widget.model.id,
+                            notificationId: widget.model.notificationId,
                             requestMode: widget.model.donatedToTimebank
                                 ? RequestMode.TIMEBANK_REQUEST
                                 : RequestMode.PERSONAL_REQUEST,
@@ -107,6 +120,9 @@ class _RequestDonationDisputePageState
                           );
                           break;
                         case _AckType.GOODS:
+                          log("Donated Goods" +
+                              widget.model.goodsDetails.donatedGoods
+                                  .toString());
                           _bloc
                               .disputeGoods(
                             donatedGoods:
@@ -136,8 +152,6 @@ class _RequestDonationDisputePageState
                   RaisedButton(
                     child: Text('Message'),
                     onPressed: () async {
-                      operatingMode = OperatingMode.CREATOR;
-
                       switch (getOperatingMode(
                         operatingMode,
                         widget.model.donatedToTimebank,
@@ -339,15 +353,17 @@ class _GoodsFlow extends StatelessWidget {
     Key key,
     @required RequestDonationDisputeBloc bloc,
     // this.goods,
+    this.requiredGoods,
   })  : _bloc = bloc,
         super(key: key);
 
   final RequestDonationDisputeBloc _bloc;
-  final Map<String, String> goods = {'1': 'Clothes', '2': 'Footwear'};
+  // final Map<String, String> goods;
+  final Map<String, String> requiredGoods;
 
   @override
   Widget build(BuildContext context) {
-    List<String> keys = List.from(goods.keys);
+    List<String> keys = List.from(requiredGoods.keys);
     return Column(
       children: [
         Text(
@@ -358,9 +374,10 @@ class _GoodsFlow extends StatelessWidget {
         StreamBuilder<Map<String, String>>(
           stream: _bloc.goodsRecieved,
           builder: (context, snapshot) {
+            print("==========+>>>>>>>>>>>>>>" + snapshot.data.toString());
             return ListView.builder(
               shrinkWrap: true,
-              itemCount: goods.length,
+              itemCount: requiredGoods.length,
               itemBuilder: (context, index) {
                 String key = keys[index];
                 return CheckboxWithText(
@@ -368,10 +385,10 @@ class _GoodsFlow extends StatelessWidget {
                   onChanged: (value) {
                     _bloc.toggleGoodsReceived(
                       key,
-                      goods[key],
+                      requiredGoods[key],
                     );
                   },
-                  text: goods[keys[index]],
+                  text: requiredGoods[keys[index]],
                 );
               },
             );
