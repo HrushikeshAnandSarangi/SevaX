@@ -4486,6 +4486,116 @@ class S {
         'This indicates the distance that the user is willing to travel to complete a Request for a Timebank or participate in a Project',
         name: 'nearby_settings_content',
       );
+
+  String get amount => Intl.message(
+        'Amount',
+        name: 'amount',
+      );
+
+  String get only_images_types_allowed => Intl.message(
+        'Only image types are allowed ex:jpg, png\'',
+        name: 'only_images_types_allowed',
+      );
+
+  String get i_pledged_amount => Intl.message(
+        'I pledge to donate this amount',
+        name: 'i_pledged_amount',
+      );
+
+  String get i_received_amount => Intl.message(
+        'I acknowledge that I have received',
+        name: 'i_received_amount',
+      );
+
+  String get acknowledge_desc_one => Intl.message(
+        'Note: Please check the amount that you have received from',
+        name: 'acknowledge_desc_one',
+      );
+
+  String get acknowledge_desc_two => Intl.message(
+        'This may be lower than the pledged amount due to a transaction fee. If there is a mismatch, please message',
+        name: 'acknowledge_desc_two',
+      );
+
+  String get acknowledge_desc_donor_one => Intl.message(
+        'Note: Please be sure that the amount you transfer to',
+        name: 'acknowledge_desc_donor_one',
+      );
+
+  String get acknowledge_desc_donor_two => Intl.message(
+        'matches the amount pledged above (subject to any transaction fee)',
+        name: 'acknowledge_desc_donor_two',
+      );
+
+  String get acknowledge_received => Intl.message(
+        'I acknowledge that i have received below',
+        name: 'acknowledge_received',
+      );
+
+  String get acknowledge_donated => Intl.message(
+        'I acknowledge that i have donated below',
+        name: 'acknowledge_donated',
+      );
+
+  String get amount_pledged => Intl.message(
+        'Amount pledged',
+        name: 'amount_pledged',
+      );
+
+  String get amount_received_from => Intl.message(
+        'Amount received from',
+        name: 'amount_received_from',
+      );
+
+  String get donations_received => Intl.message(
+        'Donations received',
+        name: 'donations_received',
+      );
+
+  String get donations_requested => Intl.message(
+        'Donation requested',
+        name: 'donations_requested',
+      );
+
+  String get pledge_modified => Intl.message(
+        'Your pledged was modified',
+        name: 'pledge_modified',
+      );
+
+  String get donation_completed => Intl.message(
+        'Donation completed',
+        name: 'donation_completed',
+      );
+
+  String get donation_completed_desc => Intl.message(
+        'Your donation is successfully completed. A receipt has been emailed to you.',
+        name: 'donation_completed_desc',
+      );
+
+  String get pledge_modified_by_donor => Intl.message(
+        'Your pledged was modified by donor',
+        name: 'pledge_modified_by_donor',
+      );
+
+  String get has_cash_donation => Intl.message(
+        'Has a request for cash donation',
+        name: 'has_cash_donation',
+      );
+
+  String get has_goods_donation => Intl.message(
+        'Has requested for goods donation',
+        name: 'has_goods_donation',
+      );
+
+  String get cash_donation_invite => Intl.message(
+        'has a request for cash donation. Tap to donate any amount that you can',
+        name: 'cash_donation_invite',
+      );
+
+  String get goods_donation_invite => Intl.message(
+        'has a request for donation of specific goods. You can tap to donate any goods that you can',
+        name: 'goods_donation_invite',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

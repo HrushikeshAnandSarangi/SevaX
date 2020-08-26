@@ -47,9 +47,7 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
     );
     String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
 
-    setState(() {
-      globals.projectsAvtaarURL = imageURL;
-    });
+    await profanityCheck(imageURL: imageURL);
 
     return imageURL;
   }

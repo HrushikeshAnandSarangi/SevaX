@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -37,6 +38,7 @@ class _RequestDonationDisputePageState
   OperatingMode operatingMode;
 
   ChatModeForDispute chatModeForDispute;
+  TimebankModel timebankModel;
 
   @override
   void initState() {
@@ -44,6 +46,12 @@ class _RequestDonationDisputePageState
         ? _AckType.CASH
         : _AckType.GOODS;
     super.initState();
+    FirestoreManager.getTimeBankForId(timebankId: widget.model.timebankId)
+        .then((value) {
+      setState(() {
+        timebankModel = value;
+      });
+    });
     widget.model.goodsDetails.donatedGoods;
     _bloc.initGoodsReceived(widget.model.goodsDetails.donatedGoods);
   }
@@ -63,7 +71,9 @@ class _RequestDonationDisputePageState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Donations Received',
+          operatingMode == OperatingMode.USER
+              ? S.of(context).donations_requested
+              : S.of(context).donations_received,
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -75,12 +85,19 @@ class _RequestDonationDisputePageState
             children: [
               ackType == _AckType.CASH
                   ? _CashFlow(
+                      requestMode: widget.model.donatedToTimebank
+                          ? RequestMode.TIMEBANK_REQUEST
+                          : RequestMode.PERSONAL_REQUEST,
+                      timebankName: timebankModel.name,
+                      creatorName: SevaCore.of(context).loggedInUser.fullname,
+                      operatingMode: operatingMode,
                       bloc: _bloc,
                       name: widget.model.donorDetails.name,
                       currency: '\$',
                       amount: widget.model.cashDetails.pledgedAmount.toString(),
                     )
                   : _GoodsFlow(
+                      operatingMode: operatingMode,
                       bloc: _bloc,
                       // goods: Map<String, String>.from(
                       //   widget.model.goodsDetails.donatedGoods,
@@ -93,7 +110,7 @@ class _RequestDonationDisputePageState
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   RaisedButton(
-                    child: Text('Acknowledge'),
+                    child: Text(S.of(context).acknowledge),
                     onPressed: () {
                       switch (ackType) {
                         case _AckType.CASH:
@@ -150,7 +167,7 @@ class _RequestDonationDisputePageState
                   ),
                   SizedBox(width: 12),
                   RaisedButton(
-                    child: Text('Message'),
+                    child: Text(S.of(context).message),
                     onPressed: () async {
                       switch (getOperatingMode(
                         operatingMode,
@@ -294,6 +311,10 @@ class _CashFlow extends StatelessWidget {
     this.name,
     this.amount,
     this.currency,
+    this.operatingMode,
+    this.timebankName,
+    this.creatorName,
+    this.requestMode,
   })  : _bloc = bloc,
         super(key: key);
 
@@ -301,6 +322,10 @@ class _CashFlow extends StatelessWidget {
   final String name;
   final String amount;
   final String currency;
+  final String timebankName;
+  final String creatorName;
+  final RequestMode requestMode;
+  final OperatingMode operatingMode;
 
   @override
   Widget build(BuildContext context) {
@@ -314,7 +339,9 @@ class _CashFlow extends StatelessWidget {
         ),
         SizedBox(height: 40),
         Text(
-          "Enter amount you have received",
+          operatingMode == OperatingMode.CREATOR
+              ? "${S.of(context).amount_received_from} ${name}"
+              : S.of(context).amount_pledged,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         StreamBuilder<String>(
@@ -323,14 +350,16 @@ class _CashFlow extends StatelessWidget {
               return TextField(
                 onChanged: _bloc.onAmountChanged,
                 decoration: InputDecoration(
-                  hintText: 'Amount',
+                  hintText: S.of(context).amount,
                   hintStyle: TextStyle(fontSize: 12),
                 ),
               );
             }),
         SizedBox(height: 30),
         Text(
-          'I acknowledge that I have received amount',
+          operatingMode == OperatingMode.CREATOR
+              ? ' ${S.of(context).i_received_amount} ${amount}'
+              : S.of(context).i_pledged_amount,
           style: TextStyle(
             color: Colors.grey,
             fontWeight: FontWeight.bold,
@@ -338,7 +367,9 @@ class _CashFlow extends StatelessWidget {
         ),
         SizedBox(height: 20),
         Text(
-          'Note: Check the amount you received and the transcation fees equals the user user donation.If it does not match please choose to message',
+          operatingMode == OperatingMode.CREATOR
+              ? '${S.of(context).acknowledge_desc_one} $name. ${S.of(context).acknowledge_desc_two} $name'
+              : '${S.of(context).acknowledge_desc_donor_one} $timebankName ${S.of(context).acknowledge_desc_donor_two}',
           style: TextStyle(
             color: Colors.grey,
           ),
@@ -354,12 +385,14 @@ class _GoodsFlow extends StatelessWidget {
     @required RequestDonationDisputeBloc bloc,
     // this.goods,
     this.requiredGoods,
+    this.operatingMode,
   })  : _bloc = bloc,
         super(key: key);
 
   final RequestDonationDisputeBloc _bloc;
   // final Map<String, String> goods;
   final Map<String, String> requiredGoods;
+  final OperatingMode operatingMode;
 
   @override
   Widget build(BuildContext context) {
@@ -367,7 +400,9 @@ class _GoodsFlow extends StatelessWidget {
     return Column(
       children: [
         Text(
-          'I acknowledge that i have received below',
+          operatingMode == OperatingMode.CREATOR
+              ? S.of(context).acknowledge_received
+              : S.of(context).acknowledge_donated,
           style: TextStyle(fontSize: 18),
         ),
         SizedBox(height: 20),

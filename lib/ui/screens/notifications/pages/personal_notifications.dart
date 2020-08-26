@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/models/donation_approve_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -16,7 +15,6 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
-import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
@@ -39,15 +37,10 @@ import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
-import 'package:sevaexchange/views/requests/donations/approve_donation_dialog.dart';
-import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/group_join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
-
-import '../../../../flavor_config.dart';
 
 class PersonalNotifications extends StatefulWidget {
   @override
@@ -733,6 +726,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return PersonalNotificationsRedcerForDonations
                     .getWidgetForSuccessfullDonation(
                         onDismissed: onDismissed,
+                        context: context,
                         timestampVal:
                             getNotificationTimestamp(notification.timestamp));
 

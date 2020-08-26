@@ -188,17 +188,6 @@ class RequestCardWidget extends StatelessWidget {
                                 userModel.sevaUserID,
                               );
 
-                              switch (requestModel.requestType) {
-                                case RequestType.CASH:
-                                  break;
-
-                                case RequestType.TIME:
-                                  break;
-
-                                case RequestType.GOODS:
-                                  break;
-                              }
-
                               sendNotification(
                                 requestModel: requestModel,
                                 userModel: userModel,
