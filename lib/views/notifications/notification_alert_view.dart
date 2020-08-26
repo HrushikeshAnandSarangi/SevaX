@@ -108,7 +108,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                 NotificationWidgetSwitch(
                   isTurnedOn:
                       getCurrentStatus('TYPE_FEEDBACK_FROM_SIGNUP_MEMBER'),
-                  title: "Feedback for one to many offer",
+                  title: S.of(context).feedback_one_to_many_offer,
                   onPressed: (bool status) {
                     NotificationWidgetSwitch.updatePersonalNotifications(
                       userEmail: SevaCore.of(context).loggedInUser.email,
@@ -121,7 +121,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                 NotificationWidgetSwitch(
                   isTurnedOn:
                       getCurrentStatus('TYPE_FEEDBACK_FROM_SIGNUP_MEMBER'),
-                  title: "Promotion to admin",
+                  title: S.of(context).promotion_to_admin_from_member,
                   onPressed: (bool status) {
                     NotificationWidgetSwitch.updatePersonalNotifications(
                       userEmail: SevaCore.of(context).loggedInUser.email,
@@ -134,7 +134,7 @@ class _NotificationAlertState extends State<NotificationAlert> {
                 NotificationWidgetSwitch(
                   isTurnedOn:
                       getCurrentStatus('TYPE_FEEDBACK_FROM_SIGNUP_MEMBER'),
-                  title: "Demotion from admin to member",
+                  title: S.of(context).demotion_from_admin_to_member,
                   onPressed: (bool status) {
                     NotificationWidgetSwitch.updatePersonalNotifications(
                       userEmail: SevaCore.of(context).loggedInUser.email,
