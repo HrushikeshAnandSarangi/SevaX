@@ -199,6 +199,8 @@ class UserModel extends DataModel {
     }
     if (map.containsKey('fullname')) {
       this.fullname = map['fullname'];
+    }else {
+      this.fullname = "Anonymous";
     }
     if (map.containsKey('photourl')) {
       this.photoURL = map['photourl'];
@@ -308,7 +310,7 @@ class UserModel extends DataModel {
   }
 
   UserModel.fromDynamic(dynamic user) {
-    this.fullname = user['fullname'];
+    this.fullname = user['fullname'] == null || user['fullname'].isEmpty ? "Anonymous" : user['fullname'];
     this.photoURL = user['photourl'];
     this.sevaUserID = user['sevauserid'];
     this.bio = user['bio'];
@@ -343,6 +345,8 @@ class UserModel extends DataModel {
     }
     if (this.fullname != null && this.fullname.isNotEmpty) {
       object['fullname'] = this.fullname;
+    } else {
+      object['fullname'] = "Anonymous";
     }
     if (this.photoURL != null && this.photoURL.isNotEmpty) {
       object['photourl'] = this.photoURL;

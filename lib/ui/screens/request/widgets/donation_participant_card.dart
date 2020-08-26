@@ -41,7 +41,7 @@ class DonationParticipantCard extends StatelessWidget {
                     name: name,
                     photoUrl: photoUrl,
                     goods: goods,
-                    message: comments,
+                    message: comments ?? '',
                   ),
                 ),
               );

@@ -27,7 +27,7 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> json) => UserModel(
         id: json["id"] == null ? null : json["id"],
-        fullName: json["full_name"] == null ? null : json["full_name"],
+        fullName: json["full_name"] == null ? "Anonymous" : json["full_name"],
         emailId: json["email_id"] == null ? null : json["email_id"],
         bio: json["bio"] == null ? null : json["bio"],
         timezone: json["timezone"] == null ? null : json["timezone"],
@@ -51,7 +51,7 @@ class UserModel {
 
   Map<String, dynamic> toMap() => {
         "id": id == null ? null : id,
-        "full_name": fullName == null ? null : fullName,
+        "full_name": fullName == null ? "Anonymous" : fullName,
         "email_id": emailId == null ? null : emailId,
         "bio": bio == null ? null : bio,
         "timezone": timezone == null ? null : timezone,

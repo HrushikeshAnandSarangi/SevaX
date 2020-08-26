@@ -190,9 +190,15 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   timestampComponent,
                   addressComponent,
                   hostNameComponent,
-                  membersEngagedComponent,
-                  SizedBox(height: 10),
-                  engagedMembersPicturesScroll,
+                  widget.requestItem.requestType == RequestType.TIME
+                      ? Column(
+                          children: [
+                            membersEngagedComponent,
+                            SizedBox(height: 10),
+                            engagedMembersPicturesScroll,
+                          ],
+                        )
+                      : Container(),
                   requestDescriptionComponent,
                 ],
               ),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
@@ -66,6 +68,8 @@ class DonationCompletedPage extends StatelessWidget {
                 itemCount: donations.length,
                 itemBuilder: (_, index) {
                   DonationModel model = donations[index];
+                  log('goods --->' +
+                      model.goodsDetails.donatedGoods.toString());
                   return DonationParticipantCard(
                     name: model.donorDetails.name,
                     isCashDonation: model.donationType == RequestType.CASH,
