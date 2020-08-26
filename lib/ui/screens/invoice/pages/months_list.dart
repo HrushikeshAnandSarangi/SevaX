@@ -56,76 +56,76 @@ class _MonthsListingState extends State<MonthsListing> {
 
   Map<String, dynamic> transactionTypes = {
     "quota_TypeJoinTimebank": {
-      "name": "Total Users Who Joined this timebank",
+      "name": "Total number of users in this Timebank",
       "billable": true,
     },
     "quota_TypeRequestApply": {
-      "name": "Total Requests Applications",
+      "name": "Number of Requests applications",
       "billable": true,
     },
     "quota_TypeRequestCreation": {
-      "name": "Total Requests Created",
+      "name": "Number of Requests created",
       "billable": true,
     },
     "quota_TypeRequestAccepted": {
-      "name": "Total Accepted Members For All Requests",
+      "name": "Number of accepted members for all Requests",
       "billable": true,
     },
     "quota_TypeOfferCreated": {
-      "name": "Total Offers Created",
+      "name": "Number of Offers created",
       "billable": true,
     },
     "quota_TypeOfferAccepted": {
-      "name": "Total Accepted Members For All Offers",
+      "name": "Number of accepted members for all Offers",
       "billable": true,
     },
     // non-billable
     "quota_TypeNewsCreated": {
-      "name": "Total Feeds Created",
+      "name": "Number of Feeds posted",
       "billable": false,
     },
     "quota_TypeMessageCreated": {
-      "name": "Total Messages Created",
+      "name": "Number of Messages created",
       "billable": false,
     },
     "quota_TypeMessageUpdated": {
-      "name": "Total Messages Updated",
+      "name": "Number of Messages updated",
       "billable": false,
     },
     "quota_TypeRequestMarkedComplete": {
-      "name": "Total Requests Completed",
+      "name": "Number of Requests completed",
       "billable": false,
     },
     "quota_TypeAdminReviewCompleted": {
-      "name": "Total Admin Reviews Completed",
+      "name": "Number of Admin Reviews completed",
       "billable": false,
     },
     "quota_TypeRequestCreditApproval": {
-      "name": "Total Credit Approvals For Requests",
+      "name": "Number of credit approvals for Requests",
       "billable": false,
     },
     "quota_TypeUserRemovedFromTimebank": {
-      "name": "Total Users Removed From Timebank",
+      "name": "Number of users removed from Timebank",
       "billable": false,
     },
     "quota_TypeCreateProject": {
-      "name": "Total Projects Created",
+      "name": "Number of Projects created",
       "billable": false,
     },
     "quota_TypeDeleteProject": {
-      "name": "Total Projects Deleted",
+      "name": "Number of Projects deleted",
       "billable": false,
     },
     "quota_TypeCreateGroup": {
-      "name": "Total Groups Created",
+      "name": "Number of Groups created",
       "billable": false,
     },
     "quota_TypeDeleteGroup": {
-      "name": "Total Groups Deleted",
+      "name": "Number of Groups deleted",
       "billable": false,
     },
     "quota_TypeMemberReported": {
-      "name": "Total Members Reported",
+      "name": "Number of Members reported",
       "billable": false,
     }
   };
@@ -229,7 +229,7 @@ class _MonthsListingState extends State<MonthsListing> {
                                 note1:
                                     "This invoice is for the billing period for the month of ${monthsArr[int.parse(transactionsMonthsList[index]['id'].split('_')[0]) - 1]}, ${transactionsMonthsList[index]['id'].split('_')[1]}",
                                 note2:
-                                    "Greetings from Seva Exchange. We're writing to provide you with a detailed report of your use of SevaX services. Additional information about your bill, individual service charge details, and your account history are available on the Billing section under Manage tab.",
+                                    "Greetings from Seva Exchange. This is a summary statement of your utilization of services in the SevaX App. Additional information about your bill, details of individual service usage and your account history is available in the Billing section under the Manage tab.",
                                 details: [
                                   Detail(
                                       description:

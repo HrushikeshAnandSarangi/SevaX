@@ -372,7 +372,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             return Text("...");
           } else if (snapshot.hasData) {
             return Text(
-              S.of(context).created_by + snapshot.data.fullname,
+              S.of(context).created_by + " ${snapshot.data.fullname}",
             );
           } else {
             return Container();

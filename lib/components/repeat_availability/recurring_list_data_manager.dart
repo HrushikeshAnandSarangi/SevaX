@@ -10,9 +10,9 @@ class RecurringListDataManager {
       {String parentRequestId}) async* {
     var query = Firestore.instance
         .collection('requests')
-        .where('softDelete', isEqualTo: false)
-        .where('accepted', isEqualTo: false)
         .where('parent_request_id', isEqualTo: parentRequestId)
+        .where('accepted', isEqualTo: false)
+        .where('softDelete', isEqualTo: false)
         .orderBy('request_start',descending: false);
     var data = query.snapshots();
     yield* data.transform(
