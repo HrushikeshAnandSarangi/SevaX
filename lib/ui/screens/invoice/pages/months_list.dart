@@ -229,7 +229,7 @@ class _MonthsListingState extends State<MonthsListing> {
                                 note1:
                                     "This invoice is for the billing period for the month of ${monthsArr[int.parse(transactionsMonthsList[index]['id'].split('_')[0]) - 1]}, ${transactionsMonthsList[index]['id'].split('_')[1]}",
                                 note2:
-                                    "Greetings from Seva Exchange. We're writing to provide you with a detailed report of your use of SevaX services. Additional information about your bill, individual service charge details, and your account history are available on the Billing section under Manage tab.",
+                                    "Greetings from Seva Exchange. This is a summary statement of your utilization of services in the SevaX App. Additional information about your bill, details of individual service usage and your account history is available in the Billing section under the Manage tab.",
                                 details: [
                                   Detail(
                                       description:
