@@ -62,10 +62,7 @@ class OfferDetails extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     subtitle: Text(
-                      DateFormat(
-                              'EEEEEEE, MMMM dd h:mm a',
-                              "en")
-                          .format(
+                      DateFormat('EEEEEEE, MMMM dd h:mm a', "en").format(
                         getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
                             offerModel.timestamp,
@@ -179,7 +176,7 @@ class OfferDetails extends StatelessWidget {
               ),
               color: Colors.red,
               child: Text(
-                "Cancel",
+                S.of(context).cancel,
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () => _onCancel(context),
@@ -338,9 +335,9 @@ class OfferDetails extends StatelessWidget {
                     ],
                   ),
                   onPressed: () async {
-                    if(SevaCore.of(context).loggedInUser.calendarId==null) {
+                    if (SevaCore.of(context).loggedInUser.calendarId == null) {
                       _settingModalBottomSheet(context, offerModel);
-                    }else{
+                    } else {
                       offerActions(context, offerModel)
                           .then((_) => Navigator.of(context).pop());
                     }
@@ -369,7 +366,7 @@ class OfferDetails extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(6,6,6,6),
+                  padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -378,56 +375,58 @@ class OfferDetails extends StatelessWidget {
                           child: CircleAvatar(
                             backgroundColor: Colors.white,
                             radius: 40,
-                            child: Image.asset(
-                                "lib/assets/images/googlecal.png"),
+                            child:
+                                Image.asset("lib/assets/images/googlecal.png"),
                           ),
                           onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            String redirectUrl =
+                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }
                             Navigator.of(bc).pop();
                             offerActions(context, offerModel)
                                 .then((_) => Navigator.of(context).pop());
-                          }
-                      ),
+                          }),
                       GestureDetector(
                           child: CircleAvatar(
                             backgroundColor: Colors.white,
                             radius: 40,
-                            child: Image.asset(
-                                "lib/assets/images/outlookcal.png"),
+                            child:
+                                Image.asset("lib/assets/images/outlookcal.png"),
                           ),
                           onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            String redirectUrl =
+                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }
                             Navigator.of(bc).pop();
                             offerActions(context, offerModel)
                                 .then((_) => Navigator.of(context).pop());
-                          }
-                      ),
+                          }),
                       GestureDetector(
                           child: CircleAvatar(
                             backgroundColor: Colors.white,
                             radius: 40,
-                            child: Image.asset(
-                                "lib/assets/images/ical.png"),
+                            child: Image.asset("lib/assets/images/ical.png"),
                           ),
                           onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            String redirectUrl =
+                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }
                             Navigator.of(bc).pop();
                             offerActions(context, offerModel)
                                 .then((_) => Navigator.of(context).pop());
-                          }
-                      )
+                          })
                     ],
                   ),
                 ),
@@ -435,13 +434,16 @@ class OfferDetails extends StatelessWidget {
                   children: <Widget>[
                     Spacer(),
                     FlatButton(
-                        child: Text(S.of(context).do_it_later, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
-                        onPressed: (){
+                        child: Text(
+                          S.of(context).do_it_later,
+                          style: TextStyle(
+                              color: FlavorConfig.values.theme.primaryColor),
+                        ),
+                        onPressed: () {
                           Navigator.of(bc).pop();
                           offerActions(context, offerModel)
                               .then((_) => Navigator.of(context).pop());
-                        }
-                    ),
+                        }),
                   ],
                 )
               ],

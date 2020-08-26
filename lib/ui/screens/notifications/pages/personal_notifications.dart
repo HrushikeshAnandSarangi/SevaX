@@ -98,17 +98,17 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
             switch (notification.type) {
               case NotificationType.RecurringOfferUpdated:
                 ReccuringOfferUpdated eventData =
-                ReccuringOfferUpdated.fromMap(notification.data);
+                    ReccuringOfferUpdated.fromMap(notification.data);
                 return NotificationCard(
                   title: "Offer Updated",
                   subTitle:
-                  "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} \n ${getNotificationTimestamp(notification.timestamp)}"
-                      .replaceFirst('***eventName', eventData.eventName)
-                      .replaceFirst(
-                      '***eventDate',
-                      DateTime.fromMillisecondsSinceEpoch(
-                        eventData.eventDate,
-                      ).toString()),
+                      "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} \n ${getNotificationTimestamp(notification.timestamp)}"
+                          .replaceFirst('***eventName', eventData.eventName)
+                          .replaceFirst(
+                              '***eventDate',
+                              DateTime.fromMillisecondsSinceEpoch(
+                                eventData.eventDate,
+                              ).toString()),
                   entityName: "Request Updated",
                   photoUrl: eventData.photoUrl,
                   onDismissed: onDismissed,
@@ -116,7 +116,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 break;
               case NotificationType.RecurringRequestUpdated:
                 ReccuringRequestUpdated eventData =
-                ReccuringRequestUpdated.fromMap(notification.data);
+                    ReccuringRequestUpdated.fromMap(notification.data);
                 return NotificationCard(
                   title: "Request Updated",
                   subTitle:
@@ -469,44 +469,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 );
                 break;
 
-              case NotificationType.RequestInvite:
-                print("notification data ${notification.data}");
-                RequestInvitationModel requestInvitationModel =
-                    RequestInvitationModel.fromMap(notification.data);
-                return NotificationCard(
-                  entityName: requestInvitationModel.timebankName.toLowerCase(),
-                  isDissmissible: true,
-                  onDismissed: () {
-                    NotificationsRepository.readUserNotification(
-                      notification.id,
-                      user.email,
-                    );
-                  },
-                  onPressed: () {
-                    if(SevaCore.of(context).loggedInUser.calendarId == null) {
-                     _settingModalBottomSheet(context, requestInvitationModel, notification.timebankId, notification.id, user);
-                    }else{
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return JoinRejectDialogView(
-                            requestInvitationModel: requestInvitationModel,
-                            timeBankId: notification.timebankId,
-                            notificationId: notification.id,
-                            userModel: user,
-                          );
-                        },
-                      );
-                    }
-
-                  },
-                  photoUrl: requestInvitationModel.timebankImage,
-                  subTitle:
-                      '${requestInvitationModel.timebankName.toLowerCase()} ${S.of(context).notifications_requested_join} ${requestInvitationModel.requestTitle}, ${S.of(context).notifications_tap_to_view} \n ${getNotificationTimestamp(notification.timestamp)}',
-                  title: S.of(context).notifications_join_request,
-                );
-                break;
-
               case NotificationType.ACKNOWLEDGE_DONOR_DONATION:
                 print("notification data ${notification.data}");
                 DonationModel donationModel =
@@ -535,7 +497,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       S.of(context).donated +
                       " " +
                       donationModel.donationType.toString() +
-                      S.of(context).tap_to_view_details+"  \n ${getNotificationTimestamp(notification.timestamp)}",
+                      S.of(context).tap_to_view_details +
+                      "  \n ${getNotificationTimestamp(notification.timestamp)}",
                   title: S.of(context).donation_acknowledge,
                 );
 
@@ -580,13 +543,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   photoUrl: '',
                   title: S.of(context).notifications_credited,
                   subTitle: UserNotificationMessage.CREDIT_FROM_OFFER
-                      .replaceFirst(
-                        '*n',
-                        (data.classDetails.numberOfClassHours +
-                                data.classDetails.numberOfPreperationHours)
-                            .toString(),
-                      )
-                      .replaceFirst('*class', data.classDetails.classTitle) +" \n ${getNotificationTimestamp(notification.timestamp)}",
+                          .replaceFirst(
+                            '*n',
+                            (data.classDetails.numberOfClassHours +
+                                    data.classDetails.numberOfPreperationHours)
+                                .toString(),
+                          )
+                          .replaceFirst(
+                              '*class', data.classDetails.classTitle) +
+                      " \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
                 break;
@@ -598,11 +563,13 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   photoUrl: data.participantDetails.photourl,
                   title: S.of(context).notifications_new_member_signup,
                   subTitle: UserNotificationMessage.NEW_MEMBER_SIGNUP_OFFER
-                      .replaceFirst(
-                        '*name',
-                        data.participantDetails.fullname,
-                      )
-                      .replaceFirst('*class', data.classDetails.classTitle)+" \n ${getNotificationTimestamp(notification.timestamp)}",
+                          .replaceFirst(
+                            '*name',
+                            data.participantDetails.fullname,
+                          )
+                          .replaceFirst(
+                              '*class', data.classDetails.classTitle) +
+                      " \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
                 break;
@@ -615,13 +582,15 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   title:
                       "${S.of(context).notifications_credits_for} ${data.classDetails.classTitle}",
                   subTitle: UserNotificationMessage.OFFER_FULFILMENT_ACHIEVED
-                      .replaceFirst(
-                        '*n',
-                        (data.classDetails.numberOfClassHours +
-                                data.classDetails.numberOfPreperationHours)
-                            .toString(),
-                      )
-                      .replaceFirst('*class', data.classDetails.classTitle)+" \n ${getNotificationTimestamp(notification.timestamp)}",
+                          .replaceFirst(
+                            '*n',
+                            (data.classDetails.numberOfClassHours +
+                                    data.classDetails.numberOfPreperationHours)
+                                .toString(),
+                          )
+                          .replaceFirst(
+                              '*class', data.classDetails.classTitle) +
+                      " \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
                 break;
@@ -634,11 +603,13 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   photoUrl: data.participantDetails.photourl,
                   title: S.of(context).notifications_debited,
                   subTitle: UserNotificationMessage.DEBIT_FROM_OFFER
-                      .replaceFirst(
-                        '*n',
-                        data.classDetails.numberOfClassHours.toString(),
-                      )
-                      .replaceFirst('*class', data.classDetails.classTitle)+" \n ${getNotificationTimestamp(notification.timestamp)}",
+                          .replaceFirst(
+                            '*n',
+                            data.classDetails.numberOfClassHours.toString(),
+                          )
+                          .replaceFirst(
+                              '*class', data.classDetails.classTitle) +
+                      " \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
                 break;
@@ -651,11 +622,13 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   photoUrl: data.participantDetails.photourl,
                   title: S.of(context).notifications_signed_for_class,
                   subTitle: UserNotificationMessage.OFFER_SUBSCRIPTION_COMPLETED
-                      .replaceFirst(
-                        '*class',
-                        data.classDetails.classTitle,
-                      )
-                      .replaceFirst('*class', data.classDetails.classTitle)+" \n ${getNotificationTimestamp(notification.timestamp)}",
+                          .replaceFirst(
+                            '*class',
+                            data.classDetails.classTitle,
+                          )
+                          .replaceFirst(
+                              '*class', data.classDetails.classTitle) +
+                      " \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
                 break;
@@ -668,10 +641,11 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   photoUrl: data.participantDetails.photourl,
                   title: S.of(context).notifications_feedback_request,
                   subTitle: UserNotificationMessage.FEEDBACK_FROM_SIGNUP_MEMBER
-                      .replaceFirst(
-                    '*class',
-                    data.classDetails.classTitle,
-                  )+" \n ${getNotificationTimestamp(notification.timestamp)}",
+                          .replaceFirst(
+                        '*class',
+                        data.classDetails.classTitle,
+                      ) +
+                      " \n ${getNotificationTimestamp(notification.timestamp)}",
                   onPressed: () => _handleFeedBackNotificationAction(
                     context,
                     data,
@@ -694,12 +668,13 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       : "${requestData.entityTitle} ${S.of(context).notifications_could_not_delete}",
                   subTitle: requestData.requestAccepted
                       ? S
-                          .of(context)
-                          .notifications_successfully_deleted
-                          .replaceAll(
-                            '***',
-                            requestData.entityTitle,
-                          )+" \n ${getNotificationTimestamp(notification.timestamp)}"
+                              .of(context)
+                              .notifications_successfully_deleted
+                              .replaceAll(
+                                '***',
+                                requestData.entityTitle,
+                              ) +
+                          " \n ${getNotificationTimestamp(notification.timestamp)}"
                       : "${requestData.entityTitle} ${S.of(context).notifications_could_not_deleted}  \n ${getNotificationTimestamp(notification.timestamp)}",
                   onPressed: () => !requestData.requestAccepted
                       ? showDialogForIncompleteTransactions(
@@ -715,7 +690,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   entityName: body.fullName,
                   photoUrl: null,
-                  title: "${S.of(context).notifications_approved_withdrawn_title}",
+                  title:
+                      "${S.of(context).notifications_approved_withdrawn_title}",
                   subTitle:
                       "${body.fullName} ${S.of(context).notifications_approved_withdrawn_subtitle} ${body.requestTite}.  \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
@@ -727,7 +703,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: "",
                   photoUrl: null,
                   title: "${S.of(context).otm_offer_cancelled_title}",
-                  subTitle: "${S.of(context).otm_offer_cancelled_subtitle} \n ${getNotificationTimestamp(notification.timestamp)}",
+                  subTitle:
+                      "${S.of(context).otm_offer_cancelled_subtitle} \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
 
@@ -736,7 +713,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: "CR",
                   photoUrl: null,
                   title: "${S.of(context).notifications_credited_msg}",
-                  subTitle: "${S.of(context).notifications_credited_msg} \n ${getNotificationTimestamp(notification.timestamp)}",
+                  subTitle:
+                      "${S.of(context).notifications_credited_msg} \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
 
@@ -745,23 +723,28 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   entityName: "CR",
                   photoUrl: null,
                   title: "${S.of(context).notifications_debited_msg}",
-                  subTitle: "${S.of(context).notifications_debited_msg} \n ${getNotificationTimestamp(notification.timestamp)}",
+                  subTitle:
+                      "${S.of(context).notifications_debited_msg} \n ${getNotificationTimestamp(notification.timestamp)}",
                   onDismissed: onDismissed,
                 );
 
               case NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY:
               case NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY:
                 return PersonalNotificationsRedcerForDonations
-                    .getWidgetForSuccessfullDonation(onDismissed: onDismissed, timestampVal: getNotificationTimestamp(notification.timestamp));
+                    .getWidgetForSuccessfullDonation(
+                        onDismissed: onDismissed,
+                        timestampVal:
+                            getNotificationTimestamp(notification.timestamp));
 
               case NotificationType.CASH_DONATION_MODIFIED_BY_DONOR:
               case NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR:
                 return PersonalNotificationsRedcerForDonations
                     .getWidgetForDonationsModifiedByDonor(
-                  context: context,
-                  onDismissed: onDismissed,
-                  notificationsModel: notification, timestampVal: getNotificationTimestamp(notification.timestamp)
-                );
+                        context: context,
+                        onDismissed: onDismissed,
+                        notificationsModel: notification,
+                        timestampVal:
+                            getNotificationTimestamp(notification.timestamp));
 
               case NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR:
               case NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR:
@@ -770,13 +753,22 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   context: context,
                   onDismissed: onDismissed,
                   notificationsModel: notification,
-                  timestampVal: getNotificationTimestamp(notification.timestamp)
+                  timestampVal:
+                      getNotificationTimestamp(notification.timestamp),
+                );
+
+              case NotificationType.RequestInvite:
+                return PersonalNotificationReducerForRequests
+                    .getInvitationForRequest(
+                  notification: notification,
+                  user: user,
+                  context: context,
                 );
 
               case NotificationType.CASH_DONATION_ACKNOWLEDGED_BY_DONOR:
               case NotificationType.GOODS_DONATION_ACKNOWLEDGED_BY_DONOR:
                 //NOT SURE WHEATHER TO ADD THIS OR NOT
-                  return Container();
+                return Container();
                 break;
 
               default:
@@ -789,138 +781,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         );
       },
     );
-  }
-
-  void _settingModalBottomSheet(BuildContext context, RequestInvitationModel requestInvitationModel, String timebankId, String id, UserModel user) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return Container(
-            child: new Wrap(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
-                  child: Text(
-                    S.of(context).calendars_popup_desc,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(6,6,6,6),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      GestureDetector(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 40,
-                            child: Image.asset(
-                                "lib/assets/images/googlecal.png"),
-                          ),
-                          onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
-                            if (await canLaunch(authorizationUrl.toString())) {
-                              await launch(authorizationUrl.toString());
-                            }
-                            Navigator.of(bc).pop();
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return JoinRejectDialogView(
-                                  requestInvitationModel: requestInvitationModel,
-                                  timeBankId: timebankId,
-                                  notificationId: id,
-                                  userModel: user,
-                                );
-                              },
-                            );
-                          }
-                      ),
-                      GestureDetector(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 40,
-                            child: Image.asset(
-                                "lib/assets/images/outlookcal.png"),
-                          ),
-                          onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
-                            if (await canLaunch(authorizationUrl.toString())) {
-                              await launch(authorizationUrl.toString());
-                            }
-                            Navigator.of(bc).pop();
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return JoinRejectDialogView(
-                                  requestInvitationModel: requestInvitationModel,
-                                  timeBankId: timebankId,
-                                  notificationId: id,
-                                  userModel: user,
-                                );
-                              },
-                            );
-                          }
-                      ),
-                      GestureDetector(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 40,
-                            child: Image.asset(
-                                "lib/assets/images/ical.png"),
-                          ),
-                          onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
-                            if (await canLaunch(authorizationUrl.toString())) {
-                              await launch(authorizationUrl.toString());
-                            }
-                            Navigator.of(bc).pop();
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return JoinRejectDialogView(
-                                  requestInvitationModel: requestInvitationModel,
-                                  timeBankId: timebankId,
-                                  notificationId: id,
-                                  userModel: user,
-                                );
-                              },
-                            );
-                          }
-                      )
-                    ],
-                  ),
-                ),
-                Row(
-                  children: <Widget>[
-                    Spacer(),
-                    FlatButton(
-                        child: Text(S.of(context).do_it_later, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
-                        onPressed: () async {
-                          Navigator.of(bc).pop();
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return JoinRejectDialogView(
-                                requestInvitationModel: requestInvitationModel,
-                                timeBankId: timebankId,
-                                notificationId: id,
-                                userModel: user,
-                              );
-                            },
-                          );
-                        }
-                    ),
-                  ],
-                )
-              ],
-            ),
-          );
-        });
   }
 
   void _handleFeedBackNotificationAction(
@@ -1090,15 +950,13 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
   bool get wantKeepAlive => true;
 }
 
-String getNotificationTimestamp(timeStampVal){
+String getNotificationTimestamp(timeStampVal) {
   return timeAgo.format(
-  DateTime
-      .fromMillisecondsSinceEpoch(
-  timeStampVal,
-  ),
-  locale: Locale(AppConfig.prefs
-      .getString('language_code'))
-      .toLanguageTag());
+      DateTime.fromMillisecondsSinceEpoch(
+        timeStampVal,
+      ),
+      locale:
+          Locale(AppConfig.prefs.getString('language_code')).toLanguageTag());
 }
 
 class WithdrawnRequestBody {

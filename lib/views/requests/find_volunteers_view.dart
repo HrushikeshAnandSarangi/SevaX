@@ -234,7 +234,9 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
     }
     return StreamBuilder<List<UserModel>>(
       stream: SearchManager.searchForUserWithTimebankId(
-          queryString: widget.controller.text, validItems: widget.validItems),
+        queryString: widget.controller.text,
+        validItems: widget.validItems,
+      ),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           Text(snapshot.error.toString());
@@ -248,6 +250,8 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
             ),
           );
         }
+
+        print("=======>>>>>> ${snapshot.data}");
 
         List<UserModel> userList = snapshot.data;
         userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);

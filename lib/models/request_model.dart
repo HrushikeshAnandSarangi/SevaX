@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/views/exchange/createrequest.dart';
 
 class TaskModel extends DataModel {
   String id;
@@ -135,7 +136,7 @@ class End extends DataModel {
     return object;
   }
 
-  End.fromMap(Map<dynamic, dynamic> map) {
+  End.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('endType')) {
       this.endType = map['endType'];
     }
@@ -228,7 +229,7 @@ class RequestModel extends DataModel {
     this.donationInstructionLink,
   });
 
-  RequestModel.fromMap(Map<String, dynamic> map) {
+  RequestModel.fromMap(Map<dynamic, dynamic> map) {
     if (map.containsKey('donationInstructionLink')) {
       this.donationInstructionLink = map["donationInstructionLink"];
     }
@@ -702,7 +703,7 @@ class RequestModel extends DataModel {
 
 class GoodsDonationDetails {
   List<String> donors;
-  Map<String, dynamic> requiredGoods;
+  Map<String, String> requiredGoods;
   String address = '';
 
   GoodsDonationDetails({this.donors, this.address, this.requiredGoods});
@@ -711,7 +712,6 @@ class GoodsDonationDetails {
   }
 
   GoodsDonationDetails.fromMap(Map<dynamic, dynamic> map) {
-    print(map.toString() + "<<<<<<<<<<<<<<<");
     if (map.containsKey('donors')) {
       this.donors = List.castFrom(map['donors']);
     }

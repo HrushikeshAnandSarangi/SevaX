@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -163,7 +164,7 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Distance that I am willing to travel",
+                S.of(context).nearby_settings_title,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
@@ -176,7 +177,8 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
             height: 10,
           ),
           Text(
-              "This indicates the distance that the user is willing to travel to complete a Request for a Timebank or participate in a Project"),
+            S.of(context).nearby_settings_content,
+          ),
           SizedBox(
             height: 20,
           ),
@@ -186,7 +188,6 @@ class _NearbySettingsWidgetState extends State<NearbySettingsWidget> {
   }
 
   void setSelectedRadio(int value) {
-    log(value.toString() + "--------------------" + selectedRadio.toString());
     if (value == NearbySettingBloc.MILES_SELECTION) {
       rating = rating / 1.6;
     } else if (value == NearbySettingBloc.KILOMETERS_SELECTION) {

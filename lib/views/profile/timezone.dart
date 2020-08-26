@@ -669,6 +669,823 @@ class TimezoneListData {
       timezoneAbb: 'YEKT',
       timezoneName: 'YEKATERINBURG TIME',
     ),
+
+    //ladditional timezones
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 1,
+        timezoneAbb: 'A',
+        timezoneName: 'ALPHA TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 30,
+        offsetFromUtc: 10,
+        timezoneAbb: 'ACDT',
+        timezoneName: 'AUSTRALIAN CENTRAL DAYLIGHT TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 30,
+        offsetFromUtc: 9,
+        timezoneAbb: 'ACST',
+        timezoneName: 'AUSTRALIAN CENTRAL STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 5,
+        timezoneAbb: 'ACT',
+        timezoneName: 'ACRE TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 30,
+        offsetFromUtc: 9,
+        timezoneAbb: 'ACT',
+        timezoneName: 'AUSTRALIAN CENTRAL TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 45,
+        offsetFromUtc: 8,
+        timezoneAbb: 'ACWST',
+        timezoneName: 'AUSTRALIAN CENTRAL WESTERN STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 11,
+        timezoneAbb: 'AEDT',
+        timezoneName: 'AUSTRALIAN EASTERN DAYLIGHT TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 10,
+        timezoneAbb: 'AEST',
+        timezoneName: 'AUSTRALIAN EASTERN STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 10,
+        timezoneAbb: 'AET',
+        timezoneName: 'AUSTRALIAN EASTERN TIM'),
+    TimeZoneModel(
+        offsetFromUtcMin: 30,
+        offsetFromUtc: 4,
+        timezoneAbb: 'AFT',
+        timezoneName: 'AFGHANISTAN TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -9,
+        timezoneAbb: 'AKST',
+        timezoneName: 'ALASKA STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 6,
+        timezoneAbb: 'ALMT',
+        timezoneName: 'ALMA-ATA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -3,
+        timezoneAbb: 'AMST',
+        timezoneName: 'AMAZON SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -4,
+        timezoneAbb: 'AMT',
+        timezoneName: 'AMAZON TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 4,
+        timezoneAbb: 'AMT',
+        timezoneName: 'ARMENIA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 12,
+        timezoneAbb: 'ANAST',
+        timezoneName: 'ANADYR SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 12,
+        timezoneAbb: 'ANAT',
+        timezoneName: 'ANADYR TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -12,
+        timezoneAbb: 'AoE',
+        timezoneName: 'ANYWHERE ON EARTH'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -3,
+        timezoneAbb: 'ART',
+        timezoneName: 'ARGENTINA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 9,
+        timezoneAbb: 'AWDT',
+        timezoneName: 'AUSTRALIAN WESTERN DAYLIGHT TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 8,
+        timezoneAbb: 'AWST',
+        timezoneName: 'AUSTRALIAN WESTERN STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 0,
+        timezoneAbb: 'AZOST',
+        timezoneName: 'AZORES SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -1,
+        timezoneAbb: 'AZOT',
+        timezoneName: 'AZORES TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 4,
+        timezoneAbb: 'AZT',
+        timezoneName: 'AZERBAIJAN TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 2,
+        timezoneAbb: 'B',
+        timezoneName: 'BRAVO TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 8,
+        timezoneAbb: 'BNT',
+        timezoneName: 'BRUNEI DARUSSALAM TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -4,
+        timezoneAbb: 'BOT',
+        timezoneName: 'BOLIVIA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -2,
+        timezoneAbb: 'BRST',
+        timezoneName: 'BRASÍLIA SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -3,
+        timezoneAbb: 'BRT',
+        timezoneName: 'BRASÍLIA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 3,
+        timezoneAbb: 'C',
+        timezoneName: 'CHARLIE TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 8,
+        timezoneAbb: 'CAST',
+        timezoneName: 'CASEY TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 2,
+        timezoneAbb: 'CAT',
+        timezoneName: 'CENTRAL AFRICA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 30,
+        offsetFromUtc: 6,
+        timezoneAbb: 'CCT',
+        timezoneName: 'COCOS ISLANDS TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -5,
+        timezoneAbb: 'CDT',
+        timezoneName: 'CENTRAL DAYLIGHT TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 2,
+        timezoneAbb: 'CEST',
+        timezoneName: 'CENTRAL EUROPEAN SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 45,
+        offsetFromUtc: 13,
+        timezoneAbb: 'CHADT',
+        timezoneName: 'CHATHAM ISLAND DAYLIGHT TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 45,
+        offsetFromUtc: 12,
+        timezoneAbb: 'CHAST',
+        timezoneName: 'CHATHAM ISLAND STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 10,
+        timezoneAbb: 'ChST',
+        timezoneName: 'CHAMORRO STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 10,
+        timezoneAbb: 'CHUT',
+        timezoneName: 'CHUUK TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -4,
+        timezoneAbb: 'CIDST',
+        timezoneName: 'CAYMAN ISLANDS DAYLIGHT SAVING TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -5,
+        timezoneAbb: 'CIST',
+        timezoneName: 'CAYMAN ISLANDS STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -10,
+        timezoneAbb: 'CKT',
+        timezoneName: 'COOK ISLAND TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -3,
+        timezoneAbb: 'CLST',
+        timezoneName: 'CHILE SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -4,
+        timezoneAbb: 'CLT',
+        timezoneName: 'CHILE STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -5,
+        timezoneAbb: 'COT',
+        timezoneName: 'COLOMBIA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -1,
+        timezoneAbb: 'CVT',
+        timezoneName: 'CAPE VERDE TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 7,
+        timezoneAbb: 'CXT',
+        timezoneName: 'CHRISTMAS ISLAND TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 4,
+        timezoneAbb: 'D',
+        timezoneName: 'DELTA TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 7,
+        timezoneAbb: 'DAVT',
+        timezoneName: 'DAVIS TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 10,
+        timezoneAbb: 'DDUT',
+        timezoneName: 'DUMONT-D\'URVILLE TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 5,
+        timezoneAbb: 'E',
+        timezoneName: 'ECHO TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -5,
+        timezoneAbb: 'EASST',
+        timezoneName: 'EASTER ISLAND SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -6,
+        timezoneAbb: 'EAST',
+        timezoneName: 'EASTER ISLAND STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 3,
+        timezoneAbb: 'EAT',
+        timezoneName: 'EASTERN AFRICA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -5,
+        timezoneAbb: 'ECT',
+        timezoneName: 'ECUADOR TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 0,
+        timezoneAbb: 'EGST',
+        timezoneName: 'EASTERN GREENLAND SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -1,
+        timezoneAbb: 'EGT',
+        timezoneName: 'EAST GREENLAND TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -5,
+        timezoneAbb: 'EST',
+        timezoneName: 'EASTERN STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 6,
+        timezoneAbb: 'F',
+        timezoneName: 'FOXTROT TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 3,
+        timezoneAbb: 'FET',
+        timezoneName: 'FURTHER-EASTERN EUROPEAN TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 13,
+        timezoneAbb: 'FJST',
+        timezoneName: 'FIJI SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 12,
+        timezoneAbb: 'FJT',
+        timezoneName: 'FIJI TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -3,
+        timezoneAbb: 'FKST',
+        timezoneName: 'FALKLAND ISLANDS SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -4,
+        timezoneAbb: 'FKT',
+        timezoneName: 'FALKLAND ISLAND TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -2,
+        timezoneAbb: 'FNT',
+        timezoneName: 'FERNANDO DE NORONHA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 7,
+        timezoneAbb: 'G',
+        timezoneName: 'GOLF TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -6,
+        timezoneAbb: 'GALT',
+        timezoneName: 'GALAPAGOS TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -9,
+        timezoneAbb: 'GAMT',
+        timezoneName: 'GAMBIER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -3,
+        timezoneAbb: 'GFT',
+        timezoneName: 'FRENCH GUIANA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 12,
+        timezoneAbb: 'GILT',
+        timezoneName: 'GILBERT ISLAND TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -4,
+        timezoneAbb: 'GYT',
+        timezoneName: 'GUYANA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 8,
+        timezoneAbb: 'H',
+        timezoneName: 'HOTEL TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 8,
+        timezoneAbb: 'HOVST',
+        timezoneName: 'HOVD SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 9,
+        timezoneAbb: 'I',
+        timezoneName: 'INDIA TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 6,
+        timezoneAbb: 'IOT',
+        timezoneName: 'INDIAN CHAGOS TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 10,
+        timezoneAbb: 'K',
+        timezoneName: 'KILO TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 11,
+        timezoneAbb: 'KOST',
+        timezoneName: 'KOSRAE TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 8,
+        timezoneAbb: 'KRAST',
+        timezoneName: 'KRASNOYARSK SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 4,
+        timezoneAbb: 'KUYT',
+        timezoneName: 'KUYBYSHEV TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 11,
+        timezoneAbb: 'L',
+        timezoneName: 'LIMA TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 11,
+        timezoneAbb: 'LHDT',
+        timezoneName: 'LORD HOWE DAYLIGHT TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 30,
+        offsetFromUtc: 10,
+        timezoneAbb: 'LHST',
+        timezoneName: 'LORD HOWE STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 14,
+        timezoneAbb: 'LINT',
+        timezoneName: 'LINE ISLANDS TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 12,
+        timezoneAbb: 'M',
+        timezoneName: 'MIKE TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 12,
+        timezoneAbb: 'MAGST',
+        timezoneName: 'MAGADAN SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 30,
+        offsetFromUtc: -9,
+        timezoneAbb: 'MART',
+        timezoneName: 'MARQUESAS TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 5,
+        timezoneAbb: 'MAWT',
+        timezoneName: 'MAWSON TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 12,
+        timezoneAbb: 'MHT',
+        timezoneName: 'MARSHALL ISLANDS TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 4,
+        timezoneAbb: 'MSD',
+        timezoneName: 'MOSCOW DAYLIGHT TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 4,
+        timezoneAbb: 'MUT',
+        timezoneName: 'MAURITIUS TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -1,
+        timezoneAbb: 'N',
+        timezoneName: 'NOVEMBER TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 11,
+        timezoneAbb: 'NCT',
+        timezoneName: 'NEW CALEDONIA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 30,
+        offsetFromUtc: -2,
+        timezoneAbb: 'NDT',
+        timezoneName: 'NEWFOUNDLAND DAYLIGHT TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 12,
+        timezoneAbb: 'NFDT',
+        timezoneName: 'NORFOLK DAYLIGHT TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 11,
+        timezoneAbb: 'NFT',
+        timezoneName: 'NORFOLK TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 7,
+        timezoneAbb: 'NOVST',
+        timezoneName: 'NOVOSIBIRSK SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 12,
+        timezoneAbb: 'NRT',
+        timezoneName: 'NAURU TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 30,
+        offsetFromUtc: -3,
+        timezoneAbb: 'NST',
+        timezoneName: 'NEWFOUNDLAND STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -11,
+        timezoneAbb: 'NUT',
+        timezoneName: 'NIUE TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 13,
+        timezoneAbb: 'NZDT',
+        timezoneName: 'NEW ZEALAND DAYLIGHT TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 12,
+        timezoneAbb: 'NZST',
+        timezoneName: 'NEW ZEALAND STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -2,
+        timezoneAbb: 'O',
+        timezoneName: 'OSCAR TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 7,
+        timezoneAbb: 'OMSST',
+        timezoneName: 'OMSK SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -3,
+        timezoneAbb: 'P',
+        timezoneName: 'PAPA TIME ZONe'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -5,
+        timezoneAbb: 'PET',
+        timezoneName: 'PERU TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 12,
+        timezoneAbb: 'PETST',
+        timezoneName: 'KAMCHATKA SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 10,
+        timezoneAbb: 'PGT',
+        timezoneName: 'PAPUA NEW GUINEA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 13,
+        timezoneAbb: 'PHOT',
+        timezoneName: 'PHOENIX ISLAND TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -2,
+        timezoneAbb: 'PMDT',
+        timezoneName: 'PIERRE & MIQUELON DAYLIGHT TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -3,
+        timezoneAbb: 'PMST',
+        timezoneName: 'PIERRE & MIQUELON STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 11,
+        timezoneAbb: 'PONT',
+        timezoneName: 'POHNPEI STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 9,
+        timezoneAbb: 'PWT',
+        timezoneName: 'PALAU TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -3,
+        timezoneAbb: 'PYST',
+        timezoneName: 'PARAGUAY SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -4,
+        timezoneAbb: 'PYT',
+        timezoneName: 'PARAGUAY TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 30,
+        offsetFromUtc: 8,
+        timezoneAbb: 'PYT',
+        timezoneName: 'PYONGYANG TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -4,
+        timezoneAbb: 'Q',
+        timezoneName: 'QUEBEC TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -5,
+        timezoneAbb: 'R',
+        timezoneName: 'ROMEO TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 4,
+        timezoneAbb: 'RET',
+        timezoneName: 'REUNION TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -3,
+        timezoneAbb: 'ROTT',
+        timezoneName: 'ROTHERA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -6,
+        timezoneAbb: 'S',
+        timezoneName: 'SIERRA TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 2,
+        timezoneAbb: 'SAST',
+        timezoneName: 'SOUTH AFRICA STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 11,
+        timezoneAbb: 'SBT',
+        timezoneName: 'SOLOMON ISLANDS TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 4,
+        timezoneAbb: 'SCT',
+        timezoneName: 'SEYCHELLES TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 11,
+        timezoneAbb: 'SRET',
+        timezoneName: 'SREDNEKOLYMSK TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -3,
+        timezoneAbb: 'SRT',
+        timezoneName: 'SURINAME TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -11,
+        timezoneAbb: 'SST',
+        timezoneName: 'SAMOA STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 3,
+        timezoneAbb: 'SYOT',
+        timezoneName: 'SYOWA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -7,
+        timezoneAbb: 'T',
+        timezoneName: 'TANGO TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -10,
+        timezoneAbb: 'TAHT',
+        timezoneName: 'TAHITI TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 5,
+        timezoneAbb: 'TFT',
+        timezoneName: 'FRENCH SOUTHERN AND ANTARCTIC TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 13,
+        timezoneAbb: 'TKT',
+        timezoneName: 'TOKELAU TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 5,
+        timezoneAbb: 'TMT',
+        timezoneName: 'TURKMENISTAN TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 14,
+        timezoneAbb: 'TOST',
+        timezoneName: 'TONGA SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 13,
+        timezoneAbb: 'TOT',
+        timezoneName: 'TONGA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 12,
+        timezoneAbb: 'TVT',
+        timezoneName: 'TUVALU TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -8,
+        timezoneAbb: 'U',
+        timezoneName: 'UNIFORM TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 9,
+        timezoneAbb: 'ULAST',
+        timezoneName: 'ULAANBAATAR SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 0,
+        timezoneAbb: 'UTC',
+        timezoneName: 'COORDINATED UNIVERSAL TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 0,
+        timezoneAbb: 'UYST',
+        timezoneName: 'URUGUAY SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -3,
+        timezoneAbb: 'UYT',
+        timezoneName: 'URUGUAY TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 5,
+        timezoneAbb: 'UZT',
+        timezoneName: 'UZBEKISTAN TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -9,
+        timezoneAbb: 'V',
+        timezoneName: 'VICTOR TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -4,
+        timezoneAbb: 'VET',
+        timezoneName: 'VENEZUELAN STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 11,
+        timezoneAbb: 'VLAST',
+        timezoneName: 'VLADIVOSTOK SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 6,
+        timezoneAbb: 'VOST',
+        timezoneName: 'VOSTOK TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 11,
+        timezoneAbb: 'VUT',
+        timezoneName: 'VANUATU TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -10,
+        timezoneAbb: 'W',
+        timezoneName: 'WHISKEY TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 12,
+        timezoneAbb: 'WAKT',
+        timezoneName: 'WAKE TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -3,
+        timezoneAbb: 'WARST',
+        timezoneName: 'WESTERN ARGENTINE SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 2,
+        timezoneAbb: 'WAST',
+        timezoneName: 'WEST AFRICA SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 1,
+        timezoneAbb: 'WAT',
+        timezoneName: 'WEST AFRICA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 1,
+        timezoneAbb: 'WEST',
+        timezoneName: 'WESTERN EUROPEAN SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 12,
+        timezoneAbb: 'WFT',
+        timezoneName: 'WALLIS AND FUTUNA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -2,
+        timezoneAbb: 'WGST',
+        timezoneName: 'WESTERN GREENLAND SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -3,
+        timezoneAbb: 'WGT',
+        timezoneName: 'WEST GREENLAND TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 13,
+        timezoneAbb: 'WST',
+        timezoneName: 'WEST SAMOA TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 1,
+        timezoneAbb: 'WST',
+        timezoneName: 'WESTERN SAHARA SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 0,
+        timezoneAbb: 'WT',
+        timezoneName: 'WESTERN SAHARA STANDARD TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -11,
+        timezoneAbb: 'X',
+        timezoneName: 'X-RAY TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: -12,
+        timezoneAbb: 'Y',
+        timezoneName: 'YANKEE TIME ZONE'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 10,
+        timezoneAbb: 'YAPT',
+        timezoneName: 'YAP TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 6,
+        timezoneAbb: 'YEKST',
+        timezoneName: 'YEKATERINBURG SUMMER TIME'),
+    TimeZoneModel(
+        offsetFromUtcMin: 0,
+        offsetFromUtc: 0,
+        timezoneAbb: 'Z',
+        timezoneName: 'ZULU TIME ZONE'),
   ];
 
   TimezoneListData();
