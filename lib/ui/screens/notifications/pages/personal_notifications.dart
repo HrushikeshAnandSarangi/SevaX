@@ -111,7 +111,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 ReccuringRequestUpdated eventData =
                     ReccuringRequestUpdated.fromMap(notification.data);
                 return NotificationCard(
-                  title: "Request Updated",
+                  title: S.of(context).request_updated,
                   subTitle:
                       "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} \n ${getNotificationTimestamp(notification.timestamp)}"
                           .replaceFirst('***eventName', eventData.eventName)
@@ -121,7 +121,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                               eventData.eventDate,
                             ).toString(),
                           ),
-                  entityName: "Request Updated",
+                  entityName: S.of(context).request_updated,
                   photoUrl: eventData.photoUrl,
                   onDismissed: onDismissed,
                 );
@@ -200,8 +200,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   title: '${S.of(context).notifications_demoted_title}',
                   subTitle:
-                      '$associatedName ${S.of(context).notifications_demoted_subtitle_phrase} ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle} \n ${getNotificationTimestamp(notification.timestamp)}',
-                  entityName: 'DEMOTED',
+                      '$associatedName ${S.of(context).notifications_demoted_subtitle_phrase} ${isGroup ? S.of(context).group : S.of(context).timebank} ${timebankTitle} \n ${getNotificationTimestamp(notification.timestamp)}',
+                  entityName: S.of(context).demoted,
                   onDismissed: () {
                     // Dismiss notification
                     NotificationsRepository.readUserNotification(
@@ -219,8 +219,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return NotificationCard(
                   title: '${S.of(context).notifications_promoted_title}',
                   subTitle:
-                      '$associatedName ${S.of(context).notifications_promoted_subtitle_phrase} ${isGroup ? 'Group' : 'Timebank'} ${timebankTitle} \n ${getNotificationTimestamp(notification.timestamp)}',
-                  entityName: 'PROMOTED',
+                      '$associatedName ${S.of(context).notifications_promoted_subtitle_phrase} ${isGroup ? S.of(context).group : S.of(context).timebank} ${timebankTitle} \n ${getNotificationTimestamp(notification.timestamp)}',
+                  entityName: S.of(context).promoted,
                   onDismissed: () {
                     // Dismiss notification
                     NotificationsRepository.readUserNotification(

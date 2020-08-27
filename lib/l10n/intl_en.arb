@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-08-27T07:32:06+00:00",
+    "@@last_modified": "2020-08-27T10:17:12+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -913,5 +913,14 @@
     "has_goods_donation": "Has requested for goods donation",
     "cash_donation_invite": "has a request for cash donation. Tap to donate any amount that you can",
     "goods_donation_invite": "has a request for donation of specific goods. You can tap to donate any goods that you can",
-    "failed_load_image": "Failed to load image. Try different image"
+    "failed_load_image": "Failed to load image. Try different image",
+    "request_updated": "Request Updated",
+    "demoted": "DEMOTED",
+    "promoted": "PROMOTED",
+    "seva_coins_debited": "Seva Coins debited",
+    "debited": "Debited",
+    "member_reported_title": "Member Reported",
+    "cannot_be_deleted": "cannot be deleted",
+    "cannot_be_deleted_desc": "Your request to delete **requestData.entityTitle cannot be completed at this time. There are pending transactions. Tap here to view the details.",
+    "delete_request_success": "**requestTitle you requested to delete has been successfully deleted!"
 }

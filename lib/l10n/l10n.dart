@@ -4601,6 +4601,51 @@ class S {
         'Failed to load image. Try different image',
         name: 'failed_load_image',
       );
+
+  String get request_updated => Intl.message(
+        'Request Updated',
+        name: 'request_updated',
+      );
+
+  String get demoted => Intl.message(
+        'DEMOTED',
+        name: 'demoted',
+      );
+
+  String get promoted => Intl.message(
+        'PROMOTED',
+        name: 'promoted',
+      );
+
+  String get seva_coins_debited => Intl.message(
+        'Seva Coins debited',
+        name: 'seva_coins_debited',
+      );
+
+  String get debited => Intl.message(
+        'Debited',
+        name: 'debited',
+      );
+
+  String get member_reported_title => Intl.message(
+        'Member Reported',
+        name: 'member_reported_title',
+      );
+
+  String get cannot_be_deleted => Intl.message(
+        'cannot be deleted',
+        name: 'cannot_be_deleted',
+      );
+
+  String get cannot_be_deleted_desc => Intl.message(
+        'Your request to delete **requestData.entityTitle cannot be completed at this time. There are pending transactions. Tap here to view the details.',
+        name: 'cannot_be_deleted_desc',
+      );
+
+  String get delete_request_success => Intl.message(
+        '**requestTitle you requested to delete has been successfully deleted!',
+        name: 'delete_request_success',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

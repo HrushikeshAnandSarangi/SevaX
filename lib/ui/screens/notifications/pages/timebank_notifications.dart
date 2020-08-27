@@ -203,11 +203,15 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   entityName: requestData.entityTitle ?? "Deletion Request",
                   photoUrl: null,
                   title: requestData.requestAccepted
-                      ? "${requestData.entityTitle} was deleted!"
-                      : "${requestData.entityTitle} cannot be deleted!",
+                      ? "${requestData.entityTitle} ${S.of(context).notifications_was_deleted}"
+                      : "${requestData.entityTitle} ${S.of(context).cannot_be_deleted}",
                   subTitle: requestData.requestAccepted
-                      ? "${requestData.entityTitle} you requested to delete has been successfully deleted!"
-                      : "Your request to delete ${requestData.entityTitle} cannot be completed at this time. There are pending transactions. Tap here to view the details:",
+                      ? S
+                          .of(context)
+                          .delete_request_success
+                          .replaceAll('**requestTitle', requestData.entityTitle)
+                      : S.of(context).cannot_be_deleted_desc.replaceAll(
+                          '**requestData.entityTitle', requestData.entityTitle),
                   onPressed: () => !requestData.requestAccepted
                       ? showDialogForIncompleteTransactions(
                           context: context,
@@ -226,7 +230,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 ReportedMemberNotificationModel data =
                     ReportedMemberNotificationModel.fromMap(notification.data);
                 return NotificationCard(
-                  title: "Member Reported",
+                  title: S.of(context).member_reported_title,
                   subTitle: TimebankNotificationMessage.MEMBER_REPORT
                       .replaceFirst('*name', data.reportedUserName),
                   photoUrl: data.reportedUserImage,
@@ -253,10 +257,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType.DEBITED_SEVA_COINS_TIMEBANK:
                 return NotificationCard(
-                  title: "Seva Coins debited",
-                  subTitle: "Seva coins debited",
+                  title: S.of(context).seva_coins_debited,
+                  subTitle: S.of(context).seva_coins_debited,
                   photoUrl: null,
-                  entityName: "Debited",
+                  entityName: S.of(context).debited,
                   onDismissed: () {
                     dismissTimebankNotification(
                         timebankId: notification.timebankId,
