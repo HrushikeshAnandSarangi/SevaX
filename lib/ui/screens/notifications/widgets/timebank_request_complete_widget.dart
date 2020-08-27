@@ -13,6 +13,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/custom_close_butto
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -80,6 +81,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
               credits: transactionModel.credits,
             );
           },
+          timestamp: notification.timestamp,
         );
       },
     );
@@ -254,6 +256,8 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
     ));
 
     if (results != null && results.containsKey('selection')) {
+      await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
+          FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
       onActivityResult(
           sevaCore: sevaCore,
           requestModel: model,
@@ -284,6 +288,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
       "reviewer": reviewer,
       "reviewed": reviewed,
       "ratings": results['selection'],
+      "ratingsonquestions": results['ratings'],
       "requestId": requestId,
       "comments": (results['didComment']
           ? results['comment']

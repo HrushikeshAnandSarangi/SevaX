@@ -32,6 +32,7 @@ import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
+import 'package:sevaexchange/widgets/parent_timebank_picker.dart';
 
 import '../switch_timebank.dart';
 
@@ -112,6 +113,7 @@ class CreateEditCommunityViewFormState
   bool protectedVal = false;
   GeoFirePoint location;
   String selectedAddress = '';
+  String selectedTimebank = '';
   String _billingDetailsError = '';
   String communityImageError = '';
   String enteredName = '';
@@ -341,11 +343,12 @@ class CreateEditCommunityViewFormState
                           },
                           controller: searchTextController,
                           onChanged: (value) {
-                            if (value.length > 1) {
+                            if (value.length > 1 && !autoValidateText) {
                               setState(() {
                                 autoValidateText = true;
                               });
-                            } else {
+                            }
+                            if (value.length <= 1 && autoValidateText) {
                               setState(() {
                                 autoValidateText = false;
                               });
@@ -411,11 +414,12 @@ class CreateEditCommunityViewFormState
                           textCapitalization: TextCapitalization.sentences,
                           initialValue: timebankModel.missionStatement ?? "",
                           onChanged: (value) {
-                            if (value.length > 1) {
+                            if (value.length > 1 && !autoValidateText) {
                               setState(() {
                                 autoValidateText = true;
                               });
-                            } else {
+                            }
+                            if (value.length <= 1 && autoValidateText) {
                               setState(() {
                                 autoValidateText = false;
                               });
@@ -657,6 +661,31 @@ class CreateEditCommunityViewFormState
                                 ),
                               ),
                             ],
+                          ),
+                        ),
+                        headingText(S.of(context).timebank_has_parent),
+                        Text(S.of(context).timebank_location_has_parent_hint_text,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Center(
+                          child: ParentTimebankPickerWidget(
+                            selectedTimebank: this.selectedTimebank,
+                            onChanged: (CommunityModel selectedTimebank) {
+                              print("received data model ");
+                              setState(() {
+                                this.selectedTimebank = selectedTimebank.name;
+                              });
+                              snapshot.data.timebank
+                                  .updateValueByKey(
+                                  'parentTimebankId', selectedTimebank.primary_timebank);
+                              timebankModel.parentTimebankId = selectedTimebank.primary_timebank;
+                              snapshot.data.community
+                                  .updateValueByKey(
+                                  'parentTimebankId', selectedTimebank.primary_timebank);
+                            },
                           ),
                         ),
                         widget.isCreateTimebank
@@ -1329,11 +1358,12 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
-            if (value.length > 1) {
+            if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
               });
-            } else {
+            }
+            if (value.length <= 1 && autoValidateText) {
               setState(() {
                 autoValidateText = false;
               });
@@ -1372,11 +1402,12 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
-            if (value.length > 1) {
+            if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
               });
-            } else {
+            }
+            if (value.length <= 1 && autoValidateText) {
               setState(() {
                 autoValidateText = false;
               });
@@ -1450,11 +1481,12 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
-            if (value.length > 1) {
+            if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
               });
-            } else {
+            }
+            if (value.length <= 1 && autoValidateText) {
               setState(() {
                 autoValidateText = false;
               });
@@ -1493,11 +1525,12 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
-            if (value.length > 1) {
+            if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
               });
-            } else {
+            }
+            if (value.length <= 1 && autoValidateText) {
               setState(() {
                 autoValidateText = false;
               });
@@ -1537,11 +1570,12 @@ class CreateEditCommunityViewFormState
             },
             keyboardType: TextInputType.text,
             onChanged: (value) {
-              if (value.length > 1) {
+              if (value.length > 1 && !autoValidateText) {
                 setState(() {
                   autoValidateText = true;
                 });
-              } else {
+              }
+              if (value.length <= 1 && autoValidateText) {
                 setState(() {
                   autoValidateText = false;
                 });
@@ -1583,11 +1617,12 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
-            if (value.length > 1) {
+            if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
               });
-            } else {
+            }
+            if (value.length <= 1 && autoValidateText) {
               setState(() {
                 autoValidateText = false;
               });
@@ -1618,11 +1653,12 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
-            if (value.length > 1) {
+            if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
               });
-            } else {
+            }
+            if (value.length <= 1 && autoValidateText) {
               setState(() {
                 autoValidateText = false;
               });

@@ -9,7 +9,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
@@ -266,25 +266,35 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get getBottomFrameForGoodRequest {
-    switch (goodsStatus) {
-      case GoodStatus.GOODS_APPROVED:
-      case GoodStatus.GOODS_REJEJCTED:
-      case GoodStatus.GOODS_SUBMITTED:
-        return goodsDonationSubmitted;
+    if (widget.requestItem.sevaUserId ==
+        SevaCore.of(context).loggedInUser.sevaUserID) {
+      return getBottombarForCreator;
+    } else {
+      switch (goodsStatus) {
+        case GoodStatus.GOODS_APPROVED:
+        case GoodStatus.GOODS_REJEJCTED:
+        case GoodStatus.GOODS_SUBMITTED:
+          return goodsDonationSubmitted;
 
-      default:
-        return goodsDonationSubmitted;
+        default:
+          return goodsDonationSubmitted;
+      }
     }
   }
 
   Widget get getBottomFrameForCashRequest {
-    switch (cashStatus) {
-      case CashStatus.CASH_CONFIRMED:
-      case CashStatus.CASH_DEPOSITED:
-        return cashDeposited;
+    if (widget.requestItem.sevaUserId ==
+        SevaCore.of(context).loggedInUser.sevaUserID) {
+      return getBottombarForCreator;
+    } else {
+      switch (cashStatus) {
+        case CashStatus.CASH_CONFIRMED:
+        case CashStatus.CASH_DEPOSITED:
+          return cashDeposited;
 
-      default:
-        return cashDeposited;
+        default:
+          return cashDeposited;
+      }
     }
   }
 
@@ -782,39 +792,34 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get totalGoodsReceived {
-    return CustomListTile(
-      title: Text(
-        'Total Goods Received',
-        style: TextStyle(
-          fontSize: 18,
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      subtitle: Text(''),
-      leading: Icon(
-        Icons.show_chart,
-        color: Colors.grey,
-      ),
-      trailing: Text(
-        widget.requestItem.goodsDonationDetails.requiredGoods.length.toString(),
-        style: TextStyle(
-          fontSize: 18,
-          color: Colors.black,
-          // fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  Future<String> _getLocation(double lat, double lng) async {
-    String address = await LocationUtility().getFormattedAddress(lat, lng);
-    // log('_getLocation: $address');
-    // setState(() {
-    //   this.selectedAddress = address;
-    // });
-
-    return address;
+    return FutureBuilder<int>(
+        future: FirestoreManager.getRequestRaisedGoods(
+            requestId: widget.requestItem.id),
+        builder: (context, snapshot) {
+          return CustomListTile(
+            title: Text(
+              'Total Goods Received',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            subtitle: Text(''),
+            leading: Icon(
+              Icons.show_chart,
+              color: Colors.grey,
+            ),
+            trailing: Text(
+              snapshot.data.toString(),
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                // fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        });
   }
 
   Widget getBottombar() {

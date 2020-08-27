@@ -325,11 +325,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                             TextFormField(
                               autovalidate: autoValidateText,
                               onChanged: (value) {
-                                if (value.length > 1) {
+                                if (value.length > 1 && !autoValidateText) {
                                   setState(() {
                                     autoValidateText = true;
                                   });
-                                } else {
+                                }
+                                if (value.length <= 1 && autoValidateText) {
                                   setState(() {
                                     autoValidateText = false;
                                   });
@@ -567,11 +568,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           TextFormField(
             autovalidate: autoValidateText,
             onChanged: (value) {
-              if (value.length > 1) {
+              if (value.length > 1 && !autoValidateText) {
                 setState(() {
                   autoValidateText = true;
                 });
-              } else {
+              }
+              if (value.length <= 1 && autoValidateText) {
                 setState(() {
                   autoValidateText = false;
                 });

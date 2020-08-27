@@ -265,32 +265,39 @@ class _ReportMemberPageState extends State<ReportMemberPage> {
 
     String imageURL = await snapshot.ref.getDownloadURL();
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
-
-    profanityStatusModel =
-        await getProfanityStatus(profanityImageModel: profanityImageModel);
-
-    if (profanityStatusModel.isProfane) {
+    if (profanityImageModel == null) {
       progressDialog.hide();
 
-      showProfanityImageAlert(
-              context: context, content: profanityStatusModel.category)
-          .then((status) {
-        if (status == 'Proceed') {
-          FirebaseStorage.instance
-              .getReferenceFromUrl(imageURL)
-              .then((reference) {
-            reference.delete();
-          }).catchError((e) => print(e));
-        } else {
-          print('error');
-        }
-      });
+      showFailedLoadImage(context: context).then((value) {});
     } else {
-      FirebaseStorage.instance.getReferenceFromUrl(imageURL).then((reference) {
-        reference.delete();
-      }).catchError((e) => print(e));
-      bloc.uploadImage(file);
-      progressDialog.hide();
+      profanityStatusModel =
+          await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+      if (profanityStatusModel.isProfane) {
+        progressDialog.hide();
+
+        showProfanityImageAlert(
+                context: context, content: profanityStatusModel.category)
+            .then((status) {
+          if (status == 'Proceed') {
+            FirebaseStorage.instance
+                .getReferenceFromUrl(imageURL)
+                .then((reference) {
+              reference.delete();
+            }).catchError((e) => print(e));
+          } else {
+            print('error');
+          }
+        });
+      } else {
+        FirebaseStorage.instance
+            .getReferenceFromUrl(imageURL)
+            .then((reference) {
+          reference.delete();
+        }).catchError((e) => print(e));
+        bloc.uploadImage(file);
+        progressDialog.hide();
+      }
     }
   }
 

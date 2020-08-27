@@ -1,66 +1,135 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:meta/meta.dart';
-// import 'package:sevaexchange/base/base_service.dart';
-// import 'dart:async';
-// import 'package:sevaexchange/flavor_config.dart';
-// import 'package:sevaexchange/new_baseline/models/news_model.dart';
+import 'dart:async';
 
-// class NewsService extends BaseService {
-//   /// create a [newsObject]
-//   Future<void> createNews({@required NewsModel newsObject}) async {
-//     log.i('createNews: newsObject: ${newsObject.toMap()}');
-//     await Firestore.instance
-//         .collection('news')
-//         .document(newsObject.id)
-//         .setData(newsObject.toMap());
-//   }
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:meta/meta.dart';
+import 'package:sevaexchange/models/models.dart';
 
-//   /// update a [newsObject]
-//   Future<void> updateNews({@required NewsModel newsObject}) async {
-//     log.i('updateNews: newsObject: ${newsObject.toMap()}');
-//     await Firestore.instance
-//         .collection('news')
-//         .document(newsObject.id)
-//         .updateData(newsObject.toMap());
-//   }
+class NewsService {
+  Future<void> updateFeedComments({
+    @required String feedId,
+    @required Comments comment,
+  }) async {
+    return await Firestore.instance
+        .collection('news')
+        .document(feedId)
+        .setData({"comments": []});
+  }
 
-//   /// get a stream of news in [newsSink]
-//   Stream<List<NewsModel>> getNewsStream() async* {
-//     log.i('getNewsStream: ');
-//     var data = Firestore.instance
-//         .collection('news')
-//         .where('entity', isEqualTo: {
-//           'entityType': 'timebanks',
-//           'entityId': FlavorConfig.values.timebankId,
-//           'entityName': FlavorConfig.values.timebankName,
-//         })
-//         .orderBy('posttimestamp', descending: true)
-//         .snapshots();
+  Future<void> updateFeedById({
+    @required NewsModel newsModel,
+  }) async {
+    print(newsModel.id);
+    return await Firestore.instance
+        .collection('news')
+        .document(newsModel.id)
+        .updateData(newsModel.toMap());
+  }
 
-//     yield* data.transform(
-//         StreamTransformer<QuerySnapshot, List<NewsModel>>.fromHandlers(
-//             handleData: (querySnapshot, newsSink) {
-//       List<NewsModel> modelList = [];
-//       querySnapshot.documents.forEach((document) {
-//         modelList.add(NewsModel.fromMap(document.data));
-//       });
-//       newsSink.add(modelList);
-//     }));
-//   }
+  Future<void> updateFeed({
+    @required NewsModel newsModel,
+  }) async {
+    return await Firestore.instance
+        .collection('news')
+        .document(newsModel.id)
+        .updateData(newsModel.toMap());
+  }
 
-//   /// get [newsModel] for a [newsId]
-//   Future<NewsModel> getNewsForId(String newsId) async {
-//     log.i('getNewsForId: newsId: $newsId');
-//     NewsModel newsModel;
-//     await Firestore.instance
-//         .collection('news')
-//         .document(newsId)
-//         .get()
-//         .then((snapshot) {
-//       if (snapshot.data == null) return null;
-//       newsModel = NewsModel.fromMap(snapshot.data);
-//     });
+  Future<void> updateFeedLikes({
+    @required NewsModel newsModel,
+  }) async {
+    // log.i('updateUser: UserModel: $user');
+    return await Firestore.instance
+        .collection('news')
+        .document(newsModel.id)
+        .updateData({'likes': newsModel.likes});
+  }
 
-//     return newsModel;
-//   }
-// }
+  Stream<List<Comments>> getAllComments(String id) async* {
+    // log.i('getNewsStream: ');
+    var data = Firestore.instance
+        .collection('comments')
+        .where("feedId", isEqualTo: id)
+        .orderBy('createdAt', descending: true)
+        .snapshots();
+
+    yield* data.transform(
+        StreamTransformer<QuerySnapshot, List<Comments>>.fromHandlers(
+            handleData: (querySnapshot, commentSink) {
+              List<Comments> modelList = [];
+              querySnapshot.documents.forEach((document) {
+                Comments comment = Comments.fromMap(document.data);
+                print(comment.comment);
+                modelList.add(Comments.fromMap(document.data));
+              });
+              commentSink.add(modelList);
+            }));
+  }
+
+  Stream<List<Comments>> getCommentsListByFeedId(String id) async* {
+    // log.i('getNewsStream: ');
+    var data = Firestore.instance
+        .collection('news')
+        .where("id", isEqualTo: id)
+    // .orderBy('createdAt', descending: true)
+        .snapshots();
+
+    yield* data.transform(
+        StreamTransformer<QuerySnapshot, List<Comments>>.fromHandlers(
+            handleData: (querySnapshot, commentSink) {
+              List<Comments> modelList = [];
+
+              querySnapshot.documents.forEach((document) {
+                NewsModel feed = NewsModel.fromMap(document.data);
+                feed.comments.forEach((comment) {
+                  print("This is comment text ${comment.comment.toString()}");
+                  modelList.add(Comments.fromMap(document.data));
+                });
+              });
+              commentSink.add(modelList);
+            }));
+  }
+
+  Stream<NewsModel> getCommentsByFeedId({@required String id}) async* {
+    assert(id != null && id.isNotEmpty, "Seva UserId cannot be null or empty");
+    var data = Firestore.instance
+        .collection('news')
+        .where("id", isEqualTo: id)
+    // .orderBy('createdAt', descending: true)
+        .snapshots();
+
+    yield* data.transform(
+      StreamTransformer<QuerySnapshot, NewsModel>.fromHandlers(
+        handleData: (snapshot, userSink) async {
+          DocumentSnapshot documentSnapshot = snapshot.documents[0];
+          NewsModel model = NewsModel.fromMap(documentSnapshot.data);
+          print("test............");
+          print(model.toString());
+          model.id = id;
+          userSink.add(model);
+        },
+      ),
+    );
+  }
+
+//  Stream<NewsModel> getCommentsByFeedId({@required String id}) async* {
+//    assert(id != null && id.isNotEmpty, "Seva UserId cannot be null or empty");
+//    var data = Firestore.instance
+//        .collection('news')
+//        .where("id", isEqualTo: id)
+//        // .orderBy('createdAt', descending: true)
+//        .snapshots();
+//
+//    yield* data.transform(
+//      StreamTransformer<QuerySnapshot, NewsModel>.fromHandlers(
+//        handleData: (snapshot, userSink) async {
+//          DocumentSnapshot documentSnapshot = snapshot.documents[0];
+//          NewsModel model = NewsModel.fromMap(documentSnapshot.data);
+//          print("test............");
+//          print(model.toString());
+//          model.id = id;
+//          userSink.add(model);
+//        },
+//      ),
+//    );
+//  }
+}

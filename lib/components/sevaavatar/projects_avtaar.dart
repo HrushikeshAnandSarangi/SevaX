@@ -55,43 +55,56 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
   Future<void> profanityCheck({String imageURL}) async {
     // _newsImageURL = imageURL;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
-
-    profanityStatusModel =
-        await getProfanityStatus(profanityImageModel: profanityImageModel);
-
-    if (profanityStatusModel.isProfane) {
-      showProfanityImageAlert(
-              context: context, content: profanityStatusModel.category)
-          .then((status) {
-        if (status == 'Proceed') {
-          FirebaseStorage.instance
-              .getReferenceFromUrl(imageURL)
-              .then((reference) {
-            reference.delete();
-            setState(() {
-              globals.projectsAvtaarURL = null;
-            });
-          }).catchError((e) => print(e));
-        } else {
-          print('error');
-        }
+    if (profanityImageModel == null) {
+      showFailedLoadImage(context: context).then((value) {
+        globals.projectsAvtaarURL = null;
       });
     } else {
-      setState(() {
-        globals.projectsAvtaarURL = imageURL;
-      });
+      profanityStatusModel =
+          await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+      if (profanityStatusModel.isProfane) {
+        showProfanityImageAlert(
+                context: context, content: profanityStatusModel.category)
+            .then((status) {
+          if (status == 'Proceed') {
+            FirebaseStorage.instance
+                .getReferenceFromUrl(imageURL)
+                .then((reference) {
+              reference.delete();
+              setState(() {
+                globals.projectsAvtaarURL = null;
+              });
+            }).catchError((e) => print(e));
+          } else {
+            print('error');
+          }
+        });
+      } else {
+        setState(() {
+          globals.projectsAvtaarURL = imageURL;
+        });
+      }
     }
   }
 
   @override
-  void userImage(File _image) {
-    setState(() {
-      this._image = _image;
-      this._isImageBeingUploaded = true;
-      _uploadImage().then((_) {
-        this._isImageBeingUploaded = false;
+  void userImage(dynamic _image, type) {
+    print(type);
+    print(_image);
+    if (type == 'stock_image') {
+      setState(() {
+        globals.projectsAvtaarURL = _image;
       });
-    });
+    } else {
+      setState(() {
+        this._image = _image;
+        this._isImageBeingUploaded = true;
+        _uploadImage().then((_) {
+          this._isImageBeingUploaded = false;
+        });
+      });
+    }
   }
 
   @override

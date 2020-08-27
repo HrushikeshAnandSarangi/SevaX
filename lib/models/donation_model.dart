@@ -43,6 +43,7 @@ class DonationModel {
     this.notificationId,
     this.donorDetails,
     this.donationAssociatedTimebankDetails,
+    this.lastModifiedBy,
   });
   String communityId;
   String donorSevaUserId;
@@ -61,56 +62,61 @@ class DonationModel {
   GoodsDetails goodsDetails;
   DonorDetails donorDetails;
   DonationAssociatedTimebankDetails donationAssociatedTimebankDetails;
+  String lastModifiedBy;
 
   factory DonationModel.fromMap(Map<String, dynamic> json) => DonationModel(
-      communityId: json["communityId"] == null ? null : json["communityId"],
-      notificationId:
-          json["notificationId"] == null ? null : json["notificationId"],
-      donorSevaUserId:
-          json["donorSevaUserId"] == null ? null : json["donorSevaUserId"],
-      donatedTo: json["donatedTo"] == null ? null : json["donatedTo"],
-      donatedToTimebank:
-          json["donatedToTimebank"] == null ? null : json["donatedToTimebank"],
-      donationType: json["donationType"] == null
-          ? null
-          : json["donationType"] == "CASH"
-              ? RequestType.CASH
-              : json["donationType"] == "GOODS"
-                  ? RequestType.GOODS
-                  : RequestType.TIME,
-      id: json["id"] == null ? null : json["id"],
-      requestId: json["requestId"] == null ? null : json["requestId"],
-      requestTitle: json["requestTitle"] == null ? null : json["requestTitle"],
-      timebankId: json["timebankId"] == null ? null : json["timebankId"],
-      timestamp: json["timestamp"] == null ? null : json["timestamp"],
-      donationStatus: json["donationStatus"] == null
-          ? null
-          : _donationStatusMapper[json["donationStatus"]],
-      cashDetails: json['cashDetails'] == null
-          ? null
-          : CashDetails.fromMap(
-              Map<String, dynamic>.from(
-                json['cashDetails'],
+        communityId: json["communityId"] == null ? null : json["communityId"],
+        notificationId:
+            json["notificationId"] == null ? null : json["notificationId"],
+        donorSevaUserId:
+            json["donorSevaUserId"] == null ? null : json["donorSevaUserId"],
+        donatedTo: json["donatedTo"] == null ? null : json["donatedTo"],
+        donatedToTimebank: json["donatedToTimebank"] == null
+            ? null
+            : json["donatedToTimebank"],
+        donationType: json["donationType"] == null
+            ? null
+            : json["donationType"] == "CASH"
+                ? RequestType.CASH
+                : json["donationType"] == "GOODS"
+                    ? RequestType.GOODS
+                    : RequestType.TIME,
+        id: json["id"] == null ? null : json["id"],
+        requestId: json["requestId"] == null ? null : json["requestId"],
+        requestTitle:
+            json["requestTitle"] == null ? null : json["requestTitle"],
+        timebankId: json["timebankId"] == null ? null : json["timebankId"],
+        timestamp: json["timestamp"] == null ? null : json["timestamp"],
+        donationStatus: json["donationStatus"] == null
+            ? null
+            : _donationStatusMapper[json["donationStatus"]],
+        cashDetails: json['cashDetails'] == null
+            ? null
+            : CashDetails.fromMap(
+                Map<String, dynamic>.from(
+                  json['cashDetails'],
+                ),
               ),
-            ),
-      goodsDetails: json['goodsDetails'] == null
-          ? null
-          : GoodsDetails.fromMap(
-              Map<String, dynamic>.from(json['goodsDetails'])),
-      donorDetails: json['donorDetails'] == null
-          ? null
-          : DonorDetails.fromMap(
-              Map<String, dynamic>.from(
-                json['donorDetails'],
+        goodsDetails: json['goodsDetails'] == null
+            ? null
+            : GoodsDetails.fromMap(
+                Map<String, dynamic>.from(json['goodsDetails'])),
+        donorDetails: json['donorDetails'] == null
+            ? null
+            : DonorDetails.fromMap(
+                Map<String, dynamic>.from(
+                  json['donorDetails'],
+                ),
               ),
-            ),
-      donationAssociatedTimebankDetails:
-          json.containsKey('donationAssociatedTimebankDetails')
-              ? DonationAssociatedTimebankDetails.fromMap(
-                  Map<String, String>.from(
-                      json['donationAssociatedTimebankDetails']),
-                )
-              : null);
+        donationAssociatedTimebankDetails:
+            json.containsKey('donationAssociatedTimebankDetails')
+                ? DonationAssociatedTimebankDetails.fromMap(
+                    Map<String, String>.from(
+                        json['donationAssociatedTimebankDetails']),
+                  )
+                : null,
+        lastModifiedBy: json['lastModifiedBy'],
+      );
 
   Map<String, dynamic> toMap() => {
         "communityId": communityId == null ? null : communityId,
@@ -138,6 +144,7 @@ class DonationModel {
         "donorDetails": donorDetails == null ? null : donorDetails.toMap(),
         'donationAssociatedTimebankDetails':
             donationAssociatedTimebankDetails.toMap(),
+        "changeHistory": lastModifiedBy,
       };
 
   @override

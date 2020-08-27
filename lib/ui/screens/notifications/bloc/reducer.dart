@@ -238,6 +238,7 @@ class PersonalNotificationReducerForRequests {
           ),
         );
       },
+      timestamp: notification.timestamp,
     );
   }
 
@@ -285,6 +286,7 @@ class PersonalNotificationReducerForRequests {
         //   );
         // }
       },
+      timestamp: notification.timestamp,
     );
   }
 
@@ -325,22 +327,24 @@ class PersonalNotificationReducerForRequests {
           );
         }
       },
+      timestamp: notification.timestamp,
     );
   }
 }
 
 class PersonalNotificationsRedcerForDonations {
-  static Widget getWidgetForDonationsModifiedByDonor(
-      {Function onDismissed,
-      BuildContext context,
-      NotificationsModel notificationsModel,
-      String timestampVal}) {
+  static Widget getWidgetForDonationsModifiedByDonor({
+    Function onDismissed,
+    BuildContext context,
+    NotificationsModel notificationsModel,
+    int timestampVal,
+  }) {
     final holder = DonationModel.fromMap(notificationsModel.data);
 
     return NotificationCard(
       entityName: S.of(context).pledge_modified_by_donor,
       title: S.of(context).tap_to_view_details,
-      subTitle: "${S.of(context).pledge_modified_by_donor} \n $timestampVal",
+      subTitle: "${S.of(context).pledge_modified_by_donor}",
       onDismissed: onDismissed,
       onPressed: () {
         Navigator.of(context).push(
@@ -351,30 +355,33 @@ class PersonalNotificationsRedcerForDonations {
           ),
         );
       },
+      timestamp: timestampVal,
     );
   }
 
   static Widget getWidgetForSuccessfullDonation(
-      {Function onDismissed, timestampVal, BuildContext context}) {
+      {Function onDismissed, int timestampVal, BuildContext context}) {
     return NotificationCard(
       entityName: S.of(context).donation_completed,
       title: S.of(context).donation_completed,
-      subTitle: "${S.of(context).donation_completed_desc}  \n $timestampVal",
+      subTitle: "${S.of(context).donation_completed_desc}",
       onDismissed: onDismissed,
+      timestamp: timestampVal,
     );
   }
 
-  static getWidgetForDonationsModifiedByCreator(
-      {Function onDismissed,
-      BuildContext context,
-      NotificationsModel notificationsModel,
-      String timestampVal}) {
+  static getWidgetForDonationsModifiedByCreator({
+    Function onDismissed,
+    BuildContext context,
+    NotificationsModel notificationsModel,
+    int timestampVal,
+  }) {
     final holder = DonationModel.fromMap(notificationsModel.data);
 
     return NotificationCard(
       entityName: S.of(context).pledge_modified,
       title: S.of(context).tap_to_view_details,
-      subTitle: "${S.of(context).pledge_modified} \n $timestampVal",
+      subTitle: "${S.of(context).pledge_modified} \n",
       onDismissed: onDismissed,
       onPressed: () {
         Navigator.of(context).push(
@@ -385,6 +392,7 @@ class PersonalNotificationsRedcerForDonations {
           ),
         );
       },
+      timestamp: timestampVal,
     );
   }
 }

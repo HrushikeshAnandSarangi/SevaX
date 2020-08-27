@@ -325,6 +325,7 @@ class _ResultViewState extends State<ResultView> {
                         builder: (context) {
                           return NewsCardView(
                             newsModel: news,
+                            isFocused: false,
                           );
                         },
                       ),

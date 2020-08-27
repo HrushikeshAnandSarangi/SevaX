@@ -67,6 +67,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
                           builder: (context) {
                             return NewsCardView(
                               newsModel: news,
+                              isFocused: false,
                             );
                           },
                         ),

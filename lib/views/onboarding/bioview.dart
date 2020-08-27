@@ -94,11 +94,12 @@ class _BioViewState extends State<BioView> {
                             maxLines: 50,
                             maxLength: 150,
                             onChanged: (value) {
-                              if (value.length > 1) {
+                              if (value.length > 1 && !autoValidateText) {
                                 setState(() {
                                   autoValidateText = true;
                                 });
-                              } else {
+                              }
+                              if (value.length <= 1 && autoValidateText) {
                                 setState(() {
                                   autoValidateText = false;
                                 });

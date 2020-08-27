@@ -168,15 +168,16 @@ class EditGroupFormState extends State<EditGroupForm> {
             controller: searchTextController,
             autovalidate: autoValidateText,
             onChanged: (value) {
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateText = false;
-                });
-              }
+               if (value.length > 1 && !autoValidateText) {
+            setState(() {
+              autoValidateText = true;
+            });
+          }
+          if (value.length <= 1 && autoValidateText) {
+            setState(() {
+              autoValidateText = false;
+            });
+          }
             },
             decoration: InputDecoration(
               errorMaxLines: 2,
@@ -200,15 +201,16 @@ class EditGroupFormState extends State<EditGroupForm> {
           TextFormField(
             autovalidate: autoValidateText,
             onChanged: (value) {
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateText = false;
-                });
-              }
+               if (value.length > 1 && !autoValidateText) {
+            setState(() {
+              autoValidateText = true;
+            });
+          }
+          if (value.length <= 1 && autoValidateText) {
+            setState(() {
+              autoValidateText = false;
+            });
+          }
             },
             initialValue: widget.timebankModel.missionStatement ?? "",
             decoration: InputDecoration(

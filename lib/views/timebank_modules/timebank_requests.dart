@@ -1326,7 +1326,10 @@ class RequestListItemsState extends State<RequestListItems> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               RecurringListing(
-                                                  requestModel: model, offerModel: null,timebankModel: null,),
+                                            requestModel: model,
+                                            offerModel: null,
+                                            timebankModel: null,
+                                          ),
                                         ),
                                       );
                                     },
@@ -1446,15 +1449,13 @@ class RequestListItemsState extends State<RequestListItems> {
     if (model.isRecurring) {
       print("is recurring ===== ${model.isRecurring}");
       Navigator.push(
-        widget.parentContext,
-        MaterialPageRoute(
-          builder: (context) => RecurringListing(
-            requestModel: model,
-            timebankModel: widget.timebankModel,
-            offerModel: null,
-          )
-        )
-      );
+          widget.parentContext,
+          MaterialPageRoute(
+              builder: (context) => RecurringListing(
+                    requestModel: model,
+                    timebankModel: widget.timebankModel,
+                    offerModel: null,
+                  )));
     } else if (model.sevaUserId ==
             SevaCore.of(context).loggedInUser.sevaUserID ||
         widget.timebankModel.admins

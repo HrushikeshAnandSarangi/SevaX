@@ -19,6 +19,7 @@ import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 //TODO update bio and remove un-necessary stuff
 
@@ -32,7 +33,7 @@ class ProfileViewer extends StatefulWidget {
 
   ProfileViewer({
     this.userEmail,
-    @required this.timebankId,
+    this.timebankId,
     this.isFromTimebank,
     this.entityName,
   })  : assert(userEmail != null),
@@ -45,6 +46,25 @@ class ProfileViewer extends StatefulWidget {
   }
 }
 
+final BorderSide borderOnepx = BorderSide(
+  color: Colors.grey[300],
+  width: 1,
+);
+final BorderSide borderHalfpx = BorderSide(
+  color: Colors.grey[300],
+  width: 0.5,
+);
+
+final TextStyle title = TextStyle(
+  color: Colors.black,
+  fontSize: 16,
+  fontWeight: FontWeight.bold,
+);
+final TextStyle subTitle = TextStyle(
+  color: Colors.grey,
+  fontSize: 14,
+);
+
 class ProfileViewerState extends State<ProfileViewer> {
   UserModel user;
   bool isBlocked;
@@ -52,6 +72,75 @@ class ProfileViewerState extends State<ProfileViewer> {
   @override
   void initState() {
     super.initState();
+  }
+
+  TRscore(num trustworthinessscore, num reliabilityscore) {
+    print('ey');
+    print(trustworthinessscore);
+    print(reliabilityscore);
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            height: 80,
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  SmoothStarRating(
+                      allowHalfRating: true,
+                      isReadOnly: true,
+                      onRated: (v) {},
+                      starCount: 5,
+                      rating: trustworthinessscore != null
+                          ? trustworthinessscore
+                          : 0,
+                      size: 30.0,
+                      filledIconData: Icons.star,
+                      halfFilledIconData: Icons.star_half,
+                      color: Colors.yellow,
+                      borderColor: Colors.yellow,
+                      spacing: 0.0),
+                  Text(
+                    "Trustworthiness",
+                    style: subTitle,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            alignment: Alignment.centerLeft,
+            height: 80,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SmoothStarRating(
+                    allowHalfRating: true,
+                    isReadOnly: true,
+                    onRated: (v) {},
+                    starCount: 5,
+                    rating: reliabilityscore != null ? reliabilityscore : 0,
+                    size: 30.0,
+                    filledIconData: Icons.star,
+                    halfFilledIconData: Icons.star_half,
+                    color: Colors.yellow,
+                    borderColor: Colors.yellow,
+                    spacing: 0.0),
+                Text(
+                  "Reliabilityscore",
+                  style: subTitle,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -501,26 +590,6 @@ class JobsCounter extends StatelessWidget {
   }) : super(key: key);
   final int jobs;
   final int hours;
-
-  final BorderSide borderOnepx = BorderSide(
-    color: Colors.grey[300],
-    width: 1,
-  );
-  final BorderSide borderHalfpx = BorderSide(
-    color: Colors.grey[300],
-    width: 0.5,
-  );
-
-  final TextStyle title = TextStyle(
-    color: Colors.black,
-    fontSize: 16,
-    fontWeight: FontWeight.bold,
-  );
-  final TextStyle subTitle = TextStyle(
-    color: Colors.grey,
-    fontSize: 14,
-  );
-
   @override
   Widget build(BuildContext context) {
     return Row(

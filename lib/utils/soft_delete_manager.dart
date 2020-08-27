@@ -91,45 +91,53 @@ Future<void> showAdvisoryBeforeDeletion({
       return AlertDialog(
         title: Text(
           S.of(context).delete_confirmation + associatedContentTitle + "?",
+          style: TextStyle(fontSize: 17),
         ),
         content: Form(
             key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(_getContentFromType(softDeleteType, context)),
-                TextFormField(
-                  decoration: InputDecoration(
-                    errorMaxLines: 2,
-                    hintText: S.of(context).enter_reason_to_delete,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    _getContentFromType(softDeleteType, context),
+                    style: TextStyle(fontSize: 15),
                   ),
-                  keyboardType: TextInputType.text,
-                  textCapitalization: TextCapitalization.sentences,
-                  style: TextStyle(fontSize: 17.0),
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(50),
-                  ],
-                  autovalidate: autoValidateText,
-                  onChanged: (value) {
-                    if (value.length > 1) {
-                      autoValidateText = true;
-                    } else {
-                      autoValidateText = false;
-                    }
-                    print("auto $autoValidateText");
-                  },
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return S.of(context).enter_reason_to_delete_error;
-                    } else if (profanityDetector.isProfaneString(value)) {
-                      return S.of(context).profanity_text_alert;
-                    } else {
-                      reason = value;
-                      return null;
-                    }
-                  },
-                ),
-              ],
+                  TextFormField(
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      errorMaxLines: 2,
+                      hintText: S.of(context).enter_reason_to_delete,
+                    ),
+                    keyboardType: TextInputType.text,
+                    textCapitalization: TextCapitalization.sentences,
+                    style: TextStyle(fontSize: 17.0),
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(50),
+                    ],
+                    autovalidate: autoValidateText,
+                    onChanged: (value) {
+                      if (value.length > 1) {
+                        autoValidateText = true;
+                      } else {
+                        autoValidateText = false;
+                      }
+                      print("auto $autoValidateText");
+                    },
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return S.of(context).enter_reason_to_delete_error;
+                      } else if (profanityDetector.isProfaneString(value)) {
+                        return S.of(context).profanity_text_alert;
+                      } else {
+                        reason = value;
+                        return null;
+                      }
+                    },
+                  ),
+                ],
+              ),
             )),
         actions: <Widget>[
           RaisedButton(
@@ -451,6 +459,38 @@ Future<String> showProfanityImageAlert({BuildContext context, String content}) {
               ),
               onPressed: () {
                 Navigator.pop(_context, 'Proceed');
+              },
+            ),
+          ],
+        );
+      });
+}
+
+Future<void> showFailedLoadImage({
+  BuildContext context,
+}) {
+  return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext _context) {
+        return AlertDialog(
+          title: Text(S.of(context).profanity_alert),
+          content: Text(
+            S.of(context).failed_load_image,
+          ),
+          actions: <Widget>[
+            RaisedButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
+              child: Text(
+                S.of(context).ok,
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(_context);
               },
             ),
           ],

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -9,13 +11,15 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/scraper.dart';
 import 'package:sevaexchange/views/core.dart';
 
 class NewsCreate extends StatelessWidget {
   final String timebankId;
-  NewsCreate({this.timebankId});
+  final TimebankModel timebankModel;
+  NewsCreate({this.timebankId, this.timebankModel});
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +60,7 @@ class NewsCreate extends StatelessWidget {
         ),
         body: NewsCreateForm(
           timebankId: timebankId,
+          timebankModel: timebankModel,
         ),
       ),
     );
@@ -65,7 +70,9 @@ class NewsCreate extends StatelessWidget {
 // Create a Form Widget
 class NewsCreateForm extends StatefulWidget {
   final String timebankId;
-  NewsCreateForm({Key key, this.timebankId}) : super(key: key);
+  final TimebankModel timebankModel;
+  NewsCreateForm({Key key, this.timebankId, this.timebankModel})
+      : super(key: key);
   @override
   NewsCreateFormState createState() {
     return NewsCreateFormState();
@@ -91,6 +98,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   String selectedAddress;
   final profanityDetector = ProfanityDetector();
   bool autoValidateText = false;
+  List<String> selectedTimebanks = [];
   Future<void> writeToDB() async {
     // print("Credit goes to ${}");
 
@@ -111,6 +119,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.newsDocumentUrl = globals.newsDocumentURL ?? '';
     newsObject.newsDocumentName = globals.newsDocumentName ?? '';
     newsObject.softDelete = false;
+    newsObject.timebanksPosted = selectedTimebanks;
 
 //    EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(
@@ -137,9 +146,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   @override
   void initState() {
     super.initState();
-
     dataList.add(EntityModel(entityType: EntityType.general));
-    // fetchCurrentlocation();
+    selectedTimebanks.add(this.widget.timebankModel.id);
   }
 
   @override
@@ -235,11 +243,12 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             maxLines: 5,
                             autovalidate: autoValidateText,
                             onChanged: (value) {
-                              if (value.length > 1) {
+                              if (value.length > 1 && !autoValidateText) {
                                 setState(() {
                                   autoValidateText = true;
                                 });
-                              } else {
+                              }
+                              if (value.length <= 1 && autoValidateText) {
                                 setState(() {
                                   autoValidateText = false;
                                 });
@@ -262,6 +271,46 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       ],
                     ),
                   ),
+
+                  Center(
+                      child: RaisedButton(
+                    textColor: Colors.green,
+                    elevation: 0,
+                    child: Container(
+                      constraints: BoxConstraints.loose(
+                        Size(MediaQuery.of(context).size.width - 220, 50),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Posting to ' +
+                                ((this.selectedTimebanks.length > 1)
+                                    ? this.selectedTimebanks.length.toString() +
+                                        ' timebanks'
+                                    : this.widget.timebankModel.name),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                          Icon(Icons.arrow_drop_down)
+                        ],
+                      ),
+                    ),
+                    color: Colors.grey[200],
+                    onPressed: () async {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      _silblingTimebankSelectionBottomsheet(
+                          context,
+                          this.widget.timebankModel,
+                          selectedTimebanks,
+                          (selectedTimebanks) => {
+                                print(selectedTimebanks),
+                                setState(() =>
+                                    {selectedTimebanks = selectedTimebanks})
+                              });
+                    },
+                  )),
+                  // Text(""),
                   Padding(
                     padding: const EdgeInsets.only(top: 0),
                     child: Center(
@@ -455,3 +504,176 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 //     );
 //   }
 // }
+
+void _silblingTimebankSelectionBottomsheet(BuildContext mcontext,
+    TimebankModel timebank, List<String> selectedTimebanks, onChanged) {
+  showModalBottomSheet(
+    context: mcontext,
+    builder: (BuildContext bc) {
+      var focusNodes = List.generate(1, (_) => FocusNode());
+      return Container(
+        child: Builder(builder: (context) {
+          return Scaffold(
+              appBar: AppBar(
+                elevation: 0.5,
+                automaticallyImplyLeading: true,
+                title: Text(
+                  S.of(context).select_parent_timebank,
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+              body: Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: SearchSiblingTimebanks(
+                  keepOnBackPress: false,
+                  loggedInUser: SevaCore.of(context).loggedInUser,
+                  selectedTimebank: timebank,
+                  selectedTimebanks: selectedTimebanks,
+                  showBackBtn: false,
+                  isFromHome: false,
+                  onChanged: onChanged,
+                ),
+              ));
+        }),
+      );
+    },
+  );
+}
+
+class SearchSiblingTimebanks extends StatefulWidget {
+  final bool keepOnBackPress;
+  final UserModel loggedInUser;
+  final bool showBackBtn;
+  final bool isFromHome;
+  TimebankModel selectedTimebank;
+  List<String> selectedTimebanks;
+  final ValueChanged onChanged;
+  SearchSiblingTimebanks({
+    @required this.keepOnBackPress,
+    @required this.loggedInUser,
+    @required this.showBackBtn,
+    @required this.isFromHome,
+    @required this.selectedTimebank,
+    this.selectedTimebanks,
+    this.onChanged,
+  });
+
+  @override
+  State<StatefulWidget> createState() {
+    return SearchSiblingTimebanksViewState();
+  }
+}
+
+class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
+  @override
+  void initState() {
+    super.initState();
+    communityBloc.searchTimebankSiblingsByParentId(
+        this.widget.selectedTimebank.id, this.widget.selectedTimebank);
+    print('called');
+  }
+
+  @override
+  void dispose() {
+//    communityBloc.dispose();
+    super.dispose();
+  }
+
+  build(context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+      child: Column(children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+        ),
+        Text(
+          S.of(context).look_for_existing_siblings,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+        SizedBox(height: 20),
+        Expanded(
+          child: buildList(),
+        )
+      ]),
+    );
+  }
+
+  Widget buildList() {
+    // ListView contains a group of widgets that scroll inside the drawer
+    return StreamBuilder(
+        stream: communityBloc.allSiblingTimebanks,
+        builder: (context, AsyncSnapshot<TimebankListModel> snapshot) {
+          if (snapshot.hasData) {
+            if (!snapshot.hasData) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              if (snapshot.data.timebanks.length != 0) {
+                List<TimebankModel> timebanks = snapshot.data.timebanks;
+//                timebanks.insert(0, this.widget.selectedTimebank);
+                return Padding(
+                    padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
+                    child: ListView.builder(
+                        itemCount: timebanks.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return timeBankWidget(
+                              timebankModel: timebanks[index],
+                              context: context,
+                              isSelected: this
+                                  .widget
+                                  .selectedTimebanks
+                                  .contains(timebanks[index].id));
+                        }));
+              } else {
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
+                  child: Center(
+                    child: Text(S.of(context).no_timebanks_found,
+                        style: TextStyle(fontFamily: "Europa", fontSize: 14)),
+                  ),
+                );
+              }
+            }
+          } else if (snapshot.hasError) {
+            return Text(S.of(context).try_later);
+          }
+          return Text("");
+        });
+  }
+
+  Widget timeBankWidget(
+      {TimebankModel timebankModel, BuildContext context, bool isSelected}) {
+    return ListTile(
+      // onTap: goToNext(snapshot.data),
+      title: Text(timebankModel.name,
+          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
+      trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+        Checkbox(
+          value: isSelected,
+          onChanged: (bool value) {
+            print(value);
+            if (isSelected &&
+                timebankModel.id != this.widget.selectedTimebanks[0]) {
+              this
+                  .widget
+                  .selectedTimebanks
+                  .removeWhere((item) => item == timebankModel.id);
+              print('removed');
+            } else if (!isSelected &&
+                timebankModel.id != this.widget.selectedTimebanks[0]) {
+              this.widget.selectedTimebanks.add(timebankModel.id);
+              print('added');
+            }
+            this.widget.onChanged(this.widget.selectedTimebanks);
+            setState(() =>
+                this.widget.selectedTimebanks = this.widget.selectedTimebanks);
+          },
+        )
+      ]),
+    );
+  }
+}

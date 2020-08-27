@@ -65,6 +65,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: isDataLoaded
           ? Container(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),

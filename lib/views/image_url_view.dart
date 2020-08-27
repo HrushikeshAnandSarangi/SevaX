@@ -20,8 +20,8 @@ class _ImageUrlViewState extends State<ImageUrlView> {
   List<String> imageUrls = [];
   String urlError = '';
   String imageUrl = '';
-  ProfanityImageModel profanityImageModel = ProfanityImageModel();
-  ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
+  ProfanityImageModel profanityImageModel;
+  ProfanityStatusModel profanityStatusModel;
   bool _saving = false;
 
   _ImageUrlViewState();
@@ -89,15 +89,17 @@ class _ImageUrlViewState extends State<ImageUrlView> {
                 keyboardType: TextInputType.url,
                 onChanged: (value) {
                   if (value.length > 5) {
-                    if (value.substring(value.length - 4).contains('.jpg') ||
-                        value.substring(value.length - 5).contains('.jpeg') ||
-                        value.substring(value.length - 4).contains('.png')) {
-                      scrapeURLFromTextField(value);
-                    } else {
-                      setState(() {
-                        urlError = S.of(context).only_images_types_allowed;
-                      });
-                    }
+                    scrapeURLFromTextField(value);
+
+//                    if (value.substring(value.length - 4).contains('.jpg') ||
+//                        value.substring(value.length - 5).contains('.jpeg') ||
+//                        value.substring(value.length - 4).contains('.png')) {
+//                      scrapeURLFromTextField(value);
+//                    } else {
+//                      setState(() {
+//                        urlError = S.of(context).only_images_types_allowed;
+//                      });
+//                    }
                   }
                 },
                 decoration: InputDecoration(
@@ -185,25 +187,35 @@ class _ImageUrlViewState extends State<ImageUrlView> {
   Future<void> profanityCheck({String imageURL}) async {
     // _newsImageURL = imageURL;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
-
-    profanityStatusModel =
-        await getProfanityStatus(profanityImageModel: profanityImageModel);
-    setState(() {
-      this._saving = false;
-    });
-    if (profanityStatusModel.isProfane) {
-      print('profane');
-
-      showProfanityImageAlert(
-              context: context, content: profanityStatusModel.category)
-          .then((status) {
+    if (profanityImageModel == null) {
+      setState(() {
+        this._saving = false;
+      });
+      showFailedLoadImage(context: context).then((value) {
         imageUrlTextController.clear();
         imageUrls.clear();
         setState(() {});
       });
     } else {
-      imageUrls.add(imageURL);
-      setState(() {});
+      profanityStatusModel =
+          await getProfanityStatus(profanityImageModel: profanityImageModel);
+      setState(() {
+        this._saving = false;
+      });
+      if (profanityStatusModel.isProfane) {
+        print('profane');
+
+        showProfanityImageAlert(
+                context: context, content: profanityStatusModel.category)
+            .then((status) {
+          imageUrlTextController.clear();
+          imageUrls.clear();
+          setState(() {});
+        });
+      } else {
+        imageUrls.add(imageURL);
+        setState(() {});
+      }
     }
   }
 
