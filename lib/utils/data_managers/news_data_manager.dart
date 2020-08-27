@@ -34,13 +34,13 @@ Future<void> updateNews({@required NewsModel newsObject}) async {
 
 Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
   var futures = <Future>[];
-
+  print('hey');
   var data = Firestore.instance
       .collection('news')
+      .where('timebanksposted', arrayContains: timebankID)
       .where('entity', isEqualTo: {
         'entityType': 'timebanks',
         'entityId': timebankID,
-        //'entityName': FlavorConfig.timebankName,
       })
       .where('softDelete', isEqualTo: false)
       .orderBy('posttimestamp', descending: true)
