@@ -1,11 +1,9 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -20,13 +18,13 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/news/update_feed.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:emoji_picker/emoji_picker.dart';
+
 import '../../flavor_config.dart';
 
 class NewsCardView extends StatefulWidget {
   final NewsModel newsModel;
-  bool isFocused = false;
-  NewsCardView({Key key, @required this.newsModel, this.isFocused}) : super(key: key);
+  final bool isFocused;
+  NewsCardView({Key key, @required this.newsModel, this.isFocused = false}) : super(key: key);
 
   @override
   NewsCardViewState createState() {
@@ -901,7 +899,7 @@ class DetailDescription extends StatefulWidget {
   UserModel userModel = UserModel();
   List<String> moreList = List<String>();
   String userId;
-  bool isFocused;
+  final bool isFocused;
   DetailDescription(this.data, {this.isFocused = false, this.userModel});
   @override
   _DetailDescriptionState createState() => _DetailDescriptionState();
