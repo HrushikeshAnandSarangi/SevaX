@@ -92,7 +92,7 @@ class _RequestInviteUserCardState extends State<RequestInviteUserCard> {
               ),
               SmoothStarRating(
                   allowHalfRating: true,
-                  onRatingChanged: (v) {
+                  onRated: (v) {
 //                    rating = v;
 //                    setState(() {});
                   },
