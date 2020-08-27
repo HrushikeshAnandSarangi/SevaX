@@ -49,9 +49,9 @@ class MailDonationReciept {
     try {
       var result = await http.post(
         '${FlavorConfig.values.cloudFunctionBaseURL}/sendReceiptToDonor',
-        body: {
+        body: jsonEncode({
           "donationModel": donationModel.toMap(),
-        },
+        }),
       );
       print(result);
     } catch (e) {
