@@ -512,9 +512,7 @@ void _silblingTimebankSelectionBottomsheet(BuildContext mcontext, TimebankModel 
                 elevation: 0.5,
                 automaticallyImplyLeading: true,
                 title: Text(
-                  AppLocalizations.of(context)
-                      .translate(
-                      'findtimebank', 'look_for_existing_timebank_title'),
+                  S.of(context).look_for_existing_timebank_title,
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -584,8 +582,7 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
           padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
         ),
         Text(
-          AppLocalizations.of(context)
-              .translate('findtimebank', 'look_for_existing_siblings'),
+          S.of(context).look_for_existing_siblings,
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
@@ -626,8 +623,7 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
                   padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
                   child: Center(
                     child: Text(
-                        AppLocalizations.of(context)
-                            .translate('findtimebank', 'no_timebanks_found'),
+                        S.of(context).no_timebanks_found,
                         style: TextStyle(fontFamily: "Europa", fontSize: 14)),
                   ),
                 );
@@ -635,7 +631,7 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
             }
           } else if (snapshot.hasError) {
             return Text(
-                AppLocalizations.of(context).translate('shared', 'try_later'));
+                S.of(context).try_later);
           }
           return Text("");
         });

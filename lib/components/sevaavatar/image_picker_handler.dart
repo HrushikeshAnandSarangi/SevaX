@@ -5,10 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sevaexchange/internationalization/app_localization.dart';
-
+import 'package:sevaexchange/l10n/l10n.dart';
 import './image_picker_dialog.dart';
-
 import './imagecategorieslist.dart';
 
 class ImagePickerHandler {
@@ -133,8 +131,7 @@ class SearchStockImagesViewState extends State<SearchStockImages>
         elevation: 0.5,
         automaticallyImplyLeading: true,
         title: Text(
-          AppLocalizations.of(context)
-              .translate('image_picker', 'stock_images'),
+          S.of(context).gallery,
           style: TextStyle(
             fontSize: 18,
           ),
@@ -145,8 +142,7 @@ class SearchStockImagesViewState extends State<SearchStockImages>
           Stack(children: <Widget>[
             Padding(
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: Text(this.catSelected > -1 ? AppLocalizations.of(context)
-                    .translate('image_picker', 'choose_image'): "Choose a category",
+                child: Text(this.catSelected > -1 ? S.of(context).choose_image: "Choose a category",
                     style: TextStyle(
                       fontSize: 20,
                     )))

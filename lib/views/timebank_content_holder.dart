@@ -76,12 +76,12 @@ class _TabarViewState extends State<TabarView> with TickerProviderStateMixin {
 }
 
 Widget getUserRole(
-  AboutUserRole role,
-  BuildContext context,
-  TimebankModel timebankModel,
-  String timebankId,
-  TickerProvider vsync,
-) {
+    AboutUserRole role,
+    BuildContext context,
+    TimebankModel timebankModel,
+    String timebankId,
+    TickerProvider vsync,
+    ) {
   switch (role) {
     case AboutUserRole.ADMIN:
       TabController controller = TabController(vsync: vsync, length: 7);
@@ -122,11 +122,11 @@ Widget getUserRole(
 }
 
 Widget createAdminTabBar(
-  BuildContext context,
-  TimebankModel timebankModel,
-  String timebankId,
-  TabController controller,
-) {
+    BuildContext context,
+    TimebankModel timebankModel,
+    String timebankId,
+    TabController controller,
+    ) {
   return Scaffold(
     appBar: AppBar(
       elevation: 0.5,
@@ -232,35 +232,35 @@ Widget unreadMessages(int unreadCount) {
 }
 
 Widget badge(int count) => Positioned(
-      right: 0,
-      top: 0,
-      child: Container(
-        padding: EdgeInsets.all(1),
-        decoration: BoxDecoration(
-          color: Colors.red,
-          borderRadius: BorderRadius.circular(7.5),
-        ),
-        constraints: BoxConstraints(
-          minWidth: 15,
-          minHeight: 15,
-        ),
-        child: Text(
-          count.toString(),
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 10,
-          ),
-          textAlign: TextAlign.center,
-        ),
+  right: 0,
+  top: 0,
+  child: Container(
+    padding: EdgeInsets.all(1),
+    decoration: BoxDecoration(
+      color: Colors.red,
+      borderRadius: BorderRadius.circular(7.5),
+    ),
+    constraints: BoxConstraints(
+      minWidth: 15,
+      minHeight: 15,
+    ),
+    child: Text(
+      count.toString(),
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 10,
       ),
-    );
+      textAlign: TextAlign.center,
+    ),
+  ),
+);
 
 Widget createJoinedUserTabBar(
-  BuildContext context,
-  TimebankModel timebankModel,
-  String timebankId,
-  TabController controller,
-) {
+    BuildContext context,
+    TimebankModel timebankModel,
+    String timebankId,
+    TabController controller,
+    ) {
   return Scaffold(
     appBar: AppBar(
       elevation: 0.5,
@@ -346,11 +346,11 @@ Widget createJoinedUserTabBar(
 }
 
 Widget createNormalUserTabBar(
-  BuildContext context,
-  TimebankModel timebankModel,
-  String timebankId,
-  TabController controller,
-) {
+    BuildContext context,
+    TimebankModel timebankModel,
+    String timebankId,
+    TabController controller,
+    ) {
   return Scaffold(
       appBar: AppBar(
         leading: BackButton(
@@ -461,8 +461,8 @@ class DiscussionListState extends State<DiscussionList> {
         InkWell(
           onTap: () {
             Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => NewsCreate(
+                MaterialPageRoute(
+                    builder: (context) => NewsCreate(
                       timebankId: widget.timebankId,
                       timebankModel: widget.timebankModel,
                     )));
@@ -547,9 +547,9 @@ class DiscussionListState extends State<DiscussionList> {
                     children: <Widget>[
                       isPinned
                           ? newFeedsCard(
-                              news: pinnedNewsModel,
-                              isFromMessage: false,
-                            )
+                        news: pinnedNewsModel,
+                        isFromMessage: false,
+                      )
                           : Offstage(),
                       ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
@@ -614,13 +614,13 @@ class DiscussionListState extends State<DiscussionList> {
 
     newsList.forEach((news) {
       SevaCore.of(context)
-                  .loggedInUser
-                  .blockedMembers
-                  .contains(news.sevaUserId) ||
-              SevaCore.of(context)
-                  .loggedInUser
-                  .blockedBy
-                  .contains(news.sevaUserId)
+          .loggedInUser
+          .blockedMembers
+          .contains(news.sevaUserId) ||
+          SevaCore.of(context)
+              .loggedInUser
+              .blockedBy
+              .contains(news.sevaUserId)
           ? print("Removed blocked content")
           : filteredNewsList.add(news);
     });
@@ -641,10 +641,10 @@ class DiscussionListState extends State<DiscussionList> {
         context,
         MaterialPageRoute(
             builder: (context) => PDFScreen(
-                  docName: documentName,
-                  pathPDF: f.path,
-                  isFromFeeds: true,
-                )),
+              docName: documentName,
+              pathPDF: f.path,
+              isFromFeeds: true,
+            )),
       );
     });
   }
@@ -707,7 +707,7 @@ class DiscussionListState extends State<DiscussionList> {
                           ),
                           Padding(
                               padding: const EdgeInsets.only(
-                                  top: 5,),
+                                top: 5,),
                               child: Row(
                                 children: <Widget>[
                                   feedAddress != null
@@ -737,7 +737,7 @@ class DiscussionListState extends State<DiscussionList> {
                           SizedBox(
                             height: 5,
                           ),
-                          document(newsModel: news),
+                          document(newsDocumentName: news.newsDocumentName, newsDocumentUrl: news.newsDocumentUrl),
                           //  SizedBox(height: 10),
                         ],
                       ),
@@ -774,34 +774,34 @@ class DiscussionListState extends State<DiscussionList> {
                     ),
                     //  SizedBox(width: 8.0),
                     widget.timebankModel.admins.contains(
-                            SevaCore.of(context).loggedInUser.sevaUserID)
+                        SevaCore.of(context).loggedInUser.sevaUserID)
                         ? getOptionButtons(
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 2),
-                              child: Container(
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
+                        child: Container(
 //                                      color: news.isPinned
 //                                          ? Colors.green
 //                                          : Colors.black,
-                                height: 20,
-                                width: 20,
-                                child: Image.asset(
-                                  'lib/assets/images/pin.png',
-                                  color: news.isPinned
-                                      ? Colors.green
-                                      : Colors.black,
-                                ),
-                              ),
-                            ),
-                            () {
-                              news.isPinned
-                                  ? unPinFeed(newsModel: news)
-                                  : pinNews(
-                                      newsModel: news,
-                                    );
-                              setState(() {});
-                            },
-                          )
+                          height: 20,
+                          width: 20,
+                          child: Image.asset(
+                            'lib/assets/images/pin.png',
+                            color: news.isPinned
+                                ? Colors.green
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
+                          () {
+                        news.isPinned
+                            ? unPinFeed(newsModel: news)
+                            : pinNews(
+                          newsModel: news,
+                        );
+                        setState(() {});
+                      },
+                    )
                         : Offstage(),
                   ],
                 ),
@@ -836,9 +836,7 @@ class DiscussionListState extends State<DiscussionList> {
                           SizedBox(
                             height: 5,
                           ),
-                          document(
-                              newsDocumentName: news.newsDocumentName,
-                              newsDocumentUrl: news.newsDocumentUrl),
+                          document(newsDocumentName: news.newsDocumentName, newsDocumentUrl: news.newsDocumentUrl),
                           //  SizedBox(height: 10),
                         ],
                       ),
@@ -852,8 +850,8 @@ class DiscussionListState extends State<DiscussionList> {
               //feed image
               news.newsImageUrl == null
                   ? news.imageScraped == null || news.imageScraped == "NoData"
-                      ? Offstage()
-                      : getImageView(news.id, news.imageScraped)
+                  ? Offstage()
+                  : getImageView(news.id, news.imageScraped)
                   : getImageView(news.id, news.newsImageUrl),
 
               //feed options
@@ -862,248 +860,248 @@ class DiscussionListState extends State<DiscussionList> {
                 padding: const EdgeInsets.only(bottom: 0.0, top: 4, right: 15),
                 child: !isFromMessage
                     ? Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          //slot closed
-                          Container(
-                            child: news.sevaUserId !=
-                                    SevaCore.of(context).loggedInUser.sevaUserID
-                                ? getOptionButtons(
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 6, vertical: 2),
-                                      child: Icon(
-                                        Icons.flag,
-                                        color: news.reports.contains(
-                                                SevaCore.of(context)
-                                                    .loggedInUser
-                                                    .sevaUserID)
-                                            ? Colors.red
-                                            : Colors.black,
-                                        size: 20,
-                                      ),
-                                    ),
-                                    () {
-                                      if (news.reports.contains(
-                                          SevaCore.of(context)
-                                              .loggedInUser
-                                              .sevaUserID)) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext viewContextS) {
-                                            // return object of type Dialog
-                                            return AlertDialog(
-                                              title: Text('Already reported!'),
-                                              content: Text(
-                                                  'You already reported this feed'),
-                                              actions: <Widget>[
-                                                FlatButton(
-                                                  child: Text(
-                                                    'OK',
-                                                    style: TextStyle(
-                                                      fontSize:
-                                                          dialogButtonSize,
-                                                    ),
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.of(viewContextS)
-                                                        .pop();
-                                                  },
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      } else {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext viewContext) {
-                                            // return object of type Dialog
-                                            return AlertDialog(
-                                              title: Text(
-                                                  S.of(context).report_feed),
-                                              content: Text(
-                                                S
-                                                    .of(context)
-                                                    .report_feed_confirmation_message,
-                                              ),
-                                              actions: <Widget>[
-                                                FlatButton(
-                                                  padding: EdgeInsets.fromLTRB(
-                                                      20, 5, 20, 5),
-                                                  color: Theme.of(context)
-                                                      .accentColor,
-                                                  textColor: FlavorConfig
-                                                      .values.buttonTextColor,
-                                                  child: Text(
-                                                    S.of(context).report_feed,
-                                                    style: TextStyle(
-                                                      fontSize:
-                                                          dialogButtonSize,
-                                                    ),
-                                                  ),
-                                                  onPressed: () {
-                                                    if (news.reports.contains(
-                                                        SevaCore.of(context)
-                                                            .loggedInUser
-                                                            .sevaUserID)) {
-                                                      print(
-                                                          'already in reports');
-                                                    } else {
-                                                      if (news
-                                                          .reports.isEmpty) {
-                                                        news.reports =
-                                                            List<String>();
-                                                      }
-                                                      news.reports.add(
-                                                          SevaCore.of(context)
-                                                              .loggedInUser
-                                                              .sevaUserID);
-                                                      Firestore.instance
-                                                          .collection('news')
-                                                          .document(news.id)
-                                                          .updateData({
-                                                        'reports': news.reports
-                                                      });
-                                                    }
-                                                    Navigator.of(viewContext)
-                                                        .pop();
-                                                  },
-                                                ),
-                                                FlatButton(
-                                                  child: Text(
-                                                    S.of(context).cancel,
-                                                    style: TextStyle(
-                                                        color: Colors.red),
-                                                  ),
-                                                  onPressed: () {
-                                                    Navigator.of(viewContext)
-                                                        .pop();
-                                                  },
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      }
-                                    },
-                                  )
-                                : Offstage(),
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    //slot closed
+                    Container(
+                      child: news.sevaUserId !=
+                          SevaCore.of(context).loggedInUser.sevaUserID
+                          ? getOptionButtons(
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          child: Icon(
+                            Icons.flag,
+                            color: news.reports.contains(
+                                SevaCore.of(context)
+                                    .loggedInUser
+                                    .sevaUserID)
+                                ? Colors.red
+                                : Colors.black,
+                            size: 20,
                           ),
-                          getOptionButtons(
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 2),
-                              child: Icon(
-                                Icons.share,
-                                color: Colors.black,
-                                size: 20,
+                        ),
+                            () {
+                          if (news.reports.contains(
+                              SevaCore.of(context)
+                                  .loggedInUser
+                                  .sevaUserID)) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext viewContextS) {
+                                // return object of type Dialog
+                                return AlertDialog(
+                                  title: Text('Already reported!'),
+                                  content: Text(
+                                      'You already reported this feed'),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text(
+                                        'OK',
+                                        style: TextStyle(
+                                          fontSize:
+                                          dialogButtonSize,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(viewContextS)
+                                            .pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext viewContext) {
+                                // return object of type Dialog
+                                return AlertDialog(
+                                  title: Text(
+                                      S.of(context).report_feed),
+                                  content: Text(
+                                    S
+                                        .of(context)
+                                        .report_feed_confirmation_message,
+                                  ),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      padding: EdgeInsets.fromLTRB(
+                                          20, 5, 20, 5),
+                                      color: Theme.of(context)
+                                          .accentColor,
+                                      textColor: FlavorConfig
+                                          .values.buttonTextColor,
+                                      child: Text(
+                                        S.of(context).report_feed,
+                                        style: TextStyle(
+                                          fontSize:
+                                          dialogButtonSize,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        if (news.reports.contains(
+                                            SevaCore.of(context)
+                                                .loggedInUser
+                                                .sevaUserID)) {
+                                          print(
+                                              'already in reports');
+                                        } else {
+                                          if (news
+                                              .reports.isEmpty) {
+                                            news.reports =
+                                                List<String>();
+                                          }
+                                          news.reports.add(
+                                              SevaCore.of(context)
+                                                  .loggedInUser
+                                                  .sevaUserID);
+                                          Firestore.instance
+                                              .collection('news')
+                                              .document(news.id)
+                                              .updateData({
+                                            'reports': news.reports
+                                          });
+                                        }
+                                        Navigator.of(viewContext)
+                                            .pop();
+                                      },
+                                    ),
+                                    FlatButton(
+                                      child: Text(
+                                        S.of(context).cancel,
+                                        style: TextStyle(
+                                            color: Colors.red),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(viewContext)
+                                            .pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        },
+                      )
+                          : Offstage(),
+                    ),
+                    getOptionButtons(
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
+                        child: Icon(
+                          Icons.share,
+                          color: Colors.black,
+                          size: 20,
+                        ),
+                      ),
+                          () {
+                        // SHARE ICON ON TAP
+                        if (SevaCore.of(context)
+                            .loggedInUser
+                            .associatedWithTimebanks >
+                            1) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    SelectTimeBankNewsShare(
+                                      news,
+                                    )),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  SelectMembersFromTimebank(
+                                    timebankId: SevaCore.of(context)
+                                        .loggedInUser
+                                        .currentTimebank,
+                                    newsModel: news,
+                                    isFromShare: true,
+                                    selectionMode:
+                                    MEMBER_SELECTION_MODE.SHARE_FEED,
+                                    userSelected: HashMap(),
+                                  ),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+
+                    getOptionButtons(
+                      Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Center(
+                              child: news.likes != null &&
+                                  news.likes.contains(loggedinemail)
+                                  ? Icon(
+                                Icons.favorite,
+                                size: 24,
+                                color: Color(0xFFec444b),
+                              )
+                                  : Icon(
+                                Icons.favorite_border,
+                                size: 24,
+                                color: Color(0xFFec444b),
                               ),
                             ),
-                            () {
-                              // SHARE ICON ON TAP
-                              if (SevaCore.of(context)
-                                      .loggedInUser
-                                      .associatedWithTimebanks >
-                                  1) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          SelectTimeBankNewsShare(
-                                            news,
-                                          )),
-                                );
-                              } else {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        SelectMembersFromTimebank(
-                                      timebankId: SevaCore.of(context)
-                                          .loggedInUser
-                                          .currentTimebank,
-                                      newsModel: news,
-                                      isFromShare: true,
-                                      selectionMode:
-                                          MEMBER_SELECTION_MODE.SHARE_FEED,
-                                      userSelected: HashMap(),
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
                           ),
-
-                          getOptionButtons(
-                            Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Center(
-                                    child: news.likes != null &&
-                                            news.likes.contains(loggedinemail)
-                                        ? Icon(
-                                            Icons.favorite,
-                                            size: 24,
-                                            color: Color(0xFFec444b),
-                                          )
-                                        : Icon(
-                                            Icons.favorite_border,
-                                            size: 24,
-                                            color: Color(0xFFec444b),
-                                          ),
-                                  ),
-                                ),
-                                Text('${news.likes.length}',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                    )),
-                                Padding(
-                                    padding: EdgeInsets.only(left: 20),
-                                    child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text('${news.comments.length}',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black)))),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => NewsCardView(
-                                              newsModel: news,
-                                              isFocused: false,
-                                            )));
-                                  },
-                                  child: Padding(
-                                      padding: EdgeInsets.only(left: 3),
-                                      child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text('comments',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
-
-                                                color: Colors.black54,
-                                              )))),
-                                ),
-                              ],
-                            ),
-                            () {
-                              Set<String> likesList = Set.from(news.likes);
-                              news.likes != null &&
-                                      news.likes.contains(loggedinemail)
-                                  ? likesList.remove(loggedinemail)
-                                  : likesList.add(loggedinemail);
-                              news.likes = likesList.toList();
-                              FirestoreManager.updateNews(newsObject: news);
+                          Text('${news.likes.length}',
+                              style: TextStyle(
+                                fontSize: 14,
+                              )),
+                          Padding(
+                              padding: EdgeInsets.only(left: 20),
+                              child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text('${news.comments.length}',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black)))),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => NewsCardView(
+                                        newsModel: news,
+                                        isFocused: false,
+                                      )));
                             },
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 3),
+                                child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text('comments',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+
+                                          color: Colors.black54,
+                                        )))),
                           ),
                         ],
-                      )
+                      ),
+                          () {
+                        Set<String> likesList = Set.from(news.likes);
+                        news.likes != null &&
+                            news.likes.contains(loggedinemail)
+                            ? likesList.remove(loggedinemail)
+                            : likesList.add(loggedinemail);
+                        news.likes = likesList.toList();
+                        FirestoreManager.updateNews(newsObject: news);
+                      },
+                    ),
+                  ],
+                )
                     : Center(),
               ),
             ],
@@ -1138,8 +1136,8 @@ class DiscussionListState extends State<DiscussionList> {
               children: <Widget>[
                 news.newsImageUrl == null
                     ? news.imageScraped == null || news.imageScraped == "NoData"
-                        ? Offstage()
-                        : getImageView(news.id, news.imageScraped)
+                    ? Offstage()
+                    : getImageView(news.id, news.imageScraped)
                     : getImageView(news.id, news.newsImageUrl),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1169,31 +1167,31 @@ class DiscussionListState extends State<DiscussionList> {
                             ),
                           ),
                           widget.timebankModel.admins.contains(
-                                  SevaCore.of(context).loggedInUser.sevaUserID)
+                              SevaCore.of(context).loggedInUser.sevaUserID)
                               ? getOptionButtons(
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 6, vertical: 2),
-                                    child: Container(
-                                      height: 20,
-                                      width: 20,
-                                      child: Image.asset(
-                                        'lib/assets/images/pin.png',
-                                        color: news.isPinned
-                                            ? Colors.green
-                                            : Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  () {
-                                    news.isPinned
-                                        ? unPinFeed(newsModel: news)
-                                        : pinNews(
-                                            newsModel: news,
-                                          );
-                                    setState(() {});
-                                  },
-                                )
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
+                              child: Container(
+                                height: 20,
+                                width: 20,
+                                child: Image.asset(
+                                  'lib/assets/images/pin.png',
+                                  color: news.isPinned
+                                      ? Colors.green
+                                      : Colors.black,
+                                ),
+                              ),
+                            ),
+                                () {
+                              news.isPinned
+                                  ? unPinFeed(newsModel: news)
+                                  : pinNews(
+                                newsModel: news,
+                              );
+                              setState(() {});
+                            },
+                          )
                               : Offstage(),
                         ],
                       ),
@@ -1206,7 +1204,7 @@ class DiscussionListState extends State<DiscussionList> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[],
                             ),
-                            () {
+                                () {
                               String emailId = news.email;
                               Navigator.push(
                                 context,
@@ -1256,7 +1254,7 @@ class DiscussionListState extends State<DiscussionList> {
                                   child: Text(
                                     news.fullName?.trim() ?? '',
                                     style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    TextStyle(fontWeight: FontWeight.bold),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -1273,8 +1271,8 @@ class DiscussionListState extends State<DiscussionList> {
                                                 news.postTimestamp,
                                               ),
                                               locale: Locale(AppConfig.prefs
-                                                      .getString(
-                                                          'language_code'))
+                                                  .getString(
+                                                  'language_code'))
                                                   .toLanguageTag()),
                                           style: TextStyle(fontSize: 12)),
                                     ],
@@ -1282,7 +1280,7 @@ class DiscussionListState extends State<DiscussionList> {
                                 ),
                                 Container(
                                   width:
-                                      MediaQuery.of(context).size.width - 125,
+                                  MediaQuery.of(context).size.width - 125,
                                   margin: EdgeInsets.only(left: 5, right: 40),
                                   child: Text(
                                     news.placeAddress == null
@@ -1303,252 +1301,252 @@ class DiscussionListState extends State<DiscussionList> {
                       padding: const EdgeInsets.only(bottom: 8.0, top: 4),
                       child: !isFromMessage
                           ? Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  child: news.sevaUserId !=
-                                          SevaCore.of(context)
-                                              .loggedInUser
-                                              .sevaUserID
-                                      ? getOptionButtons(
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 6, vertical: 2),
-                                            child: Icon(
-                                              Icons.flag,
-                                              color: news.reports.contains(
-                                                      SevaCore.of(context)
-                                                          .loggedInUser
-                                                          .sevaUserID)
-                                                  ? Colors.red
-                                                  : Colors.black,
-                                              size: 20,
-                                            ),
-                                          ),
-                                          () {
-                                            if (news.reports.contains(
-                                                SevaCore.of(context)
-                                                    .loggedInUser
-                                                    .sevaUserID)) {
-                                              showDialog(
-                                                context: context,
-                                                builder: (BuildContext
-                                                    viewContextS) {
-                                                  return AlertDialog(
-                                                    title: Text(S
-                                                        .of(context)
-                                                        .already_reported),
-                                                    content: Text(S
-                                                        .of(context)
-                                                        .feed_reported),
-                                                    actions: <Widget>[
-                                                      FlatButton(
-                                                        child: Text(
-                                                          S.of(context).ok,
-                                                          style: TextStyle(
-                                                            fontSize:
-                                                                dialogButtonSize,
-                                                          ),
-                                                        ),
-                                                        onPressed: () {
-                                                          Navigator.of(
-                                                                  viewContextS)
-                                                              .pop();
-                                                        },
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            } else {
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext viewContext) {
-                                                  return AlertDialog(
-                                                    title: Text(S
-                                                        .of(context)
-                                                        .report_feed),
-                                                    content: Text(S
-                                                        .of(context)
-                                                        .report_feed_confirmation_message),
-                                                    actions: <Widget>[
-                                                      FlatButton(
-                                                        padding:
-                                                            EdgeInsets.fromLTRB(
-                                                                20, 5, 20, 5),
-                                                        color: Theme.of(context)
-                                                            .accentColor,
-                                                        textColor: FlavorConfig
-                                                            .values
-                                                            .buttonTextColor,
-                                                        child: Text(
-                                                          S
-                                                              .of(context)
-                                                              .report_feed,
-                                                          style: TextStyle(
-                                                            fontSize:
-                                                                dialogButtonSize,
-                                                          ),
-                                                        ),
-                                                        onPressed: () {
-                                                          if (news.reports
-                                                              .contains(SevaCore
-                                                                      .of(context)
-                                                                  .loggedInUser
-                                                                  .sevaUserID)) {
-                                                            print(
-                                                                'already in reports');
-                                                          } else {
-                                                            if (news.reports
-                                                                .isEmpty) {
-                                                              news.reports =
-                                                                  List<
-                                                                      String>();
-                                                            }
-                                                            news.reports.add(
-                                                                SevaCore.of(
-                                                                        context)
-                                                                    .loggedInUser
-                                                                    .sevaUserID);
-                                                            Firestore.instance
-                                                                .collection(
-                                                                    'news')
-                                                                .document(
-                                                                    news.id)
-                                                                .updateData({
-                                                              'reports':
-                                                                  news.reports
-                                                            });
-                                                          }
-                                                          Navigator.of(
-                                                                  viewContext)
-                                                              .pop();
-                                                        },
-                                                      ),
-                                                      FlatButton(
-                                                        child: Text(
-                                                          S.of(context).cancel,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.red),
-                                                        ),
-                                                        onPressed: () {
-                                                          Navigator.of(
-                                                                  viewContext)
-                                                              .pop();
-                                                        },
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            }
-                                          },
-                                        )
-                                      : Offstage(),
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            child: news.sevaUserId !=
+                                SevaCore.of(context)
+                                    .loggedInUser
+                                    .sevaUserID
+                                ? getOptionButtons(
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
+                                child: Icon(
+                                  Icons.flag,
+                                  color: news.reports.contains(
+                                      SevaCore.of(context)
+                                          .loggedInUser
+                                          .sevaUserID)
+                                      ? Colors.red
+                                      : Colors.black,
+                                  size: 20,
                                 ),
-                                getOptionButtons(
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 6, vertical: 2),
-                                    child: Icon(
-                                      Icons.share,
-                                      color: Colors.black,
-                                      size: 20,
+                              ),
+                                  () {
+                                if (news.reports.contains(
+                                    SevaCore.of(context)
+                                        .loggedInUser
+                                        .sevaUserID)) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext
+                                    viewContextS) {
+                                      return AlertDialog(
+                                        title: Text(S
+                                            .of(context)
+                                            .already_reported),
+                                        content: Text(S
+                                            .of(context)
+                                            .feed_reported),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text(
+                                              S.of(context).ok,
+                                              style: TextStyle(
+                                                fontSize:
+                                                dialogButtonSize,
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(
+                                                  viewContextS)
+                                                  .pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder:
+                                        (BuildContext viewContext) {
+                                      return AlertDialog(
+                                        title: Text(S
+                                            .of(context)
+                                            .report_feed),
+                                        content: Text(S
+                                            .of(context)
+                                            .report_feed_confirmation_message),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            padding:
+                                            EdgeInsets.fromLTRB(
+                                                20, 5, 20, 5),
+                                            color: Theme.of(context)
+                                                .accentColor,
+                                            textColor: FlavorConfig
+                                                .values
+                                                .buttonTextColor,
+                                            child: Text(
+                                              S
+                                                  .of(context)
+                                                  .report_feed,
+                                              style: TextStyle(
+                                                fontSize:
+                                                dialogButtonSize,
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              if (news.reports
+                                                  .contains(SevaCore
+                                                  .of(context)
+                                                  .loggedInUser
+                                                  .sevaUserID)) {
+                                                print(
+                                                    'already in reports');
+                                              } else {
+                                                if (news.reports
+                                                    .isEmpty) {
+                                                  news.reports =
+                                                      List<
+                                                          String>();
+                                                }
+                                                news.reports.add(
+                                                    SevaCore.of(
+                                                        context)
+                                                        .loggedInUser
+                                                        .sevaUserID);
+                                                Firestore.instance
+                                                    .collection(
+                                                    'news')
+                                                    .document(
+                                                    news.id)
+                                                    .updateData({
+                                                  'reports':
+                                                  news.reports
+                                                });
+                                              }
+                                              Navigator.of(
+                                                  viewContext)
+                                                  .pop();
+                                            },
+                                          ),
+                                          FlatButton(
+                                            child: Text(
+                                              S.of(context).cancel,
+                                              style: TextStyle(
+                                                  color:
+                                                  Colors.red),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(
+                                                  viewContext)
+                                                  .pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                            )
+                                : Offstage(),
+                          ),
+                          getOptionButtons(
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
+                              child: Icon(
+                                Icons.share,
+                                color: Colors.black,
+                                size: 20,
+                              ),
+                            ),
+                                () {
+                              if (SevaCore.of(context)
+                                  .loggedInUser
+                                  .associatedWithTimebanks >
+                                  1) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          SelectTimeBankNewsShare(
+                                            news,
+                                          )),
+                                );
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        SelectMembersFromTimebank(
+                                          timebankId: SevaCore.of(context)
+                                              .loggedInUser
+                                              .currentTimebank,
+                                          newsModel: NewsModel(),
+                                          isFromShare: false,
+                                          selectionMode:
+                                          MEMBER_SELECTION_MODE.NEW_CHAT,
+                                          userSelected: HashMap(),
+                                        ),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                          news.newsDocumentUrl != null
+                              ? getOptionButtons(
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
+                              child: Icon(
+                                Icons.attach_file,
+                                color: Colors.black,
+                                size: 20,
+                              ),
+                            ),
+                                () {
+                              openPdfViewer(news.newsDocumentUrl,
+                                  news.newsDocumentName);
+                            },
+                          )
+                              : Offstage(),
+                          getOptionButtons(
+                            Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Center(
+                                    child: news.likes != null &&
+                                        news.likes
+                                            .contains(loggedinemail)
+                                        ? Icon(
+                                      Icons.favorite,
+                                      size: 24,
+                                      color: Colors.red[900],
+                                    )
+                                        : Icon(
+                                      Icons.favorite_border,
+                                      size: 24,
+                                      color: Colors.red[900],
                                     ),
                                   ),
-                                  () {
-                                    if (SevaCore.of(context)
-                                            .loggedInUser
-                                            .associatedWithTimebanks >
-                                        1) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                SelectTimeBankNewsShare(
-                                                  news,
-                                                )),
-                                      );
-                                    } else {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SelectMembersFromTimebank(
-                                            timebankId: SevaCore.of(context)
-                                                .loggedInUser
-                                                .currentTimebank,
-                                            newsModel: NewsModel(),
-                                            isFromShare: false,
-                                            selectionMode:
-                                                MEMBER_SELECTION_MODE.NEW_CHAT,
-                                            userSelected: HashMap(),
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  },
                                 ),
-                                news.newsDocumentUrl != null
-                                    ? getOptionButtons(
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 6, vertical: 2),
-                                          child: Icon(
-                                            Icons.attach_file,
-                                            color: Colors.black,
-                                            size: 20,
-                                          ),
-                                        ),
-                                        () {
-                                          openPdfViewer(news.newsDocumentUrl,
-                                              news.newsDocumentName);
-                                        },
-                                      )
-                                    : Offstage(),
-                                getOptionButtons(
-                                  Row(
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Center(
-                                          child: news.likes != null &&
-                                                  news.likes
-                                                      .contains(loggedinemail)
-                                              ? Icon(
-                                                  Icons.favorite,
-                                                  size: 24,
-                                                  color: Colors.red[900],
-                                                )
-                                              : Icon(
-                                                  Icons.favorite_border,
-                                                  size: 24,
-                                                  color: Colors.red[900],
-                                                ),
-                                        ),
-                                      ),
-                                      Text('${news.likes.length}',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                          )),
-                                    ],
-                                  ),
-                                  () {
-                                    Set<String> likesList =
-                                        Set.from(news.likes);
-                                    news.likes != null &&
-                                            news.likes.contains(loggedinemail)
-                                        ? likesList.remove(loggedinemail)
-                                        : likesList.add(loggedinemail);
-                                    news.likes = likesList.toList();
-                                    FirestoreManager.updateNews(
-                                        newsObject: news);
-                                  },
-                                ),
+                                Text('${news.likes.length}',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    )),
                               ],
-                            )
+                            ),
+                                () {
+                              Set<String> likesList =
+                              Set.from(news.likes);
+                              news.likes != null &&
+                                  news.likes.contains(loggedinemail)
+                                  ? likesList.remove(loggedinemail)
+                                  : likesList.add(loggedinemail);
+                              news.likes = likesList.toList();
+                              FirestoreManager.updateNews(
+                                  newsObject: news);
+                            },
+                          ),
+                        ],
+                      )
                           : Center(),
                     ),
                   ],
@@ -1598,42 +1596,42 @@ class DiscussionListState extends State<DiscussionList> {
     return newsDocumentUrl == null
         ? Offstage()
         : GestureDetector(
-            onTap: () {
-              openPdfViewer(newsDocumentUrl, newsDocumentName);
-            },
-            child: Container(
-              height: 30,
-              width: 150,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15.7),
-                color: Colors.grey[200],
+      onTap: () {
+        openPdfViewer(newsDocumentUrl, newsDocumentName);
+      },
+      child: Container(
+        height: 30,
+        width: 150,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.7),
+          color: Colors.grey[200],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8.0, right: 0),
+          child: Row(
+            children: <Widget>[
+              Icon(
+                Icons.attach_file,
+                size: 15,
               ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 0),
-                child: Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.attach_file,
-                      size: 15,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: Text(
-                        newsDocumentName ?? "Document",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 12),
-                        softWrap: false,
-                      ),
-                    ),
-                  ],
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Text(
+                  newsDocumentName ?? "Document",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(fontSize: 12),
+                  softWrap: false,
                 ),
               ),
-            ),
-          );
+            ],
+          ),
+        ),
+      ),
+    );
 //    return Container(
 //      child: newsModel.newsDocumentUrl == null
 //          ? Offstage()

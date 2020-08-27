@@ -664,11 +664,8 @@ class CreateEditCommunityViewFormState
                             ],
                           ),
                         ),
-                        headingText(AppLocalizations.of(context)
-                            .translate('createtimebank', 'timebank_hasparent')),
-                        Text(
-                          AppLocalizations.of(context).translate(
-                              'createtimebank', 'timebank_location_hasparent_hinttext'),
+                        headingText(S.of(context).timebank_hasparent),
+                        Text(S.of(context).timebank_location_hasparent_hinttext,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey,
@@ -678,8 +675,7 @@ class CreateEditCommunityViewFormState
                           child: ParentTimebankPickerWidget(
                             selectedTimebank: this.selectedTimebank,
                             onChanged: (CommunityModel selectedTimebank) {
-                              log("received data model ");
-
+                              print("received data model ");
                               setState(() {
                                 this.selectedTimebank = selectedTimebank.name;
                               });

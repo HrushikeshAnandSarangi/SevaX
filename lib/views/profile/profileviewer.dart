@@ -310,13 +310,6 @@ class ProfileViewerState extends State<ProfileViewer> {
                         isTimeBank: false,
                         onTap: () {}),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: TRscore(
-                          user.trustworthinessscore,
-                          user.reliabilityscore
-                      )
-                    ),
-                    Padding(
                       padding:
                           EdgeInsets.symmetric(horizontal: 25, vertical: 20),
                       child: StreamBuilder<List<RequestModel>>(

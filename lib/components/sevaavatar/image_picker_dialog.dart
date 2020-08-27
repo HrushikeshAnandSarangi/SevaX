@@ -108,8 +108,7 @@ class ImagePickerDialog extends StatelessWidget {
                     print(image)
                   }),
                   child: roundedButton(
-                      AppLocalizations.of(context)
-                          .translate('image_picker', 'stock_images'),
+                      S.of(context).stock_images,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0xFF673AB7),
                       const Color(0xFFFFFFFF)),

@@ -155,6 +155,33 @@ class S {
         name: 'enter_email',
       );
 
+  String get stock_images => Intl.message(
+      'Stock Images',
+      name: 'stock_images',
+      );
+  String get choose_image => Intl.message(
+    'Choose Image',
+    name: 'choose_image',
+  );
+
+  String get timebank_hasparent => Intl.message(
+       'Timebank has parent',
+       name: 'timebank_hasparent'
+  );
+  String get timebank_location_hasparent_hinttext => Intl.message(
+      'If your timebank is associated with a parent timebank select below',
+      name: 'timebank_location_hasparent_hinttext'
+  );
+
+  String get look_for_existing_timebank_title => Intl.message(
+      'Select Parent timebank',
+      name: 'look_for_existing_timebank_title'
+  );
+
+  String get look_for_existing_siblings => Intl.message(
+      'Feed is visible to following timebanks',
+      name: 'look_for_existing_siblings'
+  );
   String get your_email => Intl.message(
         'Your email address',
         name: 'your_email',
