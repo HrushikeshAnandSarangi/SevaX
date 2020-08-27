@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -30,23 +28,16 @@ class HomeDashBoard extends StatefulWidget {
 
 class _HomeDashBoardState extends State<HomeDashBoard>
     with TickerProviderStateMixin {
-  TabController controller;
-  TabController manageController;
-  TabController _timebankController;
   TimebankModel primaryTimebank;
   HomeDashBoardBloc _homeDashBoardBloc = HomeDashBoardBloc();
   CommunityModel selectedCommunity;
   TimeBankModelSingleton timeBankModelSingleton = TimeBankModelSingleton();
-  List<Widget> tabs = [];
   List<Widget> pages = [];
   bool isAdmin = false;
+  int tabLength = 7;
 
   @override
   void initState() {
-    log("home dashboard init");
-    controller = TabController(initialIndex: 0, length: 3, vsync: this);
-    _timebankController =
-        TabController(initialIndex: 0, length: 7, vsync: this);
     super.initState();
     Future.delayed(Duration.zero, () {
       _homeDashBoardBloc.getAllCommunities(SevaCore.of(context).loggedInUser);
@@ -74,10 +65,17 @@ class _HomeDashBoardState extends State<HomeDashBoard>
 
   @override
   Widget build(BuildContext context) {
-    log('${S.of(context).localeName}');
-    log("home dashboard page build");
     final _user = BlocProvider.of<UserDataBloc>(context);
-    // print("user bloc ${_user.user.email}");
+    List<String> _tabsNames = [
+      S.of(context).timebank,
+      S.of(context).feeds,
+      S.of(context).projects,
+      S.of(context).requests,
+      S.of(context).offers,
+      S.of(context).about,
+      S.of(context).members,
+      S.of(context).manage,
+    ];
 
     return BlocProvider(
       bloc: _homeDashBoardBloc,
@@ -113,7 +111,6 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                                   .setDefaultCommunity(
                                 context: context,
                                 community: v,
-                                //oldCommunityId: selectedCommunity.id,
                               )
                                   .then((_) {
                                 SevaCore.of(context)
@@ -178,117 +175,94 @@ class _HomeDashBoardState extends State<HomeDashBoard>
               return LoadingIndicator();
             }
             if (snapshot.hasData && snapshot.data != null) {
-              // print("asd" + snapshot.data.timebanks.length.toString());
               snapshot.data.timebanks.forEach(
                 (TimebankModel data) {
-                  //print("timebank ->> ${data.id}  current primary - >${snapshot.data.currentCommunity.primary_timebank}");
                   if (data.id ==
                       snapshot.data.currentCommunity.primary_timebank) {
-                    //   print("inside if" + data.toString());
                     primaryTimebank = data;
                     timeBankModelSingleton.model = primaryTimebank;
                   }
                 },
               );
-              buildTabs();
 
               if (primaryTimebank != null &&
                   primaryTimebank.admins
-                      .contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
-                  tabs.length == 7) {
+                      .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
                 isAdmin = true;
-                _timebankController = TabController(length: 8, vsync: this);
-
-                tabs.add(
-                  Tab(
-                    text: S.of(context).manage,
-                  ),
-                );
               }
             }
-            return Column(
-              children: <Widget>[
-                ShowLimitBadge(),
-                TabBar(
-                  labelPadding: EdgeInsets.symmetric(horizontal: 10),
-                  controller: _timebankController,
-                  indicatorColor: Theme.of(context).primaryColor,
-                  unselectedLabelColor: Colors.black,
-                  labelColor: Theme.of(context).primaryColor,
-                  isScrollable: true,
-                  tabs: tabs,
-                ),
-                Expanded(
-                  child: TabBarView(
-                    controller: _timebankController,
-                    children: <Widget>[
-                      TimebankHomePage(
-                        selectedCommuntityGroup: snapshot.data,
-                        primaryTimebankModel: primaryTimebank,
+            return DefaultTabController(
+              length: isAdmin ? tabLength + 1 : tabLength,
+              child: Column(
+                children: <Widget>[
+                  ShowLimitBadge(),
+                  TabBar(
+                    labelPadding: EdgeInsets.symmetric(horizontal: 10),
+                    // controller: _timebankController,
+                    indicatorColor: Theme.of(context).primaryColor,
+                    unselectedLabelColor: Colors.black,
+                    labelColor: Theme.of(context).primaryColor,
+                    isScrollable: true,
+                    tabs: List.generate(
+                      isAdmin ? tabLength + 1 : tabLength,
+                      (index) => Tab(
+                        text: _tabsNames[index],
                       ),
-                      DiscussionList(
-                        timebankId: primaryTimebank.id,
-                        timebankModel: primaryTimebank,
-                      ),
-                      TimeBankProjectsView(
-                        timebankId: primaryTimebank.id,
-                        timebankModel: primaryTimebank,
-                      ),
-                      // TimebankFeeds(),
-//                      DonationView(
-//                        initialScreen: 0,
-//                      ),
-                      RequestsModule.of(
-                        timebankId: primaryTimebank.id,
-                        timebankModel: primaryTimebank,
-                        isFromSettings: false,
-                      ),
-
-                      OfferRouter(
-                        timebankId: primaryTimebank.id,
-                        timebankModel: primaryTimebank,
-                      ),
-
-                      TimeBankAboutView.of(
-                        timebankModel: primaryTimebank,
-                        email: SevaCore.of(context).loggedInUser.email,
-                      ),
-                      TimebankRequestAdminPage(
-                        isUserAdmin: primaryTimebank.admins.contains(
-                          SevaCore.of(context).loggedInUser.sevaUserID,
-                        ),
-                        timebankId: primaryTimebank.id,
-                        userEmail: SevaCore.of(context).loggedInUser.email,
-                        isCommunity: true,
-                        isFromGroup: false,
-                      ),
-                      ...isAdmin
-                          ? [
-                              ManageTimebankSeva.of(
-                                timebankModel: primaryTimebank,
-                              ),
-                            ]
-                          : []
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: TabBarView(
+                      children: <Widget>[
+                        TimebankHomePage(
+                          selectedCommuntityGroup: snapshot.data,
+                          primaryTimebankModel: primaryTimebank,
+                        ),
+                        DiscussionList(
+                          timebankId: primaryTimebank.id,
+                          timebankModel: primaryTimebank,
+                        ),
+                        TimeBankProjectsView(
+                          timebankId: primaryTimebank.id,
+                          timebankModel: primaryTimebank,
+                        ),
+                        RequestsModule.of(
+                          timebankId: primaryTimebank.id,
+                          timebankModel: primaryTimebank,
+                          isFromSettings: false,
+                        ),
+                        OfferRouter(
+                          timebankId: primaryTimebank.id,
+                          timebankModel: primaryTimebank,
+                        ),
+                        TimeBankAboutView.of(
+                          timebankModel: primaryTimebank,
+                          email: SevaCore.of(context).loggedInUser.email,
+                        ),
+                        TimebankRequestAdminPage(
+                          isUserAdmin: primaryTimebank.admins.contains(
+                            SevaCore.of(context).loggedInUser.sevaUserID,
+                          ),
+                          timebankId: primaryTimebank.id,
+                          userEmail: SevaCore.of(context).loggedInUser.email,
+                          isCommunity: true,
+                          isFromGroup: false,
+                        ),
+                        ...isAdmin
+                            ? [
+                                ManageTimebankSeva.of(
+                                  timebankModel: primaryTimebank,
+                                ),
+                              ]
+                            : []
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             );
           },
         ),
       ),
     );
-  }
-
-  void buildTabs() {
-    tabs = [
-      Tab(text: S.of(context).timebank),
-      Tab(text: S.of(context).feeds),
-      Tab(text: S.of(context).projects),
-      Tab(text: S.of(context).requests),
-      Tab(text: S.of(context).offers),
-      Tab(text: S.of(context).about),
-      Tab(text: S.of(context).members)
-    ];
   }
 }
