@@ -9,7 +9,6 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
@@ -805,16 +804,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         ),
       ),
     );
-  }
-
-  Future<String> _getLocation(double lat, double lng) async {
-    String address = await LocationUtility().getFormattedAddress(lat, lng);
-    // log('_getLocation: $address');
-    // setState(() {
-    //   this.selectedAddress = address;
-    // });
-
-    return address;
   }
 
   Widget getBottombar() {

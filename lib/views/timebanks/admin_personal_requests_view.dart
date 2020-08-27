@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
@@ -94,7 +95,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                     if (requestModelList.length == 0) {
                       return Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: Center(child: Text('No Requests')),
+                        child: Center(child: Text(S.of(context).no_requests)),
                       );
                     }
                     var consolidatedList =
@@ -218,7 +219,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                     actions: <Widget>[
                       FlatButton(
                         child: Text(
-                          'OK',
+                          S.of(context).ok,
                           style: TextStyle(
                             fontSize: dialogButtonSize,
                           ),
@@ -246,7 +247,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                         color: Theme.of(context).accentColor,
                         textColor: FlavorConfig.values.buttonTextColor,
                         child: Text(
-                          'Add',
+                          S.of(context).add,
                           style: TextStyle(
                             fontSize: dialogButtonSize,
                           ),
@@ -272,7 +273,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                       ),
                       FlatButton(
                         child: Text(
-                          'Cancel',
+                          S.of(context).cancel,
                           style: TextStyle(color: Colors.red),
                         ),
                         onPressed: () {
@@ -362,7 +363,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                                     padding: EdgeInsets.all(0),
                                     color: Colors.green,
                                     child: Text(
-                                      'Applied',
+                                      S.of(context).applied,
                                       style: TextStyle(
                                         color: Colors.white,
                                       ),

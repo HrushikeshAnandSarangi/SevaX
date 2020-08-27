@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -189,140 +188,140 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   }
 
   Widget get createSevaX {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-        Widget>[
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Text(
-          S.of(context).group_subset,
-          textAlign: TextAlign.center,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Text(
+            S.of(context).group_subset,
+            textAlign: TextAlign.center,
+          ),
         ),
-      ),
-      Center(
-          child: Padding(
-        padding: EdgeInsets.all(5.0),
-        child: Column(
-          children: <Widget>[
-            TimebankAvatar(),
-            SizedBox(height: 5),
-            Text(
-              S.of(context).group_logo,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-              ),
-            )
+        Center(
+            child: Padding(
+          padding: EdgeInsets.all(5.0),
+          child: Column(
+            children: <Widget>[
+              TimebankAvatar(),
+              SizedBox(height: 5),
+              Text(
+                S.of(context).group_logo,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              )
+            ],
+          ),
+        )),
+        headingText(S.of(context).name_your_group, true),
+        TextFormField(
+          textCapitalization: TextCapitalization.sentences,
+          focusNode: nameNode,
+          onFieldSubmitted: (v) {
+            FocusScope.of(context).requestFocus(aboutNode);
+          },
+          controller: searchTextController,
+          onChanged: (value) {},
+          textInputAction: TextInputAction.next,
+          decoration: InputDecoration(
+            errorText: errTxt,
+            hintText: S.of(context).timebank_name_hint,
+          ),
+          // keyboardType: TextInputType.multiline,
+          // maxLines: 1,
+          inputFormatters: <TextInputFormatter>[
+            WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
           ],
-        ),
-      )),
-      headingText(S.of(context).name_your_group, true),
-      TextFormField(
-        textCapitalization: TextCapitalization.sentences,
-        focusNode: nameNode,
-        onFieldSubmitted: (v) {
-          FocusScope.of(context).requestFocus(aboutNode);
-        },
-        controller: searchTextController,
-        onChanged: (value) {
-        },
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-          errorText: errTxt,
-          hintText: S.of(context).timebank_name_hint,
-        ),
-        // keyboardType: TextInputType.multiline,
-        // maxLines: 1,
-        inputFormatters: <TextInputFormatter>[
-          WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
-        ],
-        validator: (value) {
-          if (value.isEmpty) {
-            return S.of(context).validation_error_general_text;
-          }
-          timebankModel.name = value.trim();
-        },
-      ),
-      headingText(S.of(context).about, true),
-      TextFormField(
-        textCapitalization: TextCapitalization.sentences,
-
-        focusNode: aboutNode,
-        onFieldSubmitted: (v) {
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        textInputAction: TextInputAction.done,
-        decoration:
-        InputDecoration(hintText: S.of(context).bit_more_about_group),
-        // keyboardType: TextInputType.multiline,
-        maxLines: 1,
-        validator: (value) {
-          if (value.isEmpty) {
-            return S.of(context).validation_error_general_text;
-          }
-          timebankModel.missionStatement = value;
-        },
-      ),
-      Row(
-        children: <Widget>[
-          headingText(S.of(context).private_group, false),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-            child: infoButton(
-              context: context,
-              key: GlobalKey(),
-              type: InfoType.PRIVATE_GROUP,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-            child: Checkbox(
-              value: timebankModel.private,
-              onChanged: (bool value) {
-                print(value);
-                setState(() {
-                  timebankModel.private = value;
-                });
-                print(timebankModel.private);
-              },
-            ),
-          ),
-        ],
-      ),
-      Row(
-        children: <Widget>[
-          headingText(S.of(context).prevent_accidental_delete, false),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
-            child: Checkbox(
-              value: timebankModel.preventAccedentalDelete,
-              onChanged: (bool value) {
-                print(value);
-                setState(() {
-                  timebankModel.preventAccedentalDelete = value;
-                });
-                print(timebankModel.preventAccedentalDelete);
-              },
-            ),
-          ),
-        ],
-      ),
-      tappableInviteMembers,
-      headingText(S.of(context).is_pin_at_right_place, false),
-      Center(
-        child: LocationPickerWidget(
-          selectedAddress: selectedAddress,
-          location: location,
-          onChanged: (LocationDataModel dataModel) {
-            setState(() {
-              location = dataModel.geoPoint;
-              this.selectedAddress = dataModel.location;
-            });
+          validator: (value) {
+            if (value.isEmpty) {
+              return S.of(context).validation_error_general_text;
+            }
+            timebankModel.name = value.trim();
           },
         ),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5.0),
-        child: Container(
+        headingText(S.of(context).about, true),
+        TextFormField(
+          textCapitalization: TextCapitalization.sentences,
+
+          focusNode: aboutNode,
+          onFieldSubmitted: (v) {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          textInputAction: TextInputAction.done,
+          decoration:
+              InputDecoration(hintText: S.of(context).bit_more_about_group),
+          // keyboardType: TextInputType.multiline,
+          maxLines: 1,
+          validator: (value) {
+            if (value.isEmpty) {
+              return S.of(context).validation_error_general_text;
+            }
+            timebankModel.missionStatement = value;
+          },
+        ),
+        Row(
+          children: <Widget>[
+            headingText(S.of(context).private_group, false),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+              child: infoButton(
+                context: context,
+                key: GlobalKey(),
+                type: InfoType.PRIVATE_GROUP,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+              child: Checkbox(
+                value: timebankModel.private,
+                onChanged: (bool value) {
+                  print(value);
+                  setState(() {
+                    timebankModel.private = value;
+                  });
+                  print(timebankModel.private);
+                },
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            headingText(S.of(context).prevent_accidental_delete, false),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(2, 10, 0, 0),
+              child: Checkbox(
+                value: timebankModel.preventAccedentalDelete,
+                onChanged: (bool value) {
+                  print(value);
+                  setState(() {
+                    timebankModel.preventAccedentalDelete = value;
+                  });
+                  print(timebankModel.preventAccedentalDelete);
+                },
+              ),
+            ),
+          ],
+        ),
+        tappableInviteMembers,
+        headingText(S.of(context).is_pin_at_right_place, false),
+        Center(
+          child: LocationPickerWidget(
+            selectedAddress: selectedAddress,
+            location: location,
+            onChanged: (LocationDataModel dataModel) {
+              setState(() {
+                location = dataModel.geoPoint;
+                this.selectedAddress = dataModel.location;
+              });
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: Container(
             alignment: Alignment.center,
             child: FutureBuilder<Object>(
               future: getTimeBankForId(timebankId: widget.timebankId),
