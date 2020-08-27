@@ -266,25 +266,35 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get getBottomFrameForGoodRequest {
-    switch (goodsStatus) {
-      case GoodStatus.GOODS_APPROVED:
-      case GoodStatus.GOODS_REJEJCTED:
-      case GoodStatus.GOODS_SUBMITTED:
-        return goodsDonationSubmitted;
+    if (widget.requestItem.sevaUserId ==
+        SevaCore.of(context).loggedInUser.sevaUserID) {
+      return getBottombarForCreator;
+    } else {
+      switch (goodsStatus) {
+        case GoodStatus.GOODS_APPROVED:
+        case GoodStatus.GOODS_REJEJCTED:
+        case GoodStatus.GOODS_SUBMITTED:
+          return goodsDonationSubmitted;
 
-      default:
-        return goodsDonationSubmitted;
+        default:
+          return goodsDonationSubmitted;
+      }
     }
   }
 
   Widget get getBottomFrameForCashRequest {
-    switch (cashStatus) {
-      case CashStatus.CASH_CONFIRMED:
-      case CashStatus.CASH_DEPOSITED:
-        return cashDeposited;
+    if (widget.requestItem.sevaUserId ==
+        SevaCore.of(context).loggedInUser.sevaUserID) {
+      return getBottombarForCreator;
+    } else {
+      switch (cashStatus) {
+        case CashStatus.CASH_CONFIRMED:
+        case CashStatus.CASH_DEPOSITED:
+          return cashDeposited;
 
-      default:
-        return cashDeposited;
+        default:
+          return cashDeposited;
+      }
     }
   }
 
