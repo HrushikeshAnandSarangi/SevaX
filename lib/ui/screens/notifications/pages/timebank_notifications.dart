@@ -82,7 +82,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     DonationModel.fromMap(notification.data);
 
                 return NotificationCard(
-                  entityName: donationModel.donorDetails.name,
+                  entityName: donationModel.donorDetails.name ?? '',
                   isDissmissible: true,
                   onDismissed: () {
                     FirestoreManager.readTimeBankNotification(
@@ -104,7 +104,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   photoUrl: donationModel.donorDetails.photoUrl,
                   subTitle:
-                      '${donationModel.donorDetails.name + ' ${S.of(context).donated} ' + donationModel.donationType.toString().split('.')[1]}, ${S.of(context).tap_to_view_details}',
+                      '${donationModel.donorDetails.name ?? '' + ' ${S.of(context).donated} ' + donationModel.donationType.toString().split('.')[1]}, ${S.of(context).tap_to_view_details}',
                   title: S.of(context).donation_acknowledge,
                 );
                 break;

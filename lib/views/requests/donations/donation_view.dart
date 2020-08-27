@@ -34,13 +34,13 @@ class _DonationViewState extends State<DonationView> {
   Color _checkColor = Colors.black;
   PageController pageController;
   DonationModel donationsModel = DonationModel(
-      donorDetails: DonorDetails(),
-      cashDetails: CashDetails(),
-      goodsDetails: GoodsDetails());
+    donorDetails: DonorDetails(),
+    cashDetails: CashDetails(),
+    goodsDetails: GoodsDetails(),
+  );
   UserModel sevaUser = UserModel();
   @override
   void initState() {
-    // TODO: implement initState
     pageController = PageController(
         initialPage:
             widget.requestModel.requestType == RequestType.GOODS ? 0 : 1);
@@ -116,6 +116,12 @@ class _DonationViewState extends State<DonationView> {
     donationsModel.donationStatus = DonationStatus.PLEDGED;
     donationsModel.notificationId = Utils.getUuid();
     donationsModel.requestTitle = widget.requestModel.title;
+
+    donationsModel.donationAssociatedTimebankDetails =
+        DonationAssociatedTimebankDetails(
+      timebankTitle: widget.requestModel.fullName,
+      timebankPhotoURL: widget.requestModel.photoUrl,
+    );
   }
 
   Widget amountWidget() {

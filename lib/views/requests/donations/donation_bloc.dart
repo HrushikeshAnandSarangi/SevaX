@@ -47,9 +47,6 @@ class DonationBloc {
       donationModel.goodsDetails.requiredGoods =
           requestModel.goodsDonationDetails.requiredGoods;
 
-      print("_+_+_+_+_+_+_+_+_+_+_+_+_" +
-          donationModel.goodsDetails.toMap().toString());
-
       var newDonors =
           new List<String>.from(requestModel.goodsDonationDetails.donors);
       newDonors.add(donor.sevaUserID);
