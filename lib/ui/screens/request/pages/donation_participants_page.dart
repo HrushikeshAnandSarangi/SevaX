@@ -46,6 +46,7 @@ class DonationParticipantPage extends StatelessWidget {
             //   buttonColor: buttonStatus.buttonColor,
             //   onTap: buttonStatus.onTap,
             // );
+            log('${model.lastModifiedBy == model.donatedTo}  ${model.lastModifiedBy}  ${model.donatedTo}');
             return DonationParticipantCard(
               name: model.donorDetails.name,
               isCashDonation: model.donationType == RequestType.CASH,
@@ -56,30 +57,32 @@ class DonationParticipantPage extends StatelessWidget {
               amount: model.cashDetails.pledgedAmount.toString(),
               comments: model.goodsDetails.comments,
               timestamp: model.timestamp,
-              child: model.donationStatus != DonationStatus.ACKNOWLEDGED
-                  ? Container(
-                      height: 20,
-                      child: RaisedButton(
-                        color: Colors.white,
-                        padding: EdgeInsets.zero,
-                        child: Text(
-                          S.of(context).acknowledge,
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.black,
+              child: model.donationStatus == DonationStatus.ACKNOWLEDGED
+                  ? null
+                  : model.lastModifiedBy == model.donatedTo
+                      ? null
+                      : Container(
+                          height: 20,
+                          child: RaisedButton(
+                            color: Colors.white,
+                            padding: EdgeInsets.zero,
+                            child: Text(
+                              S.of(context).acknowledge,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.black,
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      RequestDonationDisputePage(model: model),
+                                ),
+                              );
+                            },
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  RequestDonationDisputePage(model: model),
-                            ),
-                          );
-                        },
-                      ),
-                    )
-                  : null,
             );
           },
           separatorBuilder: (context, index) {

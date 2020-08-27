@@ -48,12 +48,11 @@ class DonationsRepository {
           'cashDetails.pledgedAmount':
               (donationModel).cashDetails.pledgedAmount,
         if (donationStatus == DonationStatus.ACKNOWLEDGED &&
-            requestType == RequestType.CASH)
+            requestType == RequestType.GOODS)
           'goodsDetails.donatedGoods':
               (donationModel).goodsDetails.donatedGoods,
+        'lastModifiedBy': associatedId,
       });
-
-      print("L2=============================== " + donationStatus.toString());
 
       //update request model with amount raised if donation is acknowledged
       if (donationStatus == DonationStatus.ACKNOWLEDGED) {
