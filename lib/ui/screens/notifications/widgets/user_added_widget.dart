@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
+import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/repositories/notifications_repository.dart';
 
 class UserAddedWidget extends StatelessWidget {
   final UserAddedModel userAddedModel;
@@ -11,18 +11,21 @@ class UserAddedWidget extends StatelessWidget {
   final BuildContext buildContext;
   final String timebankId;
   final String communityId;
+  final int timestamp;
 
-  const UserAddedWidget(
-      {Key key,
-      this.userAddedModel,
-      this.notificationId,
-      this.buildContext,
-      this.timebankId,
-      this.communityId})
-      : super(key: key);
+  const UserAddedWidget({
+    Key key,
+    this.userAddedModel,
+    this.notificationId,
+    this.buildContext,
+    this.timebankId,
+    this.communityId,
+    @required this.timestamp,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return NotificationCard(
+      timestamp: timestamp,
       entityName: userAddedModel.adminName,
       isDissmissible: true,
       onDismissed: () {

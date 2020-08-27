@@ -292,11 +292,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               autovalidate: autoValidateText,
               onChanged: (value) {
                 print("name ------ $value");
-                if (value.length > 1) {
+                if (value.length > 1 && !autoValidateText) {
                   setState(() {
                     autoValidateText = true;
                   });
-                } else {
+                }
+                if (value.length <= 1 && autoValidateText) {
                   setState(() {
                     autoValidateText = false;
                   });
@@ -388,11 +389,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               //  initialValue: timebankModel.missionStatement,
               autovalidate: autoValidateText,
               onChanged: (value) {
-                if (value.length > 1) {
+                if (value.length > 1 && !autoValidateText) {
                   setState(() {
                     autoValidateText = true;
                   });
-                } else {
+                }
+                if (value.length <= 1 && autoValidateText) {
                   setState(() {
                     autoValidateText = false;
                   });

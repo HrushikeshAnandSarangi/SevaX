@@ -137,9 +137,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   final volunteersTextFocus = FocusNode();
 
   RequestModel requestModel = RequestModel(
-      requestType: RequestType.TIME,
-      cashModel: CashModel(),
-      goodsDonationDetails: GoodsDonationDetails());
+    requestType: RequestType.TIME,
+    cashModel: CashModel(),
+    goodsDonationDetails: GoodsDonationDetails(),
+  );
   End end = End();
   var focusNodes = List.generate(12, (_) => FocusNode());
 
@@ -325,11 +326,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                             TextFormField(
                               autovalidate: autoValidateText,
                               onChanged: (value) {
-                                if (value.length > 1) {
+                                if (value.length > 1 && !autoValidateText) {
                                   setState(() {
                                     autoValidateText = true;
                                   });
-                                } else {
+                                }
+                                if (value.length <= 1 && autoValidateText) {
                                   setState(() {
                                     autoValidateText = false;
                                   });
@@ -489,66 +491,66 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
   Widget RequestPaymentDescriptionData() {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            S.of(context).request_payment_description,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          S.of(context).request_payment_description,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.black,
           ),
-          Text(
-            S.of(context).request_payment_description_hint,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
+        ),
+        Text(
+          S.of(context).request_payment_description_hint,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey,
           ),
-          TextFormField(
-            autovalidate: autoValidateCashText,
-            onChanged: (value) {
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
-            },
-            focusNode: focusNodes[7],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[7]);
-            },
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              errorMaxLines: 2,
-              hintText: S.of(context).request_payment_description_inputhint,
-              hintStyle: hintTextStyle,
-            ),
-            initialValue: widget.offer != null && widget.isOfferRequest
-                ? getOfferDescription(
-                    offerDataModel: widget.offer,
-                  )
-                : "",
-            keyboardType: TextInputType.multiline,
-            maxLines: 3,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              } else {
-                print(requestModel);
-                requestModel.donationInstructionLink = value;
-//                setState(() {});
-              }
-              return null;
-            },
+        ),
+        TextFormField(
+          autovalidate: autoValidateCashText,
+          onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateCashText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateCashText = false;
+              });
+            }
+          },
+          focusNode: focusNodes[7],
+          onFieldSubmitted: (v) {
+            FocusScope.of(context).requestFocus(focusNodes[7]);
+          },
+          textInputAction: TextInputAction.next,
+          decoration: InputDecoration(
+            errorMaxLines: 2,
+            hintText: S.of(context).request_payment_description_inputhint,
+            hintStyle: hintTextStyle,
           ),
-        ]);
+          initialValue: widget.offer != null && widget.isOfferRequest
+              ? getOfferDescription(
+                  offerDataModel: widget.offer,
+                )
+              : "",
+          keyboardType: TextInputType.multiline,
+          maxLines: 3,
+          validator: (value) {
+            if (value.isEmpty) {
+              return S.of(context).validation_error_general_text;
+            } else {
+              print(requestModel);
+              requestModel.donationInstructionLink = value;
+            }
+            return null;
+          },
+        ),
+      ],
+    );
   }
 
   Widget RequestDescriptionData(hintTextDesc) {
@@ -567,11 +569,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           TextFormField(
             autovalidate: autoValidateText,
             onChanged: (value) {
-              if (value.length > 1) {
+              if (value.length > 1 && !autoValidateText) {
                 setState(() {
                   autoValidateText = true;
                 });
-              } else {
+              }
+              if (value.length <= 1 && autoValidateText) {
                 setState(() {
                   autoValidateText = false;
                 });

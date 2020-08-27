@@ -1,5 +1,29 @@
 import 'package:sevaexchange/models/request_model.dart';
 
+class DonationAssociatedTimebankDetails {
+  String timebankTitle;
+  String timebankPhotoURL;
+  DonationAssociatedTimebankDetails({
+    this.timebankPhotoURL,
+    this.timebankTitle,
+  });
+
+  DonationAssociatedTimebankDetails.fromMap(Map<String, String> map) {
+    this.timebankTitle =
+        map.containsKey('timebankTitle') ? map['timebankTitle'] : null;
+
+    this.timebankPhotoURL =
+        map.containsKey('timebankPhotoURL') ? map['timebankPhotoURL'] : null;
+  }
+
+  Map<String, String> toMap() {
+    Map<String, String> map = Map();
+    map['timebankPhotoURL'] = this.timebankPhotoURL;
+    map['timebankTitle'] = this.timebankTitle;
+    return map;
+  }
+}
+
 class DonationModel {
   DonationModel({
     this.communityId,
@@ -18,9 +42,9 @@ class DonationModel {
     this.donationStatus,
     this.notificationId,
     this.donorDetails,
+    this.donationAssociatedTimebankDetails,
     this.lastModifiedBy,
   });
-
   String communityId;
   String donorSevaUserId;
   String donatedTo;
@@ -37,7 +61,9 @@ class DonationModel {
   CashDetails cashDetails;
   GoodsDetails goodsDetails;
   DonorDetails donorDetails;
+  DonationAssociatedTimebankDetails donationAssociatedTimebankDetails;
   String lastModifiedBy;
+
   factory DonationModel.fromMap(Map<String, dynamic> json) => DonationModel(
         communityId: json["communityId"] == null ? null : json["communityId"],
         notificationId:
@@ -82,6 +108,13 @@ class DonationModel {
                   json['donorDetails'],
                 ),
               ),
+        donationAssociatedTimebankDetails:
+            json.containsKey('donationAssociatedTimebankDetails')
+                ? DonationAssociatedTimebankDetails.fromMap(
+                    Map<String, String>.from(
+                        json['donationAssociatedTimebankDetails']),
+                  )
+                : null,
         lastModifiedBy: json['lastModifiedBy'],
       );
 
@@ -109,6 +142,8 @@ class DonationModel {
         "cashDetails": cashDetails == null ? null : cashDetails.toMap(),
         "goodsDetails": goodsDetails == null ? null : goodsDetails.toMap(),
         "donorDetails": donorDetails == null ? null : donorDetails.toMap(),
+        'donationAssociatedTimebankDetails':
+            donationAssociatedTimebankDetails.toMap(),
         "changeHistory": lastModifiedBy,
       };
 

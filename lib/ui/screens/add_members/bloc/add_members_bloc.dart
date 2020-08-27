@@ -27,7 +27,7 @@ class AddMembersBloc {
       HashSet timebankMembers = HashSet.from(timebank.members);
       List<UserModel> users = [];
       model.users.documents.forEach((DocumentSnapshot snap) {
-        UserModel user = UserModel.fromMap(snap.data, 'add_memvers_bloc');
+        UserModel user = UserModel.fromMap(snap.data, 'add_members_bloc');
         if (!timebankMembers.contains(user.sevaUserID)) users.add(user);
       });
       _members.add(users);

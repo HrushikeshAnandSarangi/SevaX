@@ -6,6 +6,7 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
+import 'package:sevaexchange/repositories/storage_repository.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/edit_group_info_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/create_new_chat_page.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_builder.dart';
@@ -13,7 +14,6 @@ import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/repositories/storage_repository.dart';
 import 'package:sevaexchange/widgets/camera_icon.dart';
 import 'package:sevaexchange/widgets/image_picker_widget.dart';
 
@@ -311,33 +311,40 @@ class _GroupInfoState extends State<GroupInfoPage> {
         ? await StorageRepository.uploadFile("multiUserMessagingLogo", file)
         : null;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageUrl);
-
-    profanityStatusModel =
-        await getProfanityStatus(profanityImageModel: profanityImageModel);
-
-    if (profanityStatusModel.isProfane) {
+    if (profanityImageModel == null) {
       progressDialog.hide();
 
-      showProfanityImageAlert(
-              context: context, content: profanityStatusModel.category)
-          .then((status) {
-        if (status == 'Proceed') {
-          FirebaseStorage.instance
-              .getReferenceFromUrl(imageUrl)
-              .then((reference) {
-            reference.delete();
-          }).catchError((e) => print(e));
-        } else {
-          print('error');
-        }
-      });
+      showFailedLoadImage(context: context).then((value) {});
     } else {
-      FirebaseStorage.instance.getReferenceFromUrl(imageUrl).then((reference) {
-        reference.delete();
-      }).catchError((e) => print(e));
-      bloc.onImageChanged(file);
+      profanityStatusModel =
+          await getProfanityStatus(profanityImageModel: profanityImageModel);
 
-      progressDialog.hide();
+      if (profanityStatusModel.isProfane) {
+        progressDialog.hide();
+
+        showProfanityImageAlert(
+                context: context, content: profanityStatusModel.category)
+            .then((status) {
+          if (status == 'Proceed') {
+            FirebaseStorage.instance
+                .getReferenceFromUrl(imageUrl)
+                .then((reference) {
+              reference.delete();
+            }).catchError((e) => print(e));
+          } else {
+            print('error');
+          }
+        });
+      } else {
+        FirebaseStorage.instance
+            .getReferenceFromUrl(imageUrl)
+            .then((reference) {
+          reference.delete();
+        }).catchError((e) => print(e));
+        bloc.onImageChanged(file);
+
+        progressDialog.hide();
+      }
     }
   }
 }

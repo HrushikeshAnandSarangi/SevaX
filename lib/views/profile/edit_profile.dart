@@ -669,34 +669,40 @@ class _EditProfilePageState extends State<EditProfilePage>
   Future<void> profanityCheck({String imageURL}) async {
     // _newsImageURL = imageURL;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
-
-    profanityStatusModel =
-        await getProfanityStatus(profanityImageModel: profanityImageModel);
-
-    if (profanityStatusModel.isProfane) {
-      showProfanityImageAlert(
-              context: context, content: profanityStatusModel.category)
-          .then((status) {
-        if (status == 'Proceed') {
-          FirebaseStorage.instance
-              .getReferenceFromUrl(imageURL)
-              .then((reference) {
-            reference.delete();
-            setState(() {
-              this._saving = false;
-            });
-          }).catchError((e) => print(e));
-        } else {
-          print('error');
-        }
-      });
-    } else {
+    if (profanityImageModel == null) {
       setState(() {
-        SevaCore.of(context).loggedInUser.photoURL = imageURL;
-        widget.userModel.photoURL = imageURL;
+        this._saving = false;
       });
-      print("image url ${imageURL}");
-      await updateUserPic();
+      showFailedLoadImage(context: context).then((value) {});
+    } else {
+      profanityStatusModel =
+          await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+      if (profanityStatusModel.isProfane) {
+        showProfanityImageAlert(
+                context: context, content: profanityStatusModel.category)
+            .then((status) {
+          if (status == 'Proceed') {
+            FirebaseStorage.instance
+                .getReferenceFromUrl(imageURL)
+                .then((reference) {
+              reference.delete();
+              setState(() {
+                this._saving = false;
+              });
+            }).catchError((e) => print(e));
+          } else {
+            print('error');
+          }
+        });
+      } else {
+        setState(() {
+          SevaCore.of(context).loggedInUser.photoURL = imageURL;
+          widget.userModel.photoURL = imageURL;
+        });
+        print("image url ${imageURL}");
+        await updateUserPic();
+      }
     }
   }
 
@@ -909,11 +915,12 @@ class _EditProfilePageState extends State<EditProfilePage>
                   //key: _formKey,
                   onChanged: (value) {
                     print("name ------ $value");
-                    if (value.length > 1) {
+                    if (value.length > 1 && !autoValidateText) {
                       setState(() {
                         autoValidateText = true;
                       });
-                    } else {
+                    }
+                    if (value.length <= 1 && autoValidateText) {
                       setState(() {
                         autoValidateText = false;
                       });

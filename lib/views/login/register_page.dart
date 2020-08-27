@@ -76,6 +76,7 @@ class _RegisterPageState extends State<RegisterPage>
   BuildContext parentContext;
   final profanityDetector = ProfanityDetector();
   bool autoValidateText = false;
+  List<bool> autoValidateTexts = [true, true, false, false];
 
   @override
   void initState() {
@@ -422,7 +423,7 @@ class _RegisterPageState extends State<RegisterPage>
             capitalization: TextCapitalization.none,
             onSave: (value) => this.email = value.trim(),
           ),
-          getFormField(
+          getPasswordFormField(
             focusNode: pwdFocus,
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(confirmPwdFocus);
@@ -455,7 +456,7 @@ class _RegisterPageState extends State<RegisterPage>
                   ),
                 )),
           ),
-          getFormField(
+          getPasswordFormField(
             focusNode: confirmPwdFocus,
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(FocusNode());
@@ -514,16 +515,62 @@ class _RegisterPageState extends State<RegisterPage>
         onFieldSubmitted: onFieldSubmittedCB,
         enabled: !isLoading,
         onChanged: (value) {
-          if (value.length > 1) {
+          if (value.length > 1 && !autoValidateText) {
             setState(() {
               autoValidateText = true;
             });
-          } else {
+          }
+          if (value.length <= 1 && autoValidateText) {
             setState(() {
               autoValidateText = false;
             });
           }
         },
+        decoration: InputDecoration(
+          labelText: hint,
+          errorMaxLines: 2,
+          suffix: suffix,
+          labelStyle: TextStyle(color: Colors.black),
+          suffixStyle: TextStyle(color: Colors.black),
+          counterStyle:
+              TextStyle(height: double.minPositive, color: Colors.black),
+          counterText: "",
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.black),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.black),
+          ),
+        ),
+        textCapitalization: capitalization,
+        validator: validator,
+        onSaved: onSave,
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(size),
+        ],
+        obscureText: shouldObscure,
+      ),
+    );
+  }
+
+  Widget getPasswordFormField({
+    focusNode,
+    onFieldSubmittedCB,
+    bool shouldRestrictLength,
+    String hint,
+    String Function(String value) validator,
+    Function(String value) onSave,
+    bool shouldObscure = false,
+    Widget suffix,
+    TextCapitalization capitalization = TextCapitalization.none,
+  }) {
+    var size = shouldRestrictLength ? 20 : 150;
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+      child: TextFormField(
+        focusNode: focusNode,
+        onFieldSubmitted: onFieldSubmittedCB,
+        enabled: !isLoading,
         decoration: InputDecoration(
           labelText: hint,
           errorMaxLines: 2,
@@ -697,30 +744,37 @@ class _RegisterPageState extends State<RegisterPage>
       if (this.selectedImage != null) {
         String imageUrl = await uploadImage(email);
         profanityImageModel = await checkProfanityForImage(imageUrl: imageUrl);
-        profanityStatusModel =
-            await getProfanityStatus(profanityImageModel: profanityImageModel);
-
-        if (profanityStatusModel.isProfane) {
+        if (profanityImageModel == null) {
           if (dialogContext != null) {
             Navigator.pop(dialogContext);
           }
-          showProfanityImageAlert(
-                  context: context, content: profanityStatusModel.category)
-              .then((status) {
-            if (status == 'Proceed') {
-              FirebaseStorage.instance
-                  .getReferenceFromUrl(imageUrl)
-                  .then((reference) {
-                reference.delete();
-
-                setState(() {});
-              }).catchError((e) => print(e));
-            } else {
-              print('error');
-            }
-          });
+          showFailedLoadImage().then((value) {});
         } else {
-          createUser(imageUrl: imageUrl);
+          profanityStatusModel = await getProfanityStatus(
+              profanityImageModel: profanityImageModel);
+
+          if (profanityStatusModel.isProfane) {
+            if (dialogContext != null) {
+              Navigator.pop(dialogContext);
+            }
+            showProfanityImageAlert(
+                    context: context, content: profanityStatusModel.category)
+                .then((status) {
+              if (status == 'Proceed') {
+                FirebaseStorage.instance
+                    .getReferenceFromUrl(imageUrl)
+                    .then((reference) {
+                  reference.delete();
+
+                  setState(() {});
+                }).catchError((e) => print(e));
+              } else {
+                print('error');
+              }
+            });
+          } else {
+            createUser(imageUrl: imageUrl);
+          }
         }
       } else {
         createUser(imageUrl: defaultUserImageURL);

@@ -88,7 +88,8 @@ class _RequestDonationDisputePageState
                       requestMode: widget.model.donatedToTimebank
                           ? RequestMode.TIMEBANK_REQUEST
                           : RequestMode.PERSONAL_REQUEST,
-                      timebankName: timebankModel.name,
+                      timebankName: widget.model
+                          .donationAssociatedTimebankDetails.timebankTitle,
                       creatorName: SevaCore.of(context).loggedInUser.fullname,
                       operatingMode: operatingMode,
                       bloc: _bloc,

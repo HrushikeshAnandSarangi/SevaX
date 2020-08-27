@@ -241,7 +241,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         if (snapshot.hasError) {
           Text(snapshot.error.toString());
         }
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (!snapshot.hasData) {
           return Center(
             child: SizedBox(
               height: 48,
