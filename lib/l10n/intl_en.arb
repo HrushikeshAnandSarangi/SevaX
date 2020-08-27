@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-08-27T12:52:19+00:00",
+    "@@last_modified": "2020-08-27T15:44:55+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -466,7 +466,7 @@
     "i_want_to_volunteer": "I want to volunteer.",
     "help_about_us": "About Us",
     "help_training_video": "Training Video",
-    "help_contact_us": "Contac Us",
+    "help_contact_us": "Contact Us",
     "help_version": "Version",
     "feedback": "Feedback",
     "send_feedback": "Send feedback",
