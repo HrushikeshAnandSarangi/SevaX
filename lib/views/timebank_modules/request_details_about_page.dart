@@ -9,6 +9,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
@@ -781,29 +782,35 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get totalGoodsReceived {
-    return CustomListTile(
-      title: Text(
-        'Total Goods Received',
-        style: TextStyle(
-          fontSize: 18,
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      subtitle: Text(''),
-      leading: Icon(
-        Icons.show_chart,
-        color: Colors.grey,
-      ),
-      trailing: Text(
-        widget.requestItem.goodsDonationDetails.requiredGoods.length.toString(),
-        style: TextStyle(
-          fontSize: 18,
-          color: Colors.black,
-          // fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
+    return FutureBuilder<int>(
+        future: FirestoreManager.getRequestRaisedGoods(
+            requestId: widget.requestItem.id),
+        builder: (context, snapshot) {
+          return CustomListTile(
+            title: Text(
+              'Total Goods Received',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            subtitle: Text(''),
+            leading: Icon(
+              Icons.show_chart,
+              color: Colors.grey,
+            ),
+            trailing: Text(
+              widget.requestItem.goodsDonationDetails.requiredGoods.length
+                  .toString(),
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                // fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        });
   }
 
   Widget getBottombar() {

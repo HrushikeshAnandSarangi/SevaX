@@ -155,33 +155,6 @@ class S {
         name: 'enter_email',
       );
 
-  String get stock_images => Intl.message(
-      'Stock Images',
-      name: 'stock_images',
-      );
-  String get choose_image => Intl.message(
-    'Choose Image',
-    name: 'choose_image',
-  );
-
-  String get timebank_hasparent => Intl.message(
-       'Timebank has parent',
-       name: 'timebank_hasparent'
-  );
-  String get timebank_location_hasparent_hinttext => Intl.message(
-      'If your timebank is associated with a parent timebank select below',
-      name: 'timebank_location_hasparent_hinttext'
-  );
-
-  String get look_for_existing_timebank_title => Intl.message(
-      'Select Parent timebank',
-      name: 'look_for_existing_timebank_title'
-  );
-
-  String get look_for_existing_siblings => Intl.message(
-      'Feed is visible to following timebanks',
-      name: 'look_for_existing_siblings'
-  );
   String get your_email => Intl.message(
         'Your email address',
         name: 'your_email',
@@ -4672,6 +4645,56 @@ class S {
   String get delete_request_success => Intl.message(
         '**requestTitle you requested to delete has been successfully deleted!',
         name: 'delete_request_success',
+      );
+
+  String get community => Intl.message(
+        'Community',
+        name: 'community',
+      );
+
+  String get stock_images => Intl.message(
+        'Stock Images',
+        name: 'stock_images',
+      );
+
+  String get choose_image => Intl.message(
+        'Choose Image',
+        name: 'choose_image',
+      );
+
+  String get timebank_has_parent => Intl.message(
+        'Timebank has parent',
+        name: 'timebank_has_parent',
+      );
+
+  String get timebank_location_has_parent_hint_text => Intl.message(
+        'If your timebank is associated with a parent timebank select below',
+        name: 'timebank_location_has_parent_hint_text',
+      );
+
+  String get select_parent_timebank => Intl.message(
+        'Select Parent timebank',
+        name: 'select_parent_timebank',
+      );
+
+  String get look_for_existing_siblings => Intl.message(
+        'Feed is visible to following timebanks',
+        name: 'look_for_existing_siblings',
+      );
+
+  String get none => Intl.message(
+        'None',
+        name: 'none',
+      );
+
+  String get find_your_parent_timebank => Intl.message(
+        'Find your parent timebank if you are part of',
+        name: 'find_your_parent_timebank',
+      );
+
+  String get look_for_existing_timebank_title => Intl.message(
+        'Looking for existing timebank',
+        name: 'look_for_existing_timebank_title',
       );
 }
 
