@@ -33,7 +33,6 @@ import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/parent_timebank_picker.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../switch_timebank.dart';
 
@@ -664,8 +663,8 @@ class CreateEditCommunityViewFormState
                             ],
                           ),
                         ),
-                        headingText(S.of(context).timebank_hasparent),
-                        Text(S.of(context).timebank_location_hasparent_hinttext,
+                        headingText(S.of(context).timebank_has_parent),
+                        Text(S.of(context).timebank_location_has_parent_hint_text,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey,

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -72,7 +71,8 @@ class NewsCreate extends StatelessWidget {
 class NewsCreateForm extends StatefulWidget {
   final String timebankId;
   final TimebankModel timebankModel;
-  NewsCreateForm({Key key, this.timebankId, this.timebankModel}) : super(key: key);
+  NewsCreateForm({Key key, this.timebankId, this.timebankModel})
+      : super(key: key);
   @override
   NewsCreateFormState createState() {
     return NewsCreateFormState();
@@ -273,20 +273,22 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   ),
 
                   Center(
-                    child: RaisedButton(
+                      child: RaisedButton(
                     textColor: Colors.green,
                     elevation: 0,
-                      child: Container(
+                    child: Container(
                       constraints: BoxConstraints.loose(
-                        Size(MediaQuery
-                            .of(context)
-                            .size
-                            .width - 220, 50),
+                        Size(MediaQuery.of(context).size.width - 220, 50),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text('Posting to ' + ((this.selectedTimebanks.length > 1 ) ? this.selectedTimebanks.length.toString() + ' timebanks': this.widget.timebankModel.name),
+                          Text(
+                            'Posting to ' +
+                                ((this.selectedTimebanks.length > 1)
+                                    ? this.selectedTimebanks.length.toString() +
+                                        ' timebanks'
+                                    : this.widget.timebankModel.name),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                           ),
@@ -297,12 +299,15 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     color: Colors.grey[200],
                     onPressed: () async {
                       FocusScope.of(context).requestFocus(FocusNode());
-                      _silblingTimebankSelectionBottomsheet(context,this.widget.timebankModel,selectedTimebanks,  (selectedTimebanks) => {
-                        print(selectedTimebanks),
-                        setState(() => {
-                          selectedTimebanks = selectedTimebanks
-                        })
-                      });
+                      _silblingTimebankSelectionBottomsheet(
+                          context,
+                          this.widget.timebankModel,
+                          selectedTimebanks,
+                          (selectedTimebanks) => {
+                                print(selectedTimebanks),
+                                setState(() =>
+                                    {selectedTimebanks = selectedTimebanks})
+                              });
                     },
                   )),
                   // Text(""),
@@ -500,7 +505,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 //   }
 // }
 
-void _silblingTimebankSelectionBottomsheet(BuildContext mcontext, TimebankModel timebank, List<String> selectedTimebanks, onChanged) {
+void _silblingTimebankSelectionBottomsheet(BuildContext mcontext,
+    TimebankModel timebank, List<String> selectedTimebanks, onChanged) {
   showModalBottomSheet(
     context: mcontext,
     builder: (BuildContext bc) {
@@ -512,7 +518,7 @@ void _silblingTimebankSelectionBottomsheet(BuildContext mcontext, TimebankModel 
                 elevation: 0.5,
                 automaticallyImplyLeading: true,
                 title: Text(
-                  S.of(context).look_for_existing_timebank_title,
+                  S.of(context).select_parent_timebank,
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -520,24 +526,23 @@ void _silblingTimebankSelectionBottomsheet(BuildContext mcontext, TimebankModel 
               ),
               body: Padding(
                 padding: EdgeInsets.only(
-                    bottom: MediaQuery
-                        .of(context)
-                        .viewInsets
-                        .bottom),
-                child: SearchSiblingTimebanks(keepOnBackPress: false,
-                  loggedInUser: SevaCore
-                      .of(context)
-                      .loggedInUser,
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: SearchSiblingTimebanks(
+                  keepOnBackPress: false,
+                  loggedInUser: SevaCore.of(context).loggedInUser,
                   selectedTimebank: timebank,
                   selectedTimebanks: selectedTimebanks,
                   showBackBtn: false,
-                  isFromHome: false, onChanged: onChanged,),
+                  isFromHome: false,
+                  onChanged: onChanged,
+                ),
               ));
         }),
       );
     },
   );
 }
+
 class SearchSiblingTimebanks extends StatefulWidget {
   final bool keepOnBackPress;
   final UserModel loggedInUser;
@@ -546,26 +551,28 @@ class SearchSiblingTimebanks extends StatefulWidget {
   TimebankModel selectedTimebank;
   List<String> selectedTimebanks;
   final ValueChanged onChanged;
-  SearchSiblingTimebanks(
-      {@required this.keepOnBackPress,
-        @required this.loggedInUser,
-        @required this.showBackBtn,
-        @required this.isFromHome,
-        @required this.selectedTimebank,
-        this.selectedTimebanks,
-        this.onChanged,
-      });
+  SearchSiblingTimebanks({
+    @required this.keepOnBackPress,
+    @required this.loggedInUser,
+    @required this.showBackBtn,
+    @required this.isFromHome,
+    @required this.selectedTimebank,
+    this.selectedTimebanks,
+    this.onChanged,
+  });
 
   @override
   State<StatefulWidget> createState() {
     return SearchSiblingTimebanksViewState();
   }
 }
+
 class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
   @override
   void initState() {
     super.initState();
-    communityBloc.searchTimebankSiblingsByParentId(this.widget.selectedTimebank.id, this.widget.selectedTimebank);
+    communityBloc.searchTimebankSiblingsByParentId(
+        this.widget.selectedTimebank.id, this.widget.selectedTimebank);
     print('called');
   }
 
@@ -574,6 +581,7 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
 //    communityBloc.dispose();
     super.dispose();
   }
+
   build(context) {
     return Container(
       padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -594,13 +602,12 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
       ]),
     );
   }
+
   Widget buildList() {
     // ListView contains a group of widgets that scroll inside the drawer
     return StreamBuilder(
         stream: communityBloc.allSiblingTimebanks,
-        builder: (context,
-            AsyncSnapshot<TimebankListModel>
-            snapshot) {
+        builder: (context, AsyncSnapshot<TimebankListModel> snapshot) {
           if (snapshot.hasData) {
             if (!snapshot.hasData) {
               return Center(child: CircularProgressIndicator());
@@ -616,30 +623,30 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
                           return timeBankWidget(
                               timebankModel: timebanks[index],
                               context: context,
-                              isSelected: this.widget.selectedTimebanks.contains(timebanks[index].id));
+                              isSelected: this
+                                  .widget
+                                  .selectedTimebanks
+                                  .contains(timebanks[index].id));
                         }));
               } else {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
                   child: Center(
-                    child: Text(
-                        S.of(context).no_timebanks_found,
+                    child: Text(S.of(context).no_timebanks_found,
                         style: TextStyle(fontFamily: "Europa", fontSize: 14)),
                   ),
                 );
               }
             }
           } else if (snapshot.hasError) {
-            return Text(
-                S.of(context).try_later);
+            return Text(S.of(context).try_later);
           }
           return Text("");
         });
   }
+
   Widget timeBankWidget(
-      {TimebankModel timebankModel,
-        BuildContext context,
-        bool isSelected}) {
+      {TimebankModel timebankModel, BuildContext context, bool isSelected}) {
     return ListTile(
       // onTap: goToNext(snapshot.data),
       title: Text(timebankModel.name,
@@ -649,19 +656,24 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
           value: isSelected,
           onChanged: (bool value) {
             print(value);
-            if (isSelected && timebankModel.id !=  this.widget.selectedTimebanks[0]) {
-              this.widget.selectedTimebanks.removeWhere((item) => item == timebankModel.id);
+            if (isSelected &&
+                timebankModel.id != this.widget.selectedTimebanks[0]) {
+              this
+                  .widget
+                  .selectedTimebanks
+                  .removeWhere((item) => item == timebankModel.id);
               print('removed');
-            } else if (!isSelected && timebankModel.id !=  this.widget.selectedTimebanks[0]){
+            } else if (!isSelected &&
+                timebankModel.id != this.widget.selectedTimebanks[0]) {
               this.widget.selectedTimebanks.add(timebankModel.id);
               print('added');
             }
             this.widget.onChanged(this.widget.selectedTimebanks);
-            setState(() => this.widget.selectedTimebanks = this.widget.selectedTimebanks);
+            setState(() =>
+                this.widget.selectedTimebanks = this.widget.selectedTimebanks);
           },
         )
       ]),
-
     );
   }
 }

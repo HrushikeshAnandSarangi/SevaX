@@ -63,7 +63,7 @@ void _parentSelectionBottomsheet(BuildContext mcontext, onChanged) {
                 elevation: 0.5,
                 automaticallyImplyLeading: true,
                 title: Text(
-                  S.of(context).look_for_existing_timebank_title,
+                  S.of(context).select_parent_timebank,
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -149,7 +149,7 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
           padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
         ),
         Text(
-          S.of(context).looking_existing_timebank,
+          S.of(context).find_your_parent_timebank,
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
@@ -193,7 +193,7 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                   borderRadius: BorderRadius.circular(25.7)),
-              hintText: S.of(context).help,
+              hintText: S.of(context).find_timebank_help_text,
               hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
         ),
         SizedBox(height: 20),
@@ -284,7 +284,7 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
             return Text("...");
           } else if (snapshot.hasData) {
             return Text(
-              S.of(context).created_by + snapshot.data.fullname,
+              S.of(context).created_by + ' ' + snapshot.data.fullname,
             );
           } else {
             return Text(
