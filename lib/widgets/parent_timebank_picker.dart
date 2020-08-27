@@ -35,7 +35,7 @@ class ParentTimebankPickerWidget extends StatelessWidget {
         ),
         child: Text(
           selectedTimebank == '' || selectedTimebank == null
-              ? S.of(context).none
+              ? S.of(context).no_timebanks_found
               : selectedTimebank,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
@@ -309,7 +309,7 @@ class SearchParentTimebanksViewState extends State<SearchParentTimebanks> {
                 padding: const EdgeInsets.all(0.0),
                 child: Text(communityModel.name == selectedTimebank
                     ? "Current"
-                    : "Choose"),
+                    : S.of(context).choose),
               ),
             ],
           ),

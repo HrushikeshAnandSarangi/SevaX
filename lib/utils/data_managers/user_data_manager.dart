@@ -114,6 +114,33 @@ Future<int> getTimebankRaisedAmountAndGoods({
   return totalGoodsOrAmount;
 }
 
+Future<int> getRequestRaisedGoods({
+  @required String requestId,
+}) async {
+  int totalGoods = 0;
+  try {
+    await Firestore.instance
+        .collection('donations')
+        .where('donationType', isEqualTo: 'GOODS')
+        .where('donationStatus', isEqualTo: 'ACKNOWLEDGED')
+        .where('requestId', isEqualTo: requestId)
+        .getDocuments()
+        .then((data) {
+      data.documents.forEach((documentSnapshot) {
+        DonationModel donationModel =
+            DonationModel.fromMap(documentSnapshot.data);
+
+        totalGoods += donationModel.goodsDetails.donatedGoods.values.length;
+
+        print('raised ${totalGoods.toString()}');
+      });
+    });
+  } on Exception catch (e) {
+    print(e.toString());
+  }
+  return totalGoods;
+}
+
 Stream<List<DonationModel>> getDonationList(
     {String userId, String timebankId, bool isGoods}) async* {
   var data;
