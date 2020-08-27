@@ -341,11 +341,12 @@ class CreateEditCommunityViewFormState
                           },
                           controller: searchTextController,
                           onChanged: (value) {
-                            if (value.length > 1) {
+                            if (value.length > 1 && !autoValidateText) {
                               setState(() {
                                 autoValidateText = true;
                               });
-                            } else {
+                            }
+                            if (value.length <= 1 && autoValidateText) {
                               setState(() {
                                 autoValidateText = false;
                               });
@@ -411,11 +412,12 @@ class CreateEditCommunityViewFormState
                           textCapitalization: TextCapitalization.sentences,
                           initialValue: timebankModel.missionStatement ?? "",
                           onChanged: (value) {
-                            if (value.length > 1) {
+                            if (value.length > 1 && !autoValidateText) {
                               setState(() {
                                 autoValidateText = true;
                               });
-                            } else {
+                            }
+                            if (value.length <= 1 && autoValidateText) {
                               setState(() {
                                 autoValidateText = false;
                               });
@@ -1329,11 +1331,12 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
-            if (value.length > 1) {
+            if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
               });
-            } else {
+            }
+            if (value.length <= 1 && autoValidateText) {
               setState(() {
                 autoValidateText = false;
               });
@@ -1372,11 +1375,12 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
-            if (value.length > 1) {
+            if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
               });
-            } else {
+            }
+            if (value.length <= 1 && autoValidateText) {
               setState(() {
                 autoValidateText = false;
               });
@@ -1450,11 +1454,12 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
-            if (value.length > 1) {
+            if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
               });
-            } else {
+            }
+            if (value.length <= 1 && autoValidateText) {
               setState(() {
                 autoValidateText = false;
               });
@@ -1493,11 +1498,12 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
-            if (value.length > 1) {
+            if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
               });
-            } else {
+            }
+            if (value.length <= 1 && autoValidateText) {
               setState(() {
                 autoValidateText = false;
               });
@@ -1537,11 +1543,12 @@ class CreateEditCommunityViewFormState
             },
             keyboardType: TextInputType.text,
             onChanged: (value) {
-              if (value.length > 1) {
+              if (value.length > 1 && !autoValidateText) {
                 setState(() {
                   autoValidateText = true;
                 });
-              } else {
+              }
+              if (value.length <= 1 && autoValidateText) {
                 setState(() {
                   autoValidateText = false;
                 });
@@ -1583,11 +1590,12 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
-            if (value.length > 1) {
+            if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
               });
-            } else {
+            }
+            if (value.length <= 1 && autoValidateText) {
               setState(() {
                 autoValidateText = false;
               });
@@ -1618,11 +1626,12 @@ class CreateEditCommunityViewFormState
           },
           autovalidate: autoValidateText,
           onChanged: (value) {
-            if (value.length > 1) {
+            if (value.length > 1 && !autoValidateText) {
               setState(() {
                 autoValidateText = true;
               });
-            } else {
+            }
+            if (value.length <= 1 && autoValidateText) {
               setState(() {
                 autoValidateText = false;
               });

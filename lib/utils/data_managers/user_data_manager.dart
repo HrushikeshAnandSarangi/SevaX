@@ -384,11 +384,21 @@ Future<ProfanityImageModel> checkProfanityForImage({String imageUrl}) async {
     "${FlavorConfig.values.cloudFunctionBaseURL}/visionApi",
     body: {"imageURL": imageUrl},
   );
-  print("result ${result.body.toString()}");
   print("result code ${result.statusCode}");
-  var data = json.decode(result.body);
-  ProfanityImageModel profanityImageModel =
-      ProfanityImageModel.fromMap(json.decode(result.body));
+
+  ProfanityImageModel profanityImageModel;
+  try {
+    profanityImageModel = ProfanityImageModel.fromMap(json.decode(result.body));
+  } on FormatException catch (formatException) {
+    print("format exception");
+    return null;
+  } on Exception catch (exception) {
+    print("general exception");
+
+    //other exception
+    return null;
+  }
+
   return profanityImageModel;
 }
 

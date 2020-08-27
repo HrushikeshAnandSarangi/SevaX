@@ -89,27 +89,32 @@ class NewsImageState extends State<NewsImage>
   Future<void> profanityCheck({String imageURL}) async {
     // _newsImageURL = imageURL;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
-
-    profanityStatusModel =
-        await getProfanityStatus(profanityImageModel: profanityImageModel);
-
-    if (profanityStatusModel.isProfane) {
-      showProfanityImageAlert(
-              context: context, content: profanityStatusModel.category)
-          .then((status) {
-        if (status == 'Proceed') {
-          FirebaseStorage.instance
-              .getReferenceFromUrl(imageURL)
-              .then((reference) {
-            reference.delete();
-            globals.newsImageURL = null;
-          }).catchError((e) => print(e));
-        } else {
-          print('error');
-        }
+    if (profanityImageModel == null) {
+      showFailedLoadImage(context: context).then((value) {
+        globals.newsImageURL = null;
       });
     } else {
-      globals.newsImageURL = imageURL;
+      profanityStatusModel =
+          await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+      if (profanityStatusModel.isProfane) {
+        showProfanityImageAlert(
+                context: context, content: profanityStatusModel.category)
+            .then((status) {
+          if (status == 'Proceed') {
+            FirebaseStorage.instance
+                .getReferenceFromUrl(imageURL)
+                .then((reference) {
+              reference.delete();
+              globals.newsImageURL = null;
+            }).catchError((e) => print(e));
+          } else {
+            print('error');
+          }
+        });
+      } else {
+        globals.newsImageURL = imageURL;
+      }
     }
   }
 

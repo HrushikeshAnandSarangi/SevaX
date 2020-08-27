@@ -277,11 +277,12 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                 style: TextStyle(fontSize: 14.0, color: Colors.black87),
                 autovalidate: autoValidateText,
                 onChanged: (value) {
-                  if (value.length > 1) {
+                  if (value.length > 1 && !autoValidateText) {
                     setState(() {
                       autoValidateText = true;
                     });
-                  } else {
+                  }
+                  if (value.length <= 1 && autoValidateText) {
                     setState(() {
                       autoValidateText = false;
                     });

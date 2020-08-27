@@ -4596,6 +4596,11 @@ class S {
         'has a request for donation of specific goods. You can tap to donate any goods that you can',
         name: 'goods_donation_invite',
       );
+
+  String get failed_load_image => Intl.message(
+        'Failed to load image. Try different image',
+        name: 'failed_load_image',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

@@ -55,31 +55,36 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
   Future<void> profanityCheck({String imageURL}) async {
     // _newsImageURL = imageURL;
     profanityImageModel = await checkProfanityForImage(imageUrl: imageURL);
-
-    profanityStatusModel =
-        await getProfanityStatus(profanityImageModel: profanityImageModel);
-
-    if (profanityStatusModel.isProfane) {
-      showProfanityImageAlert(
-              context: context, content: profanityStatusModel.category)
-          .then((status) {
-        if (status == 'Proceed') {
-          FirebaseStorage.instance
-              .getReferenceFromUrl(imageURL)
-              .then((reference) {
-            reference.delete();
-            setState(() {
-              globals.projectsAvtaarURL = null;
-            });
-          }).catchError((e) => print(e));
-        } else {
-          print('error');
-        }
+    if (profanityImageModel == null) {
+      showFailedLoadImage(context: context).then((value) {
+        globals.projectsAvtaarURL = null;
       });
     } else {
-      setState(() {
-        globals.projectsAvtaarURL = imageURL;
-      });
+      profanityStatusModel =
+          await getProfanityStatus(profanityImageModel: profanityImageModel);
+
+      if (profanityStatusModel.isProfane) {
+        showProfanityImageAlert(
+                context: context, content: profanityStatusModel.category)
+            .then((status) {
+          if (status == 'Proceed') {
+            FirebaseStorage.instance
+                .getReferenceFromUrl(imageURL)
+                .then((reference) {
+              reference.delete();
+              setState(() {
+                globals.projectsAvtaarURL = null;
+              });
+            }).catchError((e) => print(e));
+          } else {
+            print('error');
+          }
+        });
+      } else {
+        setState(() {
+          globals.projectsAvtaarURL = imageURL;
+        });
+      }
     }
   }
 

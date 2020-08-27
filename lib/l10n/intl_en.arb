@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-08-26T10:57:44+00:00",
+    "@@last_modified": "2020-08-27T07:32:06+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -912,5 +912,6 @@
     "has_cash_donation": "Has a request for cash donation",
     "has_goods_donation": "Has requested for goods donation",
     "cash_donation_invite": "has a request for cash donation. Tap to donate any amount that you can",
-    "goods_donation_invite": "has a request for donation of specific goods. You can tap to donate any goods that you can"
+    "goods_donation_invite": "has a request for donation of specific goods. You can tap to donate any goods that you can",
+    "failed_load_image": "Failed to load image. Try different image"
 }

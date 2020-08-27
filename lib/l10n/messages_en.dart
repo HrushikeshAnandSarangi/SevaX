@@ -328,6 +328,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "exit_user" : MessageLookupByLibrary.simpleMessage("Exit User"),
     "expired" : MessageLookupByLibrary.simpleMessage("Expired"),
     "extension_alert" : MessageLookupByLibrary.simpleMessage("Extension alert"),
+    "failed_load_image" : MessageLookupByLibrary.simpleMessage("Failed to load image. Try different image"),
     "failed_to_fetch_location" : MessageLookupByLibrary.simpleMessage("Failed to fetch location"),
     "failed_to_load_post" : MessageLookupByLibrary.simpleMessage("Couldn\'t load the post!"),
     "favourites" : MessageLookupByLibrary.simpleMessage("Favourites"),

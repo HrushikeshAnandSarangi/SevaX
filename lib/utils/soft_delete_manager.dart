@@ -458,6 +458,38 @@ Future<String> showProfanityImageAlert({BuildContext context, String content}) {
       });
 }
 
+Future<void> showFailedLoadImage({
+  BuildContext context,
+}) {
+  return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext _context) {
+        return AlertDialog(
+          title: Text(S.of(context).profanity_alert),
+          content: Text(
+            S.of(context).failed_load_image,
+          ),
+          actions: <Widget>[
+            RaisedButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
+              child: Text(
+                S.of(context).ok,
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(_context);
+              },
+            ),
+          ],
+        );
+      });
+}
+
 Future<ProfanityStatusModel> getProfanityStatus(
     {ProfanityImageModel profanityImageModel}) async {
   ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
