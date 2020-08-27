@@ -9,8 +9,10 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/views/core.dart';
 
 import '../flavor_config.dart';
 
@@ -184,7 +186,7 @@ Future<void> showAdvisoryBeforeDeletion({
                   softDeleteType,
                   associatedId,
                   true,
-                );
+                ).then((_)=>Navigator.of(context).pop());;
               } catch (_) {
                 print("Failed sending request due to ${_.toString()}");
                 progressDialog.hide();
@@ -193,7 +195,7 @@ Future<void> showAdvisoryBeforeDeletion({
                   softDeleteType,
                   associatedId,
                   false,
-                );
+                ).then((_)=>Navigator.of(context).pop());
               }
             },
             child: Text(
@@ -388,13 +390,13 @@ String _getModelType(SoftDelete type) {
   }
 }
 
-void showFinalResultConfirmation(
+Future<bool> showFinalResultConfirmation(
   BuildContext context,
   SoftDelete softDeleteType,
   String associatedId,
   bool didSuceed,
-) {
-  showDialog(
+) async {
+  await showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
@@ -410,8 +412,19 @@ void showFinalResultConfirmation(
         ),
         actions: <Widget>[
           RaisedButton(
-            onPressed: () {
-              Navigator.pop(context);
+            onPressed: () async {
+              await Future.delayed(Duration(milliseconds: 800), (){
+                Navigator.pop(context);
+//                Navigator.of(context).push(
+//                  MaterialPageRoute(
+//                    builder: (context) => SevaCore(
+//                      loggedInUser: SevaCore.of(context).loggedInUser,
+//                      child: HomePageRouter(),
+//                    ),
+//                  ),
+//                );
+              });
+//              Navigator.pop(context);
             },
             child: Container(
               margin: EdgeInsets.only(left: 10, right: 10),
@@ -424,6 +437,7 @@ void showFinalResultConfirmation(
       );
     },
   );
+  return true;
 }
 
 String getSuccessMessage(

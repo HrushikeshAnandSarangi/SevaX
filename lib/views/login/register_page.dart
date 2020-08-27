@@ -42,6 +42,7 @@ class _RegisterPageState extends State<RegisterPage>
     with ImagePickerListener, SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final fullnameFocus = FocusNode();
   final emailFocus = FocusNode();
   final pwdFocus = FocusNode();
   final confirmPwdFocus = FocusNode();
@@ -388,7 +389,7 @@ class _RegisterPageState extends State<RegisterPage>
       child: Column(
         children: <Widget>[
           getFormField(
-            focusNode: FocusNode(),
+            focusNode: fullnameFocus,
             onFieldSubmittedCB: (v) {
               FocusScope.of(context).requestFocus(emailFocus);
             },

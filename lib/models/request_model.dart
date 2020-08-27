@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/views/exchange/createrequest.dart';
 
 class TaskModel extends DataModel {
   String id;
@@ -543,6 +542,10 @@ class RequestModel extends DataModel {
   @override
   Map<String, dynamic> toMap() {
     Map<String, dynamic> object = {};
+
+    if (donationInstructionLink != null) {
+      object['donationInstructionLink'] = donationInstructionLink;
+    }
 
     if (requestMode != null) {
       switch (requestMode) {

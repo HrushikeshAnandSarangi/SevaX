@@ -381,7 +381,7 @@ class PersonalNotificationsRedcerForDonations {
     return NotificationCard(
       entityName: S.of(context).pledge_modified,
       title: S.of(context).tap_to_view_details,
-      subTitle: "${S.of(context).pledge_modified} \n",
+      subTitle: "${S.of(context).pledge_modified}",
       onDismissed: onDismissed,
       onPressed: () {
         Navigator.of(context).push(
