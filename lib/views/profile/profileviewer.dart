@@ -18,8 +18,8 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 //TODO update bio and remove un-necessary stuff
 
@@ -33,7 +33,7 @@ class ProfileViewer extends StatefulWidget {
 
   ProfileViewer({
     this.userEmail,
-    @required this.timebankId,
+    this.timebankId,
     this.isFromTimebank,
     this.entityName,
   })  : assert(userEmail != null),
@@ -74,7 +74,7 @@ class ProfileViewerState extends State<ProfileViewer> {
     super.initState();
   }
 
-  TRscore(num trustworthinessscore,num reliabilityscore) {
+  TRscore(num trustworthinessscore, num reliabilityscore) {
     print('ey');
     print(trustworthinessscore);
     print(reliabilityscore);
@@ -86,29 +86,32 @@ class ProfileViewerState extends State<ProfileViewer> {
             alignment: Alignment.centerLeft,
             child: Padding(
               padding: const EdgeInsets.only(left: 20.0),
-              child:  Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    SmoothStarRating(
-                  allowHalfRating: true,
-                  isReadOnly: true,
-                  onRated: (v) {},
-                  starCount: 5,
-                  rating: trustworthinessscore != null ? trustworthinessscore: 0,
-                  size: 30.0,
-                  filledIconData: Icons.star,
-                  halfFilledIconData: Icons.star_half,
-                  color: Colors.yellow,
-                  borderColor: Colors.yellow,
-                  spacing:0.0
-              ), Text("Trustworthiness",
-                      style: subTitle,
-                    ),
-                  ],
-                ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  SmoothStarRating(
+                      allowHalfRating: true,
+                      isReadOnly: true,
+                      onRated: (v) {},
+                      starCount: 5,
+                      rating: trustworthinessscore != null
+                          ? trustworthinessscore
+                          : 0,
+                      size: 30.0,
+                      filledIconData: Icons.star,
+                      halfFilledIconData: Icons.star_half,
+                      color: Colors.yellow,
+                      borderColor: Colors.yellow,
+                      spacing: 0.0),
+                  Text(
+                    "Trustworthiness",
+                    style: subTitle,
+                  ),
+                ],
               ),
             ),
           ),
+        ),
         Expanded(
           child: Container(
             alignment: Alignment.centerLeft,
@@ -121,14 +124,15 @@ class ProfileViewerState extends State<ProfileViewer> {
                     isReadOnly: true,
                     onRated: (v) {},
                     starCount: 5,
-                    rating: reliabilityscore != null ? reliabilityscore: 0,
+                    rating: reliabilityscore != null ? reliabilityscore : 0,
                     size: 30.0,
                     filledIconData: Icons.star,
                     halfFilledIconData: Icons.star_half,
                     color: Colors.yellow,
                     borderColor: Colors.yellow,
-                    spacing:0.0
-                ), Text("Reliabilityscore",
+                    spacing: 0.0),
+                Text(
+                  "Reliabilityscore",
                   style: subTitle,
                 ),
               ],
@@ -138,6 +142,7 @@ class ProfileViewerState extends State<ProfileViewer> {
       ],
     );
   }
+
   @override
   Widget build(BuildContext context) {
     print("**********************${widget.timebankId}");

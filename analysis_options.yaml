@@ -20,7 +20,7 @@ analyzer:
   errors:
     # close_sinks: error
     # missing_return: error
-    # missing_required_param: error
+    missing_required_param: error
     # parameter_assignments: error
     avoid_empty_else: error
     no_logic_in_create_state: error

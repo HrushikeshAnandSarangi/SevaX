@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/ui/utils/avatar.dart';
+import 'package:timeago/timeago.dart' as timeAgo;
 
 class NotificationCard extends StatelessWidget {
   final VoidCallback onPressed;
@@ -12,6 +13,7 @@ class NotificationCard extends StatelessWidget {
   final String subTitle;
   final bool isDissmissible;
   final String entityName;
+  final int timestamp;
 
   const NotificationCard({
     Key key,
@@ -22,6 +24,7 @@ class NotificationCard extends StatelessWidget {
     this.onDismissed,
     this.entityName,
     this.isDissmissible = true,
+    @required this.timestamp,
   })  : assert(title != null),
         assert(subTitle != null),
         super(key: key);
@@ -102,8 +105,22 @@ class NotificationCard extends StatelessWidget {
                     radius: 22,
                     name: entityName ?? " ",
                   ),
-            subtitle: Text(
-              subTitle,
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  subTitle,
+                ),
+                SizedBox(height: 4),
+                Text(
+                  timeAgo.format(
+                    DateTime.fromMillisecondsSinceEpoch(
+                      timestamp,
+                    ),
+                    locale: S.of(context).localeName,
+                  ),
+                ),
+              ],
             ),
             onTap: () => onPressed != null ? onPressed() : null,
           ),

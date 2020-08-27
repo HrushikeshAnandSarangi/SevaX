@@ -470,7 +470,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
     RequestModel model,
     UserModel user,
     String notificationId,
-    @required BuildContext context,
+    BuildContext context,
   }) {
     List<String> approvedUsers = model.approvedUsers;
     Set<String> acceptedSet = approvedUsers.toSet();

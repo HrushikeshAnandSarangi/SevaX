@@ -8,6 +8,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/change_ownership_dialog.dart';
 
 class ChangeOwnershipWidget extends StatelessWidget {
+  final int timestamp;
   final ChangeOwnershipModel changeOwnershipModel;
   final NotificationsModel notificationsModel;
   final String notificationId;
@@ -17,6 +18,7 @@ class ChangeOwnershipWidget extends StatelessWidget {
 
   const ChangeOwnershipWidget(
       {Key key,
+      @required this.timestamp,
       this.changeOwnershipModel,
       this.notificationsModel,
       this.notificationId,
@@ -27,6 +29,7 @@ class ChangeOwnershipWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NotificationCard(
+      timestamp: timestamp,
       entityName: changeOwnershipModel.creatorName,
       isDissmissible: true,
       onDismissed: () {

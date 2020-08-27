@@ -41,6 +41,7 @@ class NotificationsRepository {
         .where("isTimebankNotification", isEqualTo: true)
         .where("communityId", isEqualTo: communityId)
         .where("isRead", isEqualTo: false)
+        .orderBy("timestamp", descending: true)
         .snapshots();
   }
 

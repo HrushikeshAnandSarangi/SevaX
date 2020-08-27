@@ -552,7 +552,11 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => RecurringListing(requestModel: model, offerModel: null,timebankModel: null,),
+                    builder: (context) => RecurringListing(
+                      requestModel: model,
+                      offerModel: null,
+                      timebankModel: null,
+                    ),
                   ),
                 );
               } else {
@@ -608,6 +612,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
+                                  onPressed: null,
                                 ),
                               ],
                             ),

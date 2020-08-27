@@ -46,6 +46,7 @@ class TimebankRequestWidget extends StatelessWidget {
             }
             UserModel user = snapshot.data;
             return NotificationCard(
+              timestamp: notification.timestamp,
               isDissmissible: false,
               title: model.title,
               subTitle:
