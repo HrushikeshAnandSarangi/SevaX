@@ -18,6 +18,7 @@ class DonationModel {
     this.donationStatus,
     this.notificationId,
     this.donorDetails,
+    this.lastModifiedBy,
   });
 
   String communityId;
@@ -36,6 +37,7 @@ class DonationModel {
   CashDetails cashDetails;
   GoodsDetails goodsDetails;
   DonorDetails donorDetails;
+  String lastModifiedBy;
   factory DonationModel.fromMap(Map<String, dynamic> json) => DonationModel(
         communityId: json["communityId"] == null ? null : json["communityId"],
         notificationId:
@@ -80,6 +82,7 @@ class DonationModel {
                   json['donorDetails'],
                 ),
               ),
+        lastModifiedBy: json['lastModifiedBy'],
       );
 
   Map<String, dynamic> toMap() => {
@@ -106,6 +109,7 @@ class DonationModel {
         "cashDetails": cashDetails == null ? null : cashDetails.toMap(),
         "goodsDetails": goodsDetails == null ? null : goodsDetails.toMap(),
         "donorDetails": donorDetails == null ? null : donorDetails.toMap(),
+        "changeHistory": lastModifiedBy,
       };
 
   @override
