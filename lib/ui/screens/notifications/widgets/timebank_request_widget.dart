@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -88,7 +89,9 @@ class TimebankRequestWidget extends StatelessWidget {
                   height: 70,
                   width: 70,
                   child: CircleAvatar(
-                    backgroundImage: NetworkImage(userModel.photoURL),
+                    backgroundImage: NetworkImage(
+                      userModel.photoURL ?? defaultUserImageURL,
+                    ),
                   ),
                 ),
                 Padding(
