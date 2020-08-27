@@ -89,10 +89,19 @@ class _ImageUrlViewState extends State<ImageUrlView> {
                 keyboardType: TextInputType.url,
                 onChanged: (value) {
                   if (value.length > 5) {
-                    scrapeURLFromTextField(value);
+                    if (value.substring(value.length - 4).contains('.jpg') ||
+                        value.substring(value.length - 5).contains('.jpeg') ||
+                        value.substring(value.length - 4).contains('.png')) {
+                      scrapeURLFromTextField(value);
+                    } else {
+                      setState(() {
+                        urlError = S.of(context).only_images_types_allowed;
+                      });
+                    }
                   }
                 },
                 decoration: InputDecoration(
+                  errorText: urlError,
                   hintText: 'Image Url',
                   hintStyle: hintTextStyle,
                   prefixIcon: Icon(Icons.search),
@@ -123,6 +132,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
                         imageUrl: imageUrls[0],
                         fit: BoxFit.cover,
                         height: 200,
+                        placeholderFadeInDuration: Duration(seconds: 10),
                         errorWidget: (context, url, error) => Container(
                             height: 80,
                             child: Center(
@@ -163,6 +173,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
       String match = regExp.stringMatch(textContent);
       print(match);
       setState(() {
+        this.urlError = '';
         this._saving = true;
       });
       await profanityCheck(imageURL: match);

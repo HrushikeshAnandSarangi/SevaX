@@ -1,11 +1,14 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/donation_model.dart';
+import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/bottom_nav_bar.dart';
@@ -15,6 +18,7 @@ import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.da
 import 'package:sevaexchange/ui/screens/notifications/pages/combined_notification_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/splash_view.dart';
@@ -47,7 +51,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
   void initState() {
     log("home page router init");
     super.initState();
-
+    //sendNotification();
     Future.delayed(
       Duration.zero,
       () {
@@ -181,5 +185,43 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
         },
       ),
     );
+  }
+
+  Future<void> sendNotification() async {
+    DonationModel donationModel = DonationModel(
+        cashDetails: CashDetails(pledgedAmount: 10), requestTitle: 'besharm');
+//    RequestModel requestModel = RequestModel(
+//        title: 'besharam',
+//        fullName: 'fbhsbfhbg',
+//        requestMode: RequestMode.PERSONAL_REQUEST,
+//        requestType: RequestType.CASH,
+//        sevaUserId: 'EnLbSg4CyoaTjRRTkIBfogdT4dw2',
+//        email: 'burhan@uipep.com');
+//
+//    TimebankModel timebankModel = TimebankModel({});
+//    timebankModel.name = "uipep";
+//    timebankModel.id = '822bd8cc-57dc-4b30-8e2c-bd48a0ddd4c0';
+//    RequestInvitationModel requestInvitationModel = RequestInvitationModel(
+//      requestModel: requestModel,
+//      timebankModel: timebankModel,
+//    );
+
+    NotificationsModel notification = NotificationsModel(
+      id: utils.Utils.getUuid(),
+      timebankId: '822bd8cc-57dc-4b30-8e2c-bd48a0ddd4c0',
+      data: donationModel.toMap(),
+      isRead: false,
+      type: NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY,
+      communityId: '8b99789d-e987-464f-b1e1-41546660c10b',
+      senderUserId: 'Rbh5eL3vlDMlTzJb34JbYjlWCc93',
+      targetUserId: 'EnLbSg4CyoaTjRRTkIBfogdT4dw2',
+    );
+
+    await Firestore.instance
+        .collection('users')
+        .document('burhan@uipep.com')
+        .collection("notifications")
+        .document(notification.id)
+        .setData(notification.toMap());
   }
 }

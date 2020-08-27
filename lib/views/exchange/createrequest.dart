@@ -39,7 +39,6 @@ import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:usage/uuid/uuid.dart';
 
-
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
   final OfferModel offer;
@@ -137,7 +136,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
 
-  RequestModel requestModel = RequestModel(requestType: RequestType.TIME, cashModel: CashModel(), goodsDonationDetails: GoodsDonationDetails());
+  RequestModel requestModel = RequestModel(
+      requestType: RequestType.TIME,
+      cashModel: CashModel(),
+      goodsDonationDetails: GoodsDonationDetails());
   End end = End();
   var focusNodes = List.generate(12, (_) => FocusNode());
 
@@ -369,7 +371,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                             OfferDurationWidget(
                               title: S.of(context).request_duration,
                             ),
-                            requestModel.requestType == RequestType.TIME ? TimeRequest(snapshot, projectModelList): requestModel.requestType == RequestType.CASH ? CashRequest(snapshot, projectModelList): GoodsRequest(snapshot, projectModelList),
+                            requestModel.requestType == RequestType.TIME
+                                ? TimeRequest(snapshot, projectModelList)
+                                : requestModel.requestType == RequestType.CASH
+                                    ? CashRequest(snapshot, projectModelList)
+                                    : GoodsRequest(snapshot, projectModelList),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 30.0),
@@ -379,7 +385,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                   child: RaisedButton(
                                     onPressed: createRequest,
                                     child: Text(
-                                      S.of(context)
+                                      S
+                                          .of(context)
                                           .create_request
                                           .padLeft(10)
                                           .padRight(10),
@@ -400,13 +407,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               });
         });
   }
+
   Widget RequestGoodsDescriptionData() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            S.of(context)
-                .request_goods_description,
+            S.of(context).request_goods_description,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -414,13 +421,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               color: Colors.black,
             ),
           ),
-          GoodsDynamicSelection(onSelectedGoods: (goods) => {
-            print(goods),
-            requestModel.goodsDonationDetails.requiredGoods = goods
-          }),
+          GoodsDynamicSelection(
+            onSelectedGoods: (goods) => {
+              print(goods),
+              requestModel.goodsDonationDetails.requiredGoods = goods
+            },
+          ),
           Text(
-            S.of(context)
-                .request_goods_address,
+            S.of(context).request_goods_address,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -450,8 +458,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             },
             focusNode: focusNodes[8],
             onFieldSubmitted: (v) {
-              FocusScope.of(context)
-                  .requestFocus(focusNodes[8]);
+              FocusScope.of(context).requestFocus(focusNodes[8]);
             },
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
@@ -459,19 +466,16 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               hintText: S.of(context).request_goods_address_inputhint,
               hintStyle: hintTextStyle,
             ),
-            initialValue:
-            widget.offer != null && widget.isOfferRequest
+            initialValue: widget.offer != null && widget.isOfferRequest
                 ? getOfferDescription(
-              offerDataModel: widget.offer,
-            )
+                    offerDataModel: widget.offer,
+                  )
                 : "",
             keyboardType: TextInputType.multiline,
             maxLines: 3,
             validator: (value) {
               if (value.isEmpty) {
-                return S
-                    .of(context)
-                    .validation_error_general_text;
+                return S.of(context).validation_error_general_text;
               } else {
                 print(requestModel);
                 requestModel.goodsDonationDetails.address = value;
@@ -482,6 +486,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           ),
         ]);
   }
+
   Widget RequestPaymentDescriptionData() {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -517,8 +522,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             },
             focusNode: focusNodes[7],
             onFieldSubmitted: (v) {
-              FocusScope.of(context)
-                  .requestFocus(focusNodes[7]);
+              FocusScope.of(context).requestFocus(focusNodes[7]);
             },
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
@@ -526,19 +530,16 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               hintText: S.of(context).request_payment_description_inputhint,
               hintStyle: hintTextStyle,
             ),
-            initialValue:
-            widget.offer != null && widget.isOfferRequest
+            initialValue: widget.offer != null && widget.isOfferRequest
                 ? getOfferDescription(
-              offerDataModel: widget.offer,
-            )
+                    offerDataModel: widget.offer,
+                  )
                 : "",
             keyboardType: TextInputType.multiline,
             maxLines: 3,
             validator: (value) {
               if (value.isEmpty) {
-                return S
-                    .of(context)
-                    .validation_error_general_text;
+                return S.of(context).validation_error_general_text;
               } else {
                 print(requestModel);
                 requestModel.donationInstructionLink = value;
@@ -549,7 +550,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           ),
         ]);
   }
-  Widget RequestDescriptionData (hintTextDesc) {
+
+  Widget RequestDescriptionData(hintTextDesc) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -577,8 +579,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             },
             focusNode: focusNodes[0],
             onFieldSubmitted: (v) {
-              FocusScope.of(context)
-                  .requestFocus(focusNodes[1]);
+              FocusScope.of(context).requestFocus(focusNodes[1]);
             },
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
@@ -586,19 +587,16 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               hintText: hintTextDesc,
               hintStyle: hintTextStyle,
             ),
-            initialValue:
-            widget.offer != null && widget.isOfferRequest
+            initialValue: widget.offer != null && widget.isOfferRequest
                 ? getOfferDescription(
-              offerDataModel: widget.offer,
-            )
+                    offerDataModel: widget.offer,
+                  )
                 : "",
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             validator: (value) {
               if (value.isEmpty) {
-                return S
-                    .of(context)
-                    .validation_error_general_text;
+                return S.of(context).validation_error_general_text;
               }
               if (profanityDetector.isProfaneString(value)) {
                 return S.of(context).profanity_text_alert;
@@ -608,136 +606,132 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           ),
         ]);
   }
-  Widget RequestTypeWidget () {
-    return requestModel.requestMode == RequestMode.TIMEBANK_REQUEST ?
-    Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          S.of(context).request_type,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Europa',
-            color: Colors.black,
-          ),
-        ),
-         Column(
-          children: <Widget>[
-            _optionRadioButton(
-              title: S.of(context).request_type_time,
-              value: RequestType.TIME,
-              onChanged: (value) {
-                requestModel.requestType = value;
-                setState(()=>{});
-              },
-            ),
-            _optionRadioButton(
-                title: S.of(context).request_type_cash,
-                value: RequestType.CASH,
-                onChanged:(value) {
-                  requestModel.requestType = value;
-                  setState(()=>{});
-                }
-            ),
-            _optionRadioButton(
-                title: S.of(context).request_type_goods,
-                value: RequestType.GOODS,
-                onChanged:(value) {
-                  requestModel.requestType = value;
-                  setState(()=>{});
-                }
-            ),
-          ],
-        )
-      ],
-    ): Container();
+
+  Widget RequestTypeWidget() {
+    return requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                S.of(context).request_type,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                  color: Colors.black,
+                ),
+              ),
+              Column(
+                children: <Widget>[
+                  _optionRadioButton(
+                    title: S.of(context).request_type_time,
+                    value: RequestType.TIME,
+                    onChanged: (value) {
+                      requestModel.requestType = value;
+                      setState(() => {});
+                    },
+                  ),
+                  _optionRadioButton(
+                      title: S.of(context).request_type_cash,
+                      value: RequestType.CASH,
+                      onChanged: (value) {
+                        requestModel.requestType = value;
+                        setState(() => {});
+                      }),
+                  _optionRadioButton(
+                      title: S.of(context).request_type_goods,
+                      value: RequestType.GOODS,
+                      onChanged: (value) {
+                        requestModel.requestType = value;
+                        setState(() => {});
+                      }),
+                ],
+              )
+            ],
+          )
+        : Container();
   }
+
   Widget TimeRequest(snapshot, projectModelList) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        RepeatWidget(),
-        SizedBox(height: 20),
-        RequestDescriptionData(S.of(context).request_description_hint),
-        SizedBox(height: 20),
-        isFromRequest(
-          projectId: widget.projectId,
-        ) ? addToProjectContainer(
-          snapshot,
-          projectModelList,
-          requestModel,
-        )
-            : Container(),
-        SizedBox(height: 20),
-        Text(
-          S.of(context).number_of_volunteers,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Europa',
-            color: Colors.black,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          RepeatWidget(),
+          SizedBox(height: 20),
+          RequestDescriptionData(S.of(context).request_description_hint),
+          SizedBox(height: 20),
+          isFromRequest(
+            projectId: widget.projectId,
+          )
+              ? addToProjectContainer(
+                  snapshot,
+                  projectModelList,
+                  requestModel,
+                )
+              : Container(),
+          SizedBox(height: 20),
+          Text(
+            S.of(context).number_of_volunteers,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
           ),
-        ),
-        TextFormField(
-          focusNode: focusNodes[2],
-          onFieldSubmitted: (v) {
-            FocusScope.of(context).unfocus();
-          },
-          onChanged: (v) {
-            if (v.isNotEmpty && int.parse(v) >= 0) {
-              requestModel.numberOfApprovals = int.parse(v);
-              setState(() {});
-            }
-          },
-          decoration: InputDecoration(
-            hintText: S.of(context).number_of_volunteers,
-            hintStyle: hintTextStyle,
-            // labelText: 'No. of volunteers',
-          ),
-          keyboardType: TextInputType.number,
-          validator: (value) {
-            if (value.isEmpty) {
-              return S
-                  .of(context)
-                  .validation_error_volunteer_count;
-            } else if (int.parse(value) < 0) {
-              return S
-                  .of(context)
-                  .validation_error_volunteer_count_negative;
-            } else if (int.parse(value) == 0) {
-              return S
-                  .of(context)
-                  .validation_error_volunteer_count_zero;
-            } else {
-              requestModel.numberOfApprovals =
-                  int.parse(value);
-              setState(() {});
-              return null;
-            }
-          },
-        ),
-        TotalCredits(
-            context,
-            requestModel,
-            OfferDurationWidgetState.starttimestamp,
-            OfferDurationWidgetState.endtimestamp),
-        SizedBox(height: 40),
-        Center(
-          child: LocationPickerWidget(
-            selectedAddress: selectedAddress,
-            location: location,
-            onChanged: (LocationDataModel dataModel) {
-              log("received data model");
-              setState(() {
-                location = dataModel.geoPoint;
-                this.selectedAddress = dataModel.location;
-              });
+          TextFormField(
+            focusNode: focusNodes[2],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).unfocus();
+            },
+            onChanged: (v) {
+              if (v.isNotEmpty && int.parse(v) >= 0) {
+                requestModel.numberOfApprovals = int.parse(v);
+                setState(() {});
+              }
+            },
+            decoration: InputDecoration(
+              hintText: S.of(context).number_of_volunteers,
+              hintStyle: hintTextStyle,
+              // labelText: 'No. of volunteers',
+            ),
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_volunteer_count;
+              } else if (int.parse(value) < 0) {
+                return S.of(context).validation_error_volunteer_count_negative;
+              } else if (int.parse(value) == 0) {
+                return S.of(context).validation_error_volunteer_count_zero;
+              } else {
+                requestModel.numberOfApprovals = int.parse(value);
+                setState(() {});
+                return null;
+              }
             },
           ),
-        )]
-    );
+          TotalCredits(
+              context,
+              requestModel,
+              OfferDurationWidgetState.starttimestamp,
+              OfferDurationWidgetState.endtimestamp),
+          SizedBox(height: 40),
+          Center(
+            child: LocationPickerWidget(
+              selectedAddress: selectedAddress,
+              location: location,
+              onChanged: (LocationDataModel dataModel) {
+                log("received data model");
+                setState(() {
+                  location = dataModel.geoPoint;
+                  this.selectedAddress = dataModel.location;
+                });
+              },
+            ),
+          )
+        ]);
   }
+
   Widget CashRequest(snapshot, projectModelList) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -775,9 +769,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             keyboardType: TextInputType.number,
             validator: (value) {
               if (value.isEmpty) {
-                return S
-                    .of(context)
-                    .validation_error_target_donation_count;
+                return S.of(context).validation_error_target_donation_count;
               } else if (int.parse(value) < 0) {
                 return S
                     .of(context)
@@ -787,8 +779,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     .of(context)
                     .validation_error_target_donation_count_zero;
               } else {
-                requestModel.cashModel.targetAmount =
-                    int.parse(value);
+                requestModel.cashModel.targetAmount = int.parse(value);
                 setState(() {});
                 return null;
               }
@@ -824,20 +815,15 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             keyboardType: TextInputType.number,
             validator: (value) {
               if (value.isEmpty) {
-                return S
-                    .of(context)
-                    .validation_error_min_donation_count;
+                return S.of(context).validation_error_min_donation_count;
               } else if (int.parse(value) < 0) {
                 return S
                     .of(context)
                     .validation_error_min_donation_count_negative;
               } else if (int.parse(value) == 0) {
-                return S
-                    .of(context)
-                    .validation_error_min_donation_count_zero;
+                return S.of(context).validation_error_min_donation_count_zero;
               } else {
-                requestModel.cashModel.minAmount =
-                    int.parse(value);
+                requestModel.cashModel.minAmount = int.parse(value);
                 setState(() {});
                 return null;
               }
@@ -848,16 +834,18 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
-          ) ? addToProjectContainer(
-            snapshot,
-            projectModelList,
-            requestModel,
-          ) : Container(),
+          )
+              ? addToProjectContainer(
+                  snapshot,
+                  projectModelList,
+                  requestModel,
+                )
+              : Container(),
           SizedBox(height: 20),
           RequestPaymentDescriptionData(),
-        ]
-    );
+        ]);
   }
+
   Widget GoodsRequest(snapshot, projectModelList) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -867,30 +855,34 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
-          ) ? addToProjectContainer(
-            snapshot,
-            projectModelList,
-            requestModel,
-          ) : Container(),
+          )
+              ? addToProjectContainer(
+                  snapshot,
+                  projectModelList,
+                  requestModel,
+                )
+              : Container(),
           SizedBox(height: 20),
           RequestGoodsDescriptionData(),
-        ]
-    );
+        ]);
   }
+
   bool isFromRequest({String projectId}) {
     return projectId == null || projectId.isEmpty || projectId == "";
   }
-  Widget _optionRadioButton({String title, RequestType value, Function onChanged}) {
+
+  Widget _optionRadioButton(
+      {String title, RequestType value, Function onChanged}) {
     return ListTile(
       contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
       title: Text(title),
       leading: Radio(
-        value: value,
-        groupValue: requestModel.requestType,
-        onChanged: onChanged
-      ),
+          value: value,
+          groupValue: requestModel.requestType,
+          onChanged: onChanged),
     );
   }
+
   Widget requestSwitch() {
     if (widget.projectId == null ||
         widget.projectId.isEmpty ||
@@ -1422,10 +1414,8 @@ class GoodsDynamicSelection extends StatefulWidget {
   final bool automaticallyImplyLeading;
   final StringMapCallback onSelectedGoods;
 
-  GoodsDynamicSelection({
-    @required this.onSelectedGoods,
-    this.automaticallyImplyLeading = true
-  });
+  GoodsDynamicSelection(
+      {@required this.onSelectedGoods, this.automaticallyImplyLeading = true});
   @override
   _GoodsDynamicSelectionState createState() => _GoodsDynamicSelectionState();
 }
@@ -1433,10 +1423,10 @@ class GoodsDynamicSelection extends StatefulWidget {
 class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
   SuggestionsBoxController controller = SuggestionsBoxController();
   TextEditingController _textEditingController = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
   bool autovalidate = false;
-  Map<String, dynamic> goods = {};
-  Map<String, dynamic> _selectedGoods = {};
+  Map<String, String> goods = {};
+  Map<String, String> _selectedGoods = {};
   bool isDataLoaded = false;
 
   @override
@@ -1459,134 +1449,134 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
 
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-     return ConstrainedBox(
-       constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.25),
-       child: Column(
-       crossAxisAlignment: CrossAxisAlignment.start,
-       children: <Widget>[
-         SizedBox(height: 8),
-         TypeAheadField<String>(
-               suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                 // color: Colors.red,
-                 borderRadius: BorderRadius.circular(8),
-                 // shape: RoundedRectangleBorder(),
-               ),
-               hideOnError: true,
-               textFieldConfiguration: TextFieldConfiguration(
-                 controller: _textEditingController,
-                 decoration: InputDecoration(
-                   hintText: S
-                       .of(context)
-                       .search,
-                   filled: true,
-                   fillColor: Colors.grey[300],
-                   focusedBorder: OutlineInputBorder(
-                     borderSide: BorderSide(color: Colors.white),
-                     borderRadius: BorderRadius.circular(25.7),
-                   ),
-                   enabledBorder: UnderlineInputBorder(
-                       borderSide: BorderSide(color: Colors.white),
-                       borderRadius: BorderRadius.circular(25.7)),
-                   contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                   prefixIcon: Icon(
-                     Icons.search,
-                     color: Colors.grey,
-                   ),
-                   suffixIcon: InkWell(
-                     splashColor: Colors.transparent,
-                     child: Icon(
-                       Icons.clear,
-                       color: Colors.grey,
-                       // color: _textEditingController.text.length > 1
-                       //     ? Colors.black
-                       //     : Colors.grey,
-                     ),
-                     onTap: () {
-                       _textEditingController.clear();
-                       controller.close();
-                     },
-                   ),
-                 ),
-               ),
-               suggestionsBoxController: controller,
-               suggestionsCallback: (pattern) async {
-                 List<String> dataCopy = [];
-                 goods.forEach((id, skill) => dataCopy.add(skill));
-                 dataCopy.retainWhere(
-                         (s) =>
-                         s.toLowerCase().contains(pattern.toLowerCase()));
+    return ConstrainedBox(
+        constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.25),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 8),
+            TypeAheadField<String>(
+              suggestionsBoxDecoration: SuggestionsBoxDecoration(
+                // color: Colors.red,
+                borderRadius: BorderRadius.circular(8),
+                // shape: RoundedRectangleBorder(),
+              ),
+              hideOnError: true,
+              textFieldConfiguration: TextFieldConfiguration(
+                controller: _textEditingController,
+                decoration: InputDecoration(
+                  hintText: S.of(context).search,
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(25.7),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7)),
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
+                  suffixIcon: InkWell(
+                    splashColor: Colors.transparent,
+                    child: Icon(
+                      Icons.clear,
+                      color: Colors.grey,
+                      // color: _textEditingController.text.length > 1
+                      //     ? Colors.black
+                      //     : Colors.grey,
+                    ),
+                    onTap: () {
+                      _textEditingController.clear();
+                      controller.close();
+                    },
+                  ),
+                ),
+              ),
+              suggestionsBoxController: controller,
+              suggestionsCallback: (pattern) async {
+                List<String> dataCopy = [];
+                goods.forEach((id, skill) => dataCopy.add(skill));
+                dataCopy.retainWhere(
+                    (s) => s.toLowerCase().contains(pattern.toLowerCase()));
 
-                 return await Future.value(dataCopy);
-               },
-               itemBuilder: (context, suggestion) {
-                 return Padding(
-                   padding: const EdgeInsets.all(8.0),
-                   child: Text(
-                     suggestion,
-                     style: TextStyle(
-                       fontSize: 16,
-                     ),
-                   ),
-                 );
-               },
-               noItemsFoundBuilder: (context) {
-                 return searchUserDefinedEntity(
-                   keyword: _textEditingController.text,
-                   language: 'en',
-                 );
-               },
-               onSuggestionSelected: (suggestion) {
-                 _textEditingController.clear();
-                 if (!_selectedGoods.containsValue(suggestion)) {
-                   controller.close();
-                   String id =
-                   goods.keys.firstWhere((k) => goods[k] == suggestion);
-                   _selectedGoods[id] = suggestion;
+                return await Future.value(dataCopy);
+              },
+              itemBuilder: (context, suggestion) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    suggestion,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                );
+              },
+              noItemsFoundBuilder: (context) {
+                return searchUserDefinedEntity(
+                  keyword: _textEditingController.text,
+                  language: 'en',
+                );
+              },
+              onSuggestionSelected: (suggestion) {
+                _textEditingController.clear();
+                if (!_selectedGoods.containsValue(suggestion)) {
+                  controller.close();
+                  String id =
+                      goods.keys.firstWhere((k) => goods[k] == suggestion);
+                  _selectedGoods[id] = suggestion;
 //                   List<String> selectedID = [];
 //                   _selectedGoods.forEach((id, _) => selectedID.add(id));
 //                   print(selectedID);
-                   widget.onSelectedGoods(_selectedGoods);
-                   setState(() {});
-                 }
-               },
-             ),
-         SizedBox(height: 20),
-         !isDataLoaded
-             ? LoadingIndicator()
-             : Expanded(
-           child: ListView(
-             shrinkWrap: true,
-             scrollDirection: Axis.vertical,
-             children: <Widget>[
-               Wrap(
-                 runSpacing: 5.0,
-                 spacing: 5.0,
-                 children: _selectedGoods.values
-                     .toList()
-                     .map(
-                       (value) => value == null
-                       ? Container()
-                       : CustomChip(
-                     title: value,
-                     onDelete: () {
-                       String id = goods.keys.firstWhere(
-                               (k) => goods[k] == value);
-                       _selectedGoods.remove(id);
-                       setState(() {});
-                     },
-                   ),
-                 )
-                     .toList(),
-               ),
-             ],
-           ),
-         ),
-         //   Spacer(),
-       ],
-     ));
+                  widget.onSelectedGoods(_selectedGoods);
+                  setState(() {});
+                }
+              },
+            ),
+            SizedBox(height: 20),
+            !isDataLoaded
+                ? LoadingIndicator()
+                : Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      children: <Widget>[
+                        Wrap(
+                          runSpacing: 5.0,
+                          spacing: 5.0,
+                          children: _selectedGoods.values
+                              .toList()
+                              .map(
+                                (value) => value == null
+                                    ? Container()
+                                    : CustomChip(
+                                        title: value,
+                                        onDelete: () {
+                                          String id = goods.keys.firstWhere(
+                                              (k) => goods[k] == value);
+                                          _selectedGoods.remove(id);
+                                          setState(() {});
+                                        },
+                                      ),
+                              )
+                              .toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+            //   Spacer(),
+          ],
+        ));
   }
+
   FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
     String keyword,
     String language,
@@ -1603,7 +1593,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
 
         return getSuggestionLayout(
           suggestion:
-          !snapshot.data.hasErros ? snapshot.data.correctSpelling : keyword,
+              !snapshot.data.hasErros ? snapshot.data.correctSpelling : keyword,
         );
       },
     );
@@ -1620,15 +1610,20 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
       ),
     );
   }
+
   static Future<void> addGoodsToDb({
     String goodsId,
     String goodsTitle,
     String goodsLanguage,
   }) async {
-    await Firestore.instance.collection('donationCategories').document(goodsId).setData(
+    await Firestore.instance
+        .collection('donationCategories')
+        .document(goodsId)
+        .setData(
       {'goodTitle': goodsTitle, 'lang': goodsLanguage},
     );
   }
+
   Padding getSuggestionLayout({
     String suggestion,
   }) {

@@ -223,8 +223,8 @@ class PersonalNotificationReducerForRequests {
       },
       photoUrl: requestInvitationModel.timebankModel.photoUrl,
       subTitle:
-          '${requestInvitationModel.timebankModel.name} has requested you to donate goods. Tap to donate',
-      title: "Has requested for goods donation",
+          '${requestInvitationModel.timebankModel.name} ${S.of(context).goods_donation_invite}',
+      title: S.of(context).has_goods_donation,
       onPressed: () {
         Navigator.push(
           context,
@@ -258,8 +258,8 @@ class PersonalNotificationReducerForRequests {
       },
       photoUrl: requestInvitationModel.timebankModel.photoUrl,
       subTitle:
-          '${requestInvitationModel.timebankModel.name} has requested you to donate cash for request. Tap to donate',
-      title: "Has requested for cash donation",
+          '${requestInvitationModel.timebankModel.name} ${S.of(context).cash_donation_invite}',
+      title: S.of(context).has_cash_donation,
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return DonationView(
@@ -338,9 +338,9 @@ class PersonalNotificationsRedcerForDonations {
     final holder = DonationModel.fromMap(notificationsModel.data);
 
     return NotificationCard(
-      entityName: "Your pledged was modified by donorr",
-      title: "Please click to see the details",
-      subTitle: "Your pledged was modifiedby donor \n $timestampVal",
+      entityName: S.of(context).pledge_modified_by_donor,
+      title: S.of(context).tap_to_view_details,
+      subTitle: "${S.of(context).pledge_modified_by_donor} \n $timestampVal",
       onDismissed: onDismissed,
       onPressed: () {
         Navigator.of(context).push(
@@ -355,11 +355,11 @@ class PersonalNotificationsRedcerForDonations {
   }
 
   static Widget getWidgetForSuccessfullDonation(
-      {Function onDismissed, timestampVal}) {
+      {Function onDismissed, timestampVal, BuildContext context}) {
     return NotificationCard(
-      entityName: "Doantion completed successfully",
-      title: "Donation completed succesfully",
-      subTitle: "You donation was completed successfully  \n $timestampVal",
+      entityName: S.of(context).donation_completed,
+      title: S.of(context).donation_completed,
+      subTitle: "${S.of(context).donation_completed_desc}  \n $timestampVal",
       onDismissed: onDismissed,
     );
   }
@@ -372,9 +372,9 @@ class PersonalNotificationsRedcerForDonations {
     final holder = DonationModel.fromMap(notificationsModel.data);
 
     return NotificationCard(
-      entityName: "Your pledged was modified",
-      title: "Please click to see the details",
-      subTitle: "Your pledged was modified \n $timestampVal",
+      entityName: S.of(context).pledge_modified,
+      title: S.of(context).tap_to_view_details,
+      subTitle: "${S.of(context).pledge_modified} \n $timestampVal",
       onDismissed: onDismissed,
       onPressed: () {
         Navigator.of(context).push(

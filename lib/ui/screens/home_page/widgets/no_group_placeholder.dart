@@ -28,15 +28,16 @@ class NoGroupPlaceHolder extends StatelessWidget {
               children: <TextSpan>[
                 TextSpan(
                   style: TextStyle(color: Colors.grey, fontSize: 14),
-                  text: S.of(context).no_group_message,
+                  text: S.of(context).no_group_message + ' ',
                 ),
                 TextSpan(
-                    text: S.of(context).creating_one,
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = navigateToCreateGroup),
+                  text: S.of(context).creating_one,
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = navigateToCreateGroup,
+                ),
               ],
             ),
           ),
