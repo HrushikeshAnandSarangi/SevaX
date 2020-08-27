@@ -811,8 +811,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               color: Colors.grey,
             ),
             trailing: Text(
-              widget.requestItem.goodsDonationDetails.requiredGoods.length
-                  .toString(),
+              snapshot.data.toString(),
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.black,
