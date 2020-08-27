@@ -81,6 +81,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
               credits: transactionModel.credits,
             );
           },
+          timestamp: notification.timestamp,
         );
       },
     );
@@ -255,7 +256,8 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
     ));
 
     if (results != null && results.containsKey('selection')) {
-      await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
+      await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
+          FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
       onActivityResult(
           sevaCore: sevaCore,
           requestModel: model,

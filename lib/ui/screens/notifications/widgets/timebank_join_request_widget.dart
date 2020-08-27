@@ -35,6 +35,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
         UserModel user = snapshot.data;
         return user != null && user.fullname != null
             ? NotificationCard(
+                timestamp: notification.timestamp,
                 title: S.of(context).notifications_join_request,
                 subTitle:
                     '${user.fullname.toLowerCase()} ${S.of(context).notifications_requested_join} ${model.timebankTitle}.',

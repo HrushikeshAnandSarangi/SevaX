@@ -78,6 +78,7 @@ void _parentSelectionBottomsheet(BuildContext mcontext, onChanged) {
                   showBackBtn: false,
                   isFromHome: false,
                   onChanged: onChanged,
+                  selectedTimebank: null,
                 ),
               ));
         }),
@@ -91,7 +92,7 @@ class SearchParentTimebanks extends StatefulWidget {
   final UserModel loggedInUser;
   final bool showBackBtn;
   final bool isFromHome;
-  String selectedTimebank;
+  final String selectedTimebank;
   final ValueChanged<CommunityModel> onChanged;
   SearchParentTimebanks({
     @required this.keepOnBackPress,

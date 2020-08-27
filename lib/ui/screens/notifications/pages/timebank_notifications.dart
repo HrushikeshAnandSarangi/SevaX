@@ -82,6 +82,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     DonationModel.fromMap(notification.data);
 
                 return NotificationCard(
+                  timestamp: notification.timestamp,
                   entityName: donationModel.donorDetails.name,
                   isDissmissible: true,
                   onDismissed: () {
@@ -113,6 +114,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 UserExitModel userExitModel =
                     UserExitModel.fromMap(notification.data);
                 return NotificationCard(
+                  timestamp: notification.timestamp,
                   title: S.of(context).timebank_exit,
                   subTitle:
                       '${userExitModel.userName.toLowerCase()} ${S.of(context).has_exited_from} ${userExitModel.timebank}, ${S.of(context).tap_to_view_details}',
@@ -154,6 +156,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 OneToManyNotificationDataModel data =
                     OneToManyNotificationDataModel.fromJson(notification.data);
                 return NotificationCard(
+                  timestamp: notification.timestamp,
                   title: S.of(context).notifications_debited,
                   subTitle:
                       TimebankNotificationMessage.DEBIT_FULFILMENT_FROM_TIMEBANK
@@ -179,6 +182,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 OneToManyNotificationDataModel data =
                     OneToManyNotificationDataModel.fromJson(notification.data);
                 return NotificationCard(
+                  timestamp: notification.timestamp,
                   title: S.of(context).notifications_credited,
                   subTitle: TimebankNotificationMessage
                       .CREDIT_FROM_OFFER_APPROVED
@@ -200,6 +204,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 var requestData =
                     SoftDeleteRequestDataHolder.fromMap(notification.data);
                 return NotificationCard(
+                  timestamp: notification.timestamp,
                   entityName: requestData.entityTitle ?? "Deletion Request",
                   photoUrl: null,
                   title: requestData.requestAccepted
@@ -230,6 +235,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 ReportedMemberNotificationModel data =
                     ReportedMemberNotificationModel.fromMap(notification.data);
                 return NotificationCard(
+                  timestamp: notification.timestamp,
                   title: S.of(context).member_reported_title,
                   subTitle: TimebankNotificationMessage.MEMBER_REPORT
                       .replaceFirst('*name', data.reportedUserName),
@@ -257,6 +263,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
 
               case NotificationType.DEBITED_SEVA_COINS_TIMEBANK:
                 return NotificationCard(
+                  timestamp: notification.timestamp,
                   title: S.of(context).seva_coins_debited,
                   subTitle: S.of(context).seva_coins_debited,
                   photoUrl: null,
