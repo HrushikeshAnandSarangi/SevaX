@@ -21,6 +21,7 @@ import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
@@ -163,12 +164,12 @@ class _EditProfilePageState extends State<EditProfilePage>
               onTap: _updateBio,
             ),
             detailsBuilder(
-              title: S.of(context).interests,
+              title: S.of(context).interests.firstWordUpperCase(),
               text: S.of(context).click_to_see_interests,
               onTap: () => _navigateToInterestsView(usermodel),
             ),
             detailsBuilder(
-              title: S.of(context).skills,
+              title: S.of(context).skills.firstWordUpperCase(),
               text: S.of(context).click_to_see_skills,
               onTap: () => _navigateToSkillsView(usermodel),
             ),
