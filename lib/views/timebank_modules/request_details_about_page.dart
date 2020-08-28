@@ -196,6 +196,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   hostNameComponent,
                   widget.requestItem.requestType == RequestType.TIME
                       ? Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             membersEngagedComponent,
                             SizedBox(height: 10),
