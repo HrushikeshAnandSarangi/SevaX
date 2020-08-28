@@ -13,6 +13,7 @@ import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/new_baseline/models/user_exit_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
+import 'package:sevaexchange/ui/screens/notifications/pages/personal_notifications.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_join_request_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/timebank_request_complete_widget.dart';
@@ -248,6 +249,23 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                 );
 
+              case NotificationType.APPROVED_MEMBER_WITHDRAWING_REQUEST:
+                var body = WithdrawnRequestBody.fromMap(notification.data);
+                return NotificationCard(
+                  timestamp: notification.timestamp,
+                  entityName: body.fullName,
+                  photoUrl: null,
+                  title:
+                  "${S.of(context).notifications_approved_withdrawn_title}",
+                  subTitle:
+                  "${body.fullName} ${S.of(context).notifications_approved_withdrawn_subtitle} ${body.requestTite}.  ",
+                  onDismissed: (){
+                    dismissTimebankNotification(
+                        timebankId: notification.timebankId,
+                        notificationId: notification.id);
+                  },
+                  },
+                );
               case NotificationType.CASH_DONATION_MODIFIED_BY_DONOR:
               case NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR:
                 return PersonalNotificationsRedcerForDonations
