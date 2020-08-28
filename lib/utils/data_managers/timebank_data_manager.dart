@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,8 +14,6 @@ import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/neayby_setting/nearby_setting.dart';
-
-import '../app_config.dart';
 
 Future<void> createTimebank({@required TimebankModel timebankModel}) async {
   return await Firestore.instance
@@ -325,26 +322,34 @@ Future<void> updateTimebankDetails(
   });
 }
 
-Future<String> getplanForCurrentCommunity(String communityId)async{
-  DocumentSnapshot cardDoc = await Firestore.instance.collection("cards").document(communityId).get();
-  if(cardDoc.exists){
+Future<String> getplanForCurrentCommunity(String communityId) async {
+  DocumentSnapshot cardDoc =
+      await Firestore.instance.collection("cards").document(communityId).get();
+  if (cardDoc.exists) {
     return cardDoc.data['currentplan'];
-  }else{
-    DocumentSnapshot communityDoc = await Firestore.instance.collection("communities").document(communityId).get();
+  } else {
+    DocumentSnapshot communityDoc = await Firestore.instance
+        .collection("communities")
+        .document(communityId)
+        .get();
     return communityDoc.data['payment']['planId'];
   }
 }
 
-
-Future<List<Map<String, dynamic>>> getTransactionsCountsList (String communityId) async {
-  QuerySnapshot transactionsSnap = await Firestore.instance.collection('communities').document(communityId).collection("transactions").getDocuments();
+Future<List<Map<String, dynamic>>> getTransactionsCountsList(
+    String communityId) async {
+  QuerySnapshot transactionsSnap = await Firestore.instance
+      .collection('communities')
+      .document(communityId)
+      .collection("transactions")
+      .getDocuments();
   List<Map<String, dynamic>> transactionsDocs = [];
   var d = DateTime.now();
   String dStr = "${d.month}_${d.year}";
-  transactionsSnap.documents.forEach((doc){
+  transactionsSnap.documents.forEach((doc) {
     log("trans list doc id " + doc.documentID);
     doc.data['id'] = doc.documentID;
-    if(doc.data['id']!=dStr){
+    if (doc.data['id'] != dStr) {
       transactionsDocs.add(doc.data);
     }
   });
