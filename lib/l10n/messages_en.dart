@@ -254,6 +254,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "delete" : MessageLookupByLibrary.simpleMessage("Delete"),
     "delete_chat" : MessageLookupByLibrary.simpleMessage("Delete chat"),
     "delete_chat_confirmation" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this chat"),
+    "delete_comment_msg" : MessageLookupByLibrary.simpleMessage("Are you sure want to delete comment?"),
     "delete_confirmation" : MessageLookupByLibrary.simpleMessage("Are your sure you want to delete"),
     "delete_feed" : MessageLookupByLibrary.simpleMessage("Delete feed"),
     "delete_feed_confirmation" : MessageLookupByLibrary.simpleMessage("Are you sure you want to delete this news feed?"),

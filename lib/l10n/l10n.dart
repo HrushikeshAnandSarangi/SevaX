@@ -4701,6 +4701,11 @@ class S {
         'Copied to Clipboard',
         name: 'copied_to_clipboard',
       );
+
+  String get delete_comment_msg => Intl.message(
+        'Are you sure want to delete comment?',
+        name: 'delete_comment_msg',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
