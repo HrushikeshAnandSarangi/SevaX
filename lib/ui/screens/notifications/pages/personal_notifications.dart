@@ -164,11 +164,20 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 break;
               case NotificationType.RequestApprove:
                 RequestModel model = RequestModel.fromMap(notification.data);
-
-                return RequestApproveWidget(
-                  model: model,
-                  userId: notification.senderUserId,
-                  notificationId: notification.id,
+                return NotificationCard(
+                  timestamp: notification.timestamp,
+                  entityName: null,
+                  isDissmissible: true,
+                  onDismissed: () {
+                    NotificationsRepository.readUserNotification(
+                      notification.id,
+                      user.email,
+                    );
+                  },
+                  onPressed: null,
+                  photoUrl: model.photoUrl,
+                  title: model.title,
+                  subTitle: '${S.of(context).notifications_approved_by} ${model.fullName}',
                 );
                 break;
 
