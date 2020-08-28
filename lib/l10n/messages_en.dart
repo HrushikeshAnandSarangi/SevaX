@@ -202,6 +202,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "congrats" : MessageLookupByLibrary.simpleMessage("Congrats"),
     "contact_seva_to_change_plan" : MessageLookupByLibrary.simpleMessage("Please contact SevaX support to change the plans"),
     "continue_text" : MessageLookupByLibrary.simpleMessage("Continue"),
+    "copied_to_clipboard" : MessageLookupByLibrary.simpleMessage("Copied to Clipboard"),
     "country" : MessageLookupByLibrary.simpleMessage("Country"),
     "create" : MessageLookupByLibrary.simpleMessage("Create"),
     "create_feed" : MessageLookupByLibrary.simpleMessage("Create Post"),

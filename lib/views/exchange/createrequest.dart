@@ -543,7 +543,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             if (value.isEmpty) {
               return S.of(context).validation_error_general_text;
             } else {
-              print(requestModel);
               requestModel.donationInstructionLink = value;
             }
             return null;
