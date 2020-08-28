@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -512,7 +514,15 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ],
             ),
             onPressed: () {
-              applyAction();
+              if(!isApplied){
+                if (SevaCore.of(context).loggedInUser.calendarId == null) {
+                  _settingModalBottomSheet(context);
+                } else {
+                  applyAction();
+                }
+              }else{
+                applyAction();
+              }
             },
           ),
         )
@@ -888,8 +898,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   ),
                   onPressed: () {
                     if (SevaCore.of(context).loggedInUser.calendarId == null) {
+                      log("user has calendarrrrrrrrr");
                       _settingModalBottomSheet(context);
                     } else {
+                      log("user has no calendarrrrrrrrr");
                       applyAction();
                     }
                   },
