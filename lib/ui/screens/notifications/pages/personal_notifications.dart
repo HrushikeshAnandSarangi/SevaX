@@ -34,6 +34,7 @@ import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
@@ -177,7 +178,8 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   onPressed: null,
                   photoUrl: model.photoUrl,
                   title: model.title,
-                  subTitle: '${S.of(context).notifications_approved_by} ${model.fullName}',
+                  subTitle:
+                      '${S.of(context).notifications_approved_by} ${model.fullName}',
                 );
                 break;
 
@@ -496,7 +498,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                       user.email,
                     );
                   },
-                  onPressed: () {
+                  onPressed: () async {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => RequestDonationDisputePage(

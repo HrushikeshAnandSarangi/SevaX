@@ -66,7 +66,7 @@ class DonationsRepository {
           );
         }
         //send acknowledgement reciept
-        await MailDonationReciept().sendReciept(donationModel);
+        await MailDonationReciept.sendReciept(donationModel);
       }
 
       log("L3=============================== " + associatedId);
