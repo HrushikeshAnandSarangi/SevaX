@@ -70,6 +70,7 @@ Future<void> withdrawAcceptRequestNotification({
   );
   switch (requestModel.requestMode) {
     case RequestMode.TIMEBANK_REQUEST:
+      withdrawlNotification.isTimebankNotification = true;
       await Firestore.instance
           .collection('timebanknew')
           .document(requestModel.timebankId)
@@ -99,9 +100,9 @@ Future<void> withdrawAcceptRequestNotification({
       break;
 
     case RequestMode.PERSONAL_REQUEST:
-      UserModel user =
-          await getUserForId(sevaUserId: notificationsModel.targetUserId);
+      UserModel user = await getUserForId(sevaUserId: notificationsModel.targetUserId);
 
+      withdrawlNotification.isTimebankNotification = false;
       await Firestore.instance
           .collection('users')
           .document(user.email)
