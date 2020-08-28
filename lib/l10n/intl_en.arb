@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-08-27T15:44:55+00:00",
+    "@@last_modified": "2020-08-28T07:04:14+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -932,5 +932,6 @@
     "look_for_existing_siblings": "Feed is visible to following timebanks",
     "none": "None",
     "find_your_parent_timebank": "Find your parent timebank if you are part of",
-    "look_for_existing_timebank_title": "Looking for existing timebank"
+    "look_for_existing_timebank_title": "Looking for existing timebank",
+    "copied_to_clipboard": "Copied to Clipboard"
 }

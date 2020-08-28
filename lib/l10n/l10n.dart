@@ -4696,6 +4696,11 @@ class S {
         'Looking for existing timebank',
         name: 'look_for_existing_timebank_title',
       );
+
+  String get copied_to_clipboard => Intl.message(
+        'Copied to Clipboard',
+        name: 'copied_to_clipboard',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {

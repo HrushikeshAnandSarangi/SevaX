@@ -1,11 +1,11 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_bloc.dart';
@@ -25,6 +25,7 @@ class _DonationViewState extends State<DonationView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final GlobalKey<FormState> _formKey = GlobalKey();
   final DonationBloc donationBloc = DonationBloc();
+  ProgressDialog progressDialog;
 
   List<String> donationsCategories = [];
   int amountEntered = 0;
@@ -44,22 +45,20 @@ class _DonationViewState extends State<DonationView> {
     pageController = PageController(
         initialPage:
             widget.requestModel.requestType == RequestType.GOODS ? 0 : 1);
+
+    super.initState();
     donationBloc.errorMessage.listen((event) {
       if (event.isNotEmpty && event != null) {
-        _scaffoldKey.currentState.showSnackBar(
-          SnackBar(
-            content: Text(event == 'net_error'
-                ? S.of(context).general_stream_error
-                : S.of(context).select_goods_category),
-            action: SnackBarAction(
-              label: S.of(context).dismiss,
-              onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
-            ),
-          ),
-        );
+        //hideProgress();
+        showScaffold(event == 'net_error'
+            ? S.of(context).general_stream_error
+            : event == 'amount1'
+                ? S.of(context).enter_valid_amount
+                : event == 'amount2'
+                    ? S.of(context).minmum_amount
+                    : S.of(context).select_goods_category);
       }
     });
-    super.initState();
   }
 
   @override
@@ -72,7 +71,10 @@ class _DonationViewState extends State<DonationView> {
         leading: BackButton(
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(S.of(context).donations),
+        title: Text(
+          S.of(context).donations,
+          style: TextStyle(fontSize: 18),
+        ),
         centerTitle: true,
       ),
       body: PageView(
@@ -210,15 +212,20 @@ class _DonationViewState extends State<DonationView> {
           SizedBox(
             height: 20,
           ),
-          GestureDetector(
+          InkWell(
+            onLongPress: () {
+              Clipboard.setData(ClipboardData(
+                  text: widget.requestModel.donationInstructionLink));
+              showScaffold(S.of(context).copied_to_clipboard);
+            },
             onTap: () async {
-              if (await canLaunch(
-                  widget.requestModel.donationInstructionLink)) {
-                await launch(
-                  widget.requestModel.donationInstructionLink,
-                );
+              String link = widget.requestModel.donationInstructionLink;
+              if (await canLaunch(link)) {
+                await launch(link);
               } else {
-                throw 'couldnt launch';
+                showScaffold('Could not launch');
+
+                throw 'Could not launch';
               }
             },
             child: Text(
@@ -265,6 +272,18 @@ class _DonationViewState extends State<DonationView> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  void showScaffold(String message) {
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: SnackBarAction(
+          label: S.of(context).dismiss,
+          onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+        ),
       ),
     );
   }
@@ -354,19 +373,10 @@ class _DonationViewState extends State<DonationView> {
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
-                      _scaffoldKey.currentState.showSnackBar(
-                        SnackBar(
-                          content: Text(S.of(context).check_internet),
-                          action: SnackBarAction(
-                            label: S.of(context).dismiss,
-                            onPressed: () =>
-                                _scaffoldKey.currentState.hideCurrentSnackBar(),
-                          ),
-                        ),
-                      );
+                      showScaffold(S.of(context).check_internet);
                       return;
                     }
-                    showProgress();
+                    //showProgress();
 
                     donationBloc
                         .donateGoods(
@@ -375,7 +385,7 @@ class _DonationViewState extends State<DonationView> {
                             donor: sevaUser)
                         .then((value) {
                       if (value) {
-                        hideProgress();
+                        // hideProgress();
                         getSuccessDialog().then(
                           //to pop the screen
                           (_) => Navigator.of(context).pop(),

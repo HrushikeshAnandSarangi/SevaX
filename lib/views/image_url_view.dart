@@ -104,9 +104,9 @@ class _ImageUrlViewState extends State<ImageUrlView> {
                 },
                 decoration: InputDecoration(
                   errorText: urlError,
-                  hintText: 'Image Url',
+                  hintText: S.of(context).image_url,
                   hintStyle: hintTextStyle,
-                  prefixIcon: Icon(Icons.search),
+                  prefixIcon: Icon(Icons.language),
                   suffixIcon: IconButton(
                     icon: Icon(Icons.cancel),
                     color: Colors.grey,

@@ -97,6 +97,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           return UserMode.APPROVED_MEMBER;
         else if (widget.requestItem.acceptors.contains(loggedInUser))
           return UserMode.ACCEPTED_MEMBER;
+        else if (widget.timebankModel.admins.contains(loggedInUser))
+          return UserMode.TIMEBANK_ADMIN;
         else {
           return UserMode.NOT_YET_SIGNED_UP;
         }
