@@ -228,7 +228,7 @@ class ReportPdf {
     await file.writeAsBytes(pdf.save());
     material.Navigator.of(context).push(
       material.MaterialPageRoute(
-        builder: (_) => InvoiceScreen(path: path),
+        builder: (_) => InvoiceScreen(path: path, pdfType: "report"),
       ),
     );
   }
