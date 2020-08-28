@@ -45,7 +45,7 @@ enum UserMode {
   REQUEST_CREATOR,
   NOT_YET_SIGNED_UP,
   TIMEBANK_ADMIN,
-  AWITING_FOR_APPROVAL_FROM_CREATOR,
+  AWAITING_FOR_APPROVAL_FROM_CREATOR,
   AWAITING_FOR_CREDIT_APPROVAL,
 }
 
@@ -90,7 +90,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           return UserMode.REQUEST_CREATOR;
         else if (widget.requestItem.acceptors.contains(loggedInUser) &&
             !(widget.requestItem.approvedUsers.contains(loggedInUser)))
-          return UserMode.AWITING_FOR_APPROVAL_FROM_CREATOR;
+          return UserMode.AWAITING_FOR_APPROVAL_FROM_CREATOR;
         else if (widget.requestItem.approvedUsers.contains(loggedInUser))
           return UserMode.APPROVED_MEMBER;
         else if (widget.requestItem.acceptors.contains(loggedInUser))
@@ -424,14 +424,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get getBottomFrameForTimeRequest {
     switch (userMode) {
-      case UserMode.TIMEBANK_ADMIN:
       case UserMode.REQUEST_CREATOR:
         return getBottombarForCreator;
 
+      case UserMode.TIMEBANK_ADMIN:
       case UserMode.APPROVED_MEMBER:
       case UserMode.ACCEPTED_MEMBER:
       case UserMode.COMPLETED_MEMBER:
-      case UserMode.AWITING_FOR_APPROVAL_FROM_CREATOR:
+      case UserMode.AWAITING_FOR_APPROVAL_FROM_CREATOR:
       case UserMode.NOT_YET_SIGNED_UP:
         return getBottombarForParticipant;
 
