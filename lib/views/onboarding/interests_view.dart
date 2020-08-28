@@ -194,10 +194,10 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 return await Future.value(dataCopy);
               },
               itemBuilder: (context, suggestedItem) {
-                if (ProfanityDetector()
-                    .isProfaneString(suggestedItem.suggesttionTitle)) {
-                  return Text(S.of(context).profanity_text_alert);
-                }
+                // if (ProfanityDetector()
+                //     .isProfaneString(suggestedItem.suggesttionTitle)) {
+                //   return Text(S.of(context).profanity_text_alert);
+                // }
 
                 switch (suggestedItem.suggestionMode) {
                   case SuggestionMode.FROM_DB:
