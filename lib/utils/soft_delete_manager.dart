@@ -9,10 +9,8 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
-import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/utils/utils.dart';
-import 'package:sevaexchange/views/core.dart';
 
 import '../flavor_config.dart';
 
@@ -186,7 +184,10 @@ Future<void> showAdvisoryBeforeDeletion({
                   softDeleteType,
                   associatedId,
                   true,
-                ).then((_)=>Navigator.of(context).pop());;
+                ).then((_) {
+                  Navigator.of(context).pop();
+                });
+                ;
               } catch (_) {
                 print("Failed sending request due to ${_.toString()}");
                 progressDialog.hide();
@@ -195,7 +196,9 @@ Future<void> showAdvisoryBeforeDeletion({
                   softDeleteType,
                   associatedId,
                   false,
-                ).then((_)=>Navigator.of(context).pop());
+                ).then((_) {
+                  Navigator.of(context).pop();
+                });
               }
             },
             child: Text(
@@ -413,7 +416,7 @@ Future<bool> showFinalResultConfirmation(
         actions: <Widget>[
           RaisedButton(
             onPressed: () async {
-              await Future.delayed(Duration(milliseconds: 800), (){
+              await Future.delayed(Duration(milliseconds: 800), () {
                 Navigator.pop(context);
 //                Navigator.of(context).push(
 //                  MaterialPageRoute(

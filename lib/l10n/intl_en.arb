@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-08-28T07:04:14+00:00",
+    "@@last_modified": "2020-08-28T13:07:49+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -905,10 +905,10 @@
     "amount_received_from": "Amount received from",
     "donations_received": "Donations received",
     "donations_requested": "Donation requested",
-    "pledge_modified": "Your pledged was modified",
+    "pledge_modified": "Your pledged amount for donation was not acknowledged",
     "donation_completed": "Donation completed",
     "donation_completed_desc": "Your donation is successfully completed. A receipt has been emailed to you.",
-    "pledge_modified_by_donor": "Your pledged was modified by donor",
+    "pledge_modified_by_donor": "Donor has modified the pledge amount",
     "has_cash_donation": "Has a request for cash donation",
     "has_goods_donation": "Has requested for goods donation",
     "cash_donation_invite": "has a request for cash donation. Tap to donate any amount that you can",
@@ -933,5 +933,12 @@
     "none": "None",
     "find_your_parent_timebank": "Find your parent timebank if you are part of",
     "look_for_existing_timebank_title": "Looking for existing timebank",
-    "copied_to_clipboard": "Copied to Clipboard"
+    "copied_to_clipboard": "Copied to Clipboard",
+    "delete_comment_msg": "Are you sure want to delete comment?",
+    "goods_modified_by_donor": "Donor has modified goods",
+    "goods_modified_by_creator": "Your goods for donation was not acknowledged",
+    "amount_modified_by_creator_desc": "The amount that you pledged for this donation is different from the amount acknowledged by the creator. Tap to change your pledge amount.",
+    "goods_modified_by_creator_desc": "The goods that you donated for this donation is different from the goods acknowledged by the creator. Tap to change your goods details.",
+    "amount_modified_by_donor_desc": "The amount which you acknowledged for this donation is different from the amount confirmed by the Donor. Tap to change the confirmation amount.",
+    "goods_modified_by_donor_desc": "The goods which you acknowledged for this donation is different from the goods confirmed by the Donor. Tap to change the confirmation goods."
 }
