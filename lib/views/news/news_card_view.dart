@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/pdf_screen.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -36,6 +37,10 @@ class NewsCardView extends StatefulWidget {
 class NewsCardViewState extends State<NewsCardView> {
   TextEditingController _textEditingController = TextEditingController();
   bool isShowSticker;
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
+  bool isProfane = false;
+  String errorText = '';
   @override
   void initState() {
     super.initState();
@@ -229,21 +234,37 @@ class NewsCardViewState extends State<NewsCardView> {
                       ),
                       onTap: () async {
                         if (_textEditingController.text != "") {
-                          _saveComment(Comments(
-                              feedId: widget.newsModel.id,
-                              userPhotoURL:
-                                  SevaCore.of(context).loggedInUser.photoURL,
-                              fullName: SevaCore.of(context)
-                                          .loggedInUser
-                                          .fullname !=
-                                      null
-                                  ? SevaCore.of(context).loggedInUser.fullname
-                                  : "Anonymous user",
-                              createdEmail:
-                                  SevaCore.of(context).loggedInUser.email,
-                              createdAt: DateTime.now().millisecondsSinceEpoch,
-                              comment: _textEditingController.text));
-                          _textEditingController.clear();
+                          if (profanityDetector
+                              .isProfaneString(_textEditingController.text)) {
+                            print('profane');
+                            setState(() {
+                              isProfane = true;
+                              errorText = S.of(context).profanity_text_alert;
+                            });
+                          } else {
+                            print('not profane');
+
+                            setState(() {
+                              isProfane = false;
+                              errorText = '';
+                            });
+                            _saveComment(Comments(
+                                feedId: widget.newsModel.id,
+                                userPhotoURL:
+                                    SevaCore.of(context).loggedInUser.photoURL,
+                                fullName: SevaCore.of(context)
+                                            .loggedInUser
+                                            .fullname !=
+                                        null
+                                    ? SevaCore.of(context).loggedInUser.fullname
+                                    : "Anonymous user",
+                                createdEmail:
+                                    SevaCore.of(context).loggedInUser.email,
+                                createdAt:
+                                    DateTime.now().millisecondsSinceEpoch,
+                                comment: _textEditingController.text));
+                            _textEditingController.clear();
+                          }
                         }
                       },
                     ),
@@ -268,6 +289,17 @@ class NewsCardViewState extends State<NewsCardView> {
                 ),
               ),
             ),
+            isProfane
+                ? Container(
+                    margin: EdgeInsets.only(left: 20),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      errorText,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontSize: 12, color: Colors.red),
+                    ),
+                  )
+                : Offstage(),
             (isShowSticker ? buildSticker() : Container())
           ]),
         ]),
@@ -1698,7 +1730,7 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
                     padding: const EdgeInsets.only(
                         top: 30.0, left: 20.0, right: 20.0),
                     child: Text(
-                      "Are you want to delete Reply?",
+                      S.of(context).delete_comment_msg,
                       style: TextStyle(color: Colors.black, fontSize: 16.0),
                     ),
                   )),
@@ -1717,7 +1749,7 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
                                   borderRadius: BorderRadius.circular(5.0)),
                               splashColor: Colors.white.withAlpha(40),
                               child: Text(
-                                'Delete',
+                                S.of(context).delete,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
@@ -1750,7 +1782,7 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
                                     borderRadius: BorderRadius.circular(5.0)),
                                 splashColor: Colors.white.withAlpha(40),
                                 child: Text(
-                                  'Cancel',
+                                  S.of(context).cancel,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.black,
@@ -1789,7 +1821,10 @@ class _RepliesViewState extends State<RepliesView> {
   bool isFocused = true;
   bool isShowSticker;
   bool isKeyboardVisible;
-
+  final profanityDetector = ProfanityDetector();
+  bool autoValidateText = false;
+  bool isProfane = false;
+  String errorText = '';
   @override
   void initState() {
     super.initState();
@@ -1900,7 +1935,7 @@ class _RepliesViewState extends State<RepliesView> {
                 ],
               ),
             ),
-            new Divider(
+            Divider(
               color: Colors.black38,
               height: 1,
               indent: 0,
@@ -1913,6 +1948,7 @@ class _RepliesViewState extends State<RepliesView> {
                   children: <Widget>[
                     Flexible(
                       child: TextFormField(
+                        autovalidate: autoValidateText,
                         controller: _textEditingController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
@@ -1926,9 +1962,8 @@ class _RepliesViewState extends State<RepliesView> {
                                 left: 3.0, top: 3.0, right: 8.0, bottom: 3.0),
                             child: CircleAvatar(
                               backgroundImage: NetworkImage(
-                                SevaCore.of(context).loggedInUser.photoURL ??
-                                    defaultUserImageURL,
-                              ),
+                                  SevaCore.of(context).loggedInUser.photoURL ??
+                                      defaultUserImageURL),
                             ),
                           ),
                           labelText: 'Add a comment...',
@@ -1954,21 +1989,39 @@ class _RepliesViewState extends State<RepliesView> {
                       ),
                       onTap: () async {
                         if (_textEditingController.text != "") {
-                          _saveComment(Comments(
-                              feedId: widget.feed.id,
-                              userPhotoURL:
-                                  SevaCore.of(context).loggedInUser.photoURL,
-                              fullName: SevaCore.of(context)
-                                          .loggedInUser
-                                          .fullname !=
-                                      null
-                                  ? SevaCore.of(context).loggedInUser.fullname
-                                  : "Anonymous user",
-                              createdEmail:
-                                  SevaCore.of(context).loggedInUser.email,
-                              createdAt: DateTime.now().millisecondsSinceEpoch,
-                              comment: _textEditingController.text));
-                          _textEditingController.clear();
+                          if (profanityDetector
+                              .isProfaneString(_textEditingController.text)) {
+                            print('profane');
+                            setState(() {
+                              isProfane = true;
+                              errorText = S.of(context).profanity_text_alert;
+                            });
+                          } else {
+                            print('not profane');
+
+                            setState(() {
+                              isProfane = false;
+                              errorText = '';
+                            });
+
+                            _saveComment(Comments(
+                                feedId: widget.feed.id,
+                                userPhotoURL:
+                                    SevaCore.of(context).loggedInUser.photoURL,
+                                fullName: SevaCore.of(context)
+                                            .loggedInUser
+                                            .fullname !=
+                                        null
+                                    ? SevaCore.of(context).loggedInUser.fullname
+                                    : "Anonymous user",
+                                createdEmail:
+                                    SevaCore.of(context).loggedInUser.email,
+                                createdAt:
+                                    DateTime.now().millisecondsSinceEpoch,
+                                comment: _textEditingController.text));
+
+                            _textEditingController.clear();
+                          }
                         }
                       },
                     ),
@@ -1993,6 +2046,17 @@ class _RepliesViewState extends State<RepliesView> {
                 ),
               ),
             ),
+            isProfane
+                ? Container(
+                    margin: EdgeInsets.only(left: 20),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      errorText,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontSize: 12, color: Colors.red),
+                    ),
+                  )
+                : Offstage(),
             (isShowSticker ? buildSticker() : Container()),
           ],
         ),

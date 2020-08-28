@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -342,9 +343,16 @@ class PersonalNotificationsRedcerForDonations {
     final holder = DonationModel.fromMap(notificationsModel.data);
 
     return NotificationCard(
-      entityName: S.of(context).pledge_modified_by_donor,
-      title: S.of(context).tap_to_view_details,
-      subTitle: "${S.of(context).pledge_modified_by_donor}",
+      photoUrl: holder.donorDetails.photoUrl ?? defaultUserImageURL,
+      entityName: holder.donationType == RequestType.CASH
+          ? S.of(context).pledge_modified_by_donor
+          : S.of(context).goods_modified_by_donor,
+      title: holder.donationType == RequestType.CASH
+          ? S.of(context).pledge_modified_by_donor
+          : S.of(context).goods_modified_by_donor,
+      subTitle: holder.donationType == RequestType.CASH
+          ? S.of(context).amount_modified_by_donor_desc
+          : S.of(context).goods_modified_by_donor_desc,
       onDismissed: onDismissed,
       onPressed: () {
         Navigator.of(context).push(
@@ -379,9 +387,17 @@ class PersonalNotificationsRedcerForDonations {
     final holder = DonationModel.fromMap(notificationsModel.data);
 
     return NotificationCard(
-      entityName: S.of(context).pledge_modified,
-      title: S.of(context).tap_to_view_details,
-      subTitle: "${S.of(context).pledge_modified}",
+      photoUrl: holder.donationAssociatedTimebankDetails.timebankPhotoURL ??
+          defaultGroupImageURL,
+      entityName: holder.donationType == RequestType.CASH
+          ? S.of(context).pledge_modified
+          : S.of(context).goods_modified_by_creator,
+      title: holder.donationType == RequestType.CASH
+          ? S.of(context).pledge_modified
+          : S.of(context).goods_modified_by_creator,
+      subTitle: holder.donationType == RequestType.CASH
+          ? S.of(context).amount_modified_by_creator_desc
+          : S.of(context).goods_modified_by_creator_desc,
       onDismissed: onDismissed,
       onPressed: () {
         Navigator.of(context).push(
