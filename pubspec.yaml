@@ -137,7 +137,6 @@ flutter:
     - lib/assets/images/csv.png
     - lib/assets/images/send.png
     # - lib/assets/images/cv.png
-    - lib/assets/i18n/
     - lib/assets/images/apple-id-outline-yes_2x.png
 
     # card images

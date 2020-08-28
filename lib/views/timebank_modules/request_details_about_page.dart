@@ -95,6 +95,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           return UserMode.APPROVED_MEMBER;
         else if (widget.requestItem.acceptors.contains(loggedInUser))
           return UserMode.ACCEPTED_MEMBER;
+        else if (widget.timebankModel.admins.contains(loggedInUser))
+          return UserMode.TIMEBANK_ADMIN;
         else {
           return UserMode.NOT_YET_SIGNED_UP;
         }
@@ -424,10 +426,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   Widget get getBottomFrameForTimeRequest {
     switch (userMode) {
-      case UserMode.TIMEBANK_ADMIN:
       case UserMode.REQUEST_CREATOR:
         return getBottombarForCreator;
 
+      case UserMode.TIMEBANK_ADMIN:
       case UserMode.APPROVED_MEMBER:
       case UserMode.ACCEPTED_MEMBER:
       case UserMode.COMPLETED_MEMBER:

@@ -49,10 +49,14 @@ class _DonationViewState extends State<DonationView> {
     super.initState();
     donationBloc.errorMessage.listen((event) {
       if (event.isNotEmpty && event != null) {
-        hideProgress();
+        //hideProgress();
         showScaffold(event == 'net_error'
             ? S.of(context).general_stream_error
-            : S.of(context).select_goods_category);
+            : event == 'amount1'
+                ? S.of(context).enter_valid_amount
+                : event == 'amount2'
+                    ? S.of(context).minmum_amount
+                    : S.of(context).select_goods_category);
       }
     });
   }
@@ -67,7 +71,10 @@ class _DonationViewState extends State<DonationView> {
         leading: BackButton(
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(S.of(context).donations),
+        title: Text(
+          S.of(context).donations,
+          style: TextStyle(fontSize: 18),
+        ),
         centerTitle: true,
       ),
       body: PageView(
@@ -285,7 +292,7 @@ class _DonationViewState extends State<DonationView> {
     progressDialog = ProgressDialog(
       context,
       type: ProgressDialogType.Normal,
-      isDismissible: true,
+      isDismissible: false,
     );
     progressDialog.show();
   }
@@ -369,7 +376,7 @@ class _DonationViewState extends State<DonationView> {
                       showScaffold(S.of(context).check_internet);
                       return;
                     }
-                    //  showProgress();
+                    //showProgress();
 
                     donationBloc
                         .donateGoods(

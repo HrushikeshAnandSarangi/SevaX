@@ -88,6 +88,9 @@ String getValidationError(BuildContext context, String errorCode) {
       break;
     case ValidationErrors.offerCreditError:
       return error.validation_error_offer_credit;
+
+    case ValidationErrors.profanityError:
+      return error.profanity_text_alert;
       break;
     default:
       return null;
