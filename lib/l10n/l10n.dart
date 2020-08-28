@@ -4558,7 +4558,7 @@ class S {
       );
 
   String get pledge_modified => Intl.message(
-        'Your pledged was modified',
+        'Your pledged amount for donation was not acknowledged',
         name: 'pledge_modified',
       );
 
@@ -4573,7 +4573,7 @@ class S {
       );
 
   String get pledge_modified_by_donor => Intl.message(
-        'Your pledged was modified by donor',
+        'Donor has modified the pledge amount',
         name: 'pledge_modified_by_donor',
       );
 
@@ -4705,6 +4705,36 @@ class S {
   String get delete_comment_msg => Intl.message(
         'Are you sure want to delete comment?',
         name: 'delete_comment_msg',
+      );
+
+  String get goods_modified_by_donor => Intl.message(
+        'Donor has modified goods',
+        name: 'goods_modified_by_donor',
+      );
+
+  String get goods_modified_by_creator => Intl.message(
+        'Your goods for donation was not acknowledged',
+        name: 'goods_modified_by_creator',
+      );
+
+  String get amount_modified_by_creator_desc => Intl.message(
+        'The amount that you pledged for this donation is different from the amount acknowledged by the creator. Tap to change your pledge amount.',
+        name: 'amount_modified_by_creator_desc',
+      );
+
+  String get goods_modified_by_creator_desc => Intl.message(
+        'The goods that you donated for this donation is different from the goods acknowledged by the creator. Tap to change your goods details.',
+        name: 'goods_modified_by_creator_desc',
+      );
+
+  String get amount_modified_by_donor_desc => Intl.message(
+        'The amount which you acknowledged for this donation is different from the amount confirmed by the Donor. Tap to change the confirmation amount.',
+        name: 'amount_modified_by_donor_desc',
+      );
+
+  String get goods_modified_by_donor_desc => Intl.message(
+        'The goods which you acknowledged for this donation is different from the goods confirmed by the Donor. Tap to change the confirmation goods.',
+        name: 'goods_modified_by_donor_desc',
       );
 }
 
