@@ -264,7 +264,6 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                         timebankId: notification.timebankId,
                         notificationId: notification.id);
                   },
-                  },
                 );
               case NotificationType.CASH_DONATION_MODIFIED_BY_DONOR:
               case NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR:
