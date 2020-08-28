@@ -2,13 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/extensions.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 
 import '../spell_check_manager.dart';
@@ -38,7 +37,6 @@ class _InterestViewNewState extends State<InterestViewNew> {
   SuggestionsBoxController controller = SuggestionsBoxController();
   TextEditingController _textEditingController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  var _debouncer = Debouncer(milliseconds: 500);
 
   Map<String, dynamic> interests = {};
   Map<String, dynamic> _selectedInterests = {};
@@ -216,6 +214,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                       keyword: suggestedItem.suggesttionTitle,
                       language: 'en',
                       suggestionMode: suggestedItem.suggestionMode,
+                      showLoader: true,
                     );
 
                   case SuggestionMode.USER_DEFINED:
@@ -223,23 +222,23 @@ class _InterestViewNewState extends State<InterestViewNew> {
                       keyword: suggestedItem.suggesttionTitle,
                       language: 'en',
                       suggestionMode: suggestedItem.suggestionMode,
+                      showLoader: false,
                     );
+
+                  default:
+                    return Container();
                 }
               },
               noItemsFoundBuilder: (context) {
                 return searchUserDefinedEntity(
                   keyword: _textEditingController.text,
                   language: 'en',
+                  showLoader: false,
                 );
               },
               onSuggestionSelected: (SuggestedItem suggestion) {
                 _textEditingController.clear();
                 controller.close();
-
-                if (ProfanityDetector()
-                    .isProfaneString(suggestion.suggesttionTitle)) {
-                  return;
-                }
 
                 switch (suggestion.suggestionMode) {
                   case SuggestionMode.SUGGESTED:
@@ -275,9 +274,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
             ),
             SizedBox(height: 20),
             widget.isFromProfile && !isDataLoaded
-                ? Center(
-                    child: getLinearLoading,
-                  )
+                ? getLoading
                 : Expanded(
                     child: ListView(
                       shrinkWrap: true,
@@ -355,10 +352,12 @@ class _InterestViewNewState extends State<InterestViewNew> {
     );
   }
 
+//TODO: refactor to one class
   FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
     String keyword,
     String language,
     SuggestionMode suggestionMode,
+    bool showLoader,
   }) {
     return FutureBuilder<SpellCheckResult>(
       future: SpellCheckManager.evaluateSpellingFor(
@@ -367,7 +366,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return getLinearLoading;
+          return showLoader ? getLoading : LinearProgressIndicator();
         }
 
         return getSuggestionLayout(
@@ -378,9 +377,11 @@ class _InterestViewNewState extends State<InterestViewNew> {
     );
   }
 
-  Widget get getLinearLoading {
+  Widget get getLoading {
     return Padding(
-        padding: const EdgeInsets.all(8.0), child: CircularProgressIndicator());
+      padding: const EdgeInsets.all(8.0),
+      child: LoadingIndicator(),
+    );
   }
 
   Padding getSuggestionLayout({
@@ -390,7 +391,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Container(
-          height: 37,
+          height: 40,
           alignment: Alignment.centerLeft,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
