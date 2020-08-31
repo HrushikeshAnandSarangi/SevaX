@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
@@ -14,7 +16,8 @@ class LanguageListData {
     LanguageModel(languageName: 'Portuguese', code: 'pt'),
     LanguageModel(languageName: 'French', code: 'fr'),
     LanguageModel(languageName: 'Spanish', code: 'es'),
-    LanguageModel(languageName: 'Chinese Simplified', code: 'zh')
+    LanguageModel(languageName: 'Afrinkaans', code: 'af'),
+    LanguageModel(languageName: 'Chinese Simplified', code: 'zh'),
   ];
   LanguageListData();
   List<LanguageModel> getData() {
@@ -22,7 +25,7 @@ class LanguageListData {
   }
 
   LanguageModel getLanguageSupported(String languagecode) {
-    print(languagecode);
+    log('-->' + languagecode);
     var found = -1;
     for (var i = 0; i < this.languagelist.length; i++) {
       if (this.languagelist[i].code == languagecode) {
