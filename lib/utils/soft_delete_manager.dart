@@ -491,7 +491,7 @@ Future<void> showFailedLoadImage({
       context: context,
       builder: (BuildContext _context) {
         return AlertDialog(
-          title: Text(S.of(context).profanity_alert),
+          title: Text(S.of(context).failed_load_image_title),
           content: Text(
             S.of(context).failed_load_image,
           ),

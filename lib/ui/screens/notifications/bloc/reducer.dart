@@ -2,21 +2,272 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
+import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
+import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
+import 'package:sevaexchange/repositories/request_repository.dart';
+import 'package:sevaexchange/repositories/user_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/request_complete_widget.dart';
 import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
+import 'package:sevaexchange/views/timebanks/join_request_view.dart';
+import 'package:sevaexchange/views/timebanks/widgets/group_join_reject_dialog.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../flavor_config.dart';
+import 'notifications_bloc.dart';
 
 class PersonalNotificationReducerForRequests {
+  static void showDialogForIncompleteTransactions(
+      BuildContext context, SoftDeleteRequestDataHolder deletionRequest) {
+    var reason = S
+            .of(context)
+            .notifications_incomplete_transaction
+            .replaceAll('***', deletionRequest.entityTitle) +
+        '\n';
+    if (deletionRequest.noOfOpenOffers > 0) {
+      reason +=
+          '${deletionRequest.noOfOpenOffers} ${S.of(context).one_to_many_offers}\n';
+    }
+    if (deletionRequest.noOfOpenProjects > 0) {
+      reason +=
+          '${deletionRequest.noOfOpenProjects} ${S.of(context).projects}\n';
+    }
+    if (deletionRequest.noOfOpenRequests > 0) {
+      reason +=
+          '${deletionRequest.noOfOpenRequests} ${S.of(context).open_requests}\n';
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext viewContext) {
+        return AlertDialog(
+          title: Text(deletionRequest.entityTitle.trim()),
+          content: Text(reason),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                S.of(context).dismiss,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.red,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(viewContext).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  static Widget getWidgetNotificaitonForDeletionrequest({
+    NotificationsModel notification,
+    BuildContext context,
+    NotificationsBloc bloc,
+    String email,
+  }) {
+    var requestData = SoftDeleteRequestDataHolder.fromMap(notification.data);
+
+    return NotificationCard(
+      timestamp: notification.timestamp,
+      entityName: requestData.entityTitle ?? "Deletion Request",
+      photoUrl: null,
+      title: requestData.requestAccepted
+          ? "${requestData.entityTitle} ${S.of(context).notifications_was_deleted}"
+          : "${requestData.entityTitle} ${S.of(context).notifications_could_not_delete}",
+      subTitle: requestData.requestAccepted
+          ? S.of(context).notifications_successfully_deleted.replaceAll(
+                    '***',
+                    requestData.entityTitle,
+                  ) +
+              " "
+          : "${requestData.entityTitle} ${S.of(context).notifications_could_not_deleted}  ",
+      onPressed: () => !requestData.requestAccepted
+          ? showDialogForIncompleteTransactions(
+              context,
+              requestData,
+            )
+          : null,
+      onDismissed: () {
+        onDismissed(
+          bloc: bloc,
+          notificationId: notification.id,
+          userEmail: email,
+        );
+      },
+    );
+  }
+
+  static Widget getWidgetNotificationForTransactionDebit({
+    NotificationsModel notification,
+  }) {
+    TransactionModel model = TransactionModel.fromMap(notification.data);
+
+    return FutureBuilder<UserModel>(
+      future: UserRepository.fetchUserById(notification.senderUserId),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return Container();
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return LoadingIndicator();
+        }
+        UserModel user = snapshot.data;
+
+        return NotificationCard(
+          timestamp: notification.timestamp,
+          entityName: user.fullname,
+          isDissmissible: true,
+          onDismissed: () {
+            NotificationsRepository.readUserNotification(
+              notification.id,
+              user.email,
+            );
+          },
+          onPressed: null,
+          photoUrl: user.photoURL,
+          title: S.of(context).notifications_debited,
+          subTitle:
+              "${model.credits} ${S.of(context).notifications_debited_to} ",
+        );
+      },
+    );
+  }
+
+  static Widget getWidgetNotificationForGroupJoinInvite({
+    NotificationsModel notification,
+    BuildContext context,
+    UserModel user,
+  }) {
+    GroupInviteUserModel groupInviteUserModel =
+        GroupInviteUserModel.fromMap(notification.data);
+
+    return NotificationCard(
+      timestamp: notification.timestamp,
+      entityName: groupInviteUserModel.timebankName.toLowerCase(),
+      isDissmissible: true,
+      onDismissed: () {
+        NotificationsRepository.readUserNotification(
+            notification.id, user.email);
+      },
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return GroupJoinRejectDialogView(
+              groupInviteUserModel: groupInviteUserModel,
+              timeBankId: groupInviteUserModel.groupId,
+              notificationId: notification.id,
+              userModel: user,
+            );
+          },
+        );
+      },
+      photoUrl: groupInviteUserModel.timebankImage,
+      subTitle:
+          '${groupInviteUserModel.adminName.toLowerCase()} ${S.of(context).notifications_invited_to_join} ${groupInviteUserModel.timebankName}, ${S.of(context).notifications_tap_to_view} ',
+      title: "${S.of(context).notifications_group_join_invite}",
+    );
+  }
+
+  static Widget getWidgetNotificationForTransactionCredit({
+    NotificationsModel notification,
+  }) {
+    TransactionModel model = TransactionModel.fromMap(notification.data);
+
+    return FutureBuilder<UserModel>(
+      future: UserRepository.fetchUserById(notification.senderUserId),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return Container();
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return LoadingIndicator();
+        }
+        UserModel user = snapshot.data;
+
+        return NotificationCard(
+          timestamp: notification.timestamp,
+          entityName: user.fullname,
+          isDissmissible: true,
+          onDismissed: () {
+            NotificationsRepository.readUserNotification(
+              notification.id,
+              user.email,
+            );
+          },
+          onPressed: null,
+          photoUrl: user.photoURL,
+          title: S.of(context).notifications_credited,
+          subTitle:
+              ' ${S.of(context).congrats}! ${model.credits} ${S.of(context).notifications_credited_to}. ',
+        );
+      },
+    );
+  }
+
+  static Widget getWidgetForRequestCompletedApproved({
+    NotificationsModel notification,
+    UserModel user,
+    BuildContext context,
+  }) {
+    RequestModel model = RequestModel.fromMap(notification.data);
+    TransactionModel transactionModel = model.transactions.firstWhere(
+      (transaction) => transaction.to == user.sevaUserID,
+    );
+    return NotificationCard(
+      timestamp: notification.timestamp,
+      entityName: model.fullName,
+      isDissmissible: true,
+      onDismissed: () {
+        NotificationsRepository.readUserNotification(
+          notification.id,
+          user.email,
+        );
+      },
+      onPressed: null,
+      photoUrl: model.photoUrl,
+      subTitle:
+          '${model.fullName} ${S.of(context).notifications_approved_for}  ${transactionModel.credits} ${S.of(context).hour(2)} ',
+      title: model.title,
+    );
+  }
+
+  static Widget getWidgetForRequestCompleted({
+    NotificationsModel notification,
+  }) {
+    RequestModel model = RequestModel.fromMap(notification.data);
+    return FutureBuilder<RequestModel>(
+      future: RequestRepository.getRequestFutureById(model.id),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Container();
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return LoadingIndicator();
+        }
+        RequestModel model = snapshot.data;
+        return RequestCompleteWidget(
+          model: model,
+          userId: notification.senderUserId,
+          notificationId: notification.id,
+        );
+      },
+    );
+  }
+
   static void _settingModalBottomSheet(
       BuildContext context,
       RequestInvitationModel requestInvitationModel,
@@ -163,6 +414,42 @@ class PersonalNotificationReducerForRequests {
         });
   }
 
+  static Widget getWidgetForAcceptedOfferNotification({
+    NotificationsModel notification,
+  }) {
+    OfferAcceptedNotificationModel acceptedOffer =
+        OfferAcceptedNotificationModel.fromMap(notification.data);
+    return FutureBuilder<UserModel>(
+      future: UserRepository.fetchUserById(acceptedOffer.acceptedBy),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Container();
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return NotificationShimmer();
+        }
+        UserModel user = snapshot.data;
+
+        return NotificationCard(
+          timestamp: notification.timestamp,
+          entityName: user.fullname,
+          isDissmissible: true,
+          onDismissed: () {
+            NotificationsRepository.readUserNotification(
+              notification.id,
+              user.email,
+            );
+          },
+          onPressed: null,
+          photoUrl: user.photoURL,
+          title: S.of(context).notifications_offer_accepted,
+          subTitle:
+              '${user.fullname.toLowerCase()} ${S.of(context).notifications_shown_interest} ',
+        );
+      },
+    );
+  }
+
   static Widget getInvitationForRequest({
     NotificationsModel notification,
     UserModel user,
@@ -234,6 +521,7 @@ class PersonalNotificationReducerForRequests {
               return DonationView(
                 requestModel: requestInvitationModel.requestModel,
                 timabankName: requestInvitationModel.timebankModel.name,
+                notificationId: notification.id,
               );
             },
           ),
@@ -265,6 +553,7 @@ class PersonalNotificationReducerForRequests {
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return DonationView(
+            notificationId: notification.id,
             requestModel: requestInvitationModel.requestModel,
             timabankName: requestInvitationModel.timebankModel.name,
           );
@@ -290,6 +579,151 @@ class PersonalNotificationReducerForRequests {
       timestamp: notification.timestamp,
     );
   }
+
+  static Widget getNotificationForRequestAccept({
+    NotificationsModel notification,
+  }) {
+    RequestModel model = RequestModel.fromMap(notification.data);
+
+    return FutureBuilder<RequestModel>(
+      future: RequestRepository.getRequestFutureById(model.id),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Container();
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return LoadingIndicator();
+        }
+        return RequestAcceptedWidget(
+          model: snapshot.data,
+          userId: notification.senderUserId,
+          notificationId: notification.id,
+        );
+      },
+    );
+  }
+
+  static Widget getNotificationForRecurringOffer({
+    NotificationsModel notification,
+    NotificationsBloc bloc,
+    BuildContext context,
+    UserModel user,
+  }) {
+    ReccuringOfferUpdated eventData =
+        ReccuringOfferUpdated.fromMap(notification.data);
+    return NotificationCard(
+      timestamp: notification.timestamp,
+      title: "Offer Updated",
+      subTitle:
+          "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} "
+              .replaceFirst('***eventName', eventData.eventName)
+              .replaceFirst(
+                  '***eventDate',
+                  DateTime.fromMillisecondsSinceEpoch(
+                    eventData.eventDate,
+                  ).toString()),
+      entityName: "Request Updated",
+      photoUrl: eventData.photoUrl,
+      onDismissed: () {
+        onDismissed(
+          bloc: bloc,
+          notificationId: notification.id,
+          userEmail: user.email,
+        );
+      },
+    );
+  }
+
+  static Widget getNotificationForRecurringRequestUpdated({
+    NotificationsModel notification,
+    NotificationsBloc bloc,
+    BuildContext context,
+    UserModel user,
+  }) {
+    ReccuringRequestUpdated eventData =
+        ReccuringRequestUpdated.fromMap(notification.data);
+    return NotificationCard(
+      timestamp: notification.timestamp,
+      title: S.of(context).request_updated,
+      subTitle:
+          "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} "
+              .replaceFirst('***eventName', eventData.eventName)
+              .replaceFirst(
+                '***eventDate',
+                DateTime.fromMillisecondsSinceEpoch(
+                  eventData.eventDate,
+                ).toString(),
+              ),
+      entityName: S.of(context).request_updated,
+      photoUrl: eventData.photoUrl,
+      onDismissed: () {
+        onDismissed(
+          bloc: bloc,
+          notificationId: notification.id,
+          userEmail: user.email,
+        );
+      },
+    );
+  }
+
+  static Future<void> onDismissed({
+    String notificationId,
+    String userEmail,
+    NotificationsBloc bloc,
+  }) async {
+    await bloc.clearNotification(
+      notificationId: notificationId,
+      email: userEmail,
+    );
+  }
+
+  static Widget getNotificationForJoinRequest({
+    NotificationsModel notification,
+  }) {
+    JoinRequestNotificationModel model =
+        JoinRequestNotificationModel.fromMap(notification.data);
+    return FutureBuilder<UserModel>(
+      future: UserRepository.fetchUserById(notification.senderUserId),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Container();
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return NotificationShimmer();
+        }
+        UserModel user = snapshot.data;
+        return user != null && user.fullname != null
+            ? NotificationCard(
+                timestamp: notification.timestamp,
+                entityName: user.fullname,
+                title: S.of(context).notifications_join_request,
+                isDissmissible: true,
+                onDismissed: () {
+                  NotificationsRepository.readUserNotification(
+                    notification.id,
+                    user.email,
+                  );
+                },
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => JoinRequestView(
+                        timebankId: model.timebankId,
+                      ),
+                    ),
+                  );
+                },
+                photoUrl: user.photoURL,
+                subTitle:
+                    '${user.fullname.toLowerCase()} ${S.of(context).notifications_requested_join} ${model.timebankTitle}, ${S.of(context).notifications_tap_to_view} ',
+              )
+            : Container();
+      },
+    );
+  }
+
+  //
 
   static Widget _getNotificationCardForTimeInvitationRequest({
     NotificationsModel notification,
@@ -334,6 +768,43 @@ class PersonalNotificationReducerForRequests {
 }
 
 class PersonalNotificationsRedcerForDonations {
+  static Widget getWidgetNotificationForAcknowlegeDonorDonation({
+    NotificationsModel notification,
+    UserModel user,
+    BuildContext context,
+  }) {
+    DonationModel donationModel = DonationModel.fromMap(notification.data);
+    return NotificationCard(
+      timestamp: notification.timestamp,
+      entityName: donationModel.requestTitle.toLowerCase(),
+      isDissmissible: true,
+      onDismissed: () {
+        NotificationsRepository.readUserNotification(
+          notification.id,
+          user.email,
+        );
+      },
+      onPressed: () async {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => RequestDonationDisputePage(
+              model: donationModel,
+            ),
+          ),
+        );
+      },
+      photoUrl: donationModel.donorDetails.photoUrl,
+      subTitle: donationModel.donorDetails.name +
+          " " +
+          S.of(context).donated +
+          " " +
+          donationModel.donationType.toString() +
+          S.of(context).tap_to_view_details +
+          "  ",
+      title: S.of(context).donation_acknowledge,
+    );
+  }
+
   static Widget getWidgetForDonationsModifiedByDonor({
     Function onDismissed,
     BuildContext context,

@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-08-31T08:55:48+00:00",
+    "@@last_modified": "2020-08-31T10:39:46+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -797,7 +797,7 @@
     "cant_exit_group": "You cannot exit from this group",
     "cant_exit_timebank": "cannot exit from this timebank",
     "add_image_url": "Add Image Url",
-    "image_url": "Image Url",
+    "image_url": "Add Image Url ex: https:\/\/www.sevaexchange.com\/sevalogo.png",
     "day": "{count, plural, one {Day} other {Days}}",
     "year": "{count, plural, one {Year} other {Years}}",
     "lifetime": "Lifetime",
@@ -942,5 +942,9 @@
     "amount_modified_by_donor_desc": "The amount which you acknowledged for this donation is different from the amount confirmed by the Donor. Tap to change the confirmation amount.",
     "goods_modified_by_donor_desc": "The goods which you acknowledged for this donation is different from the goods confirmed by the Donor. Tap to change the confirmation goods.",
     "imageurl_alert": "Web Image url alert",
-    "image_url_alert_desc": "Please add a image url to continue"
+    "image_url_alert_desc": "Please add a image url to continue",
+    "enter_valid_link": "Enter valid payment link",
+    "target_amount_less_than_min_amount": "Minimum amount cannot be greater than target amount",
+    "failed_load_image_title": "Failed to load",
+    "image_url_hint": "Add Image Url ex: https:\/\/www.sevaexchange.com\/sevalogo.png"
 }

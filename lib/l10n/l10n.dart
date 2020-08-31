@@ -4767,6 +4767,26 @@ class S {
         'Agregue una URL de imagen para continuar',
         name: 'image_url_alert_desc',
       );
+
+  String get enter_valid_link => Intl.message(
+        'Enter valid payment link',
+        name: 'enter_valid_link',
+      );
+
+  String get target_amount_less_than_min_amount => Intl.message(
+        'Minimum amount cannot be greater than target amount',
+        name: 'target_amount_less_than_min_amount',
+      );
+
+  String get failed_load_image_title => Intl.message(
+        'Failed to load',
+        name: 'failed_load_image_title',
+      );
+
+  String get image_url_hint => Intl.message(
+        'Add Image Url ex: https://www.sevaexchange.com/sevalogo.png',
+        name: 'image_url_hint',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
