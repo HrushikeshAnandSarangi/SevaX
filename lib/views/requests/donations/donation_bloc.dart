@@ -38,6 +38,7 @@ class DonationBloc {
   Future<bool> donateGoods(
       {DonationModel donationModel,
       RequestModel requestModel,
+      String notificationId,
       UserModel donor}) async {
     if (_selectedList.value.isEmpty) {
       _errorMessage.add('goods');
@@ -60,6 +61,10 @@ class DonationBloc {
           requestModel: requestModel,
           donor: donor,
         );
+        if (notificationId != null && notificationId != '') {
+          await FirestoreManager.readUserNotification(
+              notificationId, donor.email);
+        }
         return true;
       } on Exception catch (e) {
         _errorMessage.add("net_error");
@@ -83,8 +88,10 @@ class DonationBloc {
   Future<bool> donateAmount(
       {DonationModel donationModel,
       RequestModel requestModel,
+      String notificationId,
       UserModel donor}) async {
     donationModel.cashDetails.pledgedAmount = int.parse(_amountPledged.value);
+    donationModel.minimumAmount = requestModel.cashModel.minAmount;
 
     requestModel.cashModel.donors.add(donor.sevaUserID);
     // requestModel.cashModel.amountRaised =
@@ -97,6 +104,11 @@ class DonationBloc {
         requestModel: requestModel,
         donor: donor,
       );
+      if (notificationId != null) {
+        await FirestoreManager.readUserNotification(
+            notificationId, donor.email);
+      }
+
       return true;
     } on Exception catch (e) {
       _errorMessage.add('net_error');

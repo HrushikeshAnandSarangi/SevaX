@@ -62,8 +62,11 @@ class _ImageUrlViewState extends State<ImageUrlView> {
               if (imageUrls != null && imageUrls.isNotEmpty) {
                 globals.webImageUrl = imageUrls[0];
                 print('glg ${globals.webImageUrl}');
+
+                Navigator.of(context).pop();
+              } else {
+                _showImageUrlAlert(context);
               }
-              Navigator.of(context).pop();
             },
             child: Text(
               S.of(context).continue_text,
@@ -104,7 +107,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
                 },
                 decoration: InputDecoration(
                   errorText: urlError,
-                  hintText: S.of(context).image_url,
+                  hintText: S.of(context).image_url_hint,
                   hintStyle: hintTextStyle,
                   prefixIcon: Icon(Icons.language),
                   suffixIcon: IconButton(
@@ -230,5 +233,28 @@ class _ImageUrlViewState extends State<ImageUrlView> {
   addWebImageUrl(String imageUrl) {
     // TODO: implement addWebImageUrl
     throw UnimplementedError();
+  }
+
+  void _showImageUrlAlert(BuildContext mContext) {
+    // flutter defined function
+    showDialog(
+      context: mContext,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: Text(S.of(context).imageurl_alert),
+          content: Text(S.of(context).image_url_alert_desc),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            FlatButton(
+              child: Text(S.of(context).close),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

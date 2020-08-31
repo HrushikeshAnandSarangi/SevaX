@@ -351,6 +351,9 @@ class _CashFlow extends StatelessWidget {
               return TextField(
                 onChanged: _bloc.onAmountChanged,
                 decoration: InputDecoration(
+                  errorText: snapshot.error == 'min'
+                      ? S.of(context).minmum_amount
+                      : '',
                   hintText: S.of(context).amount,
                   hintStyle: TextStyle(fontSize: 12),
                 ),

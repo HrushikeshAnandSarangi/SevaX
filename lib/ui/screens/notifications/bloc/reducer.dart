@@ -521,6 +521,7 @@ class PersonalNotificationReducerForRequests {
               return DonationView(
                 requestModel: requestInvitationModel.requestModel,
                 timabankName: requestInvitationModel.timebankModel.name,
+                notificationId: notification.id,
               );
             },
           ),
@@ -552,6 +553,7 @@ class PersonalNotificationReducerForRequests {
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return DonationView(
+            notificationId: notification.id,
             requestModel: requestInvitationModel.requestModel,
             timabankName: requestInvitationModel.timebankModel.name,
           );

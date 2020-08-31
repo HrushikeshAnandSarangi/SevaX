@@ -44,6 +44,7 @@ class DonationModel {
     this.donorDetails,
     this.donationAssociatedTimebankDetails,
     this.lastModifiedBy,
+    this.minimumAmount,
   });
   String communityId;
   String donorSevaUserId;
@@ -57,6 +58,7 @@ class DonationModel {
   String timebankId;
   String notificationId;
   int timestamp;
+  int minimumAmount;
   DonationStatus donationStatus;
   CashDetails cashDetails;
   GoodsDetails goodsDetails;
@@ -87,6 +89,8 @@ class DonationModel {
             json["requestTitle"] == null ? null : json["requestTitle"],
         timebankId: json["timebankId"] == null ? null : json["timebankId"],
         timestamp: json["timestamp"] == null ? null : json["timestamp"],
+        minimumAmount:
+            json["minimumAmount"] == null ? null : json["minimumAmount"],
         donationStatus: json["donationStatus"] == null
             ? null
             : _donationStatusMapper[json["donationStatus"]],
@@ -135,6 +139,7 @@ class DonationModel {
         "requestId": requestId == null ? null : requestId,
         "requestTitle": requestTitle == null ? null : requestTitle,
         "timebankId": timebankId == null ? null : timebankId,
+        "minimumAmount": minimumAmount == null ? null : minimumAmount,
         "donationStatus": donationStatus == null
             ? null
             : donationStatus.toString().split('.')[1],
@@ -149,7 +154,7 @@ class DonationModel {
 
   @override
   String toString() {
-    return 'DonationModel{communityId: $communityId, donorSevaUserId: $donorSevaUserId, donatedTo: $donatedTo, donatedToTimebank: $donatedToTimebank, donationInBetween: $donationInBetween, donationType: $donationType, id: $id, requestId: $requestId, requestTitle: $requestTitle, timebankId: $timebankId, notificationId: $notificationId, timestamp: $timestamp, donationStatus: $donationStatus, cashDetails: $cashDetails, goodsDetails: $goodsDetails, donorDetails: $donorDetails}';
+    return 'DonationModel{communityId: $communityId, donorSevaUserId: $donorSevaUserId,minimumAmount: $minimumAmount, donatedTo: $donatedTo, donatedToTimebank: $donatedToTimebank, donationInBetween: $donationInBetween, donationType: $donationType, id: $id, requestId: $requestId, requestTitle: $requestTitle, timebankId: $timebankId, notificationId: $notificationId, timestamp: $timestamp, donationStatus: $donationStatus, cashDetails: $cashDetails, goodsDetails: $goodsDetails, donorDetails: $donorDetails}';
   }
 }
 

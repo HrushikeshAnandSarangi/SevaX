@@ -159,6 +159,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   final profanityDetector = ProfanityDetector();
   bool autoValidateText = false;
   bool autoValidateCashText = false;
+  RegExp regExp = RegExp(
+    r'(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])',
+    caseSensitive: false,
+    multiLine: false,
+  );
   @override
   void initState() {
     super.initState();
@@ -542,8 +547,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           validator: (value) {
             if (value.isEmpty) {
               return S.of(context).validation_error_general_text;
-            } else {
+            } else if (regExp.hasMatch(value)) {
               requestModel.donationInstructionLink = value;
+              print(true);
+            } else {
+              print('not url');
+
+              return S.of(context).enter_valid_link;
             }
             return null;
           },
@@ -824,6 +834,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     .validation_error_min_donation_count_negative;
               } else if (int.parse(value) == 0) {
                 return S.of(context).validation_error_min_donation_count_zero;
+              } else if (requestModel.cashModel.targetAmount != null &&
+                  requestModel.cashModel.targetAmount < int.parse(value)) {
+                return S.of(context).target_amount_less_than_min_amount;
               } else {
                 requestModel.cashModel.minAmount = int.parse(value);
                 setState(() {});
