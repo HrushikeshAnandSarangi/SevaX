@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -204,6 +205,14 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     );
 
                   case SuggestionMode.SUGGESTED:
+                    if (ProfanityDetector()
+                        .isProfaneString(suggestedItem.suggesttionTitle)) {
+                      return ProfanityDetector.getProanityAdvisory(
+                        suggestion: suggestedItem.suggesttionTitle,
+                        suggestionMode: SuggestionMode.USER_DEFINED,
+                        context: context,
+                      );
+                    }
                     return searchUserDefinedEntity(
                       keyword: suggestedItem.suggesttionTitle,
                       language: 'en',
@@ -212,6 +221,14 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     );
 
                   case SuggestionMode.USER_DEFINED:
+                    if (ProfanityDetector()
+                        .isProfaneString(suggestedItem.suggesttionTitle)) {
+                      return ProfanityDetector.getProanityAdvisory(
+                        suggestion: suggestedItem.suggesttionTitle,
+                        suggestionMode: SuggestionMode.USER_DEFINED,
+                        context: context,
+                      );
+                    }
                     return searchUserDefinedEntity(
                       keyword: suggestedItem.suggesttionTitle,
                       language: 'en',

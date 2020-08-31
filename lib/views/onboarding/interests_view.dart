@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/get_location.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -192,11 +193,6 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 return await Future.value(dataCopy);
               },
               itemBuilder: (context, suggestedItem) {
-                // if (ProfanityDetector()
-                //     .isProfaneString(suggestedItem.suggesttionTitle)) {
-                //   return Text(S.of(context).profanity_text_alert);
-                // }
-
                 switch (suggestedItem.suggestionMode) {
                   case SuggestionMode.FROM_DB:
                     return Padding(
@@ -210,6 +206,14 @@ class _InterestViewNewState extends State<InterestViewNew> {
                     );
 
                   case SuggestionMode.SUGGESTED:
+                    if (ProfanityDetector()
+                        .isProfaneString(suggestedItem.suggesttionTitle)) {
+                      return ProfanityDetector.getProanityAdvisory(
+                        suggestion: suggestedItem.suggesttionTitle,
+                        suggestionMode: SuggestionMode.SUGGESTED,
+                        context: context,
+                      );
+                    }
                     return searchUserDefinedEntity(
                       keyword: suggestedItem.suggesttionTitle,
                       language: 'en',
@@ -218,6 +222,15 @@ class _InterestViewNewState extends State<InterestViewNew> {
                     );
 
                   case SuggestionMode.USER_DEFINED:
+                    if (ProfanityDetector()
+                        .isProfaneString(suggestedItem.suggesttionTitle)) {
+                      return ProfanityDetector.getProanityAdvisory(
+                        suggestion: suggestedItem.suggesttionTitle,
+                        suggestionMode: SuggestionMode.USER_DEFINED,
+                        context: context,
+                      );
+                    }
+
                     return searchUserDefinedEntity(
                       keyword: suggestedItem.suggesttionTitle,
                       language: 'en',
@@ -240,13 +253,20 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 _textEditingController.clear();
                 controller.close();
 
+                if (ProfanityDetector()
+                    .isProfaneString(suggestion.suggesttionTitle)) {
+                  print("No action can be taken on profane word");
+                  return;
+                }
+
                 switch (suggestion.suggestionMode) {
                   case SuggestionMode.SUGGESTED:
                     var interestId = Uuid().generateV4();
                     SkillsAndInterestBloc.addInterestToDb(
-                        interestId: interestId,
-                        interestLanguage: 'en',
-                        interestTitle: suggestion.suggesttionTitle);
+                      interestId: interestId,
+                      interestLanguage: 'en',
+                      interestTitle: suggestion.suggesttionTitle,
+                    );
                     interests[interestId] = suggestion.suggesttionTitle;
                     break;
 
@@ -331,7 +351,6 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 ),
               ),
             ),
-
             FlatButton(
               onPressed: () {
                 widget.onSkipped();
@@ -352,7 +371,6 @@ class _InterestViewNewState extends State<InterestViewNew> {
     );
   }
 
-//TODO: refactor to one class
   FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
     String keyword,
     String language,
@@ -383,72 +401,72 @@ class _InterestViewNewState extends State<InterestViewNew> {
       child: LoadingIndicator(),
     );
   }
+}
 
-  Padding getSuggestionLayout({
-    String suggestion,
-    SuggestionMode suggestionMode,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Container(
-          height: 40,
-          alignment: Alignment.centerLeft,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: "Add ",
-                            style: TextStyle(
-                              color: Colors.blue,
-                            ),
+Padding getSuggestionLayout({
+  String suggestion,
+  SuggestionMode suggestionMode,
+}) {
+  return Padding(
+    padding: const EdgeInsets.all(10.0),
+    child: Container(
+        height: 40,
+        alignment: Alignment.centerLeft,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: "Add ",
+                          style: TextStyle(
+                            color: Colors.blue,
                           ),
-                          TextSpan(
-                            text: "\"${suggestion}\"",
-                            style: suggestionMode == SuggestionMode.SUGGESTED
-                                ? TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.blue,
-                                  )
-                                : TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.blue,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: Colors.red,
-                                    decorationStyle: TextDecorationStyle.wavy,
-                                    decorationThickness: 1.5,
-                                  ),
-                          ),
-                        ],
-                      ),
+                        ),
+                        TextSpan(
+                          text: "\"${suggestion}\"",
+                          style: suggestionMode == SuggestionMode.SUGGESTED
+                              ? TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.blue,
+                                )
+                              : TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: Colors.red,
+                                  decorationStyle: TextDecorationStyle.wavy,
+                                  decorationThickness: 1.5,
+                                ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      suggestionMode == SuggestionMode.SUGGESTED
-                          ? 'Suggested'
-                          : 'You entered',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
+                  ),
+                  Text(
+                    suggestionMode == SuggestionMode.SUGGESTED
+                        ? 'Suggested'
+                        : 'You entered',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Icon(
-                Icons.add,
-                color: Colors.grey,
-              ),
-            ],
-          )),
-    );
-  }
+            ),
+            Icon(
+              Icons.add,
+              color: Colors.grey,
+            ),
+          ],
+        )),
+  );
 }
 
 class SkillsAndInterestBloc {
