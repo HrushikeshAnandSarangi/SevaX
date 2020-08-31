@@ -664,7 +664,7 @@ class PersonalNotificationReducerForRequests {
     );
   }
 
-  Future<void> onDismissed({
+  static Future<void> onDismissed({
     String notificationId,
     String userEmail,
     NotificationsBloc bloc,
