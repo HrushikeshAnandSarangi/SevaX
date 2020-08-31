@@ -206,9 +206,10 @@ class NewsCardViewState extends State<NewsCardView> {
                             padding: const EdgeInsets.only(
                                 left: 3.0, top: 3.0, right: 8.0, bottom: 3.0),
                             child: CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  SevaCore.of(context).loggedInUser.photoURL),
-                            ),
+                                backgroundImage: NetworkImage(
+                              SevaCore.of(context).loggedInUser.photoURL ??
+                                  defaultUserImageURL,
+                            )),
                           ),
                           labelText: 'Add a comment...',
                           isDense: true,
@@ -569,15 +570,13 @@ class NewsCardViewState extends State<NewsCardView> {
     String url,
     String imageId,
   }) {
-    print("______________________________>" + url);
-
     return Container(
       margin: EdgeInsets.all(5),
       child: url != null
           ? Hero(
               tag: imageId,
               child: Image.network(
-                url,
+                url ?? defaultUserImageURL,
                 fit: BoxFit.cover,
               ),
             )
@@ -1963,7 +1962,8 @@ class _RepliesViewState extends State<RepliesView> {
                                 left: 3.0, top: 3.0, right: 8.0, bottom: 3.0),
                             child: CircleAvatar(
                               backgroundImage: NetworkImage(
-                                  SevaCore.of(context).loggedInUser.photoURL),
+                                  SevaCore.of(context).loggedInUser.photoURL ??
+                                      defaultUserImageURL),
                             ),
                           ),
                           labelText: 'Add a comment...',

@@ -22,6 +22,7 @@ import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_p
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/notifications/notification_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -92,7 +93,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                       timebankId: notification.timebankId,
                     );
                   },
-                  onPressed: () {
+                  onPressed: () async {
+                    // await MailDonationReciept.sendReciept(donationModel)
+                    //     .then((value) => print("Completed process"))
+                    //     .catchError((onError) => print("Rejected Process"));
                     Navigator.push(
                       context,
                       MaterialPageRoute(

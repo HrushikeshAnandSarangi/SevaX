@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/get_location.dart';
@@ -97,9 +95,11 @@ class RequestDonationDisputeBloc {
       id: notificationId,
       isRead: false,
       isTimebankNotification:
-          model.donationStatus != DonationStatus.ACKNOWLEDGED &&
-              operatorMode == OperatingMode.CREATOR &&
-              model.donatedToTimebank,
+          model.donatedToTimebank && operatorMode == OperatingMode.USER,
+      // isTimebankNotification:
+      //     model.donationStatus != DonationStatus.ACKNOWLEDGED &&
+      //         operatorMode == OperatingMode.CREATOR &&
+      //         model.donatedToTimebank,
       senderUserId: requestMode == RequestMode.TIMEBANK_REQUEST
           ? model.timebankId
           : model.donatedTo,

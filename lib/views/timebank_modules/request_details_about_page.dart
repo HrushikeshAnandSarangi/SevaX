@@ -196,6 +196,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   hostNameComponent,
                   widget.requestItem.requestType == RequestType.TIME
                       ? Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             membersEngagedComponent,
                             SizedBox(height: 10),
@@ -516,13 +518,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ],
             ),
             onPressed: () {
-              if(!isApplied){
+              if (!isApplied) {
                 if (SevaCore.of(context).loggedInUser.calendarId == null) {
                   _settingModalBottomSheet(context);
                 } else {
                   applyAction();
                 }
-              }else{
+              } else {
                 applyAction();
               }
             },
@@ -738,10 +740,38 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get requestDescriptionComponent {
-    return Text(
-      widget.requestItem.description,
-      style: TextStyle(fontSize: 16),
-    );
+    if (widget.requestItem.requestType == RequestType.GOODS) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.requestItem.description,
+            style: TextStyle(fontSize: 16),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 20),
+            child: Text(
+              'Donation Address',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            child: Text(
+              widget.requestItem.goodsDonationDetails.address ?? '',
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Text(
+        widget.requestItem.description,
+        style: TextStyle(fontSize: 16),
+      );
+    }
   }
 
   Widget get engagedMembersPicturesScroll {
