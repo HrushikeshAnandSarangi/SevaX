@@ -31,8 +31,7 @@ class InvoiceScreen extends StatelessWidget {
                       (_) => log('file downloaded'),
                     )
                     .catchError((e) => log(e));
-              }
-//              else {
+//              } else {
 //                final text = 'this is the text file';
 //
 //                // prepare
@@ -52,7 +51,7 @@ class InvoiceScreen extends StatelessWidget {
 //                // cleanup
 //                html.document.body.children.remove(anchor);
 //                html.Url.revokeObjectUrl(url);
-//              }
+              }
             },
           ),
           Theme.of(context).platform == TargetPlatform.android ||

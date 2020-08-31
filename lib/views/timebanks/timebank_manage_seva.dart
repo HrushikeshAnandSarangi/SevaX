@@ -298,7 +298,10 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
   }
 
   Widget viewInvoice({BuildContext context}) {
-
+    if(Theme.of(context).platform == TargetPlatform.android ||
+        Theme.of(context).platform == TargetPlatform.iOS){
+        return Container();
+    }
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
