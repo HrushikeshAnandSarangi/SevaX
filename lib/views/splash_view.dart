@@ -312,12 +312,12 @@ class _SplashViewState extends State<SplashView> {
     }
 
     if (!(AppConfig.prefs.getBool(AppConfig.skip_skill) ?? false) &&
-        loggedInUser.skills == null) {
+        (loggedInUser.skills == null || loggedInUser.skills.length == 0)) {
       await _navigateToSkillsView(loggedInUser);
     }
 
     if (!(AppConfig.prefs.getBool(AppConfig.skip_interest) ?? false) &&
-        loggedInUser.interests == null) {
+        (loggedInUser.interests == null || loggedInUser.interests.length == 0)) {
       await _navigateToInterestsView(loggedInUser);
     }
 
