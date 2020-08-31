@@ -6,39 +6,24 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/change_ownership_model.dart';
 import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/models/donation_model.dart';
-import 'package:sevaexchange/models/join_req_model.dart';
-import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
-import 'package:sevaexchange/new_baseline/models/soft_delete_request.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
-import 'package:sevaexchange/repositories/request_repository.dart';
-import 'package:sevaexchange/repositories/user_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/reducer.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/change_ownership_widget.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
-import 'package:sevaexchange/ui/screens/notifications/widgets/notification_shimmer.dart';
-import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_widget.dart';
-import 'package:sevaexchange/ui/screens/notifications/widgets/request_approve_widget.dart';
-import 'package:sevaexchange/ui/screens/notifications/widgets/request_complete_widget.dart';
-import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_page.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
-import 'package:sevaexchange/views/timebanks/join_request_view.dart';
-import 'package:sevaexchange/views/timebanks/widgets/group_join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class PersonalNotifications extends StatefulWidget {
@@ -88,72 +73,135 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
             }
 
             switch (notification.type) {
-              case NotificationType.RecurringOfferUpdated:
-                ReccuringOfferUpdated eventData =
-                    ReccuringOfferUpdated.fromMap(notification.data);
-                return NotificationCard(
-                  timestamp: notification.timestamp,
-                  title: "Offer Updated",
-                  subTitle:
-                      "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} "
-                          .replaceFirst('***eventName', eventData.eventName)
-                          .replaceFirst(
-                              '***eventDate',
-                              DateTime.fromMillisecondsSinceEpoch(
-                                eventData.eventDate,
-                              ).toString()),
-                  entityName: "Request Updated",
-                  photoUrl: eventData.photoUrl,
+              case NotificationType.TYPE_DELETION_REQUEST_OUTPUT:
+                return PersonalNotificationReducerForRequests
+                    .getWidgetNotificaitonForDeletionrequest(
+                  bloc: _bloc,
+                  context: context,
+                  email: user.email,
+                  notification: notification,
+                );
+
+              case NotificationType.TransactionCredit:
+                return PersonalNotificationReducerForRequests
+                    .getWidgetNotificationForTransactionCredit(
+                  notification: notification,
+                );
+
+              case NotificationType.TransactionDebit:
+                return PersonalNotificationReducerForRequests
+                    .getWidgetNotificationForTransactionDebit(
+                  notification: notification,
+                );
+              case NotificationType.AcceptedOffer:
+                return PersonalNotificationReducerForRequests
+                    .getWidgetForAcceptedOfferNotification(
+                  notification: notification,
+                );
+
+              case NotificationType.ACKNOWLEDGE_DONOR_DONATION:
+                return PersonalNotificationsRedcerForDonations
+                    .getWidgetNotificationForAcknowlegeDonorDonation(
+                  notification: notification,
+                  context: context,
+                  user: user,
+                );
+              case NotificationType.GroupJoinInvite:
+                return PersonalNotificationReducerForRequests
+                    .getWidgetNotificationForGroupJoinInvite(
+                  context: context,
+                  notification: notification,
+                  user: user,
+                );
+              case NotificationType.JoinRequest:
+                return PersonalNotificationReducerForRequests
+                    .getNotificationForJoinRequest(
+                  notification: notification,
+                );
+                break;
+
+              case NotificationType.RequestCompleted:
+                return PersonalNotificationReducerForRequests
+                    .getWidgetForRequestCompleted(
+                  notification: notification,
+                );
+
+              case NotificationType.RequestCompletedApproved:
+                return PersonalNotificationReducerForRequests
+                    .getWidgetForRequestCompletedApproved(
+                  notification: notification,
+                  context: context,
+                  user: user,
+                );
+              case NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY:
+              case NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY:
+                return PersonalNotificationsRedcerForDonations
+                    .getWidgetForSuccessfullDonation(
                   onDismissed: onDismissed,
+                  context: context,
+                  timestampVal: notification.timestamp,
+                );
+
+              case NotificationType.CASH_DONATION_MODIFIED_BY_DONOR:
+              case NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR:
+                return PersonalNotificationsRedcerForDonations
+                    .getWidgetForDonationsModifiedByDonor(
+                  context: context,
+                  onDismissed: onDismissed,
+                  notificationsModel: notification,
+                  timestampVal: notification.timestamp,
+                );
+
+              case NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR:
+              case NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR:
+                return PersonalNotificationsRedcerForDonations
+                    .getWidgetForDonationsModifiedByCreator(
+                  context: context,
+                  onDismissed: onDismissed,
+                  notificationsModel: notification,
+                  timestampVal: notification.timestamp,
+                );
+
+              case NotificationType.RequestInvite:
+                return PersonalNotificationReducerForRequests
+                    .getInvitationForRequest(
+                  notification: notification,
+                  user: user,
+                  context: context,
+                );
+
+              case NotificationType.RecurringOfferUpdated:
+                PersonalNotificationReducerForRequests
+                    .getNotificationForRecurringOffer(
+                  bloc: _bloc,
+                  context: context,
+                  notification: notification,
+                  user: user,
                 );
                 break;
               case NotificationType.RecurringRequestUpdated:
-                ReccuringRequestUpdated eventData =
-                    ReccuringRequestUpdated.fromMap(notification.data);
-                return NotificationCard(
-                  timestamp: notification.timestamp,
-                  title: S.of(context).request_updated,
-                  subTitle:
-                      "${S.of(context).notifications_signed_up_for} ***eventName ${S.of(context).on} ***eventDate. ${S.of(context).notifications_event_modification} "
-                          .replaceFirst('***eventName', eventData.eventName)
-                          .replaceFirst(
-                            '***eventDate',
-                            DateTime.fromMillisecondsSinceEpoch(
-                              eventData.eventDate,
-                            ).toString(),
-                          ),
-                  entityName: S.of(context).request_updated,
-                  photoUrl: eventData.photoUrl,
-                  onDismissed: onDismissed,
+                return PersonalNotificationReducerForRequests
+                    .getNotificationForRecurringRequestUpdated(
+                  bloc: _bloc,
+                  context: context,
+                  notification: notification,
+                  user: user,
                 );
                 break;
               case NotificationType.RequestAccept:
-                RequestModel model = RequestModel.fromMap(notification.data);
+                return PersonalNotificationReducerForRequests
+                    .getNotificationForRequestAccept(
+                        notification: notification);
 
-                return FutureBuilder<RequestModel>(
-                  future: RequestRepository.getRequestFutureById(model.id),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Container();
-                    }
-
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return LoadingIndicator();
-                    }
-                    RequestModel model = snapshot.data;
-                    return RequestAcceptedWidget(
-                      model: model,
-                      userId: notification.senderUserId,
-                      notificationId: notification.id,
-                    );
-                  },
-                );
+              case NotificationType.CASH_DONATION_ACKNOWLEDGED_BY_DONOR:
+              case NotificationType.GOODS_DONATION_ACKNOWLEDGED_BY_DONOR:
+                //NOT SURE WHEATHER TO ADD THIS OR NOT
+                return Container();
                 break;
 
               case NotificationType.TypeChangeOwnership:
                 ChangeOwnershipModel ownershipModel =
                     ChangeOwnershipModel.fromMap(notification.data);
-
                 return ChangeOwnershipWidget(
                   timestamp: notification.timestamp,
                   notificationId: notification.id,
@@ -266,95 +314,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
                 break;
 
-              case NotificationType.JoinRequest:
-                JoinRequestNotificationModel model =
-                    JoinRequestNotificationModel.fromMap(notification.data);
-                return FutureBuilder<UserModel>(
-                  future:
-                      UserRepository.fetchUserById(notification.senderUserId),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Container();
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return NotificationShimmer();
-                    }
-                    UserModel user = snapshot.data;
-                    return user != null && user.fullname != null
-                        ? NotificationCard(
-                            timestamp: notification.timestamp,
-                            entityName: user.fullname,
-                            title: S.of(context).notifications_join_request,
-                            isDissmissible: true,
-                            onDismissed: () {
-                              NotificationsRepository.readUserNotification(
-                                notification.id,
-                                user.email,
-                              );
-                            },
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => JoinRequestView(
-                                    timebankId: model.timebankId,
-                                  ),
-                                ),
-                              );
-                            },
-                            photoUrl: user.photoURL,
-                            subTitle:
-                                '${user.fullname.toLowerCase()} ${S.of(context).notifications_requested_join} ${model.timebankTitle}, ${S.of(context).notifications_tap_to_view} ',
-                          )
-                        : Container();
-                  },
-                );
-                break;
-
-              case NotificationType.RequestCompleted:
-                RequestModel model = RequestModel.fromMap(notification.data);
-                return FutureBuilder<RequestModel>(
-                  future: RequestRepository.getRequestFutureById(model.id),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Container();
-                    }
-
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return LoadingIndicator();
-                    }
-                    RequestModel model = snapshot.data;
-                    return RequestCompleteWidget(
-                      model: model,
-                      userId: notification.senderUserId,
-                      notificationId: notification.id,
-                    );
-                  },
-                );
-                break;
-              case NotificationType.RequestCompletedApproved:
-                RequestModel model = RequestModel.fromMap(notification.data);
-                TransactionModel transactionModel =
-                    model.transactions.firstWhere(
-                  (transaction) => transaction.to == user.sevaUserID,
-                );
-                return NotificationCard(
-                  timestamp: notification.timestamp,
-                  entityName: model.fullName,
-                  isDissmissible: true,
-                  onDismissed: () {
-                    NotificationsRepository.readUserNotification(
-                      notification.id,
-                      user.email,
-                    );
-                  },
-                  onPressed: null,
-                  photoUrl: model.photoUrl,
-                  subTitle:
-                      '${model.fullName} ${S.of(context).notifications_approved_for}  ${transactionModel.credits} ${S.of(context).hour(2)} ',
-                  title: model.title,
-                );
-                break;
               case NotificationType.RequestCompletedRejected:
                 RequestModel model = RequestModel.fromMap(notification.data);
                 return NotificationCard(
@@ -375,187 +334,16 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 );
                 break;
 
-              case NotificationType.TransactionCredit:
-                TransactionModel model =
-                    TransactionModel.fromMap(notification.data);
-
-                return FutureBuilder<UserModel>(
-                  future:
-                      UserRepository.fetchUserById(notification.senderUserId),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) return Container();
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return LoadingIndicator();
-                    }
-                    UserModel user = snapshot.data;
-
-                    return NotificationCard(
-                      timestamp: notification.timestamp,
-                      entityName: user.fullname,
-                      isDissmissible: true,
-                      onDismissed: () {
-                        NotificationsRepository.readUserNotification(
-                          notification.id,
-                          user.email,
-                        );
-                      },
-                      onPressed: null,
-                      photoUrl: user.photoURL,
-                      title: S.of(context).notifications_credited,
-                      subTitle:
-                          ' ${S.of(context).congrats}! ${model.credits} ${S.of(context).notifications_credited_to}. ',
-                    );
-                  },
-                );
-                break;
-              case NotificationType.TransactionDebit:
-                TransactionModel model =
-                    TransactionModel.fromMap(notification.data);
-
-                return FutureBuilder<UserModel>(
-                  future:
-                      UserRepository.fetchUserById(notification.senderUserId),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) return Container();
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return LoadingIndicator();
-                    }
-                    UserModel user = snapshot.data;
-
-                    return NotificationCard(
-                      timestamp: notification.timestamp,
-                      entityName: user.fullname,
-                      isDissmissible: true,
-                      onDismissed: () {
-                        NotificationsRepository.readUserNotification(
-                          notification.id,
-                          user.email,
-                        );
-                      },
-                      onPressed: null,
-                      photoUrl: user.photoURL,
-                      title: S.of(context).notifications_debited,
-                      subTitle:
-                          "${model.credits} ${S.of(context).notifications_debited_to} ",
-                    );
-                  },
-                );
-                break;
               case NotificationType.OfferAccept:
                 return Container();
 
-                break;
               case NotificationType.OfferReject:
                 return Container(width: 50, height: 50, color: Colors.red);
-                break;
-
-              case NotificationType.AcceptedOffer:
-                OfferAcceptedNotificationModel acceptedOffer =
-                    OfferAcceptedNotificationModel.fromMap(notification.data);
-                return FutureBuilder<UserModel>(
-                  future:
-                      UserRepository.fetchUserById(acceptedOffer.acceptedBy),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Container();
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return NotificationShimmer();
-                    }
-                    UserModel user = snapshot.data;
-
-                    return NotificationCard(
-                      timestamp: notification.timestamp,
-                      entityName: user.fullname,
-                      isDissmissible: true,
-                      onDismissed: () {
-                        NotificationsRepository.readUserNotification(
-                          notification.id,
-                          user.email,
-                        );
-                      },
-                      onPressed: null,
-                      photoUrl: user.photoURL,
-                      title: S.of(context).notifications_offer_accepted,
-                      subTitle:
-                          '${user.fullname.toLowerCase()} ${S.of(context).notifications_shown_interest} ',
-                    );
-                  },
-                );
-                break;
-
-              case NotificationType.ACKNOWLEDGE_DONOR_DONATION:
-                print("notification data ${notification.data}");
-                DonationModel donationModel =
-                    DonationModel.fromMap(notification.data);
-                return NotificationCard(
-                  timestamp: notification.timestamp,
-                  entityName: donationModel.requestTitle.toLowerCase(),
-                  isDissmissible: true,
-                  onDismissed: () {
-                    NotificationsRepository.readUserNotification(
-                      notification.id,
-                      user.email,
-                    );
-                  },
-                  onPressed: () async {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => RequestDonationDisputePage(
-                          model: donationModel,
-                        ),
-                      ),
-                    );
-                  },
-                  photoUrl: donationModel.donorDetails.photoUrl,
-                  subTitle: donationModel.donorDetails.name +
-                      " " +
-                      S.of(context).donated +
-                      " " +
-                      donationModel.donationType.toString() +
-                      S.of(context).tap_to_view_details +
-                      "  ",
-                  title: S.of(context).donation_acknowledge,
-                );
-
-                break;
-              case NotificationType.GroupJoinInvite:
-                print("notification data ${notification.data}");
-                GroupInviteUserModel groupInviteUserModel =
-                    GroupInviteUserModel.fromMap(notification.data);
-
-                return NotificationCard(
-                  timestamp: notification.timestamp,
-                  entityName: groupInviteUserModel.timebankName.toLowerCase(),
-                  isDissmissible: true,
-                  onDismissed: () {
-                    NotificationsRepository.readUserNotification(
-                        notification.id, user.email);
-                  },
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return GroupJoinRejectDialogView(
-                          groupInviteUserModel: groupInviteUserModel,
-                          timeBankId: groupInviteUserModel.groupId,
-                          notificationId: notification.id,
-                          userModel: user,
-                        );
-                      },
-                    );
-                  },
-                  photoUrl: groupInviteUserModel.timebankImage,
-                  subTitle:
-                      '${groupInviteUserModel.adminName.toLowerCase()} ${S.of(context).notifications_invited_to_join} ${groupInviteUserModel.timebankName}, ${S.of(context).notifications_tap_to_view} ',
-                  title: "${S.of(context).notifications_group_join_invite}",
-                );
                 break;
 
               case NotificationType.TYPE_CREDIT_FROM_OFFER:
                 OneToManyNotificationDataModel data =
                     OneToManyNotificationDataModel.fromJson(notification.data);
-
                 return NotificationCard(
                   timestamp: notification.timestamp,
                   photoUrl: '',
@@ -679,36 +467,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 );
                 break;
 
-              case NotificationType.TYPE_DELETION_REQUEST_OUTPUT:
-                var requestData =
-                    SoftDeleteRequestDataHolder.fromMap(notification.data);
-
-                return NotificationCard(
-                  timestamp: notification.timestamp,
-                  entityName: requestData.entityTitle ?? "Deletion Request",
-                  photoUrl: null,
-                  title: requestData.requestAccepted
-                      ? "${requestData.entityTitle} ${S.of(context).notifications_was_deleted}"
-                      : "${requestData.entityTitle} ${S.of(context).notifications_could_not_delete}",
-                  subTitle: requestData.requestAccepted
-                      ? S
-                              .of(context)
-                              .notifications_successfully_deleted
-                              .replaceAll(
-                                '***',
-                                requestData.entityTitle,
-                              ) +
-                          " "
-                      : "${requestData.entityTitle} ${S.of(context).notifications_could_not_deleted}  ",
-                  onPressed: () => !requestData.requestAccepted
-                      ? showDialogForIncompleteTransactions(
-                          context,
-                          requestData,
-                        )
-                      : null,
-                  onDismissed: onDismissed,
-                );
-
               case NotificationType.APPROVED_MEMBER_WITHDRAWING_REQUEST:
                 var body = WithdrawnRequestBody.fromMap(notification.data);
                 return NotificationCard(
@@ -752,49 +510,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   subTitle: "${S.of(context).notifications_debited_msg} ",
                   onDismissed: onDismissed,
                 );
-
-              case NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY:
-              case NotificationType.GOODS_DONATION_COMPLETED_SUCCESSFULLY:
-                return PersonalNotificationsRedcerForDonations
-                    .getWidgetForSuccessfullDonation(
-                  onDismissed: onDismissed,
-                  context: context,
-                  timestampVal: notification.timestamp,
-                );
-
-              case NotificationType.CASH_DONATION_MODIFIED_BY_DONOR:
-              case NotificationType.GOODS_DONATION_MODIFIED_BY_DONOR:
-                return PersonalNotificationsRedcerForDonations
-                    .getWidgetForDonationsModifiedByDonor(
-                  context: context,
-                  onDismissed: onDismissed,
-                  notificationsModel: notification,
-                  timestampVal: notification.timestamp,
-                );
-
-              case NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR:
-              case NotificationType.GOODS_DONATION_MODIFIED_BY_CREATOR:
-                return PersonalNotificationsRedcerForDonations
-                    .getWidgetForDonationsModifiedByCreator(
-                  context: context,
-                  onDismissed: onDismissed,
-                  notificationsModel: notification,
-                  timestampVal: notification.timestamp,
-                );
-
-              case NotificationType.RequestInvite:
-                return PersonalNotificationReducerForRequests
-                    .getInvitationForRequest(
-                  notification: notification,
-                  user: user,
-                  context: context,
-                );
-
-              case NotificationType.CASH_DONATION_ACKNOWLEDGED_BY_DONOR:
-              case NotificationType.GOODS_DONATION_ACKNOWLEDGED_BY_DONOR:
-                //NOT SURE WHEATHER TO ADD THIS OR NOT
-                return Container();
-                break;
 
               default:
                 log("Unhandled user notification type ${notification.type} ${notification.id}");
@@ -924,51 +639,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           communityId: loggedInUser.currentCommunity,
           sender: sender);
     }
-  }
-
-  void showDialogForIncompleteTransactions(
-      BuildContext context, SoftDeleteRequestDataHolder deletionRequest) {
-    var reason = S
-            .of(context)
-            .notifications_incomplete_transaction
-            .replaceAll('***', deletionRequest.entityTitle) +
-        '\n';
-    if (deletionRequest.noOfOpenOffers > 0) {
-      reason +=
-          '${deletionRequest.noOfOpenOffers} ${S.of(context).one_to_many_offers}\n';
-    }
-    if (deletionRequest.noOfOpenProjects > 0) {
-      reason +=
-          '${deletionRequest.noOfOpenProjects} ${S.of(context).projects}\n';
-    }
-    if (deletionRequest.noOfOpenRequests > 0) {
-      reason +=
-          '${deletionRequest.noOfOpenRequests} ${S.of(context).open_requests}\n';
-    }
-
-    showDialog(
-      context: context,
-      builder: (BuildContext viewContext) {
-        return AlertDialog(
-          title: Text(deletionRequest.entityTitle.trim()),
-          content: Text(reason),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                S.of(context).dismiss,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.red,
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(viewContext).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override

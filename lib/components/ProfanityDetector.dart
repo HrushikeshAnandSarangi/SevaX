@@ -1,6 +1,66 @@
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/views/onboarding/interests_view.dart';
+
 ///Create an instance with the default constructor to use the default list of English profanity.
 /// Use the other constructors to customize the profanity list.
 class ProfanityDetector {
+  static Widget getProanityAdvisory({
+    String suggestion,
+    SuggestionMode suggestionMode,
+    BuildContext context,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+          height: 80,
+          alignment: Alignment.centerLeft,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: "Cannot add ",
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "\"${suggestion}\"",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.red,
+                              decoration: TextDecoration.underline,
+                              decorationColor: Colors.red,
+                              decorationStyle: TextDecorationStyle.wavy,
+                              decorationThickness: 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      S.of(context).profanity_text_alert,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          )),
+    );
+  }
+
   List<String> defaultWordsToFilterOutList = [
     '2g1c',
     '2 girls 1 cup',

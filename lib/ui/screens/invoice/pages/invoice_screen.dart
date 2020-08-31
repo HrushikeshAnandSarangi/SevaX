@@ -1,5 +1,5 @@
-import 'dart:convert';
 import 'dart:developer';
+
 //import 'dart:html'  as html;
 import 'dart:io' as Io;
 import 'package:http/http.dart';
@@ -27,7 +27,9 @@ class InvoiceScreen extends StatelessWidget {
                   Theme.of(context).platform == TargetPlatform.iOS) {
                 LocalFileDownloader()
                     .download('report', path)
-                    .then((_) => log('file downloaded'), )
+                    .then(
+                      (_) => log('file downloaded'),
+                    )
                     .catchError((e) => log(e));
               }
 //              else {
@@ -54,14 +56,19 @@ class InvoiceScreen extends StatelessWidget {
             },
           ),
           Theme.of(context).platform == TargetPlatform.android ||
-          Theme.of(context).platform == TargetPlatform.iOS ? IconButton(
-            icon: Icon(
-              Icons.share,
-            ),
-            onPressed: () async {
-              ShareExtend.share(path, "file");
-            },
-          ) : Container(width: 0,height: 0,),
+                  Theme.of(context).platform == TargetPlatform.iOS
+              ? IconButton(
+                  icon: Icon(
+                    Icons.share,
+                  ),
+                  onPressed: () async {
+                    ShareExtend.share(path, "file");
+                  },
+                )
+              : Container(
+                  width: 0,
+                  height: 0,
+                ),
         ],
       ),
       path: path,
