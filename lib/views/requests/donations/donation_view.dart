@@ -14,8 +14,9 @@ import 'package:url_launcher/url_launcher.dart';
 class DonationView extends StatefulWidget {
   final RequestModel requestModel;
   final String timabankName;
+  final String notificationId;
 
-  DonationView({this.requestModel, this.timabankName});
+  DonationView({this.requestModel, this.timabankName, this.notificationId});
 
   @override
   _DonationViewState createState() => _DonationViewState();
@@ -40,8 +41,12 @@ class _DonationViewState extends State<DonationView> {
     goodsDetails: GoodsDetails(),
   );
   UserModel sevaUser = UserModel();
+  String none = '';
   @override
   void initState() {
+    if (none == '') {
+      print(true);
+    }
     pageController = PageController(
         initialPage:
             widget.requestModel.requestType == RequestType.GOODS ? 0 : 1);
@@ -246,6 +251,7 @@ class _DonationViewState extends State<DonationView> {
                   showProgress();
                   donationBloc
                       .donateAmount(
+                          notificationId: widget.notificationId,
                           donationModel: donationsModel,
                           requestModel: widget.requestModel,
                           donor: sevaUser)
@@ -380,6 +386,7 @@ class _DonationViewState extends State<DonationView> {
 
                     donationBloc
                         .donateGoods(
+                            notificationId: widget.notificationId,
                             donationModel: donationsModel,
                             requestModel: widget.requestModel,
                             donor: sevaUser)

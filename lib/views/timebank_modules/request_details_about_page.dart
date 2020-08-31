@@ -105,11 +105,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         break;
 
       case RequestMode.TIMEBANK_REQUEST:
-        if (widget.timebankModel.admins.contains(loggedInUser))
+        if (widget.requestItem.sevaUserId == loggedInUser) {
+          return UserMode.REQUEST_CREATOR;
+        } else if (widget.timebankModel.admins.contains(loggedInUser)) {
           return UserMode.TIMEBANK_ADMIN;
-        else
+        } else {
           return UserMode.NOT_YET_SIGNED_UP;
-
+        }
         break;
 
       default:
@@ -421,6 +423,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         builder: (context) => DonationView(
           timabankName: widget.timebankModel.name,
           requestModel: widget.requestItem,
+          notificationId: '',
         ),
       ),
     );
@@ -516,13 +519,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ],
             ),
             onPressed: () {
-              if(!isApplied){
+              if (!isApplied) {
                 if (SevaCore.of(context).loggedInUser.calendarId == null) {
                   _settingModalBottomSheet(context);
                 } else {
                   applyAction();
                 }
-              }else{
+              } else {
                 applyAction();
               }
             },

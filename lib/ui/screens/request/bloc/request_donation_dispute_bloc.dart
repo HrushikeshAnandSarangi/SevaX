@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/get_location.dart';
@@ -43,35 +41,39 @@ class RequestDonationDisputeBloc {
     RequestMode requestMode,
   }) async {
     var status = pledgedAmount == double.parse(_cashAmount.value);
-
-    return await _donationsRepository
-        .acknowledgeDonation(
-          operatoreMode: operationMode,
-          requestType: donationModel.donationType,
-          donationStatus:
-              status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED,
-          associatedId: operationMode == OperatingMode.CREATOR &&
-                  donationModel.donatedToTimebank
-              ? donationModel.timebankId
-              : donationModel.donorDetails.email,
-          donationId: donationId,
-          isTimebankNotification: operationMode == OperatingMode.CREATOR &&
-              donationModel.donatedToTimebank,
-          notificationId: notificationId,
-          acknowledgementNotification: getAcknowlegementNotification(
-            updatedAmount: double.parse(_cashAmount.value),
-            model: donationModel,
-            operatorMode: operationMode,
-            requestMode: requestMode,
-            notificationType: status
-                ? NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY
-                : operationMode == OperatingMode.CREATOR
-                    ? NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR
-                    : NotificationType.CASH_DONATION_MODIFIED_BY_DONOR,
-          ),
-        )
-        .then((value) => true)
-        .catchError((onError) => false);
+    if (int.parse(_cashAmount.value) < donationModel.minimumAmount) {
+      _cashAmount.addError('min');
+      return false;
+    } else {
+      return await _donationsRepository
+          .acknowledgeDonation(
+            operatoreMode: operationMode,
+            requestType: donationModel.donationType,
+            donationStatus:
+                status ? DonationStatus.ACKNOWLEDGED : DonationStatus.MODIFIED,
+            associatedId: operationMode == OperatingMode.CREATOR &&
+                    donationModel.donatedToTimebank
+                ? donationModel.timebankId
+                : donationModel.donorDetails.email,
+            donationId: donationId,
+            isTimebankNotification: operationMode == OperatingMode.CREATOR &&
+                donationModel.donatedToTimebank,
+            notificationId: notificationId,
+            acknowledgementNotification: getAcknowlegementNotification(
+              updatedAmount: double.parse(_cashAmount.value),
+              model: donationModel,
+              operatorMode: operationMode,
+              requestMode: requestMode,
+              notificationType: status
+                  ? NotificationType.CASH_DONATION_COMPLETED_SUCCESSFULLY
+                  : operationMode == OperatingMode.CREATOR
+                      ? NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR
+                      : NotificationType.CASH_DONATION_MODIFIED_BY_DONOR,
+            ),
+          )
+          .then((value) => true)
+          .catchError((onError) => false);
+    }
   }
 
   NotificationsModel getAcknowlegementNotification({

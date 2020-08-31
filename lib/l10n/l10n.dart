@@ -4016,7 +4016,7 @@ class S {
       );
 
   String get image_url => Intl.message(
-        'Image Url',
+        'Add Image Url ex: https://www.sevaexchange.com/sevalogo.png',
         name: 'image_url',
       );
 
@@ -4735,6 +4735,36 @@ class S {
   String get goods_modified_by_donor_desc => Intl.message(
         'The goods which you acknowledged for this donation is different from the goods confirmed by the Donor. Tap to change the confirmation goods.',
         name: 'goods_modified_by_donor_desc',
+      );
+
+  String get imageurl_alert => Intl.message(
+        'Web Image url alert',
+        name: 'imageurl_alert',
+      );
+
+  String get image_url_alert_desc => Intl.message(
+        'Please add a image url to continue',
+        name: 'image_url_alert_desc',
+      );
+
+  String get enter_valid_link => Intl.message(
+        'Enter valid payment link',
+        name: 'enter_valid_link',
+      );
+
+  String get target_amount_less_than_min_amount => Intl.message(
+        'Minimum amount cannot be greater than target amount',
+        name: 'target_amount_less_than_min_amount',
+      );
+
+  String get failed_load_image_title => Intl.message(
+        'Failed to load',
+        name: 'failed_load_image_title',
+      );
+
+  String get image_url_hint => Intl.message(
+        'Add Image Url ex: https://www.sevaexchange.com/sevalogo.png',
+        name: 'image_url_hint',
       );
 }
 
