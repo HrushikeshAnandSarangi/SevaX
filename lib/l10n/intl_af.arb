@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2020-08-31T10:03:47+00:00",
+    "@@last_modified": "2020-08-31T11:40:49+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -942,5 +942,9 @@
     "amount_modified_by_donor_desc": "Die bedrag wat u vir hierdie skenking erken het, verskil van die bedrag wat deur die skenker bevestig is. Tik om die bevestigingsbedrag te verander.",
     "goods_modified_by_donor_desc": "Die goedere wat u vir hierdie donasie erken het, verskil van die goedere wat deur die Donateur bevestig is. Tik om die bevestigingsgoedere te verander.",
     "imageurl_alert": "Webbeeld url-waarskuwing",
-    "image_url_alert_desc": "Voeg 'n prent url toe om voort te gaan"
+    "image_url_alert_desc": "Voeg 'n prent url toe om voort te gaan",
+    "enter_valid_link": "Voer 'n geldige betalingsskakel in",
+    "target_amount_less_than_min_amount": "Minimum bedrag kan nie groter wees as die teikenbedrag nie",
+    "failed_load_image_title": "Kon nie laai nie",
+    "image_url_hint": "Voeg Image URL by: https:\/\/www.sevaexchange.com\/sevalogo.png"
 }

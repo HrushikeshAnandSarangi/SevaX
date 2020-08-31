@@ -1,6 +1,6 @@
 {
     "@@locale": "es",
-    "@@last_modified": "2020-08-31T09:38:07+00:00",
+    "@@last_modified": "2020-08-31T11:40:49+00:00",
     "check_met": "Verificando, se nos conhecemos antes",
     "we_met": "Nós nos encontramos antes",
     "hang_on": "Aguarde",
@@ -110,7 +110,7 @@
     "enter_code_to_verify": "Por favor, introduzca el PIN para verificar",
     "creating_join_request": "Crear solicitud de unión",
     "feeds": "Publicações",
-    "projects": "projetos\n",
+    "projects": "Projetos",
     "offers": "Ofertas",
     "requests": "Solicitações de",
     "about": "Sobre",
@@ -942,5 +942,9 @@
     "amount_modified_by_donor_desc": "La cantidad que reconoció por esta donación es diferente de la cantidad confirmada por el Donante. Toque para cambiar la cantidad de confirmación.",
     "goods_modified_by_donor_desc": "Los bienes que reconoció para esta donación son diferentes de los bienes confirmados por el Donante. Toque para cambiar los productos de confirmación.",
     "imageurl_alert": "Alerta de URL de imagen web",
-    "image_url_alert_desc": "Agregue una URL de imagen para continuar"
+    "image_url_alert_desc": "Agregue una URL de imagen para continuar",
+    "enter_valid_link": "Ingrese un enlace de pago válido",
+    "target_amount_less_than_min_amount": "La cantidad mínima no puede ser mayor que la cantidad objetivo",
+    "failed_load_image_title": "Falló al cargar",
+    "image_url_hint": "Agregar URL de imagen, por ejemplo: https:\/\/www.sevaexchange.com\/sevalogo.png"
 }

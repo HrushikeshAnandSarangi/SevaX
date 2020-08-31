@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/internationalization/applanguage.dart';
@@ -25,7 +23,6 @@ class LanguageListData {
   }
 
   LanguageModel getLanguageSupported(String languagecode) {
-    log('-->' + languagecode);
     var found = -1;
     for (var i = 0; i < this.languagelist.length; i++) {
       if (this.languagelist[i].code == languagecode) {
@@ -85,47 +82,48 @@ class LanguageListState extends State<LanguageList> {
   Widget build(BuildContext context) {
     var appLanguage = Provider.of<AppLanguage>(context);
     return StreamBuilder<Object>(
-        stream: FirestoreManager.getUserForIdStream(
-            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoadingIndicator();
-          }
-          UserModel userModel = snapshot.data;
-          isSelected = userModel.language;
-          return ListView.builder(
-            itemCount: languagelist.length,
+      stream: FirestoreManager.getUserForIdStream(
+          sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return LoadingIndicator();
+        }
+        UserModel userModel = snapshot.data;
+        isSelected = userModel.language;
+        return ListView.builder(
+          itemCount: languagelist.length,
 //            controller: _scrollController,
-            itemBuilder: (context, index) {
-              LanguageModel model = languagelist.elementAt(index);
-              return Card(
-                child: ListTile(
-                  leading: getIcon(isSelected, model.code),
-                  trailing: Text(
-                    '${model.languageName}',
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  title: Text('${model.languageName}'),
-                  subtitle: Text('${model.code}'),
-                  onTap: () async {
-                    if (userModel.language != model.code) {
-                      print(model.code);
-                      appLanguage.changeLanguage(Locale(model.code));
-                      userModel.language = model.code;
-                      await updateUserLanguage(user: userModel);
-                    }
-                  },
+          itemBuilder: (context, index) {
+            LanguageModel model = languagelist.elementAt(index);
+            return Card(
+              child: ListTile(
+                leading: getIcon(isSelected, model.code),
+                trailing: Text(
+                  '${model.languageName}',
+                  style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500),
                 ),
-              );
-            },
-          );
-        });
+                title: Text('${model.languageName}'),
+                subtitle: Text('${model.code}'),
+                onTap: () async {
+                  if (userModel.language != model.code) {
+                    print(model.code);
+                    appLanguage.changeLanguage(Locale(model.code));
+                    userModel.language = model.code;
+                    await updateUserLanguage(user: userModel);
+                  }
+                },
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   Widget getIcon(String isSelected, String userTimezone) {

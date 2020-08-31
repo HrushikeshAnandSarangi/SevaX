@@ -1,6 +1,6 @@
 {
     "@@locale": "pt",
-    "@@last_modified": "2020-08-31T10:03:46+00:00",
+    "@@last_modified": "2020-08-31T11:40:49+00:00",
     "check_met": "Checando, se já nos conhecemos",
     "we_met": "Já nos conhecemos",
     "hang_on": "Aguarde ",
@@ -942,5 +942,9 @@
     "amount_modified_by_donor_desc": "The amount which you acknowledged for this donation is different from the amount confirmed by the Donor. Tap to change the confirmation amount.",
     "goods_modified_by_donor_desc": "Os bens que você reconheceu para esta doação são diferentes dos bens confirmados pelo doador. Toque para alterar os produtos de confirmação.",
     "imageurl_alert": "Web Image url alert",
-    "image_url_alert_desc": "Please add a image url to continue"
+    "image_url_alert_desc": "Please add a image url to continue",
+    "enter_valid_link": "Insira um link de pagamento válido",
+    "target_amount_less_than_min_amount": "O valor mínimo não pode ser maior do que o valor alvo",
+    "failed_load_image_title": "Falha ao carregar",
+    "image_url_hint": "Adicionar URL de imagem ex: https:\/\/www.sevaexchange.com\/sevalogo.png"
 }

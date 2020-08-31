@@ -572,7 +572,7 @@ class S {
       );
 
   String get projects => Intl.message(
-        'projetos\n',
+        'Projetos',
         name: 'projects',
       );
 
@@ -4769,22 +4769,22 @@ class S {
       );
 
   String get enter_valid_link => Intl.message(
-        'Enter valid payment link',
+        'Ingrese un enlace de pago válido',
         name: 'enter_valid_link',
       );
 
   String get target_amount_less_than_min_amount => Intl.message(
-        'Minimum amount cannot be greater than target amount',
+        'La cantidad mínima no puede ser mayor que la cantidad objetivo',
         name: 'target_amount_less_than_min_amount',
       );
 
   String get failed_load_image_title => Intl.message(
-        'Failed to load',
+        'Falló al cargar',
         name: 'failed_load_image_title',
       );
 
   String get image_url_hint => Intl.message(
-        'Add Image Url ex: https://www.sevaexchange.com/sevalogo.png',
+        'Agregar URL de imagen, por ejemplo: https://www.sevaexchange.com/sevalogo.png',
         name: 'image_url_hint',
       );
 }
@@ -4795,7 +4795,7 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales => [
         Locale.fromSubtags(languageCode: 'es'),
         Locale.fromSubtags(languageCode: 'pt'),
-        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'zh', countryCode: "CN"),
         Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'en'),
         Locale.fromSubtags(languageCode: 'fr'),

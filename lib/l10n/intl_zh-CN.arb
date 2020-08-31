@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-CN",
-    "@@last_modified": "2020-08-31T09:40:54+00:00",
+    "@@last_modified": "2020-08-31T11:40:49+00:00",
     "check_met": "检查我们是否见过",
     "we_met": "我们见过",
     "hang_on": "稍待",
@@ -942,5 +942,9 @@
     "amount_modified_by_donor_desc": "您为该捐赠确认的金额与捐赠方确认的金额不同。点击以更改确认金额。",
     "goods_modified_by_donor_desc": "您为此捐赠确认的商品与捐赠人确认的商品不同。点击更改确认商品。",
     "imageurl_alert": "Web图像URL警报",
-    "image_url_alert_desc": "请添加图片网址以继续"
+    "image_url_alert_desc": "请添加图片网址以继续",
+    "enter_valid_link": "输入有效的付款链接",
+    "target_amount_less_than_min_amount": "最低金额不能大于目标金额",
+    "failed_load_image_title": "加载失败",
+    "image_url_hint": "添加图片网址，例如：https:\/\/www.sevaexchange.com\/sevalogo.png"
 }
