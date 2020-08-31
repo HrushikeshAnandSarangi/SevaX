@@ -37,11 +37,10 @@ class InvoiceScreen extends StatelessWidget {
 //                final bytes = utf8.encode(text);
                 final blob = html.Blob([bytes]);
                 final url = html.Url.createObjectUrlFromBlob(blob);
-                final anchor =
-                html.document.createElement('a') as html.AnchorElement
+                final anchor = html.document.createElement('a') as html.AnchorElement
                   ..href = url
                   ..style.display = 'none'
-                  ..download = 'report.pdf';
+                  ..download = pdfType== 'report' ? 'report.pdf' : 'invoice.pdf';
                 html.document.body.children.add(anchor);
 
                 // download
