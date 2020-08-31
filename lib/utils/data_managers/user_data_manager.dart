@@ -69,7 +69,6 @@ Future<int> getUserDonatedGoodsAndAmount({
                 donationModel.goodsDetails.donatedGoods.values.length;
           }
         }
-        print('donated ${totalGoodsOrAmount.toString()}');
       });
     });
   } on Exception catch (e) {
@@ -105,7 +104,6 @@ Future<int> getTimebankRaisedAmountAndGoods({
                 donationModel.goodsDetails.donatedGoods.length;
           }
         }
-        print('donated ${totalGoodsOrAmount.toString()}');
       });
     });
   } on Exception catch (e) {

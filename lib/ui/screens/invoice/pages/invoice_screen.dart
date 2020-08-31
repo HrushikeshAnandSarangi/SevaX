@@ -1,6 +1,4 @@
 import 'dart:developer';
-import 'dart:html' as html;
-import 'dart:io' as Io;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_full_pdf_viewer/full_pdf_viewer_scaffold.dart';
@@ -34,24 +32,22 @@ class InvoiceScreen extends StatelessWidget {
                 final text = 'this is the text file';
 
                 // prepare
-                final bytes = await Io.File(path).readAsBytes();
-//                final bytes = utf8.encode(text);
-                final blob = html.Blob([bytes]);
-                final url = html.Url.createObjectUrlFromBlob(blob);
-                final anchor = html.document.createElement('a')
-                    as html.AnchorElement
-                  ..href = url
-                  ..style.display = 'none'
-                  ..download =
-                      pdfType == 'report' ? 'report.pdf' : 'invoice.pdf';
-                html.document.body.children.add(anchor);
+//                 final bytes = await Io.File(path).readAsBytes();
+// //                final bytes = utf8.encode(text);
+//                 final blob = html.Blob([bytes]);
+//                 final url = html.Url.createObjectUrlFromBlob(blob);
+//                 final anchor = html.document.createElement('a') as html.AnchorElement
+//                   ..href = url
+//                   ..style.display = 'none'
+//                   ..download = pdfType== 'report' ? 'report.pdf' : 'invoice.pdf';
+//                 html.document.body.children.add(anchor);
 
-                // download
-                anchor.click();
+//                 // download
+//                 anchor.click();
 
-                // cleanup
-                html.document.body.children.remove(anchor);
-                html.Url.revokeObjectUrl(url);
+//                 // cleanup
+//                 html.document.body.children.remove(anchor);
+//                 html.Url.revokeObjectUrl(url);
               }
             },
           ),
