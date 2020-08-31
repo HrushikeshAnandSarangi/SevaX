@@ -87,8 +87,9 @@ class MainApplication extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<AppLanguage>(
-        create: (_) => appLanguage,
-        child: Consumer<AppLanguage>(builder: (context, model, child) {
+      create: (_) => appLanguage,
+      child: Consumer<AppLanguage>(
+        builder: (context, model, child) {
           return AuthProvider(
             auth: Auth(),
             child: MaterialApp(
@@ -116,6 +117,8 @@ class MainApplication extends StatelessWidget {
               home: SplashView(),
             ),
           );
-        }));
+        },
+      ),
+    );
   }
 }
