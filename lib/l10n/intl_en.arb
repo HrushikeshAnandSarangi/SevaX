@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-08-31T12:11:01+00:00",
+    "@@last_modified": "2020-08-31T11:40:48+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -797,7 +797,7 @@
     "cant_exit_group": "You cannot exit from this group",
     "cant_exit_timebank": "cannot exit from this timebank",
     "add_image_url": "Add Image Url",
-    "image_url": "Add Image Url ex: https:\/\/www.sevaexchange.com\/sevalogo.png",
+    "image_url": "Image Url",
     "day": "{count, plural, one {Day} other {Days}}",
     "year": "{count, plural, one {Year} other {Years}}",
     "lifetime": "Lifetime",
