@@ -7,8 +7,8 @@ import 'package:share_extend/share_extend.dart';
 
 class InvoiceScreen extends StatelessWidget {
   final String path;
-
-  const InvoiceScreen({Key key, this.path}) : super(key: key);
+  final String pdfType;
+  const InvoiceScreen({Key key, this.path, this.pdfType}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return PDFViewerScaffold(
@@ -20,22 +20,51 @@ class InvoiceScreen extends StatelessWidget {
             ),
             onPressed: () async {
               //TODO: show appropriate snackbar
-              LocalFileDownloader()
-                  .download('report', path)
-                  .then(
-                    (_) => log('file downloaded'),
-                  )
-                  .catchError((e) => print(e));
+              if (Theme.of(context).platform == TargetPlatform.android ||
+                  Theme.of(context).platform == TargetPlatform.iOS) {
+                LocalFileDownloader()
+                    .download('report', path)
+                    .then(
+                      (_) => log('file downloaded'),
+                    )
+                    .catchError((e) => log(e));
+              } else {
+                final text = 'this is the text file';
+
+                // prepare
+//                 final bytes = await Io.File(path).readAsBytes();
+// //                final bytes = utf8.encode(text);
+//                 final blob = html.Blob([bytes]);
+//                 final url = html.Url.createObjectUrlFromBlob(blob);
+//                 final anchor = html.document.createElement('a') as html.AnchorElement
+//                   ..href = url
+//                   ..style.display = 'none'
+//                   ..download = pdfType== 'report' ? 'report.pdf' : 'invoice.pdf';
+//                 html.document.body.children.add(anchor);
+
+//                 // download
+//                 anchor.click();
+
+//                 // cleanup
+//                 html.document.body.children.remove(anchor);
+//                 html.Url.revokeObjectUrl(url);
+              }
             },
           ),
-          IconButton(
-            icon: Icon(
-              Icons.share,
-            ),
-            onPressed: () async {
-              ShareExtend.share(path, "file");
-            },
-          ),
+          Theme.of(context).platform == TargetPlatform.android ||
+                  Theme.of(context).platform == TargetPlatform.iOS
+              ? IconButton(
+                  icon: Icon(
+                    Icons.share,
+                  ),
+                  onPressed: () async {
+                    ShareExtend.share(path, "file");
+                  },
+                )
+              : Container(
+                  width: 0,
+                  height: 0,
+                ),
         ],
       ),
       path: path,

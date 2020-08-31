@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +18,9 @@ class NearbySettingsWidget extends StatefulWidget {
     if (nearBySettings != null &&
         nearBySettings.radius != null &&
         nearBySettings.isMiles != null) {
-      if (!nearBySettings.isMiles) {
-        var milesEqvivalant = (nearBySettings.radius ~/ 1.6093).toInt();
-        return milesEqvivalant;
+      if (nearBySettings.isMiles) {
+        var kmEq = (nearBySettings.radius * 1.6093).toInt();
+        return kmEq;
       }
 
       return nearBySettings.radius.toInt();

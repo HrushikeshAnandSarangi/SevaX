@@ -835,10 +835,13 @@ Future<void> acceptRequest({
         id: utils.Utils.getUuid(),
         isRead: false,
         senderUserId: senderUserId,
-        communityId: communityId,
-        isTimebankNotification: true);
-
-    print("Creating notificationss model $requestModel");
+        communityId: communityId
+    );
+    if(requestModel.requestMode == RequestMode.TIMEBANK_REQUEST){
+      model.isTimebankNotification = true;
+    } else {
+      model.isTimebankNotification = false;
+    }
 
     if (isWithdrawal)
       await utils.withdrawAcceptRequestNotification(

@@ -146,7 +146,10 @@ class Searches {
       @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
     List<String> timebanksIdArr = List();
-    QuerySnapshot timebankSnap = await Firestore.instance.collection("timebanknew").where('members', arrayContains: loggedInUser.sevaUserID).getDocuments();
+    QuerySnapshot timebankSnap = await Firestore.instance
+        .collection("timebanknew")
+        .where('members', arrayContains: loggedInUser.sevaUserID)
+        .getDocuments();
     timebankSnap.documents.forEach((DocumentSnapshot doc) {
       if (doc.documentID != "73d0de2c-198b-4788-be64-a804700a88a4") {
         timebanksIdArr.add(doc.documentID);

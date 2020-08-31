@@ -45,10 +45,11 @@ class MailContent {
 }
 
 class MailDonationReciept {
-  Future<void> sendReciept(DonationModel donationModel) async {
+  static Future<void> sendReciept(DonationModel donationModel) async {
     try {
       var result = await http.post(
         '${FlavorConfig.values.cloudFunctionBaseURL}/sendReceiptToDonor',
+        headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "donationModel": donationModel.toMap(),
         }),
