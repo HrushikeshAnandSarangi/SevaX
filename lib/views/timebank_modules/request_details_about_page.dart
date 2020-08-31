@@ -132,7 +132,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       ),
       centerTitle: true,
       title: Text(
-        S.of(context).my_requests,
+        S.of(context).request_details,
         style:
             TextStyle(fontFamily: "Europa", fontSize: 20, color: Colors.black),
       ),

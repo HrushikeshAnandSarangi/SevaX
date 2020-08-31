@@ -21,25 +21,25 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(count) => "${Intl.plural(count, one: 'Día', other: 'Dias')}";
 
-  static m1(count) => "${Intl.plural(count, one: '${Intl.plural(count, one: 'Hora', other: 'Horas')}')}";
+  static m1(count) => "${Intl.plural(count, one: 'Hora', other: 'Horas')}";
 
-  static m2(count) => "${Intl.plural(count, one: '${Intl.plural(count, one: 'Miembro seleccionado', other: 'Miembros seleccionados')}')}";
+  static m2(count) => "${Intl.plural(count, one: 'Miembro seleccionado', other: 'Miembros seleccionados')}";
 
-  static m3(count) => "${Intl.plural(count, one: '${Intl.plural(count, one: 'Otro', other: 'Otros')}')}";
+  static m3(count) => "${Intl.plural(count, one: 'Otro', other: 'Otros')}";
 
-  static m4(count) => "${Intl.plural(count, one: '${Intl.plural(count, one: 'Proyecto personal', other: 'Proyectos personales')}')}";
+  static m4(count) => "${Intl.plural(count, one: 'Proyecto personal', other: 'Proyectos personales')}";
 
-  static m5(count) => "${Intl.plural(count, one: '${Intl.plural(count, one: 'Solicitud personal', other: 'Solicitudes personales')}')}";
+  static m5(count) => "${Intl.plural(count, one: 'Solicitud personal', other: 'Solicitudes personales')}";
 
-  static m6(count) => "${Intl.plural(count, one: '${Intl.plural(count, one: 'Suscripción', other: 'Suscripciones')}')}";
+  static m6(count) => "${Intl.plural(count, one: 'Suscripción', other: 'Suscripciones')}";
 
-  static m7(count) => "${Intl.plural(count, one: '${Intl.plural(count, one: 'Proyecto de banco de tiempo', other: 'Proyectos de banco de tiempo')}')}";
+  static m7(count) => "${Intl.plural(count, one: 'Proyecto de banco de tiempo', other: 'Proyectos de banco de tiempo')}";
 
-  static m8(count) => "${Intl.plural(count, one: '${Intl.plural(count, one: 'Solicitud de banco de tiempo', other: 'Solicitudes de banco de tiempo')}')}";
+  static m8(count) => "${Intl.plural(count, one: 'Solicitud de banco de tiempo', other: 'Solicitudes de banco de tiempo')}";
 
-  static m9(count) => "${Intl.plural(count, one: '${Intl.plural(count, one: 'usuario', other: 'usuarios')}')}";
+  static m9(count) => "${Intl.plural(count, one: 'usuario', other: 'usuarios')}";
 
-  static m10(count) => "${Intl.plural(count, one: '${Intl.plural(count, one: 'Voluntario seleccionado', other: 'Voluntarios seleccionados')}')}";
+  static m10(count) => "${Intl.plural(count, one: 'Voluntario seleccionado', other: 'Voluntarios seleccionados')}";
 
   static m11(count) => "${Intl.plural(count, one: 'Año', other: 'Años')}";
 

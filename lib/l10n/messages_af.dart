@@ -21,25 +21,25 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(count) => "${Intl.plural(count, one: 'Dag', other: 'Dae')}";
 
-  static m1(count) => "Ure";
+  static m1(count) => "${Intl.plural(count, one: 'Uur', other: 'Ure')}";
 
-  static m2(count) => "Lede gekies";
+  static m2(count) => "${Intl.plural(count, one: 'Lid gekies', other: 'Lede gekies')}";
 
-  static m3(count) => "ander";
+  static m3(count) => "${Intl.plural(count, one: 'Ander', other: 'ander')}";
 
-  static m4(count) => "Persoonlike projek";
+  static m4(count) => "${Intl.plural(count, one: 'Persoonlike projek', other: 'Persoonlike projekte')}";
 
-  static m5(count) => "Persoonlike versoek";
+  static m5(count) => "${Intl.plural(count, one: 'Persoonlike versoek', other: 'Persoonlike versoeke')}";
 
-  static m6(count) => "subskripsies";
+  static m6(count) => "${Intl.plural(count, one: 'Subskripsies', other: 'Subskripsies')}";
 
-  static m7(count) => "Tydbank-projek";
+  static m7(count) => "${Intl.plural(count, one: 'Tydbank-projek', other: 'Timebank-projekte')}";
 
-  static m8(count) => "Tydbankversoek";
+  static m8(count) => "${Intl.plural(count, one: 'Tydbank versoek', other: 'Tydbank versoeke')}";
 
-  static m9(count) => "Gebruikers";
+  static m9(count) => "${Intl.plural(count, one: 'Gebruiker', other: 'Gebruikers')}";
 
-  static m10(count) => "Vrywilligers gekies";
+  static m10(count) => "${Intl.plural(count, one: 'Vrywilligers gekies', other: 'Vrywilligers gekies')}";
 
   static m11(count) => "${Intl.plural(count, one: 'Jaar', other: 'Jare')}";
 
