@@ -276,8 +276,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 _textEditingController.clear();
                 if (!_selectedSkills.containsValue(suggestion)) {
                   controller.close();
-                  String id =
-                      skills.keys.firstWhere((k) => skills[k] == suggestion);
+                  String id = skills.keys.firstWhere((k) => skills[k] == suggestion);
                   _selectedSkills[id] = suggestion;
                   setState(() {});
                 }
