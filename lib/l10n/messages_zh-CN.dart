@@ -736,6 +736,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "request_description_hint" : MessageLookupByLibrary.simpleMessage("您的请求，任何＃哈希标签"),
     "request_description_hint_cash" : MessageLookupByLibrary.simpleMessage("例如：指定筹款原因和任何＃标签"),
     "request_description_hint_goods" : MessageLookupByLibrary.simpleMessage("例如：指定提出商品和任何#hashtags的原因"),
+    "request_details" : MessageLookupByLibrary.simpleMessage("索取详细资料"),
     "request_duration" : MessageLookupByLibrary.simpleMessage("  申请时间"),
     "request_failed" : MessageLookupByLibrary.simpleMessage("请求失败！"),
     "request_failure_message" : MessageLookupByLibrary.simpleMessage("发送请求以某种方式失败，请稍后再试！"),

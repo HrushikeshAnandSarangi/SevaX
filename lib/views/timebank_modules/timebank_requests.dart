@@ -318,8 +318,9 @@ class RequestsState extends State<RequestsModule> {
                     Spacer(),
                     FlatButton(
                         child: Text(
-                          S.of(context).do_it_later,
-                          style: TextStyle(
+//                          S.of(context).skip_for_now,
+                            S.of(context).do_it_later,
+                            style: TextStyle(
                               color: FlavorConfig.values.theme.primaryColor),
                         ),
                         onPressed: () {

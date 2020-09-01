@@ -736,6 +736,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "request_description_hint" : MessageLookupByLibrary.simpleMessage("U versoek en #hashtags"),
     "request_description_hint_cash" : MessageLookupByLibrary.simpleMessage("Ex: Specify the cause of fund raising and any #hashtags"),
     "request_description_hint_goods" : MessageLookupByLibrary.simpleMessage("Ex: Specify the cause of requesting goods and any #hashtags"),
+    "request_details" : MessageLookupByLibrary.simpleMessage("Versoek besonderhede"),
     "request_duration" : MessageLookupByLibrary.simpleMessage("Request duration"),
     "request_failed" : MessageLookupByLibrary.simpleMessage("Versoek het misluk!"),
     "request_failure_message" : MessageLookupByLibrary.simpleMessage("Stuurversoek het op een of ander manier misluk, probeer asseblief later weer!"),

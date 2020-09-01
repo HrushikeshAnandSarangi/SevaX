@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2020-08-31T12:25:50+00:00",
+    "@@last_modified": "2020-09-01T05:09:19+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -946,5 +946,6 @@
     "enter_valid_link": "Voer 'n geldige betalingsskakel in",
     "target_amount_less_than_min_amount": "Minimum bedrag kan nie groter wees as die teikenbedrag nie",
     "failed_load_image_title": "Kon nie laai nie",
-    "image_url_hint": "Voeg Image URL by: https:\/\/www.sevaexchange.com\/sevalogo.png"
+    "image_url_hint": "Voeg Image URL by: https:\/\/www.sevaexchange.com\/sevalogo.png",
+    "request_details": "Versoek besonderhede"
 }

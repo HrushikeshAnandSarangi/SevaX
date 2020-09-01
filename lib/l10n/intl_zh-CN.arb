@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-CN",
-    "@@last_modified": "2020-08-31T11:40:49+00:00",
+    "@@last_modified": "2020-09-01T05:09:52+00:00",
     "check_met": "检查我们是否见过",
     "we_met": "我们见过",
     "hang_on": "稍待",
@@ -946,5 +946,6 @@
     "enter_valid_link": "输入有效的付款链接",
     "target_amount_less_than_min_amount": "最低金额不能大于目标金额",
     "failed_load_image_title": "加载失败",
-    "image_url_hint": "添加图片网址，例如：https:\/\/www.sevaexchange.com\/sevalogo.png"
+    "image_url_hint": "添加图片网址，例如：https:\/\/www.sevaexchange.com\/sevalogo.png",
+    "request_details": "索取详细资料"
 }

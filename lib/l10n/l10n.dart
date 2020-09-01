@@ -5,7 +5,6 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-
 import 'messages_all.dart';
 
 class S {
@@ -27,247 +26,237 @@ class S {
   static S of(BuildContext context) => Localizations.of<S>(context, S);
 
   String get check_met => Intl.message(
-        'Checking, if we met before',
+        'Kyk of ons voorheen ontmoet het',
         name: 'check_met',
       );
 
   String get we_met => Intl.message(
-        'We met before',
+        'Ons het voorheen ontmoet',
         name: 'we_met',
       );
 
   String get hang_on => Intl.message(
-        'Hang on tight',
+        'Hou vas',
         name: 'hang_on',
       );
 
-  String get updating => Intl.message(
-        'Updating',
-        name: 'updating',
-      );
-
-  String get skipping => Intl.message(
-        'Skipping',
-        name: 'skipping',
-      );
-
   String get skills => Intl.message(
-        'skills',
+        'vaardighede',
         name: 'skills',
       );
 
   String get interests => Intl.message(
-        'interests',
+        'belange',
         name: 'interests',
       );
 
   String get email => Intl.message(
-        'email',
+        'e-pos',
         name: 'email',
       );
 
   String get password => Intl.message(
-        'password',
+        'wagwoord',
         name: 'password',
       );
 
   String get login_agreement_message1 => Intl.message(
-        'By continuing, you agree to SevaX',
+        'Deur voort te gaan, stem u in tot SevaX',
         name: 'login_agreement_message1',
       );
 
   String get login_agreement_terms_link => Intl.message(
-        'Terms of Service',
+        'Diensvoorwaardes',
         name: 'login_agreement_terms_link',
       );
 
   String get login_agreement_message2 => Intl.message(
-        'We will manage information as described in our',
+        'Ons sal inligting bestuur soos beskryf in ons',
         name: 'login_agreement_message2',
       );
 
   String get login_agreement_privacy_link => Intl.message(
-        'Privacy Policy',
+        'Privaatheidsbeleid',
         name: 'login_agreement_privacy_link',
       );
 
   String get and => Intl.message(
-        'and',
+        'en',
         name: 'and',
       );
 
   String get login_agreement_payment_link => Intl.message(
-        'Payment Policy',
+        'Betalingsbeleid',
         name: 'login_agreement_payment_link',
       );
 
   String get new_user => Intl.message(
-        'New User',
+        'Nuwe gebruiker',
         name: 'new_user',
       );
 
   String get sign_up => Intl.message(
-        'Sign up',
+        'Teken aan',
         name: 'sign_up',
       );
 
   String get sign_in => Intl.message(
-        'Sign in',
+        'Meld aan',
         name: 'sign_in',
       );
 
   String get forgot_password => Intl.message(
-        'Forgot Password',
+        'Wagwoord vergeet',
         name: 'forgot_password',
       );
 
   String get reset => Intl.message(
-        'Reset',
+        'herstel',
         name: 'reset',
       );
 
   String get sign_in_with_google => Intl.message(
-        'Sign in with Google',
+        'Meld aan met Google',
         name: 'sign_in_with_google',
       );
 
   String get sign_in_with_apple => Intl.message(
-        'Sign in with Apple',
+        'Meld aan met Apple',
         name: 'sign_in_with_apple',
       );
 
   String get or => Intl.message(
-        'or',
+        'of',
         name: 'or',
       );
 
   String get check_internet => Intl.message(
-        'Please check your internet connection.',
+        'Kontroleer u internetverbinding.',
         name: 'check_internet',
       );
 
   String get dismiss => Intl.message(
-        'Dismiss',
+        'ontslaan',
         name: 'dismiss',
       );
 
   String get enter_email => Intl.message(
-        'Enter email',
+        'Voer e-posadres in',
         name: 'enter_email',
       );
 
   String get your_email => Intl.message(
-        'Your email address',
+        'Jou eposadres',
         name: 'your_email',
       );
 
   String get reset_password => Intl.message(
-        'Reset Password',
+        'Herstel wagwoord',
         name: 'reset_password',
       );
 
   String get cancel => Intl.message(
-        'Cancel',
+        'kanselleer',
         name: 'cancel',
       );
 
   String get validation_error_invalid_email => Intl.message(
-        'Email is not valid',
+        'E-pos is nie geldig nie',
         name: 'validation_error_invalid_email',
       );
 
   String get validation_error_invalid_password => Intl.message(
-        'Password must be 6 characters long',
+        'Wagwoord moet 6 karakters lank wees',
         name: 'validation_error_invalid_password',
       );
 
   String get change_password => Intl.message(
-        'Change password',
+        'Verander wagwoord',
         name: 'change_password',
       );
 
   String get enter_password => Intl.message(
-        'Enter password',
+        'Sleutel wagwoord in',
         name: 'enter_password',
       );
 
   String get reset_password_message => Intl.message(
-        'We\'ve sent the reset link to your email address',
+        'Ons het die terugstel-skakel na u e-posadres gestuur',
         name: 'reset_password_message',
       );
 
   String get reset_dynamic_link_message => Intl.message(
-        'Please check your email to set your password. Then enter that password here.',
+        'Kontroleer u e-posadres om u wagwoord in te stel. Voer dan die wagwoord hier in.',
         name: 'reset_dynamic_link_message',
       );
 
   String get close => Intl.message(
-        'Close',
+        'Naby',
         name: 'close',
       );
 
   String get loading => Intl.message(
-        'Loading',
+        'laai',
         name: 'loading',
       );
 
   String get your_details => Intl.message(
-        'Your details',
+        'U besonderhede',
         name: 'your_details',
       );
 
   String get add_photo => Intl.message(
-        'Add Photo',
+        'Voeg foto by',
         name: 'add_photo',
       );
 
   String get full_name => Intl.message(
-        'Full Name',
+        'Volle naam',
         name: 'full_name',
       );
 
   String get confirm => Intl.message(
-        'Confirm',
+        'bevestig',
         name: 'confirm',
       );
 
   String get validation_error_full_name => Intl.message(
-        'Name cannot be empty',
+        'Naam kan nie leeg wees nie',
         name: 'validation_error_full_name',
       );
 
   String get validation_error_password_mismatch => Intl.message(
-        'Passwords do not match',
+        'Wagwoorde stem nie ooreen nie',
         name: 'validation_error_password_mismatch',
       );
 
   String get add_photo_hint => Intl.message(
-        'Do you want to add profile pic?',
+        'Wil jy \'n profielfoto byvoeg?',
         name: 'add_photo_hint',
       );
 
   String get skip_and_register => Intl.message(
-        'Skip and register',
+        'Slaan oor en registreer',
         name: 'skip_and_register',
       );
 
   String get creating_account => Intl.message(
-        'Creating account',
+        'Skep rekening',
         name: 'creating_account',
       );
 
   String get update_photo => Intl.message(
-        'Update Photo',
+        'Dateer foto op',
         name: 'update_photo',
       );
 
   String get validation_error_email_registered => Intl.message(
-        'This email already registered',
+        'Hierdie e-pos is reeds geregistreer',
         name: 'validation_error_email_registered',
       );
 
   String get camera => Intl.message(
-        'Camera',
+        'kamera',
         name: 'camera',
       );
 
@@ -276,163 +265,153 @@ class S {
         name: 'gallery',
       );
 
-  String get check_email => Intl.message(
-        'Now check your email.',
-        name: 'check_email',
-      );
-
   String get email_sent_to => Intl.message(
-        'We sent an email to',
+        'Ons het \'n e-pos gestuur aan',
         name: 'email_sent_to',
       );
 
   String get verify_account => Intl.message(
-        'to verify your account',
+        'om u rekening te verifieer',
         name: 'verify_account',
       );
 
   String get resend_email => Intl.message(
-        'Resend mail',
+        'Stuur weer e-pos',
         name: 'resend_email',
       );
 
   String get login_after_verification => Intl.message(
-        'Please login once you have verified your email.',
+        'Meld asseblief aan sodra u u e-pos bevestig het.',
         name: 'login_after_verification',
       );
 
   String get verification_sent => Intl.message(
-        'Verification email sent',
+        'Verifikasie-e-pos gestuur',
         name: 'verification_sent',
       );
 
   String get verification_sent_desc => Intl.message(
-        'Verification email was sent to your registered email',
+        'Verifiërings-e-pos is na u geregistreerde e-pos gestuur',
         name: 'verification_sent_desc',
       );
 
   String get log_in => Intl.message(
-        'Log in',
+        'teken aan',
         name: 'log_in',
       );
 
-  String get thanks => Intl.message(
-        'Thanks!',
-        name: 'thanks',
-      );
-
   String get eula_title => Intl.message(
-        'EULA Agreement',
+        'EULA-ooreenkoms',
         name: 'eula_title',
       );
 
   String get eula_delcaration => Intl.message(
-        'I agree that I am willing to adhere to these Terms and Conditions.',
+        'Ek stem in dat ek bereid is om hierdie bepalings en voorwaardes na te kom.',
         name: 'eula_delcaration',
       );
 
   String get proceed => Intl.message(
-        'Proceed',
+        'Voortgaan',
         name: 'proceed',
       );
 
   String get skills_description => Intl.message(
-        'What skills are you good at that you\'d like to share with your community?',
+        'Watter vaardighede is dit goed waarmee u met u gemeenskap wil deel?',
         name: 'skills_description',
       );
 
   String get no_matching_skills => Intl.message(
-        'No matching skills found',
+        'Geen passende vaardighede gevind nie',
         name: 'no_matching_skills',
       );
 
   String get search => Intl.message(
-        'Search',
+        'Soek',
         name: 'search',
       );
 
   String get update => Intl.message(
-        'Update',
+        'Opdateer',
         name: 'update',
       );
 
   String get next => Intl.message(
-        'Next',
+        'volgende',
         name: 'next',
       );
 
   String get skip => Intl.message(
-        'Skip',
+        'Huppel',
         name: 'skip',
       );
 
   String get interests_description => Intl.message(
-        'What are some of your interests and passions that you would be willing to share with your community?',
+        'Wat is u belangstellings en passies wat u bereid sou wees om met u gemeenskap te deel?',
         name: 'interests_description',
       );
 
   String get no_matching_interests => Intl.message(
-        'No matching interests found',
+        'Geen passende belangstellings gevind nie',
         name: 'no_matching_interests',
       );
 
   String get bio => Intl.message(
-        'Bio',
+        'bio',
         name: 'bio',
       );
 
   String get bio_description => Intl.message(
-        'Please tell us a little about yourself in a few sentences. For example, what makes you unique.',
+        'Vertel ons in \'n paar sinne \'n bietjie oor jouself. Byvoorbeeld, wat jou uniek maak.',
         name: 'bio_description',
       );
 
   String get bio_hint => Intl.message(
-        'Tell us a little about yourself.',
+        'Vertel ons \'n bietjie van jouself.',
         name: 'bio_hint',
       );
 
   String get validation_error_bio_empty => Intl.message(
-        'It\'s easy, please fill few words about you.',
+        'Dit is maklik; vul asseblief \'n paar woorde oor u in.',
         name: 'validation_error_bio_empty',
       );
 
   String get validation_error_bio_min_characters => Intl.message(
-        'Min 50 characters *',
+        'Min 50 karakters *',
         name: 'validation_error_bio_min_characters',
       );
 
   String get join => Intl.message(
-        'Join',
+        'aansluit',
         name: 'join',
       );
 
   String get joined => Intl.message(
-        'Joined',
+        'Aangesluit',
         name: 'joined',
       );
 
   String get timebanks_near_you => Intl.message(
-        'Timebanks near you',
+        'Tydbanke naby jou',
         name: 'timebanks_near_you',
       );
 
   String get find_your_timebank => Intl.message(
-        'Find your Timebank',
+        'Vind u tydbank',
         name: 'find_your_timebank',
       );
 
   String get looking_existing_timebank => Intl.message(
-        'Looking for an existing Timebank to join',
+        'Op soek na \'n bestaande tydbank om aan te sluit',
         name: 'looking_existing_timebank',
       );
 
   String get find_timebank_help_text => Intl.message(
-        'Type your Timebank name. Ex: Alaska (min 1 char)',
+        'Tik u Timebank-naam in. Voorbeeld: Alaska (min. 1 char)',
         name: 'find_timebank_help_text',
       );
 
   String get no_timebanks_found => Intl.message(
-        'No Timebanks found',
+        'Geen tydbanke gevind nie',
         name: 'no_timebanks_found',
       );
 
@@ -442,558 +421,552 @@ class S {
       );
 
   String get created_by => Intl.message(
-        'Created by',
+        'Gemaak deur',
         name: 'created_by',
       );
 
   String get create_timebank => Intl.message(
-        'Create a Timebank',
+        'Skep \'n tydbank',
         name: 'create_timebank',
       );
 
   String get timebank_gps_hint => Intl.message(
-        'Please make sure you have GPS turned on to see the list of Timebanks around you',
+        'Sorg dat u GPS aangeskakel het om die lys van die tydbanke rondom u te sien',
         name: 'timebank_gps_hint',
       );
 
   String get create_timebank_confirmation => Intl.message(
-        'Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks. In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.',
+        'Is u seker dat u \'n nuwe Timebank wil skep - in teenstelling met \'n bestaande Timebank? Die opstel van \'n nuwe Timebank impliseer dat u verantwoordelik sal wees vir die administrasie van die Timebank - insluitend die toevoeging van lede en die bestuur van lede se behoeftes, die tydige antwoord op lede se vrae, die oplos van konflikoplossings en die aanbieding van maandelikse pakkies. Om lid te word van \'n bestaande Timebank, moet u die naam van die Timebank ken en óf \'n uitnodigingskode hê of \'n versoek indien om by die Timebank aan te sluit.',
         name: 'create_timebank_confirmation',
       );
 
   String get try_later => Intl.message(
-        'Please try again later',
+        'Probeer asseblief weer later',
         name: 'try_later',
       );
 
   String get log_out => Intl.message(
-        'Logout',
+        'Teken uit',
         name: 'log_out',
       );
 
   String get log_out_confirmation => Intl.message(
-        'Are you sure you want to logout?',
+        'Is u seker dat u wil afmeld?',
         name: 'log_out_confirmation',
       );
 
   String get requested => Intl.message(
-        'Requested',
+        'versoek',
         name: 'requested',
       );
 
   String get rejected => Intl.message(
-        'Rejected',
+        'verwerp',
         name: 'rejected',
       );
 
   String get join_timebank_code_message => Intl.message(
-        'Enter the code you received from your admin to see the volunteer opportunities.',
+        'Voer die kode in wat u van u administrateur ontvang het om die geleenthede vir vrywilligers te sien.',
         name: 'join_timebank_code_message',
       );
 
   String get join_timebank_request_invite_hint => Intl.message(
-        'If you don\'t have a code, Click',
+        'As u nie \'n kode het nie, klik dan',
         name: 'join_timebank_request_invite_hint',
       );
 
   String get join_timebank_request_invite => Intl.message(
-        'Request Invite',
+        'Versoek nooi',
         name: 'join_timebank_request_invite',
       );
 
   String get join_timbank_already_requested => Intl.message(
-        'You already requested to this Timebank. Please wait untill request is accepted',
+        'U het reeds na hierdie Timebank versoek. Wag totdat die versoek aanvaar word',
         name: 'join_timbank_already_requested',
       );
 
   String get join_timebank_question => Intl.message(
-        'Why do you want to join the',
+        'Waarom wil u by die',
         name: 'join_timebank_question',
       );
 
   String get reason => Intl.message(
-        'Reason',
+        'rede',
         name: 'reason',
       );
 
   String get validation_error_general_text => Intl.message(
-        'Please enter some text',
+        'Voer \'n teks in',
         name: 'validation_error_general_text',
       );
 
   String get send_request => Intl.message(
-        'Send Request',
+        'Stuur versoek',
         name: 'send_request',
       );
 
   String get code_not_found => Intl.message(
-        'Code not found',
+        'Kode nie gevind nie',
         name: 'code_not_found',
       );
 
   String get validation_error_wrong_timebank_code => Intl.message(
-        'code was not registered, please check the code and try again!',
+        'kode is nie geregistreer nie. Gaan die kode na en probeer weer!',
         name: 'validation_error_wrong_timebank_code',
       );
 
   String get validation_error_join_code_expired => Intl.message(
-        'Code Expired!',
+        'Kode verval!',
         name: 'validation_error_join_code_expired',
       );
 
   String get join_code_expired_hint => Intl.message(
-        'code has been expired, please request the admin for a new one!',
+        'kode verval het, versoek die administrateur vir \'n nuwe een!',
         name: 'join_code_expired_hint',
       );
 
   String get awesome => Intl.message(
-        'Awesome!',
+        'Ontsagwekkende!',
         name: 'awesome',
       );
 
   String get timebank_onboarding_message => Intl.message(
-        'You have been onboarded to',
+        'Daar is aan u gestuur',
         name: 'timebank_onboarding_message',
       );
 
   String get successfully => Intl.message(
-        'Successfully',
+        'suksesvol',
         name: 'successfully',
       );
 
   String get validation_error_timebank_join_code_redeemed => Intl.message(
-        'Timebank code already redeemed',
+        'Tydbankkode is reeds afgelos',
         name: 'validation_error_timebank_join_code_redeemed',
       );
 
   String get validation_error_timebank_join_code_redeemed_self => Intl.message(
-        'The Timebank code that you have provided has already been redeemed earlier by you. Please request the Timebank admin for a new code.',
+        'Die tydbankkode wat u verskaf het, is reeds vroeër deur u afgelos. Vra die Timebank-admin vir \'n nuwe kode.',
         name: 'validation_error_timebank_join_code_redeemed_self',
       );
 
   String get code_expired => Intl.message(
-        'Code Expired!',
+        'Kode verval!',
         name: 'code_expired',
       );
 
   String get enter_code_to_verify => Intl.message(
-        'Please enter PIN to verify',
+        'Voer asseblief die PIN in om te verifieer',
         name: 'enter_code_to_verify',
       );
 
   String get creating_join_request => Intl.message(
-        'Creating Join Request',
+        'Skep aansluitversoek',
         name: 'creating_join_request',
       );
 
   String get feeds => Intl.message(
-        'Feeds',
+        'feeds',
         name: 'feeds',
       );
 
   String get projects => Intl.message(
-        'Projetos',
+        'projekte',
         name: 'projects',
       );
 
   String get offers => Intl.message(
-        'Offers',
+        'Aanbiedinge',
         name: 'offers',
       );
 
   String get requests => Intl.message(
-        'Requests',
+        'Versoeke',
         name: 'requests',
       );
 
   String get about => Intl.message(
-        'About',
+        'oor',
         name: 'about',
       );
 
   String get members => Intl.message(
-        'Members',
+        'lede',
         name: 'members',
       );
 
   String get manage => Intl.message(
-        'Manage',
+        'bestuur',
         name: 'manage',
       );
 
   String get your_tasks => Intl.message(
-        'Your Tasks',
+        'U take',
         name: 'your_tasks',
       );
 
   String get your_groups => Intl.message(
-        'Your Groups',
+        'Julle groepe',
         name: 'your_groups',
       );
 
   String get pending => Intl.message(
-        'Pending',
+        'hangende',
         name: 'pending',
       );
 
   String get not_accepted => Intl.message(
-        'Not Accepted',
+        'Nie aanvaar nie',
         name: 'not_accepted',
       );
 
   String get completed => Intl.message(
-        'Completed',
+        'voltooi',
         name: 'completed',
       );
 
   String get protected_timebank => Intl.message(
-        'Protected Timebank',
+        'Beskermde tydbank',
         name: 'protected_timebank',
       );
 
   String get protected_timebank_group_creation_error => Intl.message(
-        'You cannot create groups in a protected Timebank',
+        'U kan nie groepe in \'n beskermde tydbank skep nie',
         name: 'protected_timebank_group_creation_error',
       );
 
   String get groups_help_text => Intl.message(
-        'Groups Help',
+        'Groepe Hulp',
         name: 'groups_help_text',
       );
 
   String get payment_data_syncing => Intl.message(
-        'Payment Data Syncing',
+        'Sinkronisering van betalingsdata',
         name: 'payment_data_syncing',
       );
 
   String get actions_not_allowed => Intl.message(
-        'Actions not allowed, Please contact admin',
+        'Aksies word nie toegelaat nie. Kontak admin',
         name: 'actions_not_allowed',
       );
 
   String get configure_billing => Intl.message(
-        'Configure Billing',
+        'Stel faktuur op',
         name: 'configure_billing',
       );
 
   String get limit_badge_contact_admin => Intl.message(
-        'Action not allowed, please contact the admin',
+        'Aksie word nie toegelaat nie, kontak die administrateur',
         name: 'limit_badge_contact_admin',
       );
 
   String get limit_badge_billing_failed => Intl.message(
-        'Billing Failed, Click below to configure billing',
+        'Fakturering misluk, klik hieronder om fakturering op te stel',
         name: 'limit_badge_billing_failed',
       );
 
   String get limit_badge_delete_in_progress => Intl.message(
-        'Your request to delete has been received by us. We are processing the request. You will be notified once it is completed.',
+        'U versoek om uit te vee is deur ons ontvang. Ons verwerk die versoek. U sal in kennis gestel word sodra dit voltooi is.',
         name: 'limit_badge_delete_in_progress',
       );
 
   String get bottom_nav_explore => Intl.message(
-        'Explore',
+        'verken',
         name: 'bottom_nav_explore',
       );
 
   String get bottom_nav_notifications => Intl.message(
-        'Notifications',
+        'Kennisgewings',
         name: 'bottom_nav_notifications',
       );
 
   String get bottom_nav_home => Intl.message(
-        'Home',
+        'huis',
         name: 'bottom_nav_home',
       );
 
   String get bottom_nav_messages => Intl.message(
-        'Messages',
+        'boodskappe',
         name: 'bottom_nav_messages',
       );
 
   String get bottom_nav_profile => Intl.message(
-        'Profile',
+        'profiel',
         name: 'bottom_nav_profile',
       );
 
   String get ok => Intl.message(
-        'Ok',
+        'ok',
         name: 'ok',
       );
 
   String get no_group_message => Intl.message(
-        'Groups help you to organize your specific activities, you don\'t have any. Try',
+        'Groepe help u om u spesifieke aktiwiteite te organiseer, u het nie. probeer',
         name: 'no_group_message',
       );
 
   String get creating_one => Intl.message(
-        'creating one',
+        'een te skep',
         name: 'creating_one',
       );
 
   String get general_stream_error => Intl.message(
-        'Something went wrong, please try again',
+        'Iets het verkeerd gegaan, probeer asseblief weer',
         name: 'general_stream_error',
       );
 
   String get no_pending_task => Intl.message(
-        'No pending tasks',
+        'Geen hangende take nie',
         name: 'no_pending_task',
       );
 
   String get from => Intl.message(
-        'From',
+        'Van',
         name: 'from',
       );
 
   String get until => Intl.message(
-        'Until',
+        'totdat',
         name: 'until',
       );
 
   String get posted_by => Intl.message(
-        'Posted By',
+        'Gepos deur',
         name: 'posted_by',
       );
 
   String get posted_date => Intl.message(
-        'Post Date',
+        'Posdatum',
         name: 'posted_date',
       );
 
   String get enter_hours => Intl.message(
-        'Enter hours',
+        'Voer ure in',
         name: 'enter_hours',
       );
 
   String get select_hours => Intl.message(
-        'Select hours',
+        'Kies ure',
         name: 'select_hours',
       );
 
-  String hour(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Hour', other: 'Hours', args: [count])}',
-        name: 'hour',
-        args: [count],
-      );
-
   String get validation_error_task_minutes => Intl.message(
-        'Minutes cannot be Empty',
+        'Notules kan nie leeg wees nie',
         name: 'validation_error_task_minutes',
       );
 
   String get minutes => Intl.message(
-        'minutes',
+        'minute',
         name: 'minutes',
       );
 
   String get limit_exceeded => Intl.message(
-        'Limit exceeded!',
+        'Beperk perk!',
         name: 'limit_exceeded',
       );
 
   String get task_max_hours_of_credit => Intl.message(
-        'Hours of credit from this request.',
+        'Kredieture vanaf hierdie versoek.',
         name: 'task_max_hours_of_credit',
       );
 
   String get validation_error_invalid_hours => Intl.message(
-        'Please enter valid number of hours!',
+        'Voer asseblief die geldige aantal ure in!',
         name: 'validation_error_invalid_hours',
       );
 
   String get please_wait => Intl.message(
-        'Please wait...',
+        'Wag asseblief...',
         name: 'please_wait',
       );
 
   String get task_max_request_message => Intl.message(
-        'You can only request a maximum of',
+        'U kan slegs \'n maksimum van',
         name: 'task_max_request_message',
       );
 
   String get there_are_currently_none => Intl.message(
-        'There are currently none',
+        'Daar is tans geen',
         name: 'there_are_currently_none',
       );
 
   String get no_completed_task => Intl.message(
-        'You have not completed any tasks',
+        'U het geen take voltooi nie',
         name: 'no_completed_task',
       );
 
   String get completed_tasks => Intl.message(
-        'Completed Tasks',
+        'Voltooide take',
         name: 'completed_tasks',
       );
 
   String get seva_credits => Intl.message(
-        'Seva Credits',
+        'Seva-krediete',
         name: 'seva_credits',
       );
 
   String get no_notifications => Intl.message(
-        'No Notifications',
+        'Geen kennisgewings nie',
         name: 'no_notifications',
       );
 
   String get personal => Intl.message(
-        'Personal',
+        'persoonlike',
         name: 'personal',
       );
 
   String get notifications_signed_up_for => Intl.message(
-        'You had signed up for',
+        'Waarvoor u ingeteken het',
         name: 'notifications_signed_up_for',
       );
 
   String get on => Intl.message(
-        'on',
+        'op',
         name: 'on',
       );
 
   String get notifications_event_modification => Intl.message(
-        'The Event Owner has modified this event. Make sure the changes made are right for you and apply again.',
+        '. Die geleentheidseienaar het hierdie geleentheid verander. Sorg dat die aangebrachte wysigings by u pas en dat dit weer van toepassing is.',
         name: 'notifications_event_modification',
       );
 
   String get notification_timebank_join => Intl.message(
-        'Timebank Join',
+        'Tydbank Sluit aan',
         name: 'notification_timebank_join',
       );
 
   String get notifications_added_you => Intl.message(
-        'has added you to',
+        'het u bygevoeg',
         name: 'notifications_added_you',
       );
 
   String get notifications_request_rejected_by => Intl.message(
-        'Request rejected by',
+        'Versoek afgekeur deur',
         name: 'notifications_request_rejected_by',
       );
 
   String get notifications_join_request => Intl.message(
-        'Join request',
+        'Sluit aan by versoek',
         name: 'notifications_join_request',
       );
 
   String get notifications_requested_join => Intl.message(
-        'has requested you to join',
+        'het u versoek om aan te sluit',
         name: 'notifications_requested_join',
       );
 
   String get notifications_tap_to_view => Intl.message(
-        'Tap to view join request',
+        'Tik om aansluitingsversoek te sien',
         name: 'notifications_tap_to_view',
       );
 
   String get notifications_task_rejected_by => Intl.message(
-        'Task completion rejected by',
+        'Taak voltooiing verwerp deur',
         name: 'notifications_task_rejected_by',
       );
 
   String get notifications_approved_for => Intl.message(
-        'approved the task completion for',
+        'het die voltooiing van die taak goedgekeur vir',
         name: 'notifications_approved_for',
       );
 
   String get notifications_credited => Intl.message(
-        'Credited',
+        'gekrediteer',
         name: 'notifications_credited',
       );
 
   String get notifications_credited_to => Intl.message(
-        'have been credited to your account.',
+        'is op u rekening gekrediteer.',
         name: 'notifications_credited_to',
       );
 
   String get congrats => Intl.message(
-        'Congrats',
+        'geluk',
         name: 'congrats',
       );
 
   String get notifications_debited => Intl.message(
-        'Debited',
+        'gedebiteer',
         name: 'notifications_debited',
       );
 
   String get notifications_debited_to => Intl.message(
-        'has been debited from your account',
+        'is vanaf u rekening gedebiteer',
         name: 'notifications_debited_to',
       );
 
   String get notifications_offer_accepted => Intl.message(
-        'Offer Accepted',
+        'Aanbod aanvaar',
         name: 'notifications_offer_accepted',
       );
 
   String get notifications_shown_interest => Intl.message(
-        'has shown interest in your offer',
+        'het belangstelling getoon in u aanbod',
         name: 'notifications_shown_interest',
       );
 
   String get notifications_invited_to_join => Intl.message(
-        'has invited you to join',
+        'het u uitgenooi om aan te sluit',
         name: 'notifications_invited_to_join',
       );
 
   String get notifications_group_join_invite => Intl.message(
-        'Group join invite',
+        'Groep-uitnodiging',
         name: 'notifications_group_join_invite',
       );
 
   String get notifications_new_member_signup => Intl.message(
-        'New member signed up',
+        'Nuwe lid het ingeteken',
         name: 'notifications_new_member_signup',
       );
 
   String get notifications_credits_for => Intl.message(
-        'Credits for',
+        'Krediete vir',
         name: 'notifications_credits_for',
       );
 
   String get notifications_signed_for_class => Intl.message(
-        'Signed up for class',
+        'Aangemeld vir die klas',
         name: 'notifications_signed_for_class',
       );
 
   String get notifications_feedback_request => Intl.message(
-        'Feedback request',
+        'Terugvoerversoek',
         name: 'notifications_feedback_request',
       );
 
   String get notifications_was_deleted => Intl.message(
-        'was deleted!',
+        'is uitgevee!',
         name: 'notifications_was_deleted',
       );
 
   String get notifications_could_not_delete => Intl.message(
-        'couldn\'t be deleted!',
+        'kon nie uitgevee word nie!',
         name: 'notifications_could_not_delete',
       );
 
   String get notifications_successfully_deleted => Intl.message(
-        '*** has been successfully deleted.',
+        '*** is suksesvol uitgevee.',
         name: 'notifications_successfully_deleted',
       );
 
   String get notifications_could_not_deleted => Intl.message(
-        'couldn\'t be deleted because you have pending transactions!',
+        'kon nie uitgevee word nie omdat u transaksies hangende het!',
         name: 'notifications_could_not_deleted',
       );
 
   String get notifications_incomplete_transaction => Intl.message(
-        'We couldn\'t process you request for deletion of ***, as you are still having open transactions which are as :',
+        'Ons kon nie u versoek om skrap van *** verwerk nie, aangesien u steeds oop transaksies het, soos:',
         name: 'notifications_incomplete_transaction',
       );
 
   String get one_to_many_offers => Intl.message(
-        'one to many offers',
+        'een tot baie aanbiedinge',
         name: 'one_to_many_offers',
       );
 
   String get open_requests => Intl.message(
-        'open requests',
+        'oop versoeke',
         name: 'open_requests',
       );
 
@@ -1003,288 +976,272 @@ class S {
       );
 
   String get delete_notification => Intl.message(
-        'Delete notification',
+        'Vee kennisgewing uit',
         name: 'delete_notification',
       );
 
   String get delete_notification_confirmation => Intl.message(
-        'Are you sure you want to delete this notification?',
+        'Is u seker dat u hierdie kennisgewing wil uitvee?',
         name: 'delete_notification_confirmation',
       );
 
   String get notifications_approved_by => Intl.message(
-        'Request approved by',
+        'Versoek goedgekeur deur',
         name: 'notifications_approved_by',
       );
 
   String get notifications_request_accepted_by => Intl.message(
-        'Request accepted by',
+        'Versoek aanvaar deur',
         name: 'notifications_request_accepted_by',
       );
 
   String get notifications_waiting_for_approval => Intl.message(
-        'waiting for your approval.',
+        'wag vir u goedkeuring.',
         name: 'notifications_waiting_for_approval',
       );
 
   String get notifications_by_approving => Intl.message(
-        'By approving',
+        'Deur goedkeuring',
         name: 'notifications_by_approving',
       );
 
   String get notifications_will_be_added_to => Intl.message(
-        'will be added to the event',
+        'sal by die geleentheid gevoeg word',
         name: 'notifications_will_be_added_to',
       );
 
   String get approve => Intl.message(
-        'Approve',
+        'goed te keur',
         name: 'approve',
       );
 
   String get decline => Intl.message(
-        'Decline',
+        'afname',
         name: 'decline',
       );
 
   String get bio_not_updated => Intl.message(
-        'Bio not yet updated',
+        'Bio nog nie opgedateer nie',
         name: 'bio_not_updated',
       );
 
   String get start_new_post => Intl.message(
-        'Start a new post....',
+        'Begin \'n nuwe pos ...',
         name: 'start_new_post',
       );
 
   String get gps_on_reminder => Intl.message(
-        'Please make sure you have GPS turned on.',
+        'Maak seker dat u GPS aangeskakel het.',
         name: 'gps_on_reminder',
       );
 
   String get empty_feed => Intl.message(
-        'Your feed is empty',
+        'U voer is leeg',
         name: 'empty_feed',
       );
 
   String get report_feed => Intl.message(
-        'Report Feed',
+        'Rapporteer voer',
         name: 'report_feed',
       );
 
   String get report_feed_confirmation_message => Intl.message(
-        'Do you want to report this feed?',
+        'Wil u hierdie voer rapporteer?',
         name: 'report_feed_confirmation_message',
       );
 
   String get already_reported => Intl.message(
-        'Already reported!',
+        'Alreeds gerapporteer!',
         name: 'already_reported',
       );
 
   String get feed_reported => Intl.message(
-        'You already reported this feed',
+        'U het hierdie stroom al aangemeld',
         name: 'feed_reported',
       );
 
   String get no_projects_message => Intl.message(
-        'No projects available.Try',
+        'Geen projekte beskikbaar nie. Probeer',
         name: 'no_projects_message',
       );
 
   String get help => Intl.message(
-        'Help',
+        'hulp',
         name: 'help',
       );
 
   String get tasks => Intl.message(
-        'Tasks',
+        'take',
         name: 'tasks',
       );
 
   String get my_requests => Intl.message(
-        'My Requests',
+        'My versoeke',
         name: 'my_requests',
       );
 
   String get select_request => Intl.message(
-        'Select Request',
+        'Kies Versoek',
         name: 'select_request',
       );
 
   String get protected_timebank_request_creation_error => Intl.message(
-        'You cannot post requests in a protected Timebank',
+        'U kan nie versoeke in \'n beskermde Timebank plaas nie',
         name: 'protected_timebank_request_creation_error',
       );
 
   String get request_delete_confirmation_message => Intl.message(
-        'Are you sure you want to delete this request?',
+        'Is u seker dat u hierdie versoek wil uitvee?',
         name: 'request_delete_confirmation_message',
       );
 
   String get no => Intl.message(
-        'No',
+        'Geen',
         name: 'no',
       );
 
   String get yes => Intl.message(
-        'Yes',
+        'Ja',
         name: 'yes',
       );
 
   String get number_of_volunteers_required => Intl.message(
-        'Number of volunteers required',
+        'Aantal vrywilligers benodig',
         name: 'number_of_volunteers_required',
       );
 
   String get withdraw => Intl.message(
-        'Withdraw',
+        'onttrek',
         name: 'withdraw',
       );
 
   String get accept => Intl.message(
-        'Accept',
+        'aanvaar',
         name: 'accept',
       );
 
   String get no_approved_members => Intl.message(
-        'No Approved members yet.',
+        'Nog geen goedgekeurde lede nie.',
         name: 'no_approved_members',
       );
 
   String get view_approved_members => Intl.message(
-        'View Approved Members',
+        'Kyk na goedgekeurde lede',
         name: 'view_approved_members',
       );
 
   String get request => Intl.message(
-        'Request',
+        'versoek',
         name: 'request',
       );
 
   String get applied => Intl.message(
-        'Applied',
+        'Toegepaste',
         name: 'applied',
       );
 
   String get accepted => Intl.message(
-        'Accepted',
+        'Aanvaarde',
         name: 'accepted',
       );
 
   String get default_text => Intl.message(
-        'Default',
+        'verstek',
         name: 'default_text',
       );
 
   String get access_denied => Intl.message(
-        'Access denied.',
+        'Toegang verbied.',
         name: 'access_denied',
       );
 
   String get not_authorized_create_request => Intl.message(
-        'You are not authorized to create a request.',
+        'U mag nie \'n versoek rig nie.',
         name: 'not_authorized_create_request',
       );
 
   String get add_requests => Intl.message(
-        'Add Requests',
+        'Voeg versoeke by',
         name: 'add_requests',
       );
 
   String get no_requests_available => Intl.message(
-        'No requests available.Try',
+        'Geen versoeke beskikbaar nie. Probeer',
         name: 'no_requests_available',
       );
 
   String get fetching_location => Intl.message(
-        'Fetching location',
+        'Haal ligging af',
         name: 'fetching_location',
       );
 
   String get edit => Intl.message(
-        'Edit',
+        'wysig',
         name: 'edit',
       );
 
   String get title => Intl.message(
-        'Title',
+        'Titel',
         name: 'title',
       );
 
   String get mission_statement => Intl.message(
-        'Mission Statement',
+        'Missieverklaring',
         name: 'mission_statement',
       );
 
   String get organizer => Intl.message(
-        'Organiser',
+        'organiseerder',
         name: 'organizer',
       );
 
   String get delete_project => Intl.message(
-        'Delete Project',
+        'Skrap projek',
         name: 'delete_project',
       );
 
   String get create_project => Intl.message(
-        'Create a Project',
+        'Skep \'n projek',
         name: 'create_project',
       );
 
   String get edit_project => Intl.message(
-        'Edit Project',
+        'Projek wysig',
         name: 'edit_project',
       );
 
-  String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Timebank Project', other: 'Timebank Projects', args: [
-          count
-        ])}',
-        name: 'timebank_project',
-        args: [count],
-      );
-
-  String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [
-          count
-        ])}',
-        name: 'personal_project',
-        args: [count],
-      );
-
   String get project_logo => Intl.message(
-        'Project Logo',
+        'Projeklogo',
         name: 'project_logo',
       );
 
   String get project_name => Intl.message(
-        'Project Name',
+        'Projek Naam',
         name: 'project_name',
       );
 
   String get name_hint => Intl.message(
-        'Ex: Pets-in-town, Citizen collab',
+        'Eks: Troeteldiere in die stad, Citizen collab',
         name: 'name_hint',
       );
 
   String get validation_error_project_name_empty => Intl.message(
-        'Project name cannot be empty',
+        'Projeknaam kan nie leeg wees nie',
         name: 'validation_error_project_name_empty',
       );
 
   String get project_duration => Intl.message(
-        'Project Duration',
+        'Duur van die projek',
         name: 'project_duration',
       );
 
   String get project_mission_statement_hint => Intl.message(
-        'Ex: A bit more about your project which will help to associate with',
+        'Voorbeeld: \'n Bietjie meer oor u projek waarmee u kan assosieer',
         name: 'project_mission_statement_hint',
       );
 
   String get validation_error_mission_empty => Intl.message(
-        'Mission statement cannot be empty.',
+        'Missieverklaring kan nie leeg wees nie.',
         name: 'validation_error_mission_empty',
       );
 
@@ -1294,47 +1251,47 @@ class S {
       );
 
   String get phone_number => Intl.message(
-        'Phone Number',
+        'Telefoon nommer',
         name: 'phone_number',
       );
 
   String get project_location => Intl.message(
-        'Your project location.',
+        'U projekligging.',
         name: 'project_location',
       );
 
   String get project_location_hint => Intl.message(
-        'Project location will help your members to locate',
+        'Projekligging sal u lede help om op te spoor',
         name: 'project_location_hint',
       );
 
   String get save_as_template => Intl.message(
-        'Save as Template',
+        'Stoor as sjabloon',
         name: 'save_as_template',
       );
 
   String get validation_error_no_date => Intl.message(
-        'Please mention the start and end date of the project',
+        'Noem die begin- en einddatum van die projek',
         name: 'validation_error_no_date',
       );
 
   String get creating_project => Intl.message(
-        'Creating project',
+        'Skep projek',
         name: 'creating_project',
       );
 
   String get validation_error_location_mandatory => Intl.message(
-        'Location is Mandatory',
+        'Ligging is verpligtend',
         name: 'validation_error_location_mandatory',
       );
 
   String get validation_error_add_project_location => Intl.message(
-        'Please add location to your project',
+        'Voeg asseblief ligging by u projek',
         name: 'validation_error_add_project_location',
       );
 
   String get updating_project => Intl.message(
-        'Updating Project',
+        'Opdatering van die projek',
         name: 'updating_project',
       );
 
@@ -1344,147 +1301,147 @@ class S {
       );
 
   String get template_title => Intl.message(
-        'Provide a unique name for the template',
+        'Verskaf \'n unieke naam vir die sjabloon',
         name: 'template_title',
       );
 
   String get template_hint => Intl.message(
-        'Template Name',
+        'Sjabloonnaam',
         name: 'template_hint',
       );
 
   String get validation_error_template_name => Intl.message(
-        'Template name cannot be empty',
+        'Die naam van die sjabloon kan nie leeg wees nie',
         name: 'validation_error_template_name',
       );
 
   String get validation_error_template_name_exists => Intl.message(
-        'Template name is already in use.Please provide another name',
+        'Die naam van die sjabloon is reeds in gebruik. Verskaf \'n ander naam',
         name: 'validation_error_template_name_exists',
       );
 
   String get add_location => Intl.message(
-        'Add Location',
+        'Voeg ligging by',
         name: 'add_location',
       );
 
   String get delete_confirmation => Intl.message(
-        'Are your sure you want to delete',
+        'Is u seker dat u wil verwyder?',
         name: 'delete_confirmation',
       );
 
   String get accidental_delete_enabled => Intl.message(
-        'Accidental Deletion enabled',
+        'Toevallige uitvee geaktiveer',
         name: 'accidental_delete_enabled',
       );
 
   String get accidental_delete_enabled_description => Intl.message(
-        'This ** has \"Prevent Accidental Delete\" enabled. Please uncheck that box (in the \"Manage\" tab) before attempting to delete the **.',
+        'Hierdie ** het \"Voorkom toevallige verwydering\" geaktiveer. Ontmerk die kassie (in die blad \"Bestuur\" voordat u die ** probeer verwyder.',
         name: 'accidental_delete_enabled_description',
       );
 
   String get deletion_request_being_processed => Intl.message(
-        'Your request for deletion is being processed.',
+        'U versoek om uitvee word verwerk.',
         name: 'deletion_request_being_processed',
       );
 
   String get deletion_request_progress_description => Intl.message(
-        'Your request to delete has been received by us. We are processing the request. You will be notified once it is completed.',
+        'U versoek om uit te vee is deur ons ontvang. Ons verwerk die versoek. U sal in kennis gestel word sodra dit voltooi is.',
         name: 'deletion_request_progress_description',
       );
 
   String get submitting_request => Intl.message(
-        'Submitting request...',
+        'Dien versoek in ...',
         name: 'submitting_request',
       );
 
   String get advisory_for_timebank => Intl.message(
-        'All relevant information including projects, requests and offers under the group will be deleted!',
+        'Alle relevante inligting, insluitend projekte, versoeke en aanbiedinge onder die groep, sal uitgevee word!',
         name: 'advisory_for_timebank',
       );
 
   String get advisory_for_projects => Intl.message(
-        'All requests associated to this request would be removed',
+        'Alle versoeke wat aan hierdie versoek gekoppel is, sal verwyder word',
         name: 'advisory_for_projects',
       );
 
   String get deletion_request_recieved => Intl.message(
-        'We have received your request to delete this ***. We are sorry to see you go. We will examine your request and (in some cases) get in touch with you offline before we process the deletion of the ***',
+        'Ons het u versoek om hierdie *** te verwyder, ontvang. Ons is jammer om te sien dat u gaan. Ons sal u versoek ondersoek en (in sommige gevalle) op die regte pad met u in verbinding tree voordat ons die verwydering van die *** verwerk',
         name: 'deletion_request_recieved',
       );
 
   String get request_submitted => Intl.message(
-        'Request submitted',
+        'Versoek ingedien',
         name: 'request_submitted',
       );
 
   String get request_failed => Intl.message(
-        'Request failed!',
+        'Versoek het misluk!',
         name: 'request_failed',
       );
 
   String get request_failure_message => Intl.message(
-        'Sending request failed somehow, please try again later!',
+        'Stuurversoek het op een of ander manier misluk, probeer asseblief later weer!',
         name: 'request_failure_message',
       );
 
   String get hosted_by => Intl.message(
-        'Hosted by',
+        'Aangebied deur',
         name: 'hosted_by',
       );
 
   String get creator_of_request_message => Intl.message(
-        'You are the creator of this request.',
+        'U is die skepper van hierdie versoek.',
         name: 'creator_of_request_message',
       );
 
   String get applied_for_request => Intl.message(
-        'You have applied for the request.',
+        'U het om die versoek aansoek gedoen.',
         name: 'applied_for_request',
       );
 
   String get particpate_in_request_question => Intl.message(
-        'Do you want to participate in this request?',
+        'Wil u aan hierdie versoek deelneem?',
         name: 'particpate_in_request_question',
       );
 
   String get apply => Intl.message(
-        'Apply',
+        'aansoek doen',
         name: 'apply',
       );
 
   String get protected_timebank_alert_dialog => Intl.message(
-        'You cannot accept requests in a protected Timebank',
+        'U kan nie versoeke in \'n beskermde Timebank aanvaar nie',
         name: 'protected_timebank_alert_dialog',
       );
 
   String get already_approved => Intl.message(
-        'Already Approved',
+        'Alreeds goedgekeur',
         name: 'already_approved',
       );
 
   String get withdraw_request_failure => Intl.message(
-        'You cannot withdraw request since already approved',
+        'U kan die versoek nie intrek nie, aangesien dit reeds goedgekeur is',
         name: 'withdraw_request_failure',
       );
 
   String get find_volunteers => Intl.message(
-        'Find Volunteers',
+        'Soek vrywilligers',
         name: 'find_volunteers',
       );
 
   String get invited => Intl.message(
-        'Invited',
+        'genooi',
         name: 'invited',
       );
 
   String get favourites => Intl.message(
-        'Favourites',
+        'Gunstelinge',
         name: 'favourites',
       );
 
   String get past_hired => Intl.message(
-        'Past Hired',
+        'Verlede gehuur',
         name: 'past_hired',
       );
 
@@ -1494,7 +1451,7 @@ class S {
       );
 
   String get validation_error_search_min_characters => Intl.message(
-        'Search requires minimum 3 characters',
+        'Soek benodig minimum 3 karakters',
         name: 'validation_error_search_min_characters',
       );
 
@@ -1509,42 +1466,42 @@ class S {
       );
 
   String get invite => Intl.message(
-        'Invite',
+        'nooi',
         name: 'invite',
       );
 
   String get name_not_available => Intl.message(
-        'Name is not available',
+        'Naam is nie beskikbaar nie',
         name: 'name_not_available',
       );
 
   String get create_request => Intl.message(
-        'Create Request',
+        'Skep versoek',
         name: 'create_request',
       );
 
   String get create_project_request => Intl.message(
-        'Create Project Request',
+        'Skep projekversoeke',
         name: 'create_project_request',
       );
 
   String get set_duration => Intl.message(
-        'Click to Set Duration',
+        'Klik om die tydsduur in te stel',
         name: 'set_duration',
       );
 
   String get request_title => Intl.message(
-        'Request title*',
+        'Versoek titel *',
         name: 'request_title',
       );
 
   String get request_title_hint => Intl.message(
-        'Ex: Small carpentry work...',
+        'Eks: Klein skrynwerk ...',
         name: 'request_title_hint',
       );
 
   String get request_subject => Intl.message(
-        'Please enter the subject of your request',
+        'Voer die onderwerp van u versoek in',
         name: 'request_subject',
       );
 
@@ -1554,68 +1511,52 @@ class S {
       );
 
   String get request_description => Intl.message(
-        'Request description*',
+        'Versoek beskrywing *',
         name: 'request_description',
       );
 
   String get request_description_hint => Intl.message(
-        'Your Request and any #hashtags',
+        'U versoek en #hashtags',
         name: 'request_description_hint',
       );
 
   String get number_of_volunteers => Intl.message(
-        'No. of volunteers*',
+        'Aantal vrywilligers *',
         name: 'number_of_volunteers',
       );
 
   String get validation_error_volunteer_count => Intl.message(
-        'Please enter the number of volunteers needed',
+        'Voer die aantal vrywilligers in wat benodig word',
         name: 'validation_error_volunteer_count',
       );
 
   String get validation_error_volunteer_count_negative => Intl.message(
-        'No. of volunteers cannot be lesser than 0',
+        'Aantal vrywilligers mag nie minder as 0 wees nie',
         name: 'validation_error_volunteer_count_negative',
       );
 
   String get validation_error_volunteer_count_zero => Intl.message(
-        'No. of volunteers cannot be 0',
+        'Aantal vrywilligers mag nie 0 wees nie',
         name: 'validation_error_volunteer_count_zero',
       );
 
-  String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [
-          count
-        ])}',
-        name: 'personal_request',
-        args: [count],
-      );
-
-  String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Timebank Request', other: 'Timebank Requests', args: [
-          count
-        ])}',
-        name: 'timebank_request',
-        args: [count],
-      );
-
   String get validation_error_same_start_date_end_date => Intl.message(
-        'You have provided identical date and time for the Start and End. Please provide an End time that is after the Start time.',
+        'U het dieselfde datum en tyd vir die begin en einde verskaf. Verskaf \'n eindtyd na die begintyd.',
         name: 'validation_error_same_start_date_end_date',
       );
 
   String get validation_error_empty_recurring_days => Intl.message(
-        'Recurring days cannot be empty',
+        'Herhalende dae kan nie leeg wees nie',
         name: 'validation_error_empty_recurring_days',
       );
 
   String get creating_request => Intl.message(
-        'Creating Request',
+        'Skep versoek',
         name: 'creating_request',
       );
 
   String get updating_request => Intl.message(
-        'Updating Request',
+        'Opdatering van versoek',
         name: 'updating_request',
       );
 
@@ -1629,29 +1570,13 @@ class S {
         name: 'assign_to_volunteers',
       );
 
-  String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [
-          count
-        ])}',
-        name: 'members_selected',
-        args: [count],
-      );
-
-  String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [
-          count
-        ])}',
-        name: 'volunteers_selected',
-        args: [count],
-      );
-
   String get timebank_max_seva_credit_message1 => Intl.message(
         'Seva Credits will be credited to the Timebank for this request. Note that each participant will receive a maximum of',
         name: 'timebank_max_seva_credit_message1',
       );
 
   String get timebank_max_seva_credit_message2 => Intl.message(
-        'credits for completing this request.',
+        'krediete vir die voltooiing van hierdie versoek.',
         name: 'timebank_max_seva_credit_message2',
       );
 
@@ -1661,17 +1586,17 @@ class S {
       );
 
   String get personal_max_seva_credit_message2 => Intl.message(
-        'credits for completing this request.',
+        'krediete vir die voltooiing van hierdie versoek.',
         name: 'personal_max_seva_credit_message2',
       );
 
   String get unassigned => Intl.message(
-        'Unassigned',
+        'Nie toegeken nie',
         name: 'unassigned',
       );
 
   String get assign_to_project => Intl.message(
-        'Assign to project',
+        'Ken die projek toe',
         name: 'assign_to_project',
       );
 
@@ -1701,7 +1626,7 @@ class S {
       );
 
   String get after => Intl.message(
-        'After',
+        'na',
         name: 'after',
       );
 
@@ -1716,7 +1641,7 @@ class S {
       );
 
   String get date_time => Intl.message(
-        'date & time',
+        'Datum Tyd',
         name: 'date_time',
       );
 
@@ -1726,7 +1651,7 @@ class S {
       );
 
   String get end => Intl.message(
-        'End',
+        'einde',
         name: 'end',
       );
 
@@ -1741,17 +1666,17 @@ class S {
       );
 
   String get validation_error_end_date_greater => Intl.message(
-        'End Date cannot be before Start Date',
+        'Einddatum kan nie voor die aanvangsdatum wees nie',
         name: 'validation_error_end_date_greater',
       );
 
   String get unblock => Intl.message(
-        'Unblock',
+        'unblock',
         name: 'unblock',
       );
 
   String get no_blocked_members => Intl.message(
-        'No blocked members',
+        'Geen geblokkeerde lede nie',
         name: 'no_blocked_members',
       );
 
@@ -1776,12 +1701,12 @@ class S {
       );
 
   String get type_message => Intl.message(
-        'Type a message',
+        'Tik \'n boodskap in',
         name: 'type_message',
       );
 
   String get failed_to_load_post => Intl.message(
-        'Couldn\'t load the post!',
+        'Kon nie die pos laai nie!',
         name: 'failed_to_load_post',
       );
 
@@ -1791,7 +1716,7 @@ class S {
       );
 
   String get new_message_room => Intl.message(
-        'New Message Room',
+        'Nuwe boodskap kamer',
         name: 'new_message_room',
       );
 
@@ -1806,7 +1731,7 @@ class S {
       );
 
   String get frequently_contacted => Intl.message(
-        'FREQUENTLY CONTACTED',
+        'GEREELD KONTAK',
         name: 'frequently_contacted',
       );
 
@@ -1816,7 +1741,7 @@ class S {
       );
 
   String get timebank_members => Intl.message(
-        'Timebank Members',
+        'Tydbanklede',
         name: 'timebank_members',
       );
 
@@ -1826,7 +1751,7 @@ class S {
       );
 
   String get participants => Intl.message(
-        'Participants',
+        'deelnemers',
         name: 'participants',
       );
 
@@ -1841,12 +1766,12 @@ class S {
       );
 
   String get updating_messaging_room => Intl.message(
-        'Updating Room...',
+        'Opdateer kamer ...',
         name: 'updating_messaging_room',
       );
 
   String get messaging_room_note => Intl.message(
-        'Please provide a message room subject and optional group icon',
+        'Verskaf asseblief \'n boodskap kamer onderwerp en opsionele groep ikoon',
         name: 'messaging_room_note',
       );
 
@@ -1861,12 +1786,12 @@ class S {
       );
 
   String get no_frequent_contacts => Intl.message(
-        'No Frequent Contacts',
+        'Geen gereelde kontakte nie',
         name: 'no_frequent_contacts',
       );
 
   String get sending => Intl.message(
-        'Sending...',
+        'Stuur...',
         name: 'sending',
       );
 
@@ -1876,7 +1801,7 @@ class S {
       );
 
   String get add_caption => Intl.message(
-        'Add a caption',
+        'Voeg \'n onderskrif by',
         name: 'add_caption',
       );
 
@@ -1886,7 +1811,7 @@ class S {
       );
 
   String get validation_error_room_name => Intl.message(
-        'Name can\'t be empty',
+        'Naam kan nie leeg wees nie',
         name: 'validation_error_room_name',
       );
 
@@ -1896,7 +1821,7 @@ class S {
       );
 
   String get delete_chat_confirmation => Intl.message(
-        'Are you sure you want to delete this chat',
+        'Is u seker dat u hierdie klets wil uitvee',
         name: 'delete_chat_confirmation',
       );
 
@@ -1911,12 +1836,12 @@ class S {
       );
 
   String get exit => Intl.message(
-        'Exit',
+        'uitgang',
         name: 'exit',
       );
 
   String get delete_chat => Intl.message(
-        'Delete chat',
+        'Vee klets uit',
         name: 'delete_chat',
       );
 
@@ -1936,12 +1861,12 @@ class S {
       );
 
   String get change_ownership_invite => Intl.message(
-        'has invited you to be the new owner of the Timebank',
+        'het u uitgenooi om die nuwe eienaar van die Timebank te wees',
         name: 'change_ownership_invite',
       );
 
   String get notifications_insufficient_credits => Intl.message(
-        'Your seva credits are not sufficient to approve the credit request.',
+        'U sewekrediete is nie voldoende om die kredietversoek goed te keur nie.',
         name: 'notifications_insufficient_credits',
       );
 
@@ -1971,7 +1896,7 @@ class S {
       );
 
   String get reason_not_mentioned => Intl.message(
-        'Reason not mentioned',
+        'Rede nie genoem nie',
         name: 'reason_not_mentioned',
       );
 
@@ -1981,12 +1906,12 @@ class S {
       );
 
   String get updating_timebank => Intl.message(
-        'Updating Timebank..',
+        'Dateer Timebank op',
         name: 'updating_timebank',
       );
 
   String get no_bookmarked_offers => Intl.message(
-        'No offers bookmarked',
+        'Geen aanbiedinge is gemerk nie',
         name: 'no_bookmarked_offers',
       );
 
@@ -1996,17 +1921,17 @@ class S {
       );
 
   String get individual_offer => Intl.message(
-        'Individual offer',
+        'Individuele aanbod',
         name: 'individual_offer',
       );
 
   String get one_to_many => Intl.message(
-        'One to many',
+        'Een vir baie',
         name: 'one_to_many',
       );
 
   String get update_offer => Intl.message(
-        'Update Offer',
+        'Opdatering van aanbieding',
         name: 'update_offer',
       );
 
@@ -2016,7 +1941,7 @@ class S {
       );
 
   String get updating_offer => Intl.message(
-        'Updating offer',
+        'Opdatering van aanbod',
         name: 'updating_offer',
       );
 
@@ -2026,7 +1951,7 @@ class S {
       );
 
   String get offer_error_updating => Intl.message(
-        'There was error updating offer, Please try again.',
+        'Kon nie die aanbieding aanbied nie. Probeer asseblief weer.',
         name: 'offer_error_updating',
       );
 
@@ -2036,7 +1961,7 @@ class S {
       );
 
   String get offer_description => Intl.message(
-        'Offer description',
+        'Aanbieding beskrywing',
         name: 'offer_description',
       );
 
@@ -2046,32 +1971,32 @@ class S {
       );
 
   String get availablity => Intl.message(
-        'Availability',
+        'beskikbaarheid',
         name: 'availablity',
       );
 
   String get availablity_description => Intl.message(
-        'Describe my availability',
+        'Beskryf my beskikbaarheid',
         name: 'availablity_description',
       );
 
   String get one_to_many_offer_hint => Intl.message(
-        'Ex teaching a python class..',
+        'Eks leer \'n pythonklas ..',
         name: 'one_to_many_offer_hint',
       );
 
   String get offer_duration => Intl.message(
-        'Offer duration',
+        'Aanbieding duur',
         name: 'offer_duration',
       );
 
   String get offer_prep_hours => Intl.message(
-        'No. of preparation hours',
+        'Aantal voorbereidingsure',
         name: 'offer_prep_hours',
       );
 
   String get offer_prep_hours_required => Intl.message(
-        'No. of preparation hours required',
+        'Aantal voorbereidingsure benodig',
         name: 'offer_prep_hours_required',
       );
 
@@ -2081,7 +2006,7 @@ class S {
       );
 
   String get offer_number_class_hours_required => Intl.message(
-        'No. of class hours required',
+        'Aantal klastye benodig',
         name: 'offer_number_class_hours_required',
       );
 
@@ -2101,22 +2026,22 @@ class S {
       );
 
   String get offer_description_error => Intl.message(
-        'Please enter some class description',
+        'Voer \'n klasbeskrywing in',
         name: 'offer_description_error',
       );
 
   String get offer_start_end_date => Intl.message(
-        'Please enter start and end date',
+        'Voer die begin- en einddatum in',
         name: 'offer_start_end_date',
       );
 
   String get validation_error_offer_title => Intl.message(
-        'Please enter the subject of your offer',
+        'Voer asseblief die onderwerp van u aanbod in',
         name: 'validation_error_offer_title',
       );
 
   String get validation_error_offer_class_hours => Intl.message(
-        'Please enter the hours required for the class',
+        'Voer asseblief die ure in wat vir die klas benodig word',
         name: 'validation_error_offer_class_hours',
       );
 
@@ -2126,12 +2051,12 @@ class S {
       );
 
   String get validation_error_offer_prep_hour => Intl.message(
-        'Please enter your preperation time',
+        'Voer u voorbereidingstyd in',
         name: 'validation_error_offer_prep_hour',
       );
 
   String get validation_error_location => Intl.message(
-        'Please select location',
+        'Kies plek',
         name: 'validation_error_location',
       );
 
@@ -2146,27 +2071,27 @@ class S {
       );
 
   String get validation_error_offer_credit => Intl.message(
-        'We cannot publish this Class. There are insufficient credits from the class. Please revise the Prep time or the number of students and submit the offer again',
+        'Ons kan nie hierdie klas publiseer nie. Daar is onvoldoende krediete uit die klas. Hersien asseblief die Prep-tyd of die aantal studente en dien die aanbod weer in',
         name: 'validation_error_offer_credit',
       );
 
   String get posted_on => Intl.message(
-        'Posted on',
+        'gepos op',
         name: 'posted_on',
       );
 
   String get location => Intl.message(
-        'Location',
+        'plek',
         name: 'location',
       );
 
   String get offered_by => Intl.message(
-        'Offered by',
+        'Aangebied deur',
         name: 'offered_by',
       );
 
   String get you_created_offer => Intl.message(
-        'You created this offer',
+        'U het hierdie aanbod geskep',
         name: 'you_created_offer',
       );
 
@@ -2176,62 +2101,62 @@ class S {
       );
 
   String get not_yet => Intl.message(
-        'not yet',
+        'nog nie',
         name: 'not_yet',
       );
 
   String get signed_up_for => Intl.message(
-        'signed up for',
+        'ingeteken vir',
         name: 'signed_up_for',
       );
 
   String get bookmarked => Intl.message(
-        'bookmarked',
+        'gebookmarkte',
         name: 'bookmarked',
       );
 
   String get this_offer => Intl.message(
-        'this offer',
+        'hierdie aanbod',
         name: 'this_offer',
       );
 
   String get details => Intl.message(
-        'Details',
+        'besonderhede',
         name: 'details',
       );
 
   String get no_offers => Intl.message(
-        'No Offers',
+        'Geen aanbiedinge nie',
         name: 'no_offers',
       );
 
   String get your_earnings => Intl.message(
-        'Your earnings',
+        'U verdienste',
         name: 'your_earnings',
       );
 
   String get timebank_earnings => Intl.message(
-        'Timebank earnings',
+        'Tydbankverdienste',
         name: 'timebank_earnings',
       );
 
   String get no_participants_yet => Intl.message(
-        'No Participants yet',
+        'Nog geen deelnemers nie',
         name: 'no_participants_yet',
       );
 
   String get bookmarked_offers => Intl.message(
-        'Bookmarked Offers',
+        'Boekmerke met aanbiedings',
         name: 'bookmarked_offers',
       );
 
   String get my_offers => Intl.message(
-        'My Offers',
+        'My aanbiedinge',
         name: 'my_offers',
       );
 
   String get offer_help => Intl.message(
-        'Offers Help',
+        'Bied hulp aan',
         name: 'offer_help',
       );
 
@@ -2241,7 +2166,7 @@ class S {
       );
 
   String get report_member_inform => Intl.message(
-        'Please inform, why you are reporting this user.',
+        'Laat weet asseblief waarom u hierdie gebruiker aanmeld.',
         name: 'report_member_inform',
       );
 
@@ -2251,12 +2176,12 @@ class S {
       );
 
   String get report => Intl.message(
-        'Report',
+        'verslag',
         name: 'report',
       );
 
   String get reporting_member => Intl.message(
-        'Reporting member',
+        'Verslaglid',
         name: 'reporting_member',
       );
 
@@ -2266,68 +2191,62 @@ class S {
       );
 
   String get reported_by => Intl.message(
-        'Reported by',
+        'Gerapporteer deur',
         name: 'reported_by',
       );
 
-  String user(num count) => Intl.message(
-        '${Intl.plural(count, one: 'user', other: 'users', args: [count])}',
-        name: 'user',
-        args: [count],
-      );
-
   String get user_removed_from_group => Intl.message(
-        'User is successfully removed from the group',
+        'Gebruiker word suksesvol uit die groep verwyder',
         name: 'user_removed_from_group',
       );
 
   String get user_removed_from_group_failed => Intl.message(
-        'User cannot be deleted from this group',
+        'Gebruiker kan nie uit hierdie groep verwyder word nie',
         name: 'user_removed_from_group_failed',
       );
 
   String get user_has => Intl.message(
-        'User has',
+        'Gebruiker het',
         name: 'user_has',
       );
 
   String get pending_projects => Intl.message(
-        'pending projects',
+        'hangende projekte',
         name: 'pending_projects',
       );
 
   String get pending_requests => Intl.message(
-        'pending requests',
+        'hangende versoeke',
         name: 'pending_requests',
       );
 
   String get pending_offers => Intl.message(
-        'pending offers',
+        'hangende aanbiedinge',
         name: 'pending_offers',
       );
 
   String get clear_transaction => Intl.message(
-        'Please clear the transactions and try again.',
+        'Maak die transaksies skoon en probeer weer.',
         name: 'clear_transaction',
       );
 
   String get remove_self_from_group_error => Intl.message(
-        'Cannot remove yourself from the group. Instead, please try deleting the group.',
+        'Kan nie jouself uit die groep verwyder nie. Probeer eerder die groep uitvee.',
         name: 'remove_self_from_group_error',
       );
 
   String get user_removed_from_timebank => Intl.message(
-        'User is successfully removed from the Timebank',
+        'Gebruiker word suksesvol van die Timebank verwyder',
         name: 'user_removed_from_timebank',
       );
 
   String get user_removed_from_timebank_failed => Intl.message(
-        'User cannot be deleted from this Timebank',
+        'Gebruiker kan nie van hierdie Timebank verwyder word nie',
         name: 'user_removed_from_timebank_failed',
       );
 
   String get member_reported => Intl.message(
-        'Member reported successfully',
+        'Die lid het suksesvol berig',
         name: 'member_reported',
       );
 
@@ -2337,47 +2256,47 @@ class S {
       );
 
   String get reported_member_click_to_view => Intl.message(
-        'Click here to view reported users of this Timebank',
+        'Klik hier om gerapporteerde gebruikers van hierdie Timebank te sien',
         name: 'reported_member_click_to_view',
       );
 
   String get reported_users => Intl.message(
-        'Reported Users',
+        'Gerapporteerde gebruikers',
         name: 'reported_users',
       );
 
   String get reported_members => Intl.message(
-        'Reported Members',
+        'Gerapporteerde lede',
         name: 'reported_members',
       );
 
   String get search_something => Intl.message(
-        'Search Something',
+        'Iets soek',
         name: 'search_something',
       );
 
   String get i_want_to_volunteer => Intl.message(
-        'I want to volunteer.',
+        'Ek wil vrywillig wees.',
         name: 'i_want_to_volunteer',
       );
 
   String get help_about_us => Intl.message(
-        'About Us',
+        'Oor ons',
         name: 'help_about_us',
       );
 
   String get help_training_video => Intl.message(
-        'Training Video',
+        'Opleidingsvideo',
         name: 'help_training_video',
       );
 
   String get help_contact_us => Intl.message(
-        'Contact Us',
+        'Kontak Ons',
         name: 'help_contact_us',
       );
 
   String get help_version => Intl.message(
-        'Version',
+        'weergawe',
         name: 'help_version',
       );
 
@@ -2387,42 +2306,42 @@ class S {
       );
 
   String get send_feedback => Intl.message(
-        'Send feedback',
+        'Stuur terugvoering',
         name: 'send_feedback',
       );
 
   String get enter_feedback => Intl.message(
-        'Please enter your feedback',
+        'Voer asseblief u terugvoer in',
         name: 'enter_feedback',
       );
 
   String get feedback_messagae => Intl.message(
-        'Please let us know about your valuable feedback',
+        'Laat weet ons asseblief van u waardevolle terugvoer',
         name: 'feedback_messagae',
       );
 
   String get create_timebank_description => Intl.message(
-        'A TimeBank is a community of volunteers that give and receive time to each other and to the larger community',
+        '\'N TimeBank is \'n gemeenskap van vrywilligers wat mekaar en die groter gemeenskap tyd gee en ontvang',
         name: 'create_timebank_description',
       );
 
   String get timebank_logo => Intl.message(
-        'Timebank Logo',
+        'Tydbank Logo',
         name: 'timebank_logo',
       );
 
   String get timebank_name => Intl.message(
-        'Name your Timebank',
+        'Noem u tydbank',
         name: 'timebank_name',
       );
 
   String get timebank_name_hint => Intl.message(
-        'Ex: Pets-in-town, Citizen collab',
+        'Eks: Troeteldiere in die stad, Citizen collab',
         name: 'timebank_name_hint',
       );
 
   String get timebank_name_error => Intl.message(
-        'Timebank name cannot be empty',
+        'Die tydbanknaam kan nie leeg wees nie',
         name: 'timebank_name_error',
       );
 
@@ -2432,7 +2351,7 @@ class S {
       );
 
   String get timbank_about_hint => Intl.message(
-        'Ex: A bit more about your Timebank',
+        'Voorbeeld: \'n bietjie meer oor u Timebank',
         name: 'timbank_about_hint',
       );
 
@@ -2442,77 +2361,77 @@ class S {
       );
 
   String get timebank_select_tax_percentage => Intl.message(
-        'Select Tax percentage',
+        'Kies belastingpersentasie',
         name: 'timebank_select_tax_percentage',
       );
 
   String get timebank_current_tax_percentage => Intl.message(
-        'Current Tax Percentage',
+        'Huidige belastingpersentasie',
         name: 'timebank_current_tax_percentage',
       );
 
   String get timebank_location => Intl.message(
-        'Your Timebank location.',
+        'U Timebank-ligging.',
         name: 'timebank_location',
       );
 
   String get timebank_location_hint => Intl.message(
-        'List the place or address where your community meets (such as a cafe, library, or church.).',
+        'Lys die plek of adres waar u gemeenskap vergader (soos \'n kafee, biblioteek of kerk.)',
         name: 'timebank_location_hint',
       );
 
   String get timebank_name_exists => Intl.message(
-        'Timebank name already exists !',
+        'Die tydbanknaam bestaan ​​reeds!',
         name: 'timebank_name_exists',
       );
 
   String get timebank_location_error => Intl.message(
-        'Please add the location of your Timebank',
+        'Voeg asseblief die ligging van u Timebank by',
         name: 'timebank_location_error',
       );
 
   String get timebank_logo_error => Intl.message(
-        'Timebank logo is mandatory',
+        'Tydbank logo is verpligtend',
         name: 'timebank_logo_error',
       );
 
   String get creating_timebank => Intl.message(
-        'Creating Timebank',
+        'Skep tydbank',
         name: 'creating_timebank',
       );
 
   String get timebank_billing_error => Intl.message(
-        'Please configure your personal information details',
+        'Stel u persoonlike inligting in',
         name: 'timebank_billing_error',
       );
 
   String get timebank_configure_profile_info => Intl.message(
-        'Configure profile information',
+        'Stel profielinligting op',
         name: 'timebank_configure_profile_info',
       );
 
   String get timebank_profile_info => Intl.message(
-        'Profile Information',
+        'Profielinligting',
         name: 'timebank_profile_info',
       );
 
   String get validation_error_required_fields => Intl.message(
-        'Field cannot be left blank*',
+        'Die veld kan nie leeg gelaat word nie *',
         name: 'validation_error_required_fields',
       );
 
   String get state => Intl.message(
-        'State',
+        'staat',
         name: 'state',
       );
 
   String get city => Intl.message(
-        'City',
+        'Stad',
         name: 'city',
       );
 
   String get zip => Intl.message(
-        'Zip',
+        'zip',
         name: 'zip',
       );
 
@@ -2522,411 +2441,397 @@ class S {
       );
 
   String get street_add1 => Intl.message(
-        'Street Address 1',
+        'straat adres 1',
         name: 'street_add1',
       );
 
   String get street_add2 => Intl.message(
-        'Street Address 2',
+        'Straatadres 2',
         name: 'street_add2',
       );
 
   String get company_name => Intl.message(
-        'Company name',
+        'Maatskappynaam',
         name: 'company_name',
       );
 
   String get continue_text => Intl.message(
-        'Continue',
+        'Aanhou',
         name: 'continue_text',
       );
 
   String get private_timebank => Intl.message(
-        'Private Timebank',
+        'Privaat tydbank',
         name: 'private_timebank',
       );
 
   String get updating_details => Intl.message(
-        'Updating details',
+        'Opdatering van besonderhede',
         name: 'updating_details',
       );
 
   String get edit_profile_information => Intl.message(
-        'Edit Profile Information',
+        'Profielinligting wysig',
         name: 'edit_profile_information',
       );
 
   String get selected_users_before => Intl.message(
-        'Selected users before',
+        'Geselekteerde gebruikers voor',
         name: 'selected_users_before',
       );
 
   String get private_timebank_alert => Intl.message(
-        'Private Timebank alert',
+        'Privaat tydbankwaarskuwing',
         name: 'private_timebank_alert',
       );
 
   String get private_timebank_alert_hint => Intl.message(
-        'Please be informed that Private Timebanks do not have a free option. You will need to provide your billing details to continue to create this Timebank',
+        'Let asseblief daarop dat privaat tydbanke nie \'n gratis opsie het nie. U sal u faktuurbesonderhede moet verstrek om aan te gaan om hierdie tydbank te skep',
         name: 'private_timebank_alert_hint',
       );
 
   String get additional_notes => Intl.message(
-        'Additional Notes',
+        'Bykomende notas',
         name: 'additional_notes',
       );
 
   String get prevent_accidental_delete => Intl.message(
-        'Prevent accidental delete',
+        'Voorkom verwydering per ongeluk',
         name: 'prevent_accidental_delete',
       );
 
   String get update_request => Intl.message(
-        'Update Request',
+        'Opdateringsversoek',
         name: 'update_request',
       );
 
   String get timebank_offers => Intl.message(
-        'Timebank Offers',
+        'Timebank bied aan',
         name: 'timebank_offers',
       );
 
-  String other(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Other', other: 'Others', args: [count])}',
-        name: 'other',
-        args: [count],
-      );
-
   String get plan_details => Intl.message(
-        'Plan Details',
+        'Planbesonderhede',
         name: 'plan_details',
       );
 
   String get on_community_plan => Intl.message(
-        'You are on Community Plan',
+        'U het \'n gemeenskapsplan',
         name: 'on_community_plan',
       );
 
   String get change_plan => Intl.message(
-        'change plan',
+        'verander plan',
         name: 'change_plan',
       );
 
   String get your_community_on_the => Intl.message(
-        'Your community is on the',
+        'U gemeenskap is op die',
         name: 'your_community_on_the',
       );
 
   String get plan_yearly_1500 => Intl.message(
-        'paying yearly for \$1500 and additional charges of',
+        'jaarliks ​​te betaal vir \$ 1500 en ekstra koste van',
         name: 'plan_yearly_1500',
       );
 
   String get plan_details_quota1 => Intl.message(
-        'per transaction billed monthly upon exceeding free monthly quota',
+        'per transaksie wat maandeliks teen \'n gratis maandelikse kwota oorskry word',
         name: 'plan_details_quota1',
       );
 
   String get paying => Intl.message(
-        'paying',
+        'betaal',
         name: 'paying',
       );
 
   String get charges_of => Intl.message(
-        'yearly and additional charges of',
+        'jaarlikse en addisionele koste van',
         name: 'charges_of',
       );
 
   String get per_transaction_quota => Intl.message(
-        'per transaction billed annualy upon exceeding free monthly quota',
+        'per transaksie wat jaarliks ​​gefaktureer word as die gratis maandelikse kwota oorskry',
         name: 'per_transaction_quota',
       );
 
   String get status => Intl.message(
-        'Status',
+        'status',
         name: 'status',
       );
 
   String get view_selected_plans => Intl.message(
-        'View selected plans',
+        'Kyk na geselekteerde planne',
         name: 'view_selected_plans',
       );
 
   String get monthly_subscription => Intl.message(
-        'Monthly subscriptions',
+        'Maandelikse intekeninge',
         name: 'monthly_subscription',
       );
 
-  String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [
-          count
-        ])}',
-        name: 'subscription',
-        args: [count],
-      );
-
   String get card_details => Intl.message(
-        'CARD DETAILS',
+        'KAARTBESONDERHEDE',
         name: 'card_details',
       );
 
   String get add_new => Intl.message(
-        'Add New',
+        'Voeg nuwe',
         name: 'add_new',
       );
 
   String get no_cards_available => Intl.message(
-        'No cards available',
+        'Geen kaarte beskikbaar nie',
         name: 'no_cards_available',
       );
 
   String get default_card_note => Intl.message(
-        'Note : long press to make a card default',
+        'Opmerking: druk \'n lang druk om \'n kaart standaard te stel',
         name: 'default_card_note',
       );
 
   String get bank_name => Intl.message(
-        'Bank Name',
+        'Bank Naam',
         name: 'bank_name',
       );
 
   String get default_card => Intl.message(
-        'Default Card',
+        'Standaardkaart',
         name: 'default_card',
       );
 
   String get already_default_card => Intl.message(
-        'This card is already added as default card',
+        'Hierdie kaart is reeds bygevoeg as standaardkaart',
         name: 'already_default_card',
       );
 
   String get make_default_card => Intl.message(
-        'Make this card as default',
+        'Maak hierdie kaart as verstek',
         name: 'make_default_card',
       );
 
   String get card_added => Intl.message(
-        'Card Added',
+        'Kaart bygevoeg',
         name: 'card_added',
       );
 
   String get card_sync => Intl.message(
-        'It may take couple of minutes to synchronize your payment',
+        'Dit kan \'n paar minute neem om u betaling te sinchroniseer',
         name: 'card_sync',
       );
 
   String get select_group => Intl.message(
-        'Select Group',
+        'Kies Groep',
         name: 'select_group',
       );
 
   String get delete_feed => Intl.message(
-        'Delete feed',
+        'Vee voer uit',
         name: 'delete_feed',
       );
 
   String get deleting_feed => Intl.message(
-        'Deleting feed..',
+        'Vee feed uit',
         name: 'deleting_feed',
       );
 
   String get delete_feed_confirmation => Intl.message(
-        'Are you sure you want to delete this news feed?',
+        'Is u seker dat u hierdie nuusstroom wil uitvee?',
         name: 'delete_feed_confirmation',
       );
 
   String get create_feed => Intl.message(
-        'Create Post',
+        'Skep \'n pos',
         name: 'create_feed',
       );
 
   String get create_feed_hint => Intl.message(
-        'Text, URL and Hashtags',
+        'Teks, URL en Hashtags',
         name: 'create_feed_hint',
       );
 
   String get create_feed_placeholder => Intl.message(
-        'What would you like to share*',
+        'Wat wil jy deel *',
         name: 'create_feed_placeholder',
       );
 
   String get creating_feed => Intl.message(
-        'Creating post',
+        'Skep \'n pos',
         name: 'creating_feed',
       );
 
   String get location_not_added => Intl.message(
-        'Location not added',
+        'Ligging nie bygevoeg nie',
         name: 'location_not_added',
       );
 
   String get category => Intl.message(
-        'Category',
+        'kategorie',
         name: 'category',
       );
 
   String get select_category => Intl.message(
-        'Please select a category',
+        'Kies \'n kategorie',
         name: 'select_category',
       );
 
   String get photo_credits => Intl.message(
-        'Photo Credits',
+        'Fotokrediete',
         name: 'photo_credits',
       );
 
   String get change_image => Intl.message(
-        'Change image',
+        'Verander prent',
         name: 'change_image',
       );
 
   String get change_attachment => Intl.message(
-        'Change Attachment',
+        'Verander aanhegsel',
         name: 'change_attachment',
       );
 
   String get add_image => Intl.message(
-        'Add Image',
+        'Voeg prent by',
         name: 'add_image',
       );
 
   String get add_attachment => Intl.message(
-        'Add Image / Document',
+        'Voeg prent / dokument by',
         name: 'add_attachment',
       );
 
   String get validation_error_file_size => Intl.message(
-        'Files larger than 10 MB are not allowed',
+        'Lêers groter as 10 MB word nie toegelaat nie',
         name: 'validation_error_file_size',
       );
 
   String get large_file_size => Intl.message(
-        'Large file alert',
+        'Groot lêerwaarskuwing',
         name: 'large_file_size',
       );
 
   String get update_feed => Intl.message(
-        'Update post',
+        'Dateer die pos op',
         name: 'update_feed',
       );
 
   String get updating_feed => Intl.message(
-        'Updating post',
+        'Opdatering van plasing',
         name: 'updating_feed',
       );
 
   String get notification_alerts => Intl.message(
-        'Notification alerts',
+        'Kennisgewings waarskuwings',
         name: 'notification_alerts',
       );
 
   String get request_accepted => Intl.message(
-        'Member has accepted a request and is waiting for approval',
+        'Die lid het \'n versoek aanvaar en wag vir goedkeuring',
         name: 'request_accepted',
       );
 
   String get request_completed => Intl.message(
-        'Member claims time credits and is waiting for approval',
+        'Die lid eis tydskrediete en wag vir goedkeuring',
         name: 'request_completed',
       );
 
   String get join_request_message => Intl.message(
-        'Member request to join a',
+        'Lid versoek om aan te sluit by a',
         name: 'join_request_message',
       );
 
   String get offer_debit => Intl.message(
-        'Debit for one to many offer',
+        'Debiteer vir een tot baie aanbod',
         name: 'offer_debit',
       );
 
   String get member_exits => Intl.message(
-        'Member exits a',
+        'Lid verlaat a',
         name: 'member_exits',
       );
 
   String get deletion_request_message => Intl.message(
-        'Deletion request could not be processed (Due to pending transactions)',
+        'Die uitvee-versoek kon nie verwerk word nie (weens transaksies hangende)',
         name: 'deletion_request_message',
       );
 
   String get recieved_credits_one_to_many => Intl.message(
-        'Received Credit for one to many offer',
+        'Krediet ontvang vir een tot baie aanbod',
         name: 'recieved_credits_one_to_many',
       );
 
   String get click_to_see_interests => Intl.message(
-        'Click here to see your interests',
+        'Klik hier om u belangstellings te sien',
         name: 'click_to_see_interests',
       );
 
   String get click_to_see_skills => Intl.message(
-        'Click here to see your skills',
+        'Klik hier om u vaardighede te sien',
         name: 'click_to_see_skills',
       );
 
   String get my_language => Intl.message(
-        'My Language',
+        'My taal',
         name: 'my_language',
       );
 
   String get my_timezone => Intl.message(
-        'My Timezone',
+        'My tydsone',
         name: 'my_timezone',
       );
 
   String get select_timebank => Intl.message(
-        'Select Timebank',
+        'Kies Timebank',
         name: 'select_timebank',
       );
 
   String get name => Intl.message(
-        'Name',
+        'naam',
         name: 'name',
       );
 
   String get add_bio => Intl.message(
-        'Add your bio',
+        'Voeg u bio by',
         name: 'add_bio',
       );
 
   String get enter_name => Intl.message(
-        'Enter name',
+        'Voer naam in',
         name: 'enter_name',
       );
 
   String get update_name => Intl.message(
-        'Update name',
+        'Dateer naam op',
         name: 'update_name',
       );
 
   String get enter_name_hint => Intl.message(
-        'Please enter name to update',
+        'Voer die naam in om op te dateer',
         name: 'enter_name_hint',
       );
 
   String get update_bio => Intl.message(
-        'Update bio',
+        'Opdater bio',
         name: 'update_bio',
       );
 
   String get update_bio_hint => Intl.message(
-        'Please enter bio to update',
+        'Voer asseblief bio in om by te werk',
         name: 'update_bio_hint',
       );
 
   String get enter_bio => Intl.message(
-        'Enter bio',
+        'Voer bio in',
         name: 'enter_bio',
       );
 
   String get available_as_needed => Intl.message(
-        'Available as needed - Open to Offers',
+        'Indien nodig beskikbaar - Oop vir aanbiedinge',
         name: 'available_as_needed',
       );
 
   String get would_be_unblocked => Intl.message(
-        'would be unblocked',
+        'sou geblokkeer word',
         name: 'would_be_unblocked',
       );
 
@@ -2936,147 +2841,147 @@ class S {
       );
 
   String get hours_worked => Intl.message(
-        'Hours worked',
+        'Ure gewerk',
         name: 'hours_worked',
       );
 
   String get less => Intl.message(
-        'Less',
+        'minder',
         name: 'less',
       );
 
   String get more => Intl.message(
-        'More',
+        'meer',
         name: 'more',
       );
 
   String get no_ratings_yet => Intl.message(
-        'No ratings yet',
+        'Nog geen graderings nie',
         name: 'no_ratings_yet',
       );
 
   String get message => Intl.message(
-        'Message',
+        'boodskap',
         name: 'message',
       );
 
   String get not_completed_any_tasks => Intl.message(
-        'not completed any tasks',
+        'geen take voltooi nie',
         name: 'not_completed_any_tasks',
       );
 
   String get review_earnings => Intl.message(
-        'Review Earnings',
+        'Hersien verdienste',
         name: 'review_earnings',
       );
 
   String get no_transactions_yet => Intl.message(
-        'You do not have any transaction yet',
+        'U het nog geen transaksie nie',
         name: 'no_transactions_yet',
       );
 
   String get anonymous => Intl.message(
-        'Anonymous',
+        'Anoniem',
         name: 'anonymous',
       );
 
   String get date => Intl.message(
-        'Date',
+        'datum',
         name: 'date',
       );
 
   String get search_template_hint => Intl.message(
-        'Enter name of a Project Template',
+        'Voer die naam van \'n projekvorm in',
         name: 'search_template_hint',
       );
 
   String get create_project_from_template => Intl.message(
-        'Create Project from Template',
+        'Skep projek uit die sjabloon',
         name: 'create_project_from_template',
       );
 
   String get create_new_project => Intl.message(
-        'Create new Project',
+        'Skep \'n nuwe projek',
         name: 'create_new_project',
       );
 
   String get no_templates_found => Intl.message(
-        'No templates found',
+        'Geen sjablone gevind nie',
         name: 'no_templates_found',
       );
 
   String get select_template => Intl.message(
-        'Please select a Template from the list of available Templates',
+        'Kies \'n sjabloon uit die lys met beskikbare sjablone',
         name: 'select_template',
       );
 
   String get template_alert => Intl.message(
-        'Template alert',
+        'Sjabloonwaarskuwing',
         name: 'template_alert',
       );
 
   String get new_project => Intl.message(
-        'New Project',
+        'Nuwe projek',
         name: 'new_project',
       );
 
   String get review_feedback_message => Intl.message(
-        'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
+        'Neem \'n oomblik om na te dink oor u ervaring en deel u waardering deur \'n kort resensie te skryf.',
         name: 'review_feedback_message',
       );
 
   String get submit => Intl.message(
-        'Submit',
+        'Indien',
         name: 'submit',
       );
 
   String get review => Intl.message(
-        'Review',
+        'Resensie',
         name: 'review',
       );
 
   String get redirecting_to_messages => Intl.message(
-        'Redirecting to messages',
+        'Verwys na boodskappe',
         name: 'redirecting_to_messages',
       );
 
   String get completing_task => Intl.message(
-        'Completing task',
+        'Voltooi taak',
         name: 'completing_task',
       );
 
   String get total_spent => Intl.message(
-        'Total Spent',
+        'Totale besteding',
         name: 'total_spent',
       );
 
   String get has_worked_for => Intl.message(
-        'has worked for',
+        'het gewerk vir',
         name: 'has_worked_for',
       );
 
   String get email_not_updated => Intl.message(
-        'User email not updated',
+        'Gebruiker-e-pos nie opgedateer nie',
         name: 'email_not_updated',
       );
 
   String get no_pending_requests => Intl.message(
-        'No pending requests',
+        'Geen hangende versoeke nie',
         name: 'no_pending_requests',
       );
 
   String get choose_suitable_plan => Intl.message(
-        'Choose a suitable plan',
+        'Kies \'n geskikte plan',
         name: 'choose_suitable_plan',
       );
 
   String get click_for_more_info => Intl.message(
-        'Click here for more info',
+        'Klik hier vir meer inligting',
         name: 'click_for_more_info',
       );
 
   String get taking_to_new_timebank => Intl.message(
-        'Taking you to your new Timebank...',
+        'Neem u na u nuwe Timebank ...',
         name: 'taking_to_new_timebank',
       );
 
@@ -3086,322 +2991,322 @@ class S {
       );
 
   String get bill_me_info1 => Intl.message(
-        'This is available only to users who have prior arrangements with Seva Exchange. Please send an email to billme@sevaexchange.com for details',
+        'Dit is slegs beskikbaar vir gebruikers wat vooraf reëlings met Seva Exchange tref. Stuur \'n e-pos na billme@sevaexchange.com vir meer inligting',
         name: 'bill_me_info1',
       );
 
   String get bill_me_info2 => Intl.message(
-        'Only users who have been approved a priori can check the “Bill Me” box. If you would like to do this, please send an email to billme@sevaexchange.com',
+        'Slegs gebruikers wat a priori goedgekeur is, kan die “Bill Me” -kassie merk. Stuur \'n e-pos na billme@sevaexchange.com as u dit wil doen',
         name: 'bill_me_info2',
       );
 
   String get billable_transactions => Intl.message(
-        'Billable transactions',
+        'Faktureerbare transaksies',
         name: 'billable_transactions',
       );
 
   String get currently_active => Intl.message(
-        'Currently Active',
+        'Tans aktief',
         name: 'currently_active',
       );
 
   String get choose => Intl.message(
-        'Choose',
+        'kies',
         name: 'choose',
       );
 
   String get plan_change => Intl.message(
-        'Plan change',
+        'Beplan verandering',
         name: 'plan_change',
       );
 
   String get ownership_success => Intl.message(
-        'Congratulations! You are now the new owner of the Timebank',
+        'Baie geluk! U is nou die nuwe eienaar van die Timebank',
         name: 'ownership_success',
       );
 
   String get change => Intl.message(
-        'Change',
+        'verandering',
         name: 'change',
       );
 
   String get contact_seva_to_change_plan => Intl.message(
-        'Please contact SevaX support to change the plans',
+        'Kontak SevaX se ondersteuning om die planne te verander',
         name: 'contact_seva_to_change_plan',
       );
 
   String get changing_ownership_of => Intl.message(
-        'Changing ownership of this',
+        'Die eienaarskap hiervan verander',
         name: 'changing_ownership_of',
       );
 
   String get to_other_admin => Intl.message(
-        'to another admin.',
+        'na \'n ander administrateur.',
         name: 'to_other_admin',
       );
 
   String get change_to => Intl.message(
-        'Change to',
+        'Verander na',
         name: 'change_to',
       );
 
   String get invitation_sent1 => Intl.message(
-        'We have sent your transfer of ownership invitation. You will remain to be the owner of Timebank',
+        'Ons het u uitnodiging vir oordrag van eienaarskap gestuur. U bly die eienaar van Timebank',
         name: 'invitation_sent1',
       );
 
   String get invitation_sent2 => Intl.message(
-        'until',
+        'totdat',
         name: 'invitation_sent2',
       );
 
   String get invitation_sent3 => Intl.message(
-        'accepts the invitation and provides their new billing information.',
+        'aanvaar die uitnodiging en gee hul nuwe faktuurinligting.',
         name: 'invitation_sent3',
       );
 
   String get by_accepting_owner_timebank => Intl.message(
-        'By accepting, you will become owner of the timebank',
+        'As u aanvaar, word u eienaar van die tydbank',
         name: 'by_accepting_owner_timebank',
       );
 
   String get select_user => Intl.message(
-        'Please select a user',
+        'Kies \'n gebruiker',
         name: 'select_user',
       );
 
   String get change_ownership_pending_task_message => Intl.message(
-        'You have pending tasks. Please complete tasks before ownership can be transferred',
+        'U het hangende take. Voltooi die take voordat eienaarskap oorgedra kan word',
         name: 'change_ownership_pending_task_message',
       );
 
   String get change_ownership_pending_payment1 => Intl.message(
-        'You have payment pending of',
+        'U het \'n betaling hangende van',
         name: 'change_ownership_pending_payment1',
       );
 
   String get change_ownership_pending_payment2 => Intl.message(
-        '. Please complete these payment before ownership can be transferred',
+        '. Voltooi asseblief hierdie betaling voordat u die eienaarskap kan oordra',
         name: 'change_ownership_pending_payment2',
       );
 
   String get search_admin => Intl.message(
-        'Search Admin',
+        'Soek admin',
         name: 'search_admin',
       );
 
   String get change_ownership_message1 => Intl.message(
-        'You are the new owner of Timebank',
+        'U is die nuwe eienaar van Timebank',
         name: 'change_ownership_message1',
       );
 
   String get change_ownership_message2 => Intl.message(
-        'You need to accept it to complete the process',
+        'U moet dit aanvaar om die proses te voltooi',
         name: 'change_ownership_message2',
       );
 
   String get change_ownership_advisory => Intl.message(
-        'You are required to provide billing details for this Timebank - including the new billing address. The transfer of ownership will not be completed until this is done.',
+        'U moet faktuurbesonderhede vir hierdie tydbank verstrek - insluitend die nuwe faktuuradres. Die oordrag van eienaarskap sal eers voltooi word voordat dit gedoen is.',
         name: 'change_ownership_advisory',
       );
 
   String get change_ownership_already_invited => Intl.message(
-        'already invited.',
+        'al genooi.',
         name: 'change_ownership_already_invited',
       );
 
   String get donate => Intl.message(
-        'Donate',
+        'skenk',
         name: 'donate',
       );
 
   String get donate_to_timebank => Intl.message(
-        'Donate seva credits to Timebank',
+        'Skenk sewekrediete aan Timebank',
         name: 'donate_to_timebank',
       );
 
   String get insufficient_credits_to_donate => Intl.message(
-        'You do not have sufficient credits to donate!',
+        'U het nie genoeg krediete om te skenk nie!',
         name: 'insufficient_credits_to_donate',
       );
 
   String get current_seva_credit => Intl.message(
-        'Your current seva credits is',
+        'U huidige sewa-krediete is',
         name: 'current_seva_credit',
       );
 
   String get donate_message => Intl.message(
-        'On click of donate your balance will be adjusted',
+        'As u op die donasie klik, sal u saldo aangepas word',
         name: 'donate_message',
       );
 
   String get zero_credit_donation_error => Intl.message(
-        'You cannot donate 0 credits',
+        'U kan nie 0 krediete skenk nie',
         name: 'zero_credit_donation_error',
       );
 
   String get negative_credit_donation_error => Intl.message(
-        'You cannot donate lesser than 0 credits',
+        'U kan nie minder as 0 krediete skenk nie',
         name: 'negative_credit_donation_error',
       );
 
   String get empty_credit_donation_error => Intl.message(
-        'Donate some credits',
+        'Skenk krediete',
         name: 'empty_credit_donation_error',
       );
 
   String get number_of_seva_credit => Intl.message(
-        'No of seva credits',
+        'Aantal Seva krediete',
         name: 'number_of_seva_credit',
       );
 
   String get donation_success => Intl.message(
-        'You have donated credits successfully',
+        'U het krediete suksesvol geskenk',
         name: 'donation_success',
       );
 
   String get sending_invitation => Intl.message(
-        'Sending invitation...',
+        'Stuur uitnodiging ...',
         name: 'sending_invitation',
       );
 
   String get ownership_transfer_error => Intl.message(
-        'Error occurred! Please come back later and try again.',
+        'Fout het ontstaan! Kom asseblief later weer en probeer weer.',
         name: 'ownership_transfer_error',
       );
 
   String get add_members => Intl.message(
-        'Add members',
+        'Voeg lede by',
         name: 'add_members',
       );
 
   String get group_logo => Intl.message(
-        'Group logo',
+        'Groeplogo',
         name: 'group_logo',
       );
 
   String get name_your_group => Intl.message(
-        'Name your group',
+        'Noem u groep',
         name: 'name_your_group',
       );
 
   String get bit_more_about_group => Intl.message(
-        'Ex: A bit more about your group',
+        'Voorbeeld: \'n Bietjie meer oor u groep',
         name: 'bit_more_about_group',
       );
 
   String get private_group => Intl.message(
-        'Private Group',
+        'Privaat Groep',
         name: 'private_group',
       );
 
   String get is_pin_at_right_place => Intl.message(
-        'Is this pin at a right place?',
+        'Is hierdie speld op die regte plek?',
         name: 'is_pin_at_right_place',
       );
 
   String get find_timebanks => Intl.message(
-        'Find Timebanks',
+        'Soek Timebanks',
         name: 'find_timebanks',
       );
 
   String get groups_within => Intl.message(
-        'Groups within',
+        'Groepe binne',
         name: 'groups_within',
       );
 
   String get edit_group => Intl.message(
-        'Edit Group',
+        'Groep redigeer',
         name: 'edit_group',
       );
 
   String get view_requests => Intl.message(
-        'View requests',
+        'Kyk na versoeke',
         name: 'view_requests',
       );
 
   String get delete_group => Intl.message(
-        'Delete Group',
+        'Vee groep uit',
         name: 'delete_group',
       );
 
   String get settings => Intl.message(
-        'Settings',
+        'instellings',
         name: 'settings',
       );
 
   String get invite_members => Intl.message(
-        'Invite Members',
+        'Nooi lede',
         name: 'invite_members',
       );
 
   String get invite_via_code => Intl.message(
-        'Invite via code',
+        'Nooi via kode',
         name: 'invite_via_code',
       );
 
   String get bulk_invite_users_csv => Intl.message(
-        'Bulk invite users by CSV',
+        'Grootmaat nooi gebruikers deur CSV uit',
         name: 'bulk_invite_users_csv',
       );
 
   String get csv_message1 => Intl.message(
-        'Download the CSV template to',
+        'Laai die CSV-sjabloon af na',
         name: 'csv_message1',
       );
 
   String get csv_message2 => Intl.message(
-        'fill the users you would like to add',
+        'vul die gebruikers in wat u wil byvoeg',
         name: 'csv_message2',
       );
 
   String get csv_message3 => Intl.message(
-        'then upload the CSV.',
+        'laai dan die CSV op.',
         name: 'csv_message3',
       );
 
   String get download_sample_csv => Intl.message(
-        'Download sample CSV file',
+        'Laai voorbeeld van CSV-lêer af',
         name: 'download_sample_csv',
       );
 
   String get choose_csv => Intl.message(
-        'Choose CSV file to bulk invite Members',
+        'Kies CSV-lêer om lede uit te nooi',
         name: 'choose_csv',
       );
 
   String get csv_size_limit => Intl.message(
-        'NOTE : Maximum file size is 1 MB',
+        'OPMERKING: Die maksimum lêergrootte is 1 MB',
         name: 'csv_size_limit',
       );
 
   String get uploading_csv => Intl.message(
-        'Uploading CSV File',
+        'Laai CSV-lêer op',
         name: 'uploading_csv',
       );
 
   String get uploaded_successfully => Intl.message(
-        'Uploaded Successfully',
+        'Suksesvol opgelaai',
         name: 'uploaded_successfully',
       );
 
   String get csv_error => Intl.message(
-        'Please select a CSV file first before uploading',
+        'Kies eers \'n CSV-lêer voordat u dit oplaai',
         name: 'csv_error',
       );
 
   String get upload => Intl.message(
-        'Upload',
+        'oplaai',
         name: 'upload',
       );
 
   String get large_file_alert => Intl.message(
-        'Large file alert',
+        'Groot lêerwaarskuwing',
         name: 'large_file_alert',
       );
 
   String get csv_large_file_message => Intl.message(
-        'Files larger than 1 MB are not allowed',
+        'Lêers groter as 1 MB word nie toegelaat nie',
         name: 'csv_large_file_message',
       );
 
@@ -3416,17 +3321,17 @@ class S {
       );
 
   String get add => Intl.message(
-        'Add',
+        'Voeg',
         name: 'add',
       );
 
   String get no_codes_generated => Intl.message(
-        'No codes generated yet.',
+        'Nog geen kodes gegenereer nie.',
         name: 'no_codes_generated',
       );
 
   String get not_yet_redeemed => Intl.message(
-        'Not yet redeemed',
+        'Nog nie verlos nie',
         name: 'not_yet_redeemed',
       );
 
@@ -3436,7 +3341,7 @@ class S {
       );
 
   String get timebank_code => Intl.message(
-        'Timebank code :',
+        'Tydbankkode:',
         name: 'timebank_code',
       );
 
@@ -3451,27 +3356,27 @@ class S {
       );
 
   String get share_code => Intl.message(
-        'Share code',
+        'Deel kode',
         name: 'share_code',
       );
 
   String get invite_message => Intl.message(
-        'Timebanks are communities that allow you to volunteer and also receive time credits towards getting things done for you. Use the code',
+        'Tydbanke is gemeenskappe wat u toelaat om vrywillig te werk en ook tydskrediete te kry om dinge vir u gedoen te kry. Gebruik die kode',
         name: 'invite_message',
       );
 
   String get invite_prompt => Intl.message(
-        'when prompted to join this Timebank. Please download the app from the links provided at https://sevaexchange.page.link/sevaxapp',
+        'toe hy gevra word om by hierdie Timebank aan te sluit. Laai die app af vanaf die skakels op https://sevaexchange.page.link/sevaxapp',
         name: 'invite_prompt',
       );
 
   String get code_generated => Intl.message(
-        'Code generated',
+        'Kode gegenereer',
         name: 'code_generated',
       );
 
   String get is_your_code => Intl.message(
-        'is your code.',
+        'is u kode.',
         name: 'is_your_code',
       );
 
@@ -3486,47 +3391,47 @@ class S {
       );
 
   String get no_member_found => Intl.message(
-        'No member found',
+        'Geen lid gevind nie',
         name: 'no_member_found',
       );
 
   String get declined => Intl.message(
-        'Declined',
+        'afgeneem',
         name: 'declined',
       );
 
   String get search_by_email_name => Intl.message(
-        'Search members via email,name',
+        'Soek lede via e-pos, naam',
         name: 'search_by_email_name',
       );
 
   String get no_groups_found => Intl.message(
-        'No groups found',
+        'Geen groepe gevind nie',
         name: 'no_groups_found',
       );
 
   String get no_image_available => Intl.message(
-        'No Image Avaialable',
+        'Geen beeld beskikbaar nie',
         name: 'no_image_available',
       );
 
   String get group_description => Intl.message(
-        'Groups within a Timebank allow for granular activities. You can join one of the groups below or create your own group',
+        'Groepe binne \'n tydbank maak voorsiening vir korrelige aktiwiteite. U kan by een van die groepe hieronder aansluit of u eie groep skep',
         name: 'group_description',
       );
 
   String get updating_users => Intl.message(
-        'Updating Users',
+        'Opdatering van gebruikers',
         name: 'updating_users',
       );
 
   String get admins_organizers => Intl.message(
-        'Admins & Organizers',
+        'Administrateurs en organiseerders',
         name: 'admins_organizers',
       );
 
   String get enter_reason_to_exit => Intl.message(
-        'Enter reason to exit',
+        'Voer rede in om uit te gaan',
         name: 'enter_reason_to_exit',
       );
 
@@ -3536,7 +3441,7 @@ class S {
       );
 
   String get member_removal_confirmation => Intl.message(
-        'Are you sure you want to remove',
+        'Is u seker dat u wil verwyder?',
         name: 'member_removal_confirmation',
       );
 
@@ -3546,22 +3451,22 @@ class S {
       );
 
   String get loan_seva_credit_to_user => Intl.message(
-        'Loan seva credits to user',
+        'Lening seva krediete aan die gebruiker',
         name: 'loan_seva_credit_to_user',
       );
 
   String get timebank_seva_credit => Intl.message(
-        'Your timebank seva credits is',
+        'U tydbank-sewa-krediete is',
         name: 'timebank_seva_credit',
       );
 
   String get timebank_loan_message => Intl.message(
-        'On click of Approve, Timebank balance will be adjusted',
+        'As u goedkeur, klik Timebank-saldo',
         name: 'timebank_loan_message',
       );
 
   String get loan_zero_credit_error => Intl.message(
-        'You cannot loan 0 credits',
+        'U kan nie 0 krediete leen nie',
         name: 'loan_zero_credit_error',
       );
 
@@ -3571,22 +3476,22 @@ class S {
       );
 
   String get empty_credit_loan_error => Intl.message(
-        'Loan some credits',
+        'Lening enkele krediete',
         name: 'empty_credit_loan_error',
       );
 
   String get loan_success => Intl.message(
-        'You have loaned credits successfully',
+        'U het krediete suksesvol geleen',
         name: 'loan_success',
       );
 
   String get co_ordinators => Intl.message(
-        'Coordinators',
+        'koördineerders',
         name: 'co_ordinators',
       );
 
   String get remove => Intl.message(
-        'Remove',
+        'Verwyder',
         name: 'remove',
       );
 
@@ -3596,12 +3501,12 @@ class S {
       );
 
   String get demote => Intl.message(
-        'Demote',
+        'Gradeer',
         name: 'demote',
       );
 
   String get billing => Intl.message(
-        'Billing',
+        'Rekening',
         name: 'billing',
       );
 
@@ -3611,47 +3516,47 @@ class S {
       );
 
   String get delete_timebank => Intl.message(
-        'Delete Timebank',
+        'Vee tydbank uit',
         name: 'delete_timebank',
       );
 
   String get remove_user => Intl.message(
-        'Remove User',
+        'Verwyder gebruiker',
         name: 'remove_user',
       );
 
   String get exit_user => Intl.message(
-        'Exit User',
+        'Verlaat gebruiker',
         name: 'exit_user',
       );
 
   String get transfer_data_hint => Intl.message(
-        'Transfer ownership of this user\'s data to another user, like group ownership.',
+        'Dra eienaarskap van hierdie gebruiker se data oor aan \'n ander gebruiker, soos groepseienaarskap.',
         name: 'transfer_data_hint',
       );
 
   String get transfer_to => Intl.message(
-        'Transfer to',
+        'Oordra aan',
         name: 'transfer_to',
       );
 
   String get search_user => Intl.message(
-        'Search a user',
+        'Soek \'n gebruiker',
         name: 'search_user',
       );
 
   String get transer_hint_data_deletion => Intl.message(
-        'All data not transferred will be deleted.',
+        'Alle data wat nie oorgedra is nie, sal uitgevee word.',
         name: 'transer_hint_data_deletion',
       );
 
   String get user_removal_success => Intl.message(
-        'User is successfully removed from the timebank',
+        'Gebruiker word suksesvol van die tydbank verwyder',
         name: 'user_removal_success',
       );
 
   String get error_occured => Intl.message(
-        'Error occurred! Please come back later and try again.',
+        'Fout het ontstaan! Kom asseblief later weer en probeer weer.',
         name: 'error_occured',
       );
 
@@ -3661,7 +3566,7 @@ class S {
       );
 
   String get group_exists => Intl.message(
-        'Group name already exists',
+        'Groepnaam bestaan ​​reeds',
         name: 'group_exists',
       );
 
@@ -3671,7 +3576,7 @@ class S {
       );
 
   String get part_of => Intl.message(
-        'Part of',
+        'Deel van',
         name: 'part_of',
       );
 
@@ -3686,12 +3591,12 @@ class S {
       );
 
   String get no_volunteers_yet => Intl.message(
-        'No Volunteers joined yet.',
+        'Nog geen vrywilligers het aangesluit nie.',
         name: 'no_volunteers_yet',
       );
 
   String get read_less => Intl.message(
-        'Read Less',
+        'Lees minder',
         name: 'read_less',
       );
 
@@ -3701,7 +3606,7 @@ class S {
       );
 
   String get admin_not_available => Intl.message(
-        'Admin not Available',
+        'Admin is nie beskikbaar nie',
         name: 'admin_not_available',
       );
 
@@ -3711,7 +3616,7 @@ class S {
       );
 
   String get volunteers => Intl.message(
-        'Volunteer(s)',
+        'Vrywilliger (s)',
         name: 'volunteers',
       );
 
@@ -3721,7 +3626,7 @@ class S {
       );
 
   String get admins => Intl.message(
-        'Admins',
+        'bestuurders',
         name: 'admins',
       );
 
@@ -3736,7 +3641,7 @@ class S {
       );
 
   String get view_profile => Intl.message(
-        'View profile',
+        'Besigtig profiel',
         name: 'view_profile',
       );
 
@@ -3756,7 +3661,7 @@ class S {
       );
 
   String get select_volunteer => Intl.message(
-        'Select volunteers',
+        'Kies vrywilligers',
         name: 'select_volunteer',
       );
 
@@ -3766,22 +3671,22 @@ class S {
       );
 
   String get switching_timebank => Intl.message(
-        'Switching Timebank',
+        'Skakel tydbank uit',
         name: 'switching_timebank',
       );
 
   String get tap_to_delete => Intl.message(
-        'Tap to delete this item',
+        'Tik om hierdie item uit te vee',
         name: 'tap_to_delete',
       );
 
   String get clear => Intl.message(
-        'Clear',
+        'duidelik',
         name: 'clear',
       );
 
   String get currently_selected => Intl.message(
-        'Currently selected',
+        'Tans gekies',
         name: 'currently_selected',
       );
 
@@ -3801,7 +3706,7 @@ class S {
       );
 
   String get tap_to_view_details => Intl.message(
-        'Tap to view details',
+        'Tik om besonderhede te sien',
         name: 'tap_to_view_details',
       );
 
@@ -3816,12 +3721,12 @@ class S {
       );
 
   String get open_settings => Intl.message(
-        'Open Settings',
+        'Maak instellings oop',
         name: 'open_settings',
       );
 
   String get failed_to_fetch_location => Intl.message(
-        'Failed to fetch location',
+        'Kon nie ligging gaan haal nie',
         name: 'failed_to_fetch_location',
       );
 
@@ -3831,12 +3736,12 @@ class S {
       );
 
   String get missing_permission => Intl.message(
-        'Missing Permission',
+        'Toestemming ontbreek',
         name: 'missing_permission',
       );
 
   String get pdf_document => Intl.message(
-        'PDF Document',
+        'PDF-dokument',
         name: 'pdf_document',
       );
 
@@ -3846,12 +3751,12 @@ class S {
       );
 
   String get profanity_image_alert => Intl.message(
-        'The SevaX App has a policy of not allowing profane, explicit or violent images. Please use another image.',
+        'Die SevaX-app het \'n beleid om nie onwettige, eksplisiete of gewelddadige beelde toe te laat nie. Gebruik \'n ander prentjie.',
         name: 'profanity_image_alert',
       );
 
   String get profanity_text_alert => Intl.message(
-        'The SevaX App has a policy of not allowing profane or explicit language. Please revise your text.',
+        'Die SevaX-app het \'n beleid om nie lasterlike of eksplisiete taal toe te laat nie. Hersien asseblief u teks.',
         name: 'profanity_text_alert',
       );
 
@@ -3861,7 +3766,7 @@ class S {
       );
 
   String get cv_message => Intl.message(
-        'CV will help out to provide more details',
+        'CV sal help om meer besonderhede te verskaf',
         name: 'cv_message',
       );
 
@@ -3881,138 +3786,122 @@ class S {
       );
 
   String get validation_error_cv_not_selected => Intl.message(
-        'Please select a CV file first before uploading',
+        'Kies eers \'n CV-lêer voordat u dit oplaai',
         name: 'validation_error_cv_not_selected',
       );
 
   String get enter_reason_to_delete => Intl.message(
-        'Enter reason to delete',
+        'Voer rede in om uit te vee',
         name: 'enter_reason_to_delete',
       );
 
   String get enter_reason_to_delete_error => Intl.message(
-        'Please enter reason to delete',
+        'Voer die rede in om uit te vee',
         name: 'enter_reason_to_delete_error',
       );
 
   String get delete_request_confirmation => Intl.message(
-        '¿Estás seguro de que deseas eliminar esta solicitud?',
+        'Are you sure you want to delete this request?',
         name: 'delete_request_confirmation',
       );
 
   String get will_be_added_to_request => Intl.message(
-        'se agregará automáticamente a la solicitud.',
+        '*** word outomaties by die versoek gevoeg.',
         name: 'will_be_added_to_request',
       );
 
   String get updating => Intl.message(
-        'Actualizando',
+        'opdatering',
         name: 'updating',
       );
 
   String get skipping => Intl.message(
-        'Salto a la comba',
+        'Touspring',
         name: 'skipping',
       );
 
   String get check_email => Intl.message(
-        'Ahora, mira tu correo.',
+        'Gaan nou u e-pos na.',
         name: 'check_email',
       );
 
   String get thanks => Intl.message(
-        '¡Gracias!',
+        'Dankie!',
         name: 'thanks',
       );
 
   String hour(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Hora', other: 'Horas', args: [count])}',
-        name: 'hour',
+        '${Intl.plural(count, one: 'Uur', other: 'Ure', args: [count])}',
+        name: 'hour',        
         args: [count],
       );
 
   String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Proyecto de banco de tiempo', other: 'Proyectos de banco de tiempo', args: [
-          count
-        ])}',
-        name: 'timebank_project',
+        '${Intl.plural(count, one: 'Tydbank-projek', other: 'Timebank-projekte', args: [count])}',
+        name: 'timebank_project',        
         args: [count],
       );
 
   String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Proyecto personal', other: 'Proyectos personales', args: [
-          count
-        ])}',
-        name: 'personal_project',
+        '${Intl.plural(count, one: 'Persoonlike projek', other: 'Persoonlike projekte', args: [count])}',
+        name: 'personal_project',        
         args: [count],
       );
 
   String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Solicitud personal', other: 'Solicitudes personales', args: [
-          count
-        ])}',
-        name: 'personal_request',
+        '${Intl.plural(count, one: 'Persoonlike versoek', other: 'Persoonlike versoeke', args: [count])}',
+        name: 'personal_request',        
         args: [count],
       );
 
   String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Solicitud de banco de tiempo', other: 'Solicitudes de banco de tiempo', args: [
-          count
-        ])}',
-        name: 'timebank_request',
+        '${Intl.plural(count, one: 'Tydbank versoek', other: 'Tydbank versoeke', args: [count])}',
+        name: 'timebank_request',        
         args: [count],
       );
 
   String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Miembro seleccionado', other: 'Miembros seleccionados', args: [
-          count
-        ])}',
-        name: 'members_selected',
+        '${Intl.plural(count, one: 'Lid gekies', other: 'Lede gekies', args: [count])}',
+        name: 'members_selected',        
         args: [count],
       );
 
   String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Voluntario seleccionado', other: 'Voluntarios seleccionados', args: [
-          count
-        ])}',
-        name: 'volunteers_selected',
+        '${Intl.plural(count, one: 'Vrywilligers gekies', other: 'Vrywilligers gekies', args: [count])}',
+        name: 'volunteers_selected',        
         args: [count],
       );
 
   String user(num count) => Intl.message(
-        '${Intl.plural(count, one: 'usuario', other: 'usuarios', args: [
-          count
-        ])}',
-        name: 'user',
+        '${Intl.plural(count, one: 'Gebruiker', other: 'Gebruikers', args: [count])}',
+        name: 'user',        
         args: [count],
       );
 
   String other(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Otro', other: 'Otros', args: [count])}',
-        name: 'other',
+        '${Intl.plural(count, one: 'Ander', other: 'ander', args: [count])}ander',
+        name: 'other',        
         args: [count],
       );
 
   String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Suscripción', other: 'Suscripciones', args: [
-          count
-        ])}',
-        name: 'subscription',
+        '${Intl.plural(count, one: 'Subskripsies', other: 'Subskripsies', args: [count])}',
+        name: 'subscription',        
         args: [count],
       );
 
   String get max_credits => Intl.message(
-        'Maximum credits*',
+        'Maksimum krediete *',
         name: 'max_credits',
       );
 
   String get max_credit_hint => Intl.message(
-        'Maximum credits to be given per volunteer',
+        'Maksimum krediete wat per vrywilliger gegee moet word',
         name: 'max_credit_hint',
       );
 
   String get dont_allow => Intl.message(
-        'Don\'t Allow',
+        'Moenie toelaat nie',
         name: 'dont_allow',
       );
 
@@ -4022,32 +3911,27 @@ class S {
       );
 
   String get only_pdf_files_allowed => Intl.message(
-        'Only Pdf files are allowed',
+        'Slegs Pdf-lêers word toegelaat',
         name: 'only_pdf_files_allowed',
       );
 
   String get delete_request => Intl.message(
-        'Delete Request',
+        'Vee versoek uit',
         name: 'delete_request',
       );
 
   String get delete_offer => Intl.message(
-        'Delete Offer',
+        'Vee aanbod uit',
         name: 'delete_offer',
       );
 
-  String get delete_request_confirmation => Intl.message(
-        'Are you sure you want to delete this request?',
-        name: 'delete_request_confirmation',
-      );
-
   String get delete_offer_confirmation => Intl.message(
-        'Are you sure you want to delete this offer?',
+        'Is u seker dat u hierdie aanbod wil uitvee?',
         name: 'delete_offer_confirmation',
       );
 
   String get extension_alert => Intl.message(
-        'Extension alert',
+        'Uitbreidingwaarskuwing',
         name: 'extension_alert',
       );
 
@@ -4061,33 +3945,28 @@ class S {
         name: 'no_members',
       );
 
-  String get will_be_added_to_request => Intl.message(
-        '*** will be automatically added to the request.',
-        name: 'will_be_added_to_request',
-      );
-
   String get cancel_offer => Intl.message(
         'Cancel Offer',
         name: 'cancel_offer',
       );
 
   String get cancel_offer_confirmation => Intl.message(
-        'Are you sure you want to cancel the offer?',
+        'Is u seker dat u die aanbod wil kanselleer?',
         name: 'cancel_offer_confirmation',
       );
 
   String get recurring => Intl.message(
-        'Recurring',
+        'herhalende',
         name: 'recurring',
       );
 
   String get request_credits_again => Intl.message(
-        'Are you sure you want to request for credits again?',
+        'Is u seker dat u weer krediete wil aanvra?',
         name: 'request_credits_again',
       );
 
   String get cant_perfrom_action_offer => Intl.message(
-        'You can\'t perform action before the offer ends.',
+        'U kan nie aksie uitvoer voordat die aanbod eindig nie.',
         name: 'cant_perfrom_action_offer',
       );
 
@@ -4097,59 +3976,59 @@ class S {
       );
 
   String get days_available => Intl.message(
-        'Days Available',
+        'Dae beskikbaar',
         name: 'days_available',
       );
 
   String get this_is_repeating_event => Intl.message(
-        'This is a repeating event',
+        'Dit is \'n herhalende gebeurtenis',
         name: 'this_is_repeating_event',
       );
 
   String get edit_this_event => Intl.message(
-        'Edit this event only',
+        'Wysig slegs hierdie gebeurtenis',
         name: 'edit_this_event',
       );
 
   String get edit_subsequent_event => Intl.message(
-        'Edit subsequent events',
+        'Wysig die daaropvolgende gebeure',
         name: 'edit_subsequent_event',
       );
 
   String get left => Intl.message(
-        'left',
+        'links',
         name: 'left',
       );
 
   String get cant_exit_group => Intl.message(
-        'You cannot exit from this group',
+        'U kan nie uit hierdie groep gaan nie',
         name: 'cant_exit_group',
       );
 
   String get cant_exit_timebank => Intl.message(
-        'cannot exit from this timebank',
+        'kan nie uit hierdie tydbank gaan nie',
         name: 'cant_exit_timebank',
       );
 
   String get add_image_url => Intl.message(
-        'Add Image Url',
+        'Voeg prent URL by',
         name: 'add_image_url',
       );
 
   String get image_url => Intl.message(
-        'Add Image Url ex: https://www.sevaexchange.com/sevalogo.png',
+        'Prentlêer',
         name: 'image_url',
       );
 
   String day(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Day', other: 'Days', args: [count])}',
-        name: 'day',
+        '${Intl.plural(count, one: 'Dag', other: 'Dae', args: [count])}',
+        name: 'day',        
         args: [count],
       );
 
   String year(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Year', other: 'Years', args: [count])}',
-        name: 'year',
+        '${Intl.plural(count, one: 'Jaar', other: 'Jare', args: [count])}',
+        name: 'year',        
         args: [count],
       );
 
@@ -4504,7 +4383,7 @@ class S {
       );
 
   String get request_payment_description => Intl.message(
-        'Payment Details*',
+        'Betaling besonderhede*',
         name: 'request_payment_description',
       );
 
@@ -4514,12 +4393,12 @@ class S {
       );
 
   String get request_payment_description_inputhint => Intl.message(
-        'Ex: https://www.paypal.com/johndoe',
+        'Eks: https://www.paypal.com/johndoe',
         name: 'request_payment_description_inputhint',
       );
 
   String get request_min_donation_hint => Intl.message(
-        'Ex: \$10',
+        'Bv: \$ 10',
         name: 'request_min_donation_hint',
       );
 
@@ -4539,12 +4418,12 @@ class S {
       );
 
   String get validation_error_min_donation_count => Intl.message(
-        'Please enter the number of min donation needed',
+        'Voer die aantal skenkings in wat nodig is',
         name: 'validation_error_min_donation_count',
       );
 
   String get validation_error_min_donation_count_negative => Intl.message(
-        'Please enter the number of min donation needed',
+        'Voer die aantal skenkings in wat nodig is',
         name: 'validation_error_min_donation_count_negative',
       );
 
@@ -4559,7 +4438,7 @@ class S {
       );
 
   String get demotion_from_admin_to_member => Intl.message(
-        'Demotion from admin to member',
+        'Demosie van admin na lid',
         name: 'demotion_from_admin_to_member',
       );
 
@@ -4609,22 +4488,22 @@ class S {
       );
 
   String get amount => Intl.message(
-        'Amount',
+        'Bedrag',
         name: 'amount',
       );
 
   String get only_images_types_allowed => Intl.message(
-        'Only image types are allowed ex:jpg, png\'',
+        'Slegs beeldtipes word toegelaat, byvoorbeeld: jpg, png \'',
         name: 'only_images_types_allowed',
       );
 
   String get i_pledged_amount => Intl.message(
-        'I pledge to donate this amount',
+        'Ek belowe om hierdie bedrag te skenk',
         name: 'i_pledged_amount',
       );
 
   String get i_received_amount => Intl.message(
-        'I acknowledge that I have received',
+        'Ek erken dat ek dit ontvang het',
         name: 'i_received_amount',
       );
 
@@ -4639,17 +4518,17 @@ class S {
       );
 
   String get acknowledge_desc_donor_one => Intl.message(
-        'Note: Please be sure that the amount you transfer to',
+        'Let wel: maak seker dat u die bedrag waarna u oordra',
         name: 'acknowledge_desc_donor_one',
       );
 
   String get acknowledge_desc_donor_two => Intl.message(
-        'matches the amount pledged above (subject to any transaction fee)',
+        'ooreenstem met die bedrag wat hierbo belowe is (onderhewig aan enige transaksiefooi)',
         name: 'acknowledge_desc_donor_two',
       );
 
   String get acknowledge_received => Intl.message(
-        'I acknowledge that i have received below',
+        'Ek erken dat ek hieronder ontvang het',
         name: 'acknowledge_received',
       );
 
@@ -4664,7 +4543,7 @@ class S {
       );
 
   String get amount_received_from => Intl.message(
-        'Amount received from',
+        'Bedrag ontvang vanaf',
         name: 'amount_received_from',
       );
 
@@ -4674,17 +4553,17 @@ class S {
       );
 
   String get donations_requested => Intl.message(
-        'Donation requested',
+        'Donasie versoek',
         name: 'donations_requested',
       );
 
   String get pledge_modified => Intl.message(
-        'Your pledged amount for donation was not acknowledged',
+        'U beloofde bedrag vir donasie is nie erken nie',
         name: 'pledge_modified',
       );
 
   String get donation_completed => Intl.message(
-        'Donation completed',
+        'Skenking voltooi',
         name: 'donation_completed',
       );
 
@@ -4694,12 +4573,12 @@ class S {
       );
 
   String get pledge_modified_by_donor => Intl.message(
-        'Donor has modified the pledge amount',
+        'Die skenker het die pandbedrag verander',
         name: 'pledge_modified_by_donor',
       );
 
   String get has_cash_donation => Intl.message(
-        'Has a request for cash donation',
+        'Het \'n versoek vir kontantskenking',
         name: 'has_cash_donation',
       );
 
@@ -4709,22 +4588,22 @@ class S {
       );
 
   String get cash_donation_invite => Intl.message(
-        'has a request for cash donation. Tap to donate any amount that you can',
+        'het \'n versoek vir kontantskenking. Tik om enige bedrag wat u kan skenk',
         name: 'cash_donation_invite',
       );
 
   String get goods_donation_invite => Intl.message(
-        'has a request for donation of specific goods. You can tap to donate any goods that you can',
+        'het \'n versoek vir die skenking van spesifieke goedere. U kan tik om alle goedere wat u kan, te skenk',
         name: 'goods_donation_invite',
       );
 
   String get failed_load_image => Intl.message(
-        'Failed to load image. Try different image',
+        'Kon nie prent laai nie. Probeer \'n ander prentjie',
         name: 'failed_load_image',
       );
 
   String get request_updated => Intl.message(
-        'Request Updated',
+        'Versoek opgedateer',
         name: 'request_updated',
       );
 
@@ -4734,12 +4613,12 @@ class S {
       );
 
   String get promoted => Intl.message(
-        'PROMOTED',
+        'BEVORDER',
         name: 'promoted',
       );
 
   String get seva_coins_debited => Intl.message(
-        'Seva Coins debited',
+        'Seva Coins gedebiteer',
         name: 'seva_coins_debited',
       );
 
@@ -4749,22 +4628,22 @@ class S {
       );
 
   String get member_reported_title => Intl.message(
-        'Member Reported',
+        'Lid aangemeld',
         name: 'member_reported_title',
       );
 
   String get cannot_be_deleted => Intl.message(
-        'cannot be deleted',
+        'kan nie verwyder word nie',
         name: 'cannot_be_deleted',
       );
 
   String get cannot_be_deleted_desc => Intl.message(
-        'Your request to delete **requestData.entityTitle cannot be completed at this time. There are pending transactions. Tap here to view the details.',
+        'U versoek om ** requestData.entityTitle te verwyder, kan op die oomblik nie voltooi word nie. Daar is hangende transaksies. Tik hier om die besonderhede te sien.',
         name: 'cannot_be_deleted_desc',
       );
 
   String get delete_request_success => Intl.message(
-        '**requestTitle you requested to delete has been successfully deleted!',
+        '** requestTitle wat u versoek het om te verwyder, is suksesvol uitgevee!',
         name: 'delete_request_success',
       );
 
@@ -4774,7 +4653,7 @@ class S {
       );
 
   String get stock_images => Intl.message(
-        'Stock Images',
+        'Voorraad Beelde',
         name: 'stock_images',
       );
 
@@ -4789,107 +4668,107 @@ class S {
       );
 
   String get timebank_location_has_parent_hint_text => Intl.message(
-        'If your timebank is associated with a parent timebank select below',
+        'As u tydbank met \'n ouer-tydbank geassosieer word, kies hieronder',
         name: 'timebank_location_has_parent_hint_text',
       );
 
   String get select_parent_timebank => Intl.message(
-        'Select Parent timebank',
+        'Kies Ouer-tydbank',
         name: 'select_parent_timebank',
       );
 
   String get look_for_existing_siblings => Intl.message(
-        'Feed is visible to following timebanks',
+        'Voer is sigbaar vir die volgende tydbanke',
         name: 'look_for_existing_siblings',
       );
 
   String get none => Intl.message(
-        'None',
+        'Geen',
         name: 'none',
       );
 
   String get find_your_parent_timebank => Intl.message(
-        'Find your parent timebank if you are part of',
+        'Soek u ouer se tydbank as u deel is van',
         name: 'find_your_parent_timebank',
       );
 
   String get look_for_existing_timebank_title => Intl.message(
-        'Looking for existing timebank',
+        'Op soek na bestaande tydbank',
         name: 'look_for_existing_timebank_title',
       );
 
   String get copied_to_clipboard => Intl.message(
-        'Copied to Clipboard',
+        'Gekopieër na knipbord',
         name: 'copied_to_clipboard',
       );
 
   String get delete_comment_msg => Intl.message(
-        'Are you sure want to delete comment?',
+        'Is u seker dat u kommentaar wil uitvee?',
         name: 'delete_comment_msg',
       );
 
   String get goods_modified_by_donor => Intl.message(
-        'Donor has modified goods',
+        'Skenker het goedere verander',
         name: 'goods_modified_by_donor',
       );
 
   String get goods_modified_by_creator => Intl.message(
-        'Your goods for donation was not acknowledged',
+        'U goedere vir skenking is nie erken nie',
         name: 'goods_modified_by_creator',
       );
 
   String get amount_modified_by_creator_desc => Intl.message(
-        'The amount that you pledged for this donation is different from the amount acknowledged by the creator. Tap to change your pledge amount.',
+        'Die bedrag wat u vir hierdie donasie belowe het, verskil van die bedrag wat die skepper erken het. Tik om u pandbedrag te verander.',
         name: 'amount_modified_by_creator_desc',
       );
 
   String get goods_modified_by_creator_desc => Intl.message(
-        'The goods that you donated for this donation is different from the goods acknowledged by the creator. Tap to change your goods details.',
+        'Die goedere wat u vir hierdie donasie geskenk het, verskil van die goedere wat die skepper erken. Tik om u goedereinligting te verander.',
         name: 'goods_modified_by_creator_desc',
       );
 
   String get amount_modified_by_donor_desc => Intl.message(
-        'The amount which you acknowledged for this donation is different from the amount confirmed by the Donor. Tap to change the confirmation amount.',
+        'Die bedrag wat u vir hierdie skenking erken het, verskil van die bedrag wat deur die skenker bevestig is. Tik om die bevestigingsbedrag te verander.',
         name: 'amount_modified_by_donor_desc',
       );
 
   String get goods_modified_by_donor_desc => Intl.message(
-        'The goods which you acknowledged for this donation is different from the goods confirmed by the Donor. Tap to change the confirmation goods.',
+        'Die goedere wat u vir hierdie donasie erken het, verskil van die goedere wat deur die Donateur bevestig is. Tik om die bevestigingsgoedere te verander.',
         name: 'goods_modified_by_donor_desc',
       );
 
   String get imageurl_alert => Intl.message(
-        'Web Image url alert',
+        'Webbeeld url-waarskuwing',
         name: 'imageurl_alert',
       );
 
   String get image_url_alert_desc => Intl.message(
-        'Please add a image url to continue',
+        'Voeg \'n prent url toe om voort te gaan',
         name: 'image_url_alert_desc',
       );
 
   String get enter_valid_link => Intl.message(
-        'Ingrese un enlace de pago válido',
+        'Voer \'n geldige betalingsskakel in',
         name: 'enter_valid_link',
       );
 
   String get target_amount_less_than_min_amount => Intl.message(
-        'La cantidad mínima no puede ser mayor que la cantidad objetivo',
+        'Minimum bedrag kan nie groter wees as die teikenbedrag nie',
         name: 'target_amount_less_than_min_amount',
       );
 
   String get failed_load_image_title => Intl.message(
-        'Falló al cargar',
+        'Kon nie laai nie',
         name: 'failed_load_image_title',
       );
 
   String get image_url_hint => Intl.message(
-        'Agregar URL de imagen, por ejemplo: https://www.sevaexchange.com/sevalogo.png',
+        'Voeg Image URL by: https://www.sevaexchange.com/sevalogo.png',
         name: 'image_url_hint',
       );
 
   String get request_details => Intl.message(
-        'Request details',
+        'Versoek besonderhede',
         name: 'request_details',
       );
 }
@@ -4898,12 +4777,22 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
   const ArbifyLocalizationsDelegate();
 
   List<Locale> get supportedLocales => [
+        Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'en'),
-      ];
+        Locale.fromSubtags(languageCode: 'es'),
+        Locale.fromSubtags(languageCode: 'fr'),
+        Locale.fromSubtags(languageCode: 'pt'),
+        Locale.fromSubtags(languageCode: 'zh'),
+  ];
 
   @override
   bool isSupported(Locale locale) => [
+        'af',
         'en',
+        'es',
+        'fr',
+        'pt',
+        'zh',
       ].contains(locale.languageCode);
 
   @override
