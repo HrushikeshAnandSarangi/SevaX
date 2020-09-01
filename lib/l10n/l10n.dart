@@ -750,15 +750,6 @@ class S {
         name: 'select_hours',
       );
 
-<<<<<<< HEAD
-  String hour(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Hour', other: 'Hours', args: [count])}',
-        name: 'hour',        
-        args: [count],
-      );
-
-=======
->>>>>>> d9bfbbdbd8af5c9400af03289d5173dbce9ed96e
   String get validation_error_task_minutes => Intl.message(
         'Los minutos no pueden estar vacíos',
         name: 'validation_error_task_minutes',
@@ -1219,21 +1210,6 @@ class S {
         name: 'edit_project',
       );
 
-<<<<<<< HEAD
-  String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Timebank Project', other: 'Timebank Projects', args: [count])}',
-        name: 'timebank_project',        
-        args: [count],
-      );
-
-  String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [count])}',
-        name: 'personal_project',        
-        args: [count],
-      );
-
-=======
->>>>>>> d9bfbbdbd8af5c9400af03289d5173dbce9ed96e
   String get project_logo => Intl.message(
         'Logotipo del proyecto',
         name: 'project_logo',
@@ -1564,21 +1540,6 @@ class S {
         name: 'validation_error_volunteer_count_zero',
       );
 
-<<<<<<< HEAD
-  String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [count])}',
-        name: 'personal_request',        
-        args: [count],
-      );
-
-  String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Timebank Request', other: 'Timebank Requests', args: [count])}',
-        name: 'timebank_request',        
-        args: [count],
-      );
-
-=======
->>>>>>> d9bfbbdbd8af5c9400af03289d5173dbce9ed96e
   String get validation_error_same_start_date_end_date => Intl.message(
         'Ha proporcionado una fecha y hora idénticas para el inicio y el final. Proporcione una hora de finalización posterior a la hora de inicio.',
         name: 'validation_error_same_start_date_end_date',
@@ -1609,21 +1570,6 @@ class S {
         name: 'assign_to_volunteers',
       );
 
-<<<<<<< HEAD
-  String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [count])}',
-        name: 'members_selected',        
-        args: [count],
-      );
-
-  String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [count])}',
-        name: 'volunteers_selected',        
-        args: [count],
-      );
-
-=======
->>>>>>> d9bfbbdbd8af5c9400af03289d5173dbce9ed96e
   String get timebank_max_seva_credit_message1 => Intl.message(
         'Seva Credits se acreditará al Timebank por esta solicitud. Tenga en cuenta que cada participante recibirá un máximo de',
         name: 'timebank_max_seva_credit_message1',
@@ -2249,15 +2195,6 @@ class S {
         name: 'reported_by',
       );
 
-<<<<<<< HEAD
-  String user(num count) => Intl.message(
-        '${Intl.plural(count, one: 'user', other: 'users', args: [count])}',
-        name: 'user',        
-        args: [count],
-      );
-
-=======
->>>>>>> d9bfbbdbd8af5c9400af03289d5173dbce9ed96e
   String get user_removed_from_group => Intl.message(
         'Usuário removido com sucesso do grupo',
         name: 'user_removed_from_group',
@@ -2573,15 +2510,6 @@ class S {
         name: 'timebank_offers',
       );
 
-<<<<<<< HEAD
-  String other(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Other', other: 'Others', args: [count])}',
-        name: 'other',        
-        args: [count],
-      );
-
-=======
->>>>>>> d9bfbbdbd8af5c9400af03289d5173dbce9ed96e
   String get plan_details => Intl.message(
         'Detalles del plan',
         name: 'plan_details',
@@ -2642,15 +2570,6 @@ class S {
         name: 'monthly_subscription',
       );
 
-<<<<<<< HEAD
-  String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [count])}',
-        name: 'subscription',        
-        args: [count],
-      );
-
-=======
->>>>>>> d9bfbbdbd8af5c9400af03289d5173dbce9ed96e
   String get card_details => Intl.message(
         'DETALLES DE TARJETA',
         name: 'card_details',
@@ -3913,77 +3832,61 @@ class S {
 
   String hour(num count) => Intl.message(
         '${Intl.plural(count, one: 'Hora', other: 'Horas', args: [count])}',
-        name: 'hour',
+        name: 'hour',        
         args: [count],
       );
 
   String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Proyecto de banco de tiempo', other: 'Proyectos de banco de tiempo', args: [
-          count
-        ])}',
-        name: 'timebank_project',
+        '${Intl.plural(count, one: 'Proyecto de banco de tiempo', other: 'Proyectos de banco de tiempo', args: [count])}',
+        name: 'timebank_project',        
         args: [count],
       );
 
   String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Proyecto personal', other: 'Proyectos personales', args: [
-          count
-        ])}',
-        name: 'personal_project',
+        '${Intl.plural(count, one: 'Proyecto personal', other: 'Proyectos personales', args: [count])}',
+        name: 'personal_project',        
         args: [count],
       );
 
   String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Solicitud personal', other: 'Solicitudes personales', args: [
-          count
-        ])}',
-        name: 'personal_request',
+        '${Intl.plural(count, one: 'Solicitud personal', other: 'Solicitudes personales', args: [count])}',
+        name: 'personal_request',        
         args: [count],
       );
 
   String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Solicitud de banco de tiempo', other: 'Solicitudes de banco de tiempo', args: [
-          count
-        ])}',
-        name: 'timebank_request',
+        '${Intl.plural(count, one: 'Solicitud de banco de tiempo', other: 'Solicitudes de banco de tiempo', args: [count])}',
+        name: 'timebank_request',        
         args: [count],
       );
 
   String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Miembro seleccionado', other: 'Miembros seleccionados', args: [
-          count
-        ])}',
-        name: 'members_selected',
+        '${Intl.plural(count, one: 'Miembro seleccionado', other: 'Miembros seleccionados', args: [count])}',
+        name: 'members_selected',        
         args: [count],
       );
 
   String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Voluntario seleccionado', other: 'Voluntarios seleccionados', args: [
-          count
-        ])}',
-        name: 'volunteers_selected',
+        '${Intl.plural(count, one: 'Voluntario seleccionado', other: 'Voluntarios seleccionados', args: [count])}',
+        name: 'volunteers_selected',        
         args: [count],
       );
 
   String user(num count) => Intl.message(
-        '${Intl.plural(count, one: 'usuario', other: 'usuarios', args: [
-          count
-        ])}',
-        name: 'user',
+        '${Intl.plural(count, one: 'usuario', other: 'usuarios', args: [count])}',
+        name: 'user',        
         args: [count],
       );
 
   String other(num count) => Intl.message(
         '${Intl.plural(count, one: 'Otro', other: 'Otros', args: [count])}',
-        name: 'other',
+        name: 'other',        
         args: [count],
       );
 
   String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Suscripción', other: 'Suscripciones', args: [
-          count
-        ])}',
-        name: 'subscription',
+        '${Intl.plural(count, one: 'Suscripción', other: 'Suscripciones', args: [count])}',
+        name: 'subscription',        
         args: [count],
       );
 
@@ -4118,24 +4021,14 @@ class S {
       );
 
   String day(num count) => Intl.message(
-<<<<<<< HEAD
-        '${Intl.plural(count, one: 'Day', other: 'Days', args: [count])}',
-        name: 'day',        
-=======
         '${Intl.plural(count, one: 'Día', other: 'Dias', args: [count])}',
-        name: 'day',
->>>>>>> d9bfbbdbd8af5c9400af03289d5173dbce9ed96e
+        name: 'day',        
         args: [count],
       );
 
   String year(num count) => Intl.message(
-<<<<<<< HEAD
-        '${Intl.plural(count, one: 'Year', other: 'Years', args: [count])}',
-        name: 'year',        
-=======
         '${Intl.plural(count, one: 'Año', other: 'Años', args: [count])}',
-        name: 'year',
->>>>>>> d9bfbbdbd8af5c9400af03289d5173dbce9ed96e
+        name: 'year',        
         args: [count],
       );
 
@@ -4780,11 +4673,7 @@ class S {
       );
 
   String get select_parent_timebank => Intl.message(
-<<<<<<< HEAD
-        'Select Parent Timebank',
-=======
         'Seleccionar banco de tiempo principal',
->>>>>>> d9bfbbdbd8af5c9400af03289d5173dbce9ed96e
         name: 'select_parent_timebank',
       );
 
@@ -4921,15 +4810,11 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
         Locale.fromSubtags(languageCode: 'es'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
+        Locale.fromSubtags(languageCode: 'zh'),
         Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'en'),
-<<<<<<< HEAD
-  ];
-=======
         Locale.fromSubtags(languageCode: 'fr'),
-      ];
->>>>>>> d9bfbbdbd8af5c9400af03289d5173dbce9ed96e
+  ];
 
   @override
   bool isSupported(Locale locale) => [

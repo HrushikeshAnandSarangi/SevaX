@@ -1,10 +1,6 @@
 {
     "@@locale": "en",
-<<<<<<< HEAD
-    "@@last_modified": "2020-09-01T13:55:02+00:00",
-=======
     "@@last_modified": "2020-09-01T17:41:50+00:00",
->>>>>>> d9bfbbdbd8af5c9400af03289d5173dbce9ed96e
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
