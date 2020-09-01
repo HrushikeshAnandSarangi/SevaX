@@ -713,7 +713,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "remove_member" : MessageLookupByLibrary.simpleMessage("Remove member"),
     "remove_self_from_group_error" : MessageLookupByLibrary.simpleMessage("Cannot remove yourself from the group. Instead, please try deleting the group."),
     "remove_user" : MessageLookupByLibrary.simpleMessage("Remove User"),
-    "repeat" : MessageLookupByLibrary.simpleMessage("Repeat"),
+    "repeat" : MessageLookupByLibrary.simpleMessage("Recurring"),
     "repeat_on" : MessageLookupByLibrary.simpleMessage("Repeat on"),
     "replace_cv" : MessageLookupByLibrary.simpleMessage("Replace CV"),
     "report" : MessageLookupByLibrary.simpleMessage("Report"),

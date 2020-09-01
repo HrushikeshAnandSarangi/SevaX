@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-09-01T07:12:12+00:00",
+    "@@last_modified": "2020-09-01T07:47:02+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -329,7 +329,7 @@
     "assign_to_project": "Assign to project",
     "assign_to_one_project": "Please assign to one project",
     "tap_to_select": "Tap to select one or more...",
-    "repeat": "Repeat",
+    "repeat": "Recurring",
     "repeat_on": "Repeat on",
     "ends": "Ends",
     "after": "After",

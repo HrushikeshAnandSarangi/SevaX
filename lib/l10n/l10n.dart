@@ -1673,7 +1673,7 @@ class S {
       );
 
   String get repeat => Intl.message(
-        'Repeat',
+        'Recurring',
         name: 'repeat',
       );
 
