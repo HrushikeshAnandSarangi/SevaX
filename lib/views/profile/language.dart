@@ -16,6 +16,7 @@ class LanguageListData {
     LanguageModel(languageName: 'Spanish', code: 'es'),
     LanguageModel(languageName: 'Afrikaans', code: 'af'),
     LanguageModel(languageName: 'Chinese Simplified', code: 'zh'),
+    LanguageModel(languageName: 'Shona', code: 'sn'),
   ];
   LanguageListData();
   List<LanguageModel> getData() {
