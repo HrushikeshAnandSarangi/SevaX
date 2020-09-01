@@ -5,7 +5,6 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-
 import 'messages_all.dart';
 
 class S {
@@ -592,7 +591,7 @@ class S {
       );
 
   String get projects => Intl.message(
-        'Projetos',
+        'Projects',
         name: 'projects',
       );
 
@@ -773,7 +772,7 @@ class S {
 
   String hour(num count) => Intl.message(
         '${Intl.plural(count, one: 'Hour', other: 'Hours', args: [count])}',
-        name: 'hour',
+        name: 'hour',        
         args: [count],
       );
 
@@ -1238,18 +1237,14 @@ class S {
       );
 
   String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Timebank Project', other: 'Timebank Projects', args: [
-          count
-        ])}',
-        name: 'timebank_project',
+        '${Intl.plural(count, one: 'Timebank Project', other: 'Timebank Projects', args: [count])}',
+        name: 'timebank_project',        
         args: [count],
       );
 
   String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [
-          count
-        ])}',
-        name: 'personal_project',
+        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [count])}',
+        name: 'personal_project',        
         args: [count],
       );
 
@@ -1584,18 +1579,14 @@ class S {
       );
 
   String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [
-          count
-        ])}',
-        name: 'personal_request',
+        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [count])}',
+        name: 'personal_request',        
         args: [count],
       );
 
   String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Timebank Request', other: 'Timebank Requests', args: [
-          count
-        ])}',
-        name: 'timebank_request',
+        '${Intl.plural(count, one: 'Timebank Request', other: 'Timebank Requests', args: [count])}',
+        name: 'timebank_request',        
         args: [count],
       );
 
@@ -1630,18 +1621,14 @@ class S {
       );
 
   String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [
-          count
-        ])}',
-        name: 'members_selected',
+        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [count])}',
+        name: 'members_selected',        
         args: [count],
       );
 
   String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [
-          count
-        ])}',
-        name: 'volunteers_selected',
+        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [count])}',
+        name: 'volunteers_selected',        
         args: [count],
       );
 
@@ -2272,7 +2259,7 @@ class S {
 
   String user(num count) => Intl.message(
         '${Intl.plural(count, one: 'user', other: 'users', args: [count])}',
-        name: 'user',
+        name: 'user',        
         args: [count],
       );
 
@@ -2593,7 +2580,7 @@ class S {
 
   String other(num count) => Intl.message(
         '${Intl.plural(count, one: 'Other', other: 'Others', args: [count])}',
-        name: 'other',
+        name: 'other',        
         args: [count],
       );
 
@@ -2658,10 +2645,8 @@ class S {
       );
 
   String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [
-          count
-        ])}',
-        name: 'subscription',
+        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [count])}',
+        name: 'subscription',        
         args: [count],
       );
 
@@ -3895,112 +3880,6 @@ class S {
         name: 'enter_reason_to_delete_error',
       );
 
-  String get delete_request_confirmation => Intl.message(
-        '¿Estás seguro de que deseas eliminar esta solicitud?',
-        name: 'delete_request_confirmation',
-      );
-
-  String get will_be_added_to_request => Intl.message(
-        'se agregará automáticamente a la solicitud.',
-        name: 'will_be_added_to_request',
-      );
-
-  String get updating => Intl.message(
-        'Actualizando',
-        name: 'updating',
-      );
-
-  String get skipping => Intl.message(
-        'Salto a la comba',
-        name: 'skipping',
-      );
-
-  String get check_email => Intl.message(
-        'Ahora, mira tu correo.',
-        name: 'check_email',
-      );
-
-  String get thanks => Intl.message(
-        '¡Gracias!',
-        name: 'thanks',
-      );
-
-  String hour(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Hora', other: 'Horas', args: [count])}',
-        name: 'hour',
-        args: [count],
-      );
-
-  String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Proyecto de banco de tiempo', other: 'Proyectos de banco de tiempo', args: [
-          count
-        ])}',
-        name: 'timebank_project',
-        args: [count],
-      );
-
-  String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Proyecto personal', other: 'Proyectos personales', args: [
-          count
-        ])}',
-        name: 'personal_project',
-        args: [count],
-      );
-
-  String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Solicitud personal', other: 'Solicitudes personales', args: [
-          count
-        ])}',
-        name: 'personal_request',
-        args: [count],
-      );
-
-  String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Solicitud de banco de tiempo', other: 'Solicitudes de banco de tiempo', args: [
-          count
-        ])}',
-        name: 'timebank_request',
-        args: [count],
-      );
-
-  String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Miembro seleccionado', other: 'Miembros seleccionados', args: [
-          count
-        ])}',
-        name: 'members_selected',
-        args: [count],
-      );
-
-  String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Voluntario seleccionado', other: 'Voluntarios seleccionados', args: [
-          count
-        ])}',
-        name: 'volunteers_selected',
-        args: [count],
-      );
-
-  String user(num count) => Intl.message(
-        '${Intl.plural(count, one: 'usuario', other: 'usuarios', args: [
-          count
-        ])}',
-        name: 'user',
-        args: [count],
-      );
-
-  String other(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Otro', other: 'Otros', args: [count])}',
-        name: 'other',
-        args: [count],
-      );
-
-  String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Suscripción', other: 'Suscripciones', args: [
-          count
-        ])}',
-        name: 'subscription',
-        args: [count],
-      );
-
   String get max_credits => Intl.message(
         'Maximum credits*',
         name: 'max_credits',
@@ -4132,24 +4011,24 @@ class S {
       );
 
   String get add_image_url => Intl.message(
-        'Add Image Url',
+        'Add Image URL',
         name: 'add_image_url',
       );
 
   String get image_url => Intl.message(
-        'Add Image Url ex: https://www.sevaexchange.com/sevalogo.png',
+        'Add Image URL ex: https://www.sevaexchange.com/sevalogo.png',
         name: 'image_url',
       );
 
   String day(num count) => Intl.message(
         '${Intl.plural(count, one: 'Day', other: 'Days', args: [count])}',
-        name: 'day',
+        name: 'day',        
         args: [count],
       );
 
   String year(num count) => Intl.message(
         '${Intl.plural(count, one: 'Year', other: 'Years', args: [count])}',
-        name: 'year',
+        name: 'year',        
         args: [count],
       );
 
@@ -4719,7 +4598,7 @@ class S {
       );
 
   String get failed_load_image => Intl.message(
-        'Failed to load image. Try different image',
+        'We encountered a failure in loading the image. Please try loading a different image',
         name: 'failed_load_image',
       );
 
@@ -4859,38 +4738,43 @@ class S {
       );
 
   String get imageurl_alert => Intl.message(
-        'Web Image url alert',
+        'Web Image URL alert',
         name: 'imageurl_alert',
       );
 
   String get image_url_alert_desc => Intl.message(
-        'Please add a image url to continue',
+        'Please add a image URL to continue',
         name: 'image_url_alert_desc',
       );
 
   String get enter_valid_link => Intl.message(
-        'Ingrese un enlace de pago válido',
+        'Enter valid payment link',
         name: 'enter_valid_link',
       );
 
   String get target_amount_less_than_min_amount => Intl.message(
-        'La cantidad mínima no puede ser mayor que la cantidad objetivo',
+        'Minimum amount cannot be greater than target amount',
         name: 'target_amount_less_than_min_amount',
       );
 
   String get failed_load_image_title => Intl.message(
-        'Falló al cargar',
+        'Failed to load',
         name: 'failed_load_image_title',
       );
 
   String get image_url_hint => Intl.message(
-        'Agregar URL de imagen, por ejemplo: https://www.sevaexchange.com/sevalogo.png',
+        'Add Image URL ex: https://www.sevaexchange.com/sevalogo.png',
         name: 'image_url_hint',
       );
 
   String get request_details => Intl.message(
         'Request details',
         name: 'request_details',
+      );
+
+  String get skip_for_now => Intl.message(
+        'Skip for now',
+        name: 'skip_for_now',
       );
 }
 
@@ -4899,7 +4783,7 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
 
   List<Locale> get supportedLocales => [
         Locale.fromSubtags(languageCode: 'en'),
-      ];
+  ];
 
   @override
   bool isSupported(Locale locale) => [
