@@ -148,7 +148,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                         ),
                         onPressed: () async {
                           Navigator.pop(viewContext);
-                          showProgressForOnboardingUser(context);
+                          // showProgressForOnboardingUser(context);
 
                           await addMemberToTimebank(
                             timebankId: model.entityId,

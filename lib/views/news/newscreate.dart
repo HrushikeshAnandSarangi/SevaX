@@ -616,18 +616,20 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
                 List<TimebankModel> timebanks = snapshot.data.timebanks;
 //                timebanks.insert(0, this.widget.selectedTimebank);
                 return Padding(
-                    padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
-                    child: ListView.builder(
-                        itemCount: timebanks.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return timeBankWidget(
-                              timebankModel: timebanks[index],
-                              context: context,
-                              isSelected: this
-                                  .widget
-                                  .selectedTimebanks
-                                  .contains(timebanks[index].id));
-                        }));
+                  padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
+                  child: ListView.builder(
+                    itemCount: timebanks.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return timeBankWidget(
+                          timebankModel: timebanks[index],
+                          context: context,
+                          isSelected: this
+                              .widget
+                              .selectedTimebanks
+                              .contains(timebanks[index].id));
+                    },
+                  ),
+                );
               } else {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
@@ -647,33 +649,36 @@ class SearchSiblingTimebanksViewState extends State<SearchSiblingTimebanks> {
 
   Widget timeBankWidget(
       {TimebankModel timebankModel, BuildContext context, bool isSelected}) {
-    return ListTile(
-      // onTap: goToNext(snapshot.data),
-      title: Text(timebankModel.name,
-          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
-      trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-        Checkbox(
-          value: isSelected,
-          onChanged: (bool value) {
-            print(value);
-            if (isSelected &&
-                timebankModel.id != this.widget.selectedTimebanks[0]) {
-              this
-                  .widget
-                  .selectedTimebanks
-                  .removeWhere((item) => item == timebankModel.id);
-              print('removed');
-            } else if (!isSelected &&
-                timebankModel.id != this.widget.selectedTimebanks[0]) {
-              this.widget.selectedTimebanks.add(timebankModel.id);
-              print('added');
-            }
-            this.widget.onChanged(this.widget.selectedTimebanks);
-            setState(() =>
-                this.widget.selectedTimebanks = this.widget.selectedTimebanks);
-          },
-        )
-      ]),
+    return Offstage(
+      offstage: timebankModel.softDelete,
+      child: ListTile(
+        // onTap: goToNext(snapshot.data),
+        title: Text(timebankModel.name,
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
+        trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+          Checkbox(
+            value: isSelected,
+            onChanged: (bool value) {
+              print(value);
+              if (isSelected &&
+                  timebankModel.id != this.widget.selectedTimebanks[0]) {
+                this
+                    .widget
+                    .selectedTimebanks
+                    .removeWhere((item) => item == timebankModel.id);
+                print('removed');
+              } else if (!isSelected &&
+                  timebankModel.id != this.widget.selectedTimebanks[0]) {
+                this.widget.selectedTimebanks.add(timebankModel.id);
+                print('added');
+              }
+              this.widget.onChanged(this.widget.selectedTimebanks);
+              setState(() => this.widget.selectedTimebanks =
+                  this.widget.selectedTimebanks);
+            },
+          )
+        ]),
+      ),
     );
   }
 }

@@ -228,6 +228,13 @@ class CalendarWidgetState extends State<CalendarWidget> {
           ),
         ),
         Expanded(
+          child: Text(
+            '${_currentDate.year}',
+            textAlign: TextAlign.center,
+            // style: sectionLabelTextStyle,
+          ),
+        ),
+        Expanded(
           child: IconButton(
             alignment: Alignment.centerLeft,
             icon: Icon(
