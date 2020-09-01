@@ -46,10 +46,10 @@ class _InterestViewNewState extends State<InterestViewNew> {
 
   @override
   void initState() {
-    print("inside interestsview init state");
     hasPellError = false;
     Firestore.instance
         .collection('interests')
+        .orderBy('name')
         .getDocuments()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.documents.forEach((DocumentSnapshot data) {
@@ -250,9 +250,6 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 );
               },
               onSuggestionSelected: (SuggestedItem suggestion) {
-                _textEditingController.clear();
-                controller.close();
-
                 if (ProfanityDetector()
                     .isProfaneString(suggestion.suggesttionTitle)) {
                   print("No action can be taken on profane word");
@@ -282,6 +279,9 @@ class _InterestViewNewState extends State<InterestViewNew> {
                   case SuggestionMode.FROM_DB:
                     break;
                 }
+                _textEditingController.clear();
+                // controller.close();
+
                 if (!_selectedInterests
                     .containsValue(suggestion.suggesttionTitle)) {
                   controller.close();
@@ -479,7 +479,7 @@ class SkillsAndInterestBloc {
         .collection('interests')
         .document(interestId)
         .setData(
-      {'name': interestTitle, 'lang': interestLanguage},
+      {'name': interestTitle?.firstWordUpperCase(), 'lang': interestLanguage},
     );
   }
 
@@ -489,7 +489,7 @@ class SkillsAndInterestBloc {
     String skillLanguage,
   }) async {
     await Firestore.instance.collection('skills').document(skillId).setData(
-      {'name': skillTitle, 'lang': skillLanguage},
+      {'name': skillTitle?.firstWordUpperCase(), 'lang': skillLanguage},
     );
   }
 }
