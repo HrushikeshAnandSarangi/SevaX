@@ -1673,7 +1673,7 @@ class S {
       );
 
   String get repeat => Intl.message(
-        'Repeat',
+        'Recurring',
         name: 'repeat',
       );
 
@@ -4775,6 +4775,31 @@ class S {
   String get skip_for_now => Intl.message(
         'Skip for now',
         name: 'skip_for_now',
+      );
+
+  String get would_like_to_donate => Intl.message(
+        'Would you like to donate for this request.',
+        name: 'would_like_to_donate',
+      );
+
+  String get total_goods_recevied => Intl.message(
+        'Total Goods Received',
+        name: 'total_goods_recevied',
+      );
+
+  String get total_amount_raised => Intl.message(
+        'Total amount raised',
+        name: 'total_amount_raised',
+      );
+
+  String get by_accepting_group_join => Intl.message(
+        'By accepting, you will be added to',
+        name: 'by_accepting_group_join',
+      );
+
+  String get group_join => Intl.message(
+        'Group Join',
+        name: 'group_join',
       );
 }
 
