@@ -46,7 +46,6 @@ class _InterestViewNewState extends State<InterestViewNew> {
 
   @override
   void initState() {
-    print("inside interestsview init state");
     hasPellError = false;
     Firestore.instance
         .collection('interests')
@@ -250,9 +249,6 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 );
               },
               onSuggestionSelected: (SuggestedItem suggestion) {
-                _textEditingController.clear();
-                controller.close();
-
                 if (ProfanityDetector()
                     .isProfaneString(suggestion.suggesttionTitle)) {
                   print("No action can be taken on profane word");
@@ -282,6 +278,9 @@ class _InterestViewNewState extends State<InterestViewNew> {
                   case SuggestionMode.FROM_DB:
                     break;
                 }
+                _textEditingController.clear();
+                // controller.close();
+
                 if (!_selectedInterests
                     .containsValue(suggestion.suggesttionTitle)) {
                   controller.close();
