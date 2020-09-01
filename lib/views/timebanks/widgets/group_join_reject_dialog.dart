@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/groupinvite_user_model.dart';
 
@@ -53,7 +54,7 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                'Group Join',
+                S.of(context).group_join,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -79,7 +80,7 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
             ),
             Center(
               child: Text(
-                  "By accepting, you will be added to ${widget.groupInviteUserModel.timebankName}.",
+                  "${S.of(context).by_accepting_group_join} ${widget.groupInviteUserModel.timebankName}.",
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                   ),
@@ -96,7 +97,7 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
                   child: RaisedButton(
                     color: FlavorConfig.values.theme.primaryColor,
                     child: Text(
-                      'Accept',
+                      S.of(context).accept,
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
@@ -118,7 +119,7 @@ class _GroupJoinRejectDialogViewState extends State<GroupJoinRejectDialogView> {
                   child: RaisedButton(
                     color: Theme.of(context).accentColor,
                     child: Text(
-                      'Decline',
+                      S.of(context).decline,
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),

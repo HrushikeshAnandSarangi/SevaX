@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-09-01T07:12:12+00:00",
+    "@@last_modified": "2020-09-01T08:05:34+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -329,7 +329,7 @@
     "assign_to_project": "Assign to project",
     "assign_to_one_project": "Please assign to one project",
     "tap_to_select": "Tap to select one or more...",
-    "repeat": "Repeat",
+    "repeat": "Recurring",
     "repeat_on": "Repeat on",
     "ends": "Ends",
     "after": "After",
@@ -948,5 +948,8 @@
     "failed_load_image_title": "Failed to load",
     "image_url_hint": "Add Image URL ex: https:\/\/www.sevaexchange.com\/sevalogo.png",
     "request_details": "Request details",
-    "skip_for_now": "Skip for now"
+    "skip_for_now": "Skip for now",
+    "would_like_to_donate": "Would you like to donate for this request.",
+    "total_goods_recevied": "Total Goods Received",
+    "total_amount_raised": "Total amount raised"
 }
