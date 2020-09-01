@@ -775,9 +775,9 @@ class PersonalNotificationsRedcerForDonations {
   }) {
     DonationModel donationModel = DonationModel.fromMap(notification.data);
     return NotificationCard(
+      isDissmissible: true,
       timestamp: notification.timestamp,
       entityName: donationModel.requestTitle.toLowerCase(),
-      isDissmissible: true,
       onDismissed: () {
         NotificationsRepository.readUserNotification(
           notification.id,
@@ -815,6 +815,7 @@ class PersonalNotificationsRedcerForDonations {
     final holder = DonationModel.fromMap(notificationsModel.data);
 
     return NotificationCard(
+      isDissmissible: false,
       photoUrl: holder.donorDetails.photoUrl ?? defaultUserImageURL,
       entityName: holder.donationType == RequestType.CASH
           ? S.of(context).pledge_modified_by_donor
@@ -860,6 +861,7 @@ class PersonalNotificationsRedcerForDonations {
     final holder = DonationModel.fromMap(notificationsModel.data);
 
     return NotificationCard(
+      isDissmissible: false,
       photoUrl: holder.donationAssociatedTimebankDetails.timebankPhotoURL ??
           defaultGroupImageURL,
       entityName: holder.donationType == RequestType.CASH
