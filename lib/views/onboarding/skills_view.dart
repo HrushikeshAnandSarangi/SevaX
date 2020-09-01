@@ -51,6 +51,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
     hasPellError = false;
     Firestore.instance
         .collection('skills')
+        .orderBy('name')
         .getDocuments()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.documents.forEach((DocumentSnapshot data) {

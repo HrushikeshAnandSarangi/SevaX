@@ -26,6 +26,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -1448,15 +1449,13 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
   void initState() {
     Firestore.instance
         .collection('donationCategories')
+        .orderBy('goodTitle')
         .getDocuments()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.documents.forEach((DocumentSnapshot data) {
-        // suggestionText.add(data['name']);
-        // suggestionID.add(data.documentID);
         goods[data.documentID] = data['goodTitle'];
-
-        // ids[data['name']] = data.documentID;
       });
+      print(goods);
       setState(() {
         isDataLoaded = true;
       });
@@ -1468,128 +1467,129 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-        constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.25),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: 8),
-            TypeAheadField<String>(
-              suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                // color: Colors.red,
-                borderRadius: BorderRadius.circular(8),
-                // shape: RoundedRectangleBorder(),
-              ),
-              hideOnError: true,
-              textFieldConfiguration: TextFieldConfiguration(
-                controller: _textEditingController,
-                decoration: InputDecoration(
-                  hintText: S.of(context).search,
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  focusedBorder: OutlineInputBorder(
+      constraints:
+          BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(height: 8),
+          TypeAheadField<String>(
+            suggestionsBoxDecoration: SuggestionsBoxDecoration(
+              // color: Colors.red,
+              borderRadius: BorderRadius.circular(8),
+              // shape: RoundedRectangleBorder(),
+            ),
+            hideOnError: true,
+            textFieldConfiguration: TextFieldConfiguration(
+              controller: _textEditingController,
+              decoration: InputDecoration(
+                hintText: S.of(context).search,
+                filled: true,
+                fillColor: Colors.grey[300],
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(25.7),
+                ),
+                enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(25.7)),
-                  contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                  prefixIcon: Icon(
-                    Icons.search,
+                    borderRadius: BorderRadius.circular(25.7)),
+                contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                ),
+                suffixIcon: InkWell(
+                  splashColor: Colors.transparent,
+                  child: Icon(
+                    Icons.clear,
                     color: Colors.grey,
+                    // color: _textEditingController.text.length > 1
+                    //     ? Colors.black
+                    //     : Colors.grey,
                   ),
-                  suffixIcon: InkWell(
-                    splashColor: Colors.transparent,
-                    child: Icon(
-                      Icons.clear,
-                      color: Colors.grey,
-                      // color: _textEditingController.text.length > 1
-                      //     ? Colors.black
-                      //     : Colors.grey,
-                    ),
-                    onTap: () {
-                      _textEditingController.clear();
-                      controller.close();
-                    },
-                  ),
+                  onTap: () {
+                    _textEditingController.clear();
+                    controller.close();
+                  },
                 ),
               ),
-              suggestionsBoxController: controller,
-              suggestionsCallback: (pattern) async {
-                List<String> dataCopy = [];
-                goods.forEach((id, skill) => dataCopy.add(skill));
-                dataCopy.retainWhere(
-                    (s) => s.toLowerCase().contains(pattern.toLowerCase()));
+            ),
+            suggestionsBoxController: controller,
+            suggestionsCallback: (pattern) async {
+              List<String> dataCopy = [];
+              goods.forEach((id, skill) => dataCopy.add(skill));
+              dataCopy.retainWhere(
+                  (s) => s.toLowerCase().contains(pattern.toLowerCase()));
 
-                return await Future.value(dataCopy);
-              },
-              itemBuilder: (context, suggestion) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    suggestion,
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
+              return await Future.value(dataCopy);
+            },
+            itemBuilder: (context, suggestion) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  suggestion,
+                  style: TextStyle(
+                    fontSize: 16,
                   ),
-                );
-              },
-              noItemsFoundBuilder: (context) {
-                return searchUserDefinedEntity(
-                  keyword: _textEditingController.text,
-                  language: 'en',
-                );
-              },
-              onSuggestionSelected: (suggestion) {
-                _textEditingController.clear();
-                if (!_selectedGoods.containsValue(suggestion)) {
-                  controller.close();
-                  String id =
-                      goods.keys.firstWhere((k) => goods[k] == suggestion);
-                  _selectedGoods[id] = suggestion;
+                ),
+              );
+            },
+            noItemsFoundBuilder: (context) {
+              return searchUserDefinedEntity(
+                keyword: _textEditingController.text,
+                language: 'en',
+              );
+            },
+            onSuggestionSelected: (suggestion) {
+              _textEditingController.clear();
+              if (!_selectedGoods.containsValue(suggestion)) {
+                controller.close();
+                String id =
+                    goods.keys.firstWhere((k) => goods[k] == suggestion);
+                _selectedGoods[id] = suggestion;
 //                   List<String> selectedID = [];
 //                   _selectedGoods.forEach((id, _) => selectedID.add(id));
 //                   print(selectedID);
-                  widget.onSelectedGoods(_selectedGoods);
-                  setState(() {});
-                }
-              },
-            ),
-            SizedBox(height: 20),
-            !isDataLoaded
-                ? LoadingIndicator()
-                : Expanded(
-                    child: ListView(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      children: <Widget>[
-                        Wrap(
-                          runSpacing: 5.0,
-                          spacing: 5.0,
-                          children: _selectedGoods.values
-                              .toList()
-                              .map(
-                                (value) => value == null
-                                    ? Container()
-                                    : CustomChip(
-                                        title: value,
-                                        onDelete: () {
-                                          String id = goods.keys.firstWhere(
-                                              (k) => goods[k] == value);
-                                          _selectedGoods.remove(id);
-                                          setState(() {});
-                                        },
-                                      ),
-                              )
-                              .toList(),
-                        ),
-                      ],
-                    ),
+                widget.onSelectedGoods(_selectedGoods);
+                setState(() {});
+              }
+            },
+          ),
+          SizedBox(height: 20),
+          !isDataLoaded
+              ? LoadingIndicator()
+              : Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    children: <Widget>[
+                      Wrap(
+                        runSpacing: 5.0,
+                        spacing: 5.0,
+                        children: _selectedGoods.values
+                            .toList()
+                            .map(
+                              (value) => value == null
+                                  ? Container()
+                                  : CustomChip(
+                                      title: value,
+                                      onDelete: () {
+                                        String id = goods.keys.firstWhere(
+                                            (k) => goods[k] == value);
+                                        _selectedGoods.remove(id);
+                                        setState(() {});
+                                      },
+                                    ),
+                            )
+                            .toList(),
+                      ),
+                    ],
                   ),
-            //   Spacer(),
-          ],
-        ));
+                ),
+          //   Spacer(),
+        ],
+      ),
+    );
   }
 
   FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
@@ -1635,7 +1635,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
         .collection('donationCategories')
         .document(goodsId)
         .setData(
-      {'goodTitle': goodsTitle, 'lang': goodsLanguage},
+      {'goodTitle': goodsTitle?.firstWordUpperCase(), 'lang': goodsLanguage},
     );
   }
 

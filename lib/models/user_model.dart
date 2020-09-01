@@ -45,19 +45,14 @@ class UserModel extends DataModel {
   Map<dynamic, dynamic> notificationSetting;
 
   String root_timebank_id;
-
   //AvailabilityModel availability;
   String currentTimebank = FlavorConfig.values.timebankId;
-
   int associatedWithTimebanks = 1;
   int adminOfYanagGangs = 0;
   String timebankIdForYangGangAdmin;
-
   String tokens;
-
   bool acceptedEULA = false;
   bool completedIntro = false;
-
   List<String> pastHires = [];
   List<String> reportedUsers = [];
   List<String> blockedBy = [];
@@ -68,8 +63,9 @@ class UserModel extends DataModel {
   String calendarId;
   int calendarAccId;
   String calendarAccessToken;
-
+  String calendarEmail;
   UserModel({
+        this.calendarEmail,
         this.calendarAccessToken,
         this.calendarId,
         this.calendarAccId,
@@ -112,12 +108,15 @@ class UserModel extends DataModel {
       });
 
   UserModel.fromMap(Map<String, dynamic> map, @required String from) {
-    if(map.containsKey('calendarId')){
-      this.calendarId = map['calendarId'];
-    }
-    if(map.containsKey('calendarAccId')){
-      this.calendarAccId = map['calendarAccId'];
-    }
+      if(map.containsKey('calendarEmail')){
+          this.calendarEmail = map['calendarEmail'];
+      }
+      if(map.containsKey('calendarId')){
+          this.calendarId = map['calendarId'];
+      }
+      if(map.containsKey('calendarAccId')){
+        this.calendarAccId = map['calendarAccId'];
+      }
     if (map.containsKey('calendarAccessToken')) {
       this.calendarAccessToken = map['calendarAccessToken'];
     }
@@ -351,6 +350,9 @@ class UserModel extends DataModel {
 
     if (this.calendarId != null && this.calendarId.isNotEmpty) {
       object['calendarId'] = this.calendarId;
+    }
+    if (this.calendarEmail != null) {
+        object['calendarEmail'] = this.calendarEmail;
     }
     if (this.calendarAccessToken != null) {
       object['calendarAccessToken'] = this.calendarAccessToken;
