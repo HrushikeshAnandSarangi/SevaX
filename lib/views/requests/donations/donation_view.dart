@@ -382,23 +382,27 @@ class _DonationViewState extends State<DonationView> {
                       showScaffold(S.of(context).check_internet);
                       return;
                     }
-                    //showProgress();
+                    if (donationBloc.selectedList == null) {
+                      showScaffold(S.of(context).select_goods_category);
+                    } else {
+                      // showProgress();
 
-                    donationBloc
-                        .donateGoods(
-                            notificationId: widget.notificationId,
-                            donationModel: donationsModel,
-                            requestModel: widget.requestModel,
-                            donor: sevaUser)
-                        .then((value) {
-                      if (value) {
-                        // hideProgress();
-                        getSuccessDialog().then(
-                          //to pop the screen
-                          (_) => Navigator.of(context).pop(),
-                        );
-                      }
-                    });
+                      donationBloc
+                          .donateGoods(
+                              notificationId: widget.notificationId,
+                              donationModel: donationsModel,
+                              requestModel: widget.requestModel,
+                              donor: sevaUser)
+                          .then((value) {
+                        if (value) {
+                          // hideProgress();
+                          getSuccessDialog().then(
+                            //to pop the screen
+                            (_) => Navigator.of(context).pop(),
+                          );
+                        }
+                      });
+                    }
                   }),
               SizedBox(
                 width: 20,
@@ -460,8 +464,9 @@ class _DonationViewState extends State<DonationView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content:
-              Text(S.of(context).successfully + ' ' + S.of(context).pledged),
+          content: Text(S.of(context).successfully +
+              ' ' +
+              S.of(context).pledged.toLowerCase()),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(

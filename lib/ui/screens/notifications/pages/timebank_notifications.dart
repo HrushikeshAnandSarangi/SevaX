@@ -22,7 +22,6 @@ import 'package:sevaexchange/ui/screens/request/pages/request_donation_dispute_p
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/mailer.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/notifications/notification_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -103,6 +102,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                         builder: (context) {
                           return RequestDonationDisputePage(
                             model: donationModel,
+                            notificationId: notification.id,
                           );
                         },
                       ),
@@ -260,10 +260,10 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   entityName: body.fullName,
                   photoUrl: null,
                   title:
-                  "${S.of(context).notifications_approved_withdrawn_title}",
+                      "${S.of(context).notifications_approved_withdrawn_title}",
                   subTitle:
-                  "${body.fullName} ${S.of(context).notifications_approved_withdrawn_subtitle} ${body.requestTite}.  ",
-                  onDismissed: (){
+                      "${body.fullName} ${S.of(context).notifications_approved_withdrawn_subtitle} ${body.requestTite}.  ",
+                  onDismissed: () {
                     dismissTimebankNotification(
                         timebankId: notification.timebankId,
                         notificationId: notification.id);

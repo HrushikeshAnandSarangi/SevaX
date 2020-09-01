@@ -40,7 +40,7 @@ class DonationBloc {
       RequestModel requestModel,
       String notificationId,
       UserModel donor}) async {
-    if (_selectedList.value.isEmpty) {
+    if (_selectedList == null || _selectedList.value.isEmpty) {
       _errorMessage.add('goods');
     } else {
       donationModel.goodsDetails.donatedGoods = _selectedList.value;
@@ -170,6 +170,7 @@ class DonationBloc {
   }
 
   void dispose() {
+    _selectedList.close();
     _amountPledged.close();
     _goodsDescription.close();
     _errorMessage.close();

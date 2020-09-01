@@ -22,9 +22,11 @@ enum OperatingMode { CREATOR, USER }
 
 class RequestDonationDisputePage extends StatefulWidget {
   final DonationModel model;
+  final String notificationId;
   const RequestDonationDisputePage({
     Key key,
     @required this.model,
+    this.notificationId,
   }) : super(key: key);
   @override
   _RequestDonationDisputePageState createState() =>
@@ -96,6 +98,7 @@ class _RequestDonationDisputePageState
                       name: widget.model.donorDetails.name,
                       currency: '\$',
                       amount: widget.model.cashDetails.pledgedAmount.toString(),
+                      minAmount: widget.model.minimumAmount.toString(),
                     )
                   : _GoodsFlow(
                       operatingMode: operatingMode,
@@ -116,26 +119,34 @@ class _RequestDonationDisputePageState
                       switch (ackType) {
                         case _AckType.CASH:
                           _bloc
-                              .disputeCash(
-                            pledgedAmount: widget
-                                .model.cashDetails.pledgedAmount
-                                .toDouble(),
-                            operationMode: operatingMode,
-                            donationId: widget.model.id,
-                            donationModel: widget.model,
-                            notificationId: widget.model.notificationId,
-                            requestMode: widget.model.donatedToTimebank
-                                ? RequestMode.TIMEBANK_REQUEST
-                                : RequestMode.PERSONAL_REQUEST,
+                              .validateAmount(
+                            minmumAmount: widget.model.minimumAmount,
                           )
-                              .then(
-                            (value) {
-                              print(value);
-                              if (value) {
-                                Navigator.of(context).pop();
-                              }
-                            },
-                          );
+                              .then((value) {
+                            if (value) {
+                              _bloc
+                                  .disputeCash(
+                                pledgedAmount: widget
+                                    .model.cashDetails.pledgedAmount
+                                    .toDouble(),
+                                operationMode: operatingMode,
+                                donationId: widget.model.id,
+                                donationModel: widget.model,
+                                notificationId: widget.model.notificationId,
+                                requestMode: widget.model.donatedToTimebank
+                                    ? RequestMode.TIMEBANK_REQUEST
+                                    : RequestMode.PERSONAL_REQUEST,
+                              )
+                                  .then(
+                                (value) {
+                                  print(value);
+                                  if (value) {
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                              );
+                            }
+                          });
                           break;
                         case _AckType.GOODS:
                           log("Donated Goods" +
@@ -316,12 +327,14 @@ class _CashFlow extends StatelessWidget {
     this.timebankName,
     this.creatorName,
     this.requestMode,
+    this.minAmount,
   })  : _bloc = bloc,
         super(key: key);
 
   final RequestDonationDisputeBloc _bloc;
   final String name;
   final String amount;
+  final String minAmount;
   final String currency;
   final String timebankName;
   final String creatorName;
@@ -352,8 +365,10 @@ class _CashFlow extends StatelessWidget {
                 onChanged: _bloc.onAmountChanged,
                 decoration: InputDecoration(
                   errorText: snapshot.error == 'min'
-                      ? S.of(context).minmum_amount
-                      : '',
+                      ? S.of(context).minmum_amount + ' ' + minAmount
+                      : snapshot.error == 'amount1'
+                          ? S.of(context).enter_valid_amount
+                          : null,
                   hintText: S.of(context).amount,
                   hintStyle: TextStyle(fontSize: 12),
                 ),
