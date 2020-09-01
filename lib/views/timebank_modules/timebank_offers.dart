@@ -246,8 +246,7 @@ class OffersState extends State<OffersModule> {
                   children: <Widget>[
                     Spacer(),
                     FlatButton(
-//                        child: Text(S.of(context).skip_for_now, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
-                        child: Text(S.of(context).do_it_later, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
+                        child: Text(S.of(context).skip_for_now, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
                         onPressed: (){
                           Navigator.of(bc).pop();
                           Navigator.push(

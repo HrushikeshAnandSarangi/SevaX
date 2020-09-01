@@ -435,8 +435,7 @@ class OfferDetails extends StatelessWidget {
                     Spacer(),
                     FlatButton(
                         child: Text(
-//                          S.of(context).skip_for_now,
-                            S.of(context).do_it_later,
+                          S.of(context).skip_for_now,
                             style: TextStyle(
                               color: FlavorConfig.values.theme.primaryColor),
                         ),
