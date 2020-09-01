@@ -50,6 +50,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
     hasPellError = false;
     Firestore.instance
         .collection('interests')
+        .orderBy('name')
         .getDocuments()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.documents.forEach((DocumentSnapshot data) {
@@ -479,7 +480,7 @@ class SkillsAndInterestBloc {
         .collection('interests')
         .document(interestId)
         .setData(
-      {'name': interestTitle, 'lang': interestLanguage},
+      {'name': interestTitle?.firstWordUpperCase(), 'lang': interestLanguage},
     );
   }
 
@@ -489,7 +490,7 @@ class SkillsAndInterestBloc {
     String skillLanguage,
   }) async {
     await Firestore.instance.collection('skills').document(skillId).setData(
-      {'name': skillTitle, 'lang': skillLanguage},
+      {'name': skillTitle?.firstWordUpperCase(), 'lang': skillLanguage},
     );
   }
 }
