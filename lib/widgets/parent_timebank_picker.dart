@@ -57,8 +57,11 @@ void _parentSelectionBottomsheet(BuildContext mcontext, onChanged) {
     builder: (BuildContext bc) {
       var focusNodes = List.generate(1, (_) => FocusNode());
       return Container(
+        height: MediaQuery.of(bc).size.height -
+            38, //to avoid app bar going out of safe area
         child: Builder(builder: (context) {
           return Scaffold(
+              resizeToAvoidBottomInset: false,
               appBar: AppBar(
                 elevation: 0.5,
                 automaticallyImplyLeading: true,
