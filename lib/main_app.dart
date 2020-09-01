@@ -93,13 +93,7 @@ class MainApplication extends StatelessWidget {
             auth: Auth(),
             child: MaterialApp(
               locale: model.appLocal,
-              supportedLocales: [
-                Locale('en', 'US'),
-                Locale('pt', 'PT'),
-                Locale('fr', 'FR'),
-                Locale('es', 'ES'),
-                Locale('zh', 'CN')
-              ],
+              supportedLocales: S.delegate.supportedLocales,
               localizationsDelegates: [
                 S.delegate,
                 GlobalMaterialLocalizations.delegate,

@@ -3832,61 +3832,77 @@ class S {
 
   String hour(num count) => Intl.message(
         '${Intl.plural(count, one: 'Hora', other: 'Horas', args: [count])}',
-        name: 'hour',        
+        name: 'hour',
         args: [count],
       );
 
   String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Proyecto de banco de tiempo', other: 'Proyectos de banco de tiempo', args: [count])}',
-        name: 'timebank_project',        
+        '${Intl.plural(count, one: 'Proyecto de banco de tiempo', other: 'Proyectos de banco de tiempo', args: [
+          count
+        ])}',
+        name: 'timebank_project',
         args: [count],
       );
 
   String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Proyecto personal', other: 'Proyectos personales', args: [count])}',
-        name: 'personal_project',        
+        '${Intl.plural(count, one: 'Proyecto personal', other: 'Proyectos personales', args: [
+          count
+        ])}',
+        name: 'personal_project',
         args: [count],
       );
 
   String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Solicitud personal', other: 'Solicitudes personales', args: [count])}',
-        name: 'personal_request',        
+        '${Intl.plural(count, one: 'Solicitud personal', other: 'Solicitudes personales', args: [
+          count
+        ])}',
+        name: 'personal_request',
         args: [count],
       );
 
   String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Solicitud de banco de tiempo', other: 'Solicitudes de banco de tiempo', args: [count])}',
-        name: 'timebank_request',        
+        '${Intl.plural(count, one: 'Solicitud de banco de tiempo', other: 'Solicitudes de banco de tiempo', args: [
+          count
+        ])}',
+        name: 'timebank_request',
         args: [count],
       );
 
   String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Miembro seleccionado', other: 'Miembros seleccionados', args: [count])}',
-        name: 'members_selected',        
+        '${Intl.plural(count, one: 'Miembro seleccionado', other: 'Miembros seleccionados', args: [
+          count
+        ])}',
+        name: 'members_selected',
         args: [count],
       );
 
   String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Voluntario seleccionado', other: 'Voluntarios seleccionados', args: [count])}',
-        name: 'volunteers_selected',        
+        '${Intl.plural(count, one: 'Voluntario seleccionado', other: 'Voluntarios seleccionados', args: [
+          count
+        ])}',
+        name: 'volunteers_selected',
         args: [count],
       );
 
   String user(num count) => Intl.message(
-        '${Intl.plural(count, one: 'usuario', other: 'usuarios', args: [count])}',
-        name: 'user',        
+        '${Intl.plural(count, one: 'usuario', other: 'usuarios', args: [
+          count
+        ])}',
+        name: 'user',
         args: [count],
       );
 
   String other(num count) => Intl.message(
         '${Intl.plural(count, one: 'Otro', other: 'Otros', args: [count])}',
-        name: 'other',        
+        name: 'other',
         args: [count],
       );
 
   String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Suscripción', other: 'Suscripciones', args: [count])}',
-        name: 'subscription',        
+        '${Intl.plural(count, one: 'Suscripción', other: 'Suscripciones', args: [
+          count
+        ])}',
+        name: 'subscription',
         args: [count],
       );
 
@@ -4022,13 +4038,13 @@ class S {
 
   String day(num count) => Intl.message(
         '${Intl.plural(count, one: 'Día', other: 'Dias', args: [count])}',
-        name: 'day',        
+        name: 'day',
         args: [count],
       );
 
   String year(num count) => Intl.message(
         '${Intl.plural(count, one: 'Año', other: 'Años', args: [count])}',
-        name: 'year',        
+        name: 'year',
         args: [count],
       );
 
@@ -4809,12 +4825,12 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales => [
         Locale.fromSubtags(languageCode: 'es'),
         Locale.fromSubtags(languageCode: 'pt'),
-        Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'sn', countryCode: 'ZW'),
+        Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
         Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'en'),
         Locale.fromSubtags(languageCode: 'fr'),
-  ];
+      ];
 
   @override
   bool isSupported(Locale locale) => [
