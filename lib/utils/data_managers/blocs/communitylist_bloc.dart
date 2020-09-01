@@ -11,7 +11,6 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 
 import '../resources/repository.dart';
 
@@ -42,8 +41,8 @@ class CommunityFindBloc {
     timebankListModel.loading = true;
     _timebanksFetcher.sink.add(timebankListModel);
     print('called1');
-    timebankListModel =
-    await _repository.searchTimebankSiblingsByParentId(id, timebankListModel);
+    timebankListModel = await _repository.searchTimebankSiblingsByParentId(
+        id, timebankListModel);
     timebankListModel.loading = false;
     print(timebankListModel.timebanks.length);
     timebankListModel.timebanks.insert(0, timebank);
@@ -143,7 +142,9 @@ class CommunityCreateEditController {
     this.timebank.updateValueByKey('protected', this.timebank.protected);
     this.timebank.updateValueByKey('private', this.timebank.private);
     this.timebank.updateValueByKey('emailId', user.email);
-    this.timebank.updateValueByKey('parentTimebankId', this.timebank.parentTimebankId);
+    this
+        .timebank
+        .updateValueByKey('parentTimebankId', this.timebank.parentTimebankId);
     this
         .timebank
         .updateValueByKey('rootTimebankId', FlavorConfig.values.timebankId);
@@ -521,18 +522,18 @@ class TimeBankBloc {
     _timebankController.add(_timebankController.value);
   }
 
-  getSelectedRequestInvitedUsersData(usersids) async {
-    // TODO - get users from request
-    var usersdata = await _repository.getUsersFromRequest(usersids);
-    _timebankController.value.setInvitedUsersDataForRequest(usersdata);
-    _timebankController.add(_timebankController.value);
-  }
+//  getSelectedRequestInvitedUsersData(usersids) async {
+//    // TODO - get users from request
+//    var usersdata = await _repository.getUsersFromRequest(usersids);
+//    _timebankController.value.setInvitedUsersDataForRequest(usersdata);
+//    _timebankController.add(_timebankController.value);
+//  }
 
-  getRequestsFromTimebankId(String timebankId) async {
-    var requests = await _repository.getRequestsFromTimebankId(timebankId);
-    _timebankController.value.setRequestList(requests);
-    _timebankController.add(_timebankController.value);
-  }
+//  getRequestsFromTimebankId(String timebankId) async {
+//    var requests = await _repository.getRequestsFromTimebankId(timebankId);
+//    _timebankController.value.setRequestList(requests);
+//    _timebankController.add(_timebankController.value);
+//  }
 
   getRequestsStreamFromTimebankId(String timebankId) async {
     _repository.getRequestsStreamFromTimebankId(timebankId).listen((requests) {

@@ -77,7 +77,10 @@ class DonationParticipantPage extends StatelessWidget {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      RequestDonationDisputePage(model: model),
+                                      RequestDonationDisputePage(
+                                    model: model,
+                                    notificationId: model.notificationId,
+                                  ),
                                 ),
                               );
                             },
@@ -171,6 +174,7 @@ class DonationParticipantPage extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => RequestDonationDisputePage(
                   model: model,
+                  notificationId: model.notificationId,
                 ),
               ),
             );

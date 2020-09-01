@@ -110,7 +110,8 @@ class RequestApiProvider {
             (documentSnapshot) {
               RequestModel model = RequestModel.fromMap(documentSnapshot.data);
               model.id = documentSnapshot.documentID;
-              if (model.approvedUsers.length <= model.numberOfApprovals) {
+              if (model.approvedUsers.length <= model.numberOfApprovals &&
+                  model.requestEnd > DateTime.now().millisecondsSinceEpoch) {
                 requestList.add(model);
               }
             },
@@ -191,6 +192,7 @@ class CommunityApiProvider {
     }
     return communities;
   }
+
   Future<TimebankListModel> searchTimebankSiblingsByParentId(
       String id, TimebankListModel timebanks) async {
     timebanks.removeall();
@@ -200,7 +202,7 @@ class CommunityApiProvider {
           .where('parent_timebank_id', isEqualTo: id)
           .getDocuments()
           .then((QuerySnapshot querySnapshot) {
-            print(id);
+        print(id);
         querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
           var timebank = TimebankModel(documentSnapshot.data);
           print(timebank.name);

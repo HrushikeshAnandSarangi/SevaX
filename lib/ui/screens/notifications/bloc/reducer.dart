@@ -788,6 +788,7 @@ class PersonalNotificationsRedcerForDonations {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => RequestDonationDisputePage(
+              notificationId: notification.id,
               model: donationModel,
             ),
           ),
@@ -829,6 +830,7 @@ class PersonalNotificationsRedcerForDonations {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => RequestDonationDisputePage(
+              notificationId: notificationsModel.id,
               model: holder,
             ),
           ),
@@ -874,6 +876,7 @@ class PersonalNotificationsRedcerForDonations {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => RequestDonationDisputePage(
+              notificationId: notificationsModel.id,
               model: holder,
             ),
           ),

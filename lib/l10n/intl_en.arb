@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-09-01T07:47:02+00:00",
+    "@@last_modified": "2020-09-01T08:05:34+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -948,5 +948,8 @@
     "failed_load_image_title": "Failed to load",
     "image_url_hint": "Add Image URL ex: https:\/\/www.sevaexchange.com\/sevalogo.png",
     "request_details": "Request details",
-    "skip_for_now": "Skip for now"
+    "skip_for_now": "Skip for now",
+    "would_like_to_donate": "Would you like to donate for this request.",
+    "total_goods_recevied": "Total Goods Received",
+    "total_amount_raised": "Total amount raised"
 }

@@ -17,92 +17,87 @@ class TimezoneListData {
         offsetFromUtcMin: 0,
         offsetFromUtc: -11,
         timezoneAbb: 'ST',
-        timezoneName: 'Samoa Standard Time'),
+        timezoneName: 'SAMOA STANDARD TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -10,
         timezoneAbb: 'HAT',
-        timezoneName: 'Hawaii-Aleutian Standard Time'),
+        timezoneName: 'HAWAII-ALEUTIAN STANDARD TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -9,
         timezoneAbb: 'AKT',
-        timezoneName: 'Alaska Standard Time'),
+        timezoneName: 'ALASKA TIME ZONE'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -9,
         timezoneAbb: 'AKDT',
-        timezoneName: 'Alaska Day Light Time'),
+        timezoneName: 'ALASKA DAY LIGHT TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -7,
         timezoneAbb: 'MST',
-        timezoneName: 'Mountain Day Light Time'),
+        timezoneName: 'MOUNTAIN STANDARD TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -6,
         timezoneAbb: 'MDT',
-        timezoneName: 'Mountain Day Light Time'),
+        timezoneName: 'MOUNTAIN DAY LIGHT TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -8,
         timezoneAbb: 'PT',
-        timezoneName: 'Pacific Standard Time'),
+        timezoneName: 'PACIFIC TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -7,
         timezoneAbb: 'PDT',
-        timezoneName: 'Pacific Day Light Time'),
+        timezoneName: 'PACIFIC DAY LIGHT TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -7,
         timezoneAbb: 'MT',
-        timezoneName: 'Mountain Standard Time'),
+        timezoneName: 'MOUNTAIN TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -6,
         timezoneAbb: 'CT',
-        timezoneName: 'Central Standard Time'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: -5,
-        timezoneAbb: 'CDT',
-        timezoneName: 'Central Day Light Time'),
+        timezoneName: 'CENTRAL STANDARD TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -5,
         timezoneAbb: 'EDT',
-        timezoneName: 'Eastern Day Light Time'),
+        timezoneName: 'EASTERN DAY LIGHT TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -10,
         timezoneAbb: 'HST',
-        timezoneName: 'Hawaii-Aleutian Time'),
+        timezoneName: 'HAWAII-ALEUTIAN TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -9,
         timezoneAbb: 'HDT',
-        timezoneName: 'Hawaii-Aleutian Day Light Time'),
+        timezoneName: 'HAWAII-ALEUTIAN DAY LIGHT TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -5,
         timezoneAbb: 'ET',
-        timezoneName: 'Eastern Standard Time'),
+        timezoneName: 'EASTERN TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -4,
         timezoneAbb: 'AST',
-        timezoneName: 'Atlantic Standard Time'),
+        timezoneName: 'ATLANTIC STANDARD TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: 10,
         timezoneAbb: 'ChT',
-        timezoneName: 'Chamorro Standard Time'),
+        timezoneName: 'CHAMORRO STANDARD TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: 12,
         timezoneAbb: 'WIT',
-        timezoneName: 'Wake Island Time Zone'),
+        timezoneName: 'WAKE ISLAND TIME ZONE'),
 
     //europian timezones
 
@@ -110,22 +105,18 @@ class TimezoneListData {
         offsetFromUtcMin: 0,
         offsetFromUtc: 0,
         timezoneAbb: 'WET',
-        timezoneName: 'Western European Time'),
+        timezoneName: 'WESTERN EUROPEAN TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: 1,
         timezoneAbb: 'CET',
-        timezoneName: 'Central European Time'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: 2,
-        timezoneAbb: 'EET',
-        timezoneName: 'Eastern European Time'),
+        timezoneName: 'CENTRAL EUROPEAN TIME'),
+
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: 3,
         timezoneAbb: 'MSK',
-        timezoneName: 'Moscow Time'),
+        timezoneName: 'MOSCOW TIME'),
 
     //Australia
 
@@ -133,97 +124,69 @@ class TimezoneListData {
       offsetFromUtcMin: 0,
       offsetFromUtc: 11,
       timezoneAbb: 'ACTT',
-      timezoneName: 'Australian Capital Territory Time',
+      timezoneName: 'AUSTRALIAN CAPITAL TERRITORY TIME',
     ),
 
     TimeZoneModel(
       offsetFromUtcMin: 0,
       offsetFromUtc: 11,
       timezoneAbb: 'VT',
-      timezoneName: 'Victoria Time',
+      timezoneName: 'VICTORIA TIME',
     ),
 
     TimeZoneModel(
       offsetFromUtcMin: 0,
       offsetFromUtc: 11,
       timezoneAbb: 'NSWT',
-      timezoneName: 'New South Wales Time',
+      timezoneName: 'NEW SOUTH WALES TIME',
     ),
 
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: 10,
         timezoneAbb: 'QT',
-        timezoneName: 'Queensland Time'),
+        timezoneName: 'QUEENSLAND TIME'),
 
     TimeZoneModel(
       offsetFromUtcMin: 0,
       offsetFromUtc: 9,
       timezoneAbb: 'NTT',
-      timezoneName: 'Northern Territory Time',
+      timezoneName: 'NORTHERN TERRITORY TIME',
     ),
 
     TimeZoneModel(
       offsetFromUtcMin: 0,
       offsetFromUtc: 8,
       timezoneAbb: 'TT',
-      timezoneName: 'Tasmania Time',
+      timezoneName: 'TASMANIA TIME',
     ),
 
     TimeZoneModel(
       offsetFromUtcMin: 0,
       offsetFromUtc: 8,
       timezoneAbb: 'WA',
-      timezoneName: 'Western Australia (Most)',
+      timezoneName: 'WESTERN AUSTRALIA (MOST)',
     ),
     TimeZoneModel(
       offsetFromUtcMin: 0,
       offsetFromUtc: 8,
       timezoneAbb: 'WA',
-      timezoneName: 'Western Australia (Eucla)',
+      timezoneName: 'WESTERN AUSTRALIA (EUCLA)',
     ),
     TimeZoneModel(
       offsetFromUtcMin: 0,
       offsetFromUtc: 10,
       timezoneAbb: 'SAT',
-      timezoneName: 'South Australia Time',
+      timezoneName: 'SOUTH AUSTRALIA TIME',
     ),
 
     //Asian
 
     TimeZoneModel(
       offsetFromUtcMin: 0,
-      offsetFromUtc: 4,
-      timezoneAbb: 'AT',
-      timezoneName: 'AFGHANISTAN TIME',
-    ),
-
-    TimeZoneModel(
-      offsetFromUtcMin: 0,
-      offsetFromUtc: 6,
-      timezoneAbb: 'AAT',
-      timezoneName: 'ALMA-ATA TIME',
-    ),
-
-    TimeZoneModel(
-      offsetFromUtcMin: 0,
-      offsetFromUtc: 4,
-      timezoneAbb: 'AT',
-      timezoneName: 'ARMENIA TIME',
-    ),
-
-    TimeZoneModel(
-      offsetFromUtcMin: 0,
       offsetFromUtc: 5,
       timezoneAbb: 'AMST',
       timezoneName: 'ARMENIA SUMMER TIME',
-    ),
-
-    TimeZoneModel(
-      offsetFromUtcMin: 0,
-      offsetFromUtc: 11,
-      timezoneAbb: 'AT',
-      timezoneName: 'ANADYR TIME',
     ),
 
     TimeZoneModel(
@@ -258,7 +221,7 @@ class TimezoneListData {
       offsetFromUtcMin: 0,
       offsetFromUtc: 4,
       timezoneAbb: 'AT',
-      timezoneName: 'AZERBAIJAN TIME',
+      timezoneName: 'ATLANTIC TIME',
     ),
 
     TimeZoneModel(
@@ -1508,7 +1471,7 @@ class TimezoneListData {
         return timezonelist[i].timezoneName;
       }
     }
-    return "Pacific Standard Time";
+    return "Pacific STANDARD TIME";
   }
 
   List<TimeZoneModel> getData() {

@@ -32,6 +32,20 @@ class RequestDonationDisputeBloc {
     _goodsRecieved.add(Map.from(initialValue));
   }
 
+  Future<bool> validateAmount({int minmumAmount}) async {
+    if (_cashAmount.value == '' || _cashAmount.value == null) {
+      _cashAmount.addError('amount1');
+      return false;
+    } else if (int.parse(_cashAmount.value) < minmumAmount) {
+      _cashAmount.addError('min');
+      return false;
+    } else {
+      return true;
+    }
+
+    return false;
+  }
+
   Future<bool> disputeCash({
     OperatingMode operationMode,
     double pledgedAmount,
@@ -41,7 +55,11 @@ class RequestDonationDisputeBloc {
     RequestMode requestMode,
   }) async {
     var status = pledgedAmount == double.parse(_cashAmount.value);
-    if (int.parse(_cashAmount.value) < donationModel.minimumAmount) {
+
+    if (_cashAmount.value == null || _cashAmount.value == '') {
+      _cashAmount.addError('amount1');
+      return false;
+    } else if (int.parse(_cashAmount.value) < donationModel.minimumAmount) {
       _cashAmount.addError('min');
       return false;
     } else {

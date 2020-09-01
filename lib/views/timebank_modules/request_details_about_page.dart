@@ -132,7 +132,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       ),
       centerTitle: true,
       title: Text(
-        S.of(context).request_details,
+        // S.of(context).request_details,
+        'Request Details',
         style:
             TextStyle(fontFamily: "Europa", fontSize: 20, color: Colors.black),
       ),
@@ -316,7 +317,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               style: TextStyle(color: Colors.black),
               children: [
                 TextSpan(
-                  text: 'Would you like to donate for this request.',
+                  text: S.of(context).would_like_to_donate,
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Europa',
@@ -342,7 +343,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 SizedBox(width: 1),
                 Spacer(),
                 Text(
-                  'Donate',
+                  S.of(context).donate,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -372,7 +373,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               style: TextStyle(color: Colors.black),
               children: [
                 TextSpan(
-                  text: 'Would you like to donate for this request.',
+                  text: S.of(context).would_like_to_donate,
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Europa',
@@ -398,7 +399,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 SizedBox(width: 1),
                 Spacer(),
                 Text(
-                  'Donate',
+                  S.of(context).donate,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -843,7 +844,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         builder: (context, snapshot) {
           return CustomListTile(
             title: Text(
-              'Total Goods Received',
+              S.of(context).total_goods_recevied,
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -1099,7 +1100,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       children: [
         CustomListTile(
           title: Text(
-            'Total amount raised',
+            S.of(context).total_amount_raised,
             style: TextStyle(
               fontSize: 18,
               color: Colors.black,

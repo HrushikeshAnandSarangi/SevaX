@@ -319,7 +319,7 @@ class RequestsState extends State<RequestsModule> {
                     FlatButton(
                         child: Text(
                           S.of(context).skip_for_now,
-                            style: TextStyle(
+                          style: TextStyle(
                               color: FlavorConfig.values.theme.primaryColor),
                         ),
                         onPressed: () {

@@ -237,6 +237,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                       showLoader: false,
                     );
                     break;
+
                   default:
                     return Container();
                 }
@@ -248,7 +249,13 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   showLoader: false,
                 );
               },
-              onSuggestionSelected: (suggestion) {
+              onSuggestionSelected: (SuggestedItem suggestion) {
+                if (ProfanityDetector()
+                    .isProfaneString(suggestion.suggesttionTitle)) {
+                  print("No action can be taken on profane word");
+                  return;
+                }
+
                 switch (suggestion.suggestionMode) {
                   case SuggestionMode.SUGGESTED:
                     var skillId = Uuid().generateV4();
@@ -274,10 +281,12 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 }
 
                 _textEditingController.clear();
-                if (!_selectedSkills.containsValue(suggestion)) {
+                if (!_selectedSkills
+                    .containsValue(suggestion.suggesttionTitle)) {
                   controller.close();
-                  String id = skills.keys.firstWhere((k) => skills[k] == suggestion);
-                  _selectedSkills[id] = suggestion;
+                  String id = skills.keys.firstWhere(
+                      (k) => skills[k] == suggestion.suggesttionTitle);
+                  _selectedSkills[id] = suggestion.suggesttionTitle;
                   setState(() {});
                 }
               },
