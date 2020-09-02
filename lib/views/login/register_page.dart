@@ -27,7 +27,6 @@ import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/profile/edit_profile.dart';
-import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 import 'package:sevaexchange/views/splash_view.dart' as DefaultSplashView;
 
@@ -801,11 +800,11 @@ class _RegisterPageState extends State<RegisterPage>
 
       user.timezone =
           TimezoneListData().getTimeZoneByCodeData(DateTime.now().timeZoneName);
-      var _sysLng = ui.window.locale.languageCode;
-      var language =
-          LanguageListData().getLanguageSupported(_sysLng.toString());
-      appLanguage.changeLanguage(Locale(language.code));
-      user.language = language.code;
+      Locale _sysLng = ui.window.locale;
+      Locale _language =
+          S.delegate.isSupported(_sysLng) ? _sysLng : Locale('en');
+      appLanguage.changeLanguage(_language);
+      user.language = _language.languageCode;
       print("cv name ${cvName}");
 
       if (cvName != null) {

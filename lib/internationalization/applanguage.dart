@@ -38,6 +38,10 @@ class AppLanguage extends ChangeNotifier {
       _appLocale = Locale("zh", 'CN');
       await prefs.setString('language_code', 'zh');
       await prefs.setString('countryCode', 'CN');
+    } else if (type == Locale("zh")) {
+      _appLocale = Locale("zh", 'TW');
+      await prefs.setString('language_code', 'zh');
+      await prefs.setString('countryCode', 'TW');
     } else if (type == Locale("af")) {
       _appLocale = Locale("af");
       await prefs.setString('language_code', 'af');
@@ -46,6 +50,10 @@ class AppLanguage extends ChangeNotifier {
       _appLocale = Locale("sn");
       await prefs.setString('language_code', 'sn');
       await prefs.setString('countryCode', 'ZW');
+    } else if (type == Locale("sw")) {
+      _appLocale = Locale("sw", 'CN');
+      await prefs.setString('language_code', 'sw');
+      await prefs.setString('countryCode', 'SW');
     } else {
       _appLocale = Locale("en");
       await prefs.setString('language_code', 'en');

@@ -4826,9 +4826,11 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales => [
         Locale.fromSubtags(languageCode: 'es'),
         Locale.fromSubtags(languageCode: 'pt'),
-        Locale.fromSubtags(languageCode: 'sn', countryCode: 'ZW'),
+        Locale.fromSubtags(languageCode: 'sn'),
         Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
+        Locale.fromSubtags(languageCode: 'zh', countryCode: 'TW'),
         Locale.fromSubtags(languageCode: 'af'),
+        Locale.fromSubtags(languageCode: 'sw'),
         Locale.fromSubtags(languageCode: 'en'),
         Locale.fromSubtags(languageCode: 'fr'),
       ];
@@ -4839,7 +4841,9 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
         'pt',
         'sn',
         'zh',
+        'zh',
         'af',
+        'sw',
         'en',
         'fr',
       ].contains(locale.languageCode);
