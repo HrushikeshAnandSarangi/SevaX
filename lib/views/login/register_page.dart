@@ -16,8 +16,8 @@ import 'package:sevaexchange/components/dashed_border.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/applanguage.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -27,7 +27,6 @@ import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/profile/edit_profile.dart';
-import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/profile/timezone.dart';
 import 'package:sevaexchange/views/splash_view.dart' as DefaultSplashView;
 
@@ -801,11 +800,11 @@ class _RegisterPageState extends State<RegisterPage>
 
       user.timezone =
           TimezoneListData().getTimeZoneByCodeData(DateTime.now().timeZoneName);
-      var _sysLng = ui.window.locale.languageCode;
-      var language =
-          LanguageListData().getLanguageSupported(_sysLng.toString());
-      appLanguage.changeLanguage(Locale(language.code));
-      user.language = language.code;
+      Locale _sysLng = ui.window.locale;
+      Locale _language =
+          S.delegate.isSupported(_sysLng) ? _sysLng : Locale('en');
+      appLanguage.changeLanguage(_language);
+      user.language = _language.languageCode;
       print("cv name ${cvName}");
 
       if (cvName != null) {

@@ -181,10 +181,13 @@ class _RequestDonationDisputePageState
                   RaisedButton(
                     child: Text(S.of(context).message),
                     onPressed: () async {
-                      switch (getOperatingMode(
+                      var a = getOperatingMode(
                         operatingMode,
                         widget.model.donatedToTimebank,
-                      )) {
+                      );
+                      print("==========================" + a.toString());
+
+                      switch (a) {
                         case ChatModeForDispute.MEMBER_TO_MEMBER:
                           UserModel fundRaiserDetails =
                               await FirestoreManager.getUserForId(
@@ -250,6 +253,11 @@ class _RequestDonationDisputePageState
                             timebankId: widget.model.timebankId,
                           );
 
+                          // UserModel fundRaiserDetails =
+                          //     await FirestoreManager.getUserForId(
+                          //   sevaUserId: widget.model.donorDetails.name,
+                          // );
+
                           var loggedInUser = SevaCore.of(context).loggedInUser;
 
                           await HandlerForModificationManager
@@ -257,9 +265,9 @@ class _RequestDonationDisputePageState
                             communityId: loggedInUser.currentCommunity,
                             isTimebankMessage: true,
                             receiver: ParticipantInfo(
-                              id: loggedInUser.sevaUserID,
-                              name: loggedInUser.fullname,
-                              photoUrl: loggedInUser.photoURL,
+                              id: widget.model.donorSevaUserId,
+                              name: widget.model.donorDetails.name,
+                              photoUrl: widget.model.donorDetails.photoUrl,
                               type: ChatType.TYPE_PERSONAL,
                             ),
                             sender: ParticipantInfo(

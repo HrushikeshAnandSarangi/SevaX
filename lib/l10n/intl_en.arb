@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-09-01T17:41:50+00:00",
+    "@@last_modified": "2020-09-02T06:50:17+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -945,7 +945,7 @@
     "image_url_alert_desc": "Please add a image url to continue",
     "enter_valid_link": "Enter valid payment link",
     "target_amount_less_than_min_amount": "Minimum amount cannot be greater than target amount",
-    "failed_load_image_title": "Failed to load",
+    "failed_load_image_title": "Failed to load image",
     "image_url_hint": "Add Image Url ex: https:\/\/www.sevaexchange.com\/sevalogo.png",
     "request_details": "Request details",
     "skip_for_now": "Skip for now",
