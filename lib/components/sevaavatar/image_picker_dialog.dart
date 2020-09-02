@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -105,7 +106,7 @@ class ImagePickerDialog extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () => _listener.openStockImages(context, (image) => {
-                    print(image)
+                    log("~~~${image}")
                   }),
                   child: roundedButton(
                       S.of(context).stock_images,
