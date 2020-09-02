@@ -139,11 +139,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
   RequestModel requestModel = RequestModel(
     requestType: RequestType.TIME,
-    cashModel: CashModel(),
+    cashModel: CashModel(paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
     goodsDonationDetails: GoodsDonationDetails(),
   );
   End end = End();
-  var focusNodes = List.generate(12, (_) => FocusNode());
+  var focusNodes = List.generate(16, (_) => FocusNode());
 
   GeoFirePoint location;
 
@@ -494,8 +494,291 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           ),
         ]);
   }
+  Widget RequestPaymentACH(requestModel) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(height: 20),
+          Text(
+            S.of(context).request_payment_ach_bank_name,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[12],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[13]);
+            },
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (!value.isEmpty) {
+                requestModel.cashModel.achdetails.bank_name = value;
+                print(true);
+              } else {
+                print('not url');
+                return S.of(context).enter_valid_bank_name;
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 20),
+          Text(
+            S.of(context).request_payment_ach_bank_address,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[13],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[14]);
+            },
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (!value.isEmpty) {
+                requestModel.cashModel.achdetails.bank_address = value;
+                print(true);
+              } else {
+                print('not url');
 
-  Widget RequestPaymentDescriptionData() {
+                return S.of(context).enter_valid_bank_address;
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 20),
+          Text(
+            S.of(context).request_payment_ach_routing_number,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[14],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[15]);
+            },
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (!value.isEmpty) {
+                requestModel.cashModel.achdetails.routing_number = value;
+                print(true);
+              } else {
+                print('not url');
+
+                return S.of(context).enter_valid_routing_number;
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 20),
+          Text(
+            S.of(context).request_payment_ach_account_no,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[15],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[15]);
+            },
+            textInputAction: TextInputAction.next,
+            initialValue: widget.offer != null && widget.isOfferRequest
+                ? getOfferDescription(
+              offerDataModel: widget.offer,
+            )
+                : "",
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (!value.isEmpty) {
+                requestModel.cashModel.achdetails.account_number = value;
+                print(true);
+              } else {
+                print('not url');
+
+                return S.of(context).enter_valid_account_number;
+              }
+              return null;
+            },
+          )
+        ]);
+  }
+  Widget RequestPaymentZellePay(requestModel) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[12],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[12]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).request_payment_descriptionZelle_inputhint,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue: widget.offer != null && widget.isOfferRequest
+                ? getOfferDescription(
+              offerDataModel: widget.offer,
+            )
+                : "",
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (regExp.hasMatch(value)) {
+                requestModel.donationInstructionLink = value;
+                print(true);
+              } else {
+                print('not url');
+
+                return S.of(context).enter_valid_link;
+              }
+              return null;
+            },
+          )
+        ]);
+  }
+  Widget RequestPaymentPaypal(requestModel) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[TextFormField(
+          autovalidate: autoValidateCashText,
+          onChanged: (value) {
+            if (value.length > 1) {
+              setState(() {
+                autoValidateCashText = true;
+              });
+            } else {
+              setState(() {
+                autoValidateCashText = false;
+              });
+            }
+          },
+          focusNode: focusNodes[12],
+          onFieldSubmitted: (v) {
+            FocusScope.of(context).requestFocus(focusNodes[12]);
+          },
+          textInputAction: TextInputAction.next,
+          decoration: InputDecoration(
+            errorMaxLines: 2,
+            hintText: S.of(context).request_payment_description_inputhint,
+            hintStyle: hintTextStyle,
+          ),
+          initialValue: widget.offer != null && widget.isOfferRequest
+              ? getOfferDescription(
+            offerDataModel: widget.offer,
+          )
+              : "",
+          keyboardType: TextInputType.multiline,
+          maxLines: 1,
+          validator: (value) {
+            if (value.isEmpty) {
+              return S.of(context).validation_error_general_text;
+            } else if (regExp.hasMatch(value)) {
+              requestModel.donationInstructionLink = value;
+              print(true);
+            } else {
+              print('not url');
+
+              return S.of(context).enter_valid_link;
+            }
+            return null;
+          },
+        )]);
+  }
+  Widget RequestPaymentDescriptionData(requestModel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -515,50 +798,36 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             color: Colors.grey,
           ),
         ),
-        TextFormField(
-          autovalidate: autoValidateCashText,
+        _optionRadioButton(
+          title: S.of(context).request_paymenttype_ach,
+          value: RequestPaymentType.ACH,
+          groupvalue: requestModel.cashModel.paymentType,
           onChanged: (value) {
-            if (value.length > 1) {
-              setState(() {
-                autoValidateCashText = true;
-              });
-            } else {
-              setState(() {
-                autoValidateCashText = false;
-              });
-            }
-          },
-          focusNode: focusNodes[7],
-          onFieldSubmitted: (v) {
-            FocusScope.of(context).requestFocus(focusNodes[7]);
-          },
-          textInputAction: TextInputAction.next,
-          decoration: InputDecoration(
-            errorMaxLines: 2,
-            hintText: S.of(context).request_payment_description_inputhint,
-            hintStyle: hintTextStyle,
-          ),
-          initialValue: widget.offer != null && widget.isOfferRequest
-              ? getOfferDescription(
-                  offerDataModel: widget.offer,
-                )
-              : "",
-          keyboardType: TextInputType.multiline,
-          maxLines: 3,
-          validator: (value) {
-            if (value.isEmpty) {
-              return S.of(context).validation_error_general_text;
-            } else if (regExp.hasMatch(value)) {
-              requestModel.donationInstructionLink = value;
-              print(true);
-            } else {
-              print('not url');
-
-              return S.of(context).enter_valid_link;
-            }
-            return null;
+            requestModel.cashModel.paymentType = value;
+            setState(() => {});
           },
         ),
+        _optionRadioButton(
+            title: S.of(context).request_paymenttype_paypal,
+            value: RequestPaymentType.PAYPAL,
+            groupvalue: requestModel.cashModel.paymentType,
+            onChanged: (value) {
+              requestModel.cashModel.paymentType = value;
+              setState(() => {});
+            }),
+        _optionRadioButton(
+            title: S.of(context).request_paymenttype_zellepay,
+            value: RequestPaymentType.ZELLEPAY,
+            groupvalue: requestModel.cashModel.paymentType,
+            onChanged: (value) {
+              requestModel.cashModel.paymentType = value;
+              setState(() => {});
+            }),
+        requestModel.cashModel.paymentType == RequestPaymentType.ACH
+            ? RequestPaymentACH(requestModel)
+            : requestModel.cashModel.paymentType == RequestPaymentType.PAYPAL
+            ? RequestPaymentPaypal(requestModel)
+            : RequestPaymentZellePay(requestModel),
       ],
     );
   }
@@ -639,6 +908,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   _optionRadioButton(
                     title: S.of(context).request_type_time,
                     value: RequestType.TIME,
+                    groupvalue: requestModel.requestType,
                     onChanged: (value) {
                       requestModel.requestType = value;
                       setState(() => {});
@@ -647,6 +917,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   _optionRadioButton(
                       title: S.of(context).request_type_cash,
                       value: RequestType.CASH,
+                      groupvalue: requestModel.requestType,
                       onChanged: (value) {
                         requestModel.requestType = value;
                         setState(() => {});
@@ -654,6 +925,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   _optionRadioButton(
                       title: S.of(context).request_type_goods,
                       value: RequestType.GOODS,
+                      groupvalue: requestModel.requestType,
                       onChanged: (value) {
                         requestModel.requestType = value;
                         setState(() => {});
@@ -858,7 +1130,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 )
               : Container(),
           SizedBox(height: 20),
-          RequestPaymentDescriptionData(),
+          RequestPaymentDescriptionData(requestModel),
         ]);
   }
 
@@ -888,13 +1160,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   Widget _optionRadioButton(
-      {String title, RequestType value, Function onChanged}) {
+      {String title, value, groupvalue, Function onChanged}) {
     return ListTile(
       contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
       title: Text(title),
       leading: Radio(
           value: value,
-          groupValue: requestModel.requestType,
+          groupValue: groupvalue,
           onChanged: onChanged),
     );
   }
@@ -954,8 +1226,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   BuildContext dialogContext;
 
   void createRequest() async {
+    print('clicked here');
     // verify f the start and end date time is not same
-
     var connResult = await Connectivity().checkConnectivity();
     if (connResult == ConnectivityResult.none) {
       Scaffold.of(context).showSnackBar(
@@ -1198,6 +1470,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   Future<int> _writeToDB() async {
+    print(requestModel.cashModel);
+    print(requestModel.cashModel.achdetails);
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     requestModel.id = '${requestModel.email}*$timestampString';
@@ -1215,7 +1489,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.root_timebank_id = FlavorConfig.values.timebankId;
     requestModel.softDelete = false;
     if (requestModel.id == null) return 0;
-
     // credit the timebank the required credits before the request creation
     await TransactionBloc().createNewTransaction(
         requestModel.timebankId,

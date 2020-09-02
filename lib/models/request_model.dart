@@ -741,6 +741,11 @@ enum RequestType {
   TIME,
   GOODS,
 }
+enum RequestPaymentType {
+  ACH,
+  ZELLEPAY,
+  PAYPAL,
+}
 
 enum ContantsSeva { USER_DONATE_TOTIMEBANK }
 
@@ -748,4 +753,9 @@ Map<String, RequestType> requestTypeMapper = {
   "CASH": RequestType.CASH,
   "TIME": RequestType.TIME,
   "GOODS": RequestType.GOODS,
+};
+Map<String, RequestPaymentType> requestPaymentTypeMapper = {
+  "ACH": RequestPaymentType.ACH,
+  "ZELLEPAY": RequestPaymentType.ZELLEPAY,
+  "PAYPAL": RequestPaymentType.PAYPAL,
 };
