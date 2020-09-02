@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/internationalization/applanguage.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/localization/applanguage.dart';
+import 'package:sevaexchange/localization/delegates/localization_delegate.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -94,6 +95,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
             supportedLocales: S.delegate.supportedLocales,
             localizationsDelegates: [
               S.delegate,
+              SnMaterialLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,

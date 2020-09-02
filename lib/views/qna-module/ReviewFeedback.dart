@@ -1,16 +1,17 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:device_info/device_info.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/localization/delegates/localization_delegate.dart';
 import 'package:sevaexchange/new_baseline/models/device_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/qna-module/FeedbackConstants.dart';
-import 'package:flutter/foundation.dart';
-import 'dart:async';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 enum FeedbackType {
@@ -45,13 +46,14 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   var ratings = {};
   constructor() {
     var temp = getQuestions(widget.feedbackType).length;
-    for (var i=0; i< temp; i++) {
+    for (var i = 0; i < temp; i++) {
       ratings[i] = 0;
     }
     setState(() {
       ratings = ratings;
     });
   }
+
   DeviceModel deviceModel = DeviceModel();
   final profanityDetector = ProfanityDetector();
   bool autoValidateText = false;
@@ -91,6 +93,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       supportedLocales: S.delegate.supportedLocales,
       localizationsDelegates: [
         S.delegate,
+        SnMaterialLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -223,26 +226,28 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
     } else {
       widgettype = getQuestionsWidget(widget, questionIndex);
     }
-    return this.isLoading ? Center(child: CircularProgressIndicator()): Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Container(
-          margin: EdgeInsets.only(left: 10, bottom: 10, top: 20),
-          alignment: Alignment.centerLeft,
-          child: Text(
-            getQuestions(widget.feedbackType)[questionIndex]
-                [FeedbackConstants.FEEDBACK_TITLE],
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              letterSpacing: 2,
-            ),
-          ),
-        ),
-        widgettype
-      ],
-    );
+    return this.isLoading
+        ? Center(child: CircularProgressIndicator())
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(left: 10, bottom: 10, top: 20),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  getQuestions(widget.feedbackType)[questionIndex]
+                      [FeedbackConstants.FEEDBACK_TITLE],
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    letterSpacing: 2,
+                  ),
+                ),
+              ),
+              widgettype
+            ],
+          );
   }
 
   void makeSelection(num score) {
@@ -255,7 +260,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 
   getQuestionsWidget(widget, questionIndex) {
     return (getQuestions(widget.feedbackType)[questionIndex]
-    [FeedbackConstants.ANSWERS] as List)
+            [FeedbackConstants.ANSWERS] as List)
         .map((answerModel) {
       return Container(
         margin: EdgeInsets.all(10),
@@ -265,8 +270,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
           color: Color(0x0FF766FE0),
           child: Text(
             answerModel[FeedbackConstants.ANSWER_TEXT],
-            style:
-            TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
           onPressed: () {
             makeSelection(answerModel[FeedbackConstants.SCORE]);
@@ -275,10 +279,16 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       );
     }).toList();
   }
+
   void finishState(BuildContext context) {
     Navigator.of(context).pop({
       "ratings": ratings,
-      "selection": getRating(totalScore, widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER ? 20: 15).toStringAsFixed(1),
+      "selection": getRating(
+              totalScore,
+              widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER
+                  ? 20
+                  : 15)
+          .toStringAsFixed(1),
       'didComment': myCommentsController.text.length > 0,
       'comment': myCommentsController.text,
       'device_info': deviceModel.toMap(),
@@ -297,24 +307,25 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
           setState(() {
             ratings = ratings;
           });
-          _debouncerIng.run(() =>  {
-            setState(() {
-              isLoading = true;
-            }),
-            _debouncer.run(() =>  {
-              makeSelection(v),
-            })
-          });
+          _debouncerIng.run(() => {
+                setState(() {
+                  isLoading = true;
+                }),
+                _debouncer.run(() => {
+                      makeSelection(v),
+                    })
+              });
         },
         starCount: 5,
-        rating: this.ratings[this.questionIndex] != null ? this.ratings[this.questionIndex]: 0,
+        rating: this.ratings[this.questionIndex] != null
+            ? this.ratings[this.questionIndex]
+            : 0,
         size: 40.0,
         filledIconData: Icons.star,
         halfFilledIconData: Icons.star_half,
         color: Colors.yellow,
         borderColor: Colors.yellow,
-        spacing:0.0
-    );
+        spacing: 0.0);
   }
 
   Widget getTextFeedback(BuildContext context) {
@@ -405,12 +416,13 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
     );
   }
 }
+
 class Debouncer {
   final int milliseconds;
   VoidCallback action;
   Timer _timer;
 
-  Debouncer({ this.milliseconds });
+  Debouncer({this.milliseconds});
 
   run(VoidCallback action) {
     if (_timer != null) {

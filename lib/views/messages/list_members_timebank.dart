@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/localization/delegates/localization_delegate.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -25,6 +26,7 @@ class ListMambersForNewChatState extends State<ListMambersForNewChat> {
       supportedLocales: S.delegate.supportedLocales,
       localizationsDelegates: [
         S.delegate,
+        SnMaterialLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
