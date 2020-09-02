@@ -4416,22 +4416,6 @@ class S {
     'Detalles del pago*',
     name: 'request_payment_description',
   );
-  String get request_payment_ach_bank_name => Intl.message(
-    'Bank Name*',
-    name: 'request_payment_ach_bank_name',
-  );
-  String get request_payment_ach_bank_address => Intl.message(
-    'Bank Address*',
-    name: 'request_payment_ach_bank_address',
-  );
-  String get request_payment_ach_routing_number => Intl.message(
-    'Routing Number*',
-    name: 'request_payment_ach_routing_number',
-  );
-  String get request_payment_ach_account_no => Intl.message(
-    'Account Number*',
-    name: 'request_payment_ach_account_no',
-  );
 
   String get request_payment_description_hint => Intl.message(
         'SevaX no procesa ningún pago, debe tener su propia dirección para el cobro de pagos, proporcione uno de los siguientes detalles de paypal, zelpay (o) ACH',
@@ -4442,10 +4426,6 @@ class S {
         'Paypal ID Example: https://www.paypal.com/johndoe',
         name: 'request_payment_description_inputhint',
       );
-  String get request_payment_descriptionZelle_inputhint => Intl.message(
-    'Zellepay Example: https://www.paypal.com/johndoe',
-    name: 'request_payment_description_inputhint',
-  );
 
   String get request_min_donation_hint => Intl.message(
         'Ex: \$ 10',
@@ -4800,22 +4780,6 @@ class S {
   String get enter_valid_link => Intl.message(
     'Ingrese un enlace de pago válido',
     name: 'enter_valid_link',
-  );
-  String get enter_valid_bank_address => Intl.message(
-    'Enter Bank Address',
-    name: 'enter_valid_bank_address',
-  );
-  String get enter_valid_bank_name => Intl.message(
-    'Enter Bank Name',
-    name: 'enter_valid_bank_name',
-  );
-  String get enter_valid_account_number => Intl.message(
-    'Enter Account Number',
-    name: 'enter_valid_account_number',
-  );
-  String get enter_valid_routing_number => Intl.message(
-    'Enter Routing Number',
-    name: 'enter_valid_routing_number',
   );
 
   String get target_amount_less_than_min_amount => Intl.message(
