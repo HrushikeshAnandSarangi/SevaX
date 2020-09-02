@@ -1,6 +1,6 @@
 {
     "@@locale": "pt",
-    "@@last_modified": "2020-09-01T17:41:50+00:00",
+    "@@last_modified": "2020-09-02T18:56:07+00:00",
     "check_met": "Checando, se já nos conhecemos",
     "we_met": "Já nos conhecemos",
     "hang_on": "Aguarde ",
@@ -953,5 +953,17 @@
     "total_goods_recevied": "Total de bens recebidos",
     "total_amount_raised": "Montante total arrecadado",
     "by_accepting_group_join": "Ao aceitar, você será adicionado a",
-    "group_join": "Entrar no Grupo"
+    "group_join": "Entrar no Grupo",
+    "request_payment_descriptionZelle_inputhint": "ID Zellepay (telefone ou e-mail)",
+    "request_payment_ach_bank_name": "Nome do banco*",
+    "request_payment_ach_bank_address": "Endereço do banco*",
+    "request_payment_ach_routing_number": "Número de roteamento*",
+    "request_payment_ach_account_no": "Número da conta*",
+    "enter_valid_bank_address": "Digite o endereço do banco",
+    "enter_valid_bank_name": "Digite o nome do banco",
+    "enter_valid_account_number": "Digite o número da conta",
+    "enter_valid_routing_number": "Digite o número de roteamento",
+    "request_paymenttype_zellepay": "ZellePay",
+    "request_paymenttype_paypal": "PayPal",
+    "request_paymenttype_ach": "ACH"
 }

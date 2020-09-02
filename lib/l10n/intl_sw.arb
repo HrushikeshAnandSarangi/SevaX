@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2020-09-02T08:29:08+00:00",
+    "@@last_modified": "2020-09-02T18:56:08+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -953,5 +953,17 @@
     "total_goods_recevied": "Jumla ya Bidhaa Zilizopokelewa",
     "total_amount_raised": "Jumla ya pesa zilizopatikana",
     "by_accepting_group_join": "Kwa kukubali, utaongezwa kwa",
-    "group_join": "Jiunge na Kikundi"
+    "group_join": "Jiunge na Kikundi",
+    "request_payment_descriptionZelle_inputhint": "Kitambulisho cha Zellepay (simu au barua pepe)",
+    "request_payment_ach_bank_name": "Jina la benki*",
+    "request_payment_ach_bank_address": "Anwani ya Benki *",
+    "request_payment_ach_routing_number": "Nambari ya Njia *",
+    "request_payment_ach_account_no": "Nambari ya Akaunti *",
+    "enter_valid_bank_address": "Ingiza Anwani ya Benki",
+    "enter_valid_bank_name": "Ingiza Jina la Benki",
+    "enter_valid_account_number": "Ingiza Nambari ya Akaunti",
+    "enter_valid_routing_number": "Ingiza Nambari ya Kuelekeza",
+    "request_paymenttype_zellepay": "ZellePay",
+    "request_paymenttype_paypal": "PayPal",
+    "request_paymenttype_ach": "ACH"
 }

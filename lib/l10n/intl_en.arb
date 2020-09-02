@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-09-02T06:50:17+00:00",
+    "@@last_modified": "2020-09-02T18:56:07+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -945,7 +945,7 @@
     "image_url_alert_desc": "Please add a image url to continue",
     "enter_valid_link": "Enter valid payment link",
     "target_amount_less_than_min_amount": "Minimum amount cannot be greater than target amount",
-    "failed_load_image_title": "Failed to load image",
+    "failed_load_image_title": "Failed to load",
     "image_url_hint": "Add Image Url ex: https:\/\/www.sevaexchange.com\/sevalogo.png",
     "request_details": "Request details",
     "skip_for_now": "Skip for now",
@@ -953,5 +953,17 @@
     "total_goods_recevied": "Total Goods Received",
     "total_amount_raised": "Total amount raised",
     "by_accepting_group_join": "By accepting, you will be added to",
-    "group_join": "Group Join"
+    "group_join": "Group Join",
+    "request_payment_descriptionZelle_inputhint": "Zellepay ID (phone or email)",
+    "request_payment_ach_bank_name": "Bank Name*",
+    "request_payment_ach_bank_address": "Bank Address*",
+    "request_payment_ach_routing_number": "Routing Number*",
+    "request_payment_ach_account_no": "Account Number*",
+    "enter_valid_bank_address": "Enter Bank Address",
+    "enter_valid_bank_name": "Enter Bank Name",
+    "enter_valid_account_number": "Enter Account Number",
+    "enter_valid_routing_number": "Enter Routing Number",
+    "request_paymenttype_zellepay": "ZellePay",
+    "request_paymenttype_paypal": "PayPal",
+    "request_paymenttype_ach": "ACH"
 }
