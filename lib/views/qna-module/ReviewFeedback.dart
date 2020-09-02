@@ -8,7 +8,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/localization/delegates/localization_delegate.dart';
 import 'package:sevaexchange/new_baseline/models/device_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/qna-module/FeedbackConstants.dart';
@@ -93,7 +92,6 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       supportedLocales: S.delegate.supportedLocales,
       localizationsDelegates: [
         S.delegate,
-        SnMaterialLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
