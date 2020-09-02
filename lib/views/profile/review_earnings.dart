@@ -103,9 +103,10 @@ class _ReviewEarningState extends State<ReviewEarning> {
                 margin: EdgeInsets.all(1),
                 child: Card(
                   child: EarningListItem(
-                      model: model,
-                      usertimezone: usertimezone,
-                      viewtype: widget.type),
+                    model: model,
+                    usertimezone: usertimezone,
+                    viewtype: widget.type,
+                  ),
                 ),
               );
             },

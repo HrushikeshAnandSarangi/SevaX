@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -33,10 +34,11 @@ class ImagePickerHandler {
     FocusScope.of(context).requestFocus(FocusNode());
     _parentStockSelectionBottomsheet(
         context,
-        (image) => {
-              _listener.userImage(image, 'stock_image'),
-              Navigator.pop(context)
-            });
+        (image){
+          log("inside stock images onchanged callback");
+          _listener.userImage(image, 'stock_image');
+          Navigator.pop(context);
+        });
   }
 
   addImageUrl() async {

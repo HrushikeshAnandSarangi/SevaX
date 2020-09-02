@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -93,7 +94,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
   void userImage(dynamic _image, type) {
     if (type == 'stock_image') {
       setState(() {
-        globals.projectsAvtaarURL = _image;
+        globals.timebankAvatarURL = _image;
       });
     } else {
       setState(() {

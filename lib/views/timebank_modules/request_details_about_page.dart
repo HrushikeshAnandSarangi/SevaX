@@ -8,6 +8,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -1096,6 +1097,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get cashDonationDetails {
+    var currentPercentage = widget.requestItem.cashModel.amountRaised /
+        widget.requestItem.cashModel.targetAmount;
     return Column(
       children: [
         CustomListTile(
@@ -1108,9 +1111,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ),
           subtitle: Text('\$${widget.requestItem.cashModel.amountRaised}'),
-          leading: Icon(
-            Icons.show_chart,
-            color: Colors.grey,
+          leading: Image.asset(
+            widget.requestItem.requestType == RequestType.CASH
+                ? SevaAssetIcon.donateCash
+                : SevaAssetIcon.donateGood,
+            height: 30,
+            width: 30,
           ),
           trailing: Text(
             '',
@@ -1120,21 +1126,38 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             ),
           ),
         ),
-        Container(
-          margin: EdgeInsets.only(left: 30, bottom: 10),
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            child: LinearProgressIndicator(
-              semanticsLabel: '20%',
-              backgroundColor: Colors.grey[200],
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-              minHeight: 10,
-              value: (widget.requestItem.cashModel.amountRaised /
-                  widget.requestItem.cashModel.targetAmount),
+        Stack(
+          children: <Widget>[
+            SizedBox(
+              height: 22,
+              child: Container(
+                margin: EdgeInsets.only(left: 30, bottom: 10),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  child: LinearProgressIndicator(
+                    backgroundColor: Colors.grey[200],
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).primaryColor),
+                    minHeight: 25,
+                    value: (widget.requestItem.cashModel.amountRaised /
+                        widget.requestItem.cashModel.targetAmount),
+                  ),
+                ),
+              ),
             ),
-          ),
-        )
+            Positioned(
+              child: Center(
+                child: Text(
+                  "${(currentPercentage)}%",
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: currentPercentage > 50 ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }

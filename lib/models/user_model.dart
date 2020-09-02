@@ -64,59 +64,58 @@ class UserModel extends DataModel {
   int calendarAccId;
   String calendarAccessToken;
   String calendarEmail;
-  UserModel({
-        this.calendarEmail,
-        this.calendarAccessToken,
-        this.calendarId,
-        this.calendarAccId,
-        this.bio,
-        this.email,
-        this.fullname,
-        this.photoURL,
-        this.interests,
-        this.membershipCampaigns,
-        this.membershipTimebanks,
-        this.favoriteByMember,
-        this.favoriteByTimeBank,
-        this.sevaUserID,
-        this.skills,
-        this.currentBalance,
-        this.reliabilityscore,
-        this.trustworthinessscore,
-        this.totalReviews,
-        this.calendar,
-        this.otp,
-        this.requestStatus,
-        //this.availability,
-        this.currentTimebank,
-        this.timezone,
-        this.tokens,
-        this.reportedUsers,
-        this.blockedMembers,
-        this.acceptedEULA,
-        this.completedIntro,
-        this.pastHires,
-        this.blockedBy,
-        this.currentPosition,
-        this.currentCommunity,
-        this.communities,
-        this.emailSent,
-        this.language,
-        this.notificationAlerts,
-        this.cvUrl,
-        this.cvName
-      });
+  UserModel(
+      {this.calendarEmail,
+      this.calendarAccessToken,
+      this.calendarId,
+      this.calendarAccId,
+      this.bio,
+      this.email,
+      this.fullname,
+      this.photoURL,
+      this.interests,
+      this.membershipCampaigns,
+      this.membershipTimebanks,
+      this.favoriteByMember,
+      this.favoriteByTimeBank,
+      this.sevaUserID,
+      this.skills,
+      this.currentBalance,
+      this.reliabilityscore,
+      this.trustworthinessscore,
+      this.totalReviews,
+      this.calendar,
+      this.otp,
+      this.requestStatus,
+      //this.availability,
+      this.currentTimebank,
+      this.timezone,
+      this.tokens,
+      this.reportedUsers,
+      this.blockedMembers,
+      this.acceptedEULA,
+      this.completedIntro,
+      this.pastHires,
+      this.blockedBy,
+      this.currentPosition,
+      this.currentCommunity,
+      this.communities,
+      this.emailSent,
+      this.language,
+      this.notificationAlerts,
+      this.cvUrl,
+      this.cvName});
 
   UserModel.fromMap(Map<String, dynamic> map, @required String from) {
-      if(map.containsKey('calendarEmail')){
-          this.calendarEmail = map['calendarEmail'];
-      }
-      if(map.containsKey('calendarId')){
-          this.calendarId = map['calendarId'];
-      }
-      if(map.containsKey('calendarAccId')){
-        this.calendarAccId = map['calendarAccId'];
-      }
+    if (map.containsKey('calendarEmail')) {
+      this.calendarEmail = map['calendarEmail'];
+    }
+    if (map.containsKey('calendarId')) {
+      this.calendarId = map['calendarId'];
+    }
+    if (map.containsKey('calendarAccId')) {
+      this.calendarAccId = map['calendarAccId'];
+    }
     if (map.containsKey('calendarAccessToken')) {
       this.calendarAccessToken = map['calendarAccessToken'];
     }
@@ -180,9 +179,7 @@ class UserModel extends DataModel {
       List<String> communities = List.castFrom(map['communities']);
       this.communities = communities;
     } else {
-      ///TODO Why this asdfadf ?
       this.communities = List();
-      this.communities.add('asdfadf');
     }
 
     if (map.containsKey('blockedBy')) {
@@ -204,7 +201,7 @@ class UserModel extends DataModel {
     }
     if (map.containsKey('fullname')) {
       this.fullname = map['fullname'];
-    }else {
+    } else {
       this.fullname = "Anonymous";
     }
     if (map.containsKey('photourl')) {
@@ -330,7 +327,9 @@ class UserModel extends DataModel {
   }
 
   UserModel.fromDynamic(dynamic user) {
-    this.fullname = user['fullname'] == null || user['fullname'].isEmpty ? "Anonymous" : user['fullname'];
+    this.fullname = user['fullname'] == null || user['fullname'].isEmpty
+        ? "Anonymous"
+        : user['fullname'];
     this.photoURL = user['photourl'];
     this.sevaUserID = user['sevauserid'];
     this.bio = user['bio'];
@@ -352,7 +351,7 @@ class UserModel extends DataModel {
       object['calendarId'] = this.calendarId;
     }
     if (this.calendarEmail != null) {
-        object['calendarEmail'] = this.calendarEmail;
+      object['calendarEmail'] = this.calendarEmail;
     }
     if (this.calendarAccessToken != null) {
       object['calendarAccessToken'] = this.calendarAccessToken;

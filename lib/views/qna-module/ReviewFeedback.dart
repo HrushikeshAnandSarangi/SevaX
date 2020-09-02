@@ -220,7 +220,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   }
 
   Widget getFeebackQuestions() {
-    var widgettype;
+    Widget widgettype;
     if (widget.feedbackType == FeedbackType.FOR_REQUEST_VOLUNTEER) {
       widgettype = StarRating();
     } else {
@@ -245,7 +245,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                   ),
                 ),
               ),
-              widgettype
+              Expanded(child: widgettype)
             ],
           );
   }
@@ -259,9 +259,10 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   }
 
   getQuestionsWidget(widget, questionIndex) {
-    return (getQuestions(widget.feedbackType)[questionIndex]
-            [FeedbackConstants.ANSWERS] as List)
-        .map((answerModel) {
+    List<Container> tempWidget =
+        (getQuestions(widget.feedbackType)[questionIndex]
+                [FeedbackConstants.ANSWERS] as List)
+            .map((answerModel) {
       return Container(
         margin: EdgeInsets.all(10),
         width: double.infinity,
@@ -278,6 +279,9 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
         ),
       );
     }).toList();
+    return ListView(
+      children: tempWidget,
+    );
   }
 
   void finishState(BuildContext context) {
