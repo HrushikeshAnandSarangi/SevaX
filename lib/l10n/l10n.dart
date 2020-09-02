@@ -751,6 +751,12 @@ class S {
         name: 'select_hours',
       );
 
+  String hour(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Hour', other: 'Hours', args: [count])}',
+        name: 'hour',
+        args: [count],
+      );
+
   String get validation_error_task_minutes => Intl.message(
         'Los minutos no pueden estar vacíos',
         name: 'validation_error_task_minutes',
@@ -1211,6 +1217,22 @@ class S {
         name: 'edit_project',
       );
 
+  String timebank_project(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Timebank Project', other: 'Timebank Projects', args: [
+          count
+        ])}',
+        name: 'timebank_project',
+        args: [count],
+      );
+
+  String personal_project(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [
+          count
+        ])}',
+        name: 'personal_project',
+        args: [count],
+      );
+
   String get project_logo => Intl.message(
         'Logotipo del proyecto',
         name: 'project_logo',
@@ -1541,6 +1563,22 @@ class S {
         name: 'validation_error_volunteer_count_zero',
       );
 
+  String personal_request(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [
+          count
+        ])}',
+        name: 'personal_request',
+        args: [count],
+      );
+
+  String timebank_request(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Timebank Request', other: 'Timebank Requests', args: [
+          count
+        ])}',
+        name: 'timebank_request',
+        args: [count],
+      );
+
   String get validation_error_same_start_date_end_date => Intl.message(
         'Ha proporcionado una fecha y hora idénticas para el inicio y el final. Proporcione una hora de finalización posterior a la hora de inicio.',
         name: 'validation_error_same_start_date_end_date',
@@ -1569,6 +1607,22 @@ class S {
   String get assign_to_volunteers => Intl.message(
         'Designar para voluntários',
         name: 'assign_to_volunteers',
+      );
+
+  String members_selected(num count) => Intl.message(
+        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [
+          count
+        ])}',
+        name: 'members_selected',
+        args: [count],
+      );
+
+  String volunteers_selected(num count) => Intl.message(
+        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [
+          count
+        ])}',
+        name: 'volunteers_selected',
+        args: [count],
       );
 
   String get timebank_max_seva_credit_message1 => Intl.message(
@@ -2196,6 +2250,12 @@ class S {
         name: 'reported_by',
       );
 
+  String user(num count) => Intl.message(
+        '${Intl.plural(count, one: 'user', other: 'users', args: [count])}',
+        name: 'user',
+        args: [count],
+      );
+
   String get user_removed_from_group => Intl.message(
         'Usuário removido com sucesso do grupo',
         name: 'user_removed_from_group',
@@ -2511,6 +2571,12 @@ class S {
         name: 'timebank_offers',
       );
 
+  String other(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Other', other: 'Others', args: [count])}',
+        name: 'other',
+        args: [count],
+      );
+
   String get plan_details => Intl.message(
         'Detalles del plan',
         name: 'plan_details',
@@ -2569,6 +2635,14 @@ class S {
   String get monthly_subscription => Intl.message(
         'Suscripciones mensuales',
         name: 'monthly_subscription',
+      );
+
+  String subscription(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [
+          count
+        ])}',
+        name: 'subscription',
+        args: [count],
       );
 
   String get card_details => Intl.message(
@@ -3831,82 +3905,6 @@ class S {
         name: 'thanks',
       );
 
-  String hour(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Hora', other: 'Horas', args: [count])}',
-        name: 'hour',
-        args: [count],
-      );
-
-  String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Proyecto de banco de tiempo', other: 'Proyectos de banco de tiempo', args: [
-          count
-        ])}',
-        name: 'timebank_project',
-        args: [count],
-      );
-
-  String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Proyecto personal', other: 'Proyectos personales', args: [
-          count
-        ])}',
-        name: 'personal_project',
-        args: [count],
-      );
-
-  String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Solicitud personal', other: 'Solicitudes personales', args: [
-          count
-        ])}',
-        name: 'personal_request',
-        args: [count],
-      );
-
-  String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Solicitud de banco de tiempo', other: 'Solicitudes de banco de tiempo', args: [
-          count
-        ])}',
-        name: 'timebank_request',
-        args: [count],
-      );
-
-  String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Miembro seleccionado', other: 'Miembros seleccionados', args: [
-          count
-        ])}',
-        name: 'members_selected',
-        args: [count],
-      );
-
-  String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Voluntario seleccionado', other: 'Voluntarios seleccionados', args: [
-          count
-        ])}',
-        name: 'volunteers_selected',
-        args: [count],
-      );
-
-  String user(num count) => Intl.message(
-        '${Intl.plural(count, one: 'usuario', other: 'usuarios', args: [
-          count
-        ])}',
-        name: 'user',
-        args: [count],
-      );
-
-  String other(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Otro', other: 'Otros', args: [count])}',
-        name: 'other',
-        args: [count],
-      );
-
-  String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Suscripción', other: 'Suscripciones', args: [
-          count
-        ])}',
-        name: 'subscription',
-        args: [count],
-      );
-
   String get max_credits => Intl.message(
         'Créditos máximos *',
         name: 'max_credits',
@@ -4690,7 +4688,7 @@ class S {
       );
 
   String get select_parent_timebank => Intl.message(
-        'Seleccionar banco de tiempo principal',
+        'Select Parent Timebank',
         name: 'select_parent_timebank',
       );
 
@@ -4775,7 +4773,7 @@ class S {
       );
 
   String get failed_load_image_title => Intl.message(
-        'Falló al cargar',
+        'Failed to load image',
         name: 'failed_load_image_title',
       );
 
