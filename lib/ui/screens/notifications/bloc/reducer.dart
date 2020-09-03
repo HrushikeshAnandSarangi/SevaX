@@ -24,6 +24,7 @@ import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/group_join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../flavor_config.dart';
@@ -274,6 +275,11 @@ class PersonalNotificationReducerForRequests {
       String timebankId,
       String id,
       UserModel user) {
+      Map<String, dynamic> stateOfcalendarCallback = {
+          "email": SevaCore.of(context).loggedInUser.email,
+          "mobile":globals.isMobile,
+          "envName": FlavorConfig.values.envMode
+      };
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -304,7 +310,7 @@ class PersonalNotificationReducerForRequests {
                             String redirectUrl =
                                 "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
                             String authorizationUrl =
-                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateOfcalendarCallback}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }
@@ -333,7 +339,7 @@ class PersonalNotificationReducerForRequests {
                             String redirectUrl =
                                 "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
                             String authorizationUrl =
-                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateOfcalendarCallback}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }
@@ -361,7 +367,7 @@ class PersonalNotificationReducerForRequests {
                             String redirectUrl =
                                 "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
                             String authorizationUrl =
-                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateOfcalendarCallback}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }

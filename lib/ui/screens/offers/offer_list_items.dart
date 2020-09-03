@@ -12,6 +12,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 
 import '../../../flavor_config.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -216,6 +217,11 @@ class OfferListItems extends StatelessWidget {
   }
 
   void _settingModalBottomSheet(context, OfferModel model) {
+      Map<String, dynamic> stateOfcalendarCallback = {
+          "email": SevaCore.of(context).loggedInUser.email,
+          "mobile":globals.isMobile,
+          "envName": FlavorConfig.values.envMode
+      };
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -244,7 +250,7 @@ class OfferListItems extends StatelessWidget {
                           ),
                           onTap: () async {
                             String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateOfcalendarCallback}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }
@@ -260,7 +266,7 @@ class OfferListItems extends StatelessWidget {
                           ),
                           onTap: () async {
                             String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateOfcalendarCallback}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }
@@ -276,7 +282,7 @@ class OfferListItems extends StatelessWidget {
                           ),
                           onTap: () async {
                             String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${SevaCore.of(context).loggedInUser.email}&redirect_uri=$redirectUrl";
+                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateOfcalendarCallback}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }

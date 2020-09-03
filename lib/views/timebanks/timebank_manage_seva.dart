@@ -314,13 +314,18 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
           ),
         );
       },
-      child: Text(
-        "${S.of(context).invoice_and_reports}",
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          color: Colors.red,
-        ),
+      child: Column(
+        children: [
+          Text(
+            "${S.of(context).invoice_and_reports}",
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
+            ),
+          ),
+            SizedBox(height: 20),
+        ],
       ),
     );
   }
@@ -356,7 +361,6 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
               : Container(),
 
           viewInvoice(context: context),
-          SizedBox(height: 20),
           viewReportedMembers(context: context),
           SizedBox(height: 20),
 
