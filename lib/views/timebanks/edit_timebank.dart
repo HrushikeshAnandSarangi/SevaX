@@ -40,7 +40,7 @@ class _EditTimebankPicState extends State<EditTimebankPic>
   void initState() {
     super.initState();
     AnimationController _controller = AnimationController(
-      TickerProvider: this,
+      vsync: this,
       duration: Duration(
         milliseconds: 300,
       ),

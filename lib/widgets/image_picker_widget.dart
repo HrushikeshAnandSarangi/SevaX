@@ -27,7 +27,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget>
   @override
   void initState() {
     _controller = AnimationController(
-      TickerProvider: this,
+      vsync: this,
       duration: const Duration(milliseconds: 500),
     );
     imagePicker = ImagePickerHandler(

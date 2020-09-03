@@ -112,7 +112,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
     super.initState();
 
     _controller = AnimationController(
-      TickerProvider: this,
+      vsync: this,
       duration: const Duration(milliseconds: 500),
     );
 

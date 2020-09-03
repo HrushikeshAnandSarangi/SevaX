@@ -52,7 +52,7 @@ class _EditTimebankViewState extends State<EditTimebankView>
   void initState() {
     super.initState();
     AnimationController _controller = AnimationController(
-      TickerProvider: this,
+      vsync: this,
       duration: Duration(
         milliseconds: 300,
       ),
