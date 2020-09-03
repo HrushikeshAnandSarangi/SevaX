@@ -149,7 +149,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   context: context,
                   onDismissed: onDismissed,
                   notificationsModel: notification,
-                  timestampVal: notification.timestamp,
                 );
 
               case NotificationType.CASH_DONATION_MODIFIED_BY_CREATOR:

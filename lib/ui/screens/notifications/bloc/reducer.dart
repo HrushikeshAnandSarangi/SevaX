@@ -819,7 +819,6 @@ class PersonalNotificationsRedcerForDonations {
     Function onDismissed,
     BuildContext context,
     NotificationsModel notificationsModel,
-    int timestampVal,
   }) {
     final holder = DonationModel.fromMap(notificationsModel.data);
 
@@ -846,7 +845,7 @@ class PersonalNotificationsRedcerForDonations {
           ),
         );
       },
-      timestamp: timestampVal,
+      timestamp: notificationsModel.timestamp,
     );
   }
 
