@@ -112,7 +112,7 @@ class _ProjectsAvtaarState extends State<ProjectAvtaar>
     super.initState();
 
     _controller = AnimationController(
-      vsync: this,
+      TickerProvider: this,
       duration: const Duration(milliseconds: 500),
     );
 

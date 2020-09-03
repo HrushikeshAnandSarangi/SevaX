@@ -209,7 +209,7 @@ class NewsImageState extends State<NewsImage>
     WidgetsBinding.instance.addObserver(this);
     selectedAddress = widget.selectedAddress;
     _controller = AnimationController(
-      vsync: this,
+      TickerProvider: this,
       duration: const Duration(milliseconds: 500),
     );
 

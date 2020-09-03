@@ -80,7 +80,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   void initState() {
     super.initState();
     AnimationController _controller = AnimationController(
-      vsync: this,
+      TickerProvider: this,
       duration: Duration(
         milliseconds: 300,
       ),

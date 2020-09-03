@@ -1678,8 +1678,8 @@ class DeleteCommentOverlayState extends State<DeleteCommentOverlay>
   void initState() {
     super.initState();
 
-    controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+    controller = AnimationController(
+        TickerProvider: this, duration: Duration(milliseconds: 450));
     scaleAnimation =
         CurvedAnimation(parent: controller, curve: Curves.elasticInOut);
 
