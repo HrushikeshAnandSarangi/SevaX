@@ -86,12 +86,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return PersonalNotificationReducerForRequests
                     .getWidgetNotificationForTransactionCredit(
                   notification: notification,
+                  loggedInUserEmail: SevaCore.of(context).loggedInUser.email,
                 );
 
               case NotificationType.TransactionDebit:
                 return PersonalNotificationReducerForRequests
                     .getWidgetNotificationForTransactionDebit(
                   notification: notification,
+                  loggedInUserEmail: SevaCore.of(context).loggedInUser.email,
                 );
               case NotificationType.AcceptedOffer:
                 return PersonalNotificationReducerForRequests

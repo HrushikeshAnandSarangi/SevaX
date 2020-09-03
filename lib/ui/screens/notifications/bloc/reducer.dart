@@ -115,6 +115,7 @@ class PersonalNotificationReducerForRequests {
 
   static Widget getWidgetNotificationForTransactionDebit({
     NotificationsModel notification,
+    String loggedInUserEmail,
   }) {
     TransactionModel model = TransactionModel.fromMap(notification.data);
 
@@ -134,7 +135,7 @@ class PersonalNotificationReducerForRequests {
           onDismissed: () {
             NotificationsRepository.readUserNotification(
               notification.id,
-              user.email,
+              loggedInUserEmail,
             );
           },
           onPressed: null,
@@ -185,6 +186,7 @@ class PersonalNotificationReducerForRequests {
 
   static Widget getWidgetNotificationForTransactionCredit({
     NotificationsModel notification,
+    String loggedInUserEmail,
   }) {
     TransactionModel model = TransactionModel.fromMap(notification.data);
 
@@ -204,7 +206,7 @@ class PersonalNotificationReducerForRequests {
           onDismissed: () {
             NotificationsRepository.readUserNotification(
               notification.id,
-              user.email,
+              loggedInUserEmail,
             );
           },
           onPressed: null,
