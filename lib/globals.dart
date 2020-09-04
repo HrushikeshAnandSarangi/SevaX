@@ -3,7 +3,7 @@ library sevax.globals;
 //String sevaUserID;
 
 String appTitle = 'Seva X';
-
+bool isMobile = true;
 //USER PROFILE INFO
 //String bio;
 

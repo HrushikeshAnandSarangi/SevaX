@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -280,7 +282,8 @@ class RequestCompleteWidget extends StatelessWidget {
     );
 
     if (results != null && results.containsKey('selection')) {
-      await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
+      await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
+          FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
       onActivityResult(
         sevaCore: sevaCore,
         requestModel: model,
@@ -295,16 +298,17 @@ class RequestCompleteWidget extends StatelessWidget {
     } else {}
   }
 
-  void onActivityResult(
-      {SevaCore sevaCore,
-      RequestModel requestModel,
-      String userId,
-      String notificationId,
-      BuildContext context,
-      Map results,
-      String reviewer,
-      String reviewed,
-      String requestId}) async {
+  void onActivityResult({
+    SevaCore sevaCore,
+    RequestModel requestModel,
+    String userId,
+    String notificationId,
+    BuildContext context,
+    Map results,
+    String reviewer,
+    String reviewed,
+    String requestId,
+  }) async {
     Firestore.instance.collection("reviews").add({
       "reviewer": reviewer,
       "reviewed": reviewed,
@@ -315,12 +319,13 @@ class RequestCompleteWidget extends StatelessWidget {
           : S.of(context).no_comments)
     });
     await sendMessageToMember(
-        requestModel: requestModel,
-        message: (results['didComment']
-            ? results['comment']
-            : S.of(context).no_comments),
-        loggedInUser: SevaCore.of(context).loggedInUser,
-        context: context);
+      requestModel: requestModel,
+      message: (results['didComment']
+          ? results['comment']
+          : S.of(context).no_comments),
+      loggedInUser: sevaCore.loggedInUser,
+      context: context,
+    );
 
     approveTransaction(requestModel, userId, notificationId, sevaCore);
   }
@@ -389,9 +394,11 @@ class RequestCompleteWidget extends StatelessWidget {
       userId: userId,
       communityId: sevaCore.loggedInUser.currentCommunity,
     );
-
+    log('clearing notification');
     FirestoreManager.readUserNotification(
-        notificationId, sevaCore.loggedInUser.email);
+      notificationId,
+      sevaCore.loggedInUser.email,
+    );
   }
 
   void rejectMemberClaimForEvent(

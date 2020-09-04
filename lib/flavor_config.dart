@@ -19,6 +19,7 @@ class FlavorValues {
   final String dynamicLinkUriPrefix;
   final String bundleId;
   final String packageName;
+  final String envMode;
 
   FlavorValues({
     this.bundleId,
@@ -27,6 +28,7 @@ class FlavorValues {
     @required this.timebankName,
     @required this.timebankId,
     this.requestTitle = 'Request',
+    this.envMode,
     this.offertitle = 'Offer',
     this.theme,
     this.buttonTextColor = Colors.white,
@@ -54,10 +56,12 @@ class FlavorConfig {
           cloudFunctionBaseURL:
               "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net",
           appName: 'Seva Dev',
+          envMode: "DEV",
           timebankId: '73d0de2c-198b-4788-be64-a804700a88a4',
           timebankName: 'Seva Exchange',
           offertitle: 'Offer',
           requestTitle: 'Request',
+
           buttonTextColor: Colors.black,
           theme: ThemeData(
             appBarTheme: AppBarTheme(
@@ -131,6 +135,7 @@ class FlavorConfig {
           androidPayMode: "production",
           stripePublishableKey: "pk_live_UF4dJaTWW2zXECJ5xdzuAe7P00ga985PfN",
           appName: 'Seva Exchange',
+          envMode: "PROD",
           timebankId: '73d0de2c-198b-4788-be64-a804700a88a4',
           timebankName: 'Seva Exchange',
           offertitle: 'Offer',

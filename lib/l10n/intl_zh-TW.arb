@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-TW",
-    "@@last_modified": "2020-09-02T08:29:06+00:00",
+    "@@last_modified": "2020-09-02T18:56:08+00:00",
     "check_met": "檢查我們是否見過",
     "we_met": "我們曾見過",
     "hang_on": "稍待。。。",
@@ -953,5 +953,17 @@
     "total_goods_recevied": "收到的商品總數",
     "total_amount_raised": "募集資金總額",
     "by_accepting_group_join": "通過接受，您將被添加到",
-    "group_join": "Group Join"
+    "group_join": "Group Join",
+    "request_payment_descriptionZelle_inputhint": "Zellepay ID（電話或電子郵件）",
+    "request_payment_ach_bank_name": "銀行名稱*",
+    "request_payment_ach_bank_address": "銀行地址*",
+    "request_payment_ach_routing_number": "路由號碼*",
+    "request_payment_ach_account_no": "賬號*",
+    "enter_valid_bank_address": "輸入銀行地址",
+    "enter_valid_bank_name": "輸入銀行名稱",
+    "enter_valid_account_number": "輸入帳號",
+    "enter_valid_routing_number": "輸入路由號碼",
+    "request_paymenttype_zellepay": "ZellePay",
+    "request_paymenttype_paypal": "貝寶",
+    "request_paymenttype_ach": "ACH"
 }
