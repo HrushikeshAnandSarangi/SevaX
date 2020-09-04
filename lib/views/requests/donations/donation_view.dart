@@ -300,6 +300,11 @@ class _DonationViewState extends State<DonationView> {
       type: ProgressDialogType.Normal,
       isDismissible: false,
     );
+    progressDialog.style(
+        progressWidget: Container(
+            padding: EdgeInsets.all(8.0),
+            child: CircularProgressIndicator()),
+        message: 'please wait');
     progressDialog.show();
   }
 

@@ -429,7 +429,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         builder: (context) => DonationView(
           timabankName: widget.timebankModel.name,
           requestModel: widget.requestItem,
-          notificationId: '',
+          notificationId: null,
         ),
       ),
     );
