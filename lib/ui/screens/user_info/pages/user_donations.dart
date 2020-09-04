@@ -90,14 +90,14 @@ class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonations> {
                   !widget.isGoods
                       ? Text(
                           ' \$' +
-                              '${snapshot.data.toString() ?? 0.toString()} ${widget.isTimeBank ? ' ${S.of(context).raised}' : ' ${S.of(context).donated}'}',
+                              '${snapshot.data ?? 0} ${widget.isTimeBank ? ' ${S.of(context).raised}' : ' ${S.of(context).donated}'}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
                         )
                       : Text(
-                          ' ${snapshot.data.toString() ?? 0.toString()} ${widget.isTimeBank ? ' ${S.of(context).items_collected}' : ' ${S.of(context).items_donated}'}',
+                          ' ${snapshot.data ?? 0} ${widget.isTimeBank ? ' ${S.of(context).items_collected}' : ' ${S.of(context).items_donated}'}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
