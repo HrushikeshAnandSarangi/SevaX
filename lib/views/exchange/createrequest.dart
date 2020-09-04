@@ -139,7 +139,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
   RequestModel requestModel = RequestModel(
     requestType: RequestType.TIME,
-    cashModel: CashModel(paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
+    cashModel: CashModel(
+        paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel()),
     goodsDonationDetails: GoodsDonationDetails(),
   );
   End end = End();
@@ -494,6 +495,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           ),
         ]);
   }
+
   Widget RequestPaymentACH(requestModel) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -659,8 +661,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             textInputAction: TextInputAction.next,
             initialValue: widget.offer != null && widget.isOfferRequest
                 ? getOfferDescription(
-              offerDataModel: widget.offer,
-            )
+                    offerDataModel: widget.offer,
+                  )
                 : "",
             keyboardType: TextInputType.multiline,
             maxLines: 1,
@@ -680,6 +682,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           )
         ]);
   }
+
   Widget RequestPaymentZellePay(requestModel) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -704,13 +707,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).request_payment_descriptionZelle_inputhint,
+              hintText:
+                  S.of(context).request_payment_descriptionZelle_inputhint,
               hintStyle: hintTextStyle,
             ),
             initialValue: widget.offer != null && widget.isOfferRequest
                 ? getOfferDescription(
-              offerDataModel: widget.offer,
-            )
+                    offerDataModel: widget.offer,
+                  )
                 : "",
             keyboardType: TextInputType.multiline,
             maxLines: 1,
@@ -730,54 +734,58 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           )
         ]);
   }
+
   Widget RequestPaymentPaypal(requestModel) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[TextFormField(
-          autovalidate: autoValidateCashText,
-          onChanged: (value) {
-            if (value.length > 1) {
-              setState(() {
-                autoValidateCashText = true;
-              });
-            } else {
-              setState(() {
-                autoValidateCashText = false;
-              });
-            }
-          },
-          focusNode: focusNodes[12],
-          onFieldSubmitted: (v) {
-            FocusScope.of(context).requestFocus(focusNodes[12]);
-          },
-          textInputAction: TextInputAction.next,
-          decoration: InputDecoration(
-            errorMaxLines: 2,
-            hintText: S.of(context).request_payment_description_inputhint,
-            hintStyle: hintTextStyle,
-          ),
-          initialValue: widget.offer != null && widget.isOfferRequest
-              ? getOfferDescription(
-            offerDataModel: widget.offer,
-          )
-              : "",
-          keyboardType: TextInputType.multiline,
-          maxLines: 1,
-          validator: (value) {
-            if (value.isEmpty) {
-              return S.of(context).validation_error_general_text;
-            } else if (regExp.hasMatch(value)) {
-              requestModel.donationInstructionLink = value;
-              print(true);
-            } else {
-              print('not url');
+        children: <Widget>[
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[12],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[12]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).request_payment_description_inputhint,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue: widget.offer != null && widget.isOfferRequest
+                ? getOfferDescription(
+                    offerDataModel: widget.offer,
+                  )
+                : "",
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (regExp.hasMatch(value)) {
+                requestModel.donationInstructionLink = value;
+                print(true);
+              } else {
+                print('not url');
 
-              return S.of(context).enter_valid_link;
-            }
-            return null;
-          },
-        )]);
+                return S.of(context).enter_valid_link;
+              }
+              return null;
+            },
+          )
+        ]);
   }
+
   Widget RequestPaymentDescriptionData(requestModel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -826,8 +834,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         requestModel.cashModel.paymentType == RequestPaymentType.ACH
             ? RequestPaymentACH(requestModel)
             : requestModel.cashModel.paymentType == RequestPaymentType.PAYPAL
-            ? RequestPaymentPaypal(requestModel)
-            : RequestPaymentZellePay(requestModel),
+                ? RequestPaymentPaypal(requestModel)
+                : RequestPaymentZellePay(requestModel),
       ],
     );
   }
@@ -1164,10 +1172,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     return ListTile(
       contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
       title: Text(title),
-      leading: Radio(
-          value: value,
-          groupValue: groupvalue,
-          onChanged: onChanged),
+      leading:
+          Radio(value: value, groupValue: groupvalue, onChanged: onChanged),
     );
   }
 
@@ -1274,6 +1280,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         showDialogForTitle(
             dialogTitle:
                 S.of(context).validation_error_same_start_date_end_date);
+        return;
+      }
+      if (requestModel.requestType == RequestType.GOODS &&
+          requestModel.goodsDonationDetails.requiredGoods == null) {
+        showDialogForTitle(dialogTitle: S.of(context).goods_validation);
         return;
       }
 
