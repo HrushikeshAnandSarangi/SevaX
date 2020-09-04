@@ -464,7 +464,7 @@ Future<String> showProfanityImageAlert({BuildContext context, String content}) {
             S.of(context).profanity_image_alert + ' ' + content,
           ),
           actions: <Widget>[
-            RaisedButton(
+            FlatButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
@@ -496,7 +496,7 @@ Future<void> showFailedLoadImage({
             S.of(context).failed_load_image,
           ),
           actions: <Widget>[
-            RaisedButton(
+            FlatButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
