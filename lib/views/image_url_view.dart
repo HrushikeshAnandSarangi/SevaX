@@ -10,6 +10,8 @@ import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
+import '../flavor_config.dart';
+
 class ImageUrlView extends StatefulWidget {
   @override
   _ImageUrlViewState createState() => _ImageUrlViewState();
@@ -247,6 +249,9 @@ class _ImageUrlViewState extends State<ImageUrlView> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
               child: Text(S.of(context).close),
               onPressed: () {
                 Navigator.of(context).pop();
