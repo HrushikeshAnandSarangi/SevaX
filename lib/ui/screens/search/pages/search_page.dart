@@ -53,9 +53,6 @@ class _SearchPageState extends State<SearchPage>
       initialIndex: 0,
       vsync: this,
     );
-//    Future.delayed(Duration.zero, () {
-//    });
-
     super.initState();
   }
 
