@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -457,8 +456,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           nearbySettings: SevaCore.of(context).loggedInUser.nearBySettings,
         ),
         builder: (context, snapshot) {
-          log('--->radius ${SevaCore.of(context).loggedInUser.nearBySettings.radius}');
-          log('--->radius ${widget.loggedInUser.nearBySettings.radius}');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingIndicator();
           }
