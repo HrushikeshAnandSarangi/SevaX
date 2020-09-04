@@ -1,43 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sevaexchange/internationalization/applanguage.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
-class LanguageListData {
-  final languagelist = [
-    LanguageModel(languageName: 'English', code: 'en'),
-    LanguageModel(languageName: 'Portuguese', code: 'pt'),
-    LanguageModel(languageName: 'French', code: 'fr'),
-    LanguageModel(languageName: 'Spanish', code: 'es'),
-    LanguageModel(languageName: 'Afrikaans', code: 'af'),
-    LanguageModel(languageName: 'Chinese Simplified', code: 'zh'),
-    LanguageModel(languageName: 'Shona', code: 'ZW'),
-  ];
-  LanguageListData();
-  List<LanguageModel> getData() {
-    return languagelist;
-  }
-
-  LanguageModel getLanguageSupported(String languagecode) {
-    var found = -1;
-    for (var i = 0; i < this.languagelist.length; i++) {
-      if (this.languagelist[i].code == languagecode) {
-        found = i;
-        break;
-      }
-    }
-    if (found > -1) {
-      return this.languagelist[found];
-    } else {
-      return LanguageModel(languageName: 'English', code: 'en');
-    }
-  }
-}
+Map<String, String> languageNames = {
+  'en': 'English',
+  'pt': 'Portuguese',
+  'fr': 'French',
+  'es': 'Spanish',
+  'af': 'Afrikaans',
+  'sw': 'Swahili',
+  // 'sn': 'Shona',
+  'zh_CN': 'Chinese Simplified',
+  'zh_TW': 'Chinese Traditional',
+};
 
 class LanguageView extends StatefulWidget {
   @override
@@ -48,13 +29,14 @@ class _LanguageViewState extends State<LanguageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            S.of(context).my_language,
-            style: TextStyle(fontSize: 18),
-          ),
+      appBar: AppBar(
+        title: Text(
+          S.of(context).my_language,
+          style: TextStyle(fontSize: 18),
         ),
-        body: LanguageList());
+      ),
+      body: LanguageList(),
+    );
   }
 }
 
@@ -70,12 +52,24 @@ class LanguageListState extends State<LanguageList> {
 
   @override
   void initState() {
-    languagelist = LanguageListData().getData();
-    languagelist.sort((a, b) {
-      return a.languageName
-          .toLowerCase()
-          .compareTo(b.languageName.toLowerCase());
+    //make sure supported lang and the languageNames on this screen are synced
+    // assert(languageNames.length != S.delegate.supportedLocales.length
+    //     );
+    languageNames.forEach((key, value) {
+      languagelist.add(
+        LanguageModel(
+          languageName: value,
+          locale: getLocaleFromCode(key),
+        ),
+      );
     });
+
+    print(languagelist);
+    print(languagelist[0].locale.languageCode);
+    languagelist.sort(
+      (a, b) =>
+          a.languageName.toLowerCase().compareTo(b.languageName.toLowerCase()),
+    );
     super.initState();
   }
 
@@ -93,7 +87,6 @@ class LanguageListState extends State<LanguageList> {
           return LoadingIndicator();
         }
         UserModel userModel = snapshot.data;
-        isSelected = userModel.language;
         return ListView.builder(
           itemCount: languagelist.length,
 //            controller: _scrollController,
@@ -101,21 +94,24 @@ class LanguageListState extends State<LanguageList> {
             LanguageModel model = languagelist.elementAt(index);
             return Card(
               child: ListTile(
-                leading: getIcon(isSelected, model.code),
+                leading: getIcon(
+                  model.locale == getLocaleFromCode(userModel.language),
+                ),
                 trailing: Text(
                   '${model.languageName}',
                   style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500),
+                    color: Colors.blue,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 title: Text('${model.languageName}'),
-                subtitle: Text('${model.code}'),
+                subtitle: Text(getCodeFromLocale(model.locale)),
                 onTap: () async {
-                  if (userModel.language != model.code) {
-                    print(model.code);
-                    appLanguage.changeLanguage(Locale(model.code));
-                    userModel.language = model.code;
+                  if (userModel.language != getCodeFromLocale(model.locale)) {
+                    print(getCodeFromLocale(model.locale));
+                    appLanguage.changeLanguage(model.locale);
+                    userModel.language = getCodeFromLocale(model.locale);
                     await updateUserLanguage(user: userModel);
                   }
                 },
@@ -127,25 +123,45 @@ class LanguageListState extends State<LanguageList> {
     );
   }
 
-  Widget getIcon(String isSelected, String userTimezone) {
-    if (isSelected == userTimezone) {
-//      print("inside if card");
-      return Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Icon(
-          Icons.done,
-          color: Colors.green,
-          size: 28,
-        ),
-      );
-    } else {
-      return null;
-    }
+  Widget getIcon(bool isSelected) {
+    return isSelected
+        ? Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Icon(
+              Icons.done,
+              color: Colors.green,
+              size: 28,
+            ),
+          )
+        : null;
   }
 }
 
 class LanguageModel {
   String languageName;
-  String code;
-  LanguageModel({this.languageName, this.code});
+  Locale locale;
+  LanguageModel({this.languageName, this.locale});
+}
+
+//For generating locale for langCode_countryCode
+Locale getLocaleFromCode(String code) {
+  String country;
+  String langCode;
+  if (code.contains('_')) {
+    List<String> data = code.split('_');
+    langCode = data[0];
+    country = data[1];
+  } else {
+    langCode = code;
+    country = null;
+  }
+  return Locale.fromSubtags(languageCode: langCode, countryCode: country);
+}
+
+String getCodeFromLocale(Locale locale) {
+  if (locale.countryCode != null) {
+    return '${locale.languageCode}_${locale.countryCode}';
+  } else {
+    return '${locale.languageCode}';
+  }
 }

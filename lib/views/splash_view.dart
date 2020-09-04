@@ -7,8 +7,8 @@ import 'package:flurry/flurry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/applanguage.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/onboarding/email_verify_page.dart';
@@ -317,7 +317,8 @@ class _SplashViewState extends State<SplashView> {
     }
 
     if (!(AppConfig.prefs.getBool(AppConfig.skip_interest) ?? false) &&
-        (loggedInUser.interests == null || loggedInUser.interests.length == 0)) {
+        (loggedInUser.interests == null ||
+            loggedInUser.interests.length == 0)) {
       await _navigateToInterestsView(loggedInUser);
     }
 

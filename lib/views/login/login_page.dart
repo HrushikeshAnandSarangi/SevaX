@@ -14,14 +14,13 @@ import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/internationalization/applanguage.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/localization/applanguage.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
-import 'package:sevaexchange/views/profile/language.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/widgets/empty_text_span.dart';
 
@@ -73,9 +72,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     parentContext = context;
     var appLanguage = Provider.of<AppLanguage>(context);
-    var _sysLng = ui.window.locale.languageCode;
-    var language = LanguageListData().getLanguageSupported(_sysLng.toString());
-    appLanguage.changeLanguage(Locale(language.code));
+    Locale _sysLng = ui.window.locale;
+    Locale _language = S.delegate.isSupported(_sysLng) ? _sysLng : Locale('en');
+    appLanguage.changeLanguage(_language);
     UserData.shared.isFromLogin = true;
     //Todo check this line
     // ScreenUtil.init(context);
@@ -556,15 +555,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
   List<String> emails = [
+    'burhan@uipep.com',
+    'user15ec27@gmail.com',
     'adi007footballer@gmail.com',
     'adityatestacc123@gmail.com',
     'aditya1ga14ec004@gmail.com',
     'adityasn210496@gmail.com',
     'adityazzz@yopmail.com',
     'amazinggg@yopmail.com',
-
   ];
   Widget get directDevLogin {
     return Padding(

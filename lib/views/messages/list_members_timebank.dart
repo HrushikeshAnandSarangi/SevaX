@@ -25,6 +25,7 @@ class ListMambersForNewChatState extends State<ListMambersForNewChat> {
       supportedLocales: S.delegate.supportedLocales,
       localizationsDelegates: [
         S.delegate,
+        
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,

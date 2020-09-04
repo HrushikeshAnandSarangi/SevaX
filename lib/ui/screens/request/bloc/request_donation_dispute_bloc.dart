@@ -42,8 +42,6 @@ class RequestDonationDisputeBloc {
     } else {
       return true;
     }
-
-    return false;
   }
 
   Future<bool> disputeCash({
@@ -118,10 +116,6 @@ class RequestDonationDisputeBloc {
       isRead: false,
       isTimebankNotification:
           model.donatedToTimebank && operatorMode == OperatingMode.USER,
-      // isTimebankNotification:
-      //     model.donationStatus != DonationStatus.ACKNOWLEDGED &&
-      //         operatorMode == OperatingMode.CREATOR &&
-      //         model.donatedToTimebank,
       senderUserId: requestMode == RequestMode.TIMEBANK_REQUEST
           ? model.timebankId
           : model.donatedTo,

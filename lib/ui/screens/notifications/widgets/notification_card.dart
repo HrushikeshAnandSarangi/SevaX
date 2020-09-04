@@ -27,6 +27,7 @@ class NotificationCard extends StatelessWidget {
     @required this.timestamp,
   })  : assert(title != null),
         assert(subTitle != null),
+        assert(timestamp != null),
         super(key: key);
 
   @override
