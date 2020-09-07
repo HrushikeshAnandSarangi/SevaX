@@ -163,7 +163,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                 TextSpan(
                     text: _bloc.community.payment["planId"] == "community_plan"
                         ? "${S.of(context).on_community_plan}  "
-                        : "${S.of(context).your_community_on_the} ${_bloc.community.payment['message']}  "),
+                        : "${S.of(context).your_community_on_the} ${planName(cardModel.currentPlan)}  "),
                 TextSpan(
                   text: S.of(context).change_plan,
                   style: TextStyle(
