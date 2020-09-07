@@ -107,201 +107,201 @@ class NewsCardViewState extends State<NewsCardView> {
       ),
       body: SafeArea(
         child: Column(children: <Widget>[
-          Expanded(
-              child: SingleChildScrollView(
-            // padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                newsAuthorAndDate,
-                widget.newsModel.title == null ||
-                        widget.newsModel.title == "NoData"
-                    ? Offstage()
-                    : newsTitle,
-                newsImage,
-                photoCredits,
-                subHeadings,
-                document,
-                tags,
-                listOfHashTags,
-                listOfLinks,
-                LikeComment(
-                  newsModel: widget.newsModel,
-                  userId: SevaCore.of(context).loggedInUser.email,
-                  isFromHome: false,
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.width / 1.0,
+            Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              newsAuthorAndDate,
+              widget.newsModel.title == null ||
+                      widget.newsModel.title == "NoData"
+                  ? Offstage()
+                  : newsTitle,
+              newsImage,
+              photoCredits,
+              subHeadings,
+              document,
+              tags,
+              listOfHashTags,
+              listOfLinks,
+              LikeComment(
+                newsModel: widget.newsModel,
+                userId: SevaCore.of(context).loggedInUser.email,
+                isFromHome: false,
+              ),
+
+            ],
+          ),
+            Expanded(
+              child: Container(
+//                  height: MediaQuery.of(context).size.width / 1.0,
                   padding: EdgeInsets.fromLTRB(8, 19, 8, 0),
                   child: StreamBuilder<NewsModel>(
                       stream: NewsService()
                           .getCommentsByFeedId(id: widget.newsModel.id),
                       builder: (context, snapshot) {
-                        if (snapshot.data == null ||
-                            (snapshot.hasData &&
-                                snapshot.data.comments.length == 0)) {
-                          return Center(
-                            child: Text("No data"),
-                          );
-                        }
-                        if (snapshot.hasData) {
-                          List<Comments> commentsList = snapshot.data.comments;
-                          print("Printing CommentsList ${commentsList.length}");
-                          return ListView.builder(
-                            itemCount: commentsList.length,
-                            itemBuilder: (context, index) {
-                              return InkWell(
-                                onLongPress: () async {
-                                  if (commentsList[index].createdEmail ==
-                                      SevaCore.of(context).loggedInUser.email) {
-                                    final result = await showDialog(
-                                      context: context,
-                                      builder: (_) => DeleteCommentOverlay(
-                                        feed: widget.newsModel,
-                                        index: index,
-                                        isReply: false,
-                                      ),
-                                    );
-                                    return result;
-                                  }
-                                },
-                                child: Container(
-                                  child: CommentContainer(
-                                      commentsList[index], index),
-                                ),
+                          if (snapshot.data == null ||
+                              (snapshot.hasData &&
+                                  snapshot.data.comments.length == 0)) {
+                              return Center(
+                                  child: Text("No data"),
                               );
-                            },
-                            shrinkWrap: true,
-                          );
-                        }
+                          }
+                          if (snapshot.hasData) {
+                              List<Comments> commentsList = snapshot.data.comments;
+                              print("Printing CommentsList ${commentsList.length}");
+                              return ListView.builder(
+                                  itemCount: commentsList.length,
+                                  itemBuilder: (context, index) {
+                                      return InkWell(
+                                          onLongPress: () async {
+                                              if (commentsList[index].createdEmail ==
+                                                  SevaCore.of(context).loggedInUser.email) {
+                                                  final result = await showDialog(
+                                                      context: context,
+                                                      builder: (_) => DeleteCommentOverlay(
+                                                          feed: widget.newsModel,
+                                                          index: index,
+                                                          isReply: false,
+                                                      ),
+                                                  );
+                                                  return result;
+                                              }
+                                          },
+                                          child: Container(
+                                              child: CommentContainer(
+                                                  commentsList[index], index),
+                                          ),
+                                      );
+                                  },
+                                  shrinkWrap: true,
+                              );
+                          }
+                          return Container();
                       }),
-                )
-              ],
+              ),
             ),
-          )),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-              Widget>[
-            new Divider(
-              color: Colors.black38,
-              height: 1,
-              indent: 0,
+            Divider(
+                color: Colors.black38,
+                height: 1,
+                indent: 0,
             ),
             Card(
-              elevation: 0,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(3.0, 0.0, 3.0, 3.0),
-                child: Row(
-                  children: <Widget>[
-                    Flexible(
-                      child: TextFormField(
-                        controller: _textEditingController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          hintStyle: TextStyle(color: Colors.grey),
-                          prefixIcon: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 3.0, top: 3.0, right: 8.0, bottom: 3.0),
-                            child: CircleAvatar(
-                                backgroundImage: NetworkImage(
-                              SevaCore.of(context).loggedInUser.photoURL ??
-                                  defaultUserImageURL,
-                            )),
-                          ),
-                          labelText: 'Add a comment...',
-                          isDense: true,
-                          contentPadding: EdgeInsets.all(3.0),
-                        ),
-                        autofocus: this.widget.isFocused ? true : false,
-                        onTap: () => {
-                          setState(() {
-                            isShowSticker = false;
-                          }),
-                        },
-                      ),
-                    ),
-                    InkWell(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 5, right: 5),
-                        child: Image.asset(
-                          "lib/assets/images/send.png",
-                          height: 20,
-                          width: 20,
-                        ),
-                      ),
-                      onTap: () async {
-                        if (_textEditingController.text != "") {
-                          if (profanityDetector
-                              .isProfaneString(_textEditingController.text)) {
-                            print('profane');
-                            setState(() {
-                              isProfane = true;
-                              errorText = S.of(context).profanity_text_alert;
-                            });
-                          } else {
-                            print('not profane');
+                elevation: 0,
+                child: Padding(
+                    padding: const EdgeInsets.fromLTRB(3.0, 0.0, 3.0, 3.0),
+                    child: Row(
+                        children: <Widget>[
+                            Flexible(
+                                child: TextFormField(
+                                    controller: _textEditingController,
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        errorBorder: InputBorder.none,
+                                        disabledBorder: InputBorder.none,
+                                        hintStyle: TextStyle(color: Colors.grey),
+                                        prefixIcon: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 3.0, top: 3.0, right: 8.0, bottom: 3.0),
+                                            child: CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    SevaCore.of(context).loggedInUser.photoURL ??
+                                                        defaultUserImageURL,
+                                                )),
+                                        ),
+                                        labelText: 'Add a comment...',
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.all(3.0),
+                                    ),
+                                    autofocus: this.widget.isFocused ? true : false,
+                                    onTap: () => {
+                                        setState(() {
+                                            isShowSticker = false;
+                                        }),
+                                    },
+                                ),
+                            ),
+                            InkWell(
+                                child: Padding(
+                                    padding: EdgeInsets.only(left: 5, right: 5),
+                                    child: Image.asset(
+                                        "lib/assets/images/send.png",
+                                        height: 20,
+                                        width: 20,
+                                    ),
+                                ),
+                                onTap: () async {
+                                    if (_textEditingController.text != "") {
+                                        if (profanityDetector
+                                            .isProfaneString(_textEditingController.text)) {
+                                            print('profane');
+                                            setState(() {
+                                                isProfane = true;
+                                                errorText = S.of(context).profanity_text_alert;
+                                            });
+                                        } else {
+                                            print('not profane');
 
-                            setState(() {
-                              isProfane = false;
-                              errorText = '';
-                            });
-                            _saveComment(Comments(
-                                feedId: widget.newsModel.id,
-                                userPhotoURL:
-                                    SevaCore.of(context).loggedInUser.photoURL,
-                                fullName: SevaCore.of(context)
-                                            .loggedInUser
-                                            .fullname !=
-                                        null
-                                    ? SevaCore.of(context).loggedInUser.fullname
-                                    : "Anonymous user",
-                                createdEmail:
-                                    SevaCore.of(context).loggedInUser.email,
-                                createdAt:
-                                    DateTime.now().millisecondsSinceEpoch,
-                                comment: _textEditingController.text));
-                            _textEditingController.clear();
-                          }
-                        }
-                      },
+                                            setState(() {
+                                                isProfane = false;
+                                                errorText = '';
+                                            });
+                                            _saveComment(Comments(
+                                                feedId: widget.newsModel.id,
+                                                userPhotoURL:
+                                                SevaCore.of(context).loggedInUser.photoURL,
+                                                fullName: SevaCore.of(context)
+                                                    .loggedInUser
+                                                    .fullname !=
+                                                    null
+                                                    ? SevaCore.of(context).loggedInUser.fullname
+                                                    : "Anonymous user",
+                                                createdEmail:
+                                                SevaCore.of(context).loggedInUser.email,
+                                                createdAt:
+                                                DateTime.now().millisecondsSinceEpoch,
+                                                comment: _textEditingController.text));
+                                            _textEditingController.clear();
+                                        }
+                                    }
+                                },
+                            ),
+                            IconButton(
+                                icon: Icon(
+                                    Icons.sentiment_satisfied,
+                                ),
+                                iconSize: 30,
+                                onPressed: () => {
+                                    setState(() {
+                                        isShowSticker = !isShowSticker;
+                                        if (isShowSticker) {
+                                            FocusScope.of(context).unfocus();
+                                        } else {
+                                            isShowSticker = false;
+                                            FocusScope.of(context)
+                                                .requestFocus(FocusNode());
+                                        }
+                                    }),
+                                }),
+                        ],
                     ),
-                    IconButton(
-                        icon: Icon(
-                          Icons.sentiment_satisfied,
-                        ),
-                        iconSize: 30,
-                        onPressed: () => {
-                              setState(() {
-                                isShowSticker = !isShowSticker;
-                                if (isShowSticker) {
-                                  FocusScope.of(context).unfocus();
-                                } else {
-                                  isShowSticker = false;
-                                  FocusScope.of(context)
-                                      .requestFocus(FocusNode());
-                                }
-                              }),
-                            }),
-                  ],
                 ),
-              ),
             ),
             isProfane
                 ? Container(
-                    margin: EdgeInsets.only(left: 20),
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      errorText,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 12, color: Colors.red),
-                    ),
-                  )
+                margin: EdgeInsets.only(left: 20),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                    errorText,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 12, color: Colors.red),
+                ),
+            )
                 : Offstage(),
             (isShowSticker ? buildSticker() : Container())
-          ]),
+//          Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+//              Widget>[
+//          ]),
         ]),
       ),
     );
@@ -2104,11 +2104,14 @@ class _RepliesViewState extends State<RepliesView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text('${commentsList.fullName}',
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black)),
+                Text(
+                  '${commentsList.fullName}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 2.0, 0, 0),
                   child: Text(
@@ -2183,34 +2186,43 @@ class _RepliesViewState extends State<RepliesView> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Padding(
-                        padding: EdgeInsets.only(top: 0),
-                        child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('${commentsList.likes.length}',
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromRGBO(0, 0, 0, 0.5))))),
+                      padding: EdgeInsets.only(top: 0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          '${commentsList.likes.length}',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(0, 0, 0, 0.5),
+                          ),
+                        ),
+                      ),
+                    ),
                     Padding(
-                        padding: EdgeInsets.only(left: 2, top: 0),
-                        child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('likes',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromRGBO(0, 0, 0, 0.5),
-                                )))),
-                    Padding(
-                        padding: EdgeInsets.only(left: 12, top: 0),
-                        child: InkWell(
-                            onTap: () {},
-                            child: Text('Reply',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromRGBO(0, 0, 0, 0.5),
-                                )))),
+                      padding: EdgeInsets.only(left: 2, top: 0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'likes',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(0, 0, 0, 0.5),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Padding(
+                    //     padding: EdgeInsets.only(left: 12, top: 0),
+                    //     child: InkWell(
+                    //         onTap: () {},
+                    //         child: Text('Reply',
+                    //             style: TextStyle(
+                    //               fontSize: 11,
+                    //               fontWeight: FontWeight.bold,
+                    //               color: Color.fromRGBO(0, 0, 0, 0.5),
+                    //             )))),
                   ],
                 )
               ],
