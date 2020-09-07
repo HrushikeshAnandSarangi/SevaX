@@ -97,17 +97,13 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                                   .forEach((subscritpion) {
                                 if (subscritpion.containsKey("items")) {
                                   if (subscritpion['items']['data'] != null) {
-                                    planData =
-                                        subscritpion['items']['data'] ?? [];
-                                    if (cardModel.currentPlan ==
-                                        "grande_plan") {
-                                      data =
-//                                      "${AppLocalizations.of(context).translate('billing_admin', 'on_the')} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${AppLocalizations.of(context).translate('billing_admin', 'plan_yearly1500')} \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10} ${AppLocalizations.of(context).translate('billing_admin', 'plan_details_quota1')}.";
-                                          "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).plan_yearly_1500} \$0.03 ${S.of(context).plan_details_quota1}.";
-                                    } else {
-                                      data =
-//                                      "${AppLocalizations.of(context).translate('billing_admin', 'on_the')} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${AppLocalizations.of(context).translate('billing_admin', 'paying')} \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} ${AppLocalizations.of(context).translate('billing_admin', 'charges_of')} \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10}  ${AppLocalizations.of(context).translate('billing_admin', 'per_transaction')}.";
-                                          "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).paying} \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} ${S.of(context).charges_of} \$0.01  ${S.of(context).per_transaction_quota}.";
+                                    planData = subscritpion['items']['data'] ?? [];
+                                    if(cardModel.currentPlan == "tall_plan"){
+
+                                    } else if (cardModel.currentPlan == "grande_plan") {
+                                      data = "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).plan_yearly_1500} \$0.03 ${S.of(context).plan_details_quota1}.";
+                                    } else if(cardModel.currentPlan == "venti_plan") {
+                                      data = "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).paying} \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} ${S.of(context).charges_of} \$0.01  ${S.of(context).per_transaction_quota}.";
                                     }
                                     return spendingsTextWidgettwo(data ?? "");
                                   } else {
