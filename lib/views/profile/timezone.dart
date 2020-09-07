@@ -7,32 +7,33 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+
+import '../core.dart';
 
 //import 'package:timezone/timezone.dart';
 class TimezoneListData {
   final timezonelist = [
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: -11,
-        timezoneAbb: 'ST',
-        timezoneName: 'SAMOA STANDARD TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: -11,
+//        timezoneAbb: 'ST',
+//        timezoneName: 'SAMOA STANDARD TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -10,
         timezoneAbb: 'HAT',
         timezoneName: 'HAWAII-ALEUTIAN STANDARD TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: -9,
-        timezoneAbb: 'AKT',
-        timezoneName: 'ALASKA TIME ZONE'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: -9,
-        timezoneAbb: 'AKDT',
-        timezoneName: 'ALASKA DAY LIGHT TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: -9,
+//        timezoneAbb: 'AKT',
+//        timezoneName: 'ALASKA TIME ZONE'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: -9,
+//        timezoneAbb: 'AKDT',
+//        timezoneName: 'ALASKA DAY LIGHT TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -7,
@@ -120,12 +121,12 @@ class TimezoneListData {
 
     //Australia
 
-    TimeZoneModel(
-      offsetFromUtcMin: 0,
-      offsetFromUtc: 11,
-      timezoneAbb: 'ACTT',
-      timezoneName: 'AUSTRALIAN CAPITAL TERRITORY TIME',
-    ),
+//    TimeZoneModel(
+//      offsetFromUtcMin: 0,
+//      offsetFromUtc: 11,
+//      timezoneAbb: 'ACTT',
+//      timezoneName: 'AUSTRALIAN CAPITAL TERRITORY TIME',
+//    ),
 
     TimeZoneModel(
       offsetFromUtcMin: 0,
@@ -161,12 +162,12 @@ class TimezoneListData {
       timezoneName: 'TASMANIA TIME',
     ),
 
-    TimeZoneModel(
-      offsetFromUtcMin: 0,
-      offsetFromUtc: 8,
-      timezoneAbb: 'WA',
-      timezoneName: 'WESTERN AUSTRALIA (MOST)',
-    ),
+//    TimeZoneModel(
+//      offsetFromUtcMin: 0,
+//      offsetFromUtc: 8,
+//      timezoneAbb: 'WA',
+//      timezoneName: 'WESTERN AUSTRALIA (MOST)',
+//    ),
     TimeZoneModel(
       offsetFromUtcMin: 0,
       offsetFromUtc: 8,
@@ -196,12 +197,12 @@ class TimezoneListData {
       timezoneName: 'AQTOBE TIME',
     ),
 
-    TimeZoneModel(
-      offsetFromUtcMin: 0,
-      offsetFromUtc: 3,
-      timezoneAbb: 'ADT',
-      timezoneName: 'ARABIA DAYLIGHT TIME',
-    ),
+//    TimeZoneModel(
+//      offsetFromUtcMin: 0,
+//      offsetFromUtc: 3,
+//      timezoneAbb: 'ADT',
+//      timezoneName: 'ARABIA DAYLIGHT TIME',
+//    ),
 
     TimeZoneModel(
       offsetFromUtcMin: 0,
@@ -210,12 +211,12 @@ class TimezoneListData {
       timezoneName: 'ARAB STANDARD TIME',
     ),
 
-    TimeZoneModel(
-      offsetFromUtcMin: 0,
-      offsetFromUtc: 3,
-      timezoneAbb: 'AST',
-      timezoneName: 'ARABIA STANDARD TIME',
-    ),
+//    TimeZoneModel(
+//      offsetFromUtcMin: 0,
+//      offsetFromUtc: 3,
+//      timezoneAbb: 'AST',
+//      timezoneName: 'ARABIA STANDARD TIME',
+//    ),
 
     TimeZoneModel(
       offsetFromUtcMin: 0,
@@ -238,12 +239,12 @@ class TimezoneListData {
       timezoneName: 'BRUNEI TIME',
     ),
 
-    TimeZoneModel(
-      offsetFromUtcMin: 0,
-      offsetFromUtc: 6,
-      timezoneAbb: 'BT',
-      timezoneName: 'BANGLADESH TIME',
-    ),
+//    TimeZoneModel(
+//      offsetFromUtcMin: 0,
+//      offsetFromUtc: 6,
+//      timezoneAbb: 'BT',
+//      timezoneName: 'BANGLADESH TIME',
+//    ),
 
     TimeZoneModel(
       offsetFromUtcMin: 0,
@@ -280,12 +281,12 @@ class TimezoneListData {
       timezoneName: 'CHINA STANDARD TIME',
     ),
 
-    TimeZoneModel(
-      offsetFromUtcMin: 0,
-      offsetFromUtc: 8,
-      timezoneAbb: 'CT',
-      timezoneName: 'CHINA TIME',
-    ),
+//    TimeZoneModel(
+//      offsetFromUtcMin: 0,
+//      offsetFromUtc: 8,
+//      timezoneAbb: 'CT',
+//      timezoneName: 'CHINA TIME',
+//    ),
 
     TimeZoneModel(
       offsetFromUtcMin: 0,
@@ -556,12 +557,12 @@ class TimezoneListData {
       timezoneName: 'TURKEY TIME OR TURKISH TIME',
     ),
 
-    TimeZoneModel(
-      offsetFromUtcMin: 0,
-      offsetFromUtc: 3,
-      timezoneAbb: 'TRT',
-      timezoneName: 'TURKMENISTAN TIME',
-    ),
+//    TimeZoneModel(
+//      offsetFromUtcMin: 0,
+//      offsetFromUtc: 3,
+//      timezoneAbb: 'TRT',
+//      timezoneName: 'TURKMENISTAN TIME',
+//    ),
 
     TimeZoneModel(
       offsetFromUtcMin: 0,
@@ -577,12 +578,12 @@ class TimezoneListData {
       timezoneName: 'ULAANBAATAR TIME',
     ),
 
-    TimeZoneModel(
-      offsetFromUtcMin: 0,
-      offsetFromUtc: 5,
-      timezoneAbb: 'UZAT',
-      timezoneName: 'UZBEKISTAN TIME',
-    ),
+//    TimeZoneModel(
+//      offsetFromUtcMin: 0,
+//      offsetFromUtc: 5,
+//      timezoneAbb: 'UZAT',
+//      timezoneName: 'UZBEKISTAN TIME',
+//    ),
 
     TimeZoneModel(
       offsetFromUtcMin: 0,
@@ -639,11 +640,11 @@ class TimezoneListData {
         offsetFromUtc: 1,
         timezoneAbb: 'A',
         timezoneName: 'ALPHA TIME ZONE'),
-    TimeZoneModel(
-        offsetFromUtcMin: 30,
-        offsetFromUtc: 10,
-        timezoneAbb: 'ACDT',
-        timezoneName: 'AUSTRALIAN CENTRAL DAYLIGHT TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 30,
+//        offsetFromUtc: 10,
+//        timezoneAbb: 'ACDT',
+//        timezoneName: 'AUSTRALIAN CENTRAL DAYLIGHT TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 30,
         offsetFromUtc: 9,
@@ -654,31 +655,31 @@ class TimezoneListData {
         offsetFromUtc: 5,
         timezoneAbb: 'ACT',
         timezoneName: 'ACRE TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 30,
-        offsetFromUtc: 9,
-        timezoneAbb: 'ACT',
-        timezoneName: 'AUSTRALIAN CENTRAL TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 45,
-        offsetFromUtc: 8,
-        timezoneAbb: 'ACWST',
-        timezoneName: 'AUSTRALIAN CENTRAL WESTERN STANDARD TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: 11,
-        timezoneAbb: 'AEDT',
-        timezoneName: 'AUSTRALIAN EASTERN DAYLIGHT TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 30,
+//        offsetFromUtc: 9,
+//        timezoneAbb: 'ACT',
+//        timezoneName: 'AUSTRALIAN CENTRAL TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 45,
+//        offsetFromUtc: 8,
+//        timezoneAbb: 'ACWST',
+//        timezoneName: 'AUSTRALIAN CENTRAL WESTERN STANDARD TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: 11,
+//        timezoneAbb: 'AEDT',
+//        timezoneName: 'AUSTRALIAN EASTERN DAYLIGHT TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: 10,
         timezoneAbb: 'AEST',
         timezoneName: 'AUSTRALIAN EASTERN STANDARD TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: 10,
-        timezoneAbb: 'AET',
-        timezoneName: 'AUSTRALIAN EASTERN TIM'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: 10,
+//        timezoneAbb: 'AET',
+//        timezoneName: 'AUSTRALIAN EASTERN TIM'),
     TimeZoneModel(
         offsetFromUtcMin: 30,
         offsetFromUtc: 4,
@@ -709,31 +710,31 @@ class TimezoneListData {
         offsetFromUtc: 4,
         timezoneAbb: 'AMT',
         timezoneName: 'ARMENIA TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: 12,
-        timezoneAbb: 'ANAST',
-        timezoneName: 'ANADYR SUMMER TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: 12,
+//        timezoneAbb: 'ANAST',
+//        timezoneName: 'ANADYR SUMMER TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: 12,
         timezoneAbb: 'ANAT',
         timezoneName: 'ANADYR TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: -12,
-        timezoneAbb: 'AoE',
-        timezoneName: 'ANYWHERE ON EARTH'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: -12,
+//        timezoneAbb: 'AoE',
+//        timezoneName: 'ANYWHERE ON EARTH'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -3,
         timezoneAbb: 'ART',
         timezoneName: 'ARGENTINA TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: 9,
-        timezoneAbb: 'AWDT',
-        timezoneName: 'AUSTRALIAN WESTERN DAYLIGHT TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: 9,
+//        timezoneAbb: 'AWDT',
+//        timezoneName: 'AUSTRALIAN WESTERN DAYLIGHT TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: 8,
@@ -759,11 +760,11 @@ class TimezoneListData {
         offsetFromUtc: 2,
         timezoneAbb: 'B',
         timezoneName: 'BRAVO TIME ZONE'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: 8,
-        timezoneAbb: 'BNT',
-        timezoneName: 'BRUNEI DARUSSALAM TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: 8,
+//        timezoneAbb: 'BNT',
+//        timezoneName: 'BRUNEI DARUSSALAM TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -4,
@@ -819,11 +820,11 @@ class TimezoneListData {
         offsetFromUtc: 12,
         timezoneAbb: 'CHAST',
         timezoneName: 'CHATHAM ISLAND STANDARD TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: 10,
-        timezoneAbb: 'ChST',
-        timezoneName: 'CHAMORRO STANDARD TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: 10,
+//        timezoneAbb: 'ChST',
+//        timezoneName: 'CHAMORRO STANDARD TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: 10,
@@ -989,21 +990,21 @@ class TimezoneListData {
         offsetFromUtc: -4,
         timezoneAbb: 'GYT',
         timezoneName: 'GUYANA TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: 8,
-        timezoneAbb: 'H',
-        timezoneName: 'HOTEL TIME ZONE'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: 8,
+//        timezoneAbb: 'H',
+//        timezoneName: 'HOTEL TIME ZONE'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: 8,
         timezoneAbb: 'HOVST',
         timezoneName: 'HOVD SUMMER TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: 9,
-        timezoneAbb: 'I',
-        timezoneName: 'INDIA TIME ZONE'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: 9,
+//        timezoneAbb: 'I',
+//        timezoneName: 'INDIA TIME ZONE'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: 6,
@@ -1159,11 +1160,11 @@ class TimezoneListData {
         offsetFromUtc: -5,
         timezoneAbb: 'PET',
         timezoneName: 'PERU TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: 12,
-        timezoneAbb: 'PETST',
-        timezoneName: 'KAMCHATKA SUMMER TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: 12,
+//        timezoneAbb: 'PETST',
+//        timezoneName: 'KAMCHATKA SUMMER TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: 10,
@@ -1204,11 +1205,11 @@ class TimezoneListData {
         offsetFromUtc: -4,
         timezoneAbb: 'PYT',
         timezoneName: 'PARAGUAY TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 30,
-        offsetFromUtc: 8,
-        timezoneAbb: 'PYT',
-        timezoneName: 'PYONGYANG TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 30,
+//        offsetFromUtc: 8,
+//        timezoneAbb: 'PYT',
+//        timezoneName: 'PYONGYANG TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -4,
@@ -1249,11 +1250,11 @@ class TimezoneListData {
         offsetFromUtc: 4,
         timezoneAbb: 'SCT',
         timezoneName: 'SEYCHELLES TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: 11,
-        timezoneAbb: 'SRET',
-        timezoneName: 'SREDNEKOLYMSK TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: 11,
+//        timezoneAbb: 'SRET',
+//        timezoneName: 'SREDNEKOLYMSK TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: -3,
@@ -1349,11 +1350,11 @@ class TimezoneListData {
         offsetFromUtc: -4,
         timezoneAbb: 'VET',
         timezoneName: 'VENEZUELAN STANDARD TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: 11,
-        timezoneAbb: 'VLAST',
-        timezoneName: 'VLADIVOSTOK SUMMER TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: 11,
+//        timezoneAbb: 'VLAST',
+//        timezoneName: 'VLADIVOSTOK SUMMER TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: 6,
@@ -1389,11 +1390,11 @@ class TimezoneListData {
         offsetFromUtc: 1,
         timezoneAbb: 'WAT',
         timezoneName: 'WEST AFRICA TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: 1,
-        timezoneAbb: 'WEST',
-        timezoneName: 'WESTERN EUROPEAN SUMMER TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: 1,
+//        timezoneAbb: 'WEST',
+//        timezoneName: 'WESTERN EUROPEAN SUMMER TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: 12,
@@ -1414,11 +1415,11 @@ class TimezoneListData {
         offsetFromUtc: 13,
         timezoneAbb: 'WST',
         timezoneName: 'WEST SAMOA TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: 1,
-        timezoneAbb: 'WST',
-        timezoneName: 'WESTERN SAHARA SUMMER TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: 1,
+//        timezoneAbb: 'WST',
+//        timezoneName: 'WESTERN SAHARA SUMMER TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: 0,
@@ -1439,11 +1440,11 @@ class TimezoneListData {
         offsetFromUtc: 10,
         timezoneAbb: 'YAPT',
         timezoneName: 'YAP TIME'),
-    TimeZoneModel(
-        offsetFromUtcMin: 0,
-        offsetFromUtc: 6,
-        timezoneAbb: 'YEKST',
-        timezoneName: 'YEKATERINBURG SUMMER TIME'),
+//    TimeZoneModel(
+//        offsetFromUtcMin: 0,
+//        offsetFromUtc: 6,
+//        timezoneAbb: 'YEKST',
+//        timezoneName: 'YEKATERINBURG SUMMER TIME'),
     TimeZoneModel(
         offsetFromUtcMin: 0,
         offsetFromUtc: 0,

@@ -332,6 +332,7 @@ class RequestCompleteWidget extends StatelessWidget {
 
   Future<void> sendMessageToMember(
       {UserModel loggedInUser,
+      UserModel receiverUser,
       RequestModel requestModel,
       String message,
       BuildContext context}) async {
@@ -341,15 +342,9 @@ class RequestCompleteWidget extends StatelessWidget {
         sevaUserId: requestModel.sevaUserId);
     if (userModel != null && timebankModel != null) {
       ParticipantInfo receiver = ParticipantInfo(
-        id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.sevaUserID
-            : requestModel.timebankId,
-        photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.photoURL
-            : timebankModel.photoUrl,
-        name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.fullname
-            : timebankModel.name,
+        id: receiverUser.sevaUserID,
+        photoUrl: receiverUser.photoURL,
+        name: receiverUser.fullname,
         type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
             ? ChatType.TYPE_PERSONAL
             : timebankModel.parentTimebankId ==

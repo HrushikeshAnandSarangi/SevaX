@@ -10,7 +10,6 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
 import 'package:sevaexchange/repositories/notifications_repository.dart';
 import 'package:sevaexchange/ui/screens/notifications/bloc/notifications_bloc.dart';
@@ -20,7 +19,6 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
@@ -584,59 +582,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
           context: context,
           isTimebankMessage: false,
           timebankId: '',
-          communityId: loggedInUser.currentCommunity,
-          sender: sender);
-    }
-  }
-
-  Future<void> sendMessageToMember({
-    UserModel loggedInUser,
-    RequestModel requestModel,
-    String message,
-  }) async {
-    TimebankModel timebankModel =
-        await getTimeBankForId(timebankId: requestModel.timebankId);
-    UserModel userModel = await FirestoreManager.getUserForId(
-        sevaUserId: requestModel.sevaUserId);
-    if (userModel != null && timebankModel != null) {
-      ParticipantInfo receiver = ParticipantInfo(
-        id: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.sevaUserID
-            : requestModel.timebankId,
-        photoUrl: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.photoURL
-            : timebankModel.photoUrl,
-        name: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? userModel.fullname
-            : timebankModel.name,
-        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? ChatType.TYPE_PERSONAL
-            : timebankModel.parentTimebankId ==
-                    '73d0de2c-198b-4788-be64-a804700a88a4'
-                ? ChatType.TYPE_TIMEBANK
-                : ChatType.TYPE_GROUP,
-      );
-
-      ParticipantInfo sender = ParticipantInfo(
-        id: loggedInUser.sevaUserID,
-        photoUrl: loggedInUser.photoURL,
-        name: loggedInUser.fullname,
-        type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-            ? ChatType.TYPE_PERSONAL
-            : timebankModel.parentTimebankId ==
-                    '73d0de2c-198b-4788-be64-a804700a88a4'
-                ? ChatType.TYPE_TIMEBANK
-                : ChatType.TYPE_GROUP,
-      );
-      await sendBackgroundMessage(
-          messageContent: message,
-          reciever: receiver,
-          context: context,
-          isTimebankMessage:
-              requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-                  ? true
-                  : false,
-          timebankId: requestModel.timebankId,
           communityId: loggedInUser.currentCommunity,
           sender: sender);
     }
