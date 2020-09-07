@@ -570,14 +570,15 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     bool alreadyCompleted = false;
 
     if (widget.requestItem.transactions != null) {
-      widget.requestItem.transactions.forEach((transactionModel) {
-        if (transactionModel.to ==
+      for (int i = 0; i < widget.requestItem.transactions.length; i++) {
+        if (widget.requestItem.transactions[i].to ==
             SevaCore.of(context).loggedInUser.sevaUserID) {
           alreadyCompleted = true;
+          break;
         }
-      });
+      }
     }
-    if (alreadyCompleted) {
+    if (!alreadyCompleted) {
       bool isAlreadyApproved = widget.requestItem.approvedUsers
           .contains(SevaCore.of(context).loggedInUser.email);
       var assosciatedEmail = SevaCore.of(context).loggedInUser.email;
