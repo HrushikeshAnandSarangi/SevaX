@@ -195,8 +195,7 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
                     if (widget.isPlanActive) {
                       _changePlanAlert(context);
                     } else {
-                      if (widget.plan.id == "community_plan" ||
-                          isBillMe == true) {
+                      if (isBillMe == true) {
                         _planSuccessMessage(
                           context: context,
                         );
