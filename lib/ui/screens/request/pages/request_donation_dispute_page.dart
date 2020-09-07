@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
@@ -23,6 +24,7 @@ enum OperatingMode { CREATOR, USER }
 class RequestDonationDisputePage extends StatefulWidget {
   final DonationModel model;
   final String notificationId;
+
   const RequestDonationDisputePage({
     Key key,
     @required this.model,
@@ -38,9 +40,30 @@ class _RequestDonationDisputePageState
   final RequestDonationDisputeBloc _bloc = RequestDonationDisputeBloc();
   _AckType ackType;
   OperatingMode operatingMode;
-
+  final _key = GlobalKey<ScaffoldState>();
   ChatModeForDispute chatModeForDispute;
   TimebankModel timebankModel;
+  ProgressDialog progressDialog;
+
+  void showProgress(String message) {
+    progressDialog = ProgressDialog(
+      context,
+      type: ProgressDialogType.Normal,
+      isDismissible: false,
+    );
+    progressDialog.style(
+      progressWidget: Container(
+        padding: EdgeInsets.all(8.0),
+        child: CircularProgressIndicator(),
+      ),
+      message: message,
+    );
+    progressDialog.show();
+  }
+
+  void hideProgress() {
+    progressDialog.hide();
+  }
 
   @override
   void initState() {
@@ -71,6 +94,7 @@ class _RequestDonationDisputePageState
         ? OperatingMode.USER
         : OperatingMode.CREATOR;
     return Scaffold(
+      key: _key,
       appBar: AppBar(
         title: Text(
           operatingMode == OperatingMode.USER
@@ -124,6 +148,9 @@ class _RequestDonationDisputePageState
                           )
                               .then((value) {
                             if (value) {
+                              FocusScope.of(context).unfocus();
+                              showProgress(S.of(context).please_wait);
+
                               _bloc
                                   .disputeCash(
                                 pledgedAmount: widget
@@ -139,9 +166,21 @@ class _RequestDonationDisputePageState
                               )
                                   .then(
                                 (value) {
-                                  print(value);
+                                  hideProgress();
                                   if (value) {
                                     Navigator.of(context).pop();
+                                  } else {
+                                    _key.currentState.hideCurrentSnackBar();
+                                    _key.currentState.showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          S.of(context).general_stream_error +
+                                              ' ' +
+                                              S.of(context).try_later +
+                                              '.',
+                                        ),
+                                      ),
+                                    );
                                   }
                                 },
                               );

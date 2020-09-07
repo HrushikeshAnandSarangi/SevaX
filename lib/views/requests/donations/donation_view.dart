@@ -248,7 +248,7 @@ class _DonationViewState extends State<DonationView> {
               actionButton(
                 buttonTitle: S.of(context).pledge,
                 onPressed: () {
-                  showProgress();
+                  showProgress(S.of(context).please_wait);
                   donationBloc
                       .donateAmount(
                           notificationId: widget.notificationId,
@@ -294,17 +294,17 @@ class _DonationViewState extends State<DonationView> {
     );
   }
 
-  void showProgress() {
+  void showProgress(String message) {
     progressDialog = ProgressDialog(
       context,
       type: ProgressDialogType.Normal,
       isDismissible: false,
     );
     progressDialog.style(
-        progressWidget: Container(
-            padding: EdgeInsets.all(8.0),
-            child: CircularProgressIndicator()),
-        message: 'please wait');
+      progressWidget: Container(
+          padding: EdgeInsets.all(8.0), child: CircularProgressIndicator()),
+      message: message,
+    );
     progressDialog.show();
   }
 

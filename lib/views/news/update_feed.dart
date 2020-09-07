@@ -71,12 +71,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
   NewsModel newsObject;
   TextStyle textStyle;
-  NewsCreateFormState({this.newsObject}) {
-    globals.newsImageURL = newsObject.newsImageUrl;
-    globals.newsDocumentURL = newsObject.newsDocumentUrl;
-    globals.newsDocumentName = newsObject.newsDocumentName;
-    // _getLocation();
-  }
 
   List<DataModel> dataList = [];
   DataModel selectedEntity;
@@ -140,7 +134,12 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
   @override
   void initState() {
+    newsObject = widget.newsModel;
+    globals.newsImageURL = newsObject.newsImageUrl;
+    globals.newsDocumentURL = newsObject.newsDocumentUrl;
+    globals.newsDocumentName = newsObject.newsDocumentName;
     super.initState();
+
     selectedAddress = newsObject.placeAddress;
     location = newsObject.location;
 
