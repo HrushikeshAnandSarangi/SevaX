@@ -2104,11 +2104,14 @@ class _RepliesViewState extends State<RepliesView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text('${commentsList.fullName}',
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black)),
+                Text(
+                  '${commentsList.fullName}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 2.0, 0, 0),
                   child: Text(
@@ -2183,34 +2186,43 @@ class _RepliesViewState extends State<RepliesView> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     Padding(
-                        padding: EdgeInsets.only(top: 0),
-                        child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('${commentsList.likes.length}',
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromRGBO(0, 0, 0, 0.5))))),
+                      padding: EdgeInsets.only(top: 0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          '${commentsList.likes.length}',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(0, 0, 0, 0.5),
+                          ),
+                        ),
+                      ),
+                    ),
                     Padding(
-                        padding: EdgeInsets.only(left: 2, top: 0),
-                        child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('likes',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromRGBO(0, 0, 0, 0.5),
-                                )))),
-                    Padding(
-                        padding: EdgeInsets.only(left: 12, top: 0),
-                        child: InkWell(
-                            onTap: () {},
-                            child: Text('Reply',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromRGBO(0, 0, 0, 0.5),
-                                )))),
+                      padding: EdgeInsets.only(left: 2, top: 0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'likes',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(0, 0, 0, 0.5),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Padding(
+                    //     padding: EdgeInsets.only(left: 12, top: 0),
+                    //     child: InkWell(
+                    //         onTap: () {},
+                    //         child: Text('Reply',
+                    //             style: TextStyle(
+                    //               fontSize: 11,
+                    //               fontWeight: FontWeight.bold,
+                    //               color: Color.fromRGBO(0, 0, 0, 0.5),
+                    //             )))),
                   ],
                 )
               ],
