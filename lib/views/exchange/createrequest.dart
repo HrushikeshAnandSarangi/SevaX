@@ -718,21 +718,37 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 : "",
             keyboardType: TextInputType.multiline,
             maxLines: 1,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              } else if (regExp.hasMatch(value)) {
-                requestModel.donationInstructionLink = value;
-                print(true);
-              } else {
-                print('not url');
-
-                return S.of(context).enter_valid_link;
-              }
-              return null;
+            onSaved: (value) {
+              requestModel.donationInstructionLink = value;
             },
+            validator: _validateEmailAndPhone,
           )
         ]);
+  }
+
+  String _validateEmailAndPhone(String value) {
+    String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    RegExp emailPattern = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    RegExp regExp = RegExp(mobilePattern);
+    if (value.isEmpty) {
+      return S.of(context).validation_error_general_text;
+    } else if (emailPattern.hasMatch(value)) {
+      return null;
+    } else if (regExp.hasMatch(value)) {
+      return null;
+    } else {
+      return S.of(context).enter_valid_link;
+    }
+    return null;
+  }
+
+  String _validateEmailId(String value) {
+    RegExp emailPattern = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    if (value.isEmpty) return S.of(context).validation_error_general_text;
+    if (!emailPattern.hasMatch(value)) return S.of(context).enter_valid_link;
+    return null;
   }
 
   Widget RequestPaymentPaypal(requestModel) {
@@ -767,21 +783,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     offerDataModel: widget.offer,
                   )
                 : "",
-            keyboardType: TextInputType.multiline,
+            keyboardType: TextInputType.emailAddress,
             maxLines: 1,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              } else if (regExp.hasMatch(value)) {
-                requestModel.donationInstructionLink = value;
-                print(true);
-              } else {
-                print('not url');
-
-                return S.of(context).enter_valid_link;
-              }
-              return null;
+            onSaved: (value) {
+              requestModel.donationInstructionLink = value;
             },
+            validator: _validateEmailId,
           )
         ]);
   }
