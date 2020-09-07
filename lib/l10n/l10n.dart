@@ -1459,7 +1459,7 @@ class S {
       );
 
   String get withdraw_request_failure => Intl.message(
-        'You cannot withdraw request since already approved',
+        'You cannot withdraw request since already approved and seva coins credited to your account.',
         name: 'withdraw_request_failure',
       );
 

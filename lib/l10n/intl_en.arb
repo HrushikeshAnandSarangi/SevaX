@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-09-07T10:00:37+00:00",
+    "@@last_modified": "2020-09-07T11:53:30+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -287,7 +287,7 @@
     "apply": "Apply",
     "protected_timebank_alert_dialog": "You cannot accept requests in a protected Timebank",
     "already_approved": "Already Approved",
-    "withdraw_request_failure": "You cannot withdraw request since already approved",
+    "withdraw_request_failure": "You cannot withdraw request since already approved and seva coins credited to your account.",
     "find_volunteers": "Find Volunteers",
     "invited": "Invited",
     "favourites": "Favourites",

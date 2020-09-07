@@ -996,7 +996,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "will_added_to_donors" : MessageLookupByLibrary.simpleMessage("will be added to donors list."),
     "will_be_added_to_request" : MessageLookupByLibrary.simpleMessage("*** will be automatically added to the request."),
     "withdraw" : MessageLookupByLibrary.simpleMessage("Withdraw"),
-    "withdraw_request_failure" : MessageLookupByLibrary.simpleMessage("You cannot withdraw request since already approved"),
+    "withdraw_request_failure" : MessageLookupByLibrary.simpleMessage("You cannot withdraw request since already approved and seva coins credited to your account."),
     "would_be_unblocked" : MessageLookupByLibrary.simpleMessage("would be unblocked"),
     "would_like_to_donate" : MessageLookupByLibrary.simpleMessage("Would you like to donate for this request."),
     "year" : m11,
