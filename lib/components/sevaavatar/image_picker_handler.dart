@@ -1,12 +1,13 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+
 import './image_picker_dialog.dart';
 import './imagecategorieslist.dart';
 
@@ -29,16 +30,27 @@ class ImagePickerHandler {
     cropImage(image.path);
   }
 
-  void openStockImages(context, onChanged) async {
+  void openStockImages(context) async {
     imagePicker.dismissDialog();
     FocusScope.of(context).requestFocus(FocusNode());
-    _parentStockSelectionBottomsheet(
-        context,
-        (image){
-          log("inside stock images onchanged callback");
-          _listener.userImage(image, 'stock_image');
-          Navigator.pop(context);
-        });
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => SearchStockImages(
+          // keepOnBackPress: false,
+          // showBackBtn: false,
+          // isFromHome: false,
+          onChanged: (image) {
+            _listener.userImage(image, 'stock_image');
+            Navigator.pop(context);
+          },
+        ),
+      ),
+    );
+    // _parentStockSelectionBottomsheet(context, (image) {
+    //   log("inside stock images onchanged callback");
+    //   _listener.userImage(image, 'stock_image');
+    //   Navigator.pop(context);
+    // });
   }
 
   addImageUrl() async {
@@ -76,30 +88,30 @@ abstract class ImagePickerListener {
   addWebImageUrl();
 }
 
-void _parentStockSelectionBottomsheet(BuildContext mcontext, onChanged) {
-  showModalBottomSheet(
-    context: mcontext,
-    isScrollControlled: true,
-    builder: (BuildContext bc) {
-      return SearchStockImages(
-          keepOnBackPress: false,
-          showBackBtn: false,
-          isFromHome: false,
-          onChanged: onChanged);
-    },
-  );
-}
+// void _parentStockSelectionBottomsheet(BuildContext mcontext, onChanged) {
+//   showModalBottomSheet(
+//     context: mcontext,
+//     isScrollControlled: true,
+//     builder: (BuildContext bc) {
+//       return SearchStockImages(
+//           keepOnBackPress: false,
+//           showBackBtn: false,
+//           isFromHome: false,
+//           onChanged: onChanged);
+//     },
+//   );
+// }
 
 class SearchStockImages extends StatefulWidget {
-  final bool keepOnBackPress;
-  final bool showBackBtn;
-  final bool isFromHome;
+  // final bool keepOnBackPress;
+  // final bool showBackBtn;
+  // final bool isFromHome;
   final ValueChanged onChanged;
 
   SearchStockImages({
-    @required this.keepOnBackPress,
-    @required this.showBackBtn,
-    @required this.isFromHome,
+    // @required this.keepOnBackPress,
+    // @required this.showBackBtn,
+    // @required this.isFromHome,
     this.onChanged,
   });
 
@@ -128,7 +140,7 @@ class SearchStockImagesViewState extends State<SearchStockImages>
   }
 
   build(context) {
-    return new Scaffold(
+    return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
         automaticallyImplyLeading: true,
@@ -143,14 +155,23 @@ class SearchStockImagesViewState extends State<SearchStockImages>
         children: <Widget>[
           Stack(children: <Widget>[
             Padding(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: Text(this.catSelected > -1 ? S.of(context).choose_image: "Choose a category",
-                    style: TextStyle(
-                      fontSize: 20,
-                    )))
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Text(
+                this.catSelected > -1
+                    ? S.of(context).choose_image
+                    : "Choose a category",
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+            )
           ]),
           Expanded(
-            child: StockImageListingView(this.onCatSelected, this.catSelected, this.widget.onChanged),
+            child: StockImageListingView(
+              this.onCatSelected,
+              this.catSelected,
+              this.widget.onChanged,
+            ),
           ),
         ],
       ),
@@ -158,10 +179,9 @@ class SearchStockImagesViewState extends State<SearchStockImages>
   }
 }
 
-
-
 class StockImageListingView extends StatelessWidget {
-  const StockImageListingView(this.onCatSelected, this.catSelected, this.onChanged);
+  const StockImageListingView(
+      this.onCatSelected, this.catSelected, this.onChanged);
   final ValueChanged onChanged;
   final int catSelected;
   final ValueChanged onCatSelected;
@@ -172,24 +192,32 @@ class StockImageListingView extends StatelessWidget {
     print('hey');
     print(childs.length);
     for (var i = 0; i < childs.length; i++) {
-      categoriesList.add(new _Tile(childs[i]['image'],
-          isimages ? childs[i]['index']: i, childs[i]['name'], isimages ? (index) => {
-            this.onChanged(childs[i]['image'])
-          } : this.onCatSelected));
-      staggeredtiles.add(new StaggeredTile.fit(childs[i]['fit']));
+      categoriesList.add(_Tile(
+          childs[i]['image'],
+          isimages ? childs[i]['index'] : i,
+          childs[i]['name'],
+          isimages
+              ? (index) => {this.onChanged(childs[i]['image'])}
+              : this.onCatSelected));
+      staggeredtiles.add(
+        StaggeredTile.fit(
+          childs[i]['fit'],
+        ),
+      );
     }
-    return new StaggeredGridView.count(
-        primary: false,
-        crossAxisCount: 4,
-        mainAxisSpacing: 0.0,
-        crossAxisSpacing: 0.0,
-        children: categoriesList,
-        staggeredTiles: staggeredtiles
+    return StaggeredGridView.count(
+      padding: EdgeInsets.all(4),
+      primary: false,
+      crossAxisCount: 4,
+      mainAxisSpacing: 4.0,
+      crossAxisSpacing: 4.0,
+      children: categoriesList,
+      staggeredTiles: staggeredtiles,
     );
   }
+
   @override
   Widget build(BuildContext context) {
-    List childs = categories[0]['children'];
     print(catSelected);
     if (catSelected > -1) {
       List childs = categories[catSelected]['children'];
@@ -199,6 +227,7 @@ class StockImageListingView extends StatelessWidget {
     }
   }
 }
+
 class _Tile extends StatelessWidget {
   const _Tile(this.source, this.index, this.title, this.onChanged);
   final String source;
@@ -209,24 +238,24 @@ class _Tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () {
-          this.onChanged(index);
-        },
-        child: new Column(
-          children: <Widget>[
-            new Image.network(source),
-            title != null ? new Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: new Column(
-                children: <Widget>[
-                  new Text(
-                    title,
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-            ) : Text("")
-          ],
-        ));
+      onTap: () {
+        this.onChanged(index);
+      },
+      child: Column(
+        children: <Widget>[
+          CachedNetworkImage(
+            imageUrl: source,
+            fit: BoxFit.contain,
+          ),
+          SizedBox(height: 2),
+          title != null
+              ? Text(
+                  title,
+                  style: const TextStyle(color: Colors.grey),
+                )
+              : Container(),
+        ],
+      ),
+    );
   }
 }
