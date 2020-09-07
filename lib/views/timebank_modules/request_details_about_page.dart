@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -20,7 +21,6 @@ import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:sevaexchange/globals.dart' as globals;
 
 import '../../flavor_config.dart';
 // import 'package:timezone/browser.dart';
@@ -567,30 +567,43 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   void _withdrawRequest() {
-    bool isAlreadyApproved = widget.requestItem.approvedUsers
-        .contains(SevaCore.of(context).loggedInUser.email);
-    var assosciatedEmail = SevaCore.of(context).loggedInUser.email;
+    bool alreadyCompleted = false;
 
-    Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
-    acceptorList.remove(assosciatedEmail);
-    widget.requestItem.acceptors = acceptorList.toList();
-
-    if (widget.requestItem.approvedUsers.contains(assosciatedEmail)) {
-      Set<String> approvedUsers = Set.from(widget.requestItem.approvedUsers);
-      approvedUsers.remove(SevaCore.of(context).loggedInUser.email);
-      widget.requestItem.approvedUsers = approvedUsers.toList();
+    if (widget.requestItem.transactions != null) {
+      widget.requestItem.transactions.forEach((transactionModel) {
+        if (transactionModel.to ==
+            SevaCore.of(context).loggedInUser.sevaUserID) {
+          alreadyCompleted = true;
+        }
+      });
     }
+    if (alreadyCompleted) {
+      bool isAlreadyApproved = widget.requestItem.approvedUsers
+          .contains(SevaCore.of(context).loggedInUser.email);
+      var assosciatedEmail = SevaCore.of(context).loggedInUser.email;
+      Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
+      acceptorList.remove(assosciatedEmail);
+      widget.requestItem.acceptors = acceptorList.toList();
 
-    acceptRequest(
-      loggedInUser: SevaCore.of(context).loggedInUser,
-      isAlreadyApproved: isAlreadyApproved,
-      requestModel: widget.requestItem,
-      senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-      isWithdrawal: true,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-      directToMember: !widget.timebankModel.protected,
-    );
-    Navigator.pop(context);
+      if (widget.requestItem.approvedUsers.contains(assosciatedEmail)) {
+        Set<String> approvedUsers = Set.from(widget.requestItem.approvedUsers);
+        approvedUsers.remove(SevaCore.of(context).loggedInUser.email);
+        widget.requestItem.approvedUsers = approvedUsers.toList();
+      }
+
+      acceptRequest(
+        loggedInUser: SevaCore.of(context).loggedInUser,
+        isAlreadyApproved: isAlreadyApproved,
+        requestModel: widget.requestItem,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        isWithdrawal: true,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        directToMember: !widget.timebankModel.protected,
+      );
+      Navigator.pop(context);
+    } else {
+      _showAlreadyApprovedMessage();
+    }
   }
 
   Widget get membersEngagedComponent {
@@ -980,12 +993,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   void _settingModalBottomSheet(context) {
-      Map<String, dynamic> stateOfcalendarCallback = {
-          "email": SevaCore.of(context).loggedInUser.email,
-          "mobile":globals.isMobile,
-          "envName": FlavorConfig.values.envMode
-      };
-      var stateVar = jsonEncode(stateOfcalendarCallback);
+    Map<String, dynamic> stateOfcalendarCallback = {
+      "email": SevaCore.of(context).loggedInUser.email,
+      "mobile": globals.isMobile,
+      "envName": FlavorConfig.values.envMode
+    };
+    var stateVar = jsonEncode(stateOfcalendarCallback);
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
