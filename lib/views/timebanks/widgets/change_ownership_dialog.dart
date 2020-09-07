@@ -203,9 +203,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
     String planName = '';
     print('curr ${loggedInUser.currentCommunity}');
     print('curr plan ${communityModel.payment["planId"]}');
-    if (communityModel.payment["planId"] != null &&
-            communityModel.payment["planId"] == 'community_plan' ||
-        communityModel.billMe == true) {
+    if (communityModel.billMe == true) {
       showProgressDialog(S.of(context).updating_details);
       changeOwnership(
               primaryTimebank: communityModel.primary_timebank,
