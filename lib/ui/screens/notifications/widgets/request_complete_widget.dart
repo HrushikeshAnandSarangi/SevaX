@@ -285,16 +285,16 @@ class RequestCompleteWidget extends StatelessWidget {
       await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
           FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
       onActivityResult(
-        sevaCore: sevaCore,
-        requestModel: model,
-        userId: userId,
-        notificationId: notificationId,
-        context: context,
-        reviewer: model.email,
-        reviewed: user.email,
-        requestId: model.id,
-        results: results,
-      );
+          sevaCore: sevaCore,
+          requestModel: model,
+          userId: userId,
+          notificationId: notificationId,
+          context: context,
+          reviewer: model.email,
+          reviewed: user.email,
+          requestId: model.id,
+          results: results,
+          receiverUser: user);
     } else {}
   }
 
@@ -308,6 +308,7 @@ class RequestCompleteWidget extends StatelessWidget {
     String reviewer,
     String reviewed,
     String requestId,
+    UserModel receiverUser,
   }) async {
     Firestore.instance.collection("reviews").add({
       "reviewer": reviewer,
@@ -319,6 +320,7 @@ class RequestCompleteWidget extends StatelessWidget {
           : S.of(context).no_comments)
     });
     await sendMessageToMember(
+      receiverUser: receiverUser,
       requestModel: requestModel,
       message: (results['didComment']
           ? results['comment']

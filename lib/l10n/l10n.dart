@@ -712,7 +712,7 @@ class S {
       );
 
   String get general_stream_error => Intl.message(
-        'Somthing went wrong!',
+        'Something went wrong, please try again',
         name: 'general_stream_error',
       );
 
@@ -4378,17 +4378,17 @@ class S {
       );
 
   String get request_goods_description => Intl.message(
-        'Select list of goods / supplies for donation*',
+        'Provide the list of Goods/Supplies that you need*',
         name: 'request_goods_description',
       );
 
   String get request_goods_address => Intl.message(
-        'Which address go to be received*',
+        'Provide address where the donor should ship*',
         name: 'request_goods_address',
       );
 
   String get request_goods_address_hint => Intl.message(
-        'Donors will use the below given address to send the items. Add additional details to the request details specify address only here.',
+        'Donors will use the address below to ship the Goods/Supplies.',
         name: 'request_goods_address_hint',
       );
 
@@ -4403,7 +4403,7 @@ class S {
       );
 
   String get request_payment_description_hint => Intl.message(
-        'SevaX doesn\'t process any payment you should have your own address for collection of payments, Plese provide one of the below paypal, zelpay (or) ACH details',
+        'SevaX does not process the payment. Please select from among PayPal, ZellePay or ACH in the drop down and provide the appropriate details for each method. The donor will complete the donation outside the SevaX app.',
         name: 'request_payment_description_hint',
       );
 
@@ -4448,7 +4448,7 @@ class S {
       );
 
   String get request_description_hint_cash => Intl.message(
-        'Ex: Specify the cause of fund raising and any #hashtags',
+        'Ex: Specify the cause for fundraising. Include any #hashtags',
         name: 'request_description_hint_cash',
       );
 
@@ -4881,6 +4881,11 @@ class S {
         'You have not selected any Goods/Supplies. Please select one or more before creating the Donation request.',
         name: 'goods_validation',
       );
+
+  String get monthly_charges_of => Intl.message(
+        'monthly and additional charges of',
+        name: 'monthly_charges_of',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
@@ -4890,8 +4895,8 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
         Locale.fromSubtags(languageCode: 'es'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'TW'),
+        Locale.fromSubtags(languageCode: 'zh', countryCode: 'zh_CN'),
+        Locale.fromSubtags(languageCode: 'zh', countryCode: 'zh_TW'),
         Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'sw'),
         Locale.fromSubtags(languageCode: 'en'),
