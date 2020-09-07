@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
@@ -181,6 +182,21 @@ class Auth {
       await _createUserDoc(signedInUser);
     }
 
+    // updating the sevaX global timebank community with user Id;
+    CommunityModel cmodel = await FirestoreManager.getCommunityDetailsByCommunityId(
+      communityId: FlavorConfig.values.timebankId,
+    );
+    List<String> cmembers = cmodel.members;
+    if (!cmembers.contains(signedInUser.sevaUserID)) {
+      List<String> tbMembers = cmembers.map((m) => m).toList();
+      if (!tbMembers.contains(signedInUser.sevaUserID)) {
+        tbMembers.add(signedInUser.sevaUserID);
+      }
+      cmodel.members = tbMembers;
+      await FirestoreManager.updateCommunity(communityModel: cmodel);
+    }
+
+    // updating the sevaX global timebank with user Id;
     TimebankModel model = await FirestoreManager.getTimeBankForId(
       timebankId: FlavorConfig.values.timebankId,
     );
