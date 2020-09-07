@@ -1459,7 +1459,7 @@ class S {
       );
 
   String get withdraw_request_failure => Intl.message(
-        'You cannot withdraw request since already approved',
+        'You cannot withdraw request since already approved and seva coins credited to your account.',
         name: 'withdraw_request_failure',
       );
 
@@ -4869,34 +4869,39 @@ class S {
         'You have not selected any Goods/Supplies. Please select one or more before creating the Donation request.',
         name: 'goods_validation',
       );
+
+  String get monthly_charges_of => Intl.message(
+        'monthly and additional charges of',
+        name: 'monthly_charges_of',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
   const ArbifyLocalizationsDelegate();
 
   List<Locale> get supportedLocales => [
+        Locale.fromSubtags(languageCode: 'af'),
+        Locale.fromSubtags(languageCode: 'en'),
         Locale.fromSubtags(languageCode: 'es'),
+        Locale.fromSubtags(languageCode: 'fr'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'zh'),
-        Locale.fromSubtags(languageCode: 'zh'),
-        Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'sw'),
-        Locale.fromSubtags(languageCode: 'en'),
-        Locale.fromSubtags(languageCode: 'fr'),
+        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'zh'),
   ];
 
   @override
   bool isSupported(Locale locale) => [
+        'af',
+        'en',
         'es',
+        'fr',
         'pt',
         'sn',
-        'zh',
-        'zh',
-        'af',
         'sw',
-        'en',
-        'fr',
+        'zh',
+        'zh',
       ].contains(locale.languageCode);
 
   @override

@@ -4,10 +4,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/billing_plan_details.dart';
 import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -37,6 +39,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   var transactionPaymentData;
   final profanityDetector = ProfanityDetector();
   bool autoValidateText = false;
+  List<BillingPlanDetailsModel> _billingPlanDetailsModels=[];
   @override
   void initState() {
     super.initState();
@@ -47,11 +50,23 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
               communityId: SevaCore.of(context).loggedInUser.currentCommunity)
           .then((onValue) {
         communityModel = onValue;
+
       });
+      _billingPlanDetailsModels = billingPlanDetailsModelFromJson(
+          AppConfig.remoteConfig
+              .getString('billing_plans_${S.of(context).localeName}'),
+      );
     });
+
+
+
   }
 
   String planName(String text) {
+      if(text=="tall_plan"){
+          List<String> x = text.split('_');
+          return '${x[0][0].toUpperCase() + x[0].substring(1)} ${x[1][0].toUpperCase() + x[1].substring(1)}'.replaceFirst("TALL", "COMMUNITY");
+      }
     List<String> x = text.split('_');
     return '${x[0][0].toUpperCase() + x[0].substring(1)} ${x[1][0].toUpperCase() + x[1].substring(1)}';
   }
@@ -68,8 +83,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            _bloc.community.payment.containsKey("planId") ||
-                    _bloc.community.billMe == true
+                _bloc.community.billMe == true
                 ? planCard(_bloc)
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,23 +101,23 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                           }
                           if (snapshot.hasData && snapshot.data != null) {
                             cardModel = snapshot.data;
-
                             //print('cardmodel ${cardModel.currentPlan}');
                             //  print('subscription  ${cardModel.toString()}');
                             //print('subscription  ${cardModel.subscriptionModel}');
                             if (cardModel.subscriptionModel != null) {
                               String data = "";
+                              _billingPlanDetailsModels.removeWhere((element) => element.id != cardModel.currentPlan);
                               cardModel.subscriptionModel
                                   .forEach((subscritpion) {
                                 if (subscritpion.containsKey("items")) {
                                   if (subscritpion['items']['data'] != null) {
                                     planData = subscritpion['items']['data'] ?? [];
                                     if(cardModel.currentPlan == "tall_plan"){
-
+                                      data = "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).paying} \$${_billingPlanDetailsModels[0].price} ${S.of(context).monthly_charges_of} \$0.05 ${S.of(context).plan_details_quota1}.";
                                     } else if (cardModel.currentPlan == "grande_plan") {
-                                      data = "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).plan_yearly_1500} \$0.03 ${S.of(context).plan_details_quota1}.";
+                                      data = "${S.of(context).your_community_on_the}  ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).plan_yearly_1500} \$0.03 ${S.of(context).plan_details_quota1}.";
                                     } else if(cardModel.currentPlan == "venti_plan") {
-                                      data = "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).paying} \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} ${S.of(context).charges_of} \$0.01  ${S.of(context).per_transaction_quota}.";
+                                      data = "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).paying} \$${_billingPlanDetailsModels[0].price} ${S.of(context).charges_of} \$0.01  ${S.of(context).per_transaction_quota}.";
                                     }
                                     return spendingsTextWidgettwo(data ?? "");
                                   } else {
