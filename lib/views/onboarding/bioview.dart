@@ -137,7 +137,6 @@ class _BioViewState extends State<BioView> {
                               this.bio = value;
                               return null;
                             })))
-                          ),
                         ],
                       ),
                     )
@@ -154,7 +153,7 @@ class _BioViewState extends State<BioView> {
                     }
                   },
                   child: Text(
-                    AppLocalizations.of(context).translate('shared', 'next'),
+                    S.of(context).next,
                     style: Theme.of(context).primaryTextTheme.button,
                   ),
                   // color: Theme.of(context).accentColor,
@@ -168,9 +167,8 @@ class _BioViewState extends State<BioView> {
                 },
                 child: Text(
                   AppConfig.prefs.getBool(AppConfig.skip_bio) == null
-                      ? AppLocalizations.of(context).translate('shared', 'skip')
-                      : AppLocalizations.of(context)
-                          .translate('shared', 'capital_cancel'),
+                      ? S.of(context).skip
+                      : S.of(context).cancel,
                   style: TextStyle(color: Theme.of(context).accentColor),
                 ),
               ),

@@ -974,64 +974,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     );
   }
 
-  Widget optionText({String title}) {
-    return Text(
-      title,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        color: Colors.white,
-      ),
-    );
-  }
-
-  void deleteRequestDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: Text(
-            AppLocalizations.of(context)
-                .translate('delete', 'delete_request_title'),
-          ),
-          content: Text(
-            AppLocalizations.of(context)
-                .translate('delete', 'sure_to_delete_request'),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              onPressed: () => {Navigator.of(dialogContext).pop()},
-              child: Text(
-                AppLocalizations.of(context).translate(
-                  'notifications_card',
-                  'cancel',
-                ),
-                style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
-              ),
-            ),
-            FlatButton(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              color: Theme.of(context).accentColor,
-              textColor: FlavorConfig.values.buttonTextColor,
-              onPressed: () async {
-                await Firestore.instance
-                    .collection('requests')
-                    .document(widget.requestItem.id)
-                    .updateData({'softDelete': true});
-                Navigator.of(dialogContext).pop();
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                AppLocalizations.of(context)
-                    .translate('notifications_card', 'delete'),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void _showProtectedTimebankMessage() {
     // flutter defined function
     showDialog(

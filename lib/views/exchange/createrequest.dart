@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -1595,14 +1596,25 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 }
 
-///
-Widget totalCredits(context, RequestModel requestModel) {
+Widget TotalCredits(
+    context, requestModel, int starttimestamp, int endtimestamp) {
   var label;
-  var totalCredits =
-      requestModel.numberOfApprovals * (requestModel.maxCredits ?? 1);
-  requestModel.numberOfHours = totalCredits;
+  var totalhours = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
+      .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
+      .inHours;
+  var totalminutes = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
+      .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
+      .inMinutes;
+  var totalallowedhours;
+  if (totalhours == 0) {
+    totalallowedhours = (totalhours + ((totalminutes / 60) / 100).ceil());
+  } else {
+    totalallowedhours = (totalhours + ((totalminutes / 60) / 100).round());
+  }
 
-  if ((requestModel.maxCredits ?? 0) > 0 && totalCredits > 0) {
+  var totalCredits = requestModel.numberOfApprovals * totalallowedhours;
+  requestModel.numberOfHours = totalCredits;
+  if (totalallowedhours > 0 && totalCredits > 0) {
     if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
       label = totalCredits.toString() +
           ' ' +
