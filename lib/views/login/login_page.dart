@@ -166,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                         Row(
                           children: <Widget>[
                             Text(
-                              S.of(context).new_user + '? ',
+                              S.of(context).new_user,
                               style: TextStyle(
                                 color: Colors.grey,
                               ),
@@ -196,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                         Row(
                           children: <Widget>[
                             Text(
-                              S.of(context).forgot_password + '? ',
+                              S.of(context).forgot_password,
                               style: TextStyle(
                                 color: Colors.grey,
                               ),
