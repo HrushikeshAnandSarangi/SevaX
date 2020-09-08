@@ -150,7 +150,7 @@ class OffersState extends State<OffersModule> {
           "mobile":globals.isMobile,
           "envName": FlavorConfig.values.envMode
       };
-      var stateVar = jsonEncode(stateOfcalendarCallback);
+    var stateVar = jsonEncode(stateOfcalendarCallback);
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
