@@ -806,16 +806,11 @@ class _RegisterPageState extends State<RegisterPage>
           S.delegate.isSupported(_sysLng) ? _sysLng : Locale('en');
       appLanguage.changeLanguage(_language);
       user.language = _language.languageCode;
-      print("cv name ${cvName}");
 
       if (cvName != null) {
         user.cvName = cvName;
         user.cvUrl = cvUrl;
-        print("cv details ${cvName + '' + cvUrl}");
-        print("cv details ${user.cvUrl + '' + user.cvName}");
       }
-
-      print("cv details ${cvName + '' + cvUrl}");
       await FirestoreManager.updateUser(user: user);
 
       Navigator.pop(dialogContext);
@@ -838,7 +833,7 @@ class _RegisterPageState extends State<RegisterPage>
       if (dialogContext != null) {
         Navigator.pop(dialogContext);
       }
-
+      throw error;
       log('createUser: error: ${error.toString()}');
       return null;
     }
