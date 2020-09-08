@@ -29,6 +29,8 @@ class ImagePickerHandler {
   }
 
   addImageUrl() async {
+    imagePicker.dismissDialog();
+
     _listener.addWebImageUrl();
   }
 

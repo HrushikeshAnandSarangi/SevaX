@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,7 +14,6 @@ import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/dashed_border.dart';
-import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -31,6 +31,7 @@ import 'package:sevaexchange/views/profile/timezone.dart';
 import 'package:sevaexchange/views/splash_view.dart' as DefaultSplashView;
 
 import '../../globals.dart' as globals;
+import '../image_picker_handler.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -38,7 +39,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage>
-    with ImagePickerListener, SingleTickerProviderStateMixin {
+    with UserImagePickerListener, SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final fullnameFocus = FocusNode();
@@ -59,7 +60,7 @@ class _RegisterPageState extends State<RegisterPage>
   File selectedImage;
   String isImageSelected;
 
-  ImagePickerHandler imagePicker;
+  UserImagePickerHandler imagePicker;
   bool isEmailVerified = false;
   bool sentOTP = false;
   bool _isDocumentBeingUploaded = false;
@@ -86,7 +87,7 @@ class _RegisterPageState extends State<RegisterPage>
         milliseconds: 300,
       ),
     );
-    imagePicker = ImagePickerHandler(this, _controller);
+    imagePicker = UserImagePickerHandler(this, _controller);
     imagePicker.init();
   }
 
@@ -360,7 +361,7 @@ class _RegisterPageState extends State<RegisterPage>
                       image: DecorationImage(
                           image: webImageUrl == null
                               ? FileImage(selectedImage)
-                              : Image.network(webImageUrl),
+                              : CachedNetworkImageProvider(webImageUrl),
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.all(Radius.circular(75.0)),
                       boxShadow: [
