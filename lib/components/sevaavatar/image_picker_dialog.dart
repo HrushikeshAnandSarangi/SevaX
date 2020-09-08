@@ -113,6 +113,7 @@ class ImagePickerDialog extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
+                    dismissDialog();
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
