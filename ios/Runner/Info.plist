@@ -55,16 +55,26 @@
 	<string>public.app-category.productivity</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Audio for app</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Events for app</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Need access to camera to take pictures and post news feed</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Contacts access for people</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>We need this permission to show relevant posts near you</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This is to make sure your posts are tagged with your current location</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Motion for app</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>这里填写为什么需要相册写入权限的描述语句</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need access to camera roll to select pictures to upload to the News Feed</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Speech recognition for app</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>processing</string>
