@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/views/image_url_view.dart';
 
-import './image_picker_handler.dart';
+import './user_image_picker_handler.dart';
 
 class ImagePickerDialog extends StatelessWidget {
   ImagePickerHandler _listener;
@@ -116,7 +116,6 @@ class ImagePickerDialog extends StatelessWidget {
                 isShowWebImageUrl
                     ? GestureDetector(
                         onTap: () {
-                          dismissDialog();
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) {
@@ -124,6 +123,7 @@ class ImagePickerDialog extends StatelessWidget {
                               },
                             ),
                           ).then((value) {
+                            //dismissDialog();
                             refresh();
                           });
                         },

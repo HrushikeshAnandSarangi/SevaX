@@ -12,7 +12,6 @@ import 'package:path_drawing/path_drawing.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/dashed_border.dart';
-import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -25,6 +24,7 @@ import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/notification_manager.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
+import 'package:sevaexchange/views/image_picker_handler.dart';
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/views/splash_view.dart';
@@ -43,7 +43,7 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage>
-    with ImagePickerListener, SingleTickerProviderStateMixin {
+    with UserImagePickerListener, SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final _firestore = Firestore.instance;
@@ -58,7 +58,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   String confirmPassword;
   File selectedImage;
   String isImageSelected = 'Add Photo';
-  ImagePickerHandler imagePicker;
+  UserImagePickerHandler imagePicker;
   UserModel usermodel;
   bool _saving = false;
   bool _isDocumentBeingUploaded = false;
@@ -91,7 +91,7 @@ class _EditProfilePageState extends State<EditProfilePage>
         this.canuploadCV = true;
       });
     }
-    imagePicker = ImagePickerHandler(this, _controller);
+    imagePicker = UserImagePickerHandler(this, _controller);
     imagePicker.init();
   }
 

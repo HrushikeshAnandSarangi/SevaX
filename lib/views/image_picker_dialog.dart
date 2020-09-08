@@ -1,15 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 
 import './image_picker_handler.dart';
+import 'image_url_view.dart';
 
-class ImagePickerDialog extends StatelessWidget {
-  ImagePickerHandler _listener;
+class UserImagePickerDialog extends StatelessWidget {
+  UserImagePickerHandler _listener;
   AnimationController _controller;
   BuildContext context;
 
-  ImagePickerDialog(this._listener, this._controller);
+  UserImagePickerDialog(this._listener, this._controller);
 
   Animation<double> _drawerContentsOpacity;
   Animation<Offset> _drawerDetailsPosition;
@@ -60,6 +62,10 @@ class ImagePickerDialog extends StatelessWidget {
     Navigator.pop(context);
   }
 
+  void refresh() {
+    _listener.addImageUrl();
+  }
+
   void dismissDialog() {
     _controller.reverse();
     startTime();
@@ -81,7 +87,7 @@ class ImagePickerDialog extends StatelessWidget {
                 GestureDetector(
                   onTap: () => _listener.openCamera(),
                   child: roundedButton(
-                      "Camera",
+                      S.of(context).camera,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0xFF673AB7),
                       const Color(0xFFFFFFFF)),
@@ -89,7 +95,26 @@ class ImagePickerDialog extends StatelessWidget {
                 GestureDetector(
                   onTap: () => _listener.openGallery(),
                   child: roundedButton(
-                      "Gallery",
+                      S.of(context).gallery,
+                      EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                      const Color(0xFF673AB7),
+                      const Color(0xFFFFFFFF)),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return ImageUrlView();
+                        },
+                      ),
+                    ).then((value) {
+                      //dismissDialog();
+                      refresh();
+                    });
+                  },
+                  child: roundedButton(
+                      S.of(context).image_url,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0xFF673AB7),
                       const Color(0xFFFFFFFF)),
@@ -100,7 +125,7 @@ class ImagePickerDialog extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
                     child: roundedButton(
-                        "Cancel",
+                        S.of(context).cancel,
                         EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                         const Color(0xFF673AB7),
                         const Color(0xFFFFFFFF)),

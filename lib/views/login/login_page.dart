@@ -241,6 +241,7 @@ class _LoginPageState extends State<LoginPage> {
                                                       }
                                                       _textFieldControllerResetEmail =
                                                           value;
+                                                      return null;
                                                     },
                                                     onChanged: (value) {
                                                       print("$value");
