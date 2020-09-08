@@ -267,7 +267,9 @@ class OfferDetails extends StatelessWidget {
       userId,
     );
     bool isCreator = offerModel.sevaUserId == userId;
-
+    bool canDeleteOffer = isCreator &&
+        offerModel.offerType == OfferType.INDIVIDUAL_OFFER &&
+        offerModel.individualOfferDataModel.offerAcceptors.length == 0;
     return Container(
       decoration: BoxDecoration(color: Colors.white54, boxShadow: [
         BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))

@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,6 +35,7 @@ import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:usage/uuid/uuid.dart';
@@ -1334,7 +1334,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           requestModel.photoUrl = timebankModel.photoUrl;
           break;
       }
-      print(requestModel.goodsDonationDetails);
+
       linearProgressForCreatingRequest();
       int resVar = await _writeToDB();
       await _updateProjectModel();
@@ -1595,25 +1595,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 }
 
-Widget TotalCredits(
-    context, requestModel, int starttimestamp, int endtimestamp) {
+///
+Widget totalCredits(context, RequestModel requestModel) {
   var label;
-  var totalhours = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
-      .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
-      .inHours;
-  var totalminutes = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
-      .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
-      .inMinutes;
-  var totalallowedhours;
-  if (totalhours == 0) {
-    totalallowedhours = (totalhours + ((totalminutes / 60) / 100).ceil());
-  } else {
-    totalallowedhours = (totalhours + ((totalminutes / 60) / 100).round());
-  }
-
-  var totalCredits = requestModel.numberOfApprovals * totalallowedhours;
+  var totalCredits =
+      requestModel.numberOfApprovals * (requestModel.maxCredits ?? 1);
   requestModel.numberOfHours = totalCredits;
-  if (totalallowedhours > 0 && totalCredits > 0) {
+
+  if ((requestModel.maxCredits ?? 0) > 0 && totalCredits > 0) {
     if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
       label = totalCredits.toString() +
           ' ' +

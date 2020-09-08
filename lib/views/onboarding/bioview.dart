@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/app_config.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 
 typedef StringCallback = void Function(String bio);
 
@@ -25,8 +26,11 @@ class _BioViewState extends State<BioView> {
   String bio = '';
   final profanityDetector = ProfanityDetector();
   bool autoValidateText = false;
+  final _focusNodeBio = FocusNode();
+
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -73,9 +77,21 @@ class _BioViewState extends State<BioView> {
                     Form(
                       key: _formKey,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          TextFormField(
+                          Container(
+                            height: 250,
+                            child: KeyboardActions(
+                              tapOutsideToDismiss: true,
+                              config: KeyboardActionsConfig(
+                                keyboardSeparatorColor: Color(0x0FF766FE0),
+                                actions: [
+                                  KeyboardActionsItem(
+                                    focusNode: _focusNodeBio,
+                                  )
+                                ],
+                              ),
+                              child: TextFormField(
                             textCapitalization: TextCapitalization.sentences,
                             style: TextStyle(
                                 fontSize: 16.0, color: Colors.black54),
@@ -120,7 +136,7 @@ class _BioViewState extends State<BioView> {
                               }
                               this.bio = value;
                               return null;
-                            },
+                            })))
                           ),
                         ],
                       ),
@@ -138,7 +154,7 @@ class _BioViewState extends State<BioView> {
                     }
                   },
                   child: Text(
-                    'Next',
+                    AppLocalizations.of(context).translate('shared', 'next'),
                     style: Theme.of(context).primaryTextTheme.button,
                   ),
                   // color: Theme.of(context).accentColor,
@@ -152,8 +168,9 @@ class _BioViewState extends State<BioView> {
                 },
                 child: Text(
                   AppConfig.prefs.getBool(AppConfig.skip_bio) == null
-                      ? 'Skip'
-                      : 'Cancel',
+                      ? AppLocalizations.of(context).translate('shared', 'skip')
+                      : AppLocalizations.of(context)
+                          .translate('shared', 'capital_cancel'),
                   style: TextStyle(color: Theme.of(context).accentColor),
                 ),
               ),

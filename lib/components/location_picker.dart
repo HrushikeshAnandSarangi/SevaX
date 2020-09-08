@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:app_settings/app_settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,6 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/ui/screens/location/widgets/location_confirmation_card.dart';
-
 import 'get_location.dart';
 
 extension StringExtension on String {
@@ -31,13 +29,11 @@ class LocationPicker extends StatefulWidget {
   final Geoflutterfire geo = Geoflutterfire();
   final Firestore firestore = Firestore.instance;
   final LatLng defaultLocation;
-
   LocationPicker({
     this.defaultLocation,
     this.selectedLocation,
     this.selectedAddress,
   });
-
   @override
   _LocationPickerState createState() => _LocationPickerState();
 }
@@ -56,7 +52,6 @@ class _LocationPickerState extends State<LocationPicker> {
     null,
     null,
   );
-
   CameraPosition get initialCameraPosition {
     return CameraPosition(
       target: defaultLatLng,
@@ -69,7 +64,6 @@ class _LocationPickerState extends State<LocationPicker> {
   //   cameraPosition = CameraPosition(
   //       target: LatLng(position.latitude, position.longitude), zoom: 15);
   // }
-
   @override
   void initState() {
     super.initState();
@@ -80,7 +74,6 @@ class _LocationPickerState extends State<LocationPicker> {
             _addMarker(latLng: defaultLatLng)
           });
     }
-
     if (widget.selectedLocation != null) {
       locationDataFromSearch = LocationDataModel(
         widget.selectedAddress,
@@ -90,7 +83,6 @@ class _LocationPickerState extends State<LocationPicker> {
     }
     log('init state called for ${this.runtimeType.toString()}');
     // loadCameraPosition();
-
     loadInitialLocation();
   }
 
@@ -167,6 +159,7 @@ class _LocationPickerState extends State<LocationPicker> {
                   fullscreenDialog: true,
                 ),
               );
+              print('came here');
               if (model?.lat != null && model?.lng != null) {
                 locationDataFromSearch = model;
                 target = LatLng(
@@ -202,7 +195,15 @@ class _LocationPickerState extends State<LocationPicker> {
             ],
           ),
         ),
-        render,
+        LocationConfimationCard(
+          locationDataModel: locationDataFromSearch.location == null
+              ? LocationDataModel(
+                  address == null ? "" : address,
+                  point?.latitude,
+                  point?.longitude,
+                )
+              : locationDataFromSearch,
+        ),
       ]),
     );
   }
@@ -283,8 +284,6 @@ class _LocationPickerState extends State<LocationPicker> {
   }
 
   Positioned get mapWidget {
-    bool _zoomControlsEnabled = false;
-    bool _zoomGesturesEnabled = true;
     return Positioned.fill(
       child: GoogleMap(
         initialCameraPosition: widget.selectedLocation != null
@@ -300,17 +299,13 @@ class _LocationPickerState extends State<LocationPicker> {
         myLocationEnabled: true,
         mapType: MapType.normal,
         compassEnabled: true,
-        zoomGesturesEnabled: _zoomGesturesEnabled,
-        zoomControlsEnabled: _zoomControlsEnabled,
         markers: markers,
         onCameraMove: (position) {
           // setState(() {
-          print(position);
           target = position.target;
           // });
         },
         onCameraIdle: () {
-          print("came here");
           _addMarker();
           var temp = point(markers);
           if (locationDataFromSearch.lat != null &&
@@ -362,6 +357,16 @@ class _LocationPickerState extends State<LocationPicker> {
     }
   }
 
+  GeoFirePoint get point {
+    if (markers == null || markers.isEmpty) return null;
+    Marker marker = markers.first;
+    if (marker.position == null) return null;
+    return widget.geo.point(
+      latitude: marker.position.latitude,
+      longitude: marker.position.longitude,
+    );
+  }
+
   void _onMapCreated(GoogleMapController controller) {
     if (controller == null) return;
     setState(() => _mapController = controller);
@@ -409,10 +414,9 @@ class _LocationPickerState extends State<LocationPicker> {
       ),
       zoom: 15,
     );
-
-    await mapController.animateCamera(
-      CameraUpdate.newCameraPosition(newPosition),
-    );
     _addMarker(latLng: location);
+    Future.delayed(Duration(milliseconds: 100), () => {
+      mapController.animateCamera(CameraUpdate.newCameraPosition(newPosition))
+    });
   }
 }

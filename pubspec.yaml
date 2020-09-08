@@ -83,6 +83,7 @@ dependencies:
   flutter_downloader: ^1.4.4
   flutter_local_notifications: ^1.4.4+1
   permission_handler: ^5.0.1+1
+  keyboard_actions: "^3.2.0"
   logger: ^0.9.1
   pdf: ^1.10.0
   arbify: ^0.0.9

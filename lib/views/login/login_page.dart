@@ -10,6 +10,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
@@ -38,6 +39,7 @@ class _LoginPageState extends State<LoginPage> {
   Alignment childAlignment = Alignment.center;
   bool _isLoading = false;
   final pwdFocus = FocusNode();
+  final emailFocus = FocusNode();
   String emailId;
   String password;
   bool _shouldObscurePassword = true;
@@ -455,6 +457,14 @@ class _LoginPageState extends State<LoginPage> {
       Container(
         width: double.infinity,
         decoration: BoxDecoration(color: Colors.white),
+        height: 200,
+        child: KeyboardActions(
+        tapOutsideToDismiss: true,
+        config: KeyboardActionsConfig(
+        keyboardSeparatorColor: Colors.black38,
+        actions: [
+          KeyboardActionsItem(focusNode: emailFocus)],
+        ),
         child: Padding(
             padding: EdgeInsets.only(top: 8.0, bottom: 0.0),
             child: Form(
@@ -464,6 +474,7 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   TextFormField(
+                    focusNode: emailFocus,
                     style: textStyle,
                     cursorColor: Colors.black54,
                     validator: _validateEmailId,
@@ -513,6 +524,7 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             )),
+        )
       ),
     );
   }

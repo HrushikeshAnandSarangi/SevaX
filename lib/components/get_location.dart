@@ -58,8 +58,8 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
       title: AppBarPlacesAutoCompleteTextField(),
     );
     final body = PlacesAutocompleteResult(
-      onTap: (p) {
-        displayPrediction(p);
+      onTap: (p) async {
+        await displayPrediction(p);
       },
       // logo: Row(
       //   children: [FlutterLogo()],
