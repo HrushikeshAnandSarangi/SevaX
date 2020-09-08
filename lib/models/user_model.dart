@@ -185,7 +185,7 @@ class UserModel extends DataModel {
       List<String> communities = List.castFrom(map['communities']);
       this.communities = communities;
     } else {
-      this.communities = List();
+      this.communities = ['73d0de2c-198b-4788-be64-a804700a88a4'];
     }
 
     if (map.containsKey('blockedBy')) {
@@ -234,6 +234,8 @@ class UserModel extends DataModel {
     if (map.containsKey('membershipTimebanks')) {
       List<String> timebanksList = List.castFrom(map['membershipTimebanks']);
       this.membershipTimebanks = timebanksList;
+    } else {
+      this.membershipTimebanks = ['73d0de2c-198b-4788-be64-a804700a88a4'];
     }
     if (map.containsKey('sevauserid')) {
       this.sevaUserID = map['sevauserid'];
@@ -414,7 +416,7 @@ class UserModel extends DataModel {
     if (this.communities != null && this.communities.isNotEmpty) {
       object['communities'] = this.communities;
     } else {
-      object['communities'] = List();
+      object['communities'] = ['73d0de2c-198b-4788-be64-a804700a88a4'];
     }
     if (this.favoriteByTimeBank != null && this.favoriteByTimeBank.isNotEmpty) {
       object['favoriteByTimeBank'] = this.favoriteByTimeBank;

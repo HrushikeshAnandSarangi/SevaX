@@ -65,7 +65,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   String planName(String text) {
       if(text=="tall_plan"){
           List<String> x = text.split('_');
-          return '${x[0][0].toUpperCase() + x[0].substring(1)} ${x[1][0].toUpperCase() + x[1].substring(1)}'.replaceFirst("TALL", "COMMUNITY");
+          return '${x[0][0].toUpperCase() + x[0].substring(1)} ${x[1][0].toUpperCase() + x[1].substring(1)}'.replaceFirst("Tall", "Community");
       }
     List<String> x = text.split('_');
     return '${x[0][0].toUpperCase() + x[0].substring(1)} ${x[1][0].toUpperCase() + x[1].substring(1)}';
