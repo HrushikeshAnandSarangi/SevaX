@@ -540,7 +540,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                       children: <TextSpan>[
                         TextSpan(
                           style: TextStyle(color: Colors.grey, fontSize: 14),
-                          text: S.of(context).no_requests_available,
+                          text: S.of(context).no_requests_available + ' ',
                         ),
                         TextSpan(
                             text: S.of(context).creating_one,

@@ -162,6 +162,7 @@ class RequestModel extends DataModel {
   int requestEnd;
   int requestStart;
   int numberOfHours;
+  int maxCredits;
   bool accepted;
   String rejectedReason;
   List<TransactionModel> transactions;
@@ -350,6 +351,9 @@ class RequestModel extends DataModel {
     if (map.containsKey('numberOfHours')) {
       this.numberOfHours = map['numberOfHours'];
     }
+    if (map.containsKey('maxCredits')) {
+      this.maxCredits = map['maxCredits'];
+    }
 
     if (map.containsKey('location')) {
       GeoPoint geoPoint = map['location']['geopoint'];
@@ -473,6 +477,10 @@ class RequestModel extends DataModel {
 
     if (map.containsKey('numberOfHours')) {
       this.numberOfHours = map['numberOfHours'];
+    }
+
+    if (map.containsKey('maxCredits')) {
+      this.maxCredits = map['maxCredits'];
     }
 
     if (map.containsKey('isNotified')) {
@@ -637,6 +645,10 @@ class RequestModel extends DataModel {
 
     if (this.numberOfHours != null) {
       object['numberOfHours'] = this.numberOfHours;
+    }
+
+    if (this.maxCredits != null) {
+      object['maxCredits'] = this.maxCredits;
     }
 
     if (this.isNotified != null) {

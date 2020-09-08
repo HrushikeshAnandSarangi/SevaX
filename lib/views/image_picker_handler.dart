@@ -7,12 +7,12 @@ import 'package:image_picker/image_picker.dart';
 
 import './image_picker_dialog.dart';
 
-class ImagePickerHandler {
-  ImagePickerDialog imagePicker;
+class UserImagePickerHandler {
+  UserImagePickerDialog imagePicker;
   AnimationController _controller;
-  ImagePickerListener _listener;
+  UserImagePickerListener _listener;
 
-  ImagePickerHandler(this._listener, this._controller);
+  UserImagePickerHandler(this._listener, this._controller);
 
   void openCamera() async {
     imagePicker.dismissDialog();
@@ -26,8 +26,14 @@ class ImagePickerHandler {
     cropImage(image);
   }
 
+  addImageUrl() async {
+    imagePicker.dismissDialog();
+
+    _listener.addWebImageUrl();
+  }
+
   void init() {
-    imagePicker = ImagePickerDialog(this, _controller);
+    imagePicker = UserImagePickerDialog(this, _controller);
     imagePicker.initState();
   }
 
@@ -47,6 +53,7 @@ class ImagePickerHandler {
   }
 }
 
-abstract class ImagePickerListener {
+abstract class UserImagePickerListener {
   void userImage(File _image);
+  addWebImageUrl();
 }

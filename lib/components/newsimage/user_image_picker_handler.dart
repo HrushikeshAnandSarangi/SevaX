@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-import './image_picker_dialog.dart';
+import './user_image_picker_dialog.dart';
 
 class ImagePickerHandler {
   ImagePickerDialog imagePicker;
@@ -29,6 +29,8 @@ class ImagePickerHandler {
   }
 
   addImageUrl() async {
+    imagePicker.dismissDialog();
+
     _listener.addWebImageUrl();
   }
 

@@ -328,7 +328,11 @@ class _SplashViewState extends State<SplashView> {
     }
     loadingMessage = S.of(context).we_met;
 
-    if (loggedInUser.communities == null || loggedInUser.communities.isEmpty) {
+    if (loggedInUser.communities == null ||
+        loggedInUser.communities.isEmpty ||
+        (loggedInUser.communities?.length == 1 &&
+            loggedInUser.communities?.elementAt(0) ==
+                FlavorConfig.values.timebankId)) {
       await _navigateToFindCommunitiesView(loggedInUser);
     } else {
       _navigateToCoreView(loggedInUser);

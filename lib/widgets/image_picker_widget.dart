@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
+import 'package:sevaexchange/components/newsimage/user_image_picker_handler.dart';
 
 ///Pass a [Widget] without any gestures or click events
 class ImagePickerWidget extends StatefulWidget {

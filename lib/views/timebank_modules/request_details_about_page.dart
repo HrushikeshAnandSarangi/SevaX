@@ -81,6 +81,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     color: Colors.grey,
   );
 
+  bool isAdmin = false;
+  bool canDeleteRequest = false;
   @override
   void initState() {
     super.initState();
@@ -886,6 +888,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget getBottombar() {
+    canDeleteRequest = widget.requestItem.sevaUserId ==
+            SevaCore.of(context).loggedInUser.sevaUserID &&
+        widget.requestItem.acceptors.length == 0 &&
+        widget.requestItem.approvedUsers.length == 0 &&
+        widget.requestItem.invitedUsers.length == 0;
     return Container(
       decoration: BoxDecoration(color: Colors.white54, boxShadow: [
         BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
