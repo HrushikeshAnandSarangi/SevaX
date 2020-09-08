@@ -33,15 +33,15 @@ Future<void> updateNews({@required NewsModel newsObject}) async {
 }
 
 Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
-  var futures = <Future>[];
   print('hey');
   var data = Firestore.instance
       .collection('news')
       .where('timebanksposted', arrayContains: timebankID)
-      .where('entity', isEqualTo: {
-        'entityType': 'timebanks',
-        'entityId': timebankID,
-      })
+      //Removed to support feeds in parent timebank
+      // .where('entity', isEqualTo: {
+      //   'entityType': 'timebanks',
+      //   'entityId': timebankID,
+      // })
       .where('softDelete', isEqualTo: false)
       .orderBy('posttimestamp', descending: true)
       .snapshots();
