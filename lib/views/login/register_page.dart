@@ -623,7 +623,7 @@ class _RegisterPageState extends State<RegisterPage>
 
                 isLoading = true;
 
-                if (selectedImage == null) {
+                if (selectedImage == null && webImageUrl == null) {
                   if (!_formKey.currentState.validate()) {
                     isLoading = false;
                     return;
