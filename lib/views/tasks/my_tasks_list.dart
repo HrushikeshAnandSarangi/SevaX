@@ -662,9 +662,7 @@ class TaskCardViewState extends State<TaskCardView> {
 
     if (results != null && results.containsKey('selection')) {
       showProgressForCreditRetrieval();
-      onActivityResult(
-        results,
-      );
+      onActivityResult(results, SevaCore.of(context).loggedInUser);
     } else {}
   }
 
@@ -682,21 +680,26 @@ class TaskCardViewState extends State<TaskCardView> {
         });
   }
 
-  Future<void> onActivityResult(Map results) async {
+  Future<void> onActivityResult(Map results, UserModel loggedInUser) async {
     // adds review to firestore
-    await Firestore.instance.collection("reviews").add({
-      "reviewer": SevaCore.of(context).loggedInUser.email,
-      "reviewed": requestModel.email,
-      "ratings": results['selection'],
-      "device_info": results['device_info'],
-      "requestId": requestModel.id,
-      "comments": (results['didComment'] ? results['comment'] : "No comments")
-    });
-    sendMessageToMember(
-        message: results['didComment'] ? results['comment'] : "No comments",
-        requestModel: requestModel,
-        loggedInUser: SevaCore.of(context).loggedInUser);
-    startTransaction();
+    try {
+      await Firestore.instance.collection("reviews").add({
+        "reviewer": SevaCore.of(context).loggedInUser.email,
+        "reviewed": requestModel.email,
+        "ratings": results['selection'],
+        "device_info": results['device_info'],
+        "requestId": requestModel.id,
+        "comments": (results['didComment'] ? results['comment'] : "No comments")
+      });
+      await sendMessageToMember(
+          message: results['didComment'] ? results['comment'] : "No comments",
+          requestModel: requestModel,
+          loggedInUser: loggedInUser);
+      startTransaction();
+    } on Exception catch (e) {
+      print("errrrr ${e}");
+      // TODO
+    }
   }
 
   Future<void> sendMessageToMember({
@@ -739,13 +742,17 @@ class TaskCardViewState extends State<TaskCardView> {
                 : ChatType.TYPE_GROUP,
       );
       await sendBackgroundMessage(
-          messageContent: message,
+          messageContent: utils.getReviewMessage(
+              requestTitle: requestModel.title,
+              context: context,
+              userName: loggedInUser.fullname,
+              isForCreator: true,
+              reviewMessage: message),
           reciever: receiver,
-          context: context,
           isTimebankMessage:
               requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-                  ? true
-                  : false,
+                  ? false
+                  : true,
           timebankId: requestModel.timebankId,
           communityId: loggedInUser.currentCommunity,
           sender: sender);
@@ -799,6 +806,8 @@ class TaskCardViewState extends State<TaskCardView> {
           targetUserId: requestModel.sevaUserId,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
           timebankId: requestModel.timebankId,
+          isTimebankNotification: true,
+          isRead: false,
         ),
       );
       Navigator.of(creditRequestDialogContext).pop();

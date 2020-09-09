@@ -19,6 +19,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
@@ -879,7 +880,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     ));
 
     if (results != null && results.containsKey('selection')) {
-      await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
+      await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
+          FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
       onActivityResult(
         sevaCore: sevaCore,
         requestModel: model,
@@ -1017,13 +1019,17 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
               : ChatType.TYPE_GROUP,
     );
     await sendBackgroundMessage(
-        messageContent: message,
+        messageContent: getReviewMessage(
+            reviewMessage: message,
+            userName: loggedInUser.fullname,
+            context: context,
+            requestTitle: requestModel.title,
+            isForCreator: false),
         reciever: reciever,
-        context: context,
         isTimebankMessage:
             requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-                ? true
-                : false,
+                ? false
+                : true,
         timebankId: requestModel.timebankId,
         communityId: loggedInUser.currentCommunity,
         sender: sender);
