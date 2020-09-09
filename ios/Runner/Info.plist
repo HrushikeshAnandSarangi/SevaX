@@ -55,6 +55,8 @@
 	<string>public.app-category.productivity</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>MinimumOSVersion</key>
+	<string>10.0</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Access to media</string>
 	<key>NSCalendarsUsageDescription</key>
