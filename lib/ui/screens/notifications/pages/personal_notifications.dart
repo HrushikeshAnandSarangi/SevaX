@@ -20,6 +20,7 @@ import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -557,6 +558,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
 
   Future<void> sendMessageOfferCreator({
     UserModel loggedInUser,
+    String offerTitle,
     String creatorId,
     String message,
   }) async {
@@ -577,7 +579,14 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
         type: ChatType.TYPE_PERSONAL,
       );
       await sendBackgroundMessage(
-          messageContent: message,
+          messageContent: getReviewMessage(
+            reviewMessage: message,
+            userName: loggedInUser.fullname,
+            context: context,
+            requestTitle: offerTitle,
+            isForCreator: true,
+            isOfferReview: true,
+          ),
           reciever: receiver,
           context: context,
           isTimebankMessage: false,

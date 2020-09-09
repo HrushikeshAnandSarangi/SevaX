@@ -739,7 +739,12 @@ class TaskCardViewState extends State<TaskCardView> {
                 : ChatType.TYPE_GROUP,
       );
       await sendBackgroundMessage(
-          messageContent: message,
+          messageContent: utils.getReviewMessage(
+              requestTitle: requestModel.title,
+              context: context,
+              userName: loggedInUser.fullname,
+              isForCreator: true,
+              reviewMessage: message),
           reciever: receiver,
           context: context,
           isTimebankMessage:

@@ -61,3 +61,20 @@ Future<File> createFileOfPdfUrl(String documentUrl, String documentName) async {
   await file.writeAsBytes(bytes);
   return file;
 }
+
+String getReviewMessage(
+    {String userName,
+    String requestTitle,
+    String reviewMessage,
+    bool isForCreator,
+    bool isOfferReview = false,
+    BuildContext context}) {
+  String offerReview =
+      'Body: You have received a review for the offer: $requestTitle';
+  String body = isForCreator
+      ? 'Body: You have received a review for the request: '
+      : 'Body: You have received a review on the work that you did for the request: ';
+  String review =
+      '$userName has given you a review \n\n${isOfferReview ? offerReview : body} $requestTitle \nReview:\n\n$reviewMessage';
+  return review;
+}
