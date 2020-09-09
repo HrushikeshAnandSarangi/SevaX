@@ -72,9 +72,9 @@ String getReviewMessage(
   String offerReview =
       'Body: You have received a review for the offer: $requestTitle';
   String body = isForCreator
-      ? 'Body: You have received a review for the request: '
-      : 'Body: You have received a review on the work that you did for the request: ';
+      ? 'You have received a review for the request: '
+      : 'You have received a review on the work that you did for the request: ';
   String review =
-      '$userName has given you a review \n\n${isOfferReview ? offerReview : body} $requestTitle \nReview:\n\n$reviewMessage';
+      '$userName has given you a review \n\n${isOfferReview ? offerReview : body} $requestTitle \n\nReview:\n$reviewMessage';
   return review;
 }
