@@ -31,9 +31,9 @@ class ImagePickerHandler {
   }
 
   void openStockImages(context) async {
-    imagePicker.dismissDialog();
     FocusScope.of(context).requestFocus(FocusNode());
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => SearchStockImages(
           // keepOnBackPress: false,
@@ -45,7 +45,10 @@ class ImagePickerHandler {
           },
         ),
       ),
-    );
+    )
+        .then((value) {
+      imagePicker.dismissDialog();
+    });
     // _parentStockSelectionBottomsheet(context, (image) {
     //   log("inside stock images onchanged callback");
     //   _listener.userImage(image, 'stock_image');
