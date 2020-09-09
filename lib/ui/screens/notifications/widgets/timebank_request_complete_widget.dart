@@ -352,8 +352,8 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
         context: context,
         isTimebankMessage:
             requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-                ? true
-                : false,
+                ? false
+                : true,
         timebankId: requestModel.timebankId,
         communityId: loggedInUser.currentCommunity,
         sender: sender);

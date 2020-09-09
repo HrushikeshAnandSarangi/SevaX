@@ -880,7 +880,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     ));
 
     if (results != null && results.containsKey('selection')) {
-      await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
+      await handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
+          FeedbackType.FOR_REQUEST_VOLUNTEER, results, model, user);
       onActivityResult(
         sevaCore: sevaCore,
         requestModel: model,
@@ -1018,13 +1019,18 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
               : ChatType.TYPE_GROUP,
     );
     await sendBackgroundMessage(
-        messageContent: getReviewMessage(reviewMessage: message,userName: loggedInUser.fullname,context: context,requestTitle: requestModel.title,isForCreator: false),
+        messageContent: getReviewMessage(
+            reviewMessage: message,
+            userName: loggedInUser.fullname,
+            context: context,
+            requestTitle: requestModel.title,
+            isForCreator: false),
         reciever: reciever,
         context: context,
         isTimebankMessage:
             requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-                ? true
-                : false,
+                ? false
+                : true,
         timebankId: requestModel.timebankId,
         communityId: loggedInUser.currentCommunity,
         sender: sender);
