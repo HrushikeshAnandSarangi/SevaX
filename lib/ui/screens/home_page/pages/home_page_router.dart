@@ -79,8 +79,8 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
   void dispose() {
     _userBloc.dispose();
     _messageBloc.dispose();
-    _notificationsBloc.dispose();
     super.dispose();
+    _notificationsBloc.dispose();
   }
 
   @override
