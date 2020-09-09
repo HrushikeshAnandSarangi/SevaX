@@ -62,7 +62,6 @@ Future<void> createAndOpenChat({
 }
 
 Future<void> sendBackgroundMessage({
-  BuildContext context,
   ParticipantInfo sender,
   ParticipantInfo reciever,
   String timebankId,

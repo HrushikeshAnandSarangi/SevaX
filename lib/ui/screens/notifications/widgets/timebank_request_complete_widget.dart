@@ -349,7 +349,6 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           reviewMessage: message,
         ),
         reciever: reciever,
-        context: context,
         isTimebankMessage:
             requestModel.requestMode == RequestMode.PERSONAL_REQUEST
                 ? false

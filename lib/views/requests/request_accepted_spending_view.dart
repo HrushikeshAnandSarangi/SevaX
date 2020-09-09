@@ -1026,7 +1026,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
             requestTitle: requestModel.title,
             isForCreator: false),
         reciever: reciever,
-        context: context,
         isTimebankMessage:
             requestModel.requestMode == RequestMode.PERSONAL_REQUEST
                 ? false
