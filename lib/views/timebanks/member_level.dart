@@ -16,7 +16,6 @@ class MembershipManager {
     NotificationType notificationType,
   }) async {
     var batch = Firestore.instance.batch();
-
     NotificationsModel notification = new NotificationsModel(
       communityId: communityId,
       id: Uuid().generateV4(),
@@ -32,10 +31,6 @@ class MembershipManager {
         'isGroup': parentTimebankId != FlavorConfig.values.timebankId,
       },
     );
-
-    var selectedCommunityOperation;
-    var selectedTimebankOperation;
-
     switch (notificationType) {
       case NotificationType.MEMBER_PROMOTED_AS_ADMIN:
         batch.updateData(
@@ -73,17 +68,6 @@ class MembershipManager {
 
       default:
     }
-
-    batch.updateData(
-      Firestore.instance.collection('communities').document(communityId),
-      selectedCommunityOperation,
-    );
-
-    batch.updateData(
-      Firestore.instance.collection('timebanknew').document(timebankId),
-      selectedTimebankOperation,
-    );
-
     batch.setData(
       Firestore.instance
           .collection('users')
@@ -92,7 +76,6 @@ class MembershipManager {
           .document(notification.id),
       notification.toMap(),
     );
-
     return await batch.commit().then((value) => true).catchError((onError) {
       return false;
     });

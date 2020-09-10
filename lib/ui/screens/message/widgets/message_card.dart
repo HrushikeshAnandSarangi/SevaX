@@ -29,7 +29,7 @@ class MessageCard extends StatelessWidget {
     String userId = SevaCore.of(context).loggedInUser.sevaUserID;
     String senderId = model.isTimebankMessage ? timebankId : userId;
     ParticipantInfo info = getSenderInfo(
-      userId,
+      isAdminMessage ? timebankId : userId,
       model.participantInfo,
     );
     int unreadCount =

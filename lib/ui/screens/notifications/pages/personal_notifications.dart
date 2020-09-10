@@ -588,7 +588,6 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
             isOfferReview: true,
           ),
           reciever: receiver,
-          context: context,
           isTimebankMessage: false,
           timebankId: '',
           communityId: loggedInUser.currentCommunity,
