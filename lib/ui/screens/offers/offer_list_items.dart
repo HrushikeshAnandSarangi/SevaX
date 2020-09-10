@@ -252,7 +252,7 @@ class OfferListItems extends StatelessWidget {
                                 "lib/assets/images/googlecal.png"),
                           ),
                           onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String redirectUrl = "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                             String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
@@ -268,7 +268,7 @@ class OfferListItems extends StatelessWidget {
                                 "lib/assets/images/outlookcal.png"),
                           ),
                           onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String redirectUrl = "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                             String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
@@ -284,7 +284,7 @@ class OfferListItems extends StatelessWidget {
                                 "lib/assets/images/ical.png"),
                           ),
                           onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                            String redirectUrl = "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                             String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());

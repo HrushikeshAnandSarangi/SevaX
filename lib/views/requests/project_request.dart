@@ -4,9 +4,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
-import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -221,116 +221,121 @@ class ProjectRequestListState extends State<ProjectRequestList> {
   void createProjectRequest() async {
     var sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
 
-    if ((widget.projectModel.mode == "Timebank" && widget.timebankModel.admins.contains(sevaUserId)) ||
-        (widget.projectModel.mode == "Personal" && widget.projectModel.creatorId == sevaUserId) ) {
-        if (SevaCore.of(context).loggedInUser.calendarId == null) {
-            _settingModalBottomSheet(context);
-        } else {
-            proceedCreatingRequest();
-        }
-
-
+    if ((widget.projectModel.mode == "Timebank" &&
+            widget.timebankModel.admins.contains(sevaUserId)) ||
+        (widget.projectModel.mode == "Personal" &&
+            widget.projectModel.creatorId == sevaUserId)) {
+      if (SevaCore.of(context).loggedInUser.calendarId == null) {
+        _settingModalBottomSheet(context);
+      } else {
+        proceedCreatingRequest();
+      }
     } else {
       _showProtectedTimebankMessage();
     }
   }
 
   void _settingModalBottomSheet(context) {
-      Map<String, dynamic> stateOfcalendarCallback = {
-          "email": SevaCore.of(context).loggedInUser.email,
-          "mobile":globals.isMobile,
-          "envName": FlavorConfig.values.envMode
-      };
-      var stateVar = jsonEncode(stateOfcalendarCallback);
-      showModalBottomSheet(
-          context: context,
-          builder: (BuildContext bc) {
-              return Container(
-                  child: new Wrap(
-                      children: <Widget>[
-                          Padding(
-                              padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
-                              child: Text(
-                                  S.of(context).calendars_popup_desc,
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                          ),
-                          Padding(
-                              padding: const EdgeInsets.fromLTRB(6,6,6,6),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                      GestureDetector(
-                                          child: CircleAvatar(
-                                              backgroundColor: Colors.white,
-                                              radius: 40,
-                                              child: Image.asset(
-                                                  "lib/assets/images/googlecal.png"),
-                                          ),
-                                          onTap: () async {
-                                              String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                                              String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                                              if (await canLaunch(authorizationUrl.toString())) {
-                                                  await launch(authorizationUrl.toString());
-                                              }
-                                              Navigator.of(bc).pop();
-                                              proceedCreatingRequest();
-                                          }
-                                      ),
-                                      GestureDetector(
-                                          child: CircleAvatar(
-                                              backgroundColor: Colors.white,
-                                              radius: 40,
-                                              child: Image.asset(
-                                                  "lib/assets/images/outlookcal.png"),
-                                          ),
-                                          onTap: () async {
-                                              String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                                              String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                                              if (await canLaunch(authorizationUrl.toString())) {
-                                                  await launch(authorizationUrl.toString());
-                                              }
-                                              Navigator.of(bc).pop();
-                                              proceedCreatingRequest();
-                                          }
-                                      ),
-                                      GestureDetector(
-                                          child: CircleAvatar(
-                                              backgroundColor: Colors.white,
-                                              radius: 40,
-                                              child: Image.asset(
-                                                  "lib/assets/images/ical.png"),
-                                          ),
-                                          onTap: () async {
-                                              String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                                              String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                                              if (await canLaunch(authorizationUrl.toString())) {
-                                                  await launch(authorizationUrl.toString());
-                                              }
-                                              Navigator.of(bc).pop();
-                                              proceedCreatingRequest();
-                                          }
-                                      )
-                                  ],
-                              ),
-                          ),
-                          Row(
-                              children: <Widget>[
-                                  Spacer(),
-                                  FlatButton(
-                                      child: Text(S.of(context).skip_for_now, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
-                                      onPressed: (){
-                                          Navigator.of(bc).pop();
-                                          proceedCreatingRequest();
-                                      }
-                                  ),
-                              ],
-                          )
-                      ],
+    Map<String, dynamic> stateOfcalendarCallback = {
+      "email": SevaCore.of(context).loggedInUser.email,
+      "mobile": globals.isMobile,
+      "envName": FlavorConfig.values.envMode
+    };
+    var stateVar = jsonEncode(stateOfcalendarCallback);
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: new Wrap(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+                  child: Text(
+                    S.of(context).calendars_popup_desc,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-              );
-          });
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child:
+                                Image.asset("lib/assets/images/googlecal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl =
+                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            proceedCreatingRequest();
+                          }),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child:
+                                Image.asset("lib/assets/images/outlookcal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl =
+                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            proceedCreatingRequest();
+                          }),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset("lib/assets/images/ical.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl =
+                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                            proceedCreatingRequest();
+                          })
+                    ],
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Spacer(),
+                    FlatButton(
+                        child: Text(
+                          S.of(context).skip_for_now,
+                          style: TextStyle(
+                              color: FlavorConfig.values.theme.primaryColor),
+                        ),
+                        onPressed: () {
+                          Navigator.of(bc).pop();
+                          proceedCreatingRequest();
+                        }),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
   }
 
   void proceedCreatingRequest() {

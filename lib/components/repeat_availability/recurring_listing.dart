@@ -1,16 +1,14 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/repeat_availability/recurring_list_data_manager.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
-import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
-import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -21,16 +19,18 @@ import 'package:sevaexchange/views/timebank_modules/request_details_about_page.d
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../flavor_config.dart';
-import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-
 
 class RecurringListing extends StatefulWidget {
   final RequestModel requestModel;
   final TimebankModel timebankModel;
   final OfferModel offerModel;
 
-  RecurringListing({Key key, @required this.requestModel, this.timebankModel, this.offerModel,})
-      : super(key: key);
+  RecurringListing({
+    Key key,
+    @required this.requestModel,
+    this.timebankModel,
+    this.offerModel,
+  }) : super(key: key);
 
   @override
   _RecurringListingState createState() => _RecurringListingState();
@@ -41,22 +41,26 @@ class _RecurringListingState extends State<RecurringListing> {
 
   void initState() {
     super.initState();
-    if(widget.timebankModel == null){
-      getTimebankForId(widget.offerModel == null ? widget.requestModel.timebankId : widget.offerModel.timebankId);
-    }else{
+    if (widget.timebankModel == null) {
+      getTimebankForId(widget.offerModel == null
+          ? widget.requestModel.timebankId
+          : widget.offerModel.timebankId);
+    } else {
       timebankModel = widget.timebankModel;
     }
-
   }
 
   Future<void> getTimebankForId(timebankId) async {
-    DocumentSnapshot timebankDoc = await Firestore.instance.collection("timebankDoc").document(timebankId).get();
-    timebankModel =  TimebankModel.fromMap(timebankDoc.data);
+    DocumentSnapshot timebankDoc = await Firestore.instance
+        .collection("timebankDoc")
+        .document(timebankId)
+        .get();
+    timebankModel = TimebankModel.fromMap(timebankDoc.data);
   }
 
   @override
   Widget build(BuildContext context) {
-    if(widget.offerModel==null){
+    if (widget.offerModel == null) {
       return Scaffold(
           appBar: AppBar(
             title: Text(
@@ -81,8 +85,7 @@ class _RecurringListingState extends State<RecurringListing> {
                   }
                 }),
           ));
-    }
-    else{
+    } else {
       return Scaffold(
           appBar: AppBar(
             title: Text(
@@ -131,9 +134,11 @@ class _RecurringListState extends State<RecurringList> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: widget.offerModel == null ? widget.requestmodel.length : widget.offerModel.length,
+        itemCount: widget.offerModel == null
+            ? widget.requestmodel.length
+            : widget.offerModel.length,
         itemBuilder: (BuildContext context, int index) {
-          if(widget.offerModel == null){
+          if (widget.offerModel == null) {
             return Container(
               margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
               child: Card(
@@ -145,7 +150,7 @@ class _RecurringListState extends State<RecurringList> {
                       timebankModel: widget.timebankModel),
                   child: Padding(
                     padding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -188,8 +193,8 @@ class _RecurringListState extends State<RecurringList> {
                                 crossAxisAlignment: WrapCrossAlignment.center,
                                 children: <Widget>[
                                   Text(
-                                    getTimeFormattedString(
-                                        widget.requestmodel[index].requestStart),
+                                    getTimeFormattedString(widget
+                                        .requestmodel[index].requestStart),
                                   ),
                                   SizedBox(width: 2),
                                   Icon(Icons.arrow_forward, size: 14),
@@ -209,8 +214,7 @@ class _RecurringListState extends State<RecurringList> {
                 ),
               ),
             );
-          }
-          else {
+          } else {
             return Offstage(
               offstage: isOfferVisible(
                 widget.offerModel[index],
@@ -223,7 +227,8 @@ class _RecurringListState extends State<RecurringList> {
                     _navigateToOfferDetails(widget.offerModel[index]);
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 16),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -233,7 +238,8 @@ class _RecurringListState extends State<RecurringList> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                getOfferTitle(offerDataModel: widget.offerModel[index]),
+                                getOfferTitle(
+                                    offerDataModel: widget.offerModel[index]),
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 17,
@@ -244,17 +250,20 @@ class _RecurringListState extends State<RecurringList> {
                                 height: 4,
                               ),
                               Text(
-                                  getOfferDescription(offerDataModel: widget.offerModel[index]),
+                                getOfferDescription(
+                                    offerDataModel: widget.offerModel[index]),
                                 style: Theme.of(context).textTheme.subtitle,
                               ),
                               getOfferMetaData(
-                                context: context,
-                                startDate: widget.offerModel[index]?.groupOfferDataModel?.startDate,
-                                offerType: widget.offerModel[index].offerType,
-                                selectedAddress: widget.offerModel[index].selectedAdrress
-                              ),
+                                  context: context,
+                                  startDate: widget.offerModel[index]
+                                      ?.groupOfferDataModel?.startDate,
+                                  offerType: widget.offerModel[index].offerType,
+                                  selectedAddress:
+                                      widget.offerModel[index].selectedAdrress),
                               Offstage(
-                                offstage: widget.offerModel[index].email == SevaCore.of(context).loggedInUser.email,
+                                offstage: widget.offerModel[index].email ==
+                                    SevaCore.of(context).loggedInUser.email,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: <Widget>[
@@ -262,22 +271,33 @@ class _RecurringListState extends State<RecurringList> {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-                                      padding: EdgeInsets.only(left: 10, right: 10),
-                                      color:
-                                      isParticipant(context, widget.offerModel[index])
+                                      padding:
+                                          EdgeInsets.only(left: 10, right: 10),
+                                      color: isParticipant(
+                                              context, widget.offerModel[index])
                                           ? Colors.grey
                                           : Theme.of(context).primaryColor,
                                       child: Text(
-                                        getButtonLabel(widget.offerModel[index], SevaCore.of(context).loggedInUser.sevaUserID) ?? '',
+                                        getButtonLabel(
+                                                widget.offerModel[index],
+                                                SevaCore.of(context)
+                                                    .loggedInUser
+                                                    .sevaUserID) ??
+                                            '',
                                         style: TextStyle(
                                           color: Colors.white,
                                         ),
                                       ),
                                       onPressed: () async {
-                                        if(SevaCore.of(context).loggedInUser.calendarId==null) {
-                                          _settingModalBottomSheet(context, widget.offerModel[index]);
-                                        }else{
-                                          offerActions(context, widget.offerModel[index]);
+                                        if (SevaCore.of(context)
+                                                .loggedInUser
+                                                .calendarId ==
+                                            null) {
+                                          _settingModalBottomSheet(context,
+                                              widget.offerModel[index]);
+                                        } else {
+                                          offerActions(context,
+                                              widget.offerModel[index]);
                                         }
                                       },
                                     )
@@ -306,7 +326,11 @@ class _RecurringListState extends State<RecurringList> {
     );
   }
 
-  Widget getOfferMetaData({BuildContext context, int startDate, OfferType offerType, String selectedAddress}) {
+  Widget getOfferMetaData(
+      {BuildContext context,
+      int startDate,
+      OfferType offerType,
+      String selectedAddress}) {
     return Container(
       margin: EdgeInsets.only(top: 15),
       child: Row(
@@ -316,25 +340,25 @@ class _RecurringListState extends State<RecurringList> {
         children: <Widget>[
           offerType == OfferType.GROUP_OFFER
               ? getStatsIcon(
-              label: getFormatedTimeFromTimeStamp(
-                timeStamp: startDate,
-                timeZone: SevaCore.of(context).loggedInUser.timezone,
-              ),
-              icon: Icons.calendar_today)
+                  label: getFormatedTimeFromTimeStamp(
+                    timeStamp: startDate,
+                    timeZone: SevaCore.of(context).loggedInUser.timezone,
+                  ),
+                  icon: Icons.calendar_today)
               : Offstage(),
           offerType == OfferType.GROUP_OFFER
               ? getStatsIcon(
-              label: getFormatedTimeFromTimeStamp(
-                timeStamp: startDate,
-                timeZone: SevaCore.of(context).loggedInUser.timezone,
-                format: "h:mm a",
-              ),
-              icon: Icons.access_time)
+                  label: getFormatedTimeFromTimeStamp(
+                    timeStamp: startDate,
+                    timeZone: SevaCore.of(context).loggedInUser.timezone,
+                    format: "h:mm a",
+                  ),
+                  icon: Icons.access_time)
               : Offstage(),
           getOfferLocation(selectedAddress: selectedAddress) != null
               ? getStatsIcon(
-              label: getOfferLocation(selectedAddress: selectedAddress),
-              icon: Icons.location_on)
+                  label: getOfferLocation(selectedAddress: selectedAddress),
+                  icon: Icons.location_on)
               : Container(),
         ],
       ),
@@ -391,12 +415,12 @@ class _RecurringListState extends State<RecurringList> {
   }
 
   void _settingModalBottomSheet(context, OfferModel model) {
-      Map<String, dynamic> stateOfcalendarCallback = {
-          "email": SevaCore.of(context).loggedInUser.email,
-          "mobile":globals.isMobile,
-          "envName": FlavorConfig.values.envMode
-      };
-      var stateVar = jsonEncode(stateOfcalendarCallback);
+    Map<String, dynamic> stateOfcalendarCallback = {
+      "email": SevaCore.of(context).loggedInUser.email,
+      "mobile": globals.isMobile,
+      "envName": FlavorConfig.values.envMode
+    };
+    var stateVar = jsonEncode(stateOfcalendarCallback);
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -411,7 +435,7 @@ class _RecurringListState extends State<RecurringList> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(6,6,6,6),
+                  padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -420,50 +444,52 @@ class _RecurringListState extends State<RecurringList> {
                           child: CircleAvatar(
                             backgroundColor: Colors.white,
                             radius: 40,
-                            child: Image.asset(
-                                "lib/assets/images/googlecal.png"),
+                            child:
+                                Image.asset("lib/assets/images/googlecal.png"),
                           ),
                           onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                            String redirectUrl =
+                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }
                             Navigator.of(bc).pop();
-                          }
-                      ),
+                          }),
                       GestureDetector(
                           child: CircleAvatar(
                             backgroundColor: Colors.white,
                             radius: 40,
-                            child: Image.asset(
-                                "lib/assets/images/outlookcal.png"),
+                            child:
+                                Image.asset("lib/assets/images/outlookcal.png"),
                           ),
                           onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                            String redirectUrl =
+                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }
                             Navigator.of(bc).pop();
-                          }
-                      ),
+                          }),
                       GestureDetector(
                           child: CircleAvatar(
                             backgroundColor: Colors.white,
                             radius: 40,
-                            child: Image.asset(
-                                "lib/assets/images/ical.png"),
+                            child: Image.asset("lib/assets/images/ical.png"),
                           ),
                           onTap: () async {
-                            String redirectUrl = "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
-                            String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                            String redirectUrl =
+                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }
                             Navigator.of(bc).pop();
-                          }
-                      )
+                          })
                     ],
                   ),
                 ),
@@ -471,12 +497,15 @@ class _RecurringListState extends State<RecurringList> {
                   children: <Widget>[
                     Spacer(),
                     FlatButton(
-                        child: Text(S.of(context).skip_for_now, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
-                        onPressed: (){
+                        child: Text(
+                          S.of(context).skip_for_now,
+                          style: TextStyle(
+                              color: FlavorConfig.values.theme.primaryColor),
+                        ),
+                        onPressed: () {
                           Navigator.of(bc).pop();
                           offerActions(context, model);
-                        }
-                    ),
+                        }),
                   ],
                 )
               ],
