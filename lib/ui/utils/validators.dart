@@ -55,6 +55,8 @@ class ValidationErrors {
   static const String sizeOfClassError = "size_of_class_error";
   static const String offerCreditError = "offer_credit_error";
   static const String profanityError = "profanity_error";
+  static const String emptyErrorCash = "add_amount_donate_empty";
+  static const String emptyErrorGoods = "add_goods_donate_empty";
 
   // static const String titleError = 'Please enter the subject of your offer';
 }
@@ -92,6 +94,14 @@ String getValidationError(BuildContext context, String errorCode) {
     case ValidationErrors.profanityError:
       return error.profanity_text_alert;
       break;
+
+    case ValidationErrors.emptyErrorCash:
+      return error.add_amount_donate_empty;
+      break;
+    case ValidationErrors.emptyErrorGoods:
+      return error.add_goods_donate_empty;
+      break;
+
     default:
       return null;
       break;
