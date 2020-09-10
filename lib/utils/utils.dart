@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:usage/uuid/uuid.dart';
 
 export 'firestore_manager.dart';
@@ -69,12 +70,11 @@ String getReviewMessage(
     bool isForCreator,
     bool isOfferReview = false,
     BuildContext context}) {
-  String offerReview =
-      'Body: You have received a review for the offer: $requestTitle';
+  String offerReview = '${S.of(context).offerReview} $requestTitle';
   String body = isForCreator
-      ? 'Body: You have received a review for the request: '
-      : 'Body: You have received a review on the work that you did for the request: ';
+      ? S.of(context).request_review_body_creator
+      : S.of(context).request_review_body_user;
   String review =
-      '$userName has given you a review \n\n${isOfferReview ? offerReview : body} $requestTitle \nReview:\n\n$reviewMessage';
+      '$userName ${S.of(context).has_given_review} \n\n${isOfferReview ? offerReview : body} $requestTitle \n${S.of(context).review}:\n\n$reviewMessage';
   return review;
 }
