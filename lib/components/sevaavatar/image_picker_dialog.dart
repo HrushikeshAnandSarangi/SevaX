@@ -105,6 +105,7 @@ class ImagePickerDialog extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
+                    dismissDialog();
                     _listener.openStockImages(context);
                   },
                   child: roundedButton(
