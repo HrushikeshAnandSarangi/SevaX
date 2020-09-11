@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
-import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +7,6 @@ import 'package:sevaexchange/models/claimedRequestStatus.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
-import 'package:sevaexchange/views/core.dart';
 
 import '../utils.dart';
 
@@ -100,7 +97,8 @@ Future<void> withdrawAcceptRequestNotification({
       break;
 
     case RequestMode.PERSONAL_REQUEST:
-      UserModel user = await getUserForId(sevaUserId: notificationsModel.targetUserId);
+      UserModel user =
+          await getUserForId(sevaUserId: notificationsModel.targetUserId);
 
       withdrawlNotification.isTimebankNotification = false;
       await Firestore.instance

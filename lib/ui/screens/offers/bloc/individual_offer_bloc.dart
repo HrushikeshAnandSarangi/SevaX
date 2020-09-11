@@ -1,6 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
@@ -9,11 +10,14 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 
 class IndividualOfferBloc extends BlocBase with Validators {
+  final _type = BehaviorSubject<RequestType>();
   final _title = BehaviorSubject<String>();
   final _offerDescription = BehaviorSubject<String>();
   final _availabilty = BehaviorSubject<String>();
   final _location = BehaviorSubject<CustomLocation>();
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
+  final _cashModel = BehaviorSubject<CashModel>.seeded(CashModel(donors: [],achdetails: ACHModel(),paymentType: RequestPaymentType.ACH, amountRaised: 0, minAmount: 0, targetAmount: 0));
+  final _goodsDonationDetails = BehaviorSubject<GoodsDonationDetails>.seeded(GoodsDonationDetails(address: '', donors: [],requiredGoods: {}));
 
   final profanityDetector = ProfanityDetector();
   bool autoValidateText = false;
@@ -22,12 +26,18 @@ class IndividualOfferBloc extends BlocBase with Validators {
   Function(String) get onOfferDescriptionChanged => _offerDescription.sink.add;
   Function(String) get onAvailabilityChanged => _availabilty.sink.add;
   Function(CustomLocation) get onLocatioChanged => _location.sink.add;
+  Function(RequestType) get onTypeChanged => _type.sink.add;
+  Function(CashModel) get onCashModelChanged => _cashModel.sink.add;
+  Function(GoodsDonationDetails) get onGoodsDetailsChanged => _goodsDonationDetails.sink.add;
 
   Stream<String> get title => _title.stream;
   Stream<String> get offerDescription => _offerDescription.stream;
   Stream<String> get availability => _availabilty.stream;
   Stream<CustomLocation> get location => _location.stream;
   Stream<Status> get status => _status.stream;
+  Stream<RequestType> get type => _type.stream;
+  Stream<CashModel> get cashModel => _cashModel.stream;
+  Stream<GoodsDonationDetails> get goodsDonationDetails => _goodsDonationDetails.stream;
 
   ///[Function] to create offer
   void createOrUpdateOffer({UserModel user, String timebankId}) {
@@ -63,8 +73,11 @@ class IndividualOfferBloc extends BlocBase with Validators {
           ..description = _offerDescription.value
           ..schedule = _availabilty.value,
         offerType: OfferType.INDIVIDUAL_OFFER,
+        type: _type.value,
+        cashModel: _cashModel.value,
+        goodsDonationDetails:_goodsDonationDetails.value
       );
-
+      print('heysdfsdf');
       createOffer(offerModel: offerModel).then((_) {
         _status.add(Status.COMPLETE);
       }).catchError((e) => _status.add(Status.ERROR));
@@ -80,7 +93,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
       offer.individualOfferDataModel = IndividualOfferDataModel()
         ..title = _title.value.replaceAll('__*__', '')
         ..description = _offerDescription.value.replaceAll('__*__', '')
-        ..schedule = _availabilty.value.replaceAll('__*__', '');
+        ..schedule = _availabilty.value != null ? _availabilty.value.replaceAll('__*__', ''): '';
 
       updateOfferWithRequest(offer: offerModel).then((_) {
         _status.add(Status.COMPLETE);
@@ -96,9 +109,14 @@ class IndividualOfferBloc extends BlocBase with Validators {
     _offerDescription.add(
       offerModel.individualOfferDataModel.description + '__*__',
     );
-    _availabilty.add(
-      offerModel.individualOfferDataModel.schedule + '__*__',
-    );
+    _type.add(offerModel.type);
+    _goodsDonationDetails.add(offerModel.goodsDonationDetails);
+    _cashModel.add(offerModel.cashModel);
+    if (offerModel.individualOfferDataModel.schedule != null) {
+      _availabilty.add(
+        offerModel.individualOfferDataModel.schedule + '__*__',
+      );
+    }
     _location.add(
       CustomLocation(
         offerModel.location,
@@ -125,12 +143,26 @@ class IndividualOfferBloc extends BlocBase with Validators {
       _offerDescription.addError(ValidationErrors.profanityError);
       flag = true;
     }
-    if (_availabilty.value == null || _availabilty.value == '') {
-      _availabilty.addError(ValidationErrors.genericError);
-      flag = true;
-    } else if (profanityDetector.isProfaneString(_availabilty.value)) {
-      _availabilty.addError(ValidationErrors.profanityError);
-      flag = true;
+    if (_type.value == null && _type.value != '') {
+      if (_type.value == RequestType.TIME) {
+        if (_availabilty.value == null || _availabilty.value == '') {
+          _availabilty.addError(ValidationErrors.genericError);
+          flag = true;
+        } else if (profanityDetector.isProfaneString(_availabilty.value)) {
+          _availabilty.addError(ValidationErrors.profanityError);
+          flag = true;
+        }
+      } else if (_type.value == RequestType.CASH){
+        if (_cashModel.value.targetAmount == null || _cashModel.value.targetAmount == 0) {
+          _cashModel.addError(ValidationErrors.emptyErrorCash);
+          flag = true;
+        }
+      } else if (_type.value == RequestType.GOODS){
+        if (_goodsDonationDetails.value.requiredGoods == null || _goodsDonationDetails.value.requiredGoods.length == 0) {
+          _goodsDonationDetails.addError(ValidationErrors.emptyErrorCash);
+          flag = true;
+        }
+      }
     }
 
     // if (_location.value == null) {
@@ -148,5 +180,8 @@ class IndividualOfferBloc extends BlocBase with Validators {
     _availabilty.close();
     _location.close();
     _status.close();
+    _cashModel.close;
+    _goodsDonationDetails.close();
+    _type.close();
   }
 }

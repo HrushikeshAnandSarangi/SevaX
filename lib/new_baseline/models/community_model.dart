@@ -142,10 +142,8 @@ class CommunityModel extends DataModel {
   String parentTimebankId;
 
   CommunityModel(Map<String, dynamic> map) {
-    this.transactionCount =
-    map["transactionCount"] != null ? map['transactionCount'] ?? 0 : null;
-    this.taxPercentage =
-        map["taxPercentage"] != null ? map["taxPercentage"].toDouble() : 0.0;
+    this.transactionCount = map.containsKey('transactionCount') && map["transactionCount"] != null ? map['transactionCount'] ?? 0 : null;
+    this.taxPercentage = map.containsKey('taxPercentage') && map["taxPercentage"] != null ? map["taxPercentage"].toDouble() : 0.0;
     this.payment = Map<String, dynamic>.from(map['payment'] ?? {});
     this.transactionCount = map['transactionCount'] ?? 0;
     this.billingQuota = Map<String, dynamic>.from(map['billing_quota'] ?? {});

@@ -62,6 +62,11 @@ class _ChatPageState extends State<ChatPage> {
   String errorText = '';
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.isFromRejectCompletion)
+        textcontroller.text = '${S.of(context).reject_task_completion} ';
+    });
+
     chatModel = widget.chatModel;
     recieverId = chatModel.participants[0] != widget.senderId
         ? chatModel.participants[0]
@@ -74,9 +79,6 @@ class _ChatPageState extends State<ChatPage> {
 
     _bloc.getAllMessages(chatModel.id, widget.senderId);
     _scrollController = ScrollController();
-
-    if (widget.isFromRejectCompletion)
-      textcontroller.text = '${S.of(context).reject_task_completion} ';
 
     if (widget.isFromShare) {
       print("Pushing new message from share");
@@ -117,7 +119,6 @@ class _ChatPageState extends State<ChatPage> {
         },
       );
     }
-
     super.initState();
   }
 

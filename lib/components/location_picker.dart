@@ -25,7 +25,7 @@ extension StringExtension on String {
 class LocationPicker extends StatefulWidget {
   final GeoFirePoint selectedLocation;
   final String selectedAddress;
-  final Location location = Location();
+  final Location location = new Location();
   final Geoflutterfire geo = Geoflutterfire();
   final Firestore firestore = Firestore.instance;
   final LatLng defaultLocation;
@@ -86,15 +86,15 @@ class _LocationPickerState extends State<LocationPicker> {
     loadInitialLocation();
   }
 
-  GeoFirePoint point(markers) {
-    if (markers == null || markers.isEmpty) return null;
-    Marker marker = markers.first;
-    if (marker.position == null) return null;
-    return widget.geo.point(
-      latitude: marker.position.latitude,
-      longitude: marker.position.longitude,
-    );
-  }
+//  GeoFirePoint point(markers) {
+//    if (markers == null || markers.isEmpty) return null;
+//    Marker marker = markers.first;
+//    if (marker.position == null) return null;
+//    return widget.geo.point(
+//      latitude: marker.position.latitude,
+//      longitude: marker.position.longitude,
+//    );
+//  }
 
   Future<void> loadInitialAddress(marker) async {
     address = await _getAddressFromLatLng(target);
@@ -120,7 +120,7 @@ class _LocationPickerState extends State<LocationPicker> {
 
   @override
   Widget build(context) {
-    var temp = point(markers);
+    var temp = point;
     var render;
     if (temp != null) {
       render = LocationConfimationCard(
@@ -165,10 +165,10 @@ class _LocationPickerState extends State<LocationPicker> {
                 target = LatLng(
                     locationDataFromSearch.lat, locationDataFromSearch.lng);
                 _addMarker(latLng: target);
-                var temp = point(markers);
+                var temp = point;
                 if (locationDataFromSearch.lat != null &&
                     locationDataFromSearch.lng != null && temp != null) {
-                  if (point(markers).distance(
+                  if (point.distance(
                       lat: locationDataFromSearch.lat,
                       lng: locationDataFromSearch.lng) >
                       0.005) {
@@ -198,8 +198,8 @@ class _LocationPickerState extends State<LocationPicker> {
           locationDataModel: locationDataFromSearch.location == null
               ? LocationDataModel(
                   address == null ? "" : address,
-                  temp.latitude,
-                  temp.longitude,
+                  point?.latitude,
+                  point?.longitude,
                 )
               : locationDataFromSearch,
         ),
@@ -306,14 +306,14 @@ class _LocationPickerState extends State<LocationPicker> {
         },
         onCameraIdle: () {
           _addMarker();
-          var temp = point(markers);
+          var temp = point;
           if (locationDataFromSearch.lat != null &&
               locationDataFromSearch.lng != null && temp != null) {
-            log(point(markers).distance(
+            log(point.distance(
               lat: locationDataFromSearch.lat,
               lng: locationDataFromSearch.lng,
             ).toString());
-            if (point(markers).distance(
+            if (point.distance(
                     lat: locationDataFromSearch.lat,
                     lng: locationDataFromSearch.lng) >
                 0.005) {
@@ -353,15 +353,15 @@ class _LocationPickerState extends State<LocationPicker> {
     }
   }
 
-//  GeoFirePoint get point {
-//    if (markers == null || markers.isEmpty) return null;
-//    Marker marker = markers.first;
-//    if (marker.position == null) return null;
-//    return widget.geo.point(
-//      latitude: marker.position.latitude,
-//      longitude: marker.position.longitude,
-//    );
-//  }
+  GeoFirePoint get point {
+    if (markers == null || markers.isEmpty) return null;
+    Marker marker = markers.first;
+    if (marker.position == null) return null;
+    return widget.geo.point(
+      latitude: marker.position.latitude,
+      longitude: marker.position.longitude,
+    );
+  }
 
   void _onMapCreated(GoogleMapController controller) {
     if (controller == null) return;

@@ -16,6 +16,7 @@ import 'package:sevaexchange/ui/screens/notifications/widgets/request_accepted_w
 import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/message_utils.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 
@@ -340,13 +341,18 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
               : ChatType.TYPE_GROUP,
     );
     await sendBackgroundMessage(
-        messageContent: message,
+        messageContent: getReviewMessage(
+          isForCreator: false,
+          requestTitle: requestModel.title,
+          context: context,
+          userName: loggedInUser.fullname,
+          reviewMessage: message,
+        ),
         reciever: reciever,
-        context: context,
         isTimebankMessage:
             requestModel.requestMode == RequestMode.PERSONAL_REQUEST
-                ? true
-                : false,
+                ? false
+                : true,
         timebankId: requestModel.timebankId,
         communityId: loggedInUser.currentCommunity,
         sender: sender);

@@ -4,16 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:sevaexchange/globals.dart' as globals;
 
 import '../../../../flavor_config.dart';
 import 'individual_offer.dart';
@@ -357,13 +356,13 @@ class OfferDetails extends StatelessWidget {
   }
 
   void _settingModalBottomSheet(BuildContext context, OfferModel offerModel) {
-      Map<String, dynamic> stateOfcalendarCallback = {
-          "email": SevaCore.of(context).loggedInUser.email,
-          "mobile":globals.isMobile,
-          "envName": FlavorConfig.values.envMode
-      };
-      var stateVar = jsonEncode(stateOfcalendarCallback);
-      showModalBottomSheet(
+    Map<String, dynamic> stateOfcalendarCallback = {
+      "email": SevaCore.of(context).loggedInUser.email,
+      "mobile": globals.isMobile,
+      "envName": FlavorConfig.values.envMode
+    };
+    var stateVar = jsonEncode(stateOfcalendarCallback);
+    showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
           return Container(
@@ -391,7 +390,7 @@ class OfferDetails extends StatelessWidget {
                           ),
                           onTap: () async {
                             String redirectUrl =
-                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                             String authorizationUrl =
                                 "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
@@ -410,7 +409,7 @@ class OfferDetails extends StatelessWidget {
                           ),
                           onTap: () async {
                             String redirectUrl =
-                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                             String authorizationUrl =
                                 "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
@@ -428,7 +427,7 @@ class OfferDetails extends StatelessWidget {
                           ),
                           onTap: () async {
                             String redirectUrl =
-                                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net/callbackurlforoauth";
+                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                             String authorizationUrl =
                                 "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
                             if (await canLaunch(authorizationUrl.toString())) {
@@ -447,7 +446,7 @@ class OfferDetails extends StatelessWidget {
                     FlatButton(
                         child: Text(
                           S.of(context).skip_for_now,
-                            style: TextStyle(
+                          style: TextStyle(
                               color: FlavorConfig.values.theme.primaryColor),
                         ),
                         onPressed: () {

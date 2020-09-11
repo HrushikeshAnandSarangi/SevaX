@@ -72,7 +72,7 @@ class MessageBloc extends BlocBase {
           chats.add(chat);
         }
       });
-      _personalMessage.add(chats);
+      if (!_personalMessage.isClosed) _personalMessage.add(chats);
       if (!chatModelSync.isClosed) chatModelSync.addChatModels(chats);
       if (!_frequentContacts.isClosed) _frequentContacts.add(frequentContacts);
       if (!_personalMessageCount.isClosed)
@@ -109,7 +109,8 @@ class MessageBloc extends BlocBase {
   }
 
   @override
-  void dispose() {
+  void dispose() async {
+    await _personalMessage.drain();
     _personalMessage.close();
     _adminMessage.close();
     _personalMessageCount.close();

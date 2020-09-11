@@ -75,13 +75,14 @@ class NotificationsBloc extends BlocBase {
           _adminNotificationsMap[notification.timebankId] = [notification];
         }
       });
-      _timebankNotificationCount.add(_adminNotificationCount);
+      if (!_timebankNotificationCount.isClosed)
+        _timebankNotificationCount.add(_adminNotificationCount);
       return TimebankNotificationData(
         notifications: _adminNotificationsMap,
         timebanks: _adminTimebanks,
       );
     }).listen((data) {
-      _adminNotificationData.add(data);
+      if (!_adminNotificationData.isClosed) _adminNotificationData.add(data);
     });
   }
 
@@ -92,10 +93,12 @@ class NotificationsBloc extends BlocBase {
     );
   }
 
-  void dispose() {
+  void dispose() async {
     _personalNotifications.close();
+    await _adminNotificationData.drain();
     _adminNotificationData.close();
     _personalNotificationCount.close();
+    await _timebankNotificationCount.drain();
     _timebankNotificationCount.close();
   }
 }

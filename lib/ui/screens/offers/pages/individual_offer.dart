@@ -1,6 +1,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 class IndividualOffer extends StatefulWidget {
@@ -16,6 +18,7 @@ class IndividualOffer extends StatefulWidget {
 
   const IndividualOffer({Key key, this.offerModel, this.timebankId})
       : super(key: key);
+
   @override
   _IndividualOfferState createState() => _IndividualOfferState();
 }
@@ -25,11 +28,13 @@ class _IndividualOfferState extends State<IndividualOffer> {
   final IndividualOfferBloc _bloc = IndividualOfferBloc();
   String selectedAddress;
   CustomLocation customLocation;
+  bool autoValidateText = false;
+  bool autoValidateCashText = false;
 
   FocusNode _title = FocusNode();
   FocusNode _description = FocusNode();
   FocusNode _availability = FocusNode();
-
+  var focusNodes = List.generate(8, (_) => FocusNode());
   @override
   void initState() {
     if (widget.offerModel != null) {
@@ -45,6 +50,162 @@ class _IndividualOfferState extends State<IndividualOffer> {
     _description.dispose();
     _availability.dispose();
     super.dispose();
+  }
+
+  Widget _optionRadioButton(
+      {String title, value, groupvalue, Function onChanged}) {
+    return ListTile(
+      contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
+      title: Text(title),
+      leading:
+          Radio(value: value, groupValue: groupvalue, onChanged: onChanged),
+    );
+  }
+
+  Widget RequestTypeWidget() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          StreamBuilder<RequestType>(
+              stream: _bloc.type,
+              builder: (context, snapshot) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      S.of(context).offer_type,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                      ),
+                    ),
+                    Column(
+                      children: <Widget>[
+                        _optionRadioButton(
+                          title: S.of(context).request_type_time,
+                          value: RequestType.TIME,
+                          groupvalue: snapshot.data != null
+                              ? snapshot.data : RequestType.TIME,
+                          onChanged: _bloc.onTypeChanged,
+                        ),
+                        _optionRadioButton(
+                            title: S.of(context).request_type_cash,
+                            value: RequestType.CASH,
+                            groupvalue: snapshot.data != null
+                                ? snapshot.data : RequestType.TIME,
+                            onChanged: (data) => {
+                              _bloc.onTypeChanged(data),
+                              setState(() {})
+                            }),
+                        _optionRadioButton(
+                            title: S.of(context).request_type_goods,
+                            value: RequestType.GOODS,
+                            groupvalue: snapshot.data != null
+                                ? snapshot.data : RequestType.TIME,
+                            onChanged: _bloc.onTypeChanged)
+                      ],
+                    )
+                  ],
+                );
+              })
+        ]);
+  }
+
+  Widget TimeRequest() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          StreamBuilder<String>(
+            stream: _bloc.availability,
+            builder: (context, snapshot) {
+              return CustomTextField(
+                currentNode: _availability,
+                initialValue: snapshot.data != null
+                    ? snapshot.data.contains('__*__')
+                    ? snapshot.data
+                    : null
+                    : null,
+                heading: S.of(context).availablity,
+                onChanged: _bloc.onAvailabilityChanged,
+                hint: S.of(context).availablity_description,
+                maxLength: 100,
+                error:
+                getValidationError(context, snapshot.error),
+              );
+            },
+          ),
+        ]);
+  }
+  Widget CashRequest() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          StreamBuilder<CashModel>(
+            stream: _bloc.cashModel,
+            builder: (context, snapshot) {
+              return CustomTextField(
+                currentNode: _availability,
+                initialValue: snapshot.data != null
+                    ? snapshot.data.targetAmount != null
+                    ? snapshot.data.targetAmount.toString()
+                    : 0
+                    : null,
+                heading: S.of(context).amount,
+                textInputType: TextInputType.number,
+                onChanged: (data) => {
+                  snapshot.data.targetAmount = int.parse(data),
+                  _bloc.onCashModelChanged(snapshot.data)
+                },
+                hint: S.of(context).add_amount_donate,
+                error: getValidationError(context, snapshot.error),
+              );
+            },
+          ),
+        ]);
+  }
+  Widget RequestGoodsDescriptionData(GoodsDonationDetails requestGoodsData) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            S.of(context).request_goods_offer,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          GoodsDynamicSelection(
+            goodsbefore: requestGoodsData.requiredGoods,
+            onSelectedGoods: (goods) => {
+              requestGoodsData.requiredGoods = goods,
+              _bloc.onGoodsDetailsChanged(requestGoodsData)
+            },
+          )
+        ]);
+  }
+
+  TextStyle hintTextStyle = TextStyle(
+    fontSize: 14,
+    // fontWeight: FontWeight.bold,
+    color: Colors.grey,
+    fontFamily: 'Europa',
+  );
+
+  Widget GoodsRequest() {
+    return StreamBuilder<GoodsDonationDetails>(
+            stream: _bloc.goodsDonationDetails,
+            builder: (context, snapshot) {
+              return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(height: 20),
+                    RequestGoodsDescriptionData(snapshot.data),
+                  ]);
+            });
   }
 
   @override
@@ -107,6 +268,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                     child: Column(
                       children: <Widget>[
                         SizedBox(height: 20),
+                        RequestTypeWidget(),
                         StreamBuilder<String>(
                           stream: _bloc.title,
                           builder: (context, snapshot) {
@@ -150,25 +312,16 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           },
                         ),
                         SizedBox(height: 20),
-                        StreamBuilder<String>(
-                          stream: _bloc.availability,
-                          builder: (context, snapshot) {
-                            return CustomTextField(
-                              currentNode: _availability,
-                              initialValue: snapshot.data != null
-                                  ? snapshot.data.contains('__*__')
-                                      ? snapshot.data
-                                      : null
-                                  : null,
-                              heading: S.of(context).availablity,
-                              onChanged: _bloc.onAvailabilityChanged,
-                              hint: S.of(context).availablity_description,
-                              maxLength: 100,
-                              error:
-                                  getValidationError(context, snapshot.error),
-                            );
-                          },
-                        ),
+                      StreamBuilder<RequestType>(
+                        stream: _bloc.type,
+                        builder: (context, snapshot) {
+                          var type = snapshot.data != null ? snapshot.data: RequestType.TIME;
+                          return type == RequestType.TIME
+                                ? TimeRequest()
+                                : type == RequestType.CASH
+                                ? CashRequest()
+                                : GoodsRequest();
+                        }),
                         SizedBox(height: 40),
                         StreamBuilder<CustomLocation>(
                             stream: _bloc.location,

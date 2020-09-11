@@ -5,7 +5,6 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
-
 import 'messages_all.dart';
 
 class S {
@@ -41,23 +40,33 @@ class S {
         name: 'hang_on',
       );
 
+  String get updating => Intl.message(
+        'Updating',
+        name: 'updating',
+      );
+
+  String get skipping => Intl.message(
+        'Skipping',
+        name: 'skipping',
+      );
+
   String get skills => Intl.message(
-        'Skills',
+        'skills',
         name: 'skills',
       );
 
   String get interests => Intl.message(
-        'Interests',
+        'interests',
         name: 'interests',
       );
 
   String get email => Intl.message(
-        'Email',
+        'email',
         name: 'email',
       );
 
   String get password => Intl.message(
-        'Password',
+        'password',
         name: 'password',
       );
 
@@ -72,7 +81,7 @@ class S {
       );
 
   String get login_agreement_message2 => Intl.message(
-        ' We will manage information as described in our',
+        'We will manage information as described in our',
         name: 'login_agreement_message2',
       );
 
@@ -82,7 +91,7 @@ class S {
       );
 
   String get and => Intl.message(
-        ' and',
+        'and',
         name: 'and',
       );
 
@@ -92,12 +101,12 @@ class S {
       );
 
   String get new_user => Intl.message(
-        'New User? ',
+        'New User',
         name: 'new_user',
       );
 
   String get sign_up => Intl.message(
-        'Sign Up',
+        'Sign up',
         name: 'sign_up',
       );
 
@@ -107,7 +116,7 @@ class S {
       );
 
   String get forgot_password => Intl.message(
-        'Forgot Password? ',
+        'Forgot Password',
         name: 'forgot_password',
       );
 
@@ -187,7 +196,7 @@ class S {
       );
 
   String get reset_dynamic_link_message => Intl.message(
-        'Please check your email to set your password. Then enter that password here',
+        'Please check your email to set your password. Then enter that password here.',
         name: 'reset_dynamic_link_message',
       );
 
@@ -266,13 +275,18 @@ class S {
         name: 'gallery',
       );
 
+  String get check_email => Intl.message(
+        'Now check your email.',
+        name: 'check_email',
+      );
+
   String get email_sent_to => Intl.message(
-        '\n\nWe sent an email to\n',
+        'We sent an email to',
         name: 'email_sent_to',
       );
 
   String get verify_account => Intl.message(
-        ' to verify\nyour account',
+        'to verify your account',
         name: 'verify_account',
       );
 
@@ -299,6 +313,11 @@ class S {
   String get log_in => Intl.message(
         'Log in',
         name: 'log_in',
+      );
+
+  String get thanks => Intl.message(
+        'Thanks!',
+        name: 'thanks',
       );
 
   String get eula_title => Intl.message(
@@ -372,12 +391,12 @@ class S {
       );
 
   String get validation_error_bio_empty => Intl.message(
-        'Its easy, please fill few words about you.',
+        'It\'s easy, please fill few words about you.',
         name: 'validation_error_bio_empty',
       );
 
   String get validation_error_bio_min_characters => Intl.message(
-        '* min 50 characters',
+        'Min 50 characters *',
         name: 'validation_error_bio_min_characters',
       );
 
@@ -422,7 +441,7 @@ class S {
       );
 
   String get created_by => Intl.message(
-        'Created by ',
+        'Created by',
         name: 'created_by',
       );
 
@@ -457,12 +476,12 @@ class S {
       );
 
   String get requested => Intl.message(
-        'REQUESTED',
+        'Requested',
         name: 'requested',
       );
 
   String get rejected => Intl.message(
-        'REJECTED',
+        'Rejected',
         name: 'rejected',
       );
 
@@ -472,7 +491,7 @@ class S {
       );
 
   String get join_timebank_request_invite_hint => Intl.message(
-        'If you dont have a code, Click',
+        'If you don\'t have a code, Click',
         name: 'join_timebank_request_invite_hint',
       );
 
@@ -537,7 +556,7 @@ class S {
       );
 
   String get successfully => Intl.message(
-        'successfully.',
+        'Successfully',
         name: 'successfully',
       );
 
@@ -697,12 +716,12 @@ class S {
       );
 
   String get ok => Intl.message(
-        'OK',
+        'Ok',
         name: 'ok',
       );
 
   String get no_group_message => Intl.message(
-        'Groups help you to organize your specific \n activities, you don\'t have any. Try ',
+        'Groups help you to organize your specific activities, you don\'t have any. Try',
         name: 'no_group_message',
       );
 
@@ -722,22 +741,22 @@ class S {
       );
 
   String get from => Intl.message(
-        'From:',
+        'From',
         name: 'from',
       );
 
   String get until => Intl.message(
-        ' until ',
+        'Until',
         name: 'until',
       );
 
   String get posted_by => Intl.message(
-        'Posted By:',
+        'Posted By',
         name: 'posted_by',
       );
 
   String get posted_date => Intl.message(
-        'PostDate:',
+        'Post Date',
         name: 'posted_date',
       );
 
@@ -751,13 +770,19 @@ class S {
         name: 'select_hours',
       );
 
+  String hour(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Hour', other: 'Hours', args: [count])}',
+        name: 'hour',        
+        args: [count],
+      );
+
   String get validation_error_task_minutes => Intl.message(
         'Minutes cannot be Empty',
         name: 'validation_error_task_minutes',
       );
 
   String get minutes => Intl.message(
-        'Minutes',
+        'minutes',
         name: 'minutes',
       );
 
@@ -822,12 +847,12 @@ class S {
       );
 
   String get on => Intl.message(
-        'On',
+        'on',
         name: 'on',
       );
 
   String get notifications_event_modification => Intl.message(
-        '. The Event Owner has modified this event. Make sure the changes made are right for you and apply again',
+        'The Event Owner has modified this event. Make sure the changes made are right for you and apply again.',
         name: 'notifications_event_modification',
       );
 
@@ -957,17 +982,17 @@ class S {
       );
 
   String get notifications_incomplete_transaction => Intl.message(
-        'We couldn\'t process you request for deletion of ***, as you are still having open transactions which are as : \n',
+        'We couldn\'t process you request for deletion of ***, as you are still having open transactions which are as :',
         name: 'notifications_incomplete_transaction',
       );
 
   String get one_to_many_offers => Intl.message(
-        'one to many offers\n',
+        'one to many offers',
         name: 'one_to_many_offers',
       );
 
   String get open_requests => Intl.message(
-        'open requests\n',
+        'open requests',
         name: 'open_requests',
       );
 
@@ -1107,7 +1132,7 @@ class S {
       );
 
   String get number_of_volunteers_required => Intl.message(
-        'Number of volunteers required:',
+        'Number of volunteers required',
         name: 'number_of_volunteers_required',
       );
 
@@ -1122,7 +1147,7 @@ class S {
       );
 
   String get no_approved_members => Intl.message(
-        'No approved members yet.',
+        'No Approved members yet.',
         name: 'no_approved_members',
       );
 
@@ -1147,7 +1172,7 @@ class S {
       );
 
   String get default_text => Intl.message(
-        'DEFAULT',
+        'Default',
         name: 'default_text',
       );
 
@@ -1211,6 +1236,18 @@ class S {
         name: 'edit_project',
       );
 
+  String timebank_project(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Timebank Project', other: 'Timebank Projects', args: [count])}',
+        name: 'timebank_project',        
+        args: [count],
+      );
+
+  String personal_project(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [count])}',
+        name: 'personal_project',        
+        args: [count],
+      );
+
   String get project_logo => Intl.message(
         'Project Logo',
         name: 'project_logo',
@@ -1232,7 +1269,7 @@ class S {
       );
 
   String get project_duration => Intl.message(
-        'Project duration',
+        'Project Duration',
         name: 'project_duration',
       );
 
@@ -1292,7 +1329,7 @@ class S {
       );
 
   String get updating_project => Intl.message(
-        'Updating project',
+        'Updating Project',
         name: 'updating_project',
       );
 
@@ -1317,7 +1354,7 @@ class S {
       );
 
   String get validation_error_template_name_exists => Intl.message(
-        'Template name is already in use.\nPlease provide another name',
+        'Template name is already in use.Please provide another name',
         name: 'validation_error_template_name_exists',
       );
 
@@ -1327,7 +1364,7 @@ class S {
       );
 
   String get delete_confirmation => Intl.message(
-        'Are your sure you want to delete ',
+        'Are your sure you want to delete',
         name: 'delete_confirmation',
       );
 
@@ -1422,7 +1459,7 @@ class S {
       );
 
   String get withdraw_request_failure => Intl.message(
-        'You cannot withdraw request since already approved',
+        'You cannot withdraw request since already approved and seva coins credited to your account.',
         name: 'withdraw_request_failure',
       );
 
@@ -1487,7 +1524,7 @@ class S {
       );
 
   String get set_duration => Intl.message(
-        ' Click to Set Duration',
+        'Click to Set Duration',
         name: 'set_duration',
       );
 
@@ -1507,7 +1544,7 @@ class S {
       );
 
   String get request_duration => Intl.message(
-        '  Request duration',
+        'Request duration',
         name: 'request_duration',
       );
 
@@ -1541,6 +1578,18 @@ class S {
         name: 'validation_error_volunteer_count_zero',
       );
 
+  String personal_request(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [count])}',
+        name: 'personal_request',        
+        args: [count],
+      );
+
+  String timebank_request(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Timebank Request', other: 'Timebank Requests', args: [count])}',
+        name: 'timebank_request',        
+        args: [count],
+      );
+
   String get validation_error_same_start_date_end_date => Intl.message(
         'You have provided identical date and time for the Start and End. Please provide an End time that is after the Start time.',
         name: 'validation_error_same_start_date_end_date',
@@ -1552,12 +1601,12 @@ class S {
       );
 
   String get creating_request => Intl.message(
-        'Creating Request...',
+        'Creating Request',
         name: 'creating_request',
       );
 
   String get updating_request => Intl.message(
-        'Updating Request...',
+        'Updating Request',
         name: 'updating_request',
       );
 
@@ -1571,23 +1620,35 @@ class S {
         name: 'assign_to_volunteers',
       );
 
+  String members_selected(num count) => Intl.message(
+        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [count])}',
+        name: 'members_selected',        
+        args: [count],
+      );
+
+  String volunteers_selected(num count) => Intl.message(
+        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [count])}',
+        name: 'volunteers_selected',        
+        args: [count],
+      );
+
   String get timebank_max_seva_credit_message1 => Intl.message(
-        ' Seva Credits will be credited to the Timebank for this request. Note that each participant will receive a maximum of ',
+        'Seva Credits will be credited to the Timebank for this request. Note that each participant will receive a maximum of',
         name: 'timebank_max_seva_credit_message1',
       );
 
   String get timebank_max_seva_credit_message2 => Intl.message(
-        ' credits for completing this request.',
+        'credits for completing this request.',
         name: 'timebank_max_seva_credit_message2',
       );
 
   String get personal_max_seva_credit_message1 => Intl.message(
-        ' Seva Credits are required for this request. It will be debited from your balance. Note that each participant will receive a maximum of ',
+        'Seva Credits are required for this request. It will be debited from your balance. Note that each participant will receive a maximum of',
         name: 'personal_max_seva_credit_message1',
       );
 
   String get personal_max_seva_credit_message2 => Intl.message(
-        ' credits for completing this request.',
+        'credits for completing this request.',
         name: 'personal_max_seva_credit_message2',
       );
 
@@ -1612,7 +1673,7 @@ class S {
       );
 
   String get repeat => Intl.message(
-        'Repeat',
+        'Recurring',
         name: 'repeat',
       );
 
@@ -1667,7 +1728,7 @@ class S {
       );
 
   String get validation_error_end_date_greater => Intl.message(
-        'End Date cannot be before Start Date ',
+        'End Date cannot be before Start Date',
         name: 'validation_error_end_date_greater',
       );
 
@@ -1687,12 +1748,12 @@ class S {
       );
 
   String get confirm_location => Intl.message(
-        'CONFIRM LOCATION',
+        'confirm location',
         name: 'confirm_location',
       );
 
   String get no_message => Intl.message(
-        'No Messages',
+        'No Message',
         name: 'no_message',
       );
 
@@ -1737,12 +1798,12 @@ class S {
       );
 
   String get groups => Intl.message(
-        'GROUPS',
+        'Groups',
         name: 'groups',
       );
 
   String get timebank_members => Intl.message(
-        'TIMEBANK MEMBERS',
+        'Timebank Members',
         name: 'timebank_members',
       );
 
@@ -1887,7 +1948,7 @@ class S {
       );
 
   String get no_comments => Intl.message(
-        'No comments',
+        'No Comments',
         name: 'no_comments',
       );
 
@@ -1937,7 +1998,7 @@ class S {
       );
 
   String get creating_offer => Intl.message(
-        'Creating Offer',
+        'Creating offer',
         name: 'creating_offer',
       );
 
@@ -2196,6 +2257,12 @@ class S {
         name: 'reported_by',
       );
 
+  String user(num count) => Intl.message(
+        '${Intl.plural(count, one: 'user', other: 'users', args: [count])}',
+        name: 'user',        
+        args: [count],
+      );
+
   String get user_removed_from_group => Intl.message(
         'User is successfully removed from the group',
         name: 'user_removed_from_group',
@@ -2237,7 +2304,7 @@ class S {
       );
 
   String get user_removed_from_timebank => Intl.message(
-        'User is successfully removed from the timebank',
+        'User is successfully removed from the Timebank',
         name: 'user_removed_from_timebank',
       );
 
@@ -2282,7 +2349,7 @@ class S {
       );
 
   String get help_about_us => Intl.message(
-        'About us',
+        'About Us',
         name: 'help_about_us',
       );
 
@@ -2432,12 +2499,12 @@ class S {
       );
 
   String get zip => Intl.message(
-        'ZIP Code',
+        'Zip',
         name: 'zip',
       );
 
   String get country => Intl.message(
-        'Country Name',
+        'Country',
         name: 'country',
       );
 
@@ -2452,7 +2519,7 @@ class S {
       );
 
   String get company_name => Intl.message(
-        'Company Name',
+        'Company name',
         name: 'company_name',
       );
 
@@ -2477,7 +2544,7 @@ class S {
       );
 
   String get selected_users_before => Intl.message(
-        ' Selected users before ',
+        'Selected users before',
         name: 'selected_users_before',
       );
 
@@ -2511,6 +2578,12 @@ class S {
         name: 'timebank_offers',
       );
 
+  String other(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Other', other: 'Others', args: [count])}',
+        name: 'other',        
+        args: [count],
+      );
+
   String get plan_details => Intl.message(
         'Plan Details',
         name: 'plan_details',
@@ -2532,7 +2605,7 @@ class S {
       );
 
   String get plan_yearly_1500 => Intl.message(
-        'paying yearly for \\\$1500 and additional charges of',
+        'paying yearly for \$1500 and additional charges of',
         name: 'plan_yearly_1500',
       );
 
@@ -2569,6 +2642,12 @@ class S {
   String get monthly_subscription => Intl.message(
         'Monthly subscriptions',
         name: 'monthly_subscription',
+      );
+
+  String subscription(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [count])}',
+        name: 'subscription',        
+        args: [count],
       );
 
   String get card_details => Intl.message(
@@ -2632,7 +2711,7 @@ class S {
       );
 
   String get deleting_feed => Intl.message(
-        'Deleting feed',
+        'Deleting feed..',
         name: 'deleting_feed',
       );
 
@@ -2647,7 +2726,7 @@ class S {
       );
 
   String get create_feed_hint => Intl.message(
-        'Text, URL and Hashtags ',
+        'Text, URL and Hashtags',
         name: 'create_feed_hint',
       );
 
@@ -2692,7 +2771,7 @@ class S {
       );
 
   String get add_image => Intl.message(
-        'Add image',
+        'Add Image',
         name: 'add_image',
       );
 
@@ -2737,17 +2816,17 @@ class S {
       );
 
   String get join_request_message => Intl.message(
-        'Member request to join a ',
+        'Member request to join a',
         name: 'join_request_message',
       );
 
   String get offer_debit => Intl.message(
-        'Debit for one to many offer ',
+        'Debit for one to many offer',
         name: 'offer_debit',
       );
 
   String get member_exits => Intl.message(
-        'Member exits a ',
+        'Member exits a',
         name: 'member_exits',
       );
 
@@ -2782,7 +2861,7 @@ class S {
       );
 
   String get select_timebank => Intl.message(
-        'Select a Timebank',
+        'Select Timebank',
         name: 'select_timebank',
       );
 
@@ -2832,7 +2911,7 @@ class S {
       );
 
   String get would_be_unblocked => Intl.message(
-        ' would be unblocked',
+        'would be unblocked',
         name: 'would_be_unblocked',
       );
 
@@ -2887,7 +2966,7 @@ class S {
       );
 
   String get date => Intl.message(
-        'Date:',
+        'Date',
         name: 'date',
       );
 
@@ -3022,7 +3101,7 @@ class S {
       );
 
   String get ownership_success => Intl.message(
-        'Congratulations! You are now the new owner of the Timebank ',
+        'Congratulations! You are now the new owner of the Timebank',
         name: 'ownership_success',
       );
 
@@ -3037,12 +3116,12 @@ class S {
       );
 
   String get changing_ownership_of => Intl.message(
-        'Changing ownership of this ',
+        'Changing ownership of this',
         name: 'changing_ownership_of',
       );
 
   String get to_other_admin => Intl.message(
-        ' to another admin.',
+        'to another admin.',
         name: 'to_other_admin',
       );
 
@@ -3052,17 +3131,17 @@ class S {
       );
 
   String get invitation_sent1 => Intl.message(
-        'We have sent your transfer of ownership invitation. You will remain to be the owner of Timebank ',
+        'We have sent your transfer of ownership invitation. You will remain to be the owner of Timebank',
         name: 'invitation_sent1',
       );
 
   String get invitation_sent2 => Intl.message(
-        ' until ',
+        'until',
         name: 'invitation_sent2',
       );
 
   String get invitation_sent3 => Intl.message(
-        ' accepts the invitation and provides their new billing information.',
+        'accepts the invitation and provides their new billing information.',
         name: 'invitation_sent3',
       );
 
@@ -3082,7 +3161,7 @@ class S {
       );
 
   String get change_ownership_pending_payment1 => Intl.message(
-        'You have payment pending of ',
+        'You have payment pending of',
         name: 'change_ownership_pending_payment1',
       );
 
@@ -3097,22 +3176,22 @@ class S {
       );
 
   String get change_ownership_message1 => Intl.message(
-        'You are the new owner of Timebank ',
+        'You are the new owner of Timebank',
         name: 'change_ownership_message1',
       );
 
   String get change_ownership_message2 => Intl.message(
-        ' You need to accept it to complete the process',
+        'You need to accept it to complete the process',
         name: 'change_ownership_message2',
       );
 
   String get change_ownership_advisory => Intl.message(
-        ' You are required to provide billing details for this Timebank - including the new billing address. The transfer of ownership will not be completed until this is done.',
+        'You are required to provide billing details for this Timebank - including the new billing address. The transfer of ownership will not be completed until this is done.',
         name: 'change_ownership_advisory',
       );
 
   String get change_ownership_already_invited => Intl.message(
-        ' already invited.',
+        'already invited.',
         name: 'change_ownership_already_invited',
       );
 
@@ -3177,7 +3256,7 @@ class S {
       );
 
   String get add_members => Intl.message(
-        'Add Members',
+        'Add members',
         name: 'add_members',
       );
 
@@ -3257,7 +3336,7 @@ class S {
       );
 
   String get csv_message2 => Intl.message(
-        'fill the users you would like to add ',
+        'fill the users you would like to add',
         name: 'csv_message2',
       );
 
@@ -3342,7 +3421,7 @@ class S {
       );
 
   String get timebank_code => Intl.message(
-        'Timebank code : ',
+        'Timebank code :',
         name: 'timebank_code',
       );
 
@@ -3362,7 +3441,7 @@ class S {
       );
 
   String get invite_message => Intl.message(
-        'Timebank. Timebanks are communities that allow you to volunteer and also receive time credits towards getting things done for you. Use the code',
+        'Timebanks are communities that allow you to volunteer and also receive time credits towards getting things done for you. Use the code',
         name: 'invite_message',
       );
 
@@ -3392,7 +3471,7 @@ class S {
       );
 
   String get no_member_found => Intl.message(
-        'No Member found',
+        'No member found',
         name: 'no_member_found',
       );
 
@@ -3622,7 +3701,7 @@ class S {
       );
 
   String get and_others => Intl.message(
-        'and Others',
+        'and others',
         name: 'and_others',
       );
 
@@ -3637,7 +3716,7 @@ class S {
       );
 
   String get add_as_admin => Intl.message(
-        'Add as Admin',
+        'Add as admin',
         name: 'add_as_admin',
       );
 
@@ -3727,7 +3806,7 @@ class S {
       );
 
   String get failed_to_fetch_location => Intl.message(
-        'Failed to fetch location*',
+        'Failed to fetch location',
         name: 'failed_to_fetch_location',
       );
 
@@ -3801,110 +3880,6 @@ class S {
         name: 'enter_reason_to_delete_error',
       );
 
-  String get delete_request_confirmation => Intl.message(
-        'Are you sure you want to delete this request?',
-        name: 'delete_request_confirmation',
-      );
-
-  String get will_be_added_to_request => Intl.message(
-        'will be automatically added to the request.',
-        name: 'will_be_added_to_request',
-      );
-
-  String get updating => Intl.message(
-        'Updating',
-        name: 'updating',
-      );
-
-  String get skipping => Intl.message(
-        'Skipping',
-        name: 'skipping',
-      );
-
-  String get check_email => Intl.message(
-        'Now check your email.',
-        name: 'check_email',
-      );
-
-  String get thanks => Intl.message(
-        'Thanks!',
-        name: 'thanks',
-      );
-
-  String hour(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Hour', other: 'Hours', args: [count])}',
-        name: 'hour',
-        args: [count],
-      );
-
-  String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Timebank Project', other: 'Timebank Projects', args: [
-          count
-        ])}',
-        name: 'timebank_project',
-        args: [count],
-      );
-
-  String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [
-          count
-        ])}',
-        name: 'personal_project',
-        args: [count],
-      );
-
-  String personal_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [
-          count
-        ])}',
-        name: 'personal_request',
-        args: [count],
-      );
-
-  String timebank_request(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Timebank Request', other: 'Timebank Requests', args: [
-          count
-        ])}',
-        name: 'timebank_request',
-        args: [count],
-      );
-
-  String members_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'member selected', other: 'members selected', args: [
-          count
-        ])}',
-        name: 'members_selected',
-        args: [count],
-      );
-
-  String volunteers_selected(num count) => Intl.message(
-        '${Intl.plural(count, one: 'volunteer selected', other: 'volunteers selected', args: [
-          count
-        ])}',
-        name: 'volunteers_selected',
-        args: [count],
-      );
-
-  String user(num count) => Intl.message(
-        '${Intl.plural(count, one: 'user', other: 'users', args: [count])}',
-        name: 'user',
-        args: [count],
-      );
-
-  String other(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Other', other: 'Others', args: [count])}',
-        name: 'other',
-        args: [count],
-      );
-
-  String subscription(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Subscription', other: 'Subscriptions', args: [
-          count
-        ])}',
-        name: 'subscription',
-        args: [count],
-      );
-
   String get max_credits => Intl.message(
         'Maximum credits*',
         name: 'max_credits',
@@ -3940,6 +3915,11 @@ class S {
         name: 'delete_offer',
       );
 
+  String get delete_request_confirmation => Intl.message(
+        'Are you sure you want to delete this request?',
+        name: 'delete_request_confirmation',
+      );
+
   String get delete_offer_confirmation => Intl.message(
         'Are you sure you want to delete this offer?',
         name: 'delete_offer_confirmation',
@@ -3958,6 +3938,11 @@ class S {
   String get no_members => Intl.message(
         'No Members',
         name: 'no_members',
+      );
+
+  String get will_be_added_to_request => Intl.message(
+        '*** will be automatically added to the request.',
+        name: 'will_be_added_to_request',
       );
 
   String get cancel_offer => Intl.message(
@@ -4026,24 +4011,24 @@ class S {
       );
 
   String get add_image_url => Intl.message(
-        'Add Image Url',
+        'Add Image URL',
         name: 'add_image_url',
       );
 
   String get image_url => Intl.message(
-        'Image Url',
+        'Add Image URL ex: https://www.sevaexchange.com/sevalogo.png',
         name: 'image_url',
       );
 
   String day(num count) => Intl.message(
         '${Intl.plural(count, one: 'Day', other: 'Days', args: [count])}',
-        name: 'day',
+        name: 'day',        
         args: [count],
       );
 
   String year(num count) => Intl.message(
         '${Intl.plural(count, one: 'Year', other: 'Years', args: [count])}',
-        name: 'year',
+        name: 'year',        
         args: [count],
       );
 
@@ -4093,7 +4078,7 @@ class S {
       );
 
   String get select_goods_category => Intl.message(
-        'Select a goods / supplies category',
+        'Select a goods category',
         name: 'select_goods_category',
       );
 
@@ -4113,7 +4098,7 @@ class S {
       );
 
   String get describe_goods => Intl.message(
-        'Describe your goods / supplies and select from checkbox below',
+        'Describe your goods and select from checkbox below',
         name: 'describe_goods',
       );
 
@@ -4138,9 +4123,23 @@ class S {
       );
 
   String get add_amount_donated => Intl.message(
-        'Add amount that you have donated.',
-        name: 'add_amount_donated',
-      );
+    'Add amount that you have donated.',
+    name: 'add_amount_donated',
+  );
+
+  String get add_amount_donate => Intl.message(
+    'Add amount that you want to donate.',
+    name: 'add_amount_donate',
+  );
+  String get add_amount_donate_empty => Intl.message(
+    'Amount cannot be empty',
+    name: 'add_amount_donate_empty',
+  );
+  String get add_goods_donate_empty => Intl.message(
+    'Please select atleast one goods to offer.',
+    name: 'add_goods_donate_empty',
+  );
+
 
   String get amount_donated => Intl.message(
         'Amount Donated?',
@@ -4188,12 +4187,12 @@ class S {
       );
 
   String get goods => Intl.message(
-        'Goods/Supplies',
+        'Goods',
         name: 'goods',
       );
 
   String get cash => Intl.message(
-        'Money',
+        'Cash',
         name: 'cash',
       );
 
@@ -4338,9 +4337,13 @@ class S {
       );
 
   String get request_type => Intl.message(
-        'Request type*',
-        name: 'request_type',
-      );
+    'Request type*',
+    name: 'request_type',
+  );
+  String get offer_type => Intl.message(
+    'Offer type*',
+    name: 'offer_type',
+  );
 
   String get request_type_time => Intl.message(
         'Time',
@@ -4348,17 +4351,17 @@ class S {
       );
 
   String get request_type_cash => Intl.message(
-        'Money',
+        'Cash',
         name: 'request_type_cash',
       );
 
   String get request_type_goods => Intl.message(
-        'Goods / Supplies',
+        'Goods',
         name: 'request_type_goods',
       );
 
   String get request_description_hint_goods => Intl.message(
-        'Ex: Specify the cause of requesting goods / supplies and any #hashtags',
+        'Ex: Specify the cause of requesting goods and any #hashtags',
         name: 'request_description_hint_goods',
       );
 
@@ -4378,9 +4381,14 @@ class S {
       );
 
   String get request_goods_description => Intl.message(
-        'Provide the list of Goods/Supplies that you need*',
-        name: 'request_goods_description',
-      );
+    'Provide the list of Goods/Supplies that you need*',
+    name: 'request_goods_description',
+  );
+
+  String get request_goods_offer => Intl.message(
+    'Provide the list of Goods/Supplies that you offer*',
+    name: 'request_goods_offer',
+  );
 
   String get request_goods_address => Intl.message(
         'Provide address where the donor should ship*',
@@ -4408,7 +4416,7 @@ class S {
       );
 
   String get request_payment_description_inputhint => Intl.message(
-        'Ex: https://www.paypal.com/johndoe',
+        'Paypal ID ex: https://www.paypal.com/johndoe',
         name: 'request_payment_description_inputhint',
       );
 
@@ -4593,27 +4601,27 @@ class S {
       );
 
   String get has_cash_donation => Intl.message(
-        'Has a request for money donation',
+        'Has a request for cash donation',
         name: 'has_cash_donation',
       );
 
   String get has_goods_donation => Intl.message(
-        'Has requested for goods / supplies donation',
+        'Has requested for goods donation',
         name: 'has_goods_donation',
       );
 
   String get cash_donation_invite => Intl.message(
-        'has a request for money donation. Tap to donate any amount that you can',
+        'has a request for cash donation. Tap to donate any amount that you can',
         name: 'cash_donation_invite',
       );
 
   String get goods_donation_invite => Intl.message(
-        'has a request for donation of specific goods / supplies. You can tap to donate any goods that you can',
+        'has a request for donation of specific goods. You can tap to donate any goods that you can',
         name: 'goods_donation_invite',
       );
 
   String get failed_load_image => Intl.message(
-        'Failed to load image. Try different image',
+        'We encountered a failure in loading the image. Please try loading a different image',
         name: 'failed_load_image',
       );
 
@@ -4723,12 +4731,12 @@ class S {
       );
 
   String get goods_modified_by_donor => Intl.message(
-        'Donor has modified goods / supplies',
+        'Donor has modified goods',
         name: 'goods_modified_by_donor',
       );
 
   String get goods_modified_by_creator => Intl.message(
-        'Your goods / supplies for donation was not acknowledged',
+        'Your goods for donation was not acknowledged',
         name: 'goods_modified_by_creator',
       );
 
@@ -4738,7 +4746,7 @@ class S {
       );
 
   String get goods_modified_by_creator_desc => Intl.message(
-        'The goods / supplies that you donated for this donation is different from the goods acknowledged by the creator. Tap to change your goods details.',
+        'The goods that you donated for this donation is different from the goods acknowledged by the creator. Tap to change your goods details.',
         name: 'goods_modified_by_creator_desc',
       );
 
@@ -4748,17 +4756,17 @@ class S {
       );
 
   String get goods_modified_by_donor_desc => Intl.message(
-        'The goods / supplies which you acknowledged for this donation is different from the goods confirmed by the Donor. Tap to change the confirmation goods.',
+        'The goods which you acknowledged for this donation is different from the goods confirmed by the Donor. Tap to change the confirmation goods.',
         name: 'goods_modified_by_donor_desc',
       );
 
   String get imageurl_alert => Intl.message(
-        'Web Image url alert',
+        'Web Image URL alert',
         name: 'imageurl_alert',
       );
 
   String get image_url_alert_desc => Intl.message(
-        'Please add a image url to continue',
+        'Please add a image URL to continue',
         name: 'image_url_alert_desc',
       );
 
@@ -4773,12 +4781,12 @@ class S {
       );
 
   String get failed_load_image_title => Intl.message(
-        'Failed to load',
+        'Failed to load image',
         name: 'failed_load_image_title',
       );
 
   String get image_url_hint => Intl.message(
-        'Add Image Url ex: https://www.sevaexchange.com/sevalogo.png',
+        'Add Image URL ex: https://www.sevaexchange.com/sevalogo.png',
         name: 'image_url_hint',
       );
 
@@ -4819,7 +4827,8 @@ class S {
 
   String get request_payment_descriptionZelle_inputhint => Intl.message(
         'Zellepay ID (phone or email)',
-        name: 'request_payment_descriptionZelle_inputhint',
+        name: 'request_payment_descriptionZelle_inputhint',        
+        desc: 'Zellepay ID (phone or email)',
       );
 
   String get request_payment_ach_bank_name => Intl.message(
@@ -4844,7 +4853,8 @@ class S {
 
   String get enter_valid_bank_address => Intl.message(
         'Enter Bank Address',
-        name: 'enter_valid_bank_address',
+        name: 'enter_valid_bank_address',        
+        desc: 'Enter Bank Address',
       );
 
   String get enter_valid_bank_name => Intl.message(
@@ -4864,7 +4874,8 @@ class S {
 
   String get request_paymenttype_zellepay => Intl.message(
         'ZellePay',
-        name: 'request_paymenttype_zellepay',
+        name: 'request_paymenttype_zellepay',        
+        desc: 'ZellePay',
       );
 
   String get request_paymenttype_paypal => Intl.message(
@@ -4886,6 +4897,26 @@ class S {
         'monthly and additional charges of',
         name: 'monthly_charges_of',
       );
+
+  String get offerReview => Intl.message(
+        'Body: You have received a review for the offer:',
+        name: 'offerReview',
+      );
+
+  String get request_review_body_creator => Intl.message(
+        'Body: You have received a review for the request:',
+        name: 'request_review_body_creator',
+      );
+
+  String get request_review_body_user => Intl.message(
+        'Body: You have received a review on the work that you did for the request:',
+        name: 'request_review_body_user',
+      );
+
+  String get has_given_review => Intl.message(
+        'has given you a review',
+        name: 'has_given_review',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
@@ -4895,13 +4926,13 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
         Locale.fromSubtags(languageCode: 'es'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'zh_CN'),
-        Locale.fromSubtags(languageCode: 'zh', countryCode: 'zh_TW'),
+        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'zh'),
         Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'sw'),
         Locale.fromSubtags(languageCode: 'en'),
         Locale.fromSubtags(languageCode: 'fr'),
-      ];
+  ];
 
   @override
   bool isSupported(Locale locale) => [

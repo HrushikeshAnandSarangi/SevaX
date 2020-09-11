@@ -104,7 +104,10 @@ class ImagePickerDialog extends StatelessWidget {
                       const Color(0xFFFFFFFF)),
                 ),
                 GestureDetector(
-                  onTap: () => _listener.openStockImages(context),
+                  onTap: () {
+                    dismissDialog();
+                    _listener.openStockImages(context);
+                  },
                   child: roundedButton(
                       S.of(context).stock_images,
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
@@ -113,7 +116,6 @@ class ImagePickerDialog extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    dismissDialog();
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
@@ -125,7 +127,7 @@ class ImagePickerDialog extends StatelessWidget {
                     });
                   },
                   child: roundedButton(
-                    S.of(context).image_url,
+                    S.of(context).add_image_url,
                     EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                     const Color(0xFF673AB7),
                     const Color(0xFFFFFFFF),
