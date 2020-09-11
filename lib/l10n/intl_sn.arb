@@ -1,6 +1,6 @@
 {
     "@@locale": "sn",
-    "@@last_modified": "2020-09-07T13:53:45+00:00",
+    "@@last_modified": "2020-09-11T13:34:42+00:00",
     "check_met": "Kuongorora, kana takasangana zvisati zvaitika",
     "we_met": "Takasangana zvisati zvaitika",
     "hang_on": "Ramba wakasimba",
@@ -967,5 +967,14 @@
     "request_paymenttype_paypal": "PayPal",
     "request_paymenttype_ach": "ACH",
     "goods_validation": "Iwe hauna kusarudza chero Midziyo\/Zvishandiso. Ndokumbira usarudze imwe kana dzakawanda usati wagadzira chikumbiro cheMupiro.",
-    "monthly_charges_of": "pamwedzi uye nekuwedzera mari ye"
+    "monthly_charges_of": "pamwedzi uye nekuwedzera mari ye",
+    "add_amount_donate": "Wedzera mari yaunoda kupa.",
+    "add_amount_donate_empty": "Huwandu haugone kuve usina chinhu",
+    "add_goods_donate_empty": "Ndokumbira usarudze atleast chinhu chimwe chekupa.",
+    "offer_type": "Mhando yekupa *",
+    "request_goods_offer": "Ipa runyorwa rweZvinhu \/ Zvishandiso zvaunopa *",
+    "offerReview": "Muviri: Wakatambira wongororo yekupihwa:",
+    "request_review_body_creator": "Mutumbi: Wakatambira ongororo yechikumbiro:",
+    "request_review_body_user": "Mutumbi: Wakatambira wongororo pabasa rawakaitira chikumbiro:",
+    "has_given_review": "akakupa wongororo"
 }

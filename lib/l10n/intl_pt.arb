@@ -1,6 +1,6 @@
 {
     "@@locale": "pt",
-    "@@last_modified": "2020-09-07T13:53:45+00:00",
+    "@@last_modified": "2020-09-11T13:34:42+00:00",
     "check_met": "Checando, se já nos conhecemos",
     "we_met": "Já nos conhecemos",
     "hang_on": "Aguarde ",
@@ -967,5 +967,14 @@
     "request_paymenttype_paypal": "PayPal",
     "request_paymenttype_ach": "ACH",
     "goods_validation": "Você não selecionou nenhum bem\/material. Selecione um ou mais antes de criar a solicitação de doação.",
-    "monthly_charges_of": "encargos mensais e adicionais de"
+    "monthly_charges_of": "encargos mensais e adicionais de",
+    "add_amount_donate": "Adicione a quantidade que você deseja doar.",
+    "add_amount_donate_empty": "A quantidade não pode estar vazia",
+    "add_goods_donate_empty": "Selecione pelo menos um produto para oferecer.",
+    "offer_type": "Tipo de oferta *",
+    "request_goods_offer": "Forneça a lista de bens \/ suprimentos que você oferece *",
+    "offerReview": "Corpo: Você recebeu uma avaliação para a oferta:",
+    "request_review_body_creator": "Corpo: Você recebeu uma revisão para a solicitação:",
+    "request_review_body_user": "Corpo: Você recebeu uma revisão sobre o trabalho que realizou para a solicitação:",
+    "has_given_review": "te deu uma revisão"
 }

@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-CN",
-    "@@last_modified": "2020-09-07T13:53:45+00:00",
+    "@@last_modified": "2020-09-11T13:34:42+00:00",
     "check_met": "检查我们是否见过",
     "we_met": "我们见过",
     "hang_on": "稍待",
@@ -967,5 +967,14 @@
     "request_paymenttype_paypal": "贝宝",
     "request_paymenttype_ach": "ACH",
     "goods_validation": "您尚未选择任何商品\/供应。在创建捐赠请求之前，请选择一个或多个。",
-    "monthly_charges_of": "的每月和附加费用"
+    "monthly_charges_of": "的每月和附加费用",
+    "add_amount_donate": "添加您要捐赠的金额。",
+    "add_amount_donate_empty": "金额不能为空",
+    "add_goods_donate_empty": "请选择至少一种商品。",
+    "offer_type": "优惠类型*",
+    "request_goods_offer": "提供您提供的商品\/供应清单*",
+    "offerReview": "正文：您已收到此优惠的评论：",
+    "request_review_body_creator": "正文：您已收到针对该请求的审核：",
+    "request_review_body_user": "正文：您已收到对您为请求所做的工作的评论：",
+    "has_given_review": "给了你评论"
 }

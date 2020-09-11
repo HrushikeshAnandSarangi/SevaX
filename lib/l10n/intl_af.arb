@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2020-09-07T13:53:45+00:00",
+    "@@last_modified": "2020-09-11T13:34:42+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -967,5 +967,14 @@
     "request_paymenttype_paypal": "PayPal",
     "request_paymenttype_ach": "ACH",
     "goods_validation": "U het geen goedere\/voorrade gekies nie. Kies een of meer voordat u 'n donasieversoek skep.",
-    "monthly_charges_of": "maandelikse en addisionele koste van"
+    "monthly_charges_of": "maandelikse en addisionele koste van",
+    "add_amount_donate": "Voeg die bedrag by wat u wil skenk.",
+    "add_amount_donate_empty": "Bedrag kan nie leeg wees nie",
+    "add_goods_donate_empty": "Kies ten minste een goed wat u wil aanbied.",
+    "offer_type": "Aanbiedingstipe *",
+    "request_goods_offer": "Verskaf die lys van goedere \/ voorrade wat u aanbied *",
+    "offerReview": "Liggaam: u het 'n resensie vir die aanbod ontvang:",
+    "request_review_body_creator": "Liggaam: u het 'n hersiening ontvang vir die versoek:",
+    "request_review_body_user": "Liggaam: u het 'n oorsig ontvang van die werk wat u vir die versoek gedoen het:",
+    "has_given_review": "het u 'n resensie gegee"
 }
