@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-TW",
-    "@@last_modified": "2020-09-07T13:53:45+00:00",
+    "@@last_modified": "2020-09-11T13:34:42+00:00",
     "check_met": "檢查我們是否見過",
     "we_met": "我們曾見過",
     "hang_on": "稍待。。。",
@@ -967,5 +967,14 @@
     "request_paymenttype_paypal": "貝寶",
     "request_paymenttype_ach": "ACH",
     "goods_validation": "您尚未選擇任何商品\/供應。在創建捐贈請求之前，請選擇一個或多個。",
-    "monthly_charges_of": "的每月和附加費用"
+    "monthly_charges_of": "的每月和附加費用",
+    "add_amount_donate": "添加您要捐贈的金額。",
+    "add_amount_donate_empty": "金額不能為空",
+    "add_goods_donate_empty": "請選擇至少一種商品。",
+    "offer_type": "優惠類型*",
+    "request_goods_offer": "提供您提供的商品\/供應清單*",
+    "offerReview": "正文：您已收到此優惠的評論：",
+    "request_review_body_creator": "正文：您已收到針對該請求的審核：",
+    "request_review_body_user": "正文：您已收到對您為請求所做的工作的評論：",
+    "has_given_review": "給了你評論"
 }

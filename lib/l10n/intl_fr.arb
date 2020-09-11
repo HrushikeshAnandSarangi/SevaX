@@ -1,6 +1,6 @@
 {
     "@@locale": "fr",
-    "@@last_modified": "2020-09-07T13:53:44+00:00",
+    "@@last_modified": "2020-09-11T13:34:42+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Accrochez-vous bien",
@@ -967,5 +967,14 @@
     "request_paymenttype_paypal": "Pay Pal",
     "request_paymenttype_ach": "ACH",
     "goods_validation": "Vous n'avez sélectionné aucune marchandise\/fourniture. Veuillez en sélectionner un ou plusieurs avant de créer la demande de don.",
-    "monthly_charges_of": "frais mensuels et supplémentaires de"
+    "monthly_charges_of": "frais mensuels et supplémentaires de",
+    "add_amount_donate": "Ajoutez le montant que vous souhaitez donner.",
+    "add_amount_donate_empty": "Le montant ne peut pas être vide",
+    "add_goods_donate_empty": "Veuillez sélectionner au moins un produit à offrir.",
+    "offer_type": "Type d'offre *",
+    "request_goods_offer": "Fournissez la liste des biens \/ fournitures que vous proposez *",
+    "offerReview": "Corps: Vous avez reçu un avis sur l'offre:",
+    "request_review_body_creator": "Corps: Vous avez reçu un avis pour la demande:",
+    "request_review_body_user": "Corps: Vous avez reçu un avis sur le travail que vous avez effectué pour la demande:",
+    "has_given_review": "vous a donné un avis"
 }
