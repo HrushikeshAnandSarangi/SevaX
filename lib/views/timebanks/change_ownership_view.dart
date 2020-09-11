@@ -428,13 +428,7 @@ class _ChangeOwnerShipViewState extends State<ChangeOwnerShipView> {
         // return object of type Dialog
         return AlertDialog(
           content: Text(
-            S.of(context).invitation_sent1 +
-                ' ' +
-                timebankName +
-                S.of(context).invitation_sent2 +
-                ' ' +
-                admin +
-                S.of(context).invitation_sent3,
+            '${S.of(context).invitation_sent1} $timebankName ${S.of(context).invitation_sent2} $admin ${S.of(context).invitation_sent3}',
           ),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
