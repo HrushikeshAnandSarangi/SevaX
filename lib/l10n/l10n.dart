@@ -4123,9 +4123,23 @@ class S {
       );
 
   String get add_amount_donated => Intl.message(
-        'Add amount that you have donated.',
-        name: 'add_amount_donated',
-      );
+    'Add amount that you have donated.',
+    name: 'add_amount_donated',
+  );
+
+  String get add_amount_donate => Intl.message(
+    'Add amount that you want to donate.',
+    name: 'add_amount_donate',
+  );
+  String get add_amount_donate_empty => Intl.message(
+    'Amount cannot be empty',
+    name: 'add_amount_donate_empty',
+  );
+  String get add_goods_donate_empty => Intl.message(
+    'Please select atleast one goods to offer.',
+    name: 'add_goods_donate_empty',
+  );
+
 
   String get amount_donated => Intl.message(
         'Amount Donated?',
@@ -4323,9 +4337,13 @@ class S {
       );
 
   String get request_type => Intl.message(
-        'Request type*',
-        name: 'request_type',
-      );
+    'Request type*',
+    name: 'request_type',
+  );
+  String get offer_type => Intl.message(
+    'Offer type*',
+    name: 'offer_type',
+  );
 
   String get request_type_time => Intl.message(
         'Time',
@@ -4363,9 +4381,14 @@ class S {
       );
 
   String get request_goods_description => Intl.message(
-        'Provide the list of Goods/Supplies that you need*',
-        name: 'request_goods_description',
-      );
+    'Provide the list of Goods/Supplies that you need*',
+    name: 'request_goods_description',
+  );
+
+  String get request_goods_offer => Intl.message(
+    'Provide the list of Goods/Supplies that you offer*',
+    name: 'request_goods_offer',
+  );
 
   String get request_goods_address => Intl.message(
         'Provide address where the donor should ship*',

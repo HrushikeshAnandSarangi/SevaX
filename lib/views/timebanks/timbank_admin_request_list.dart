@@ -1441,7 +1441,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   }
 
   Widget getCoordinationList(BuildContext context, TimebankModel model) {
-    if (model.coordinators == null || model.coordinators.isEmpty) return Container();
+    if (model.coordinators == null || model.coordinators.isEmpty)
+      return Container();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1886,7 +1887,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
           color: Theme.of(context).accentColor,
           textColor: FlavorConfig.values.buttonTextColor,
           child: Text(
-            S.of(context).loan,
+            S.of(context).donate,
             style: TextStyle(
               fontSize: dialogButtonSize,
             ),
