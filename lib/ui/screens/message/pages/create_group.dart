@@ -57,8 +57,8 @@ class CreateGroupPage extends StatelessWidget {
               bloc
                   .createMultiUserMessaging(SevaCore.of(context).loggedInUser)
                   .then((ChatModel model) {
+                Navigator.of(context, rootNavigator: true).pop();
                 if (model != null) {
-                  Navigator.of(context, rootNavigator: true).pop();
                   Navigator.of(context).pop(model);
                 }
               });
