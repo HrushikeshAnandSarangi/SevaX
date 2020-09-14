@@ -6,12 +6,12 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import './image_picker_handler.dart';
 import 'image_url_view.dart';
 
-class UserImagePickerDialog extends StatelessWidget {
-  UserImagePickerHandler _listener;
+class ImagePickerDialog extends StatelessWidget {
+  ImagePickerHandler _listener;
   AnimationController _controller;
   BuildContext context;
 
-  UserImagePickerDialog(this._listener, this._controller);
+  ImagePickerDialog(this._listener, this._controller);
 
   Animation<double> _drawerContentsOpacity;
   Animation<Offset> _drawerDetailsPosition;

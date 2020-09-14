@@ -20,8 +20,8 @@ class ImagePickerWidget extends StatefulWidget {
 }
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget>
-    with TickerProviderStateMixin, ImagePickerListener {
-  ImagePickerHandler imagePicker;
+    with TickerProviderStateMixin, UserImagePickerListener {
+  UserImagePickerHandler imagePicker;
   AnimationController _controller;
 
   @override
@@ -30,7 +30,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget>
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    imagePicker = ImagePickerHandler(
+    imagePicker = UserImagePickerHandler(
       this,
       _controller,
       isAspectRatioFixed: widget.isAspectRatioFixed,

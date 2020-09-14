@@ -43,7 +43,7 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage>
-    with UserImagePickerListener, SingleTickerProviderStateMixin {
+    with ImagePickerListener, SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final _firestore = Firestore.instance;
@@ -58,7 +58,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   String confirmPassword;
   File selectedImage;
   String isImageSelected = 'Add Photo';
-  UserImagePickerHandler imagePicker;
+  ImagePickerHandler imagePicker;
   UserModel usermodel;
   bool _saving = false;
   bool _isDocumentBeingUploaded = false;
@@ -91,7 +91,7 @@ class _EditProfilePageState extends State<EditProfilePage>
         this.canuploadCV = true;
       });
     }
-    imagePicker = UserImagePickerHandler(this, _controller);
+    imagePicker = ImagePickerHandler(this, _controller);
     imagePicker.init();
   }
 
