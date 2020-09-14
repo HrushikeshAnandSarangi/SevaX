@@ -36,7 +36,6 @@ import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
-import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:usage/uuid/uuid.dart';
@@ -497,7 +496,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         ]);
   }
 
-  Widget RequestPaymentACH(requestModel) {
+  Widget RequestPaymentACH(RequestModel requestModel) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -684,7 +683,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         ]);
   }
 
-  Widget RequestPaymentZellePay(requestModel) {
+  Widget RequestPaymentZellePay(RequestModel requestModel) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -720,7 +719,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
-              requestModel.donationInstructionLink = value;
+              requestModel.zelleId = value;
             },
             validator: _validateEmailAndPhone,
           )
@@ -787,14 +786,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             keyboardType: TextInputType.emailAddress,
             maxLines: 1,
             onSaved: (value) {
-              requestModel.donationInstructionLink = value;
+              requestModel.paypalId = value;
             },
             validator: _validateEmailId,
           )
         ]);
   }
 
-  Widget RequestPaymentDescriptionData(requestModel) {
+  Widget RequestPaymentDescriptionData(RequestModel requestModel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[

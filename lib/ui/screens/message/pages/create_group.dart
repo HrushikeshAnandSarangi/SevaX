@@ -27,6 +27,10 @@ class CreateGroupPage extends StatelessWidget {
   CreateGroupPage({Key key, this.bloc}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    Map validationString = {
+      'profanity': S.of(context).profanity_text_alert,
+      'validation_error_room_name': S.of(context).profanity_text_alert
+    };
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
@@ -147,8 +151,8 @@ class CreateGroupPage extends StatelessWidget {
                               disabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
                               errorText:
-                                  snapshot.error == 'validation_error_room_name'
-                                      ? S.of(context).validation_error_room_name
+                                  validationString.containsKey(snapshot.error)
+                                      ? validationString[snapshot.error]
                                       : null,
                               hintText: S.of(context).messaging_room_name,
                               hintStyle: TextStyle(
