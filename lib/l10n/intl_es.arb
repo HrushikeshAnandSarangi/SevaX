@@ -1,6 +1,6 @@
 {
     "@@locale": "es",
-    "@@last_modified": "2020-09-11T13:34:42+00:00",
+    "@@last_modified": "2020-09-14T12:53:42+00:00",
     "check_met": "Verificando, se nos conhecemos antes",
     "we_met": "Nós nos encontramos antes",
     "hang_on": "Aguarde",
@@ -250,7 +250,7 @@
     "project_location": "La ubicación de tu proyecto.",
     "project_location_hint": "La ubicación del proyecto ayudará a sus miembros a localizar",
     "save_as_template": "Guardar como plantilla",
-    "validation_error_no_date": "Mencione la fecha de inicio y finalización del proyecto.",
+    "validation_error_no_date": "Por favor mencione la fecha de inicio y finalización.",
     "creating_project": "Creando proyecto",
     "validation_error_location_mandatory": "La ubicación es obligatoria",
     "validation_error_add_project_location": "Por favor agregue ubicación a su proyecto",

@@ -970,7 +970,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "validation_error_min_donation_count_negative" : MessageLookupByLibrary.simpleMessage("Ndokumbirawo kuti uise iyo min min min donation inodiwa"),
     "validation_error_min_donation_count_zero" : MessageLookupByLibrary.simpleMessage("Ndokumbirawo kuti uise iyo min min min donation inodiwa"),
     "validation_error_mission_empty" : MessageLookupByLibrary.simpleMessage("Chirevo chemishini hachigone kunge chisina chinhu."),
-    "validation_error_no_date" : MessageLookupByLibrary.simpleMessage("Ndokumbira utaure nezve kutanga uye kupera zuva rerojekiti"),
+    "validation_error_no_date" : MessageLookupByLibrary.simpleMessage("Ndokumbira utaure zuva rekutanga uye rekupedzisira."),
     "validation_error_offer_class_hours" : MessageLookupByLibrary.simpleMessage("Ndokumbira kuti upinde maawa anodiwa ekirasi"),
     "validation_error_offer_credit" : MessageLookupByLibrary.simpleMessage("Hatikwanise kushambadza Kirasi iyi. Iko kune zvisina kukwana zvikwereti kubva mukirasi. Ndokumbirawo mudzokorora iyo Prep nguva kana nhamba yevadzidzi uye mutumire iyo yekupa zvakare"),
     "validation_error_offer_prep_hour" : MessageLookupByLibrary.simpleMessage("Ndokumbira utore yako yekugadzirira nguva"),

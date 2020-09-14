@@ -970,7 +970,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "validation_error_min_donation_count_negative" : MessageLookupByLibrary.simpleMessage("Veuillez saisir le nombre de dons minimum requis"),
     "validation_error_min_donation_count_zero" : MessageLookupByLibrary.simpleMessage("Veuillez saisir le nombre de dons minimum requis"),
     "validation_error_mission_empty" : MessageLookupByLibrary.simpleMessage("L\'énoncé de mission ne peut pas être vide."),
-    "validation_error_no_date" : MessageLookupByLibrary.simpleMessage("Veuillez mentionner la date de début et de fin du projet"),
+    "validation_error_no_date" : MessageLookupByLibrary.simpleMessage("Veuillez mentionner la date de début et de fin."),
     "validation_error_offer_class_hours" : MessageLookupByLibrary.simpleMessage("S\'il vous plaît entrer les heures requises pour la classe"),
     "validation_error_offer_credit" : MessageLookupByLibrary.simpleMessage("Nous ne pouvons pas publier cette classe. Il n\'y a pas suffisamment de crédits de la classe. S\'il vous plaît réviser le temps de préparation ou le nombre d\'étudiants et de soumettre l\'offre à nouveau"),
     "validation_error_offer_prep_hour" : MessageLookupByLibrary.simpleMessage("S\'il vous plaît entrer votre temps preperation"),
