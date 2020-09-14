@@ -676,6 +676,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pledge_modified" : MessageLookupByLibrary.simpleMessage("Le montant promis pour le don n\'a pas été reconnu"),
     "pledge_modified_by_donor" : MessageLookupByLibrary.simpleMessage("Le donateur a modifié le montant de la promesse de don"),
     "pledged" : MessageLookupByLibrary.simpleMessage("Promis"),
+    "pledged_to_donate" : MessageLookupByLibrary.simpleMessage("s\'est engagé à faire un don"),
     "posted_by" : MessageLookupByLibrary.simpleMessage("Posté par:"),
     "posted_date" : MessageLookupByLibrary.simpleMessage("Postdater:"),
     "posted_on" : MessageLookupByLibrary.simpleMessage("Posté sur"),

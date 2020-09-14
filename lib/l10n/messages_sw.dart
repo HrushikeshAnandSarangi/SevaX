@@ -676,6 +676,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pledge_modified" : MessageLookupByLibrary.simpleMessage("Kiasi chako kilichoahidiwa kwa mchango hakikubaliwa"),
     "pledge_modified_by_donor" : MessageLookupByLibrary.simpleMessage("Mfadhili amebadilisha kiasi cha ahadi"),
     "pledged" : MessageLookupByLibrary.simpleMessage("Umeahidi"),
+    "pledged_to_donate" : MessageLookupByLibrary.simpleMessage("ameahidi kuchangia"),
     "posted_by" : MessageLookupByLibrary.simpleMessage("Iliyotumwa na:"),
     "posted_date" : MessageLookupByLibrary.simpleMessage("Tarehe ya mwisho:"),
     "posted_on" : MessageLookupByLibrary.simpleMessage("Imewekwa kwenye"),

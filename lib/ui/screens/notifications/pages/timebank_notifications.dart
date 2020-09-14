@@ -93,9 +93,6 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                     );
                   },
                   onPressed: () async {
-                    // await MailDonationReciept.sendReciept(donationModel)
-                    //     .then((value) => print("Completed process"))
-                    //     .catchError((onError) => print("Rejected Process"));
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -110,8 +107,8 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   photoUrl: donationModel.donorDetails.photoUrl,
                   subTitle:
-                      '${donationModel.donorDetails.name ?? '' + ' ${S.of(context).donated} ' + donationModel.donationType.toString().split('.')[1]}, ${S.of(context).tap_to_view_details}',
-                  title: S.of(context).donation_acknowledge,
+                      "${donationModel.donorDetails.name}  ${S.of(context).pledged_to_donate} ${donationModel.donationType == RequestType.CASH ? "\$${donationModel.cashDetails.pledgedAmount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+                  title: S.of(context).donations_received,
                 );
                 break;
 

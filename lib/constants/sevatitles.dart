@@ -3,7 +3,7 @@
 final String newsCreateTitle = "Add News Post";
 final String feedTitle = "News Feed";
 final String defaultUserImageURL =
-    "https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg";
+    "https://firebasestorage.googleapis.com/v0/b/sevaxproject4sevax.appspot.com/o/static_images%2Fdefault_user_image.jpg?alt=media&token=5f35ee87-78b1-4d04-9c4a-967a03dde926";
 final String defaultUsername = "Anonymous";
 final double dialogButtonSize = 16;
 

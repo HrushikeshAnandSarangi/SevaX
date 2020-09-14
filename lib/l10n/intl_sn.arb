@@ -1,6 +1,6 @@
 {
     "@@locale": "sn",
-    "@@last_modified": "2020-09-14T12:53:42+00:00",
+    "@@last_modified": "2020-09-14T13:59:55+00:00",
     "check_met": "Kuongorora, kana takasangana zvisati zvaitika",
     "we_met": "Takasangana zvisati zvaitika",
     "hang_on": "Ramba wakasimba",
@@ -976,5 +976,6 @@
     "offerReview": "Muviri: Wakatambira wongororo yekupihwa:",
     "request_review_body_creator": "Mutumbi: Wakatambira ongororo yechikumbiro:",
     "request_review_body_user": "Mutumbi: Wakatambira wongororo pabasa rawakaitira chikumbiro:",
-    "has_given_review": "akakupa wongororo"
+    "has_given_review": "akakupa wongororo",
+    "pledged_to_donate": "akavimbisa kupa"
 }

@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2020-09-14T12:53:42+00:00",
+    "@@last_modified": "2020-09-14T13:59:55+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -976,5 +976,6 @@
     "offerReview": "Mwili: Umepokea hakiki ya ofa:",
     "request_review_body_creator": "Mwili: Umepokea hakiki ya ombi:",
     "request_review_body_user": "Mwili: Umepokea ukaguzi juu ya kazi uliyofanya kwa ombi:",
-    "has_given_review": "amekupa hakiki"
+    "has_given_review": "amekupa hakiki",
+    "pledged_to_donate": "ameahidi kuchangia"
 }

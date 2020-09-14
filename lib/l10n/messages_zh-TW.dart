@@ -676,6 +676,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pledge_modified" : MessageLookupByLibrary.simpleMessage("您的認捐金額未得到確認"),
     "pledge_modified_by_donor" : MessageLookupByLibrary.simpleMessage("Donor has modified the pledge amount"),
     "pledged" : MessageLookupByLibrary.simpleMessage("已抵押"),
+    "pledged_to_donate" : MessageLookupByLibrary.simpleMessage("承諾捐贈"),
     "posted_by" : MessageLookupByLibrary.simpleMessage("發表者:"),
     "posted_date" : MessageLookupByLibrary.simpleMessage("發布日期:"),
     "posted_on" : MessageLookupByLibrary.simpleMessage("發表於"),
