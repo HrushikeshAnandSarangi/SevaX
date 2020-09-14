@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/repositories/storage_repository.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_builder.dart';
@@ -18,11 +17,6 @@ import 'package:sevaexchange/widgets/image_picker_widget.dart';
 class CreateGroupPage extends StatelessWidget {
   final CreateChatBloc bloc;
   final TextEditingController _controller = TextEditingController();
-  ProfanityImageModel profanityImageModel = ProfanityImageModel();
-  ProfanityStatusModel profanityStatusModel = ProfanityStatusModel();
-  FirebaseStorage _storage = FirebaseStorage();
-  BuildContext viewContext;
-  bool showLoadingDialog = false;
 
   CreateGroupPage({Key key, this.bloc}) : super(key: key);
   @override
@@ -45,28 +39,26 @@ class CreateGroupPage extends StatelessWidget {
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             onPressed: () {
-              if (showLoadingDialog) {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext context) {
-                    viewContext = context;
-                    return AlertDialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      content: Text(
-                        S.of(context).creating_messaging_room,
-                      ),
-                    );
-                  },
-                );
-              }
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    content: Text(
+                      S.of(context).creating_messaging_room,
+                    ),
+                  );
+                },
+              );
+
               bloc
                   .createMultiUserMessaging(SevaCore.of(context).loggedInUser)
                   .then((ChatModel model) {
+                Navigator.of(context, rootNavigator: true).pop();
                 if (model != null) {
-                  Navigator.of(viewContext).pop();
                   Navigator.of(context).pop(model);
                 }
               });
@@ -127,20 +119,10 @@ class CreateGroupPage extends StatelessWidget {
                       StreamBuilder<String>(
                         stream: bloc.groupName,
                         builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            if (snapshot.error
-                                .toString()
-                                .contains('profanity')) {
-                              showLoadingDialog = false;
-                            }
-                          }
                           _controller.value = _controller.value.copyWith(
                             text: snapshot.data,
                           );
-                          if (_controller.text != null &&
-                              _controller.text.length > 0) {
-                            showLoadingDialog = true;
-                          }
+
                           return TextField(
                             controller: _controller,
                             onChanged: bloc.onGroupNameChanged,
@@ -215,19 +197,17 @@ class CreateGroupPage extends StatelessWidget {
     );
     progressDialog.show();
 
-    // _newsImageURL = imageURL;
-    String filePath = DateTime.now().toString();
     if (file == null) {
       progressDialog.hide();
     }
     String imageUrl = file != null
         ? await StorageRepository.uploadFile("multiUserMessagingLogo", file)
         : null;
-    profanityImageModel = await checkProfanityForImage(imageUrl: imageUrl);
+    var profanityImageModel = await checkProfanityForImage(imageUrl: imageUrl);
     if (profanityImageModel == null) {
       showFailedLoadImage(context: context).then((value) {});
     } else {
-      profanityStatusModel =
+      var profanityStatusModel =
           await getProfanityStatus(profanityImageModel: profanityImageModel);
 
       if (profanityStatusModel.isProfane) {
@@ -256,10 +236,5 @@ class CreateGroupPage extends StatelessWidget {
         progressDialog.hide();
       }
     }
-  }
-
-  void stop() {
-    Navigator.of(viewContext).pop();
-    showLoadingDialog = false;
   }
 }
