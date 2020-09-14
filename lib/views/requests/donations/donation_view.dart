@@ -6,6 +6,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_bloc.dart';
@@ -469,7 +470,11 @@ class _DonationViewState extends State<DonationView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          content: Text(S.of(context).successfully +
+          content: Text(S
+                  .of(context)
+                  .successfully
+                  .firstWordUpperCase()
+                  .replaceFirst('.', '') +
               ' ' +
               S.of(context).pledged.toLowerCase()),
           actions: <Widget>[
