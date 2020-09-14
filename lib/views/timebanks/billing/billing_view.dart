@@ -184,7 +184,7 @@ class BillingViewState extends State<BillingView> {
 
     WriteBatch batch = Firestore.instance.batch();
     var timebankRef =
-        Firestore.instance.collection('timebank').document(primaryTimebank);
+        Firestore.instance.collection('timebanknew').document(primaryTimebank);
 
     var personalNotifications = Firestore.instance
         .collection('users')

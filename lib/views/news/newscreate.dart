@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:sevaexchange/components/ProfanityDetector.dart';
-import 'package:html/parser.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
+import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -196,93 +195,100 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         Padding(
                           padding: EdgeInsets.only(bottom: 0.0),
                           child: Container(
-                            height: 200,
-                            child: KeyboardActions(
-                              tapOutsideToDismiss: true,
-                              config: KeyboardActionsConfig(
-                                keyboardSeparatorColor: Color(0x0FF766FE0),
-                                actions: [
-                                  KeyboardActionsItem(
+                              height: 200,
+                              child: KeyboardActions(
+                                  tapOutsideToDismiss: true,
+                                  config: KeyboardActionsConfig(
+                                    keyboardSeparatorColor: Color(0x0FF766FE0),
+                                    keyboardActionsPlatform:
+                                        KeyboardActionsPlatform.IOS,
+                                    actions: [
+                                      KeyboardActionsItem(focusNode: postNode)
+                                    ],
+                                  ),
+                                  child: TextFormField(
                                     focusNode: postNode,
-                                  )
-                                ],
-                              ),
-                              child:TextFormField(
-                                focusNode: postNode,
-                            textCapitalization: TextCapitalization.sentences,
-                            controller: subheadingController,
-                            textAlign: TextAlign.start,
-                            decoration: InputDecoration(
-                              errorMaxLines: 2,
-                              labelStyle: TextStyle(color: Colors.grey),
-                              alignLabelWithHint: false,
-                              hintText: S.of(context).create_feed_hint,
-                              labelText: S.of(context).create_feed_placeholder,
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(12.0),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                  width: 0.5,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(12.0),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                  width: 0.5,
-                                ),
-                              ),
-                              disabledBorder: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(12.0),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                  width: 0.5,
-                                ),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(0.0),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.black,
-                                  width: 0.5,
-                                ),
-                              ),
-                            ),
-                            keyboardType: TextInputType.text,
-                            maxLines: 5,
-                            autovalidate: autoValidateText,
-                            onChanged: (value) {
-                              if (value.length > 1 && !autoValidateText) {
-                                setState(() {
-                                  autoValidateText = true;
-                                });
-                              }
-                              if (value.length <= 1 && autoValidateText) {
-                                setState(() {
-                                  autoValidateText = false;
-                                });
-                              }
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return S
-                                    .of(context)
-                                    .validation_error_general_text;
-                              }
-                              if (profanityDetector.isProfaneString(value)) {
-                                return S.of(context).profanity_text_alert;
-                              }
-                              newsObject.subheading = value;
-                              // print("object");
-                            },
-                          ))),
+                                    textCapitalization:
+                                        TextCapitalization.sentences,
+                                    controller: subheadingController,
+                                    textAlign: TextAlign.start,
+                                    decoration: InputDecoration(
+                                      errorMaxLines: 2,
+                                      labelStyle: TextStyle(color: Colors.grey),
+                                      alignLabelWithHint: false,
+                                      hintText: S.of(context).create_feed_hint,
+                                      labelText:
+                                          S.of(context).create_feed_placeholder,
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                          const Radius.circular(12.0),
+                                        ),
+                                        borderSide: BorderSide(
+                                          color: Colors.black,
+                                          width: 0.5,
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                          const Radius.circular(12.0),
+                                        ),
+                                        borderSide: BorderSide(
+                                          color: Colors.black,
+                                          width: 0.5,
+                                        ),
+                                      ),
+                                      disabledBorder: OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                          const Radius.circular(12.0),
+                                        ),
+                                        borderSide: BorderSide(
+                                          color: Colors.black,
+                                          width: 0.5,
+                                        ),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                          const Radius.circular(0.0),
+                                        ),
+                                        borderSide: BorderSide(
+                                          color: Colors.black,
+                                          width: 0.5,
+                                        ),
+                                      ),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                    maxLines: 5,
+                                    autovalidate: autoValidateText,
+                                    onChanged: (value) {
+                                      if (value.length > 1 &&
+                                          !autoValidateText) {
+                                        setState(() {
+                                          autoValidateText = true;
+                                        });
+                                      }
+                                      if (value.length <= 1 &&
+                                          autoValidateText) {
+                                        setState(() {
+                                          autoValidateText = false;
+                                        });
+                                      }
+                                    },
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return S
+                                            .of(context)
+                                            .validation_error_general_text;
+                                      }
+                                      if (profanityDetector
+                                          .isProfaneString(value)) {
+                                        return S
+                                            .of(context)
+                                            .profanity_text_alert;
+                                      }
+                                      newsObject.subheading = value;
+                                      // print("object");
+                                    },
+                                  ))),
                         ),
                       ],
                     ),

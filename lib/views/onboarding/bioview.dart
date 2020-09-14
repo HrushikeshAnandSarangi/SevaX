@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/utils/app_config.dart';
-import 'package:keyboard_actions/keyboard_actions.dart';
 
 typedef StringCallback = void Function(String bio);
 
@@ -80,63 +80,73 @@ class _BioViewState extends State<BioView> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Container(
-                            height: 250,
-                            child: KeyboardActions(
-                              tapOutsideToDismiss: true,
-                              config: KeyboardActionsConfig(
-                                keyboardSeparatorColor: Color(0x0FF766FE0),
-                                actions: [
-                                  KeyboardActionsItem(
-                                    focusNode: _focusNodeBio,
-                                  )
-                                ],
-                              ),
-                              child: TextFormField(
-                            textCapitalization: TextCapitalization.sentences,
-                            style: TextStyle(
-                                fontSize: 16.0, color: Colors.black54),
-                            decoration: InputDecoration(
-                              errorMaxLines: 2,
-                              fillColor: Colors.grey[300],
-                              filled: true,
-                              hintText: S.of(context).bio_hint,
-                              border: textFieldBorder,
-                              enabledBorder: textFieldBorder,
-                              focusedBorder: textFieldBorder,
-                            ),
-                            keyboardType: TextInputType.multiline,
-                            autovalidate: autoValidateText,
-                            minLines: 6,
-                            maxLines: 50,
-                            maxLength: 150,
-                            onChanged: (value) {
-                              if (value.length > 1 && !autoValidateText) {
-                                setState(() {
-                                  autoValidateText = true;
-                                });
-                              }
-                              if (value.length <= 1 && autoValidateText) {
-                                setState(() {
-                                  autoValidateText = false;
-                                });
-                              }
-                            },
-                            validator: (value) {
-                              if (value.trim().isEmpty) {
-                                return S.of(context).validation_error_bio_empty;
-                              }
-                              if (value.length < 50) {
-                                this.bio = value;
-                                return S
-                                    .of(context)
-                                    .validation_error_bio_min_characters;
-                              }
-                              if (profanityDetector.isProfaneString(value)) {
-                                return S.of(context).profanity_text_alert;
-                              }
-                              this.bio = value;
-                              return null;
-                            })))
+                              height: 250,
+                              child: KeyboardActions(
+                                  tapOutsideToDismiss: true,
+                                  config: KeyboardActionsConfig(
+                                    keyboardSeparatorColor: Color(0x0FF766FE0),
+                                    keyboardActionsPlatform:
+                                        KeyboardActionsPlatform.IOS,
+                                    actions: [
+                                      KeyboardActionsItem(
+                                          focusNode: _focusNodeBio)
+                                    ],
+                                  ),
+                                  child: TextFormField(
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                      style: TextStyle(
+                                          fontSize: 16.0,
+                                          color: Colors.black54),
+                                      decoration: InputDecoration(
+                                        errorMaxLines: 2,
+                                        fillColor: Colors.grey[300],
+                                        filled: true,
+                                        hintText: S.of(context).bio_hint,
+                                        border: textFieldBorder,
+                                        enabledBorder: textFieldBorder,
+                                        focusedBorder: textFieldBorder,
+                                      ),
+                                      keyboardType: TextInputType.multiline,
+                                      autovalidate: autoValidateText,
+                                      minLines: 6,
+                                      maxLines: 50,
+                                      maxLength: 150,
+                                      onChanged: (value) {
+                                        if (value.length > 1 &&
+                                            !autoValidateText) {
+                                          setState(() {
+                                            autoValidateText = true;
+                                          });
+                                        }
+                                        if (value.length <= 1 &&
+                                            autoValidateText) {
+                                          setState(() {
+                                            autoValidateText = false;
+                                          });
+                                        }
+                                      },
+                                      validator: (value) {
+                                        if (value.trim().isEmpty) {
+                                          return S
+                                              .of(context)
+                                              .validation_error_bio_empty;
+                                        }
+                                        if (value.length < 50) {
+                                          this.bio = value;
+                                          return S
+                                              .of(context)
+                                              .validation_error_bio_min_characters;
+                                        }
+                                        if (profanityDetector
+                                            .isProfaneString(value)) {
+                                          return S
+                                              .of(context)
+                                              .profanity_text_alert;
+                                        }
+                                        this.bio = value;
+                                        return null;
+                                      })))
                         ],
                       ),
                     )

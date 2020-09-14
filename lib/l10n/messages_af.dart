@@ -970,7 +970,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "validation_error_min_donation_count_negative" : MessageLookupByLibrary.simpleMessage("Voer die aantal skenkings in wat nodig is"),
     "validation_error_min_donation_count_zero" : MessageLookupByLibrary.simpleMessage("Please enter the number of min donation needed"),
     "validation_error_mission_empty" : MessageLookupByLibrary.simpleMessage("Missieverklaring kan nie leeg wees nie."),
-    "validation_error_no_date" : MessageLookupByLibrary.simpleMessage("Noem die begin- en einddatum van die projek"),
+    "validation_error_no_date" : MessageLookupByLibrary.simpleMessage("Noem die begin- en einddatum."),
     "validation_error_offer_class_hours" : MessageLookupByLibrary.simpleMessage("Voer asseblief die ure in wat vir die klas benodig word"),
     "validation_error_offer_credit" : MessageLookupByLibrary.simpleMessage("Ons kan nie hierdie klas publiseer nie. Daar is onvoldoende krediete uit die klas. Hersien asseblief die Prep-tyd of die aantal studente en dien die aanbod weer in"),
     "validation_error_offer_prep_hour" : MessageLookupByLibrary.simpleMessage("Voer u voorbereidingstyd in"),

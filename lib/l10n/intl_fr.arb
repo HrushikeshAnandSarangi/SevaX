@@ -1,6 +1,6 @@
 {
     "@@locale": "fr",
-    "@@last_modified": "2020-09-11T13:34:42+00:00",
+    "@@last_modified": "2020-09-14T12:53:42+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Accrochez-vous bien",
@@ -250,7 +250,7 @@
     "project_location": "Lieu où  se trouve votre projet",
     "project_location_hint": "Le lieu du projet aidera vos membres à le localiser",
     "save_as_template": "Enregistrer en tant que modèle",
-    "validation_error_no_date": "Veuillez mentionner la date de début et de fin du projet",
+    "validation_error_no_date": "Veuillez mentionner la date de début et de fin.",
     "creating_project": "Création de votre projet en cours",
     "validation_error_location_mandatory": "Renseigner le lieu du projet est obligatoire",
     "validation_error_add_project_location": "Veuillez ajouter un lieu à votre projet",
