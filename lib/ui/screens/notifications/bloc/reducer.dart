@@ -279,12 +279,12 @@ class PersonalNotificationReducerForRequests {
       String timebankId,
       String id,
       UserModel user) {
-      Map<String, dynamic> stateOfcalendarCallback = {
-          "email": SevaCore.of(context).loggedInUser.email,
-          "mobile":globals.isMobile,
-          "envName": FlavorConfig.values.envMode
-      };
-      var stateVar = jsonEncode(stateOfcalendarCallback);
+    Map<String, dynamic> stateOfcalendarCallback = {
+      "email": SevaCore.of(context).loggedInUser.email,
+      "mobile": globals.isMobile,
+      "envName": FlavorConfig.values.envMode
+    };
+    var stateVar = jsonEncode(stateOfcalendarCallback);
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -786,7 +786,7 @@ class PersonalNotificationsRedcerForDonations {
   }) {
     DonationModel donationModel = DonationModel.fromMap(notification.data);
     return NotificationCard(
-      isDissmissible: true,
+      isDissmissible: false,
       timestamp: notification.timestamp,
       entityName: donationModel.requestTitle.toLowerCase(),
       onDismissed: () {
@@ -810,10 +810,10 @@ class PersonalNotificationsRedcerForDonations {
           " " +
           S.of(context).donated +
           " " +
-          donationModel.donationType.toString() +
+          donationModel.donationType.toString().toLowerCase() +
           S.of(context).tap_to_view_details +
           "  ",
-      title: S.of(context).donation_acknowledge,
+      title: S.of(context).donations_received,
     );
   }
 
@@ -856,7 +856,7 @@ class PersonalNotificationsRedcerForDonations {
     return NotificationCard(
       entityName: S.of(context).donation_completed,
       title: S.of(context).donation_completed,
-      subTitle: "${S.of(context).donation_completed_desc}",
+      subTitle: S.of(context).donation_completed_desc,
       onDismissed: onDismissed,
       timestamp: timestampVal,
     );
