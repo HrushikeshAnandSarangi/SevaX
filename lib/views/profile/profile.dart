@@ -12,7 +12,6 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/blocked_members/pages/blocked_members_page.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/user_donations_list.dart';
@@ -49,8 +48,6 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   UserModel user;
-  TimebankModel timebankModel;
-  bool isAdminOrCoordinator = false;
   bool isUserLoaded = false;
   bool isCommunityLoaded = false;
   int selected = 0;
@@ -66,38 +63,12 @@ class _ProfilePageState extends State<ProfilePage> {
     _profileBloc = UserProfileBloc(context);
     super.initState();
     _profileBloc.getAllCommunities(context, widget.userModel);
-
-    FirestoreManager.getTimeBankForId(
-            timebankId: FlavorConfig.values.timebankId)
-        .then((model) {
-      setState(() {
-        timebankModel = model;
-      });
-    });
-
     _profileBloc.communityLoaded.listen((value) {
       isCommunityLoaded = value;
       setState(() {});
     });
 
     Future.delayed(Duration.zero, () {
-      FirestoreManager.getTimeBankForId(
-              timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
-          .then((timebank) {
-        if (timebank.admins
-                .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
-            timebank.coordinators
-                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-          setState(() {
-            print("Admin access granted");
-            isAdminOrCoordinator = true;
-          });
-        } else {
-          // print("Admin access Revoked");
-          // isAdminOrCoordinator = false;
-        }
-      });
-
       FirestoreManager.getUserForIdStream(
         sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       ).listen((UserModel userModel) {
