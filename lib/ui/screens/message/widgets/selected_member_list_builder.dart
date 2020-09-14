@@ -56,8 +56,7 @@ class SelectedMemberWrapBuilder extends StatelessWidget {
         if ((snapshot.data?.length ?? 0) <= 0) {
           return Container();
         }
-        return Container(
-          height: 110,
+        return SingleChildScrollView(
           child: Wrap(
             children: List.generate(
               snapshot.data.length,

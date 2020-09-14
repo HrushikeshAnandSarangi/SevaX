@@ -199,6 +199,7 @@ Widget createAdminTabBar(
               TimeBankAboutView.of(
                 timebankModel: timebankModel,
                 email: SevaCore.of(context).loggedInUser.email,
+                userId: SevaCore.of(context).loggedInUser.sevaUserID,
               ),
               TimebankRequestAdminPage(
                 isUserAdmin: timebankModel.admins
@@ -324,6 +325,7 @@ Widget createJoinedUserTabBar(
               TimeBankAboutView.of(
                 timebankModel: timebankModel,
                 email: SevaCore.of(context).loggedInUser.email,
+                userId: SevaCore.of(context).loggedInUser.sevaUserID,
               ),
               // AcceptedOffers(
               //   sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
@@ -385,6 +387,7 @@ Widget createNormalUserTabBar(
                 TimeBankAboutView.of(
                   timebankModel: timebankModel,
                   email: SevaCore.of(context).loggedInUser.email,
+                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
                 ),
                 TimebankRequestAdminPage(
                   isUserAdmin: false,

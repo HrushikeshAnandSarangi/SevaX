@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2020-09-07T13:53:45+00:00",
+    "@@last_modified": "2020-09-11T13:34:42+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -967,5 +967,14 @@
     "request_paymenttype_paypal": "PayPal",
     "request_paymenttype_ach": "ACH",
     "goods_validation": "Hujachagua Bidhaa\/Ugavi wowote. Tafadhali chagua moja au zaidi kabla ya kuunda ombi la Mchango.",
-    "monthly_charges_of": "malipo ya kila mwezi na nyongeza ya"
+    "monthly_charges_of": "malipo ya kila mwezi na nyongeza ya",
+    "add_amount_donate": "Ongeza kiasi ambacho unataka kuchangia.",
+    "add_amount_donate_empty": "Kiasi hakiwezi kuwa tupu",
+    "add_goods_donate_empty": "Tafadhali chagua angalau bidhaa utakayotoa.",
+    "offer_type": "Aina ya ofa *",
+    "request_goods_offer": "Toa orodha ya Bidhaa \/ Ugavi ambao unatoa *",
+    "offerReview": "Mwili: Umepokea hakiki ya ofa:",
+    "request_review_body_creator": "Mwili: Umepokea hakiki ya ombi:",
+    "request_review_body_user": "Mwili: Umepokea ukaguzi juu ya kazi uliyofanya kwa ombi:",
+    "has_given_review": "amekupa hakiki"
 }
