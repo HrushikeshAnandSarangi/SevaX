@@ -283,15 +283,18 @@ class _DonationViewState extends State<DonationView> {
   }
 
   String getDonationLink() {
-    switch (widget.requestModel.cashModel.paymentType) {
-      case RequestPaymentType.ZELLEPAY:
-        return widget.requestModel.cashModel.zelleId;
-      case RequestPaymentType.PAYPAL:
-        return widget.requestModel.cashModel.paypalId;
+    if (widget.requestModel.requestType == RequestType.CASH) {
+      switch (widget.requestModel.cashModel.paymentType) {
+        case RequestPaymentType.ZELLEPAY:
+          return widget.requestModel.cashModel.zelleId;
+        case RequestPaymentType.PAYPAL:
+          return widget.requestModel.cashModel.paypalId ?? '';
 
-      default:
-        return "Link not registered!";
+        default:
+          return "Link not registered!";
+      }
     }
+    return "";
   }
 
   void showScaffold(String message) {

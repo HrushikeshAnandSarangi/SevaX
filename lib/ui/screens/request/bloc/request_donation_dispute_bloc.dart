@@ -165,10 +165,8 @@ class RequestDonationDisputeBloc {
       // if status is true that means the notification will go to user only as the request is acknowledged
       // if true then we check whether it should go to timebank or user
       //TODO: check the condition for all scenario
-      isTimebankNotification: status
-          ? false
-          : operationMode == OperatingMode.CREATOR &&
-              donationModel.donatedToTimebank,
+      isTimebankNotification: operationMode == OperatingMode.CREATOR &&
+          donationModel.donatedToTimebank,
       notificationId: notificationId,
     );
     return true;

@@ -871,9 +871,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ),
             ),
             subtitle: Text(''),
-            leading: Icon(
-              Icons.show_chart,
-              color: Colors.grey,
+            leading: Image.asset(
+              SevaAssetIcon.donateGood,
+              height: 30,
+              width: 30,
             ),
             trailing: Text(
               snapshot.data.toString(),

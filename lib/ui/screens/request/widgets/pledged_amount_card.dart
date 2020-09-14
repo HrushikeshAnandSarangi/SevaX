@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 
 class PledgedAmountCard extends StatelessWidget {
   final String name;
@@ -25,7 +26,7 @@ class PledgedAmountCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  '$name pledged to donate',
+                  '$name ${S.of(context).pledged_to_donate}',
                   style: TextStyle(color: Colors.grey, fontSize: 16),
                 ),
                 Text(

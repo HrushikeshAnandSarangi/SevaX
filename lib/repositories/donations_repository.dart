@@ -66,10 +66,12 @@ class DonationsRepository {
           );
         }
         //send acknowledgement reciept
-        await MailDonationReciept.sendReciept(donationModel);
+        MailDonationReciept.sendReciept(donationModel);
       }
 
-      log("L3=============================== " + associatedId);
+      log(isTimebankNotification.toString() +
+          "L3=============================== " +
+          operatoreMode.toString());
 
       var notificationReference = Firestore.instance
           .collection(
@@ -130,7 +132,6 @@ class DonationsRepository {
       }
       print("L5===============================");
 
-      log("=========== ");
       batch.setData(
         notificationReferenceForDonor.document(acknowledgementNotification.id),
         acknowledgementNotification.toMap(),
@@ -140,7 +141,7 @@ class DonationsRepository {
           " <-------------------------> " +
           acknowledgementNotification.toString());
       await batch.commit().then((value) => log("Success")).catchError(
-            (onError) => log("FAILURE " + onError.toString()),
+            (onError) => print("FAILURE " + onError.toString()),
           );
     } on Exception catch (e) {
       print("ERROR ===================================" + e.toString());
