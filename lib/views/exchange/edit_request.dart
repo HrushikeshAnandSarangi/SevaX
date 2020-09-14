@@ -510,7 +510,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         ]);
   }
 
-  Widget RequestPaymentACH(requestModel) {
+  Widget RequestPaymentACH(RequestModel requestModel) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -680,9 +680,18 @@ class RequestEditFormState extends State<RequestEditForm> {
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
-              requestModel.paypalId = value;
+              requestModel.cashModel.achdetails.account_number = value;
             },
-            validator: _validateEmailId,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (!value.isEmpty) {
+                requestModel.cashModel.achdetails.account_number = value;
+              } else {
+                return S.of(context).enter_valid_account_number;
+              }
+              return null;
+            },
           )
         ]);
   }
@@ -723,14 +732,15 @@ class RequestEditFormState extends State<RequestEditForm> {
                   S.of(context).request_payment_descriptionZelle_inputhint,
               hintStyle: hintTextStyle,
             ),
-            initialValue: requestModel.donationInstructionLink,
+            initialValue: requestModel.cashModel.zelleId != null
+                ? requestModel.cashModel.zelleId
+                : '',
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
               requestModel.cashModel.zelleId = value;
             },
             validator: (value) {
-              requestModel.cashModel.zelleId = value;
               return _validateEmailAndPhone(value);
             },
           )
@@ -754,7 +764,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     return null;
   }
 
-  Widget RequestPaymentPaypal(requestModel) {
+  Widget RequestPaymentPaypal(RequestModel requestModel) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -778,25 +788,16 @@ class RequestEditFormState extends State<RequestEditForm> {
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).request_payment_description_inputhint,
+              hintText: S.of(context).email_hint,
               hintStyle: hintTextStyle,
             ),
-            initialValue: requestModel.donationInstructionLink,
+            initialValue: requestModel.cashModel.paypalId ?? '',
             keyboardType: TextInputType.multiline,
             maxLines: 1,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              } else if (regExp.hasMatch(value)) {
-                requestModel.paypalId = value;
-                print(true);
-              } else {
-                print('not url');
-
-                return S.of(context).enter_valid_link;
-              }
-              return null;
+            onSaved: (value) {
+              requestModel.cashModel.paypalId = value;
             },
+            validator: _validateEmailId,
           )
         ]);
   }
@@ -854,16 +855,16 @@ class RequestEditFormState extends State<RequestEditForm> {
   Widget get getPaymentInformation {
     switch (widget.requestModel.cashModel.paymentType) {
       case RequestPaymentType.ACH:
-        return RequestPaymentACH(requestModel);
+        return RequestPaymentACH(widget.requestModel);
 
       case RequestPaymentType.PAYPAL:
-        return RequestPaymentPaypal(requestModel);
+        return RequestPaymentPaypal(widget.requestModel);
 
       case RequestPaymentType.ZELLEPAY:
-        return RequestPaymentZellePay(requestModel);
+        return RequestPaymentZellePay(widget.requestModel);
 
       default:
-        return RequestPaymentACH(requestModel);
+        return RequestPaymentACH(widget.requestModel);
     }
   }
 

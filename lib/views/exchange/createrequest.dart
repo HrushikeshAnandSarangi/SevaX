@@ -747,7 +747,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     RegExp emailPattern = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
     if (value.isEmpty) return S.of(context).validation_error_general_text;
-    if (!emailPattern.hasMatch(value)) return S.of(context).enter_valid_link;
+    if (!emailPattern.hasMatch(value))
+      return S.of(context).validation_error_invalid_email;
     return null;
   }
 
@@ -775,7 +776,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).request_payment_description_inputhint,
+              hintText: S.of(context).email_hint,
               hintStyle: hintTextStyle,
             ),
             initialValue: widget.offer != null && widget.isOfferRequest
