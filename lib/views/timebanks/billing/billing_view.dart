@@ -70,7 +70,6 @@ class BillingViewState extends State<BillingView> {
 
   Future<void> connectToStripe(String paymentMethodId) async {
     print(paymentMethodId);
-    const String url = 'YOUR_SERVER_URL';
     PaymentMethod paymentMethod = PaymentMethod();
     if (paymentMethodId == null) {
       paymentMethod = await StripePayment.paymentRequestWithCardForm(
@@ -103,7 +102,7 @@ class BillingViewState extends State<BillingView> {
           setState(() {});
         });
       } else {
-        _cardSuccessMessage();
+        _cardAlertMessage(isSuccess: true);
       }
     }
   }
@@ -123,6 +122,11 @@ class BillingViewState extends State<BillingView> {
         Navigator.pop(dialogContext);
       }
       getSuccessDialog();
+    } else {
+      if (dialogContext != null) {
+        Navigator.pop(dialogContext);
+      }
+      _cardAlertMessage(isSuccess: false);
     }
   }
 
@@ -302,6 +306,7 @@ class BillingViewState extends State<BillingView> {
                             return GestureDetector(
                               onTap: () {
                                 // connectToStripe(cards[index]['paymentMethodId']);
+                                print(snapshot.data.data[index].id);
                                 connectToStripe(snapshot.data.data[index].id);
                               },
                               onLongPress: () => isDefault
@@ -354,6 +359,7 @@ class BillingViewState extends State<BillingView> {
                       ],
                     );
                   }
+                  return Container();
                 },
               ),
               SizedBox(
@@ -433,29 +439,45 @@ class BillingViewState extends State<BillingView> {
     );
   }
 
-  void _cardSuccessMessage() {
+  void _cardAlertMessage({bool isSuccess = true}) {
     showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        Future.delayed(Duration(milliseconds: 600), () {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context1) => FlavorConfig.appFlavor == Flavor.APP
-                    ? MainApplication()
-                    : dev.MainApplication(),
-              ),
-              (Route<dynamic> route) => false);
-        });
+        if (isSuccess) {
+          Future.delayed(Duration(milliseconds: 600), () {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context1) => FlavorConfig.appFlavor == Flavor.APP
+                      ? MainApplication()
+                      : dev.MainApplication(),
+                ),
+                (Route<dynamic> route) => false);
+          });
+        }
         return AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(S.of(context).card_added),
-              Text(S.of(context).card_sync),
-            ],
-          ),
+          content: isSuccess
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(S.of(context).card_added),
+                    Text(S.of(context).card_sync),
+                  ],
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(S.of(context).general_stream_error),
+                    SizedBox(height: 12),
+                    RaisedButton(
+                      child: Text(S.of(context).ok),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                ),
         );
       },
     );
