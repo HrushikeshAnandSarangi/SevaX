@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-TW",
-    "@@last_modified": "2020-09-14T12:53:42+00:00",
+    "@@last_modified": "2020-09-14T13:59:55+00:00",
     "check_met": "檢查我們是否見過",
     "we_met": "我們曾見過",
     "hang_on": "稍待。。。",
@@ -976,5 +976,6 @@
     "offerReview": "正文：您已收到此優惠的評論：",
     "request_review_body_creator": "正文：您已收到針對該請求的審核：",
     "request_review_body_user": "正文：您已收到對您為請求所做的工作的評論：",
-    "has_given_review": "給了你評論"
+    "has_given_review": "給了你評論",
+    "pledged_to_donate": "承諾捐贈"
 }

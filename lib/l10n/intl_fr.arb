@@ -1,6 +1,6 @@
 {
     "@@locale": "fr",
-    "@@last_modified": "2020-09-14T12:53:42+00:00",
+    "@@last_modified": "2020-09-14T13:59:55+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Accrochez-vous bien",
@@ -976,5 +976,6 @@
     "offerReview": "Corps: Vous avez reçu un avis sur l'offre:",
     "request_review_body_creator": "Corps: Vous avez reçu un avis pour la demande:",
     "request_review_body_user": "Corps: Vous avez reçu un avis sur le travail que vous avez effectué pour la demande:",
-    "has_given_review": "vous a donné un avis"
+    "has_given_review": "vous a donné un avis",
+    "pledged_to_donate": "s'est engagé à faire un don"
 }

@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2020-09-14T12:53:42+00:00",
+    "@@last_modified": "2020-09-14T13:59:55+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -976,5 +976,6 @@
     "offerReview": "Liggaam: u het 'n resensie vir die aanbod ontvang:",
     "request_review_body_creator": "Liggaam: u het 'n hersiening ontvang vir die versoek:",
     "request_review_body_user": "Liggaam: u het 'n oorsig ontvang van die werk wat u vir die versoek gedoen het:",
-    "has_given_review": "het u 'n resensie gegee"
+    "has_given_review": "het u 'n resensie gegee",
+    "pledged_to_donate": "belowe om te skenk"
 }

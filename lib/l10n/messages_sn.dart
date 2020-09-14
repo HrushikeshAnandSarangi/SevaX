@@ -676,6 +676,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pledge_modified" : MessageLookupByLibrary.simpleMessage("Mari yako yawakavimbisa yemupiro haina kubvumwa"),
     "pledge_modified_by_donor" : MessageLookupByLibrary.simpleMessage("Anopa akachinja huwandu hwemhiko"),
     "pledged" : MessageLookupByLibrary.simpleMessage("Akavimbisa"),
+    "pledged_to_donate" : MessageLookupByLibrary.simpleMessage("akavimbisa kupa"),
     "posted_by" : MessageLookupByLibrary.simpleMessage("Yakatumirwa Na:"),
     "posted_date" : MessageLookupByLibrary.simpleMessage("PostDate:"),
     "posted_on" : MessageLookupByLibrary.simpleMessage("Yakatumirwa pa"),

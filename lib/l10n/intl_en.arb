@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-09-14T12:53:42+00:00",
+    "@@last_modified": "2020-09-14T13:59:55+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -976,5 +976,6 @@
     "offerReview": "Body: You have received a review for the offer:",
     "request_review_body_creator": "Body: You have received a review for the request:",
     "request_review_body_user": "Body: You have received a review on the work that you did for the request:",
-    "has_given_review": "has given you a review"
+    "has_given_review": "has given you a review",
+    "pledged_to_donate": "pledged to donate"
 }

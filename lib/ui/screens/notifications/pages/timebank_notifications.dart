@@ -107,7 +107,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   photoUrl: donationModel.donorDetails.photoUrl,
                   subTitle:
-                      "${donationModel.donorDetails.name} pledged to donate ${donationModel.donationType == RequestType.CASH ? "\$${donationModel.cashDetails.pledgedAmount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+                      "${donationModel.donorDetails.name}  ${S.of(context).pledged_to_donate} ${donationModel.donationType == RequestType.CASH ? "\$${donationModel.cashDetails.pledgedAmount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
                   title: S.of(context).donations_received,
                 );
                 break;

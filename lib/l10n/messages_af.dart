@@ -676,6 +676,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pledge_modified" : MessageLookupByLibrary.simpleMessage("U beloofde bedrag vir donasie is nie erken nie"),
     "pledge_modified_by_donor" : MessageLookupByLibrary.simpleMessage("Die skenker het die pandbedrag verander"),
     "pledged" : MessageLookupByLibrary.simpleMessage("Pledged"),
+    "pledged_to_donate" : MessageLookupByLibrary.simpleMessage("belowe om te skenk"),
     "posted_by" : MessageLookupByLibrary.simpleMessage("Gepos deur"),
     "posted_date" : MessageLookupByLibrary.simpleMessage("Posdatum"),
     "posted_on" : MessageLookupByLibrary.simpleMessage("gepos op"),
