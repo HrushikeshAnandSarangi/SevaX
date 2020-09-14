@@ -671,10 +671,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 return S.of(context).validation_error_general_text;
               } else if (!value.isEmpty) {
                 requestModel.cashModel.achdetails.account_number = value;
-                print(true);
               } else {
-                print('not url');
-
                 return S.of(context).enter_valid_account_number;
               }
               return null;
@@ -719,9 +716,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
-              requestModel.zelleId = value;
+              requestModel.cashModel.zelleId = value;
             },
-            validator: _validateEmailAndPhone,
+            validator: (value) {
+              requestModel.cashModel.zelleId = value;
+              return _validateEmailAndPhone(value);
+            },
           )
         ]);
   }
@@ -751,7 +751,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     return null;
   }
 
-  Widget RequestPaymentPaypal(requestModel) {
+  Widget RequestPaymentPaypal(RequestModel requestModel) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -786,9 +786,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             keyboardType: TextInputType.emailAddress,
             maxLines: 1,
             onSaved: (value) {
-              requestModel.paypalId = value;
+              requestModel.cashModel.paypalId = value;
             },
-            validator: _validateEmailId,
+            validator: (value) {
+              requestModel.cashModel.paypalId = value;
+              return _validateEmailId(value);
+            },
           )
         ]);
   }
