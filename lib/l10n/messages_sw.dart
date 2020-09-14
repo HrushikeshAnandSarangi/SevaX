@@ -970,7 +970,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "validation_error_min_donation_count_negative" : MessageLookupByLibrary.simpleMessage("Tafadhali ingiza idadi ya mchango unaohitajika"),
     "validation_error_min_donation_count_zero" : MessageLookupByLibrary.simpleMessage("Tafadhali ingiza idadi ya mchango unaohitajika"),
     "validation_error_mission_empty" : MessageLookupByLibrary.simpleMessage("Tataarifa ya ujumbe haiwezi kuwa tupu."),
-    "validation_error_no_date" : MessageLookupByLibrary.simpleMessage("Tafadhali taja tarehe ya kuanza na ya mwisho ya mradi"),
+    "validation_error_no_date" : MessageLookupByLibrary.simpleMessage("Tafadhali taja tarehe ya kuanza na kumaliza."),
     "validation_error_offer_class_hours" : MessageLookupByLibrary.simpleMessage("Tafadhali ingiza saa zinazohitajika kwa darasa"),
     "validation_error_offer_credit" : MessageLookupByLibrary.simpleMessage("Hatuwezi kuchapisha Hatari hii. Hakuna mikopo ya kutosha kutoka kwa darasa. Tafadhali kagua wakati wa Prep au idadi ya wanafunzi na uwasilishe toleo tena"),
     "validation_error_offer_prep_hour" : MessageLookupByLibrary.simpleMessage("Tafadhali ingiza wakati wako wa maandalizi"),

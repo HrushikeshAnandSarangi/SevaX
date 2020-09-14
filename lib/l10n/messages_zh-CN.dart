@@ -970,7 +970,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "validation_error_min_donation_count_negative" : MessageLookupByLibrary.simpleMessage("请输入所需的最低捐款数"),
     "validation_error_min_donation_count_zero" : MessageLookupByLibrary.simpleMessage("请输入所需的最低捐款数"),
     "validation_error_mission_empty" : MessageLookupByLibrary.simpleMessage("任务说明不能为空。"),
-    "validation_error_no_date" : MessageLookupByLibrary.simpleMessage("请注明项目的开始和结束日期"),
+    "validation_error_no_date" : MessageLookupByLibrary.simpleMessage("请提及开始和结束日期。"),
     "validation_error_offer_class_hours" : MessageLookupByLibrary.simpleMessage("请输入类所需的时间"),
     "validation_error_offer_credit" : MessageLookupByLibrary.simpleMessage("我们不能发布此类。有从类学分不足。请修改准备时间和学生的数量，然后再次提交报价"),
     "validation_error_offer_prep_hour" : MessageLookupByLibrary.simpleMessage("请输入您的水面浮油的时间"),

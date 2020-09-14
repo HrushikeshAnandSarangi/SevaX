@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2020-09-11T13:34:42+00:00",
+    "@@last_modified": "2020-09-14T12:53:42+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -250,7 +250,7 @@
     "project_location": "Eneo lako la mradi.",
     "project_location_hint": "Mahali pa mradi utasaidia washiriki wako kupata",
     "save_as_template": "Hifadhi kama Kiolezo",
-    "validation_error_no_date": "Tafadhali taja tarehe ya kuanza na ya mwisho ya mradi",
+    "validation_error_no_date": "Tafadhali taja tarehe ya kuanza na kumaliza.",
     "creating_project": "Kuunda mradi",
     "validation_error_location_mandatory": "Mahali ni Lazima",
     "validation_error_add_project_location": "Tafadhali ongeza eneo kwenye mradi wako",

@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2020-09-11T13:34:42+00:00",
+    "@@last_modified": "2020-09-14T12:53:42+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -250,7 +250,7 @@
     "project_location": "U projekligging.",
     "project_location_hint": "Projekligging sal u lede help om op te spoor",
     "save_as_template": "Stoor as sjabloon",
-    "validation_error_no_date": "Noem die begin- en einddatum van die projek",
+    "validation_error_no_date": "Noem die begin- en einddatum.",
     "creating_project": "Skep projek",
     "validation_error_location_mandatory": "Ligging is verpligtend",
     "validation_error_add_project_location": "Voeg asseblief ligging by u projek",

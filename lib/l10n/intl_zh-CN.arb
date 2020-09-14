@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-CN",
-    "@@last_modified": "2020-09-11T13:34:42+00:00",
+    "@@last_modified": "2020-09-14T12:53:42+00:00",
     "check_met": "检查我们是否见过",
     "we_met": "我们见过",
     "hang_on": "稍待",
@@ -250,7 +250,7 @@
     "project_location": "您的项目位置。",
     "project_location_hint": "项目位置将帮助您的成员找到",
     "save_as_template": "另存为模板",
-    "validation_error_no_date": "请注明项目的开始和结束日期",
+    "validation_error_no_date": "请提及开始和结束日期。",
     "creating_project": "建立专案",
     "validation_error_location_mandatory": "位置必选",
     "validation_error_add_project_location": "请在您的项目中添加位置",

@@ -970,7 +970,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "validation_error_min_donation_count_negative" : MessageLookupByLibrary.simpleMessage("Please enter the number of min donation needed"),
     "validation_error_min_donation_count_zero" : MessageLookupByLibrary.simpleMessage("Please enter the number of min donation needed"),
     "validation_error_mission_empty" : MessageLookupByLibrary.simpleMessage("Mission statement cannot be empty."),
-    "validation_error_no_date" : MessageLookupByLibrary.simpleMessage("Please mention the start and end date of the project"),
+    "validation_error_no_date" : MessageLookupByLibrary.simpleMessage("Please mention the start and end date."),
     "validation_error_offer_class_hours" : MessageLookupByLibrary.simpleMessage("Please enter the hours required for the class"),
     "validation_error_offer_credit" : MessageLookupByLibrary.simpleMessage("We cannot publish this Class. There are insufficient credits from the class. Please revise the Prep time or the number of students and submit the offer again"),
     "validation_error_offer_prep_hour" : MessageLookupByLibrary.simpleMessage("Please enter your preperation time"),
