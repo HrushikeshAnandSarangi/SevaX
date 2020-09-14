@@ -39,7 +39,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage>
-    with UserImagePickerListener, SingleTickerProviderStateMixin {
+    with ImagePickerListener, SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final fullnameFocus = FocusNode();
@@ -60,7 +60,7 @@ class _RegisterPageState extends State<RegisterPage>
   File selectedImage;
   String isImageSelected;
 
-  UserImagePickerHandler imagePicker;
+  ImagePickerHandler imagePicker;
   bool isEmailVerified = false;
   bool sentOTP = false;
   bool _isDocumentBeingUploaded = false;
@@ -87,7 +87,7 @@ class _RegisterPageState extends State<RegisterPage>
         milliseconds: 300,
       ),
     );
-    imagePicker = UserImagePickerHandler(this, _controller);
+    imagePicker = ImagePickerHandler(this, _controller);
     imagePicker.init();
   }
 

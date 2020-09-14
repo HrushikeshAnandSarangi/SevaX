@@ -7,13 +7,13 @@ import 'package:image_picker/image_picker.dart';
 
 import './user_image_picker_dialog.dart';
 
-class ImagePickerHandler {
-  ImagePickerDialog imagePicker;
+class UserImagePickerHandler {
+  UserImagePickerDialog imagePicker;
   AnimationController _controller;
-  ImagePickerListener _listener;
+  UserImagePickerListener _listener;
   bool isAspectRatioFixed;
 
-  ImagePickerHandler(this._listener, this._controller,
+  UserImagePickerHandler(this._listener, this._controller,
       {this.isAspectRatioFixed = true});
 
   void openCamera() async {
@@ -35,7 +35,7 @@ class ImagePickerHandler {
   }
 
   void init() {
-    imagePicker = ImagePickerDialog(this, _controller);
+    imagePicker = UserImagePickerDialog(this, _controller);
     imagePicker.initState(isAspectRatioFixed);
   }
 
@@ -55,7 +55,7 @@ class ImagePickerHandler {
   }
 }
 
-abstract class ImagePickerListener {
+abstract class UserImagePickerListener {
   void userImage(File _image);
   addWebImageUrl();
 }
