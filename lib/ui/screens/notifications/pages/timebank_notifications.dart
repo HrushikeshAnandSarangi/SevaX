@@ -133,7 +133,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (context) {
+                      builder: (_context) {
                         return TimebankUserExitDialogView(
                           userExitModel: userExitModel,
                           timeBankId: notification.timebankId,
