@@ -461,6 +461,7 @@ class _LoginPageState extends State<LoginPage> {
             tapOutsideToDismiss: true,
             config: KeyboardActionsConfig(
               keyboardSeparatorColor: Colors.black38,
+              keyboardActionsPlatform: KeyboardActionsPlatform.IOS,
               actions: [KeyboardActionsItem(focusNode: emailFocus)],
             ),
             child: Padding(
