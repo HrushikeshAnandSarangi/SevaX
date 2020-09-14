@@ -96,7 +96,6 @@ class MainApplication extends StatelessWidget {
               supportedLocales: S.delegate.supportedLocales,
               localizationsDelegates: [
                 S.delegate,
-                
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
@@ -104,9 +103,6 @@ class MainApplication extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               theme: FlavorConfig.values.theme,
               title: AppConfig.appName,
-              // home: RequestStatusView(
-              //   requestId: "anitha.beberg@gmail.com*1573268670404",
-              // ),
               builder: (context, child) {
                 return GestureDetector(
                   child: child,
@@ -115,7 +111,6 @@ class MainApplication extends StatelessWidget {
                   },
                 );
               },
-              // home:BillingPlanDetails(),
               home: SplashView(
                 skipToHomePage: skipToHomePage,
               ),

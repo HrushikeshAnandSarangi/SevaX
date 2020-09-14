@@ -39,20 +39,15 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
 
   @override
   void initState() {
-    super.initState();
-
     if (SchedulerBinding.instance.schedulerPhase ==
         SchedulerPhase.persistentCallbacks) {
-      SchedulerBinding.instance.addPostFrameCallback((_) => () => {});
+      SchedulerBinding.instance.addPostFrameCallback((_) => getData());
     }
-    getData();
-// TODO: implement initState
+
+    super.initState();
   }
 
-  @override
   void getData() async {
-    // print('Admin id  ${widget.timebankModel.admins[0]}');
-
     await FirestoreManager.getUserForId(
             sevaUserId: widget.timebankModel.admins[0])
         .then((onValue) {
@@ -67,20 +62,13 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
       ...widget.timebankModel.admins,
       ...widget.timebankModel.coordinators
     ];
-    isUserJoined =
-        templist.contains(SevaCore.of(context).loggedInUser.sevaUserID)
-            ? true
-            : false;
+    isUserJoined = templist.contains(widget.userId) ? true : false;
     if (widget.timebankModel.members.contains(widget.userId)) {
       userModels = await FirestoreManager
           .getUsersForAdminsCoordinatorsMembersTimebankIdTwo(
               widget.timebankModel.id, 1, widget.email);
       isDataLoaded = true;
     }
-
-    // setState(() {});
-
-    //  print('Time Bank${userModels.userModelList[0].photoURL}');
   }
 
   @override
@@ -242,7 +230,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                                     userModel.photoURL == null
                                         ? defaultUserImageURL
                                         : userModel.photoURL);
-                                // : print("Userimage not yet set");
                               }
                             }
 
@@ -290,9 +277,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 ? Container(
                     height: 40,
                     child: GestureDetector(
-                      onTap: () {
-                        print('listview clicked');
-                      },
+                      onTap: () {},
                       child: ListView.builder(
                         padding: EdgeInsets.only(left: 20),
                         scrollDirection: Axis.horizontal,

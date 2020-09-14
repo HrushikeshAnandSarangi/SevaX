@@ -237,6 +237,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                         TimeBankAboutView.of(
                           timebankModel: primaryTimebank,
                           email: SevaCore.of(context).loggedInUser.email,
+                          userId: SevaCore.of(context).loggedInUser.sevaUserID,
                         ),
                         TimebankRequestAdminPage(
                           isUserAdmin: primaryTimebank.admins.contains(
