@@ -1,5 +1,5 @@
 import 'dart:collection';
-    import 'dart:convert';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,27 +18,24 @@ import 'package:sevaexchange/components/repeat_availability/edit_repeat_widget.d
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
-as RequestManager;
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
+    as RequestManager;
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/spell_check_manager.dart';
-import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
-import 'package:sevaexchange/widgets/custom_info_dialog.dart';
-import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:usage/uuid/uuid.dart';
@@ -54,14 +51,13 @@ class EditRequest extends StatefulWidget {
 
   EditRequest(
       {Key key,
-        this.isOfferRequest,
-        this.offer,
-        this.timebankId,
-        this.userModel,
-        this.projectId,
-        this.projectModel,
-        this.requestModel
-      })
+      this.isOfferRequest,
+      this.offer,
+      this.timebankId,
+      this.userModel,
+      this.projectId,
+      this.projectModel,
+      this.requestModel})
       : super(key: key);
 
   @override
@@ -127,14 +123,13 @@ class RequestEditForm extends StatefulWidget {
   RequestModel requestModel;
   RequestEditForm(
       {this.isOfferRequest,
-        this.offer,
-        this.timebankId,
-        this.userModel,
-        this.loggedInUser,
-        this.projectId,
-        this.projectModel,
-        this.requestModel
-      });
+      this.offer,
+      this.timebankId,
+      this.userModel,
+      this.loggedInUser,
+      this.projectId,
+      this.projectModel,
+      this.requestModel});
 
   @override
   RequestEditFormState createState() {
@@ -258,7 +253,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     this.requestModel.sevaUserId = widget.requestModel.sevaUserId;
     if (widget.loggedInUser?.sevaUserID != null)
       FirestoreManager.getUserForIdStream(
-          sevaUserId: widget.loggedInUser.sevaUserID)
+              sevaUserId: widget.loggedInUser.sevaUserID)
           .listen((userModel) {});
     super.didChangeDependencies();
   }
@@ -398,25 +393,29 @@ class RequestEditFormState extends State<RequestEditForm> {
                             ),
                             SizedBox(height: 30),
                             OfferDurationWidget(
-                              title: S.of(context).request_duration,
+                                title: S.of(context).request_duration,
                                 startTime: startDate,
-                                endTime: endDate
-                            ),
+                                endTime: endDate),
                             widget.requestModel.requestType == RequestType.TIME
                                 ? TimeRequest(snapshot, projectModelList)
-                                : widget.requestModel.requestType == RequestType.CASH
-                                ? CashRequest(snapshot, projectModelList)
-                                : GoodsRequest(snapshot, projectModelList),
+                                : widget.requestModel.requestType ==
+                                        RequestType.CASH
+                                    ? CashRequest(snapshot, projectModelList)
+                                    : GoodsRequest(snapshot, projectModelList),
                             Padding(
                               padding:
-                              const EdgeInsets.symmetric(vertical: 30.0),
+                                  const EdgeInsets.symmetric(vertical: 30.0),
                               child: Center(
                                 child: Container(
                                   // width: 150,
                                   child: RaisedButton(
                                     onPressed: editRequest,
                                     child: Text(
-                                      S.of(context).update_request.padLeft(10).padRight(10),
+                                      S
+                                          .of(context)
+                                          .update_request
+                                          .padLeft(10)
+                                          .padRight(10),
                                       style: Theme.of(context)
                                           .primaryTextTheme
                                           .button,
@@ -680,22 +679,22 @@ class RequestEditFormState extends State<RequestEditForm> {
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.multiline,
             maxLines: 1,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              } else if (!value.isEmpty) {
-                requestModel.cashModel.achdetails.account_number = value;
-                print(true);
-              } else {
-                print('not url');
-
-                return S.of(context).enter_valid_account_number;
-              }
-              return null;
+            onSaved: (value) {
+              requestModel.paypalId = value;
             },
+            validator: _validateEmailId,
           )
         ]);
   }
+
+  String _validateEmailId(String value) {
+    RegExp emailPattern = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    if (value.isEmpty) return S.of(context).validation_error_general_text;
+    if (!emailPattern.hasMatch(value)) return S.of(context).enter_valid_link;
+    return null;
+  }
+
   Widget RequestPaymentZellePay(requestModel) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -720,7 +719,63 @@ class RequestEditFormState extends State<RequestEditForm> {
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorMaxLines: 2,
-              hintText: S.of(context).request_payment_descriptionZelle_inputhint,
+              hintText:
+                  S.of(context).request_payment_descriptionZelle_inputhint,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue: requestModel.donationInstructionLink,
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            onSaved: (value) {
+              requestModel.zelleId = value;
+            },
+            validator: _validateEmailAndPhone,
+          )
+        ]);
+  }
+
+  String _validateEmailAndPhone(String value) {
+    String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    RegExp emailPattern = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    RegExp regExp = RegExp(mobilePattern);
+    if (value.isEmpty) {
+      return S.of(context).validation_error_general_text;
+    } else if (emailPattern.hasMatch(value)) {
+      return null;
+    } else if (regExp.hasMatch(value)) {
+      return null;
+    } else {
+      return S.of(context).enter_valid_link;
+    }
+    return null;
+  }
+
+  Widget RequestPaymentPaypal(requestModel) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[12],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[12]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).request_payment_description_inputhint,
               hintStyle: hintTextStyle,
             ),
             initialValue: requestModel.donationInstructionLink,
@@ -730,7 +785,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               if (value.isEmpty) {
                 return S.of(context).validation_error_general_text;
               } else if (regExp.hasMatch(value)) {
-                requestModel.donationInstructionLink = value;
+                requestModel.paypalId = value;
                 print(true);
               } else {
                 print('not url');
@@ -742,50 +797,7 @@ class RequestEditFormState extends State<RequestEditForm> {
           )
         ]);
   }
-  Widget RequestPaymentPaypal(requestModel) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[TextFormField(
-          autovalidate: autoValidateCashText,
-          onChanged: (value) {
-            if (value.length > 1) {
-              setState(() {
-                autoValidateCashText = true;
-              });
-            } else {
-              setState(() {
-                autoValidateCashText = false;
-              });
-            }
-          },
-          focusNode: focusNodes[12],
-          onFieldSubmitted: (v) {
-            FocusScope.of(context).requestFocus(focusNodes[12]);
-          },
-          textInputAction: TextInputAction.next,
-          decoration: InputDecoration(
-            errorMaxLines: 2,
-            hintText: S.of(context).request_payment_description_inputhint,
-            hintStyle: hintTextStyle,
-          ),
-          initialValue: requestModel.donationInstructionLink,
-          keyboardType: TextInputType.multiline,
-          maxLines: 1,
-          validator: (value) {
-            if (value.isEmpty) {
-              return S.of(context).validation_error_general_text;
-            } else if (regExp.hasMatch(value)) {
-              requestModel.donationInstructionLink = value;
-              print(true);
-            } else {
-              print('not url');
 
-              return S.of(context).enter_valid_link;
-            }
-            return null;
-          },
-        )]);
-  }
   Widget RequestPaymentDescriptionData(requestModel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -834,8 +846,8 @@ class RequestEditFormState extends State<RequestEditForm> {
         requestModel.cashModel.paymentType == RequestPaymentType.ACH
             ? RequestPaymentACH(requestModel)
             : requestModel.cashModel.paymentType == RequestPaymentType.PAYPAL
-            ? RequestPaymentPaypal(requestModel)
-            : RequestPaymentZellePay(requestModel),
+                ? RequestPaymentPaypal(requestModel)
+                : RequestPaymentZellePay(requestModel),
       ],
     );
   }
@@ -897,51 +909,51 @@ class RequestEditFormState extends State<RequestEditForm> {
   Widget RequestTypeWidget() {
     return widget.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
         ? Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          S.of(context).request_type,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Europa',
-            color: Colors.black,
-          ),
-        ),
-        Column(
-          children: <Widget>[
-            _optionRadioButton(
-              title: S.of(context).request_type_time,
-              value: RequestType.TIME,
-              groupvalue: widget.requestModel.requestType,
-              onChanged: (value) {
-                widget.requestModel.requestType = value;
-                print(widget.requestModel.requestType);
-                setState(() => {});
-              },
-            ),
-            _optionRadioButton(
-                title: S.of(context).request_type_cash,
-                value: RequestType.CASH,
-                groupvalue: widget.requestModel.requestType,
-                onChanged: (value) {
-                  widget.requestModel.requestType = value;
-                  print(widget.requestModel.requestType);
-                  setState(() => {});
-                }),
-            _optionRadioButton(
-                title: S.of(context).request_type_goods,
-                value: RequestType.GOODS,
-                groupvalue: widget.requestModel.requestType,
-                onChanged: (value) {
-                  widget.requestModel.requestType = value;
-                  print(widget.requestModel.requestType);
-                  setState(() => {});
-                }),
-          ],
-        )
-      ],
-    )
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                S.of(context).request_type,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                  color: Colors.black,
+                ),
+              ),
+              Column(
+                children: <Widget>[
+                  _optionRadioButton(
+                    title: S.of(context).request_type_time,
+                    value: RequestType.TIME,
+                    groupvalue: widget.requestModel.requestType,
+                    onChanged: (value) {
+                      widget.requestModel.requestType = value;
+                      print(widget.requestModel.requestType);
+                      setState(() => {});
+                    },
+                  ),
+                  _optionRadioButton(
+                      title: S.of(context).request_type_cash,
+                      value: RequestType.CASH,
+                      groupvalue: widget.requestModel.requestType,
+                      onChanged: (value) {
+                        widget.requestModel.requestType = value;
+                        print(widget.requestModel.requestType);
+                        setState(() => {});
+                      }),
+                  _optionRadioButton(
+                      title: S.of(context).request_type_goods,
+                      value: RequestType.GOODS,
+                      groupvalue: widget.requestModel.requestType,
+                      onChanged: (value) {
+                        widget.requestModel.requestType = value;
+                        print(widget.requestModel.requestType);
+                        setState(() => {});
+                      }),
+                ],
+              )
+            ],
+          )
         : Container();
   }
 
@@ -957,10 +969,10 @@ class RequestEditFormState extends State<RequestEditForm> {
             projectId: widget.projectId,
           )
               ? addToProjectContainer(
-            snapshot,
-            projectModelList,
-            requestModel,
-          )
+                  snapshot,
+                  projectModelList,
+                  requestModel,
+                )
               : Container(),
           SizedBox(height: 20),
           Text(
@@ -1132,10 +1144,10 @@ class RequestEditFormState extends State<RequestEditForm> {
             projectId: widget.projectId,
           )
               ? addToProjectContainer(
-            snapshot,
-            projectModelList,
-            requestModel,
-          )
+                  snapshot,
+                  projectModelList,
+                  requestModel,
+                )
               : Container(),
           SizedBox(height: 20),
           RequestPaymentDescriptionData(widget.requestModel),
@@ -1153,10 +1165,10 @@ class RequestEditFormState extends State<RequestEditForm> {
             projectId: widget.projectId,
           )
               ? addToProjectContainer(
-            snapshot,
-            projectModelList,
-            requestModel,
-          )
+                  snapshot,
+                  projectModelList,
+                  requestModel,
+                )
               : Container(),
           SizedBox(height: 20),
           RequestGoodsDescriptionData(),
@@ -1172,10 +1184,8 @@ class RequestEditFormState extends State<RequestEditForm> {
     return ListTile(
       contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
       title: Text(title),
-      leading: Radio(
-          value: value,
-          groupValue: groupvalue,
-          onChanged: onChanged),
+      leading:
+          Radio(value: value, groupValue: groupvalue, onChanged: onChanged),
     );
   }
 
@@ -1206,9 +1216,11 @@ class RequestEditFormState extends State<RequestEditForm> {
             if (val != sharedValue) {
               setState(() {
                 if (val == 0) {
-                  widget.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
+                  widget.requestModel.requestMode =
+                      RequestMode.TIMEBANK_REQUEST;
                 } else {
-                  widget.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+                  widget.requestModel.requestMode =
+                      RequestMode.PERSONAL_REQUEST;
                   widget.requestModel.requestType = RequestType.TIME;
                 }
                 sharedValue = val;
@@ -1255,12 +1267,9 @@ class RequestEditFormState extends State<RequestEditForm> {
           widget.requestModel.autoGenerated == true) {
         widget.requestModel.recurringDays =
             EditRepeatWidgetState.getRecurringdays();
-        end.endType = EditRepeatWidgetState.endType == 0
-            ? "on"
-            : "after";
+        end.endType = EditRepeatWidgetState.endType == 0 ? "on" : "after";
         end.on = end.endType == "on"
-            ? EditRepeatWidgetState
-            .selectedDate.millisecondsSinceEpoch
+            ? EditRepeatWidgetState.selectedDate.millisecondsSinceEpoch
             : null;
         end.after = (end.endType == "after"
             ? int.parse(EditRepeatWidgetState.after)
@@ -1268,40 +1277,28 @@ class RequestEditFormState extends State<RequestEditForm> {
         widget.requestModel.end = end;
       }
 
-      if (widget.requestModel.requestMode ==
-          RequestMode.PERSONAL_REQUEST) {
+      if (widget.requestModel.requestMode == RequestMode.PERSONAL_REQUEST) {
         var onBalanceCheckResult;
         if (widget.requestModel.isRecurring == true ||
             widget.requestModel.autoGenerated == true) {
-          int recurrences =
-          widget.requestModel.end.endType == "after"
+          int recurrences = widget.requestModel.end.endType == "after"
               ? (widget.requestModel.end.after -
-              widget
-                  .requestModel.occurenceCount)
-              .abs()
-              : calculateRecurrencesOnMode(
-              widget.requestModel);
-          onBalanceCheckResult = await RequestManager
-              .hasSufficientCreditsIncludingRecurring(
-              credits: widget.requestModel.numberOfHours
-                  .toDouble(),
-              userId: SevaCore.of(context)
-                  .loggedInUser
-                  .sevaUserID,
-              isRecurring:
-              widget.requestModel.isRecurring,
-              recurrences: recurrences);
+                      widget.requestModel.occurenceCount)
+                  .abs()
+              : calculateRecurrencesOnMode(widget.requestModel);
+          onBalanceCheckResult =
+              await RequestManager.hasSufficientCreditsIncludingRecurring(
+                  credits: widget.requestModel.numberOfHours.toDouble(),
+                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                  isRecurring: widget.requestModel.isRecurring,
+                  recurrences: recurrences);
         } else {
-          onBalanceCheckResult = await RequestManager
-              .hasSufficientCreditsIncludingRecurring(
-              credits: widget.requestModel.numberOfHours
-                  .toDouble(),
-              userId: SevaCore.of(context)
-                  .loggedInUser
-                  .sevaUserID,
-              isRecurring:
-              widget.requestModel.isRecurring,
-              recurrences: 0);
+          onBalanceCheckResult =
+              await RequestManager.hasSufficientCreditsIncludingRecurring(
+                  credits: widget.requestModel.numberOfHours.toDouble(),
+                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                  isRecurring: widget.requestModel.isRecurring,
+                  recurrences: 0);
         }
 
         if (!onBalanceCheckResult) {
@@ -1314,21 +1311,18 @@ class RequestEditFormState extends State<RequestEditForm> {
       if (OfferDurationWidgetState.starttimestamp ==
           OfferDurationWidgetState.endtimestamp) {
         showDialogForTitle(
-            dialogTitle: S
-                .of(context)
-                .validation_error_same_start_date_end_date);
+            dialogTitle:
+                S.of(context).validation_error_same_start_date_end_date);
         return;
       }
 
       // if (location != null) {
       widget.requestModel.requestStart =
           OfferDurationWidgetState.starttimestamp;
-      widget.requestModel.requestEnd =
-          OfferDurationWidgetState.endtimestamp;
+      widget.requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
       widget.requestModel.location = location;
       widget.requestModel.address = selectedAddress;
-      print(
-          "request model data === ${widget.requestModel.toMap()}");
+      print("request model data === ${widget.requestModel.toMap()}");
 
       if (widget.requestModel.isRecurring == true ||
           widget.requestModel.autoGenerated == true) {
@@ -1339,8 +1333,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             return WillPopScope(
               onWillPop: () {},
               child: AlertDialog(
-                title: Text(
-                    S.of(context).this_is_repeating_event),
+                title: Text(S.of(context).this_is_repeating_event),
                 actions: [
                   FlatButton(
                     child: Text(
@@ -1353,9 +1346,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                     onPressed: () async {
                       Navigator.pop(viewContext);
                       linearProgressForCreatingRequest();
-                      await updateRequest(
-                          requestModel:
-                          widget.requestModel);
+                      await updateRequest(requestModel: widget.requestModel);
                       Navigator.pop(dialogContext);
                       Navigator.pop(context);
                     },
@@ -1371,13 +1362,9 @@ class RequestEditFormState extends State<RequestEditForm> {
                     onPressed: () async {
                       Navigator.pop(viewContext);
                       linearProgressForCreatingRequest();
-                      await updateRequest(
-                          requestModel:
-                          widget.requestModel);
-                      await RequestManager
-                          .updateRecurrenceRequestsFrontEnd(
-                          updatedRequestModel:
-                          widget.requestModel);
+                      await updateRequest(requestModel: widget.requestModel);
+                      await RequestManager.updateRecurrenceRequestsFrontEnd(
+                          updatedRequestModel: widget.requestModel);
 
                       Navigator.pop(dialogContext);
                       Navigator.pop(context);
@@ -1404,8 +1391,7 @@ class RequestEditFormState extends State<RequestEditForm> {
       } else {
         linearProgressForCreatingRequest();
 
-        await updateRequest(
-            requestModel: widget.requestModel);
+        await updateRequest(requestModel: widget.requestModel);
 
         Navigator.pop(dialogContext);
         Navigator.pop(context);
@@ -1426,7 +1412,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   int calculateRecurrencesOnMode(RequestModel requestModel) {
     DateTime eventStartDate =
-    DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart);
+        DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart);
     int recurrenceCount = 0;
     bool lastRound = false;
     while (lastRound == false) {
@@ -1556,7 +1542,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 memberAssignment = S.of(context).assign_to_volunteers;
               else
                 memberAssignment =
-                "${selectedUsers.length ?? ''} ${S.of(context).volunteers_selected(selectedUsers.length)}";
+                    "${selectedUsers.length ?? ''} ${S.of(context).volunteers_selected(selectedUsers.length)}";
             });
           } else {
             //no users where selected
@@ -1569,7 +1555,7 @@ class RequestEditFormState extends State<RequestEditForm> {
 
   String getTimeInFormat(int timeStamp) {
     return DateFormat('EEEEEEE, MMMM dd yyyy',
-        Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
+            Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
         .format(
       getDateTimeAccToUserTimezone(
           dateTime: DateTime.fromMillisecondsSinceEpoch(timeStamp),
@@ -1580,7 +1566,7 @@ class RequestEditFormState extends State<RequestEditForm> {
   bool hasSufficientBalance() {
     var requestCoins = widget.requestModel.numberOfHours;
     var lowerLimit =
-    json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
+        json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
 
     var finalbalance = (sevaCoinsValue + lowerLimit ?? 10);
     return requestCoins <= finalbalance;
@@ -1655,10 +1641,10 @@ class RequestEditFormState extends State<RequestEditForm> {
 class ProjectSelection extends StatefulWidget {
   ProjectSelection(
       {Key key,
-        this.requestModel,
-        this.admin,
-        this.projectModelList,
-        this.selectedProject})
+      this.requestModel,
+      this.admin,
+      this.projectModelList,
+      this.selectedProject})
       : super(key: key);
   final admin;
   final List<ProjectModel> projectModelList;
@@ -1731,7 +1717,9 @@ class GoodsDynamicSelection extends StatefulWidget {
   final StringMapCallback onSelectedGoods;
 
   GoodsDynamicSelection(
-      {this.goodsbefore, @required this.onSelectedGoods, this.automaticallyImplyLeading = true});
+      {this.goodsbefore,
+      @required this.onSelectedGoods,
+      this.automaticallyImplyLeading = true});
   @override
   _GoodsDynamicSelectionState createState() => _GoodsDynamicSelectionState();
 }
@@ -1747,7 +1735,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
 
   @override
   void initState() {
-    this._selectedGoods = widget.goodsbefore != null ? widget.goodsbefore: {};
+    this._selectedGoods = widget.goodsbefore != null ? widget.goodsbefore : {};
     Firestore.instance
         .collection('donationCategories')
         .getDocuments()
@@ -1822,7 +1810,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                 List<String> dataCopy = [];
                 goods.forEach((id, skill) => dataCopy.add(skill));
                 dataCopy.retainWhere(
-                        (s) => s.toLowerCase().contains(pattern.toLowerCase()));
+                    (s) => s.toLowerCase().contains(pattern.toLowerCase()));
 
                 return await Future.value(dataCopy);
               },
@@ -1848,7 +1836,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                 if (!_selectedGoods.containsValue(suggestion)) {
                   controller.close();
                   String id =
-                  goods.keys.firstWhere((k) => goods[k] == suggestion);
+                      goods.keys.firstWhere((k) => goods[k] == suggestion);
                   _selectedGoods[id] = suggestion;
 //                   List<String> selectedID = [];
 //                   _selectedGoods.forEach((id, _) => selectedID.add(id));
@@ -1862,33 +1850,33 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
             !isDataLoaded
                 ? LoadingIndicator()
                 : Expanded(
-              child: ListView(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                children: <Widget>[
-                  Wrap(
-                    runSpacing: 5.0,
-                    spacing: 5.0,
-                    children: _selectedGoods.values
-                        .toList()
-                        .map(
-                          (value) => value == null
-                          ? Container()
-                          : CustomChip(
-                        title: value,
-                        onDelete: () {
-                          String id = goods.keys.firstWhere(
-                                  (k) => goods[k] == value);
-                          _selectedGoods.remove(id);
-                          setState(() {});
-                        },
-                      ),
-                    )
-                        .toList(),
+                    child: ListView(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      children: <Widget>[
+                        Wrap(
+                          runSpacing: 5.0,
+                          spacing: 5.0,
+                          children: _selectedGoods.values
+                              .toList()
+                              .map(
+                                (value) => value == null
+                                    ? Container()
+                                    : CustomChip(
+                                        title: value,
+                                        onDelete: () {
+                                          String id = goods.keys.firstWhere(
+                                              (k) => goods[k] == value);
+                                          _selectedGoods.remove(id);
+                                          setState(() {});
+                                        },
+                                      ),
+                              )
+                              .toList(),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
             //   Spacer(),
           ],
         ));
@@ -1910,7 +1898,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
 
         return getSuggestionLayout(
           suggestion:
-          !snapshot.data.hasErros ? snapshot.data.correctSpelling : keyword,
+              !snapshot.data.hasErros ? snapshot.data.correctSpelling : keyword,
         );
       },
     );
