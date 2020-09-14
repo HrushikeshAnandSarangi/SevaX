@@ -1772,7 +1772,7 @@ String actionToStringMapper(BuildContext context, Actions action) {
       return s.exit;
       break;
     case Actions.Loan:
-      return s.loan;
+      return s.donate;
       break;
     default:
       return '';
