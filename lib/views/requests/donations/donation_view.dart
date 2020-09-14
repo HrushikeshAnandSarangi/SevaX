@@ -234,8 +234,7 @@ class _DonationViewState extends State<DonationView> {
               }
             },
             child: Text(
-              widget.requestModel.donationInstructionLink ??
-                  "Link not registered!",
+              getDonationLink(),
               style: TextStyle(color: Colors.blue),
             ),
           ),
@@ -280,6 +279,18 @@ class _DonationViewState extends State<DonationView> {
         ],
       ),
     );
+  }
+
+  String getDonationLink() {
+    switch (widget.requestModel.cashModel.paymentType) {
+      case RequestPaymentType.ZELLEPAY:
+        return widget.requestModel.cashModel.zelleId;
+      case RequestPaymentType.PAYPAL:
+        return widget.requestModel.cashModel.paypalId;
+
+      default:
+        return "Link not registered!";
+    }
   }
 
   void showScaffold(String message) {

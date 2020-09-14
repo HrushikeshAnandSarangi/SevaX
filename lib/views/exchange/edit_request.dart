@@ -695,7 +695,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     return null;
   }
 
-  Widget RequestPaymentZellePay(requestModel) {
+  Widget RequestPaymentZellePay(RequestModel requestModel) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -727,9 +727,12 @@ class RequestEditFormState extends State<RequestEditForm> {
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             onSaved: (value) {
-              requestModel.zelleId = value;
+              requestModel.cashModel.zelleId = value;
             },
-            validator: _validateEmailAndPhone,
+            validator: (value) {
+              requestModel.cashModel.zelleId = value;
+              return _validateEmailAndPhone(value);
+            },
           )
         ]);
   }
@@ -843,13 +846,25 @@ class RequestEditFormState extends State<RequestEditForm> {
               requestModel.cashModel.paymentType = value;
               setState(() => {});
             }),
-        requestModel.cashModel.paymentType == RequestPaymentType.ACH
-            ? RequestPaymentACH(requestModel)
-            : requestModel.cashModel.paymentType == RequestPaymentType.PAYPAL
-                ? RequestPaymentPaypal(requestModel)
-                : RequestPaymentZellePay(requestModel),
+        getPaymentInformation
       ],
     );
+  }
+
+  Widget get getPaymentInformation {
+    switch (widget.requestModel.cashModel.paymentType) {
+      case RequestPaymentType.ACH:
+        return RequestPaymentACH(requestModel);
+
+      case RequestPaymentType.PAYPAL:
+        return RequestPaymentPaypal(requestModel);
+
+      case RequestPaymentType.ZELLEPAY:
+        return RequestPaymentZellePay(requestModel);
+
+      default:
+        return RequestPaymentACH(requestModel);
+    }
   }
 
   Widget RequestDescriptionData(hintTextDesc) {
