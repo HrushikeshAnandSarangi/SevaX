@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 
 import './image_picker_dialog.dart';
@@ -47,7 +48,7 @@ class ImagePickerHandler {
       ),
     )
         .then((value) {
-      imagePicker.dismissDialog();
+      globals.isFromOnBoarding ? imagePicker.dismissDialog() : print('');
     });
     // _parentStockSelectionBottomsheet(context, (image) {
     //   log("inside stock images onchanged callback");
@@ -57,8 +58,7 @@ class ImagePickerHandler {
   }
 
   addImageUrl() async {
-    imagePicker.dismissDialog();
-
+    globals.isFromOnBoarding ? imagePicker.dismissDialog() : print('');
     _listener.addWebImageUrl();
   }
 
@@ -83,8 +83,8 @@ class ImagePickerHandler {
     });
   }
 
-  void showDialog(BuildContext context) {
-    imagePicker.getImage(context);
+  void showDialog(BuildContext context, {bool isOnboarding = false}) {
+    imagePicker.getImage(context, isOnboarding: isOnboarding);
   }
 }
 
@@ -163,8 +163,8 @@ class SearchStockImagesViewState extends State<SearchStockImages>
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Text(
                 this.catSelected > -1
-                    ? S.of(context).choose_image
-                    : "Choose a category",
+                    ? S.of(context).choose_image + ''
+                    : S.of(context).choose_category,
                 style: TextStyle(
                   fontSize: 20,
                 ),

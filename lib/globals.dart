@@ -47,6 +47,7 @@ int orTaskSelector;
 var onLoadResult;
 
 bool isSame = false;
+bool isFromOnBoarding = false;
 
 bool userRecordExists = false;
 
