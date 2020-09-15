@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -456,33 +455,70 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get getBottombarForCreator {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(
-          child: RichText(
-            text: TextSpan(style: TextStyle(color: Colors.black), children: [
-              TextSpan(
-                text: S.of(context).creator_of_request_message,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontFamily: 'Europa',
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ]),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget get getBottombarForParticipant {
     canDeleteRequest = widget.requestItem.sevaUserId ==
             SevaCore.of(context).loggedInUser.sevaUserID &&
         widget.requestItem.acceptors.length == 0 &&
         widget.requestItem.approvedUsers.length == 0 &&
         widget.requestItem.invitedUsers.length == 0;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: TextStyle(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: S.of(context).creator_of_request_message,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Europa',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Offstage(
+          offstage: !canDeleteRequest,
+          child: Container(
+            margin: EdgeInsets.only(right: 5),
+            width: 100,
+            height: 32,
+            child: FlatButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: EdgeInsets.all(0),
+              color: Colors.green,
+              child: Row(
+                children: <Widget>[
+                  SizedBox(width: 1),
+                  Spacer(),
+                  Text(
+                    S.of(context).delete,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  Spacer(
+                    flex: 1,
+                  ),
+                ],
+              ),
+              onPressed: () {
+                deleteRequestDialog();
+              },
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget get getBottombarForParticipant {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -532,17 +568,15 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ],
             ),
             onPressed: () {
-              if (!canDeleteRequest) {
-                if (!isApplied) {
-                  if (SevaCore.of(context).loggedInUser.calendarId == null) {
-                    _settingModalBottomSheet(context);
-                  } else {
-                    applyAction();
-                  }
+              if (!isApplied) {
+                if (SevaCore.of(context).loggedInUser.calendarId == null) {
+                  _settingModalBottomSheet(context);
                 } else {
                   applyAction();
                 }
-              } else {}
+              } else {
+                applyAction();
+              }
             },
           ),
         )
@@ -895,90 +929,132 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         });
   }
 
-  Widget getBottombar() {
-    canDeleteRequest = widget.requestItem.sevaUserId ==
-            SevaCore.of(context).loggedInUser.sevaUserID &&
-        widget.requestItem.acceptors.length == 0 &&
-        widget.requestItem.approvedUsers.length == 0 &&
-        widget.requestItem.invitedUsers.length == 0;
-    return Container(
-      decoration: BoxDecoration(color: Colors.white54, boxShadow: [
-        BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
-      ]),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: RichText(
-                text: TextSpan(
-                  style: TextStyle(color: Colors.black),
-                  children: [
-                    TextSpan(
-                      text: widget.requestItem.sevaUserId ==
-                              SevaCore.of(context).loggedInUser.sevaUserID
-                          ? S.of(context).creator_of_request_message
-                          : isApplied
-                              ? S.of(context).applied_for_request
-                              : S.of(context).particpate_in_request_question,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: 'Europa',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
+//  Widget getBottombar() {
+//    canDeleteRequest = widget.requestItem.sevaUserId ==
+//            SevaCore.of(context).loggedInUser.sevaUserID &&
+//        widget.requestItem.acceptors.length == 0 &&
+//        widget.requestItem.approvedUsers.length == 0 &&
+//        widget.requestItem.invitedUsers.length == 0;
+//    return Container(
+//      decoration: BoxDecoration(color: Colors.white54, boxShadow: [
+//        BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
+//      ]),
+//      child: Padding(
+//        padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20),
+//        child: Row(
+//          crossAxisAlignment: CrossAxisAlignment.center,
+//          children: <Widget>[
+//            Expanded(
+//              child: RichText(
+//                text: TextSpan(
+//                  style: TextStyle(color: Colors.black),
+//                  children: [
+//                    TextSpan(
+//                      text: widget.requestItem.sevaUserId ==
+//                              SevaCore.of(context).loggedInUser.sevaUserID
+//                          ? S.of(context).creator_of_request_message
+//                          : isApplied
+//                              ? S.of(context).applied_for_request
+//                              : S.of(context).particpate_in_request_question,
+//                      style: TextStyle(
+//                        fontSize: 16,
+//                        fontFamily: 'Europa',
+//                        fontWeight: FontWeight.bold,
+//                      ),
+//                    ),
+//                  ],
+//                ),
+//              ),
+//            ),
+//            Offstage(
+//              offstage: widget.requestItem.sevaUserId ==
+//                  SevaCore.of(context).loggedInUser.sevaUserID,
+//              child: Container(
+//                margin: EdgeInsets.only(right: 5),
+//                width: 100,
+//                height: 32,
+//                child: FlatButton(
+//                  shape: RoundedRectangleBorder(
+//                    borderRadius: BorderRadius.circular(20),
+//                  ),
+//                  padding: EdgeInsets.all(0),
+//                  color:
+//                      isApplied ? Theme.of(context).accentColor : Colors.green,
+//                  child: Row(
+//                    children: <Widget>[
+//                      SizedBox(width: 1),
+//                      Spacer(),
+//                      Text(
+//                        isApplied
+//                            ? S.of(context).withdraw
+//                            : S.of(context).apply,
+//                        textAlign: TextAlign.center,
+//                        style: TextStyle(
+//                          color: Colors.white,
+//                        ),
+//                      ),
+//                      Spacer(
+//                        flex: 1,
+//                      ),
+//                    ],
+//                  ),
+//                  onPressed: () {
+//                    if (SevaCore.of(context).loggedInUser.calendarId == null) {
+//                      log("user has calendarrrrrrrrr");
+//                      _settingModalBottomSheet(context);
+//                    } else {
+//                      log("user has no calendarrrrrrrrr");
+//                      applyAction();
+//                    }
+//                  },
+//                ),
+//              ),
+//            )
+//          ],
+//        ),
+//      ),
+//    );
+//  }
+
+  void deleteRequestDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            S.of(context).delete_request,
+          ),
+          content: Text(
+            S.of(context).delete_request_confirmation,
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => {Navigator.of(dialogContext).pop()},
+              child: Text(
+                S.of(context).cancel,
+                style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
               ),
             ),
-            Offstage(
-              offstage: widget.requestItem.sevaUserId ==
-                  SevaCore.of(context).loggedInUser.sevaUserID,
-              child: Container(
-                margin: EdgeInsets.only(right: 5),
-                width: 100,
-                height: 32,
-                child: FlatButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  padding: EdgeInsets.all(0),
-                  color:
-                      isApplied ? Theme.of(context).accentColor : Colors.green,
-                  child: Row(
-                    children: <Widget>[
-                      SizedBox(width: 1),
-                      Spacer(),
-                      Text(
-                        isApplied
-                            ? S.of(context).withdraw
-                            : S.of(context).apply,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      Spacer(
-                        flex: 1,
-                      ),
-                    ],
-                  ),
-                  onPressed: () {
-                    if (SevaCore.of(context).loggedInUser.calendarId == null) {
-                      log("user has calendarrrrrrrrr");
-                      _settingModalBottomSheet(context);
-                    } else {
-                      log("user has no calendarrrrrrrrr");
-                      applyAction();
-                    }
-                  },
-                ),
+            FlatButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
+              onPressed: () async {
+                await Firestore.instance
+                    .collection('requests')
+                    .document(widget.requestItem.id)
+                    .updateData({'softDelete': true});
+                Navigator.of(dialogContext).pop();
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                S.of(context).delete,
               ),
-            )
+            ),
           ],
-        ),
-      ),
+        );
+      },
     );
   }
 
