@@ -993,16 +993,6 @@ class RequestEditFormState extends State<RequestEditForm> {
               : Container(),
           SizedBox(height: 20),
           Text(
-            S.of(context).number_of_volunteers,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          SizedBox(height: 20),
-          Text(
             S.of(context).max_credits,
             style: TextStyle(
               fontSize: 16,
@@ -1057,6 +1047,15 @@ class RequestEditFormState extends State<RequestEditForm> {
             ],
           ),
           SizedBox(height: 20),
+          Text(
+            S.of(context).number_of_volunteers,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
           TextFormField(
             focusNode: focusNodes[2],
             onFieldSubmitted: (v) {
@@ -1090,8 +1089,9 @@ class RequestEditFormState extends State<RequestEditForm> {
             },
           ),
           TotalCredits(
-            context,
-            requestModel,
+            context: context,
+            requestCreditsMode: TotalCreditseMode.EDIT_MODE,
+            requestModel: widget.requestModel,
           ),
           SizedBox(height: 40),
           Center(
@@ -2056,3 +2056,5 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
     );
   }
 }
+
+enum TotalCreditseMode { EDIT_MODE, CREATE_MODE }

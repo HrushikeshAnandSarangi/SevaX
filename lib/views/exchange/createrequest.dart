@@ -30,6 +30,7 @@ import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
@@ -1070,8 +1071,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             },
           ),
           TotalCredits(
-            context,
-            requestModel,
+            context: context,
+            requestModel: requestModel,
+            requestCreditsMode: TotalCreditseMode.CREATE_MODE,
           ),
           SizedBox(height: 40),
           Center(
@@ -1653,7 +1655,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 }
 
-Widget TotalCredits(context, RequestModel requestModel) {
+Widget TotalCredits({
+  BuildContext context,
+  RequestModel requestModel,
+  TotalCreditseMode requestCreditsMode,
+}) {
   var label;
   var totalCredits =
       requestModel.numberOfApprovals * (requestModel.maxCredits ?? 1);
