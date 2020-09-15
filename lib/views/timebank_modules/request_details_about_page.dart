@@ -478,6 +478,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   Widget get getBottombarForParticipant {
+    canDeleteRequest = widget.requestItem.sevaUserId ==
+            SevaCore.of(context).loggedInUser.sevaUserID &&
+        widget.requestItem.acceptors.length == 0 &&
+        widget.requestItem.approvedUsers.length == 0 &&
+        widget.requestItem.invitedUsers.length == 0;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -527,15 +532,17 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ],
             ),
             onPressed: () {
-              if (!isApplied) {
-                if (SevaCore.of(context).loggedInUser.calendarId == null) {
-                  _settingModalBottomSheet(context);
+              if (!canDeleteRequest) {
+                if (!isApplied) {
+                  if (SevaCore.of(context).loggedInUser.calendarId == null) {
+                    _settingModalBottomSheet(context);
+                  } else {
+                    applyAction();
+                  }
                 } else {
                   applyAction();
                 }
-              } else {
-                applyAction();
-              }
+              } else {}
             },
           ),
         )
