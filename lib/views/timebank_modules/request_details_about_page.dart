@@ -1185,7 +1185,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
             Positioned(
               child: Center(
                 child: Text(
-                  "${(currentPercentage)}%",
+                  "${(currentPercentage * 100)}%",
                   style: TextStyle(
                     fontSize: 10,
                     color: currentPercentage > 50 ? Colors.white : Colors.black,

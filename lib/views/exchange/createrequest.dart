@@ -36,6 +36,7 @@ import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:usage/uuid/uuid.dart';
@@ -975,6 +976,60 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               : Container(),
           SizedBox(height: 20),
           Text(
+            S.of(context).max_credits,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: TextFormField(
+                  focusNode: focusNodes[1],
+                  onFieldSubmitted: (v) {
+                    FocusScope.of(context).requestFocus(focusNodes[2]);
+                  },
+                  onChanged: (v) {
+                    if (v.isNotEmpty && int.parse(v) >= 0) {
+                      requestModel.maxCredits = int.parse(v);
+                      setState(() {});
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: S.of(context).max_credit_hint,
+                    hintStyle: hintTextStyle,
+                    // labelText: 'No. of volunteers',
+                  ),
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "Please enter maximum credits";
+                    } else if (int.parse(value) < 0) {
+                      return "Please enter maximum credits";
+                    } else if (int.parse(value) == 0) {
+                      return "Please enter maximum credits";
+                    } else {
+                      requestModel.maxCredits = int.parse(value);
+                      setState(() {});
+                      return null;
+                    }
+                  },
+                ),
+              ),
+              infoButton(
+                context: context,
+                key: GlobalKey(),
+                type: InfoType.MAX_CREDITS,
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Text(
             S.of(context).number_of_volunteers,
             style: TextStyle(
               fontSize: 16,
@@ -1015,10 +1070,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             },
           ),
           TotalCredits(
-              context,
-              requestModel,
-              OfferDurationWidgetState.starttimestamp,
-              OfferDurationWidgetState.endtimestamp),
+            context,
+            requestModel,
+          ),
           SizedBox(height: 40),
           Center(
             child: LocationPickerWidget(
@@ -1040,6 +1094,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          SizedBox(height: 20),
+          RequestDescriptionData(S.of(context).request_description_hint_cash),
           SizedBox(height: 20),
           Text(
             S.of(context).request_target_donation,
@@ -1136,8 +1192,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               }
             },
           ),
-          SizedBox(height: 20),
-          RequestDescriptionData(S.of(context).request_description_hint_cash),
           SizedBox(height: 20),
           isFromRequest(
             projectId: widget.projectId,
@@ -1599,37 +1653,25 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 }
 
-Widget TotalCredits(
-    context, requestModel, int starttimestamp, int endtimestamp) {
+Widget TotalCredits(context, RequestModel requestModel) {
   var label;
-  var totalhours = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
-      .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
-      .inHours;
-  var totalminutes = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
-      .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
-      .inMinutes;
-  var totalallowedhours;
-  if (totalhours == 0) {
-    totalallowedhours = (totalhours + ((totalminutes / 60) / 100).ceil());
-  } else {
-    totalallowedhours = (totalhours + ((totalminutes / 60) / 100).round());
-  }
-
-  var totalCredits = requestModel.numberOfApprovals * totalallowedhours;
+  var totalCredits =
+      requestModel.numberOfApprovals * (requestModel.maxCredits ?? 1);
   requestModel.numberOfHours = totalCredits;
-  if (totalallowedhours > 0 && totalCredits > 0) {
+
+  if ((requestModel.maxCredits ?? 0) > 0 && totalCredits > 0) {
     if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
       label = totalCredits.toString() +
           ' ' +
           S.of(context).timebank_max_seva_credit_message1 +
-          totalallowedhours.toString() +
+          requestModel.maxCredits.toString() +
           ' ' +
           S.of(context).timebank_max_seva_credit_message2;
     } else {
       label = totalCredits.toString() +
           ' ' +
           S.of(context).personal_max_seva_credit_message1 +
-          totalallowedhours.toString() +
+          totalCredits.toString() +
           ' ' +
           S.of(context).personal_max_seva_credit_message2;
     }
@@ -1637,16 +1679,72 @@ Widget TotalCredits(
     label = "";
   }
 
-  return Text(
-    label,
-    style: TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.normal,
-      fontFamily: 'Europa',
-      color: Colors.black54,
+  return Container(
+    margin: EdgeInsets.only(top: 10),
+    child: Text(
+      label,
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.normal,
+        fontFamily: 'Europa',
+        color: Colors.black54,
+      ),
     ),
   );
 }
+
+// Widget TotalCredits(
+//   context,
+//   requestModel,
+//   int starttimestamp,
+//   int endtimestamp,
+// ) {
+//   var label;
+//   var totalhours = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
+//       .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
+//       .inHours;
+//   var totalminutes = DateTime.fromMillisecondsSinceEpoch(endtimestamp)
+//       .difference(DateTime.fromMillisecondsSinceEpoch(starttimestamp))
+//       .inMinutes;
+//   var totalallowedhours;
+//   if (totalhours == 0) {
+//     totalallowedhours = (totalhours + ((totalminutes / 60) / 100).ceil());
+//   } else {
+//     totalallowedhours = (totalhours + ((totalminutes / 60) / 100).round());
+//   }
+
+//   var totalCredits = requestModel.numberOfApprovals * totalallowedhours;
+//   requestModel.numberOfHours = totalCredits;
+//   if (totalallowedhours > 0 && totalCredits > 0) {
+//     if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
+//       label = totalCredits.toString() +
+//           ' ' +
+//           S.of(context).timebank_max_seva_credit_message1 +
+//           totalallowedhours.toString() +
+//           ' ' +
+//           S.of(context).timebank_max_seva_credit_message2;
+//     } else {
+//       label = totalCredits.toString() +
+//           ' ' +
+//           S.of(context).personal_max_seva_credit_message1 +
+//           totalallowedhours.toString() +
+//           ' ' +
+//           S.of(context).personal_max_seva_credit_message2;
+//     }
+//   } else {
+//     label = "";
+//   }
+
+//   return Text(
+//     label,
+//     style: TextStyle(
+//       fontSize: 16,
+//       fontWeight: FontWeight.normal,
+//       fontFamily: 'Europa',
+//       color: Colors.black54,
+//     ),
+//   );
+// }
 
 class ProjectSelection extends StatefulWidget {
   ProjectSelection(

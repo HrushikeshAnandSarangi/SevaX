@@ -36,6 +36,7 @@ import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:usage/uuid/uuid.dart';
@@ -339,8 +340,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            headerContainer(snapshot),
-                            RequestTypeWidget(),
+                            // headerContainer(snapshot),
+                            // RequestTypeWidget(),
                             Text(
                               S.of(context).request_title,
                               style: TextStyle(
@@ -1000,12 +1001,68 @@ class RequestEditFormState extends State<RequestEditForm> {
               color: Colors.black,
             ),
           ),
+          SizedBox(height: 20),
+          Text(
+            S.of(context).max_credits,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: TextFormField(
+                  focusNode: focusNodes[1],
+                  onFieldSubmitted: (v) {
+                    FocusScope.of(context).requestFocus(focusNodes[2]);
+                  },
+                  initialValue: widget.requestModel.maxCredits.toString(),
+                  onChanged: (v) {
+                    if (v.isNotEmpty && int.parse(v) >= 0) {
+                      widget.requestModel.maxCredits = int.parse(v);
+                      setState(() {});
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: S.of(context).max_credit_hint,
+                    hintStyle: hintTextStyle,
+                    // labelText: 'No. of volunteers',
+                  ),
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return "Please enter maximum credits";
+                    } else if (int.parse(value) < 0) {
+                      return "Please enter maximum credits";
+                    } else if (int.parse(value) == 0) {
+                      return "Please enter maximum credits";
+                    } else {
+                      requestModel.maxCredits = int.parse(value);
+                      setState(() {});
+                      return null;
+                    }
+                  },
+                ),
+              ),
+              infoButton(
+                context: context,
+                key: GlobalKey(),
+                type: InfoType.MAX_CREDITS,
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
           TextFormField(
             focusNode: focusNodes[2],
             onFieldSubmitted: (v) {
               FocusScope.of(context).unfocus();
             },
-            initialValue: "${widget.requestModel.numberOfApprovals}",
+            initialValue: widget.requestModel.numberOfApprovals.toString(),
             onChanged: (v) {
               if (v.isNotEmpty && int.parse(v) >= 0) {
                 widget.requestModel.numberOfApprovals = int.parse(v);
@@ -1033,17 +1090,15 @@ class RequestEditFormState extends State<RequestEditForm> {
             },
           ),
           TotalCredits(
-              context,
-              requestModel,
-              OfferDurationWidgetState.starttimestamp,
-              OfferDurationWidgetState.endtimestamp),
+            context,
+            requestModel,
+          ),
           SizedBox(height: 40),
           Center(
             child: LocationPickerWidget(
               selectedAddress: selectedAddress,
               location: location,
               onChanged: (LocationDataModel dataModel) {
-                log("received data model");
                 setState(() {
                   location = dataModel.geoPoint;
                   this.selectedAddress = dataModel.location;

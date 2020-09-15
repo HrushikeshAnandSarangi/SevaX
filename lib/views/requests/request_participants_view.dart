@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -133,15 +134,17 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 
   Widget getUserThumbnail(String photoURL) {
     return Container(
-        margin: EdgeInsets.only(top: 20, right: 15),
-        width: 60.0,
-        height: 60.0,
-        decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-                fit: BoxFit.fill,
-                image: NetworkImage(photoURL ??
-                    "https://www.itl.cat/pngfile/big/43-430987_cute-profile-images-pic-for-whatsapp-for-boys.jpg"))));
+      margin: EdgeInsets.only(top: 20, right: 15),
+      width: 60.0,
+      height: 60.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        image: DecorationImage(
+          fit: BoxFit.fill,
+          image: NetworkImage(photoURL ?? defaultUserImageURL),
+        ),
+      ),
+    );
   }
 
   Widget getUserCard(UserModel userModel,
