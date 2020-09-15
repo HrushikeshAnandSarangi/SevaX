@@ -261,12 +261,14 @@ class OfferDetails extends StatelessWidget {
     }
   }
 
+  bool canDeleteOffer = false;
+
   Widget getBottombar(BuildContext context, String userId) {
     bool isAccepted = getOfferParticipants(offerDataModel: offerModel).contains(
       userId,
     );
     bool isCreator = offerModel.sevaUserId == userId;
-    bool canDeleteOffer = isCreator &&
+    canDeleteOffer = isCreator &&
         offerModel.offerType == OfferType.INDIVIDUAL_OFFER &&
         offerModel.individualOfferDataModel.offerAcceptors.length == 0;
     return Container(
@@ -285,15 +287,23 @@ class OfferDetails extends StatelessWidget {
                   text: TextSpan(
                     style: TextStyle(color: Colors.black),
                     children: [
-                      TextSpan(
-                        text: isCreator
-                            ? S.of(context).you_created_offer
-                            : '${S.of(context).you_have} ${isAccepted ? '' : " ${S.of(context).not_yet}"} ${offerModel.offerType == OfferType.GROUP_OFFER ? S.of(context).signed_up_for : S.of(context).bookmarked} ${S.of(context).this_offer}.',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      canDeleteOffer
+                          ? TextSpan(
+                              text: S.of(context).delete,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : TextSpan(
+                              text: isCreator
+                                  ? S.of(context).you_created_offer
+                                  : '${S.of(context).you_have} ${isAccepted ? '' : " ${S.of(context).not_yet}"} ${offerModel.offerType == OfferType.GROUP_OFFER ? S.of(context).signed_up_for : S.of(context).bookmarked} ${S.of(context).this_offer}.',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                     ],
                   ),
                 ),

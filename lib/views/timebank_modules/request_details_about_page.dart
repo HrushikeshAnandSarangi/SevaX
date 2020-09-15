@@ -520,7 +520,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 SizedBox(width: 1),
                 Spacer(),
                 Text(
-                  isApplied ? S.of(context).withdraw : S.of(context).apply,
+                  canDeleteRequest
+                      ? S.of(context).delete
+                      : isApplied
+                          ? S.of(context).withdraw
+                          : S.of(context).apply,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -542,7 +546,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 } else {
                   applyAction();
                 }
-              } else {}
+              } else {
+                deleteRequestDialog();
+              }
             },
           ),
         )
@@ -979,6 +985,48 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           ],
         ),
       ),
+    );
+  }
+
+  void deleteRequestDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            S.of(context).delete_request,
+          ),
+          content: Text(
+            S.of(context).delete_request_confirmation,
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => {Navigator.of(dialogContext).pop()},
+              child: Text(
+                S.of(context).cancel,
+                style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
+              ),
+            ),
+            FlatButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
+              onPressed: () async {
+                await Firestore.instance
+                    .collection('requests')
+                    .document(widget.requestItem.id)
+                    .updateData({'softDelete': true});
+                Navigator.of(dialogContext).pop();
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                S.of(context).delete,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
