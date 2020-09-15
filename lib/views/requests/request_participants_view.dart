@@ -13,7 +13,6 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../flavor_config.dart';
 import '../core.dart';
 
 class RequestParticipantsView extends StatefulWidget {
@@ -308,144 +307,144 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
     );
   }
 
-// crate dialog for approval or rejection
-  Future showDialogForApprovalOfRequest({
-    BuildContext context,
-    UserModel userModel,
-    RequestModel requestModel,
-    String notificationId,
-  }) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext viewContext) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25.0))),
-            content: Form(
-              //key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  _getCloseButton(viewContext),
-                  Container(
-                    height: 70,
-                    width: 70,
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(4.0),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(4.0),
-                    child: Text(
-                      userModel.fullname == null
-                          ? S.of(context).anonymous
-                          : userModel.fullname,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: Text(
-                      userModel.email ?? '',
-                    ),
-                  ),
-                  if (userModel.bio != null)
-                    Padding(
-                      padding: EdgeInsets.all(0.0),
-                      child: Text(
-                        "${S.of(context).about} ${userModel.fullname}",
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      userModel.bio == null
-                          ? S.of(context).bio_not_updated
-                          : userModel.bio,
-                      maxLines: 5,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                        "${S.of(context).by_approving_you_accept}, ${userModel.fullname} ${S.of(context).my_requests}",
-                        style: TextStyle(
-                          fontStyle: FontStyle.italic,
-                        ),
-                        textAlign: TextAlign.center),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        width: double.infinity,
-                        child: RaisedButton(
-                          color: FlavorConfig.values.theme.primaryColor,
-                          child: Text(
-                            S.of(context).approve,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Europa',
-                            ),
-                          ),
-                          onPressed: () async {
-                            // Once approved
-                            approveMemberForVolunteerRequest(
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                            );
-                            Navigator.pop(viewContext);
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(5.0),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        child: RaisedButton(
-                          color: Theme.of(context).accentColor,
-                          child: Text(
-                            S.of(context).decline,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Europa',
-                            ),
-                          ),
-                          onPressed: () async {
-                            // request declined
-
-                            declineRequestedMember(
-                                model: requestModel,
-                                notificationId: notificationId,
-                                user: userModel);
-
-                            Navigator.pop(viewContext);
-                          },
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          );
-        });
-  }
+//// crate dialog for approval or rejection
+//  Future showDialogForApprovalOfRequest({
+//    BuildContext context,
+//    UserModel userModel,
+//    RequestModel requestModel,
+//    String notificationId,
+//  }) {
+//    return showDialog(
+//        context: context,
+//        builder: (BuildContext viewContext) {
+//          return AlertDialog(
+//            shape: RoundedRectangleBorder(
+//                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+//            content: Form(
+//              //key: _formKey,
+//              child: Column(
+//                mainAxisSize: MainAxisSize.min,
+//                children: <Widget>[
+//                  _getCloseButton(viewContext),
+//                  Container(
+//                    height: 70,
+//                    width: 70,
+//                    child: CircleAvatar(
+//                      backgroundImage: NetworkImage(userModel.photoURL),
+//                    ),
+//                  ),
+//                  Padding(
+//                    padding: EdgeInsets.all(4.0),
+//                  ),
+//                  Padding(
+//                    padding: EdgeInsets.all(4.0),
+//                    child: Text(
+//                      userModel.fullname == null
+//                          ? S.of(context).anonymous
+//                          : userModel.fullname,
+//                      style: TextStyle(
+//                        fontSize: 18,
+//                        fontWeight: FontWeight.w600,
+//                      ),
+//                    ),
+//                  ),
+//                  Padding(
+//                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+//                    child: Text(
+//                      userModel.email ?? '',
+//                    ),
+//                  ),
+//                  if (userModel.bio != null)
+//                    Padding(
+//                      padding: EdgeInsets.all(0.0),
+//                      child: Text(
+//                        "${S.of(context).about} ${userModel.fullname}",
+//                        style: TextStyle(
+//                          fontSize: 13,
+//                          fontWeight: FontWeight.bold,
+//                        ),
+//                      ),
+//                    ),
+//                  Padding(
+//                    padding: EdgeInsets.all(8.0),
+//                    child: Text(
+//                      userModel.bio == null
+//                          ? S.of(context).bio_not_updated
+//                          : userModel.bio,
+//                      maxLines: 5,
+//                      overflow: TextOverflow.ellipsis,
+//                    ),
+//                  ),
+//                  Center(
+//                    child: Text(
+//                        "${S.of(context).by_approving_you_accept}, ${userModel.fullname} ${S.of(context).my_requests}",
+//                        style: TextStyle(
+//                          fontStyle: FontStyle.italic,
+//                        ),
+//                        textAlign: TextAlign.center),
+//                  ),
+//                  Padding(
+//                    padding: EdgeInsets.all(8.0),
+//                  ),
+//                  Column(
+//                    mainAxisAlignment: MainAxisAlignment.center,
+//                    children: <Widget>[
+//                      Container(
+//                        width: double.infinity,
+//                        child: RaisedButton(
+//                          color: FlavorConfig.values.theme.primaryColor,
+//                          child: Text(
+//                            S.of(context).approve,
+//                            style: TextStyle(
+//                              color: Colors.white,
+//                              fontFamily: 'Europa',
+//                            ),
+//                          ),
+//                          onPressed: () async {
+//                            // Once approved
+//                            approveMemberForVolunteerRequest(
+//                              model: requestModel,
+//                              notificationId: notificationId,
+//                              user: userModel,
+//                            );
+//                            Navigator.pop(viewContext);
+//                          },
+//                        ),
+//                      ),
+//                      Padding(
+//                        padding: EdgeInsets.all(5.0),
+//                      ),
+//                      Container(
+//                        width: double.infinity,
+//                        child: RaisedButton(
+//                          color: Theme.of(context).accentColor,
+//                          child: Text(
+//                            S.of(context).decline,
+//                            style: TextStyle(
+//                              color: Colors.white,
+//                              fontFamily: 'Europa',
+//                            ),
+//                          ),
+//                          onPressed: () async {
+//                            // request declined
+//
+//                            declineRequestedMember(
+//                                model: requestModel,
+//                                notificationId: notificationId,
+//                                user: userModel);
+//
+//                            Navigator.pop(viewContext);
+//                          },
+//                        ),
+//                      ),
+//                    ],
+//                  )
+//                ],
+//              ),
+//            ),
+//          );
+//        });
+//  }
 
   void declineRequestedMember({
     RequestModel model,
