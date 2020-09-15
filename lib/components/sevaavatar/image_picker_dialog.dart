@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/views/image_url_view.dart';
 
@@ -30,7 +31,7 @@ class ImagePickerDialog extends StatelessWidget {
     ));
   }
 
-  void getImage(BuildContext context) {
+  void getImage(BuildContext context, {bool isOnboarding}) {
     this.context = context;
     if (_controller == null ||
         _drawerDetailsPosition == null ||
@@ -64,7 +65,11 @@ class ImagePickerDialog extends StatelessWidget {
   }
 
   void navigationPage() {
-    Navigator.pop(dialogContext);
+    Navigator.of(dialogContext).pop();
+  }
+
+  void popContext() {
+    Navigator.of(dialogContext).pop();
   }
 
   void dismissDialog() {
@@ -105,7 +110,8 @@ class ImagePickerDialog extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    dismissDialog();
+                    !globals.isFromOnBoarding ? dismissDialog() : print('');
+
                     _listener.openStockImages(context);
                   },
                   child: roundedButton(
@@ -116,6 +122,8 @@ class ImagePickerDialog extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
+                    !globals.isFromOnBoarding ? dismissDialog() : print('');
+
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
