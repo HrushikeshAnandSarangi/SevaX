@@ -349,11 +349,18 @@ class OfferDetails extends StatelessWidget {
                     ],
                   ),
                   onPressed: () async {
-                    if (SevaCore.of(context).loggedInUser.calendarId == null) {
-                      _settingModalBottomSheet(context, offerModel);
+                    if (canDeleteOffer) {
+                      deleteOffer(context: context, offerId: offerModel.id);
                     } else {
-                      offerActions(context, offerModel)
-                          .then((_) => Navigator.of(context).pop());
+                      if (SevaCore.of(context).loggedInUser.calendarId ==
+                          null) {
+                        _settingModalBottomSheet(context, offerModel);
+                      } else {
+                        offerActions(
+                          context,
+                          offerModel,
+                        ).then((_) => Navigator.of(context).pop());
+                      }
                     }
                   },
                 ),
