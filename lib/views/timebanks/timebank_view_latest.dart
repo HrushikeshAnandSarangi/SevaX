@@ -256,14 +256,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                                           ),
                                         ),
                                       ),
-//                                      decoration: BoxDecoration(
-//                                          shape: BoxShape.circle,
-//                                          image: DecorationImage(
-//                                            fit: BoxFit.cover,
-//                                            image: CachedNetworkImageProvider(
-//                                              photoUrl ?? defaultUserImageURL,
-//                                            ),
-//                                          )),
                                     ),
                                   );
                                 }).toList()
@@ -273,37 +265,39 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                     ),
                   )
                 : Container(),
-            isUserJoined && isDataLoaded
-                ? Container(
-                    height: 40,
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: ListView.builder(
-                        padding: EdgeInsets.only(left: 20),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 8,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 2.5),
-                            child: Container(
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: CachedNetworkImageProvider(
-                                      userModels.userModelList[index].photoURL,
-                                    ),
-                                  )),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  )
-                : Container(),
+            // isUserJoined && isDataLoaded
+            //     ? Container(
+            //         height: 40,
+            //         child: GestureDetector(
+            //           onTap: () {},
+            //           child: ListView.builder(
+            //             padding: EdgeInsets.only(left: 20),
+            //             scrollDirection: Axis.horizontal,
+            //             itemCount: userModels.userModelList.length,
+            //             itemBuilder: (context, index) {
+            //               return Padding(
+            //                 padding:
+            //                     const EdgeInsets.symmetric(horizontal: 2.5),
+            //                 child: Container(
+            //                   height: 40,
+            //                   width: 40,
+            //                   decoration: BoxDecoration(
+            //                       shape: BoxShape.circle,
+            //                       image: DecorationImage(
+            //                         fit: BoxFit.cover,
+            //                         image: CachedNetworkImageProvider(
+            //                           userModels
+            //                                   .userModelList[index].photoURL ??
+            //                               defaultUserImageURL,
+            //                         ),
+            //                       )),
+            //                 ),
+            //               );
+            //             },
+            //           ),
+            //         ),
+            //       )
+            //     : Container(),
             Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 20),
               child: Text(
