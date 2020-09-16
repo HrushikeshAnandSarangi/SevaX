@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/ui/screens/request/pages/goods_display_page.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 
 class DonationParticipantCard extends StatelessWidget {
   final String photoUrl;
+  final String type;
   final String name;
   final int timestamp;
   final bool isCashDonation;
@@ -12,12 +14,14 @@ class DonationParticipantCard extends StatelessWidget {
   final String amount;
   final String currency;
   final String comments;
+  final DonationStatus status;
 
   final Widget child;
 
   const DonationParticipantCard({
     Key key,
     this.photoUrl,
+    this.type,
     @required this.name,
     @required this.isCashDonation,
     this.timestamp,
@@ -26,6 +30,7 @@ class DonationParticipantCard extends StatelessWidget {
     this.currency = '\$',
     this.child,
     this.comments,
+    this.status,
   })  : assert(name != null),
         assert(isCashDonation != null),
         super(key: key);
@@ -38,6 +43,7 @@ class DonationParticipantCard extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => GoodsDisplayPage(
+                    label: status ==  DonationStatus.REQUESTED ? 'Donation Requested' : this.type == 'request'? 'Donation Received': 'Donation Offered',
                     name: name,
                     photoUrl: photoUrl,
                     goods: goods,

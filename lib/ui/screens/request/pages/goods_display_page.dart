@@ -3,6 +3,7 @@ import 'package:sevaexchange/ui/screens/request/widgets/checkbox_with_text.dart'
 import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 
 class GoodsDisplayPage extends StatelessWidget {
+  final String label;
   final String name;
   final String photoUrl;
   final List<String> goods;
@@ -10,6 +11,7 @@ class GoodsDisplayPage extends StatelessWidget {
 
   const GoodsDisplayPage({
     Key key,
+    this.label,
     this.name,
     this.photoUrl,
     this.goods,
@@ -21,7 +23,7 @@ class GoodsDisplayPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Donation Received',
+          this.label,
           style: TextStyle(fontSize: 18),
         ),
       ),

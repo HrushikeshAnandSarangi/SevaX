@@ -24,3 +24,25 @@ class DonationAcceptedBloc extends BlocBase {
     _donations.close();
   }
 }
+class DonationAcceptedOfferBloc extends BlocBase {
+  final _donations = BehaviorSubject<List<DonationModel>>();
+
+  Stream<List<DonationModel>> get donations => _donations.stream;
+
+  DonationsRepository _donationsRepository = DonationsRepository();
+  void init(String offerId) {
+    _donationsRepository.getDonationsOfOffer(offerId).listen((event) {
+      List<DonationModel> temp = [];
+      event.documents.forEach((element) {
+        DonationModel model = DonationModel.fromMap(element.data);
+        temp.add(model);
+        print('here2');
+      });
+      if (!_donations.isClosed) _donations.add(temp);
+    });
+  }
+
+  void dispose() {
+    _donations.close();
+  }
+}

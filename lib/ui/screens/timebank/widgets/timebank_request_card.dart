@@ -152,41 +152,41 @@ class TimebankRequestCard extends StatelessWidget {
   }
 
   Widget getAppropriateTag(RequestType requestType, BuildContext context) {
-      switch (requestType) {
-          case RequestType.CASH:
-              return getTagMainFrame('Cash Request', context);
+    switch (requestType) {
+      case RequestType.CASH:
+        return getTagMainFrame(S.of(context).requesttag_cash_request, context);
 
-          case RequestType.GOODS:
-              return getTagMainFrame('Goods Request', context);
+      case RequestType.GOODS:
+        return getTagMainFrame(S.of(context).requesttag_goods_request, context);
 
-          case RequestType.TIME:
-              return getTagMainFrame('Time Request', context);
+      case RequestType.TIME:
+        return getTagMainFrame(S.of(context).requesttag_time_request, context);
 
-          default:
-              return Container();
-      }
+      default:
+        return Container();
+    }
   }
+}
 
-  Widget getTagMainFrame(String tagTitle, BuildContext context) {
-      return Container(
-          margin: EdgeInsets.only(bottom: 3, right: 5, top: 5),
-          child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              child: Container(
-                  color: Theme.of(context).primaryColor,
-                  child: Padding(
-                      padding:
-                      const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
-                      child: Text(
-                          tagTitle,
-                          style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.white,
-                          ),
-                      ),
-                  ),
-              ),
+Widget getTagMainFrame(String tagTitle, BuildContext context) {
+  return Container(
+    margin: EdgeInsets.only(bottom: 3, right: 5, top: 5),
+    child: ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(5)),
+      child: Container(
+        color: Theme.of(context).primaryColor,
+        child: Padding(
+          padding:
+          const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
+          child: Text(
+            tagTitle,
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.white,
+            ),
           ),
-      );
-  }
+        ),
+      ),
+    ),
+  );
 }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -22,9 +23,14 @@ String getOfferDescription({OfferModel offerDataModel}) {
 }
 
 List<String> getOfferParticipants({OfferModel offerDataModel}) {
-  return offerDataModel.offerType == OfferType.INDIVIDUAL_OFFER
-      ? offerDataModel.individualOfferDataModel.offerAcceptors ?? []
-      : offerDataModel.groupOfferDataModel.signedUpMembers ?? [];
+  if (offerDataModel.type == RequestType.GOODS) {
+    return offerDataModel.goodsDonationDetails.donors ?? [];
+  } else {
+    return offerDataModel.offerType == OfferType.INDIVIDUAL_OFFER
+        ? offerDataModel.individualOfferDataModel.offerAcceptors ?? []
+        : offerDataModel.groupOfferDataModel.signedUpMembers ?? [];
+  }
+
 }
 
 String getOfferLocation({String selectedAddress}) {
@@ -70,18 +76,24 @@ bool isOfferVisible(OfferModel offerModel, String userId) {
   }
 }
 
-String getButtonLabel(OfferModel offerModel, String userId) {
+String getButtonLabel(context, OfferModel offerModel, String userId) {
   List<String> participants = getOfferParticipants(offerDataModel: offerModel);
   if (offerModel.offerType == OfferType.GROUP_OFFER) {
     if (participants.contains(userId))
-      return "SignedUp";
+      return S.of(context).label_signedUp;
     else
-      return "SignUp";
+      return S.of(context).label_signUp;
   } else {
-    if (participants.contains(userId))
-      return "Bookmarked";
+    if (offerModel.type == RequestType.CASH || offerModel.type == RequestType.GOODS) {
+      if (participants.contains(userId)) {
+         return S.of(context).label_accepted;
+      } else {
+        return S.of(context).label_accept;
+      }
+    } else if (participants.contains(userId))
+      return S.of(context).label_bookmarked;
     else
-      return "Bookmark";
+      return S.of(context).label_bookmark;
   }
 }
 
@@ -138,6 +150,8 @@ Future<bool> offerActions(BuildContext context, OfferModel model) async {
         error: "You don't have enough credit to signup for this class",
       );
     }
+  } else if ((model.type == RequestType.CASH || model.type == RequestType.GOODS)) {
+//    if (!_isParticipant) addBookMark(model.id, _userId);
   } else {
     if (!_isParticipant) addBookMark(model.id, _userId);
   }

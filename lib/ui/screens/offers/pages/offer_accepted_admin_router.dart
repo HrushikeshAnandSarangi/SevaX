@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_model.dart';
+import 'package:sevaexchange/models/request_model.dart';
 
 import 'offer_earnings.dart';
 import 'offer_participants.dart';
@@ -11,6 +12,13 @@ class OfferAcceptedAdminRouter extends StatelessWidget {
   const OfferAcceptedAdminRouter({Key key, this.offerModel}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    List<Widget> tabslist;
+    offerModel.type == RequestType.TIME
+        ? tabslist = [ OfferParticipants(offerModel: offerModel),
+      OfferEarnings(offerModel: offerModel),
+    ] : tabslist = [ OfferParticipants(offerModel: offerModel),
+      OfferDonationRequest(offerModel: offerModel),
+    ];
     return Scaffold(
       body: SafeArea(
         child: DefaultTabController(
@@ -34,10 +42,7 @@ class OfferAcceptedAdminRouter extends StatelessWidget {
               ),
               Expanded(
                 child: TabBarView(
-                  children: <Widget>[
-                    OfferParticipants(offerModel: offerModel),
-                    OfferEarnings(offerModel: offerModel),
-                  ],
+                  children: tabslist,
                 ),
               )
             ],

@@ -2,8 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
+import 'package:sevaexchange/ui/screens/request/pages/donation_accepted_page.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -24,7 +26,6 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
 
   @override
   void initState() {
-
     log("-----offerid---------------> ${widget.offerModel.id} - ${widget.offerModel.occurenceCount}");
     print(widget.offerModel.toString());
     _bloc.offerModel = widget.offerModel;
@@ -41,8 +42,7 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
   @override
   Widget build(BuildContext context) {
     bool _isCreator = widget.offerModel.sevaUserId ==
-            SevaCore.of(context).loggedInUser.sevaUserID &&
-        widget.offerModel.offerType == OfferType.GROUP_OFFER;
+        SevaCore.of(context).loggedInUser.sevaUserID;
     return BlocProvider(
       bloc: _bloc,
       child: Scaffold(
@@ -93,9 +93,13 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
                             OfferDetails(
                               offerModel: widget.offerModel,
                             ),
-                            OfferAcceptedAdminRouter(
-                              offerModel: widget.offerModel,
-                            ),
+                            widget.offerModel.type == RequestType.TIME
+                                ? OfferAcceptedAdminRouter(
+                                    offerModel: widget.offerModel,
+                                  )
+                                : DonationAcceptedPage(
+                                    offermodel: widget.offerModel,
+                                  ),
                           ]
                         : <Widget>[
                             OfferDetails(

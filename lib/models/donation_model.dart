@@ -176,14 +176,15 @@ class CashDetails {
 }
 
 class GoodsDetails {
-  GoodsDetails({this.comments, this.donatedGoods, this.requiredGoods});
-
+  GoodsDetails({this.toAddress, this.comments, this.donatedGoods, this.requiredGoods});
+  String toAddress;
   String comments;
   Map<String, String> donatedGoods;
   Map<String, String> requiredGoods;
 
   factory GoodsDetails.fromMap(Map<dynamic, dynamic> json) {
     return GoodsDetails(
+      toAddress: json['toAddress'] == null ? null: json["toAddress"],
       comments: json["comments"] == null ? null : json["comments"],
       donatedGoods: json.containsKey('donatedGoods')
           ? Map<String, String>.from(json["donatedGoods"] ?? {})
@@ -195,6 +196,7 @@ class GoodsDetails {
   }
 
   Map<dynamic, dynamic> toMap() => {
+        "toAddress": toAddress == null? null: toAddress,
         "comments": comments == null ? null : comments,
         "donatedGoods": donatedGoods == null ? null : donatedGoods,
         "requiredGoods": requiredGoods == null ? null : requiredGoods,
@@ -230,6 +232,7 @@ class DonorDetails {
 }
 
 enum DonationStatus {
+  REQUESTED,
   PLEDGED,
   ACKNOWLEDGED,
   MODIFIED,
@@ -238,6 +241,7 @@ enum DonationStatus {
 }
 
 Map<String, DonationStatus> _donationStatusMapper = {
+  "REQUESTED": DonationStatus.REQUESTED,
   "PLEDGED": DonationStatus.PLEDGED,
   "ACKNOWLEDGED": DonationStatus.ACKNOWLEDGED,
   "MODIFIED": DonationStatus.MODIFIED,

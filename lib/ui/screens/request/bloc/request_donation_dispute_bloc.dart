@@ -17,7 +17,9 @@ class RequestDonationDisputeBloc {
   Stream<Map<String, String>> get goodsRecieved => _goodsRecieved.stream;
 
   Function(String) get onAmountChanged => _cashAmount.sink.add;
-
+  getgoodsRecieved () {
+    return _goodsRecieved.value;
+  }
   void toggleGoodsReceived(String key, String value) {
     var map = _goodsRecieved.value;
     if (map.containsKey(key)) {
