@@ -181,6 +181,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                               isPlanActive: true,
                               autoImplyLeading: true,
                               isPrivateTimebank: communityModel.private,
+                              isBillMe: communityModel.billMe
                             ),
                           ),
                         ),
