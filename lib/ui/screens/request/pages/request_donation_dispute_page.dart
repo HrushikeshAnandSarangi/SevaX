@@ -106,9 +106,11 @@ class _RequestDonationDisputePageState
       key: _key,
       appBar: AppBar(
         title: Text(
-          widget.model.donationStatus == DonationStatus.REQUESTED ? S.of(context).donate : operatingMode == OperatingMode.USER
-              ? S.of(context).donations_requested
-              : S.of(context).donations_received,
+          widget.model.donationStatus == DonationStatus.REQUESTED
+              ? S.of(context).donate
+              : operatingMode == OperatingMode.USER
+                  ? S.of(context).donations_requested
+                  : S.of(context).donations_received,
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -120,9 +122,13 @@ class _RequestDonationDisputePageState
             children: [
               ackType == _AckType.CASH
                   ? _CashFlow(
-                      to: widget.model.cashDetails.pledgedAmount != null ? widget.model
-                          .donationAssociatedTimebankDetails.timebankTitle:  widget.model.donorDetails.name,
-                      title: widget.model.cashDetails.pledgedAmount != null ? '$name ${S.of(context).pledged_to_donate}' : '$name ${S.of(context).requested_small}',
+                      to: widget.model.cashDetails.pledgedAmount != null
+                          ? widget.model.donationAssociatedTimebankDetails
+                              .timebankTitle
+                          : widget.model.donorDetails.name,
+                      title: widget.model.cashDetails.pledgedAmount != null
+                          ? '$name ${S.of(context).pledged_to_donate}'
+                          : '$name ${S.of(context).requested.toLowerCase()}',
                       status: widget.model.donationStatus,
                       requestMode: widget.model.donatedToTimebank
                           ? RequestMode.TIMEBANK_REQUEST
@@ -134,7 +140,10 @@ class _RequestDonationDisputePageState
                       bloc: _bloc,
                       name: name,
                       currency: '\$',
-                      amount: widget.model.cashDetails.pledgedAmount != null ? widget.model.cashDetails.pledgedAmount.toString(): widget.model.cashDetails.cashDetails.amountRaised.toString(),
+                      amount: widget.model.cashDetails.pledgedAmount != null
+                          ? widget.model.cashDetails.pledgedAmount.toString()
+                          : widget.model.cashDetails.cashDetails.amountRaised
+                              .toString(),
                       minAmount: widget.model.minimumAmount.toString(),
                     )
                   : _GoodsFlow(
@@ -146,36 +155,46 @@ class _RequestDonationDisputePageState
                       // ),
                       requiredGoods: widget.model.goodsDetails.requiredGoods,
                     ),
-              widget.model.donationStatus == DonationStatus.REQUESTED && widget.model.donationType == RequestType.GOODS ?
-              CustomListTile(
-                leading: Icon(
-                  Icons.location_on,
-                  color: Colors.black54,
-                ),
-                title: Text(
-                  S.of(context).offer_to_sent_at,
-                  style: titleStyle,
-                  maxLines: 1,
-                ),
-                subtitle: Text(
-                  widget.model.goodsDetails.toAddress,
-                  style: subTitleStyle,
-                  maxLines: 1,
-                ),
-              ): Container(),
+              widget.model.donationStatus == DonationStatus.REQUESTED &&
+                      widget.model.donationType == RequestType.GOODS
+                  ? CustomListTile(
+                      leading: Icon(
+                        Icons.location_on,
+                        color: Colors.black54,
+                      ),
+                      title: Text(
+                        S.of(context).offer_to_sent_at,
+                        style: titleStyle,
+                        maxLines: 1,
+                      ),
+                      subtitle: Text(
+                        widget.model.goodsDetails.toAddress,
+                        style: subTitleStyle,
+                        maxLines: 1,
+                      ),
+                    )
+                  : Container(),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   RaisedButton(
-                    child: Text(widget.model.donationStatus == DonationStatus.REQUESTED ? S.of(context).donate : S.of(context).acknowledge),
+                    child: Text(
+                        widget.model.donationStatus == DonationStatus.REQUESTED
+                            ? S.of(context).donate
+                            : S.of(context).acknowledge),
                     onPressed: () {
-                      if (widget.model.donationStatus == DonationStatus.REQUESTED) {
+                      if (widget.model.donationStatus ==
+                          DonationStatus.REQUESTED) {
                         // for the offers.
-                        widget.model.goodsDetails.donatedGoods = _bloc.getgoodsRecieved();
+                        widget.model.goodsDetails.donatedGoods =
+                            _bloc.getgoodsRecieved();
                       }
-                      var amount = widget.model.cashDetails.pledgedAmount == null ?  widget.model.cashDetails.cashDetails.amountRaised : widget.model.minimumAmount;
+                      var amount = widget.model.cashDetails.pledgedAmount ==
+                              null
+                          ? widget.model.cashDetails.cashDetails.amountRaised
+                          : widget.model.minimumAmount;
                       switch (ackType) {
                         case _AckType.CASH:
                           // null will happen for widget.model.cashDetails.pledgedAmount when its a offer
@@ -508,10 +527,11 @@ class _GoodsFlow extends StatelessWidget {
     return Column(
       children: [
         Text(
-    status == DonationStatus.REQUESTED ? S.of(context).request_goods_offer:
-          operatingMode == OperatingMode.CREATOR
-              ? S.of(context).acknowledge_received
-              : S.of(context).acknowledge_donated,
+          status == DonationStatus.REQUESTED
+              ? S.of(context).request_goods_offer
+              : operatingMode == OperatingMode.CREATOR
+                  ? S.of(context).acknowledge_received
+                  : S.of(context).acknowledge_donated,
           style: TextStyle(fontSize: 18),
         ),
         SizedBox(height: 20),
