@@ -107,6 +107,13 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                   context: context,
                   user: user,
                 );
+              case NotificationType.GOODS_DONATION_REQUEST:
+                return PersonalNotificationsRedcerForDonations
+                    .getWidgetNotificationForOfferRequestGoods(
+                  notification: notification,
+                  context: context,
+                  user: user,
+                );
               case NotificationType.GroupJoinInvite:
                 return PersonalNotificationReducerForRequests
                     .getWidgetNotificationForGroupJoinInvite(

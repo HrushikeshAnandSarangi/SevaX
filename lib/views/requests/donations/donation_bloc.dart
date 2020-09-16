@@ -36,39 +36,48 @@ class DonationBloc {
     print("map -> " + localMap.toString());
   }
 
-  Future<bool> donateOfferGoods(
-      { DonationModel donationModel,
-        OfferModel offerModel,
-        String notificationId,
-        UserModel donor}) async {
-    if (_selectedList == null || _selectedList.value.isEmpty) {
-      _errorMessage.add('goods');
-    } else {
+  Future<bool> donateOfferGoods({ DonationModel donationModel,
+    OfferModel offerModel,
+    String notificationId,
+    UserModel donor}) async {
 //      donationModel.goodsDetails.donatedGoods = _selectedList.value;
-      donationModel.goodsDetails.comments = _comment.value;
-      donationModel.goodsDetails.requiredGoods = _selectedList.value;
-      donationModel.goodsDetails.toAddress = donationModel.goodsDetails.toAddress;
-      var newDonors =
-      new List<String>.from(offerModel.goodsDonationDetails.donors);
-      newDonors.add(donor.sevaUserID);
-      offerModel.goodsDonationDetails.donors = newDonors;
-      print(donationModel.goodsDetails.toMap());
-      try {
-        await FirestoreManager.createDonation(donationModel: donationModel);
-        await updateOfferWithRequest(offer: offerModel);
-        await sendNotification(
-          donationModel: donationModel,
-          offerModel: offerModel,
-          donor: donor,
-        );
-        if (notificationId != null && notificationId != '') {
-          await FirestoreManager.readUserNotification(
-              notificationId, donor.email);
-        }
-        return true;
-      } on Exception catch (e) {
-        _errorMessage.add("net_error");
+    if (offerModel.type == RequestType.GOODS) {
+      if (_selectedList == null || _selectedList.value.isEmpty) {
+        _errorMessage.add('goods');
+        return false;
+      } else {
+        donationModel.goodsDetails.comments = _comment.value;
+        donationModel.goodsDetails.requiredGoods = _selectedList.value;
+        donationModel.goodsDetails.toAddress =
+            donationModel.goodsDetails.toAddress;
+        var newDonors =
+        new List<String>.from(offerModel.goodsDonationDetails.donors);
+        newDonors.add(donor.sevaUserID);
+        offerModel.goodsDonationDetails.donors = newDonors;
+        print(donationModel.goodsDetails.toMap());
       }
+    } else {
+      var newDonors =
+      new List<String>.from(offerModel.cashModel.donors);
+      newDonors.add(donor.sevaUserID);
+      offerModel.cashModel.donors = newDonors;
+      print(donationModel.cashDetails.toMap());
+    }
+    try {
+      await FirestoreManager.createDonation(donationModel: donationModel);
+      await updateOfferWithRequest(offer: offerModel);
+      await sendNotification(
+        donationModel: donationModel,
+        offerModel: offerModel,
+        donor: donor,
+      );
+      if (notificationId != null && notificationId != '') {
+        await FirestoreManager.readUserNotification(
+            notificationId, donor.email);
+      }
+      return true;
+    } on Exception catch (e) {
+      _errorMessage.add("net_error");
     }
     return false;
   }
@@ -164,7 +173,7 @@ class DonationBloc {
       NotificationsModel notificationsModel = NotificationsModel(
         timebankId: donationModel.timebankId,
         communityId: donationModel.communityId,
-        type: NotificationType.ACKNOWLEDGE_DONOR_DONATION,
+        type: NotificationType.GOODS_DONATION_REQUEST,
         id: donationModel.notificationId,
         isRead: false,
         isTimebankNotification: false,

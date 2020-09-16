@@ -814,6 +814,39 @@ class PersonalNotificationsRedcerForDonations {
     );
   }
 
+  static Widget getWidgetNotificationForOfferRequestGoods({
+    NotificationsModel notification,
+    UserModel user,
+    BuildContext context,
+  }) {
+    DonationModel donationModel = DonationModel.fromMap(notification.data);
+    return NotificationCard(
+      isDissmissible: false,
+      timestamp: notification.timestamp,
+      entityName: donationModel.requestTitle.toLowerCase(),
+      onDismissed: () {
+        NotificationsRepository.readUserNotification(
+          notification.id,
+          user.email,
+        );
+      },
+      onPressed: () async {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => RequestDonationDisputePage(
+              notificationId: notification.id,
+              model: donationModel,
+            ),
+          ),
+        );
+      },
+      photoUrl: donationModel.donorDetails.photoUrl,
+      subTitle:
+      "${donationModel.donorDetails.name}  ${S.of(context).requested_small} ${donationModel.donationType == RequestType.CASH ? "\$${donationModel.cashDetails.pledgedAmount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+      title: S.of(context).donations_requested,
+    );
+  }
+
   static Widget getWidgetForDonationsModifiedByDonor({
     Function onDismissed,
     BuildContext context,

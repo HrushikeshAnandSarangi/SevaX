@@ -27,6 +27,8 @@ String getOfferDescription({OfferModel offerDataModel}) {
 List<String> getOfferParticipants({OfferModel offerDataModel}) {
   if (offerDataModel.type == RequestType.GOODS) {
     return offerDataModel.goodsDonationDetails.donors ?? [];
+  } else if (offerDataModel.type == RequestType.CASH) {
+    return offerDataModel.cashModel.donors ?? [];
   } else {
     return offerDataModel.offerType == OfferType.INDIVIDUAL_OFFER
         ? offerDataModel.individualOfferDataModel.offerAcceptors ?? []

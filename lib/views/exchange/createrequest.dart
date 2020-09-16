@@ -1205,6 +1205,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 )
               : Container(),
           SizedBox(height: 20),
+
           RequestPaymentDescriptionData(requestModel),
         ]);
   }

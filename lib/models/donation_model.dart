@@ -1,3 +1,4 @@
+import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 
 class DonationAssociatedTimebankDetails {
@@ -158,20 +159,24 @@ class DonationModel {
   }
 }
 
-class CashDetails {
+class CashDetails{
+  int pledgedAmount;
+  CashModel cashDetails = CashModel(paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel());
+
   CashDetails({
     this.pledgedAmount,
+    this.cashDetails,
   });
 
-  int pledgedAmount;
-
   factory CashDetails.fromMap(Map<String, dynamic> json) => CashDetails(
+        cashDetails: json['cashDetails'] == null? null : CashModel.fromMap(json['cashDetails']),
         pledgedAmount:
             json["pledgedAmount"] == null ? null : json["pledgedAmount"],
       );
 
   Map<String, dynamic> toMap() => {
         "pledgedAmount": pledgedAmount == null ? null : pledgedAmount,
+        "cashDetails": cashDetails == null? null : cashDetails.toMap(),
       };
 }
 
