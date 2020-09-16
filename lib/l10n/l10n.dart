@@ -3899,22 +3899,6 @@ class S {
         args: [count],
       );
 
-  String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Timebank Project', other: 'Timebank Projects', args: [
-          count
-        ])}',
-        name: 'timebank_project',
-        args: [count],
-      );
-
-  String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [
-          count
-        ])}',
-        name: 'personal_project',
-        args: [count],
-      );
-
   String personal_request(num count) => Intl.message(
         '${Intl.plural(count, one: 'Personal Request', other: 'Personal Requests', args: [
           count
