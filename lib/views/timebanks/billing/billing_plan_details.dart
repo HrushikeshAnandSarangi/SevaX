@@ -17,6 +17,7 @@ class BillingPlanDetails extends StatefulWidget {
   final bool isPlanActive;
   final bool isPrivateTimebank;
   final String planName;
+  final bool isBillMe;
 
   const BillingPlanDetails({
     Key key,
@@ -25,6 +26,7 @@ class BillingPlanDetails extends StatefulWidget {
     this.planName,
     this.autoImplyLeading = false,
     this.isPrivateTimebank,
+    this.isBillMe
   }) : super(key: key);
   @override
   _BillingPlanDetailsState createState() => _BillingPlanDetailsState();
@@ -114,6 +116,7 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
                                 widget.planName,
                             isPlanActive: widget.isPlanActive,
                             canBillMe: billMeEmails.contains(widget.user.email),
+                            isBillMe: widget.isBillMe
                           ),
                         );
                       },

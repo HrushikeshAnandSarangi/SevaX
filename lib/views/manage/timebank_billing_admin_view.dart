@@ -163,7 +163,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                 TextSpan(
                     text: _bloc.community.payment["planId"] == "community_plan"
                         ? "${S.of(context).on_community_plan}  "
-                        : "${S.of(context).your_community_on_the} ${planName(cardModel.currentPlan)}  "),
+                        : "${S.of(context).your_community_on_the} ${planName(_bloc.community.payment["planId"])}  "),
                 TextSpan(
                   text: S.of(context).change_plan,
                   style: TextStyle(
@@ -181,6 +181,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                               isPlanActive: true,
                               autoImplyLeading: true,
                               isPrivateTimebank: communityModel.private,
+                              isBillMe: communityModel.billMe
                             ),
                           ),
                         ),

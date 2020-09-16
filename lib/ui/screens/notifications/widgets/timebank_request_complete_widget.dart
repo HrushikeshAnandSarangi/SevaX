@@ -23,9 +23,10 @@ import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 class TimebankRequestCompletedWidget extends StatelessWidget {
   final NotificationsModel notification;
   final TimebankModel timebankModel;
+  final BuildContext parentContext;
 
   const TimebankRequestCompletedWidget(
-      {Key key, this.notification, this.timebankModel})
+      {Key key, this.notification, this.timebankModel, this.parentContext})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -74,7 +75,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           onPressed: () {
             print("pressed");
             showMemberClaimConfirmation(
-              context: context,
+              context: parentContext,
               notificationId: notificationId,
               requestModel: model,
               userId: userId,

@@ -27,9 +27,14 @@ class RequestCompleteWidget extends StatelessWidget {
   final RequestModel model;
   final String userId;
   final String notificationId;
+  final BuildContext parentContext;
 
   const RequestCompleteWidget(
-      {Key key, this.model, this.userId, this.notificationId})
+      {Key key,
+      this.model,
+      this.userId,
+      this.notificationId,
+      this.parentContext})
       : super(key: key);
 
   @override
@@ -223,7 +228,7 @@ class RequestCompleteWidget extends StatelessWidget {
                         ),
                         onPressed: () async {
                           checkForFeedback(
-                            context: context,
+                            context: parentContext,
                             model: requestModel,
                             notificationId: notificationId,
                             user: userModel,
@@ -244,7 +249,7 @@ class RequestCompleteWidget extends StatelessWidget {
                         ),
                         onPressed: () async {
                           rejectMemberClaimForEvent(
-                            context: context,
+                            context: parentContext,
                             model: requestModel,
                             notificationId: notificationId,
                             user: userModel,
@@ -311,26 +316,31 @@ class RequestCompleteWidget extends StatelessWidget {
     String requestId,
     UserModel receiverUser,
   }) async {
-    Firestore.instance.collection("reviews").add({
-      "reviewer": reviewer,
-      "reviewed": reviewed,
-      "ratings": results['selection'],
-      "requestId": requestId,
-      "comments": (results['didComment']
-          ? results['comment']
-          : S.of(context).no_comments)
-    });
-    await sendMessageToMember(
-      receiverUser: receiverUser,
-      requestModel: requestModel,
-      message: (results['didComment']
-          ? results['comment']
-          : S.of(context).no_comments),
-      loggedInUser: sevaCore.loggedInUser,
-      context: context,
-    );
+    try {
+      Firestore.instance.collection("reviews").add({
+        "reviewer": reviewer,
+        "reviewed": reviewed,
+        "ratings": results['selection'],
+        "requestId": requestId,
+        "comments": (results['didComment']
+            ? results['comment']
+            : S.of(context).no_comments)
+      });
+      await sendMessageToMember(
+        receiverUser: receiverUser,
+        requestModel: requestModel,
+        message: (results['didComment']
+            ? results['comment']
+            : S.of(context).no_comments),
+        loggedInUser: sevaCore.loggedInUser,
+        context: context,
+      );
 
-    approveTransaction(requestModel, userId, notificationId, sevaCore);
+      approveTransaction(requestModel, userId, notificationId, sevaCore);
+    } on Exception catch (e) {
+      print(e.toString());
+      // TODO
+    }
   }
 
   Future<void> sendMessageToMember(

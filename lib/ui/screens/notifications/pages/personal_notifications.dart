@@ -132,6 +132,7 @@ class _PersonalNotificationsState extends State<PersonalNotifications>
                 return PersonalNotificationReducerForRequests
                     .getWidgetForRequestCompleted(
                   notification: notification,
+                  parentContext: parentContext,
                 );
 
               case NotificationType.RequestCompletedApproved:

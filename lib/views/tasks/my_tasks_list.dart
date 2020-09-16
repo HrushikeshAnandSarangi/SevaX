@@ -743,11 +743,12 @@ class TaskCardViewState extends State<TaskCardView> {
       );
       await sendBackgroundMessage(
           messageContent: utils.getReviewMessage(
-              requestTitle: requestModel.title,
-              context: context,
-              userName: loggedInUser.fullname,
-              isForCreator: true,
-              reviewMessage: message),
+            requestTitle: requestModel.title,
+            context: context,
+            userName: loggedInUser.fullname,
+            isForCreator: true,
+            reviewMessage: message,
+          ),
           reciever: receiver,
           isTimebankMessage:
               requestModel.requestMode == RequestMode.PERSONAL_REQUEST
@@ -806,7 +807,8 @@ class TaskCardViewState extends State<TaskCardView> {
           targetUserId: requestModel.sevaUserId,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
           timebankId: requestModel.timebankId,
-          isTimebankNotification: true,
+          isTimebankNotification:
+              requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
           isRead: false,
         ),
       );

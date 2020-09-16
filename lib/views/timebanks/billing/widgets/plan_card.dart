@@ -16,6 +16,8 @@ class BillingPlanCard extends StatefulWidget {
   final BillingPlanDetailsModel plan;
   final bool canBillMe;
   final bool billMeVisibility;
+  final bool isBillMe;
+
   const BillingPlanCard({
     Key key,
     this.plan,
@@ -24,6 +26,7 @@ class BillingPlanCard extends StatefulWidget {
     this.isPlanActive = false,
     this.canBillMe,
     this.billMeVisibility,
+    this.isBillMe
   }) : super(key: key);
 
   @override
@@ -31,12 +34,17 @@ class BillingPlanCard extends StatefulWidget {
 }
 
 class _BillingPlanCardState extends State<BillingPlanCard> {
-  bool isBillMe = false;
+    bool isBillMe;
+
+    void initState(){
+      super.initState();
+      isBillMe = widget.isBillMe;
+    }
 
   @override
   Widget build(BuildContext context) {
     final textColor = widget.isSelected ? Colors.white : Colors.black;
-    print("co id ==>> ${widget.user.currentCommunity}");
+    print("co id ==>> ${widget.user.currentCommunity} ${widget.isBillMe}");
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20),
       child: Container(
