@@ -151,6 +151,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 return TimebankRequestCompletedWidget(
                   notification: notification,
                   timebankModel: widget.timebankModel,
+                  parentContext: parentContext,
                 );
                 break;
 
