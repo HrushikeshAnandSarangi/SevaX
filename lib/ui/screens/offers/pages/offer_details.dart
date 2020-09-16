@@ -136,9 +136,13 @@ class OfferDetails extends StatelessWidget {
                       maxLines: 1,
                     ),
                   ),
-                  offerModel.type == RequestType.GOODS ?   Container(
-                      padding: EdgeInsets.fromLTRB(8.0, 0.0,0.0,0.0),
-                      child:showGoodsDonationDetails(context, offerModel)): offerModel.type == RequestType.CASH ? showCashDonationDetails(context, offerModel): Container(),
+                  offerModel.type == RequestType.GOODS
+                      ? Container(
+                          padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                          child: showGoodsDonationDetails(context, offerModel))
+                      : offerModel.type == RequestType.CASH
+                          ? showCashDonationDetails(context, offerModel)
+                          : Container(),
 
                   Container(
                     padding: EdgeInsets.all(8.0),
@@ -167,9 +171,7 @@ class OfferDetails extends StatelessWidget {
     );
   }
 
-  Widget showCashDonationDetails(BuildContext context, offerModel) {
-
-  }
+  Widget showCashDonationDetails(BuildContext context, offerModel) {}
 
   Widget showGoodsDonationDetails(BuildContext context, OfferModel offerModel) {
     if (offerModel.type == RequestType.GOODS) {
@@ -190,11 +192,14 @@ class OfferDetails extends StatelessWidget {
             shrinkWrap: true,
             itemCount: offerModel.goodsDonationDetails.requiredGoods.length,
             itemBuilder: (context, index) {
-              List<String> keys = List.from(offerModel.goodsDonationDetails.requiredGoods.keys);
+              List<String> keys =
+                  List.from(offerModel.goodsDonationDetails.requiredGoods.keys);
               return Row(
                 children: [
                   Checkbox(
-                    value: offerModel.goodsDonationDetails.requiredGoods.containsKey(keys[index]) ?? false,
+                    value: offerModel.goodsDonationDetails.requiredGoods
+                            .containsKey(keys[index]) ??
+                        false,
                     checkColor: Colors.black,
                     onChanged: null,
                     activeColor: Colors.grey[200],
@@ -328,7 +333,8 @@ class OfferDetails extends StatelessWidget {
         BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
       ]),
       child: Padding(
-        padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20, right: 5),
+        padding:
+            const EdgeInsets.only(top: 20.0, left: 20, bottom: 20, right: 5),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -341,7 +347,7 @@ class OfferDetails extends StatelessWidget {
                     children: [
                       canDeleteOffer
                           ? TextSpan(
-                              text: S.of(context).delete,
+                              text: '${S.of(context).you_created_offer}',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -349,86 +355,117 @@ class OfferDetails extends StatelessWidget {
                             )
                           : TextSpan(
                               text: isCreator
-                              ? S.of(context).you_created_offer
-                                    : '${S.of(context).you_have} ${isAccepted ? '' : " ${S.of(context).not_yet}"} ${offerModel.offerType == OfferType.GROUP_OFFER ? S.of(context).signed_up_for : ((offerModel.type == RequestType.GOODS || offerModel.type == RequestType.CASH) ? S.of(context).applied :  S.of(context).bookmarked)} ${S.of(context).this_offer}.',
-                            style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                                  ? S.of(context).you_created_offer
+                                  : '${S.of(context).you_have} ${isAccepted ? '' : " ${S.of(context).not_yet}"} ${offerModel.offerType == OfferType.GROUP_OFFER ? S.of(context).signed_up_for : ((offerModel.type == RequestType.GOODS || offerModel.type == RequestType.CASH) ? S.of(context).applied : S.of(context).bookmarked)} ${S.of(context).this_offer}.',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
                     ],
                   ),
                 ),
               ),
             ),
-            Offstage(
-              offstage: isCreator ||
-                  (isAccepted && offerModel.offerType == OfferType.GROUP_OFFER),
-              child: Container(
-                width: isAccepted? 150: 120,
-                height: 32,
-                child: FlatButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  padding: EdgeInsets.fromLTRB(0,0,0,0),
-                  color: Color.fromRGBO(44, 64, 140, 0.7),
-                  child: Row(
-                    children: <Widget>[
-                      SizedBox(width: 1),
-                      Container(
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(44, 64, 140, 1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.check,
-                          color: Colors.white,
-                        ),
+            canDeleteOffer
+                ? Container(
+                    width: isAccepted ? 150 : 120,
+                    height: 32,
+                    child: FlatButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      Spacer(),
-                      Text(
-                        getButtonLabel(context, offerModel, userId),
-                        style: TextStyle(
-                          color: Colors.white,
+                      padding: EdgeInsets.all(0),
+                      color: Colors.green,
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(width: 1),
+                          Spacer(),
+                          Text(
+                            '${S.of(context).delete}',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          Spacer(
+                            flex: 1,
+                          ),
+                        ],
+                      ),
+                      onPressed: () async {
+                        deleteOffer(context: context, offerId: offerModel.id);
+                      },
+                    ),
+                  )
+                : Offstage(
+                    offstage: isCreator ||
+                        (isAccepted &&
+                            offerModel.offerType == OfferType.GROUP_OFFER),
+                    child: Container(
+                      width: isAccepted ? 150 : 120,
+                      height: 32,
+                      child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        color: Color.fromRGBO(44, 64, 140, 0.7),
+                        child: Row(
+                          children: <Widget>[
+                            SizedBox(width: 1),
+                            Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(44, 64, 140, 1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Spacer(),
+                            Text(
+                              getButtonLabel(context, offerModel, userId),
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            Spacer(
+                              flex: 2,
+                            ),
+                          ],
+                        ),
+                        onPressed: () async {
+                          bool isAccepted =
+                              getOfferParticipants(offerDataModel: offerModel)
+                                  .contains(
+                            userId,
+                          );
+                          if (offerModel.type == RequestType.CASH) {
+                          } else if (offerModel.type == RequestType.GOODS &&
+                              !isAccepted) {
+                            navigateToDonations(context, offerModel);
+                          } else {
+                            if (SevaCore.of(context).loggedInUser.calendarId ==
+                                null) {
+                              _settingModalBottomSheet(context, offerModel);
+                            } else {
+                              offerActions(context, offerModel)
+                                  .then((_) => Navigator.of(context).pop());
+                            }
+                          }
+                        },
                       ),
-                      Spacer(
-                        flex: 2,
-                      ),
-                    ],
-                  ),
-                  onPressed: () async {
-                    if (canDeleteOffer) {
-                      deleteOffer(context: context, offerId: offerModel.id);
-                    } else {
-                      bool isAccepted = getOfferParticipants(offerDataModel: offerModel).contains(
-                        userId,
-                      );
-                      if (offerModel.type == RequestType.CASH) {
-
-                      } else if (offerModel.type == RequestType.GOODS && !isAccepted){
-                        navigateToDonations(context, offerModel);
-                      } else {
-                        if (SevaCore.of(context).loggedInUser.calendarId == null) {
-                          _settingModalBottomSheet(context, offerModel);
-                        } else {
-                          offerActions(context, offerModel)
-                              .then((_) => Navigator.of(context).pop());
-                        }
-                      }
-                    }
-                  },
-                ),
-              ),
-            )
+                    ),
+                  )
           ],
         ),
       ),
     );
   }
+
   void navigateToDonations(context, OfferModel offerModel) {
     Navigator.push(
       context,
@@ -442,6 +479,7 @@ class OfferDetails extends StatelessWidget {
       ),
     );
   }
+
   void _settingModalBottomSheet(BuildContext context, OfferModel offerModel) {
     Map<String, dynamic> stateOfcalendarCallback = {
       "email": SevaCore.of(context).loggedInUser.email,
