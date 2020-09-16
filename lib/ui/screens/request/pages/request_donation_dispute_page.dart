@@ -15,6 +15,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/accept_modified_acknowlegement.dart';
+import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -44,7 +45,14 @@ class _RequestDonationDisputePageState
   ChatModeForDispute chatModeForDispute;
   TimebankModel timebankModel;
   ProgressDialog progressDialog;
-
+  final TextStyle titleStyle = TextStyle(
+    fontSize: 16,
+    color: Colors.grey,
+  );
+  final TextStyle subTitleStyle = TextStyle(
+    fontSize: 14,
+    color: Colors.black,
+  );
   void showProgress(String message) {
     progressDialog = ProgressDialog(
       context,
@@ -97,7 +105,7 @@ class _RequestDonationDisputePageState
       key: _key,
       appBar: AppBar(
         title: Text(
-          operatingMode == OperatingMode.USER
+          widget.model.donationStatus == DonationStatus.REQUESTED ? S.of(context).donate : operatingMode == OperatingMode.USER
               ? S.of(context).donations_requested
               : S.of(context).donations_received,
           style: TextStyle(fontSize: 18),
@@ -111,6 +119,7 @@ class _RequestDonationDisputePageState
             children: [
               ackType == _AckType.CASH
                   ? _CashFlow(
+                      status: widget.model.donationStatus,
                       requestMode: widget.model.donatedToTimebank
                           ? RequestMode.TIMEBANK_REQUEST
                           : RequestMode.PERSONAL_REQUEST,
@@ -125,6 +134,7 @@ class _RequestDonationDisputePageState
                       minAmount: widget.model.minimumAmount.toString(),
                     )
                   : _GoodsFlow(
+                      status: widget.model.donationStatus,
                       operatingMode: operatingMode,
                       bloc: _bloc,
                       // goods: Map<String, String>.from(
@@ -132,14 +142,35 @@ class _RequestDonationDisputePageState
                       // ),
                       requiredGoods: widget.model.goodsDetails.requiredGoods,
                     ),
+              widget.model.donationStatus == DonationStatus.REQUESTED ?
+              CustomListTile(
+                leading: Icon(
+                  Icons.location_on,
+                  color: Colors.black54,
+                ),
+                title: Text(
+                  S.of(context).offer_to_sent_at,
+                  style: titleStyle,
+                  maxLines: 1,
+                ),
+                subtitle: Text(
+                  widget.model.goodsDetails.toAddress,
+                  style: subTitleStyle,
+                  maxLines: 1,
+                ),
+              ): Container(),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   RaisedButton(
-                    child: Text(S.of(context).acknowledge),
+                    child: Text(widget.model.donationStatus == DonationStatus.REQUESTED ? S.of(context).donate : S.of(context).acknowledge),
                     onPressed: () {
+                      if (widget.model.donationStatus == DonationStatus.REQUESTED) {
+                        // for the offers.
+                        widget.model.goodsDetails.donatedGoods = _bloc.getgoodsRecieved();
+                      }
                       switch (ackType) {
                         case _AckType.CASH:
                           _bloc
@@ -367,6 +398,7 @@ class _CashFlow extends StatelessWidget {
   const _CashFlow({
     Key key,
     @required RequestDonationDisputeBloc bloc,
+    this.status,
     this.name,
     this.amount,
     this.currency,
@@ -378,6 +410,7 @@ class _CashFlow extends StatelessWidget {
   })  : _bloc = bloc,
         super(key: key);
 
+  final status;
   final RequestDonationDisputeBloc _bloc;
   final String name;
   final String amount;
@@ -450,11 +483,12 @@ class _GoodsFlow extends StatelessWidget {
     Key key,
     @required RequestDonationDisputeBloc bloc,
     // this.goods,
+    this.status,
     this.requiredGoods,
     this.operatingMode,
   })  : _bloc = bloc,
         super(key: key);
-
+  final status;
   final RequestDonationDisputeBloc _bloc;
   // final Map<String, String> goods;
   final Map<String, String> requiredGoods;
@@ -466,6 +500,7 @@ class _GoodsFlow extends StatelessWidget {
     return Column(
       children: [
         Text(
+    status == DonationStatus.REQUESTED ? S.of(context).request_goods_offer:
           operatingMode == OperatingMode.CREATOR
               ? S.of(context).acknowledge_received
               : S.of(context).acknowledge_donated,

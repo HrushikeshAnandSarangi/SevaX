@@ -278,7 +278,7 @@ class _RecurringListState extends State<RecurringList> {
                                           ? Colors.grey
                                           : Theme.of(context).primaryColor,
                                       child: Text(
-                                        getButtonLabel(
+                                        getButtonLabel(context,
                                                 widget.offerModel[index],
                                                 SevaCore.of(context)
                                                     .loggedInUser

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
@@ -70,10 +71,8 @@ class _OffersTabViewState extends State<OffersTabView> {
                     offerType: offer.offerType,
                     startDate: offer?.groupOfferDataModel?.startDate,
                     selectedAddress: offer.selectedAdrress,
-                    actionButtonLabel: getButtonLabel(
-                        offer, SevaCore.of(context).loggedInUser.sevaUserID),
-                    buttonColor: isParticipant(context, offer)
-                        ? Colors.grey
+                    actionButtonLabel: getButtonLabel(context, offer, SevaCore.of(context).loggedInUser.sevaUserID),
+                    buttonColor: (offer.type == RequestType.CASH || offer.type == RequestType.GOODS) ?  Theme.of(context).primaryColor:  isParticipant(context, offer) ? Colors.grey
                         : Theme.of(context).primaryColor,
                     onCardPressed: () async {
                       if (offer.isRecurring) {

@@ -966,15 +966,15 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       communityId: sevaCore.loggedInUser.currentCommunity,
     );
 
-    await FirestoreManager.readUserNotification(
-        notificationId, sevaCore.loggedInUser.email);
-
-//    if (model.projectId.isNotEmpty &&
-//        model.approvedUsers.length <= model.numberOfApprovals) {
-//      await FirestoreManager.updateProjectCompletedRequest(
-//          projectId: model.projectId, requestId: model.id);
-//    }
-
+    if (model.requestMode == RequestMode.PERSONAL_REQUEST) {
+      await FirestoreManager.readUserNotification(
+          notificationId, sevaCore.loggedInUser.email);
+    } else {
+      await FirestoreManager.readTimeBankNotification(
+        notificationId: notificationId,
+        timebankId: model.timebankId,
+      );
+    }
     setState(() {
       isProgressBarActive = false;
     });

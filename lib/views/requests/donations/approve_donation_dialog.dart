@@ -4,6 +4,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/donation_approve_model.dart';
+import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -17,6 +18,7 @@ class ApproveDonationDialog extends StatelessWidget {
   final String notificationId;
   final String userId;
   final RequestModel requestModel;
+  final OfferModel offermodel;
   final BuildContext parentContext;
   final VoidCallback onTap;
 
@@ -26,6 +28,7 @@ class ApproveDonationDialog extends StatelessWidget {
     this.notificationId,
     this.userId,
     this.requestModel,
+    this.offermodel,
     this.parentContext,
     this.onTap,
   });
@@ -144,7 +147,8 @@ class ApproveDonationDialog extends StatelessWidget {
                         // donation declined
                         createChat(
                           context: context,
-                          model: requestModel,
+                          requestModel: requestModel,
+                          offerModel: offermodel,
                           notificationId: notificationId,
                           userId: userId,
                         );
@@ -197,40 +201,52 @@ class ApproveDonationDialog extends StatelessWidget {
   }
 
   Future createChat({
-    RequestModel model,
+    RequestModel requestModel,
+    OfferModel offerModel,
     String userId,
     BuildContext context,
     String notificationId,
   }) async {
+    var timeBankId = requestModel != null ? requestModel.timebankId: offermodel != null ? offermodel.timebankId: '';
+    var userid = requestModel != null ? requestModel.sevaUserId: offermodel != null ? offermodel.sevaUserId: '';
     TimebankModel timebankModel =
-        await getTimeBankForId(timebankId: model.timebankId);
+        await getTimeBankForId(timebankId: timeBankId);
     UserModel user = await FirestoreManager.getUserForId(sevaUserId: userId);
-    UserModel loggedInUser =
-        await FirestoreManager.getUserForId(sevaUserId: model.sevaUserId);
+    UserModel loggedInUser = await FirestoreManager.getUserForId(sevaUserId: userid);
     ParticipantInfo sender, reciever;
-    switch (requestModel.requestMode) {
-      case RequestMode.PERSONAL_REQUEST:
-        sender = ParticipantInfo(
-          id: loggedInUser.sevaUserID,
-          name: loggedInUser.fullname,
-          photoUrl: loggedInUser.photoURL,
-          type: ChatType.TYPE_PERSONAL,
-        );
-        break;
+    if (requestModel != null) {
+      switch (requestModel.requestMode) {
+        case RequestMode.PERSONAL_REQUEST:
+          sender = ParticipantInfo(
+            id: loggedInUser.sevaUserID,
+            name: loggedInUser.fullname,
+            photoUrl: loggedInUser.photoURL,
+            type: ChatType.TYPE_PERSONAL,
+          );
+          break;
 
-      case RequestMode.TIMEBANK_REQUEST:
-        sender = ParticipantInfo(
-          id: timebankModel.id,
-          type: timebankModel.parentTimebankId ==
-                  FlavorConfig
-                      .values.timebankId //check if timebank is primary timebank
-              ? ChatType.TYPE_TIMEBANK
-              : ChatType.TYPE_GROUP,
-          name: timebankModel.name,
-          photoUrl: timebankModel.photoUrl,
-        );
-        break;
+        case RequestMode.TIMEBANK_REQUEST:
+          sender = ParticipantInfo(
+            id: timebankModel.id,
+            type: timebankModel.parentTimebankId ==
+                FlavorConfig
+                    .values.timebankId //check if timebank is primary timebank
+                ? ChatType.TYPE_TIMEBANK
+                : ChatType.TYPE_GROUP,
+            name: timebankModel.name,
+            photoUrl: timebankModel.photoUrl,
+          );
+          break;
+      }
+    } else if (offermodel != null) {
+      sender = ParticipantInfo(
+        id: loggedInUser.sevaUserID,
+        name: loggedInUser.fullname,
+        photoUrl: loggedInUser.photoURL,
+        type: ChatType.TYPE_PERSONAL,
+      );
     }
+
 
     reciever = ParticipantInfo(
       id: user.sevaUserID,
@@ -240,10 +256,9 @@ class ApproveDonationDialog extends StatelessWidget {
     );
 
     createAndOpenChat(
-      isTimebankMessage:
-          requestModel.requestMode == RequestMode.TIMEBANK_REQUEST,
+      isTimebankMessage: offermodel != null ? false: requestModel != null ?  requestModel.requestMode == RequestMode.TIMEBANK_REQUEST: false,
       context: parentContext,
-      timebankId: model.timebankId,
+      timebankId: timeBankId,
       communityId: loggedInUser.currentCommunity,
       sender: sender,
       reciever: reciever,

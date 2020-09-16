@@ -22,6 +22,10 @@ class DonationsRepository {
     return _donationRef.where('requestId', isEqualTo: requestId).snapshots();
   }
 
+  Stream<QuerySnapshot> getDonationsOfOffer(String offerId) {
+    return _donationRef.where('requestId', isEqualTo: offerId).snapshots();
+  }
+
   Future<void> acknowledgeDonation({
     String donationId,
     bool isTimebankNotification,
@@ -66,7 +70,7 @@ class DonationsRepository {
           );
         }
         //send acknowledgement reciept
-        MailDonationReciept.sendReciept(donationModel);
+        await MailDonationReciept.sendReciept(donationModel);
       }
 
       log(isTimebankNotification.toString() +

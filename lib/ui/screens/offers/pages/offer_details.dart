@@ -6,10 +6,12 @@ import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/requests/donations/donation_view.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -134,12 +136,17 @@ class OfferDetails extends StatelessWidget {
                       maxLines: 1,
                     ),
                   ),
+                  offerModel.type == RequestType.GOODS ?   Container(
+                      padding: EdgeInsets.fromLTRB(8.0, 0.0,0.0,0.0),
+                      child:showGoodsDonationDetails(context, offerModel)): offerModel.type == RequestType.CASH ? showCashDonationDetails(context, offerModel): Container(),
+
                   Container(
                     padding: EdgeInsets.all(8.0),
                     child: RichTextView(
                       text: getOfferDescription(offerDataModel: offerModel),
                     ),
                   ),
+
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: UserCircleAvatarList(
@@ -158,6 +165,51 @@ class OfferDetails extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Widget showCashDonationDetails(BuildContext context, offerModel) {
+
+  }
+
+  Widget showGoodsDonationDetails(BuildContext context, OfferModel offerModel) {
+    if (offerModel.type == RequestType.GOODS) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 20),
+            child: Text(
+              'Offering Goods',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: offerModel.goodsDonationDetails.requiredGoods.length,
+            itemBuilder: (context, index) {
+              List<String> keys = List.from(offerModel.goodsDonationDetails.requiredGoods.keys);
+              return Row(
+                children: [
+                  Checkbox(
+                    value: offerModel.goodsDonationDetails.requiredGoods.containsKey(keys[index]) ?? false,
+                    checkColor: Colors.black,
+                    onChanged: null,
+                    activeColor: Colors.grey[200],
+                  ),
+                  Text(
+                    offerModel.goodsDonationDetails.requiredGoods[keys[index]],
+                    style: subTitleStyle,
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
+      );
+    }
   }
 
   Widget oneToManyOfferCancellation(BuildContext context) {
@@ -276,7 +328,7 @@ class OfferDetails extends StatelessWidget {
         BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
       ]),
       child: Padding(
-        padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20),
+        padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20, right: 5),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -297,13 +349,13 @@ class OfferDetails extends StatelessWidget {
                             )
                           : TextSpan(
                               text: isCreator
-                                  ? S.of(context).you_created_offer
-                                  : '${S.of(context).you_have} ${isAccepted ? '' : " ${S.of(context).not_yet}"} ${offerModel.offerType == OfferType.GROUP_OFFER ? S.of(context).signed_up_for : S.of(context).bookmarked} ${S.of(context).this_offer}.',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              ? S.of(context).you_created_offer
+                                    : '${S.of(context).you_have} ${isAccepted ? '' : " ${S.of(context).not_yet}"} ${offerModel.offerType == OfferType.GROUP_OFFER ? S.of(context).signed_up_for : ((offerModel.type == RequestType.GOODS || offerModel.type == RequestType.CASH) ? S.of(context).applied :  S.of(context).bookmarked)} ${S.of(context).this_offer}.',
+                            style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                             ),
+                          ),
                     ],
                   ),
                 ),
@@ -313,13 +365,13 @@ class OfferDetails extends StatelessWidget {
               offstage: isCreator ||
                   (isAccepted && offerModel.offerType == OfferType.GROUP_OFFER),
               child: Container(
-                width: 120,
+                width: isAccepted? 150: 120,
                 height: 32,
                 child: FlatButton(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  padding: EdgeInsets.all(0),
+                  padding: EdgeInsets.fromLTRB(0,0,0,0),
                   color: Color.fromRGBO(44, 64, 140, 0.7),
                   child: Row(
                     children: <Widget>[
@@ -338,7 +390,7 @@ class OfferDetails extends StatelessWidget {
                       ),
                       Spacer(),
                       Text(
-                        getButtonLabel(offerModel, userId),
+                        getButtonLabel(context, offerModel, userId),
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -352,14 +404,20 @@ class OfferDetails extends StatelessWidget {
                     if (canDeleteOffer) {
                       deleteOffer(context: context, offerId: offerModel.id);
                     } else {
-                      if (SevaCore.of(context).loggedInUser.calendarId ==
-                          null) {
-                        _settingModalBottomSheet(context, offerModel);
+                      bool isAccepted = getOfferParticipants(offerDataModel: offerModel).contains(
+                        userId,
+                      );
+                      if (offerModel.type == RequestType.CASH) {
+
+                      } else if (offerModel.type == RequestType.GOODS && !isAccepted){
+                        navigateToDonations(context, offerModel);
                       } else {
-                        offerActions(
-                          context,
-                          offerModel,
-                        ).then((_) => Navigator.of(context).pop());
+                        if (SevaCore.of(context).loggedInUser.calendarId == null) {
+                          _settingModalBottomSheet(context, offerModel);
+                        } else {
+                          offerActions(context, offerModel)
+                              .then((_) => Navigator.of(context).pop());
+                        }
                       }
                     }
                   },
@@ -371,7 +429,19 @@ class OfferDetails extends StatelessWidget {
       ),
     );
   }
-
+  void navigateToDonations(context, OfferModel offerModel) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DonationView(
+          offerModel: offerModel,
+          timabankName: '',
+          requestModel: null,
+          notificationId: null,
+        ),
+      ),
+    );
+  }
   void _settingModalBottomSheet(BuildContext context, OfferModel offerModel) {
     Map<String, dynamic> stateOfcalendarCallback = {
       "email": SevaCore.of(context).loggedInUser.email,

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
+import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/ui/screens/request/bloc/donation_accepted_bloc.dart';
 import 'package:sevaexchange/ui/screens/request/widgets/donation_participant_card.dart';
@@ -12,14 +13,17 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class DonationCompletedPage extends StatelessWidget {
   final RequestModel requestModel;
+  final OfferModel offermodel;
 
-  const DonationCompletedPage({Key key, this.requestModel}) : super(key: key);
+  const DonationCompletedPage({Key key, this.requestModel, this.offermodel}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<DonationAcceptedBloc>(context);
+    final _blocOffer = BlocProvider.of<DonationAcceptedOfferBloc>(context);
     return StreamBuilder(
-      stream: _bloc.donations,
+      stream: requestModel != null ? _bloc.donations: _blocOffer.donations,
       builder: (BuildContext _, AsyncSnapshot<List<DonationModel>> snapshot) {
+        var type = requestModel != null? requestModel.requestType : offermodel != null? offermodel.type : '';
         if (snapshot.data == null ||
             snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
@@ -33,7 +37,7 @@ class DonationCompletedPage extends StatelessWidget {
 
         snapshot.data.forEach((donation) {
           if (donation.donationStatus == DonationStatus.ACKNOWLEDGED) {
-            if (requestModel.requestType == RequestType.CASH) {
+            if (type == RequestType.CASH) {
               totalQuantity += donation.cashDetails.pledgedAmount;
             } else {
               totalQuantity += donation.goodsDetails.donatedGoods.length;
@@ -52,7 +56,8 @@ class DonationCompletedPage extends StatelessWidget {
           child: Column(
             children: [
               _DonationProgressWidget(
-                isCashDonation: requestModel.requestType == RequestType.CASH,
+                type: requestModel != null ? 'request': 'offer',
+                isCashDonation: type == RequestType.CASH,
                 quantity:
                     totalQuantity.toString(), //update to support goods quantity
               ),
@@ -99,8 +104,10 @@ class DonationCompletedPage extends StatelessWidget {
 class _DonationProgressWidget extends StatelessWidget {
   final bool isCashDonation;
   final String quantity;
+  final String type;
   const _DonationProgressWidget({
     Key key,
+    this.type,
     this.isCashDonation,
     this.quantity,
   }) : super(key: key);
@@ -111,7 +118,7 @@ class _DonationProgressWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${S.of(context).total} ${isCashDonation ? '${S.of(context).donations}' : S.of(context).goods} ${S.of(context).received}',
+          '${S.of(context).total} ${isCashDonation ? '${S.of(context).donations}' :  S.of(context).goods} ${ this.type == 'request' ? S.of(context).received : S.of(context).offered}',
           style: TextStyle(
             fontSize: 18,
             color: Colors.grey,
