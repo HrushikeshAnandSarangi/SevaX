@@ -631,7 +631,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ),
-                  getBio(userModel),
+                  Center(child: getBio(userModel)),
                   Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Center(
@@ -667,14 +667,23 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                               isProgressBarActive = true;
                               isRemoving = false;
                             });
-                            approveMemberClaim(
+                            await checkForFeedback(
+                              userId: userId,
+                              user: userModel,
                               context: context,
                               model: requestModel,
                               notificationId: notificationId,
-                              user: userModel,
-                              userId: userId,
+                              sevaCore: SevaCore.of(context),
                               credits: credits,
                             );
+                            // approveMemberClaim(
+                            //   context: context,
+                            //   model: requestModel,
+                            //   notificationId: notificationId,
+                            //   user: userModel,
+                            //   userId: userId,
+                            //   credits: credits,
+                            // );
                           },
                         ),
                       ),
@@ -819,8 +828,9 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   Widget getBio(UserModel userModel) {
     if (userModel.bio != null) {
       if (userModel.bio.length < 100) {
-        return Center(
-          child: Text(userModel.bio),
+        return Text(
+          userModel.bio,
+          textAlign: TextAlign.center,
         );
       }
       return Container(
@@ -842,24 +852,24 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     );
   }
 
-  Future approveMemberClaim(
-      {String userId,
-      UserModel user,
-      BuildContext context,
-      RequestModel model,
-      String notificationId,
-      num credits}) async {
-    //request for feedback;
-    await checkForFeedback(
-      userId: userId,
-      user: user,
-      context: context,
-      model: model,
-      notificationId: notificationId,
-      sevaCore: SevaCore.of(context),
-      credits: credits,
-    );
-  }
+  // Future approveMemberClaim(
+  //     {String userId,
+  //     UserModel user,
+  //     BuildContext context,
+  //     RequestModel model,
+  //     String notificationId,
+  //     num credits}) async {
+  //   //request for feedback;
+  //   await checkForFeedback(
+  //     userId: userId,
+  //     user: user,
+  //     context: context,
+  //     model: model,
+  //     notificationId: notificationId,
+  //     sevaCore: SevaCore.of(context),
+  //     credits: credits,
+  //   );
+  // }
 
   Future checkForFeedback(
       {String userId,
@@ -893,7 +903,12 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         credits: credits,
         reciever: user,
       );
-    } else {}
+    } else {
+      setState(() {
+        isProgressBarActive = false;
+        // isRemoving = false;
+      });
+    }
   }
 
   Future updateUserData(String reviewerEmail, String reviewedEmail) async {

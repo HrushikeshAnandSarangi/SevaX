@@ -120,7 +120,7 @@ class RequestAcceptedWidget extends StatelessWidget {
                           TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
                   ),
-                getBio(context, userModel),
+                Center(child: getBio(context, userModel)),
                 Center(
                   child: Text(
                     "${S.of(context).notifications_by_approving}, ${userModel.fullname} ${S.of(context).notifications_will_be_added_to}.",
@@ -242,8 +242,9 @@ class RequestAcceptedWidget extends StatelessWidget {
 Widget getBio(BuildContext context, UserModel userModel) {
   if (userModel.bio != null) {
     if (userModel.bio.length < 100) {
-      return Center(
-        child: Text(userModel.bio),
+      return Text(
+        userModel.bio,
+        textAlign: TextAlign.center,
       );
     }
     return Container(

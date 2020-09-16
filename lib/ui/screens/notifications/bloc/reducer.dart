@@ -145,7 +145,7 @@ class PersonalNotificationReducerForRequests {
           photoUrl: user.photoURL,
           title: S.of(context).notifications_debited,
           subTitle:
-              "${model.credits} ${S.of(context).notifications_debited_to} ",
+              "${model.credits} Seva Credits ${S.of(context).notifications_debited_to} ",
         );
       },
     );
@@ -216,7 +216,7 @@ class PersonalNotificationReducerForRequests {
           photoUrl: user.photoURL,
           title: S.of(context).notifications_credited,
           subTitle:
-              ' ${S.of(context).congrats}! ${model.credits} ${S.of(context).notifications_credited_to}. ',
+              ' ${S.of(context).congrats}! ${model.credits} Seva Credits ${S.of(context).notifications_credited_to}. ',
         );
       },
     );

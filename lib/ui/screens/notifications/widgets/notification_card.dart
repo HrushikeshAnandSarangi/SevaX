@@ -110,7 +110,7 @@ class NotificationCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  subTitle,
+                  subTitle != null ? subTitle.trim() : '',
                 ),
                 SizedBox(height: 4),
                 Text(
