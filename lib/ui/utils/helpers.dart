@@ -33,7 +33,8 @@ Future<String> getLocation(GeoFirePoint location) async {
   return address;
 }
 
-handleVolunterFeedbackForTrustWorthynessNRealiablityScore(type, results, model,UserModel user) async {
+handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
+    type, results, model, UserModel user) async {
   /* Here are the questions that should be asked (replacing the current ones)
     How likely are you to recommend this person / service to a friend, on a scale between 0-10 where 0 = Not at all Likely and 10 = Extremely Likely
 
@@ -69,30 +70,31 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(type, results, model,U
   ratingCal(total) {
     if (total <= 1) {
       return 1;
-    } else if (total >=9) {
+    } else if (total >= 9) {
       return 5;
     } else {
-      var starat = ((total - 1)/ 2) + 1;
+      var starat = ((total - 1) / 2) + 1;
       return starat;
     }
   }
+
   averageReview(totalreviews, currentreview, pastreview) {
     print(totalreviews);
     print(currentreview);
     print(pastreview);
-    print((pastreview *  totalreviews + currentreview) / (totalreviews + 1));
-    return (pastreview *  totalreviews + currentreview) / (totalreviews + 1);
+    print((pastreview * totalreviews + currentreview) / (totalreviews + 1));
+    return (pastreview * totalreviews + currentreview) / (totalreviews + 1);
   }
+
   if (type == FeedbackType.FOR_REQUEST_VOLUNTEER) {
     var temp = results['ratings'];
     print(temp);
-    await Firestore.instance
-        .collection('users')
-        .document(user.email)
-        .setData({
+    await Firestore.instance.collection('users').document(user.email).setData({
       'totalReviews': FieldValue.increment(1),
-      'reliabilityscore': averageReview(user.totalReviews, ratingCal(temp[0] + temp[1]), user.reliabilityscore),
-      'trustworthinessscore': averageReview(user.totalReviews, ratingCal(temp[2] + temp[3]), user.trustworthinessscore)
+      'reliabilityscore': averageReview(user.totalReviews,
+          ratingCal(temp['0'] + temp['1']), user.reliabilityscore),
+      'trustworthinessscore': averageReview(user.totalReviews,
+          ratingCal(temp['2'] + temp['3']), user.trustworthinessscore)
     }, merge: true);
   }
 }
