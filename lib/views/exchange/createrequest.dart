@@ -1677,7 +1677,7 @@ Widget TotalCredits({
       label = totalCredits.toString() +
           ' ' +
           S.of(context).personal_max_seva_credit_message1 +
-          totalCredits.toString() +
+          requestModel.maxCredits.toString() +
           ' ' +
           S.of(context).personal_max_seva_credit_message2;
     }
