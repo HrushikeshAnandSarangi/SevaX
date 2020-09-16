@@ -80,7 +80,7 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                 break;
               case NotificationType.ACKNOWLEDGE_DONOR_DONATION:
                 DonationModel donationModel =
-                    DonationModel.fromMap(notification.data);
+                DonationModel.fromMap(notification.data);
 
                 return NotificationCard(
                   timestamp: notification.timestamp,
@@ -107,8 +107,41 @@ class _TimebankNotificationsState extends State<TimebankNotifications> {
                   },
                   photoUrl: donationModel.donorDetails.photoUrl,
                   subTitle:
-                      "${donationModel.donorDetails.name}  ${S.of(context).pledged_to_donate} ${donationModel.donationType == RequestType.CASH ? "\$${donationModel.cashDetails.pledgedAmount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+                  "${donationModel.donorDetails.name}  ${S.of(context).pledged_to_donate} ${donationModel.donationType == RequestType.CASH ? "\$${donationModel.cashDetails.pledgedAmount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
                   title: S.of(context).donations_received,
+                );
+                break;
+              case NotificationType.GOODS_DONATION_REQUEST:
+                DonationModel donationModel =
+                DonationModel.fromMap(notification.data);
+
+                return NotificationCard(
+                  timestamp: notification.timestamp,
+                  entityName: donationModel.donorDetails.name,
+                  isDissmissible: true,
+                  onDismissed: () {
+                    FirestoreManager.readTimeBankNotification(
+                      notificationId: notification.id,
+                      timebankId: notification.timebankId,
+                    );
+                  },
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return RequestDonationDisputePage(
+                            model: donationModel,
+                            notificationId: notification.id,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  photoUrl: donationModel.donorDetails.photoUrl,
+                  subTitle:
+                  "${donationModel.donorDetails.name}  ${S.of(context).requested_small} ${donationModel.donationType == RequestType.CASH ? "\$${donationModel.cashDetails.pledgedAmount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+                  title: S.of(context).donations_requested,
                 );
                 break;
 

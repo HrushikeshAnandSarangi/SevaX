@@ -466,9 +466,13 @@ class S {
       );
 
   String get requested => Intl.message(
-        'REQUESTED',
-        name: 'requested',
-      );
+    'REQUESTED',
+    name: 'requested',
+  );
+  String get requested_small => Intl.message(
+    'requested',
+    name: 'requested_small',
+  );
 
   String get rejected => Intl.message(
         'REJECTED',
@@ -4581,7 +4585,14 @@ class S {
         'Amount',
         name: 'amount',
       );
-
+  String get donations_cash_request => Intl.message(
+    'Request Amount*',
+    name: 'donations_cash_request',
+  );
+  String get donations_cash_request_hint => Intl.message(
+    "Request Amount shouldn't be more than the offer amount",
+    name: 'donations_cash_request_hint',
+  );
   String get only_images_types_allowed => Intl.message(
         'Only image types are allowed ex:jpg, png\'',
         name: 'only_images_types_allowed',
@@ -4878,9 +4889,14 @@ class S {
       );
 
   String get total_amount_raised => Intl.message(
-        'Total amount raised',
-        name: 'total_amount_raised',
-      );
+    'Total amount raised',
+    name: 'total_amount_raised',
+  );
+
+  String get total_donation_amount => Intl.message(
+    'Total donation amount',
+    name: 'total_donation_amount',
+  );
 
   String get by_accepting_group_join => Intl.message(
         'By accepting, you will be added to',

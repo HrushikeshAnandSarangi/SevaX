@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -39,24 +40,25 @@ class _DonationViewState extends State<DonationView> {
   PageController pageController;
   DonationModel donationsModel = DonationModel(
     donorDetails: DonorDetails(),
-    cashDetails: CashDetails(),
+    cashDetails: CashDetails(cashDetails: CashModel(paymentType: RequestPaymentType.ZELLEPAY, achdetails: new ACHModel())),
     goodsDetails: GoodsDetails(),
   );
   UserModel sevaUser = UserModel();
   String none = '';
+  bool autoValidateText = false;
+  bool autoValidateCashText = false;
+  var focusNodes = List.generate(16, (_) => FocusNode());
   @override
   void initState() {
     if (none == '') {
       print(true);
     }
-    print('hesdfsdfy');
-    var temp = (widget.offerModel != null ? (widget.offerModel.type == RequestType.GOODS ? 3: widget.offerModel.type == RequestType.CASH ? 3: 0): widget.requestModel != null ? widget.requestModel.requestType == RequestType.GOODS ? 0 : 1: 0);
+    var temp = (widget.offerModel != null ? (widget.offerModel.type == RequestType.GOODS ? 3: widget.offerModel.type == RequestType.CASH ? 4: 0): widget.requestModel != null ? widget.requestModel.requestType == RequestType.GOODS ? 0 : 1: 0);
     print(temp);
     pageController = PageController(
         initialPage: temp);
 
     super.initState();
-    print('hesdfy');
     donationBloc.errorMessage.listen((event) {
       if (event.isNotEmpty && event != null) {
         //hideProgress();
@@ -69,7 +71,6 @@ class _DonationViewState extends State<DonationView> {
                     : S.of(context).select_goods_category);
       }
     });
-    print('hsdfsdfdsfey');
   }
 
   @override
@@ -101,6 +102,7 @@ class _DonationViewState extends State<DonationView> {
           amountWidget(),
           donationDetails(),
           donationOfferAt(),
+          RequestPaymentDescriptionData(widget.offerModel),
         ],
       ),
     );
@@ -128,6 +130,11 @@ class _DonationViewState extends State<DonationView> {
             timebankPhotoURL: widget.requestModel.photoUrl,
           );
       donationsModel.donationStatus = DonationStatus.PLEDGED;
+      donationsModel.donorSevaUserId = sevaUser.sevaUserID;
+      donationsModel.donorDetails.name = sevaUser.fullname;
+      donationsModel.donorDetails.photoUrl = sevaUser.photoURL;
+      donationsModel.donorDetails.email = sevaUser.email;
+      donationsModel.donorDetails.bio = sevaUser.bio;
     } else if (widget.offerModel != null) {
       donationsModel.timebankId = widget.offerModel.timebankId;
       donationsModel.requestId = widget.offerModel.id;
@@ -137,16 +144,468 @@ class _DonationViewState extends State<DonationView> {
       donationsModel.requestTitle = widget.offerModel.individualOfferDataModel.title;
       donationsModel.donationAssociatedTimebankDetails = DonationAssociatedTimebankDetails();
       donationsModel.donationStatus = DonationStatus.REQUESTED;
+      donationsModel.donorSevaUserId = sevaUser.sevaUserID;
+      donationsModel.donorDetails.name = widget.offerModel.fullName;
+      donationsModel.donorDetails.photoUrl = widget.offerModel.photoUrlImage;
+      donationsModel.donorDetails.email = widget.offerModel.email;
     }
     donationsModel.communityId = sevaUser.currentCommunity;
     donationsModel.id = Utils.getUuid();
-    donationsModel.donorSevaUserId = sevaUser.sevaUserID;
-    donationsModel.donorDetails.name = sevaUser.fullname;
-    donationsModel.donorDetails.photoUrl = sevaUser.photoURL;
-    donationsModel.donorDetails.email = sevaUser.email;
-    donationsModel.donorDetails.bio = sevaUser.bio;
     donationsModel.notificationId = Utils.getUuid();
   }
+  TextStyle hintTextStyle = TextStyle(
+    fontSize: 14,
+    // fontWeight: FontWeight.bold,
+    color: Colors.grey,
+    fontFamily: 'Europa',
+  );
+  Widget _optionRadioButton(
+      {String title, value, groupvalue, Function onChanged}) {
+    return ListTile(
+      contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
+      title: Text(title),
+      leading:
+      Radio(value: value, groupValue: groupvalue, onChanged: onChanged),
+    );
+  }
+  Widget RequestPaymentPaypal(OfferModel offerModel) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[12],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[12]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).email_hint,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue: donationsModel.cashDetails.cashDetails != null ? donationsModel.cashDetails.cashDetails.targetAmount : "0",
+            keyboardType: TextInputType.emailAddress,
+            maxLines: 1,
+            onSaved: (value) {
+              widget.offerModel.cashModel.paypalId = value;
+            },
+            validator: (value) {
+              donationsModel.cashDetails.cashDetails.paypalId = value;
+              return _validateEmailId(value);
+            },
+          )
+        ]);
+  }
+  Widget RequestPaymentACH(OfferModel offerModel) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(height: 20),
+          Text(
+            S.of(context).request_payment_ach_bank_name,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[12],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[13]);
+            },
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (!value.isEmpty) {
+                donationsModel.cashDetails.cashDetails.achdetails.bank_name = value;
+                print(true);
+              } else {
+                print('not url');
+                return S.of(context).enter_valid_bank_name;
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 20),
+          Text(
+            S.of(context).request_payment_ach_bank_address,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[13],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[14]);
+            },
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (!value.isEmpty) {
+                donationsModel.cashDetails.cashDetails.achdetails.bank_address = value;
+                print(true);
+              } else {
+                print('not url');
+
+                return S.of(context).enter_valid_bank_address;
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 20),
+          Text(
+            S.of(context).request_payment_ach_routing_number,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[14],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[15]);
+            },
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (!value.isEmpty) {
+                donationsModel.cashDetails.cashDetails.achdetails.routing_number = value;
+                print(true);
+              } else {
+                print('not url');
+
+                return S.of(context).enter_valid_routing_number;
+              }
+              return null;
+            },
+          ),
+          SizedBox(height: 20),
+          Text(
+            S.of(context).request_payment_ach_account_no,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[15],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[15]);
+            },
+            textInputAction: TextInputAction.next,
+            initialValue: donationsModel.cashDetails.cashDetails.achdetails != null ? donationsModel.cashDetails.cashDetails.achdetails.account_number: "",
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else if (!value.isEmpty) {
+                donationsModel.cashDetails.cashDetails.achdetails.account_number = value;
+              } else {
+                return S.of(context).enter_valid_account_number;
+              }
+              return null;
+            },
+          )
+        ]);
+  }
+  Widget RequestPaymentZellePay(OfferModel offerModel) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[12],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[12]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText:
+              S.of(context).request_payment_descriptionZelle_inputhint,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue: donationsModel.cashDetails.cashDetails != null ? donationsModel.cashDetails.cashDetails.zelleId: "",
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            onSaved: (value) {
+              donationsModel.cashDetails.cashDetails.zelleId = value;
+            },
+            validator: (value) {
+              donationsModel.cashDetails.cashDetails.zelleId = value;
+              return _validateEmailAndPhone(value);
+            },
+          )
+        ]);
+  }
+  String _validateEmailAndPhone(String value) {
+    String mobilePattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    RegExp emailPattern = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    RegExp regExp = RegExp(mobilePattern);
+    if (value.isEmpty) {
+      return S.of(context).validation_error_general_text;
+    } else if (emailPattern.hasMatch(value)) {
+      return null;
+    } else if (regExp.hasMatch(value)) {
+      return null;
+    } else {
+      return S.of(context).enter_valid_link;
+    }
+    return null;
+  }
+  String _validateEmailId(String value) {
+    RegExp emailPattern = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    if (value.isEmpty) return S.of(context).validation_error_general_text;
+    if (!emailPattern.hasMatch(value))
+      return S.of(context).validation_error_invalid_email;
+    return null;
+  }
+  Widget RequestPaymentDescriptionData(OfferModel offerModel) {
+    print(donationsModel.cashDetails.toMap());
+    print(donationsModel.cashDetails.cashDetails);
+    print('check this out');
+    return  SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child:Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+    child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        S.of(context).donations_cash_request,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Europa',
+          color: Colors.black,
+        ),
+      ),
+      Text(
+        S.of(context).donations_cash_request_hint,
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.normal,
+          fontFamily: 'Europa',
+          color: Colors.grey,
+        ),
+      ),
+      TextFormField(
+        autovalidate: autoValidateCashText,
+        onChanged: (value) {
+          if (value.length > 1) {
+            setState(() {
+              autoValidateCashText = true;
+            });
+          } else {
+            setState(() {
+              autoValidateCashText = false;
+            });
+          }
+        },
+        focusNode: focusNodes[1],
+        onFieldSubmitted: (v) {
+          FocusScope.of(context).requestFocus(focusNodes[1]);
+        },
+        textInputAction: TextInputAction.next,
+        keyboardType: TextInputType.number,
+        validator: (value) {
+          if (value.isEmpty) {
+            return S.of(context).validation_error_general_text;
+          } else if (!value.isEmpty) {
+            donationsModel.cashDetails.cashDetails.amountRaised = int.parse(value);
+            print(true);
+          } else {
+            return S.of(context).enter_valid_amount;
+          }
+          return null;
+        },
+      ),
+      SizedBox(height: 10,),
+        Text(
+          S.of(context).request_payment_description,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.black,
+          ),
+        ),
+        Text(
+          S.of(context).request_payment_description_hint,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey,
+          ),
+        ),
+        _optionRadioButton(
+          title: S.of(context).request_paymenttype_ach,
+          value: RequestPaymentType.ACH,
+          groupvalue: donationsModel.cashDetails.cashDetails.paymentType,
+          onChanged: (value) {
+            donationsModel.cashDetails.cashDetails.paymentType = value;
+            setState(() => {});
+          },
+        ),
+        _optionRadioButton(
+            title: S.of(context).request_paymenttype_paypal,
+            value: RequestPaymentType.PAYPAL,
+            groupvalue: donationsModel.cashDetails.cashDetails.paymentType,
+            onChanged: (value) {
+              donationsModel.cashDetails.cashDetails.paymentType = value;
+              setState(() => {});
+            }),
+        _optionRadioButton(
+            title: S.of(context).request_paymenttype_zellepay,
+            value: RequestPaymentType.ZELLEPAY,
+            groupvalue: donationsModel.cashDetails.cashDetails.paymentType,
+            onChanged: (value) {
+              donationsModel.cashDetails.cashDetails.paymentType = value;
+              setState(() => {});
+            }),
+        donationsModel.cashDetails.cashDetails.paymentType == RequestPaymentType.ACH
+            ? RequestPaymentACH(widget.offerModel)
+            : donationsModel.cashDetails.cashDetails.paymentType == RequestPaymentType.PAYPAL
+            ? RequestPaymentPaypal(widget.offerModel)
+            : RequestPaymentZellePay(widget.offerModel),
+        SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            actionButton(
+                buttonTitle: S.of(context).submit,
+                onPressed: () async {
+                  var connResult = await Connectivity().checkConnectivity();
+                  if (connResult == ConnectivityResult.none) {
+                    showScaffold(S.of(context).check_internet);
+                    return;
+                  }
+                  donationBloc
+                      .donateOfferGoods(
+                      notificationId: widget.notificationId,
+                      donationModel: donationsModel,
+                      offerModel: widget.offerModel,
+                      donor: UserModel(
+                          email: donationsModel.donorDetails.email,
+                          fullname: donationsModel.donorDetails.name,
+                          photoURL: donationsModel.donorDetails.photoUrl,
+                          sevaUserID: donationsModel.donorSevaUserId
+                      ))
+                      .then((value) {
+                    if (value) {
+                      // hideProgress();
+                      getSuccessDialog(S.of(context).donations_requested.toLowerCase()).then(
+                        //to pop the screen
+                            (_) => Navigator.of(context).pop(),
+                      );
+                    }
+                  });
+                }),
+            SizedBox(
+              width: 20,
+            ),
+            actionButton(
+                buttonTitle: S.of(context).do_it_later,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                }),
+          ],
+        )
+      ])
+    ));
+  }
+
   Widget donationOfferAt() {
     bool autoValidateText = false;
     bool autoValidateCashText = false;
@@ -281,7 +740,12 @@ class _DonationViewState extends State<DonationView> {
                           notificationId: widget.notificationId,
                           donationModel: donationsModel,
                           offerModel: widget.offerModel,
-                          donor: sevaUser)
+                          donor: UserModel(
+                            email: donationsModel.donorDetails.email,
+                            fullname: donationsModel.donorDetails.name,
+                            photoURL: donationsModel.donorDetails.photoUrl,
+                            sevaUserID: donationsModel.donorSevaUserId
+                          ))
                           .then((value) {
                         if (value) {
                           // hideProgress();

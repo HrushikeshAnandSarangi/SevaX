@@ -59,7 +59,7 @@ class RequestDonationDisputeBloc {
     if (_cashAmount.value == null || _cashAmount.value == '') {
       _cashAmount.addError('amount1');
       return false;
-    } else if (int.parse(_cashAmount.value) < donationModel.minimumAmount) {
+    } else if (donationModel.minimumAmount != null && int.parse(_cashAmount.value) < donationModel.minimumAmount) {
       _cashAmount.addError('min');
       return false;
     } else {

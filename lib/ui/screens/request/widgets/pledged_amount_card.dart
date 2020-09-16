@@ -5,8 +5,10 @@ class PledgedAmountCard extends StatelessWidget {
   final String name;
   final String currency;
   final String amount;
+  final String title;
   const PledgedAmountCard({
     Key key,
+    this.title,
     this.name,
     this.currency,
     this.amount,
@@ -26,7 +28,7 @@ class PledgedAmountCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  '$name ${S.of(context).pledged_to_donate}',
+                  title,
                   style: TextStyle(color: Colors.grey, fontSize: 16),
                 ),
                 Text(

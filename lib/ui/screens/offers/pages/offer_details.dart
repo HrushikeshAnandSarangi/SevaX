@@ -9,6 +9,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
+import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/donations/donation_view.dart';
@@ -167,8 +168,49 @@ class OfferDetails extends StatelessWidget {
     );
   }
 
-  Widget showCashDonationDetails(BuildContext context, offerModel) {
-
+  Widget showCashDonationDetails(BuildContext context, OfferModel offerModel) {
+    if (offerModel.type == RequestType.CASH) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 20),
+            child: Text(
+              'Offering Amount',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          ),
+          CustomListTile(
+            title: Text(
+              S.of(context).total_donation_amount,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            subtitle: Text('\$${offerModel.cashModel.targetAmount}'),
+            leading: Image.asset(
+              offerModel.type == RequestType.CASH
+                  ? SevaAssetIcon.donateCash
+                  : SevaAssetIcon.donateGood,
+              height: 30,
+              width: 30,
+            ),
+            trailing: Text(
+              '',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+              ),
+            ),
+          )
+        ],
+      );
+    }
   }
 
   Widget showGoodsDonationDetails(BuildContext context, OfferModel offerModel) {
@@ -319,6 +361,7 @@ class OfferDetails extends StatelessWidget {
     bool isAccepted = getOfferParticipants(offerDataModel: offerModel).contains(
       userId,
     );
+    print(offerModel.cashModel.donors);
     bool isCreator = offerModel.sevaUserId == userId;
     canDeleteOffer = isCreator &&
         offerModel.offerType == OfferType.INDIVIDUAL_OFFER &&
@@ -407,8 +450,8 @@ class OfferDetails extends StatelessWidget {
                       bool isAccepted = getOfferParticipants(offerDataModel: offerModel).contains(
                         userId,
                       );
-                      if (offerModel.type == RequestType.CASH) {
-
+                      if (offerModel.type == RequestType.CASH && !isAccepted) {
+                        navigateToDonations(context, offerModel);
                       } else if (offerModel.type == RequestType.GOODS && !isAccepted){
                         navigateToDonations(context, offerModel);
                       } else {

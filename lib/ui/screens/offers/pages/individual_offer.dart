@@ -145,21 +145,24 @@ class _IndividualOfferState extends State<IndividualOffer> {
           StreamBuilder<CashModel>(
             stream: _bloc.cashModel,
             builder: (context, snapshot) {
-              return CustomTextField(
-                currentNode: _availability,
-                initialValue: snapshot.data != null
-                    ? snapshot.data.targetAmount != null
-                    ? snapshot.data.targetAmount.toString()
-                    : 0
-                    : null,
-                heading: S.of(context).amount,
-                textInputType: TextInputType.number,
+              return TextField(
+                focusNode: _availability,
                 onChanged: (data) => {
                   snapshot.data.targetAmount = int.parse(data),
                   _bloc.onCashModelChanged(snapshot.data)
                 },
-                hint: S.of(context).add_amount_donate,
-                error: getValidationError(context, snapshot.error),
+                inputFormatters: null,
+                textCapitalization: TextCapitalization.sentences,
+                decoration: InputDecoration(
+                  hintText: S.of(context).add_amount_donate ?? '',
+                  errorText: getValidationError(context, snapshot.error),
+                ),
+                keyboardType: TextInputType.number,
+                onSubmitted: (v) {
+                  _availability.unfocus();
+                  snapshot.data.targetAmount = int.parse(v);
+                  _bloc.onCashModelChanged(snapshot.data);
+                },
               );
             },
           ),

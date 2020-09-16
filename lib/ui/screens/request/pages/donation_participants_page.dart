@@ -60,7 +60,7 @@ class DonationParticipantPage extends StatelessWidget {
                   :(model.goodsDetails?.donatedGoods != null
                   ? List<String>.from(model.goodsDetails.donatedGoods.values)
                   : []),
-              status: model.donationType == RequestType.GOODS ? model.donationStatus: '',
+              status: model.donationStatus,
               photoUrl: model.donorDetails.photoUrl,
               amount: model.cashDetails.pledgedAmount.toString(),
               comments: model.goodsDetails.comments,

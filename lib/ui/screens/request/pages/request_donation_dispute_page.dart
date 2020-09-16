@@ -101,6 +101,7 @@ class _RequestDonationDisputePageState
             SevaCore.of(context).loggedInUser.sevaUserID
         ? OperatingMode.USER
         : OperatingMode.CREATOR;
+    var name = widget.model.donorDetails.name;
     return Scaffold(
       key: _key,
       appBar: AppBar(
@@ -119,6 +120,9 @@ class _RequestDonationDisputePageState
             children: [
               ackType == _AckType.CASH
                   ? _CashFlow(
+                      to: widget.model.cashDetails.pledgedAmount != null ? widget.model
+                          .donationAssociatedTimebankDetails.timebankTitle:  widget.model.donorDetails.name,
+                      title: widget.model.cashDetails.pledgedAmount != null ? '$name ${S.of(context).pledged_to_donate}' : '$name ${S.of(context).requested_small}',
                       status: widget.model.donationStatus,
                       requestMode: widget.model.donatedToTimebank
                           ? RequestMode.TIMEBANK_REQUEST
@@ -128,9 +132,9 @@ class _RequestDonationDisputePageState
                       creatorName: SevaCore.of(context).loggedInUser.fullname,
                       operatingMode: operatingMode,
                       bloc: _bloc,
-                      name: widget.model.donorDetails.name,
+                      name: name,
                       currency: '\$',
-                      amount: widget.model.cashDetails.pledgedAmount.toString(),
+                      amount: widget.model.cashDetails.pledgedAmount != null ? widget.model.cashDetails.pledgedAmount.toString(): widget.model.cashDetails.cashDetails.amountRaised.toString(),
                       minAmount: widget.model.minimumAmount.toString(),
                     )
                   : _GoodsFlow(
@@ -142,7 +146,7 @@ class _RequestDonationDisputePageState
                       // ),
                       requiredGoods: widget.model.goodsDetails.requiredGoods,
                     ),
-              widget.model.donationStatus == DonationStatus.REQUESTED ?
+              widget.model.donationStatus == DonationStatus.REQUESTED && widget.model.donationType == RequestType.GOODS ?
               CustomListTile(
                 leading: Icon(
                   Icons.location_on,
@@ -171,11 +175,13 @@ class _RequestDonationDisputePageState
                         // for the offers.
                         widget.model.goodsDetails.donatedGoods = _bloc.getgoodsRecieved();
                       }
+                      var amount = widget.model.cashDetails.pledgedAmount == null ?  widget.model.cashDetails.cashDetails.amountRaised : widget.model.minimumAmount;
                       switch (ackType) {
                         case _AckType.CASH:
+                          // null will happen for widget.model.cashDetails.pledgedAmount when its a offer
                           _bloc
                               .validateAmount(
-                            minmumAmount: widget.model.minimumAmount,
+                            minmumAmount: amount,
                           )
                               .then((value) {
                             if (value) {
@@ -184,9 +190,7 @@ class _RequestDonationDisputePageState
 
                               _bloc
                                   .disputeCash(
-                                pledgedAmount: widget
-                                    .model.cashDetails.pledgedAmount
-                                    .toDouble(),
+                                pledgedAmount: amount.toDouble(),
                                 operationMode: operatingMode,
                                 donationId: widget.model.id,
                                 donationModel: widget.model,
@@ -398,6 +402,8 @@ class _CashFlow extends StatelessWidget {
   const _CashFlow({
     Key key,
     @required RequestDonationDisputeBloc bloc,
+    this.title,
+    this.to,
     this.status,
     this.name,
     this.amount,
@@ -409,7 +415,8 @@ class _CashFlow extends StatelessWidget {
     this.minAmount,
   })  : _bloc = bloc,
         super(key: key);
-
+  final to;
+  final title;
   final status;
   final RequestDonationDisputeBloc _bloc;
   final String name;
@@ -427,6 +434,7 @@ class _CashFlow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         PledgedAmountCard(
+          title: title,
           name: name,
           amount: amount,
           currency: currency,
@@ -468,7 +476,7 @@ class _CashFlow extends StatelessWidget {
         Text(
           operatingMode == OperatingMode.CREATOR
               ? '${S.of(context).acknowledge_desc_one} $name. ${S.of(context).acknowledge_desc_two} $name'
-              : '${S.of(context).acknowledge_desc_donor_one} $timebankName ${S.of(context).acknowledge_desc_donor_two}',
+              : '${S.of(context).acknowledge_desc_donor_one} $to ${S.of(context).acknowledge_desc_donor_two}',
           style: TextStyle(
             color: Colors.grey,
           ),
