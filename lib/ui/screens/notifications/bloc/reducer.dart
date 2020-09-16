@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/donation_model.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
@@ -26,7 +27,6 @@ import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/widgets/group_join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
-import 'package:sevaexchange/globals.dart' as globals;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../flavor_config.dart';
@@ -251,6 +251,7 @@ class PersonalNotificationReducerForRequests {
 
   static Widget getWidgetForRequestCompleted({
     NotificationsModel notification,
+    BuildContext parentContext,
   }) {
     RequestModel model = RequestModel.fromMap(notification.data);
     return FutureBuilder<RequestModel>(
@@ -265,6 +266,7 @@ class PersonalNotificationReducerForRequests {
         }
         RequestModel model = snapshot.data;
         return RequestCompleteWidget(
+          parentContext: parentContext,
           model: model,
           userId: notification.senderUserId,
           notificationId: notification.id,
