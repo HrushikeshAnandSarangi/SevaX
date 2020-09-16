@@ -906,7 +906,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     } else {
       setState(() {
         isProgressBarActive = false;
-        // isRemoving = false;
       });
     }
   }

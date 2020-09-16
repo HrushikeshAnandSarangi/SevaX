@@ -42,16 +42,16 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   final _debouncer = Debouncer(milliseconds: 500);
   final _debouncerIng = Debouncer(milliseconds: 1500);
   bool isLoading = false;
-  var ratings = {};
-  constructor() {
-    var temp = getQuestions(widget.feedbackType).length;
-    for (var i = 0; i < temp; i++) {
-      ratings[i] = 0;
-    }
-    setState(() {
-      ratings = ratings;
-    });
-  }
+  var ratings = Map<String, dynamic>();
+  // constructor() {
+  //   var temp = getQuestions(widget.feedbackType).length;
+  //   for (var i = 0; i < temp; i++) {
+  //     ratings[i.toString()] = 0;
+  //   }
+  //   setState(() {
+  //     ratings = ratings;
+  //   });
+  // }
 
   DeviceModel deviceModel = DeviceModel();
   final profanityDetector = ProfanityDetector();
@@ -305,7 +305,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
     return SmoothStarRating(
         allowHalfRating: true,
         onRated: (v) {
-          this.ratings[this.questionIndex] = v;
+          this.ratings[this.questionIndex.toString()] = v;
           setState(() {
             ratings = ratings;
           });
@@ -319,8 +319,8 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
               });
         },
         starCount: 5,
-        rating: this.ratings[this.questionIndex] != null
-            ? this.ratings[this.questionIndex]
+        rating: this.ratings[this.questionIndex.toString()] != null
+            ? this.ratings[this.questionIndex.toString()]
             : 0,
         size: 40.0,
         filledIconData: Icons.star,
