@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2020-09-15T19:17:26+00:00",
+    "@@last_modified": "2020-09-16T19:02:28+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -978,5 +978,21 @@
     "request_review_body_user": "Liggaam: u het 'n oorsig ontvang van die werk wat u vir die versoek gedoen het:",
     "has_given_review": "het u 'n resensie gegee",
     "pledged_to_donate": "belowe om te skenk",
-    "computer": "Rekenaar"
+    "computer": "Rekenaar",
+    "total_donation_amount": "Totale bedrag vir donasies",
+    "cash_offer": "Kontantaanbod",
+    "goods_offer": "Goedere aanbod",
+    "time_offer": "Tydaanbod",
+    "offered": "Aangebied",
+    "offer_to_sent_at": "Stuur aanbod na adres",
+    "cash_request": "Kontantversoek",
+    "goods_request": "Goedere versoek",
+    "time_request": "Tydversoek",
+    "donations_cash_request": "Versoekbedrag *",
+    "donations_cash_request_hint": "Versoekbedrag mag nie meer as die aanbodbedrag wees nie",
+    "tell_what_you_get_donated": "Vertel ons wat u wil skenk",
+    "signed_up": "Opgeteken",
+    "accepted_offer": "Aanvaarde aanbod",
+    "accept_offer": "Aanvaar die aanbod",
+    "bookmark": "Boekmerk"
 }

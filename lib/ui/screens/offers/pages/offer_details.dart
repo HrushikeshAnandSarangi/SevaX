@@ -137,9 +137,13 @@ class OfferDetails extends StatelessWidget {
                       maxLines: 1,
                     ),
                   ),
-                  offerModel.type == RequestType.GOODS ?   Container(
-                      padding: EdgeInsets.fromLTRB(8.0, 0.0,0.0,0.0),
-                      child:showGoodsDonationDetails(context, offerModel)): offerModel.type == RequestType.CASH ? showCashDonationDetails(context, offerModel): Container(),
+                  offerModel.type == RequestType.GOODS
+                      ? Container(
+                          padding: EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                          child: showGoodsDonationDetails(context, offerModel))
+                      : offerModel.type == RequestType.CASH
+                          ? showCashDonationDetails(context, offerModel)
+                          : Container(),
 
                   Container(
                     padding: EdgeInsets.all(8.0),
@@ -232,11 +236,14 @@ class OfferDetails extends StatelessWidget {
             shrinkWrap: true,
             itemCount: offerModel.goodsDonationDetails.requiredGoods.length,
             itemBuilder: (context, index) {
-              List<String> keys = List.from(offerModel.goodsDonationDetails.requiredGoods.keys);
+              List<String> keys =
+                  List.from(offerModel.goodsDonationDetails.requiredGoods.keys);
               return Row(
                 children: [
                   Checkbox(
-                    value: offerModel.goodsDonationDetails.requiredGoods.containsKey(keys[index]) ?? false,
+                    value: offerModel.goodsDonationDetails.requiredGoods
+                            .containsKey(keys[index]) ??
+                        false,
                     checkColor: Colors.black,
                     onChanged: null,
                     activeColor: Colors.grey[200],
@@ -371,7 +378,8 @@ class OfferDetails extends StatelessWidget {
         BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
       ]),
       child: Padding(
-        padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20, right: 5),
+        padding:
+            const EdgeInsets.only(top: 20.0, left: 20, bottom: 20, right: 5),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -392,13 +400,13 @@ class OfferDetails extends StatelessWidget {
                             )
                           : TextSpan(
                               text: isCreator
-                              ? S.of(context).you_created_offer
-                                    : '${S.of(context).you_have} ${isAccepted ? '' : " ${S.of(context).not_yet}"} ${offerModel.offerType == OfferType.GROUP_OFFER ? S.of(context).signed_up_for : ((offerModel.type == RequestType.GOODS || offerModel.type == RequestType.CASH) ? S.of(context).applied :  S.of(context).bookmarked)} ${S.of(context).this_offer}.',
-                            style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                                  ? S.of(context).you_created_offer
+                                  : '${S.of(context).you_have} ${isAccepted ? '' : " ${S.of(context).not_yet}"} ${offerModel.offerType == OfferType.GROUP_OFFER ? S.of(context).signed_up_for : ((offerModel.type == RequestType.GOODS || offerModel.type == RequestType.CASH) ? S.of(context).applied : S.of(context).bookmarked)} ${S.of(context).this_offer}.',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
                     ],
                   ),
                 ),
@@ -408,13 +416,13 @@ class OfferDetails extends StatelessWidget {
               offstage: isCreator ||
                   (isAccepted && offerModel.offerType == OfferType.GROUP_OFFER),
               child: Container(
-                width: isAccepted? 150: 120,
+                width: isAccepted ? 150 : 120,
                 height: 32,
                 child: FlatButton(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  padding: EdgeInsets.fromLTRB(0,0,0,0),
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   color: Color.fromRGBO(44, 64, 140, 0.7),
                   child: Row(
                     children: <Widget>[
@@ -447,15 +455,19 @@ class OfferDetails extends StatelessWidget {
                     if (canDeleteOffer) {
                       deleteOffer(context: context, offerId: offerModel.id);
                     } else {
-                      bool isAccepted = getOfferParticipants(offerDataModel: offerModel).contains(
+                      bool isAccepted =
+                          getOfferParticipants(offerDataModel: offerModel)
+                              .contains(
                         userId,
                       );
                       if (offerModel.type == RequestType.CASH && !isAccepted) {
                         navigateToDonations(context, offerModel);
-                      } else if (offerModel.type == RequestType.GOODS && !isAccepted){
+                      } else if (offerModel.type == RequestType.GOODS &&
+                          !isAccepted) {
                         navigateToDonations(context, offerModel);
                       } else {
-                        if (SevaCore.of(context).loggedInUser.calendarId == null) {
+                        if (SevaCore.of(context).loggedInUser.calendarId ==
+                            null) {
                           _settingModalBottomSheet(context, offerModel);
                         } else {
                           offerActions(context, offerModel)
@@ -472,6 +484,7 @@ class OfferDetails extends StatelessWidget {
       ),
     );
   }
+
   void navigateToDonations(context, OfferModel offerModel) {
     Navigator.push(
       context,
@@ -485,6 +498,7 @@ class OfferDetails extends StatelessWidget {
       ),
     );
   }
+
   void _settingModalBottomSheet(BuildContext context, OfferModel offerModel) {
     Map<String, dynamic> stateOfcalendarCallback = {
       "email": SevaCore.of(context).loggedInUser.email,

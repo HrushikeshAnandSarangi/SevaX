@@ -4,10 +4,12 @@ import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/extensions.dart';
 
 import '../../flavor_config.dart';
 import '../core.dart';
@@ -34,7 +36,6 @@ List<String> getOfferParticipants({OfferModel offerDataModel}) {
         ? offerDataModel.individualOfferDataModel.offerAcceptors ?? []
         : offerDataModel.groupOfferDataModel.signedUpMembers ?? [];
   }
-
 }
 
 String getOfferLocation({String selectedAddress}) {
@@ -85,20 +86,21 @@ String getButtonLabel(context, OfferModel offerModel, String userId) {
   List<String> participants = getOfferParticipants(offerDataModel: offerModel);
   if (offerModel.offerType == OfferType.GROUP_OFFER) {
     if (participants.contains(userId))
-      return S.of(context).label_signedUp;
+      return S.of(context).signed_up;
     else
-      return S.of(context).label_signUp;
+      return S.of(context).sign_up;
   } else {
-    if (offerModel.type == RequestType.CASH || offerModel.type == RequestType.GOODS) {
+    if (offerModel.type == RequestType.CASH ||
+        offerModel.type == RequestType.GOODS) {
       if (participants.contains(userId)) {
-         return S.of(context).label_accepted;
+        return S.of(context).accepted_offer;
       } else {
-        return S.of(context).label_accept;
+        return S.of(context).accept_offer;
       }
     } else if (participants.contains(userId))
-      return S.of(context).label_bookmarked;
+      return S.of(context).bookmarked.firstWordUpperCase();
     else
-      return S.of(context).label_bookmark;
+      return S.of(context).bookmark.firstWordUpperCase();
   }
 }
 
@@ -203,8 +205,16 @@ Future<bool> offerActions(BuildContext context, OfferModel model) async {
         error: "You don't have enough credit to signup for this class",
       );
     }
-  } else if ((model.type == RequestType.CASH || model.type == RequestType.GOODS)) {
+  } else if ((model.type == RequestType.CASH ||
+      model.type == RequestType.GOODS)) {
 //    if (!_isParticipant) addBookMark(model.id, _userId);
+    print("Inside accept offer-----");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OfferDetailsRouter(offerModel: model),
+      ),
+    );
   } else {
     if (!_isParticipant) addBookMark(model.id, _userId);
   }

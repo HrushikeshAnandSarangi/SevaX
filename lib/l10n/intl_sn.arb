@@ -1,6 +1,6 @@
 {
     "@@locale": "sn",
-    "@@last_modified": "2020-09-15T19:17:26+00:00",
+    "@@last_modified": "2020-09-16T19:02:28+00:00",
     "check_met": "Kuongorora, kana takasangana zvisati zvaitika",
     "we_met": "Takasangana zvisati zvaitika",
     "hang_on": "Ramba wakasimba",
@@ -978,5 +978,21 @@
     "request_review_body_user": "Mutumbi: Wakatambira wongororo pabasa rawakaitira chikumbiro:",
     "has_given_review": "akakupa wongororo",
     "pledged_to_donate": "akavimbisa kupa",
-    "computer": "Computer"
+    "computer": "Computer",
+    "total_donation_amount": "Yese mari yemupiro",
+    "cash_offer": "Cash Chipo",
+    "goods_offer": "Zvinhu Zvokupa",
+    "time_offer": "Nguva Yekupa",
+    "offered": "Yakapihwa",
+    "offer_to_sent_at": "Tumira chipo kukero",
+    "cash_request": "Chikumbiro Chemari",
+    "goods_request": "Zvinhu Zvekukumbira",
+    "time_request": "Nguva Yekukumbira",
+    "donations_cash_request": "Kumbira Mari *",
+    "donations_cash_request_hint": "Chikumbiro Mari hachifanirwe kunge chiri kupfuura chinopihwa huwandu",
+    "tell_what_you_get_donated": "Tiudze zvaungade kuti upiwe",
+    "signed_up": "Wakanyoresa Up",
+    "accepted_offer": "Yakagamuchirwa Chipo",
+    "accept_offer": "Gamuchira Chipo",
+    "bookmark": "Bookmark"
 }
