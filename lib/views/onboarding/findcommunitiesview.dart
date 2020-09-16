@@ -8,6 +8,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -52,7 +53,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   final profanityDetector = ProfanityDetector();
   bool autoValidateText = false;
   String errorText = '';
-
+  BuildContext parentContext;
   @override
   void initState() {
     gpsCheck();
@@ -87,6 +88,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   @override
   Widget build(BuildContext context) {
+    parentContext = context;
     JOIN = S.of(context).join;
     JOINED = S.of(context).joined;
     nearTimebankText = S.of(context).timebanks_near_you;
@@ -585,6 +587,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
                 onPressed: () async {
+                  globals.isFromOnBoarding = true;
                   var timebankAdvisory =
                       S.of(context).create_timebank_confirmation;
                   Map<String, bool> onActivityResult =
@@ -593,7 +596,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     createEditCommunityBloc
                         .updateUserDetails(SevaCore.of(context).loggedInUser);
                     Navigator.push(
-                      context,
+                      parentContext,
                       MaterialPageRoute(
                         builder: (context1) => SevaCore(
                           loggedInUser: SevaCore.of(context).loggedInUser,

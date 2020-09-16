@@ -22,7 +22,6 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -304,17 +303,17 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           text: TextSpan(
             style: TextStyle(color: Colors.grey),
             children: [
-              TextSpan(text: "${S.of(context).csv_message1}  "),
-              TextSpan(
-                text: S.of(context).csv_message2 + ' ',
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
-                    fontFamily: 'Europa',
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic),
-              ),
-              TextSpan(text: " ${S.of(context).csv_message3}  "),
+              TextSpan(text: "${S.of(context).csv_message1}"),
+//              TextSpan(
+//                text: S.of(context).csv_message2 + ' ',
+//                style: TextStyle(
+//                    color: Colors.grey,
+//                    fontSize: 14,
+//                    fontFamily: 'Europa',
+//                    fontWeight: FontWeight.bold,
+//                    fontStyle: FontStyle.italic),
+//              ),
+//              TextSpan(text: " ${S.of(context).csv_message3}  "),
             ],
           ),
         ),

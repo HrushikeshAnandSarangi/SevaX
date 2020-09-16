@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
@@ -8,6 +9,7 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
+import '../../flavor_config.dart';
 import '../core.dart';
 
 String getOfferTitle({OfferModel offerDataModel}) {
@@ -60,7 +62,8 @@ String getFormatedTimeFromTimeStamp(
 bool isOfferVisible(OfferModel offerModel, String userId) {
   var currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
   if (offerModel.offerType == OfferType.GROUP_OFFER) {
-    if (offerModel.groupOfferDataModel.signedUpMembers.length == offerModel.groupOfferDataModel.sizeOfClass ||
+    if (offerModel.groupOfferDataModel.signedUpMembers.length ==
+            offerModel.groupOfferDataModel.sizeOfClass ||
         offerModel.groupOfferDataModel.endDate < currentTimeStamp) {
       if (offerModel.groupOfferDataModel.signedUpMembers.contains(userId)) {
         return false;
@@ -95,6 +98,54 @@ String getButtonLabel(context, OfferModel offerModel, String userId) {
     else
       return S.of(context).label_bookmark;
   }
+}
+
+Future<void> deleteOffer({
+  BuildContext context,
+  String offerId,
+}) async {
+  bool status = false;
+  await showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        title: Text(
+          S.of(context).delete_offer,
+        ),
+        content: Text(
+          S.of(context).delete_offer_confirmation,
+        ),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+            },
+            child: Text(
+              S.of(context).cancel,
+              style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
+            ),
+          ),
+          FlatButton(
+            padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+            color: Theme.of(context).accentColor,
+            textColor: FlavorConfig.values.buttonTextColor,
+            onPressed: () async {
+              await Firestore.instance
+                  .collection("offers")
+                  .document(offerId)
+                  .updateData({'softDelete': true});
+              Navigator.of(dialogContext).pop();
+              Navigator.pop(context);
+            },
+            child: Text(
+              S.of(context).delete,
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 void removeBookmark(String offerId, String userId) {

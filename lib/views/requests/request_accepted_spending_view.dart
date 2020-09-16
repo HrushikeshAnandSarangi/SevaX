@@ -76,7 +76,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         title: Text(
           isRemoving
               ? S.of(context).redirecting_to_messages
-              : S.of(context).completed_task_in,
+              : S.of(context).updating_users,
         ),
         content: LinearProgressIndicator(),
       );
@@ -313,9 +313,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                   width: 45,
                   child: FadeInImage.assetNetwork(
                     placeholder: 'lib/assets/images/profile.png',
-                    image: defaultUserImageURL != null
-                        ? usermodel.photoURL
-                        : defaultUserImageURL,
+                    image: usermodel.photoURL ?? defaultUserImageURL,
                   ),
                 ),
               ),
@@ -968,15 +966,15 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       communityId: sevaCore.loggedInUser.currentCommunity,
     );
 
-    await FirestoreManager.readUserNotification(
-        notificationId, sevaCore.loggedInUser.email);
-
-//    if (model.projectId.isNotEmpty &&
-//        model.approvedUsers.length <= model.numberOfApprovals) {
-//      await FirestoreManager.updateProjectCompletedRequest(
-//          projectId: model.projectId, requestId: model.id);
-//    }
-
+    if (model.requestMode == RequestMode.PERSONAL_REQUEST) {
+      await FirestoreManager.readUserNotification(
+          notificationId, sevaCore.loggedInUser.email);
+    } else {
+      await FirestoreManager.readTimeBankNotification(
+        notificationId: notificationId,
+        timebankId: model.timebankId,
+      );
+    }
     setState(() {
       isProgressBarActive = false;
     });

@@ -13,6 +13,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -835,9 +836,8 @@ Future<void> acceptRequest({
         id: utils.Utils.getUuid(),
         isRead: false,
         senderUserId: senderUserId,
-        communityId: communityId
-    );
-    if(requestModel.requestMode == RequestMode.TIMEBANK_REQUEST){
+        communityId: communityId);
+    if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
       model.isTimebankNotification = true;
     } else {
       model.isTimebankNotification = false;
@@ -948,8 +948,9 @@ Future<void> approveRequestCompletion({
         .collection('communities')
         .document(communityId)
         .get();
-
-    taxPercentage = data.data['taxPercentage'] ?? 0;
+    Map<String, dynamic> dataMap = data.data;
+    CommunityModel communityModel = CommunityModel(dataMap);
+    taxPercentage = communityModel.taxPercentage ?? 0;
     // print('---->tax percentage $taxPercentage');
 
     double tax = transactionvalue * taxPercentage;
@@ -1217,7 +1218,7 @@ Future<void> acceptInviteRequest({
       .document(requestId)
       .updateData({
     'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
-    'acceptors': FieldValue.arrayUnion([acceptedUserEmail]),
+    //'acceptors': FieldValue.arrayUnion([acceptedUserEmail]),
     'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
   });
 }
