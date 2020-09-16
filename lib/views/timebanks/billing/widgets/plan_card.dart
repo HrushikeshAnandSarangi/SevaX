@@ -36,7 +36,8 @@ class BillingPlanCard extends StatefulWidget {
 class _BillingPlanCardState extends State<BillingPlanCard> {
     bool isBillMe;
 
-    void init(){
+    void initState(){
+      super.initState();
       isBillMe = widget.isBillMe;
     }
 
