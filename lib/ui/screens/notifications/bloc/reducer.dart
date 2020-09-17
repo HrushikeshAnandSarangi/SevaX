@@ -842,7 +842,7 @@ class PersonalNotificationsRedcerForDonations {
       },
       photoUrl: donationModel.donorDetails.photoUrl,
       subTitle:
-      "${donationModel.donorDetails.name}  ${S.of(context).requested_small} ${donationModel.donationType == RequestType.CASH ? "\$${donationModel.cashDetails.pledgedAmount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
+          "${donationModel.donorDetails.name}  ${S.of(context).requested.toLowerCase()} ${donationModel.donationType == RequestType.CASH ? "\$${donationModel.cashDetails.pledgedAmount}" : "goods/supplies"}, ${S.of(context).tap_to_view_details}",
       title: S.of(context).donations_requested,
     );
   }

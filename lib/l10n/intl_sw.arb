@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2020-09-15T19:17:26+00:00",
+    "@@last_modified": "2020-09-16T19:02:28+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -978,5 +978,21 @@
     "request_review_body_user": "Mwili: Umepokea ukaguzi juu ya kazi uliyofanya kwa ombi:",
     "has_given_review": "amekupa hakiki",
     "pledged_to_donate": "ameahidi kuchangia",
-    "computer": "Kompyuta"
+    "computer": "Kompyuta",
+    "total_donation_amount": "Jumla ya mchango",
+    "cash_offer": "Ofa ya Fedha",
+    "goods_offer": "Ofa ya Bidhaa",
+    "time_offer": "Ofa ya Wakati",
+    "offered": "Iliyotolewa",
+    "offer_to_sent_at": "Tuma ofa kwa anwani",
+    "cash_request": "Ombi la Fedha",
+    "goods_request": "Ombi la Bidhaa",
+    "time_request": "Ombi la Wakati",
+    "donations_cash_request": "Omba Kiasi *",
+    "donations_cash_request_hint": "Kiasi cha Ombi haipaswi kuwa zaidi ya kiwango cha ofa",
+    "tell_what_you_get_donated": "Tuambie ni nini ungependa kupata msaada",
+    "signed_up": "Umejisajili",
+    "accepted_offer": "Ofa Iliyokubaliwa",
+    "accept_offer": "Kubali Ofa",
+    "bookmark": "Alamisho"
 }

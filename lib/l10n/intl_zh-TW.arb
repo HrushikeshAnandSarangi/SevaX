@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-TW",
-    "@@last_modified": "2020-09-15T19:17:26+00:00",
+    "@@last_modified": "2020-09-16T19:02:29+00:00",
     "check_met": "檢查我們是否見過",
     "we_met": "我們曾見過",
     "hang_on": "稍待。。。",
@@ -978,5 +978,21 @@
     "request_review_body_user": "正文：您已收到對您為請求所做的工作的評論：",
     "has_given_review": "給了你評論",
     "pledged_to_donate": "承諾捐贈",
-    "computer": "電腦"
+    "computer": "電腦",
+    "total_donation_amount": "捐款總額",
+    "cash_offer": "現金要約",
+    "goods_offer": "商品報價",
+    "time_offer": "時間優惠",
+    "offered": "提供了",
+    "offer_to_sent_at": "發送報價至地址",
+    "cash_request": "現金要求",
+    "goods_request": "商品要求",
+    "time_request": "時間要求",
+    "donations_cash_request": "申請金額*",
+    "donations_cash_request_hint": "要求金額不得超過優惠金額",
+    "tell_what_you_get_donated": "告訴我們您想獲得的捐款",
+    "signed_up": "註冊",
+    "accepted_offer": "接受報價",
+    "accept_offer": "接受報價",
+    "bookmark": "書籤"
 }

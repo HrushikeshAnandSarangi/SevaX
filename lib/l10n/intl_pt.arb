@@ -1,6 +1,6 @@
 {
     "@@locale": "pt",
-    "@@last_modified": "2020-09-15T19:17:26+00:00",
+    "@@last_modified": "2020-09-16T19:02:28+00:00",
     "check_met": "Checando, se já nos conhecemos",
     "we_met": "Já nos conhecemos",
     "hang_on": "Aguarde ",
@@ -978,5 +978,21 @@
     "request_review_body_user": "Corpo: Você recebeu uma revisão sobre o trabalho que realizou para a solicitação:",
     "has_given_review": "te deu uma revisão",
     "pledged_to_donate": "prometeu doar",
-    "computer": "Computador"
+    "computer": "Computador",
+    "total_donation_amount": "Valor total da doação",
+    "cash_offer": "Oferta em dinheiro",
+    "goods_offer": "Oferta de Bens",
+    "time_offer": "Oferta de tempo",
+    "offered": "Oferecido",
+    "offer_to_sent_at": "Enviar oferta para endereço",
+    "cash_request": "Pedido de dinheiro",
+    "goods_request": "Pedido de Mercadorias",
+    "time_request": "Pedido de tempo",
+    "donations_cash_request": "Solicitar valor *",
+    "donations_cash_request_hint": "O valor do pedido não deve ser superior ao valor da oferta",
+    "tell_what_you_get_donated": "Diga-nos o que você gostaria de receber doação",
+    "signed_up": "Inscrito",
+    "accepted_offer": "Oferta aceita",
+    "accept_offer": "Aceitar oferta",
+    "bookmark": "marca páginas"
 }

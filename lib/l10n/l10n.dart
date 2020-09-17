@@ -40,16 +40,6 @@ class S {
         name: 'hang_on',
       );
 
-  String get updating => Intl.message(
-        'Updating',
-        name: 'updating',
-      );
-
-  String get skipping => Intl.message(
-        'Skipping',
-        name: 'skipping',
-      );
-
   String get skills => Intl.message(
         'Skills',
         name: 'skills',
@@ -466,13 +456,9 @@ class S {
       );
 
   String get requested => Intl.message(
-    'REQUESTED',
-    name: 'requested',
-  );
-  String get requested_small => Intl.message(
-    'requested',
-    name: 'requested_small',
-  );
+        'REQUESTED',
+        name: 'requested',
+      );
 
   String get rejected => Intl.message(
         'REJECTED',
@@ -1143,54 +1129,7 @@ class S {
         'View Approved Members',
         name: 'view_approved_members',
       );
-  String get requesttag_cash_request => Intl.message(
-    'Cash Request',
-    name: 'requesttag_cash_request',
-  );
-  String get requesttag_goods_request => Intl.message(
-    'Goods Request',
-    name: 'requesttag_goods_request',
-  );
-  String get requesttag_time_request => Intl.message(
-    'Time Request',
-    name: 'requesttag_time_request',
-  );
-  String get offertag_cash_request => Intl.message(
-    'Cash Offer',
-    name: 'offertag_cash_request',
-  );
-  String get offertag_goods_request => Intl.message(
-    'Goods Offer',
-    name: 'offertag_goods_request',
-  );
-  String get offertag_time_request => Intl.message(
-    'Time Offer',
-    name: 'offertag_time_request',
-  );
-  String get label_signedUp => Intl.message(
-      'SignedUp',
-    name: 'label_signedUp',
-  );
-  String get label_signUp => Intl.message(
-      'SignUp',
-    name: 'label_signUp',
-  );
-  String get label_bookmarked => Intl.message(
-      'Bookmarked',
-      name: 'label_bookmarked',
-  );
-  String get label_accept => Intl.message(
-      'Accept Offer',
-      name: 'label_accept'
-  );
-  String get label_accepted => Intl.message(
-      'Accepted Offer',
-      name: 'label_accepted'
-  );
-  String get label_bookmark => Intl.message(
-      'Bookmark',
-    name: 'label_bookmark',
-  );
+
   String get request => Intl.message(
         'Request',
         name: 'request',
@@ -1269,18 +1208,6 @@ class S {
   String get edit_project => Intl.message(
         'Edit Project',
         name: 'edit_project',
-      );
-
-  String timebank_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Timebank Project', other: 'Timebank Projects', args: [count])}',
-        name: 'timebank_project',
-        args: [count],
-      );
-
-  String personal_project(num count) => Intl.message(
-        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [count])}',
-        name: 'personal_project',
-        args: [count],
       );
 
   String get project_logo => Intl.message(
@@ -2159,13 +2086,9 @@ class S {
       );
 
   String get offered_by => Intl.message(
-    'Offered by',
-    name: 'offered_by',
-  );
-  String get offered => Intl.message(
-    'Offered',
-    name: 'offered',
-  );
+        'Offered by',
+        name: 'offered_by',
+      );
 
   String get you_created_offer => Intl.message(
         'You created this offer',
@@ -3887,6 +3810,16 @@ class S {
         name: 'will_be_added_to_request',
       );
 
+  String get updating => Intl.message(
+        'Updating',
+        name: 'updating',
+      );
+
+  String get skipping => Intl.message(
+        'Skipping',
+        name: 'skipping',
+      );
+
   String get check_email => Intl.message(
         'Now check your email.',
         name: 'check_email',
@@ -3900,6 +3833,22 @@ class S {
   String hour(num count) => Intl.message(
         '${Intl.plural(count, one: 'Hour', other: 'Hours', args: [count])}',
         name: 'hour',
+        args: [count],
+      );
+
+  String timebank_project(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Timebank Project', other: 'Timebank Projects', args: [
+          count
+        ])}',
+        name: 'timebank_project',
+        args: [count],
+      );
+
+  String personal_project(num count) => Intl.message(
+        '${Intl.plural(count, one: 'Personal Project', other: 'Personal Projects', args: [
+          count
+        ])}',
+        name: 'personal_project',
         args: [count],
       );
 
@@ -4192,22 +4141,6 @@ class S {
         name: 'add_amount_donated',
       );
 
-  String get add_amount_donate => Intl.message(
-    'Add amount that you want to donate.',
-    name: 'add_amount_donate',
-  );
-  String get add_amount_donate_empty => Intl.message(
-    'Amount cannot be empty',
-    name: 'add_amount_donate_empty',
-  );
-  String get add_goods_donate_empty => Intl.message(
-    'Please select atleast one goods to offer.',
-    name: 'add_goods_donate_empty',
-  );
-  String get tell_what_you_get_donated => Intl.message(
-    'Tell us what you would like to get donated',
-    name: 'tell_what_you_get_donated',
-  );
   String get amount_donated => Intl.message(
         'Amount Donated?',
         name: 'amount_donated',
@@ -4448,14 +4381,6 @@ class S {
         name: 'request_goods_description',
       );
 
-  String get request_goods_offer => Intl.message(
-    'Provide the list of Goods/Supplies that you offer*',
-    name: 'request_goods_offer',
-  );
-  String get requested_goods_address => Intl.message(
-    'Address',
-    name: 'requested_goods_address',
-  );
   String get request_goods_address => Intl.message(
         'Provide address where the donor should ship*',
         name: 'request_goods_address',
@@ -4470,11 +4395,6 @@ class S {
         'Address Only',
         name: 'request_goods_address_inputhint',
       );
-
-  String get offer_to_sent_at => Intl.message(
-    'Send offer to address',
-    name: 'offer_to_sent_at',
-  );
 
   String get request_payment_description => Intl.message(
         'Payment Details*',
@@ -4585,14 +4505,7 @@ class S {
         'Amount',
         name: 'amount',
       );
-  String get donations_cash_request => Intl.message(
-    'Request Amount*',
-    name: 'donations_cash_request',
-  );
-  String get donations_cash_request_hint => Intl.message(
-    "Request Amount shouldn't be more than the offer amount",
-    name: 'donations_cash_request_hint',
-  );
+
   String get only_images_types_allowed => Intl.message(
         'Only image types are allowed ex:jpg, png\'',
         name: 'only_images_types_allowed',
@@ -4889,14 +4802,9 @@ class S {
       );
 
   String get total_amount_raised => Intl.message(
-    'Total amount raised',
-    name: 'total_amount_raised',
-  );
-
-  String get total_donation_amount => Intl.message(
-    'Total donation amount',
-    name: 'total_donation_amount',
-  );
+        'Total amount raised',
+        name: 'total_amount_raised',
+      );
 
   String get by_accepting_group_join => Intl.message(
         'By accepting, you will be added to',
@@ -4978,11 +4886,30 @@ class S {
         name: 'monthly_charges_of',
       );
 
+  String get add_amount_donate => Intl.message(
+        'Add amount that you want to donate.',
+        name: 'add_amount_donate',
+      );
+
+  String get add_amount_donate_empty => Intl.message(
+        'Amount cannot be empty',
+        name: 'add_amount_donate_empty',
+      );
+
+  String get add_goods_donate_empty => Intl.message(
+        'Please select atleast one goods to offer.',
+        name: 'add_goods_donate_empty',
+      );
+
   String get offer_type => Intl.message(
         'Offer type*',
         name: 'offer_type',
       );
 
+  String get request_goods_offer => Intl.message(
+        'Provide the list of Goods/Supplies that you offer*',
+        name: 'request_goods_offer',
+      );
 
   String get offerReview => Intl.message(
         'Body: You have received a review for the offer:',
@@ -5012,6 +4939,86 @@ class S {
   String get computer => Intl.message(
         'Computer',
         name: 'computer',
+      );
+
+  String get total_donation_amount => Intl.message(
+        'Total donation amount',
+        name: 'total_donation_amount',
+      );
+
+  String get cash_offer => Intl.message(
+        'Cash Offer',
+        name: 'cash_offer',
+      );
+
+  String get goods_offer => Intl.message(
+        'Goods Offer',
+        name: 'goods_offer',
+      );
+
+  String get time_offer => Intl.message(
+        'Time Offer',
+        name: 'time_offer',
+      );
+
+  String get offered => Intl.message(
+        'Offered',
+        name: 'offered',
+      );
+
+  String get offer_to_sent_at => Intl.message(
+        'Send offer to address',
+        name: 'offer_to_sent_at',
+      );
+
+  String get cash_request => Intl.message(
+        'Cash Request',
+        name: 'cash_request',
+      );
+
+  String get goods_request => Intl.message(
+        'Goods Request',
+        name: 'goods_request',
+      );
+
+  String get time_request => Intl.message(
+        'Time Request',
+        name: 'time_request',
+      );
+
+  String get donations_cash_request => Intl.message(
+        'Request Amount*',
+        name: 'donations_cash_request',
+      );
+
+  String get donations_cash_request_hint => Intl.message(
+        'Request Amount shouldn\'t be more than the offer amount',
+        name: 'donations_cash_request_hint',
+      );
+
+  String get tell_what_you_get_donated => Intl.message(
+        'Tell us what you would like to get donated',
+        name: 'tell_what_you_get_donated',
+      );
+
+  String get signed_up => Intl.message(
+        'Signed Up',
+        name: 'signed_up',
+      );
+
+  String get accepted_offer => Intl.message(
+        'Accepted Offer',
+        name: 'accepted_offer',
+      );
+
+  String get accept_offer => Intl.message(
+        'Accept Offer',
+        name: 'accept_offer',
+      );
+
+  String get bookmark => Intl.message(
+        'Bookmark',
+        name: 'bookmark',
       );
 }
 

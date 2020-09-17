@@ -154,13 +154,13 @@ class TimebankRequestCard extends StatelessWidget {
   Widget getAppropriateTag(RequestType requestType, BuildContext context) {
     switch (requestType) {
       case RequestType.CASH:
-        return getTagMainFrame(S.of(context).requesttag_cash_request, context);
+        return getTagMainFrame(S.of(context).cash_request, context);
 
       case RequestType.GOODS:
-        return getTagMainFrame(S.of(context).requesttag_goods_request, context);
+        return getTagMainFrame(S.of(context).goods_request, context);
 
       case RequestType.TIME:
-        return getTagMainFrame(S.of(context).requesttag_time_request, context);
+        return getTagMainFrame(S.of(context).time_request, context);
 
       default:
         return Container();
@@ -177,7 +177,7 @@ Widget getTagMainFrame(String tagTitle, BuildContext context) {
         color: Theme.of(context).primaryColor,
         child: Padding(
           padding:
-          const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
+              const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
           child: Text(
             tagTitle,
             style: TextStyle(
