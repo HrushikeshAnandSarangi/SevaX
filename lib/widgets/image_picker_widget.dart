@@ -2,15 +2,21 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/newsimage/user_image_picker_handler.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 
 ///Pass a [Widget] without any gestures or click events
 class ImagePickerWidget extends StatefulWidget {
   final Widget child;
   final ValueChanged<File> onChanged;
+  final ValueChanged<String> onStockImageChanged;
   final bool isAspectRatioFixed;
 
   const ImagePickerWidget(
-      {Key key, this.onChanged, this.child, this.isAspectRatioFixed = true})
+      {Key key,
+      this.onChanged,
+      this.child,
+      this.isAspectRatioFixed = true,
+      this.onStockImageChanged})
       : assert(child != null),
         assert(onChanged != null),
         super(key: key);
@@ -61,6 +67,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget>
 
   @override
   addWebImageUrl() {
+    widget.onStockImageChanged(globals.webImageUrl);
+
     // TODO: implement addWebImageUrl
     print('');
   }
@@ -68,6 +76,6 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget>
   @override
   void stockImage(_image, String type) {
     // TODO: implement stockImage
-    widget.onChanged(_image);
+    widget.onStockImageChanged(_image);
   }
 }

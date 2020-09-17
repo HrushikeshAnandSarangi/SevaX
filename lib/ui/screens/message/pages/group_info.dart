@@ -7,6 +7,7 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/profanity_image_model.dart';
 import 'package:sevaexchange/repositories/storage_repository.dart';
+import 'package:sevaexchange/ui/screens/message/bloc/create_chat_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/bloc/edit_group_info_bloc.dart';
 import 'package:sevaexchange/ui/screens/message/pages/create_new_chat_page.dart';
 import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_builder.dart';
@@ -98,7 +99,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
                     horizontal: 20,
                     vertical: 12,
                   ),
-                  child: StreamBuilder<File>(
+                  child: StreamBuilder<MessageRoomImageModel>(
                     stream: _bloc.image,
                     builder: (context, snapshot) {
                       return AbsorbPointer(
@@ -118,16 +119,25 @@ class _GroupInfoState extends State<GroupInfoPage> {
                                     ),
                                     child: ClipOval(
                                       child: snapshot.data != null
-                                          ? Image.file(
-                                              snapshot.data,
-                                              fit: BoxFit.cover,
-                                            )
+                                          ? snapshot.data.stockImageUrl != null
+                                              ? Image.network(
+                                                  snapshot.data.stockImageUrl)
+                                              : Image.file(
+                                                  snapshot.data.selectedImage,
+                                                  fit: BoxFit.cover,
+                                                )
                                           : CustomNetworkImage(
                                               chatModel.groupDetails.imageUrl,
                                               fit: BoxFit.cover,
                                             ),
                                     ),
                                   ),
+                            onStockImageChanged: (String stockImageUrl) {
+                              if (stockImageUrl != null) {
+                                _bloc.onImageChanged(MessageRoomImageModel(
+                                    stockImageUrl: stockImageUrl));
+                              }
+                            },
                             onChanged: (file) {
                               if (file != null) {
                                 profanityCheck(file: file, bloc: _bloc);
@@ -341,8 +351,7 @@ class _GroupInfoState extends State<GroupInfoPage> {
             .then((reference) {
           reference.delete();
         }).catchError((e) => print(e));
-        bloc.onImageChanged(file);
-
+        bloc.onImageChanged(MessageRoomImageModel(selectedImage: file));
         progressDialog.hide();
       }
     }

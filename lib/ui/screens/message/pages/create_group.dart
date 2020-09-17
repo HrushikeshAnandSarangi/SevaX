@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/repositories/storage_repository.dart';
@@ -79,7 +80,7 @@ class CreateGroupPage extends StatelessWidget {
                     horizontal: 20,
                     vertical: 12,
                   ),
-                  child: StreamBuilder<File>(
+                  child: StreamBuilder<MessageRoomImageModel>(
                     stream: bloc.selectedImage,
                     builder: (context, snapshot) {
                       return ImagePickerWidget(
@@ -95,12 +96,22 @@ class CreateGroupPage extends StatelessWidget {
                                   border: Border.all(),
                                 ),
                                 child: ClipOval(
-                                  child: Image.file(
-                                    snapshot.data,
-                                    fit: BoxFit.cover,
-                                  ),
+                                  child: snapshot.data.selectedImage == null
+                                      ? Image.network(
+                                          snapshot.data.stockImageUrl ??
+                                              defaultGroupImageURL)
+                                      : Image.file(
+                                          snapshot.data.selectedImage,
+                                          fit: BoxFit.cover,
+                                        ),
                                 ),
                               ),
+                        onStockImageChanged: (String stockImageUrl) {
+                          if (stockImageUrl != null) {
+                            bloc.onImageChanged(MessageRoomImageModel(
+                                stockImageUrl: stockImageUrl));
+                          }
+                        },
                         onChanged: (file) {
                           if (file != null) {
                             profanityCheck(
@@ -232,7 +243,7 @@ class CreateGroupPage extends StatelessWidget {
             .then((reference) {
           reference.delete();
         }).catchError((e) => print(e));
-        bloc.onImageChanged(file);
+        bloc.onImageChanged(MessageRoomImageModel(selectedImage: file));
         progressDialog.hide();
       }
     }
