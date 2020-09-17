@@ -113,6 +113,20 @@ class UserImagePickerDialog extends StatelessWidget {
                         color: Colors.white,
                       )),
                 ),
+                GestureDetector(
+                  onTap: () {
+                    _listener.openStockImages(context);
+                  },
+                  child: roundedButton(
+                      S.of(context).stock_images,
+                      EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                      const Color(0xFF673AB7),
+                      const Color(0xFFFFFFFF),
+                      Icon(
+                        Icons.dashboard,
+                        color: Colors.white,
+                      )),
+                ),
                 isShowWebImageUrl
                     ? GestureDetector(
                         onTap: () {
