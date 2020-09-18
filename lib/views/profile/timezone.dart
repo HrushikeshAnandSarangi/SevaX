@@ -1500,14 +1500,7 @@ class _TimezoneViewState extends State<TimezoneView> {
   @override
   Widget build(BuildContext context) {
     // TimezoneListData().printData();
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            S.of(context).my_timezone,
-            style: TextStyle(fontSize: 18),
-          ),
-        ),
-        body: TimezoneList());
+    return Scaffold(body: TimezoneList());
   }
 }
 
@@ -1535,70 +1528,93 @@ class TimezoneListState extends State<TimezoneList> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Object>(
-        stream: FirestoreManager.getUserForIdStream(
-            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return LoadingIndicator();
-          }
-          UserModel userModel = snapshot.data;
-          isSelected = userModel.timezone;
-          return ListView.builder(
-            itemCount: timezonelist.length,
-//            controller: _scrollController,
-            itemBuilder: (context, index) {
-              TimeZoneModel model = timezonelist.elementAt(index);
-              DateFormat format = DateFormat(
-                  'dd/MMM/yyyy HH:mm',
-                  Locale(AppConfig.prefs.getString('language_code'))
-                      .toLanguageTag());
-              DateTime timeInUtc = DateTime.now().toUtc();
-
-              DateTime localtime = timeInUtc.add(Duration(
-                  hours: model.offsetFromUtc, minutes: model.offsetFromUtcMin));
-              return Card(
-                child: ListTile(
-                  leading: getIcon(isSelected, model.timezoneName),
-                  trailing: Text(
-                    '${model.timezoneAbb}',
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  title: Text('${model.timezoneName}'),
-                  subtitle: Text('${format.format(localtime)}'),
-                  onTap: () async {
-                    if (userModel.timezone != model.timezoneName) {
-                      userModel.timezone = model.timezoneName;
-                      await updateUser(user: userModel);
-                    }
-                  },
-                ),
-              );
-            },
-          );
-        });
-  }
-
-  Widget getIcon(String isSelected, String userTimezone) {
-    if (isSelected == userTimezone) {
-//      print("inside if card");
-      return Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Icon(
-          Icons.done,
-          color: Colors.green,
-          size: 28,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          S.of(context).my_timezone,
+          style: TextStyle(fontSize: 18),
         ),
-      );
-    } else {
-      return null;
-    }
+        actions: [
+          IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                showSearch(
+                    context: context,
+                    delegate: CustomDelegateTimezoneSearch(
+                        userModel: SevaCore.of(context).loggedInUser,
+                        isSelected: SevaCore.of(context).loggedInUser.timezone,
+                        timezoneList: timezonelist));
+              })
+        ],
+      ),
+      body: StreamBuilder<Object>(
+          stream: FirestoreManager.getUserForIdStream(
+              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return LoadingIndicator();
+            }
+            UserModel userModel = snapshot.data;
+            isSelected = userModel.timezone;
+            return ListView.builder(
+              itemCount: timezonelist.length,
+//            controller: _scrollController,
+              itemBuilder: (context, index) {
+                TimeZoneModel model = timezonelist.elementAt(index);
+                DateFormat format = DateFormat(
+                    'dd/MMM/yyyy HH:mm',
+                    Locale(AppConfig.prefs.getString('language_code'))
+                        .toLanguageTag());
+                DateTime timeInUtc = DateTime.now().toUtc();
+
+                DateTime localtime = timeInUtc.add(Duration(
+                    hours: model.offsetFromUtc,
+                    minutes: model.offsetFromUtcMin));
+                return Card(
+                  child: ListTile(
+                    leading: getIcon(isSelected, model.timezoneName),
+                    trailing: Text(
+                      '${model.timezoneAbb}',
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    title: Text('${model.timezoneName}'),
+                    subtitle: Text('${format.format(localtime)}'),
+                    onTap: () async {
+                      if (userModel.timezone != model.timezoneName) {
+                        userModel.timezone = model.timezoneName;
+                        SevaCore.of(context).loggedInUser.timezone =
+                            model.timezoneName;
+                        await updateUser(user: userModel);
+                      }
+                    },
+                  ),
+                );
+              },
+            );
+          }),
+    );
+  }
+}
+
+Widget getIcon(String isSelected, String userTimezone) {
+  if (isSelected == userTimezone) {
+//      print("inside if card");
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Icon(
+        Icons.done,
+        color: Colors.green,
+        size: 28,
+      ),
+    );
+  } else {
+    return null;
   }
 }
 
@@ -1616,27 +1632,79 @@ class TimeZoneModel {
 }
 
 class CustomDelegateTimezoneSearch extends SearchDelegate<TimezoneListData> {
+  final UserModel userModel;
+  final String isSelected;
+  final List<TimeZoneModel> timezoneList;
+
+  CustomDelegateTimezoneSearch({
+    this.userModel,
+    this.isSelected,
+    this.timezoneList,
+  });
+
   @override
   List<Widget> buildActions(BuildContext context) {
     // TODO: implement buildActions
-    throw UnimplementedError();
+    return [
+      IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: () {
+            query = '';
+          })
+    ];
   }
 
   @override
   Widget buildLeading(BuildContext context) {
     // TODO: implement buildLeading
-    throw UnimplementedError();
+    return BackButton(onPressed: () {
+      close(context, null);
+    });
   }
 
   @override
   Widget buildResults(BuildContext context) {
     // TODO: implement buildResults
-    throw UnimplementedError();
+    return null;
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     // TODO: implement buildSuggestions
-    throw UnimplementedError();
+    final list = timezoneList;
+    return ListView.builder(
+        itemCount: list.length,
+        itemBuilder: (context, index) {
+          TimeZoneModel model = list[index];
+          DateFormat format = DateFormat(
+              'dd/MMM/yyyy HH:mm',
+              Locale(AppConfig.prefs.getString('language_code'))
+                  .toLanguageTag());
+          DateTime timeInUtc = DateTime.now().toUtc();
+
+          DateTime localtime = timeInUtc.add(Duration(
+              hours: model.offsetFromUtc, minutes: model.offsetFromUtcMin));
+
+          return Card(
+            child: ListTile(
+              leading: getIcon(isSelected, model.timezoneName),
+              trailing: Text(
+                '${model.timezoneAbb}',
+                style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500),
+              ),
+              title: Text('${model.timezoneName}'),
+              subtitle: Text('${format.format(localtime)}'),
+              onTap: () async {
+                if (userModel.timezone != model.timezoneName) {
+                  userModel.timezone = model.timezoneName;
+                  await updateUser(user: userModel);
+                }
+              },
+            ),
+          );
+        });
   }
 }
