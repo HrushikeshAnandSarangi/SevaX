@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sevaexchange/components/sevaavatar/image_picker_handler.dart';
 
 import './user_image_picker_dialog.dart';
 
@@ -26,6 +27,32 @@ class UserImagePickerHandler {
     imagePicker.dismissDialog();
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     cropImage(image);
+  }
+
+  void openStockImages(context) async {
+    imagePicker.dismissDialog();
+
+    FocusScope.of(context).requestFocus(FocusNode());
+    Navigator.of(context)
+        .push(
+          MaterialPageRoute(
+            builder: (context) => SearchStockImages(
+              // keepOnBackPress: false,
+              // showBackBtn: false,
+              // isFromHome: false,
+              onChanged: (image) {
+                _listener.stockImage(image, 'stock_image');
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        )
+        .then((value) {});
+    // _parentStockSelectionBottomsheet(context, (image) {
+    //   log("inside stock images onchanged callback");
+    //   _listener.userImage(image, 'stock_image');
+    //   Navigator.pop(context);
+    // });
   }
 
   addImageUrl() async {
@@ -57,5 +84,7 @@ class UserImagePickerHandler {
 
 abstract class UserImagePickerListener {
   void userImage(File _image);
+  void stockImage(dynamic _image, String type);
+
   addWebImageUrl();
 }
