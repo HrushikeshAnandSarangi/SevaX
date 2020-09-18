@@ -19,15 +19,15 @@ class BillingPlanDetails extends StatefulWidget {
   final String planName;
   final bool isBillMe;
 
-  const BillingPlanDetails({
-    Key key,
-    this.user,
-    this.isPlanActive,
-    this.planName,
-    this.autoImplyLeading = false,
-    this.isPrivateTimebank,
-    this.isBillMe
-  }) : super(key: key);
+  const BillingPlanDetails(
+      {Key key,
+      this.user,
+      this.isPlanActive,
+      this.planName,
+      this.autoImplyLeading = false,
+      this.isPrivateTimebank,
+      this.isBillMe})
+      : super(key: key);
   @override
   _BillingPlanDetailsState createState() => _BillingPlanDetailsState();
 }
@@ -116,7 +116,7 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
                                 widget.planName,
                             isPlanActive: widget.isPlanActive,
                             canBillMe: billMeEmails.contains(widget.user.email),
-                            isBillMe: widget.isBillMe
+                            isBillMe: widget.isBillMe ?? false,
                           ),
                         );
                       },
