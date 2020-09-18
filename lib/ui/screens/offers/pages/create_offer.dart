@@ -73,6 +73,9 @@ class _CreateOfferState extends State<CreateOffer> {
         onValueChanged: (int val) {
           print(val);
           if (val != currentPage) {
+              if(val == 1){
+
+              }
             setState(() {
               currentPage = val;
             });

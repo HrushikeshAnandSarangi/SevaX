@@ -59,10 +59,8 @@ class TransactionLimitCheck extends StatelessWidget {
     return StreamBuilder(
       stream: _userBloc.comunityStream,
       builder: (context, AsyncSnapshot<CommunityModel> snapshot) {
-        bool isAdmin =
-            _userBloc.community.admins.contains(_userBloc.user.sevaUserID);
-        bool isBillingFailed =
-            !(_userBloc.community.payment['payment_success'] ?? false);
+        bool isAdmin = _userBloc.community.admins.contains(_userBloc.user.sevaUserID);
+        bool isBillingFailed = !(_userBloc.community.payment['payment_success'] ?? false);
         return GestureDetector(
           onTap: () {
             _showDialog(context, isAdmin, _userBloc.user, isBillingFailed,
