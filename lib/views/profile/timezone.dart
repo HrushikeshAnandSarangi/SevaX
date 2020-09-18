@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/screens/timezone/timezone_search_delegate.dart';
+import 'package:sevaexchange/ui/screens/timezone/widgets/timezone_card.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -1489,6 +1491,16 @@ class TimezoneListData {
     log(x.toString());
     log(y.toString());
   }
+
+  List<TimeZoneModel> searchTimebank(String query) {
+    List<TimeZoneModel> data = List<TimeZoneModel>.from(timezonelist);
+    data.retainWhere(
+      (element) => element.timezoneName.toLowerCase().contains(
+            query.toLowerCase(),
+          ),
+    );
+    return data;
+  }
 }
 
 class TimezoneView extends StatefulWidget {
@@ -1501,13 +1513,29 @@ class _TimezoneViewState extends State<TimezoneView> {
   Widget build(BuildContext context) {
     // TimezoneListData().printData();
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            S.of(context).my_timezone,
-            style: TextStyle(fontSize: 18),
-          ),
+      appBar: AppBar(
+        title: Text(
+          S.of(context).my_timezone,
+          style: TextStyle(fontSize: 18),
         ),
-        body: TimezoneList());
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () async {
+              TimeZoneModel timezone = await showSearch(
+                context: context,
+                delegate: TimezoneSearchDelegate(
+                  textStyle: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+      body: TimezoneList(),
+    );
   }
 }
 
@@ -1559,25 +1587,18 @@ class TimezoneListState extends State<TimezoneList> {
 
               DateTime localtime = timeInUtc.add(Duration(
                   hours: model.offsetFromUtc, minutes: model.offsetFromUtcMin));
-              return Card(
-                child: ListTile(
-                  leading: getIcon(isSelected, model.timezoneName),
-                  trailing: Text(
-                    '${model.timezoneAbb}',
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  title: Text('${model.timezoneName}'),
-                  subtitle: Text('${format.format(localtime)}'),
-                  onTap: () async {
-                    if (userModel.timezone != model.timezoneName) {
-                      userModel.timezone = model.timezoneName;
-                      await updateUser(user: userModel);
-                    }
-                  },
-                ),
+
+              return TimezoneCard(
+                isSelected: isSelected == model.timezoneName,
+                title: model.timezoneName,
+                subTitle: format.format(localtime),
+                code: model.timezoneAbb,
+                onTap: () async {
+                  if (userModel.timezone != model.timezoneName) {
+                    userModel.timezone = model.timezoneName;
+                    await updateUser(user: userModel);
+                  }
+                },
               );
             },
           );
