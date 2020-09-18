@@ -38,6 +38,7 @@ import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
+import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
 import 'package:usage/uuid/uuid.dart';
@@ -67,38 +68,40 @@ class CreateRequest extends StatefulWidget {
 class _CreateRequestState extends State<CreateRequest> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text(
-            _title,
-            style: TextStyle(fontSize: 18),
+    return ExitWithConfirmation(
+      child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            title: Text(
+              _title,
+              style: TextStyle(fontSize: 18),
+            ),
+            centerTitle: false,
           ),
-          centerTitle: false,
-        ),
-        body: StreamBuilder<UserModelController>(
-            stream: userBloc.getLoggedInUser,
-            builder: (context, snapshot) {
-              if (snapshot.hasError)
-                return Text(
-                  S.of(context).general_stream_error,
-                );
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return LoadingIndicator();
-              }
-              if (snapshot.data != null) {
-                return RequestCreateForm(
-                  isOfferRequest: widget.isOfferRequest,
-                  offer: widget.offer,
-                  timebankId: widget.timebankId,
-                  userModel: widget.userModel,
-                  loggedInUser: snapshot.data.loggedinuser,
-                  projectId: widget.projectId,
-                  projectModel: widget.projectModel,
-                );
-              }
-              return Text('');
-            }));
+          body: StreamBuilder<UserModelController>(
+              stream: userBloc.getLoggedInUser,
+              builder: (context, snapshot) {
+                if (snapshot.hasError)
+                  return Text(
+                    S.of(context).general_stream_error,
+                  );
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return LoadingIndicator();
+                }
+                if (snapshot.data != null) {
+                  return RequestCreateForm(
+                    isOfferRequest: widget.isOfferRequest,
+                    offer: widget.offer,
+                    timebankId: widget.timebankId,
+                    userModel: widget.userModel,
+                    loggedInUser: snapshot.data.loggedinuser,
+                    projectId: widget.projectId,
+                    projectModel: widget.projectModel,
+                  );
+                }
+                return Text('');
+              })),
+    );
   }
 
   String get _title {
@@ -1205,7 +1208,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 )
               : Container(),
           SizedBox(height: 20),
-
           RequestPaymentDescriptionData(requestModel),
         ]);
   }

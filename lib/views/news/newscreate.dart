@@ -16,6 +16,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/scraper.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
 class NewsCreate extends StatelessWidget {
   final String timebankId;
@@ -24,44 +25,46 @@ class NewsCreate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        globals.newsImageURL = null;
-        return true;
-      },
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text(
-            S.of(context).create_feed,
-            style: TextStyle(fontSize: 18),
-          ),
-          centerTitle: false,
-          actions: <Widget>[
-            //  OutlineButton(
-            //         //color: Colors.indigo,
-            //         onPressed: () {
-            //           // Validate will return true if the form is valid, or false if
-            //           // the form is invalid.
+    return ExitWithConfirmation(
+      child: WillPopScope(
+        onWillPop: () async {
+          globals.newsImageURL = null;
+          return true;
+        },
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            title: Text(
+              S.of(context).create_feed,
+              style: TextStyle(fontSize: 18),
+            ),
+            centerTitle: false,
+            actions: <Widget>[
+              //  OutlineButton(
+              //         //color: Colors.indigo,
+              //         onPressed: () {
+              //           // Validate will return true if the form is valid, or false if
+              //           // the form is invalid.
 
-            //           if (_formState.currentState.formKey.currentState.validate()) {
-            //             // If the form is valid, we want to show a Snackbar
-            //             Scaffold.of(context).showSnackBar(
-            //                 SnackBar(content: Text('Creating Post')));
-            //             _formState.currentState.writeToDB();
-            //           }
-            //         },
-            //         highlightColor: Colors.white,
-            //         child: Text(
-            //           'Save',
-            //           style: TextStyle(color: Colors.white),
-            //         ),
-            //       ),
-          ],
-        ),
-        body: NewsCreateForm(
-          timebankId: timebankId,
-          timebankModel: timebankModel,
+              //           if (_formState.currentState.formKey.currentState.validate()) {
+              //             // If the form is valid, we want to show a Snackbar
+              //             Scaffold.of(context).showSnackBar(
+              //                 SnackBar(content: Text('Creating Post')));
+              //             _formState.currentState.writeToDB();
+              //           }
+              //         },
+              //         highlightColor: Colors.white,
+              //         child: Text(
+              //           'Save',
+              //           style: TextStyle(color: Colors.white),
+              //         ),
+              //       ),
+            ],
+          ),
+          body: NewsCreateForm(
+            timebankId: timebankId,
+            timebankModel: timebankModel,
+          ),
         ),
       ),
     );

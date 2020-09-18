@@ -9,7 +9,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -32,6 +31,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
+import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/parent_timebank_picker.dart';
 
@@ -51,21 +51,23 @@ class CreateEditCommunityView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return isCreateTimebank
-        ? Scaffold(
-            appBar: AppBar(
-              elevation: 0.5,
-              automaticallyImplyLeading: true,
-              title: Text(
-                S.of(context).create_timebank,
-                style: TextStyle(
-                  fontSize: 18,
+        ? ExitWithConfirmation(
+            child: Scaffold(
+              appBar: AppBar(
+                elevation: 0.5,
+                automaticallyImplyLeading: true,
+                title: Text(
+                  S.of(context).create_timebank,
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
                 ),
               ),
-            ),
-            body: CreateEditCommunityViewForm(
-              timebankId: timebankId,
-              isFromFind: isFromFind,
-              isCreateTimebank: isCreateTimebank,
+              body: CreateEditCommunityViewForm(
+                timebankId: timebankId,
+                isFromFind: isFromFind,
+                isCreateTimebank: isCreateTimebank,
+              ),
             ),
           )
         : Scaffold(
@@ -665,7 +667,8 @@ class CreateEditCommunityViewFormState
                           ),
                         ),
                         headingText(S.of(context).timebank_has_parent),
-                        Text(S.of(context).timebank_location_has_parent_hint_text,
+                        Text(
+                          S.of(context).timebank_location_has_parent_hint_text,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey,
@@ -679,13 +682,14 @@ class CreateEditCommunityViewFormState
                               setState(() {
                                 this.selectedTimebank = selectedTimebank.name;
                               });
-                              snapshot.data.timebank
-                                  .updateValueByKey(
-                                  'parentTimebankId', selectedTimebank.primary_timebank);
-                              timebankModel.parentTimebankId = selectedTimebank.primary_timebank;
-                              snapshot.data.community
-                                  .updateValueByKey(
-                                  'parentTimebankId', selectedTimebank.primary_timebank);
+                              snapshot.data.timebank.updateValueByKey(
+                                  'parentTimebankId',
+                                  selectedTimebank.primary_timebank);
+                              timebankModel.parentTimebankId =
+                                  selectedTimebank.primary_timebank;
+                              snapshot.data.community.updateValueByKey(
+                                  'parentTimebankId',
+                                  selectedTimebank.primary_timebank);
                             },
                           ),
                         ),

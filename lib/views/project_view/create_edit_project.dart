@@ -26,6 +26,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 import '../../flavor_config.dart';
@@ -155,30 +156,32 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           dateTime: DateTime.fromMillisecondsSinceEpoch(projectModel.endTime));
     }
 
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        elevation: 0.5,
-        automaticallyImplyLeading: true,
-        centerTitle: true,
-        title: Text(
-          widget.isCreateProject
-              ? S.of(context).create_project
-              : S.of(context).edit_project,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return ExitWithConfirmation(
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          elevation: 0.5,
+          automaticallyImplyLeading: true,
+          centerTitle: true,
+          title: Text(
+            widget.isCreateProject
+                ? S.of(context).create_project
+                : S.of(context).edit_project,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
         ),
+        body: widget.isCreateProject
+            ? Form(
+                key: _formKey,
+                child: createProjectForm,
+              )
+            : isDataLoaded
+                ? Form(
+                    key: _formKey,
+                    child: createProjectForm,
+                  )
+                : LoadingIndicator(),
       ),
-      body: widget.isCreateProject
-          ? Form(
-              key: _formKey,
-              child: createProjectForm,
-            )
-          : isDataLoaded
-              ? Form(
-                  key: _formKey,
-                  child: createProjectForm,
-                )
-              : LoadingIndicator(),
     );
   }
 
