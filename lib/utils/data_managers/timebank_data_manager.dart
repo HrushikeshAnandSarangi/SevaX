@@ -455,9 +455,11 @@ Stream<CardModel> getCardModelStream({@required String communityId}) async* {
   yield* data.transform(
     StreamTransformer<DocumentSnapshot, CardModel>.fromHandlers(
       handleData: (snapshot, modelSink) {
-        CardModel model = CardModel(snapshot.data);
-        model.timebankid = snapshot.documentID;
-        modelSink.add(model);
+        if (snapshot.exists) {
+          CardModel model = CardModel(snapshot.data);
+          model.timebankid = snapshot.documentID;
+          modelSink.add(model);
+        } else {}
       },
     ),
   );

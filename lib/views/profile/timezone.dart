@@ -1637,22 +1637,6 @@ class TimezoneListState extends State<TimezoneList> {
   }
 }
 
-Widget getIcon(String isSelected, String userTimezone) {
-  if (isSelected == userTimezone) {
-//      print("inside if card");
-    return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: Icon(
-        Icons.done,
-        color: Colors.green,
-        size: 28,
-      ),
-    );
-  } else {
-    return null;
-  }
-}
-
 class TimeZoneModel {
   String timezoneName;
   int offsetFromUtc;

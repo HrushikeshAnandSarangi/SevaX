@@ -15,6 +15,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_view.dart';
+import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 import '../../flavor_config.dart';
@@ -39,7 +40,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   var transactionPaymentData;
   final profanityDetector = ProfanityDetector();
   bool autoValidateText = false;
-  List<BillingPlanDetailsModel> _billingPlanDetailsModels=[];
+  List<BillingPlanDetailsModel> _billingPlanDetailsModels = [];
   @override
   void initState() {
     super.initState();
@@ -50,23 +51,20 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
               communityId: SevaCore.of(context).loggedInUser.currentCommunity)
           .then((onValue) {
         communityModel = onValue;
-
       });
       _billingPlanDetailsModels = billingPlanDetailsModelFromJson(
-          AppConfig.remoteConfig
-              .getString('billing_plans_${S.of(context).localeName}'),
+        AppConfig.remoteConfig
+            .getString('billing_plans_${S.of(context).localeName}'),
       );
     });
-
-
-
   }
 
   String planName(String text) {
-      if(text=="tall_plan"){
-          List<String> x = text.split('_');
-          return '${x[0][0].toUpperCase() + x[0].substring(1)} ${x[1][0].toUpperCase() + x[1].substring(1)}'.replaceFirst("Tall", "Community");
-      }
+    if (text == "tall_plan") {
+      List<String> x = text.split('_');
+      return '${x[0][0].toUpperCase() + x[0].substring(1)} ${x[1][0].toUpperCase() + x[1].substring(1)}'
+          .replaceFirst("Tall", "Community");
+    }
     List<String> x = text.split('_');
     return '${x[0][0].toUpperCase() + x[0].substring(1)} ${x[1][0].toUpperCase() + x[1].substring(1)}';
   }
@@ -76,14 +74,15 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
     // FocusScope.of(context).requestFocus(FocusNode());
 
     final _bloc = BlocProvider.of<UserDataBloc>(context);
-    //  print("---->community model ${_bloc.community}");
+    print("---->community model ${_bloc.community}");
+
     this.parentContext = context;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-                _bloc.community.billMe == true
+            _bloc.community.billMe
                 ? planCard(_bloc)
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,25 +98,37 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                               ConnectionState.waiting) {
                             return LoadingIndicator();
                           }
+                          print("Inside ============ Procceding");
+
                           if (snapshot.hasData && snapshot.data != null) {
+                            print("Inside ============ true plan");
+
                             cardModel = snapshot.data;
                             //print('cardmodel ${cardModel.currentPlan}');
                             //  print('subscription  ${cardModel.toString()}');
                             //print('subscription  ${cardModel.subscriptionModel}');
                             if (cardModel.subscriptionModel != null) {
                               String data = "";
-                              _billingPlanDetailsModels.removeWhere((element) => element.id != cardModel.currentPlan);
+                              _billingPlanDetailsModels.removeWhere((element) =>
+                                  element.id != cardModel.currentPlan);
                               cardModel.subscriptionModel
                                   .forEach((subscritpion) {
                                 if (subscritpion.containsKey("items")) {
                                   if (subscritpion['items']['data'] != null) {
-                                    planData = subscritpion['items']['data'] ?? [];
-                                    if(cardModel.currentPlan == "tall_plan"){
-                                      data = "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).paying} \$${_billingPlanDetailsModels[0].price} ${S.of(context).monthly_charges_of} \$0.05 ${S.of(context).plan_details_quota1}.";
-                                    } else if (cardModel.currentPlan == "grande_plan") {
-                                      data = "${S.of(context).your_community_on_the}  ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).plan_yearly_1500} \$0.03 ${S.of(context).plan_details_quota1}.";
-                                    } else if(cardModel.currentPlan == "venti_plan") {
-                                      data = "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).paying} \$${_billingPlanDetailsModels[0].price} ${S.of(context).charges_of} \$0.01  ${S.of(context).per_transaction_quota}.";
+                                    planData =
+                                        subscritpion['items']['data'] ?? [];
+                                    if (cardModel.currentPlan ==
+                                        SevaBillingPlans.COMMUNITY_PLAN) {
+                                      data =
+                                          "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).paying} \$${_billingPlanDetailsModels[0].price} ${S.of(context).monthly_charges_of} \$0.05 ${S.of(context).plan_details_quota1}.";
+                                    } else if (cardModel.currentPlan ==
+                                        SevaBillingPlans.NON_PROFIT) {
+                                      data =
+                                          "${S.of(context).your_community_on_the}  ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).plan_yearly_1500} \$0.03 ${S.of(context).plan_details_quota1}.";
+                                    } else if (cardModel.currentPlan ==
+                                        SevaBillingPlans.ENTERPRISE) {
+                                      data =
+                                          "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).paying} \$${_billingPlanDetailsModels[0].price} ${S.of(context).charges_of} \$0.01  ${S.of(context).per_transaction_quota}.";
                                     }
                                     return spendingsTextWidgettwo(data ?? "");
                                   } else {
@@ -132,6 +143,12 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                               return emptyText();
                             }
                           } else {
+                            print("Inside ============ timebankbilling plan");
+                            if (_bloc.community.payment['planId'] ==
+                                SevaBillingPlans.NEIGHBOUR_HOOD_PLAN) {
+                              return spendingsTextWidgettwo(
+                                  "You're on neightbourhood plan");
+                            }
                             return emptyText();
                           }
                         },
@@ -176,13 +193,12 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => BillingPlanDetails(
-                              user: SevaCore.of(context).loggedInUser,
-                              planName: _bloc.community.payment["planId"],
-                              isPlanActive: true,
-                              autoImplyLeading: true,
-                              isPrivateTimebank: communityModel.private,
-                              isBillMe: communityModel.billMe
-                            ),
+                                user: SevaCore.of(context).loggedInUser,
+                                planName: _bloc.community.payment["planId"],
+                                isPlanActive: true,
+                                autoImplyLeading: true,
+                                isPrivateTimebank: communityModel.private,
+                                isBillMe: communityModel.billMe),
                           ),
                         ),
                 ),
@@ -495,7 +511,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           textCapitalization: TextCapitalization.sentences,
           textInputAction: TextInputAction.done,
           onFieldSubmitted: (input) {
-            print("--------------------------");
             // FocusScope.of(bc).requestFocus(focusNodes[0]);
             FocusScope.of(bc).unfocus();
           },
