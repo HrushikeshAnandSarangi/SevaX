@@ -28,6 +28,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
@@ -325,7 +326,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             headerContainer(snapshot),
-                            RequestTypeWidget(),
+                            TransactionsMatrixCheck(transaction_matrix_type: "cash_goods_requests", child: RequestTypeWidget()),
                             Text(
                               S.of(context).request_title,
                               style: TextStyle(
@@ -423,82 +424,160 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   Widget RequestGoodsDescriptionData() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            S.of(context).request_goods_description,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          GoodsDynamicSelection(
-            onSelectedGoods: (goods) => {
-              print(goods),
-              requestModel.goodsDonationDetails.requiredGoods = goods
-            },
-          ),
-          Text(
-            S.of(context).request_goods_address,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          Text(
-            S.of(context).request_goods_address_hint,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
-          ),
-          TextFormField(
-            autovalidate: autoValidateCashText,
-            onChanged: (value) {
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
-            },
-            focusNode: focusNodes[8],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[8]);
-            },
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              errorMaxLines: 2,
-              hintText: S.of(context).request_goods_address_inputhint,
-              hintStyle: hintTextStyle,
-            ),
-            initialValue: widget.offer != null && widget.isOfferRequest
-                ? getOfferDescription(
-                    offerDataModel: widget.offer,
-                  )
-                : "",
-            keyboardType: TextInputType.multiline,
-            maxLines: 3,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              } else {
-                print(requestModel);
-                requestModel.goodsDonationDetails.address = value;
+    Future.delayed(Duration(milliseconds: 1500), (){
+        return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+                Text(
+                    S.of(context).request_goods_description,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                    ),
+                ),
+                GoodsDynamicSelection(
+                    onSelectedGoods: (goods) => {
+                        print(goods),
+                        requestModel.goodsDonationDetails.requiredGoods = goods
+                    },
+                ),
+                Text(
+                    S.of(context).request_goods_address,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                    ),
+                ),
+                Text(
+                    S.of(context).request_goods_address_hint,
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                    ),
+                ),
+                TextFormField(
+                    autovalidate: autoValidateCashText,
+                    onChanged: (value) {
+                        if (value.length > 1) {
+                            setState(() {
+                                autoValidateCashText = true;
+                            });
+                        } else {
+                            setState(() {
+                                autoValidateCashText = false;
+                            });
+                        }
+                    },
+                    focusNode: focusNodes[8],
+                    onFieldSubmitted: (v) {
+                        FocusScope.of(context).requestFocus(focusNodes[8]);
+                    },
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                        errorMaxLines: 2,
+                        hintText: S.of(context).request_goods_address_inputhint,
+                        hintStyle: hintTextStyle,
+                    ),
+                    initialValue: widget.offer != null && widget.isOfferRequest
+                        ? getOfferDescription(
+                        offerDataModel: widget.offer,
+                    )
+                        : "",
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 3,
+                    validator: (value) {
+                        if (value.isEmpty) {
+                            return S.of(context).validation_error_general_text;
+                        } else {
+                            print(requestModel);
+                            requestModel.goodsDonationDetails.address = value;
 //                setState(() {});
-              }
-              return null;
-            },
-          ),
-        ]);
+                        }
+                        return null;
+                    },
+                ),
+            ]);
+    });
+//      return Column(
+//        crossAxisAlignment: CrossAxisAlignment.start,
+//        children: <Widget>[
+//          Text(
+//            S.of(context).request_goods_description,
+//            style: TextStyle(
+//              fontSize: 16,
+//              fontWeight: FontWeight.bold,
+//              fontFamily: 'Europa',
+//              color: Colors.black,
+//            ),
+//          ),
+//          GoodsDynamicSelection(
+//            onSelectedGoods: (goods) => {
+//              print(goods),
+//              requestModel.goodsDonationDetails.requiredGoods = goods
+//            },
+//          ),
+//          Text(
+//            S.of(context).request_goods_address,
+//            style: TextStyle(
+//              fontSize: 16,
+//              fontWeight: FontWeight.bold,
+//              fontFamily: 'Europa',
+//              color: Colors.black,
+//            ),
+//          ),
+//          Text(
+//            S.of(context).request_goods_address_hint,
+//            style: TextStyle(
+//              fontSize: 12,
+//              color: Colors.grey,
+//            ),
+//          ),
+//          TextFormField(
+//            autovalidate: autoValidateCashText,
+//            onChanged: (value) {
+//              if (value.length > 1) {
+//                setState(() {
+//                  autoValidateCashText = true;
+//                });
+//              } else {
+//                setState(() {
+//                  autoValidateCashText = false;
+//                });
+//              }
+//            },
+//            focusNode: focusNodes[8],
+//            onFieldSubmitted: (v) {
+//              FocusScope.of(context).requestFocus(focusNodes[8]);
+//            },
+//            textInputAction: TextInputAction.next,
+//            decoration: InputDecoration(
+//              errorMaxLines: 2,
+//              hintText: S.of(context).request_goods_address_inputhint,
+//              hintStyle: hintTextStyle,
+//            ),
+//            initialValue: widget.offer != null && widget.isOfferRequest
+//                ? getOfferDescription(
+//                    offerDataModel: widget.offer,
+//                  )
+//                : "",
+//            keyboardType: TextInputType.multiline,
+//            maxLines: 3,
+//            validator: (value) {
+//              if (value.isEmpty) {
+//                return S.of(context).validation_error_general_text;
+//              } else {
+//                print(requestModel);
+//                requestModel.goodsDonationDetails.address = value;
+////                setState(() {});
+//              }
+//              return null;
+//            },
+//          ),
+//        ]);
   }
 
   Widget RequestPaymentACH(RequestModel requestModel) {
@@ -939,13 +1018,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     },
                   ),
                   _optionRadioButton(
-                      title: S.of(context).request_type_cash,
-                      value: RequestType.CASH,
-                      groupvalue: requestModel.requestType,
-                      onChanged: (value) {
-                        requestModel.requestType = value;
-                        setState(() => {});
-                      }),
+                    title: S.of(context).request_type_cash,
+                    value: RequestType.CASH,
+                    groupvalue: requestModel.requestType,
+                    onChanged: (value) {
+                      requestModel.requestType = value;
+                      setState(() => {});
+                    }),
                   _optionRadioButton(
                       title: S.of(context).request_type_goods,
                       value: RequestType.GOODS,
