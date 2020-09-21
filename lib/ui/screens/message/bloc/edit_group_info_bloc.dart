@@ -1,27 +1,27 @@
-import 'dart:io';
-
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/repositories/chats_repository.dart';
 import 'package:sevaexchange/repositories/storage_repository.dart';
 
+import 'create_chat_bloc.dart';
+
 class EditGroupInfoBloc {
   final _chatModel = BehaviorSubject<ChatModel>();
-  final _file = BehaviorSubject<File>();
+  final _file = BehaviorSubject<MessageRoomImageModel>();
   final _groupName = BehaviorSubject<String>();
   final _participantInfo = BehaviorSubject<List<ParticipantInfo>>();
   final profanityDetector = ProfanityDetector();
 
   Stream<String> get groupName => _groupName.stream;
-  Stream<File> get image => _file.stream;
+  Stream<MessageRoomImageModel> get image => _file.stream;
   Stream<ChatModel> get chatModel => _chatModel.stream;
   Stream<List<ParticipantInfo>> get participants => _participantInfo.stream;
 
   List<ParticipantInfo> get participantsList => _participantInfo.value;
 
   Function(String) get onGroupNameChanged => _groupName.sink.add;
-  Function(File) get onImageChanged => _file.sink.add;
+  Function(MessageRoomImageModel) get onImageChanged => _file.sink.add;
   Function(List<ParticipantInfo>) get addParticipants =>
       _participantInfo.sink.add;
 
@@ -42,9 +42,16 @@ class EditGroupInfoBloc {
       _groupName.addError('profanity');
     } else {
       String imageUrl;
-      if (_file.value != null) {
-        imageUrl = await StorageRepository.uploadFile(
-            "multiUserMessagingLogo", _file.value);
+
+      if (_file.value != null && _file.value.selectedImage != null) {
+        imageUrl = _file.value != null
+            ? await StorageRepository.uploadFile(
+                "multiUserMessagingLogo", _file.value.selectedImage)
+            : null;
+      } else if (_file.value != null && _file.value.stockImageUrl != null) {
+        imageUrl = _file.value.stockImageUrl;
+      } else {
+        return null;
       }
       print("image url ${imageUrl}");
 

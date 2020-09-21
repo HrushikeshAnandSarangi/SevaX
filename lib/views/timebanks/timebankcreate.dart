@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
@@ -25,6 +24,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
+import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 
 class TimebankCreate extends StatelessWidget {
@@ -32,21 +32,23 @@ class TimebankCreate extends StatelessWidget {
   TimebankCreate({@required this.timebankId});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        elevation: 0.5,
-        // leading: BackButton(color: Colors.black54),
-        title: Text(
-          // 'Create a ${FlavorConfig.values.timebankTitle}',
-          S.of(context).create_group,
-          style: TextStyle(
-            fontSize: 20,
+    return ExitWithConfirmation(
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          elevation: 0.5,
+          // leading: BackButton(color: Colors.black54),
+          title: Text(
+            // 'Create a ${FlavorConfig.values.timebankTitle}',
+            S.of(context).create_group,
+            style: TextStyle(
+              fontSize: 20,
+            ),
           ),
         ),
-      ),
-      body: TimebankCreateForm(
-        timebankId: timebankId,
+        body: TimebankCreateForm(
+          timebankId: timebankId,
+        ),
       ),
     );
   }

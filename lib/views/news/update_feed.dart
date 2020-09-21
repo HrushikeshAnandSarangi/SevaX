@@ -12,6 +12,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/scraper.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
 class UpdateNewsFeed extends StatelessWidget {
   final String timebankId;
@@ -22,24 +23,26 @@ class UpdateNewsFeed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        globals.newsImageURL = null;
-        globals.newsDocumentName = null;
-        globals.newsDocumentURL = null;
-        return true;
-      },
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text(
-            S.of(context).update_feed,
-            style: TextStyle(fontSize: 18),
+    return ExitWithConfirmation(
+      child: WillPopScope(
+        onWillPop: () async {
+          globals.newsImageURL = null;
+          globals.newsDocumentName = null;
+          globals.newsDocumentURL = null;
+          return true;
+        },
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            title: Text(
+              S.of(context).update_feed,
+              style: TextStyle(fontSize: 18),
+            ),
           ),
-        ),
-        body: NewsCreateForm(
-          timebankId: timebankId,
-          newsModel: newsMmodel,
+          body: NewsCreateForm(
+            timebankId: timebankId,
+            newsModel: newsMmodel,
+          ),
         ),
       ),
     );

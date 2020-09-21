@@ -116,6 +116,24 @@ class UserImagePickerDialog extends StatelessWidget {
                 isShowWebImageUrl
                     ? GestureDetector(
                         onTap: () {
+                          _listener.openStockImages(context);
+                        },
+                        child: roundedButton(
+                            S.of(context).stock_images,
+                            EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                            const Color(0x0FF766FE0),
+                            const Color(0xFFFFFFFF),
+                            Icon(
+                              Icons.dashboard,
+                              color: Colors.white,
+                            )),
+                      )
+                    : Offstage(),
+                isShowWebImageUrl
+                    ? GestureDetector(
+                        onTap: () {
+                          dismissDialog();
+
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) {
@@ -123,7 +141,6 @@ class UserImagePickerDialog extends StatelessWidget {
                               },
                             ),
                           ).then((value) {
-                            //dismissDialog();
                             refresh();
                           });
                         },

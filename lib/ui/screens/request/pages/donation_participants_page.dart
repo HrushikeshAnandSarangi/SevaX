@@ -19,13 +19,14 @@ class DonationParticipantPage extends StatelessWidget {
   final RequestModel requestModel;
   final OfferModel offermodel;
 
-  const DonationParticipantPage({Key key, this.requestModel, this.offermodel}) : super(key: key);
+  const DonationParticipantPage({Key key, this.requestModel, this.offermodel})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<DonationAcceptedBloc>(context);
     final _offerbloc = BlocProvider.of<DonationAcceptedOfferBloc>(context);
     return StreamBuilder(
-      stream: requestModel != null ?  _bloc.donations: _offerbloc.donations,
+      stream: requestModel != null ? _bloc.donations : _offerbloc.donations,
       builder: (BuildContext _, AsyncSnapshot<List<DonationModel>> snapshot) {
         if (snapshot.data == null ||
             snapshot.connectionState == ConnectionState.waiting) {
@@ -51,15 +52,18 @@ class DonationParticipantPage extends StatelessWidget {
             // );
             log('${model.lastModifiedBy == model.donatedTo}  ${model.lastModifiedBy}  ${model.donatedTo}');
             return DonationParticipantCard(
-              type: requestModel != null ? 'request': 'offer',
+              type: requestModel != null ? 'request' : 'offer',
               name: model.donorDetails.name,
               isCashDonation: model.donationType == RequestType.CASH,
-              goods: model.donationStatus == DonationStatus.REQUESTED ? (model.goodsDetails?.requiredGoods != null
-                  ? List<String>.from(model.goodsDetails.requiredGoods.values)
-                  : [])
-                  :(model.goodsDetails?.donatedGoods != null
-                  ? List<String>.from(model.goodsDetails.donatedGoods.values)
-                  : []),
+              goods: model.donationStatus == DonationStatus.REQUESTED
+                  ? (model.goodsDetails?.requiredGoods != null
+                      ? List<String>.from(
+                          model.goodsDetails.requiredGoods.values)
+                      : [])
+                  : (model.goodsDetails?.donatedGoods != null
+                      ? List<String>.from(
+                          model.goodsDetails.donatedGoods.values)
+                      : []),
               status: model.donationStatus,
               photoUrl: model.donorDetails.photoUrl,
               amount: model.cashDetails.pledgedAmount.toString(),
@@ -67,59 +71,59 @@ class DonationParticipantPage extends StatelessWidget {
               timestamp: model.timestamp,
               child: model.donationStatus == DonationStatus.ACKNOWLEDGED
                   ? null
-                  : model.donationStatus == DonationStatus.REQUESTED ?
-              Container(
-                height: 20,
-                child: RaisedButton(
-                  color: Colors.white,
-                  padding: EdgeInsets.zero,
-                  child: Text(
-                    S.of(context).donate,
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.black,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            RequestDonationDisputePage(
-                              model: model,
-                              notificationId: model.notificationId,
+                  : model.donationStatus == DonationStatus.REQUESTED
+                      ? Container(
+                          height: 20,
+                          child: RaisedButton(
+                            color: Colors.white,
+                            padding: EdgeInsets.zero,
+                            child: Text(
+                              S.of(context).donate,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.black,
+                              ),
                             ),
-                      ),
-                    );
-                  },
-                ),
-              )
-                  : model.lastModifiedBy == model.donatedTo
-                  ? null
-                  : Container(
-                height: 20,
-                child: RaisedButton(
-                  color: Colors.white,
-                  padding: EdgeInsets.zero,
-                  child: Text(
-                    S.of(context).acknowledge,
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.black,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            RequestDonationDisputePage(
-                              model: model,
-                              notificationId: model.notificationId,
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      RequestDonationDisputePage(
+                                    model: model,
+                                    notificationId: model.notificationId,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      : model.lastModifiedBy == model.donatedTo
+                          ? null
+                          : Container(
+                              height: 20,
+                              child: RaisedButton(
+                                color: Colors.white,
+                                padding: EdgeInsets.zero,
+                                child: Text(
+                                  S.of(context).acknowledge,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          RequestDonationDisputePage(
+                                        model: model,
+                                        notificationId: model.notificationId,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
-                      ),
-                    );
-                  },
-                ),
-              ),
             );
           },
           separatorBuilder: (context, index) {
@@ -193,10 +197,15 @@ class DonationParticipantPage extends StatelessWidget {
             donorPhotoUrl: model.donorDetails.photoUrl,
             donationId: model.id,
             donationDetails:
-            '${model.donationType == RequestType.CASH ? model.cashDetails.pledgedAmount.toString() : model.donationType == RequestType.GOODS ? '${model.goodsDetails.donatedGoods.values} \n' + '\n' + model.goodsDetails.comments ?? ' ' : 'time'}',
+                '${model.donationType == RequestType.CASH ? model.cashDetails.pledgedAmount.toString() : model.donationType == RequestType.GOODS ? '${model.goodsDetails.donatedGoods.values} \n' + '\n' + model.goodsDetails.comments ?? ' ' : 'time'}',
             donationType: model.donationType,
             requestId: requestModel.id,
-            requestTitle: requestModel != null && requestModel.title != '' ? requestModel.title: (offermodel != null && offermodel.individualOfferDataModel !=null) ?  offermodel.individualOfferDataModel.title:  '',
+            requestTitle: requestModel != null && requestModel.title != ''
+                ? requestModel.title
+                : (offermodel != null &&
+                        offermodel.individualOfferDataModel != null)
+                    ? offermodel.individualOfferDataModel.title
+                    : '',
           ),
           timeBankId: requestModel.timebankId,
           notificationId: model.notificationId,

@@ -18,28 +18,28 @@ class BillingPlanCard extends StatefulWidget {
   final bool billMeVisibility;
   final bool isBillMe;
 
-  const BillingPlanCard({
-    Key key,
-    this.plan,
-    this.user,
-    this.isSelected = false,
-    this.isPlanActive = false,
-    this.canBillMe,
-    this.billMeVisibility,
-    this.isBillMe
-  }) : super(key: key);
+  const BillingPlanCard(
+      {Key key,
+      this.plan,
+      this.user,
+      this.isSelected = false,
+      this.isPlanActive = false,
+      this.canBillMe,
+      this.billMeVisibility,
+      this.isBillMe})
+      : super(key: key);
 
   @override
   _BillingPlanCardState createState() => _BillingPlanCardState();
 }
 
 class _BillingPlanCardState extends State<BillingPlanCard> {
-    bool isBillMe;
+  bool isBillMe;
 
-    void initState(){
-      super.initState();
-      isBillMe = widget.isBillMe;
-    }
+  void initState() {
+    super.initState();
+    isBillMe = widget.isBillMe;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -197,13 +197,13 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
                           : Colors.white,
                     ),
                   ),
-                  onPressed:
-                      // ? () {}
-                      () {
+                  onPressed: () {
                     if (widget.isPlanActive) {
                       _changePlanAlert(context);
                     } else {
-                      if (isBillMe == true) {
+                      if (widget.plan.id ==
+                              SevaBillingPlans.NEIGHBOUR_HOOD_PLAN ||
+                          isBillMe) {
                         _planSuccessMessage(
                           context: context,
                         );
@@ -359,7 +359,7 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
               "planId": widget.plan.id,
               "message": isBillMe
                   ? widget.plan.planName
-                  : S.of(context).on_community_plan
+                  : "You are on neighbourhood plan"
             },
             "billMe": isBillMe
           },
@@ -386,4 +386,11 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
       },
     );
   }
+}
+
+class SevaBillingPlans {
+  static String NEIGHBOUR_HOOD_PLAN = 'neighbourhood_plan';
+  static String COMMUNITY_PLAN = 'tall_plan';
+  static String NON_PROFIT = 'grande_plan';
+  static String ENTERPRISE = 'venti_plan';
 }

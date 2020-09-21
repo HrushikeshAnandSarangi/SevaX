@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-09-15T19:17:26+00:00",
+    "@@last_modified": "2020-09-16T19:02:27+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -978,5 +978,21 @@
     "request_review_body_user": "Body: You have received a review on the work that you did for the request:",
     "has_given_review": "has given you a review",
     "pledged_to_donate": "pledged to donate",
-    "computer": "Computer"
+    "computer": "Computer",
+    "total_donation_amount": "Total donation amount",
+    "cash_offer": "Cash Offer",
+    "goods_offer": "Goods Offer",
+    "time_offer": "Time Offer",
+    "offered": "Offered",
+    "offer_to_sent_at": "Send offer to address",
+    "cash_request": "Cash Request",
+    "goods_request": "Goods Request",
+    "time_request": "Time Request",
+    "donations_cash_request": "Request Amount*",
+    "donations_cash_request_hint": "Request Amount shouldn't be more than the offer amount",
+    "tell_what_you_get_donated": "Tell us what you would like to get donated",
+    "signed_up": "Signed Up",
+    "accepted_offer": "Accepted Offer",
+    "accept_offer": "Accept Offer",
+    "bookmark": "Bookmark"
 }

@@ -1,6 +1,6 @@
 {
     "@@locale": "fr",
-    "@@last_modified": "2020-09-15T19:17:26+00:00",
+    "@@last_modified": "2020-09-16T19:02:28+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Accrochez-vous bien",
@@ -978,5 +978,21 @@
     "request_review_body_user": "Corps: Vous avez reçu un avis sur le travail que vous avez effectué pour la demande:",
     "has_given_review": "vous a donné un avis",
     "pledged_to_donate": "s'est engagé à faire un don",
-    "computer": "Ordinateur"
+    "computer": "Ordinateur",
+    "total_donation_amount": "Montant total du don",
+    "cash_offer": "Offre en espèces",
+    "goods_offer": "Offre de marchandises",
+    "time_offer": "Offre de temps",
+    "offered": "Offert",
+    "offer_to_sent_at": "Envoyer l'offre à l'adresse",
+    "cash_request": "Demande d'espèces",
+    "goods_request": "Demande de marchandises",
+    "time_request": "Demande de temps",
+    "donations_cash_request": "Montant de la demande *",
+    "donations_cash_request_hint": "Le montant de la demande ne doit pas dépasser le montant de l'offre",
+    "tell_what_you_get_donated": "Dites-nous ce que vous aimeriez recevoir",
+    "signed_up": "Signé",
+    "accepted_offer": "Offre acceptée",
+    "accept_offer": "Accepter l'offre",
+    "bookmark": "Signet"
 }
