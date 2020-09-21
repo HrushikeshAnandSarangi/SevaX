@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -591,9 +592,55 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       _withdrawRequest();
     } else {
       print("Accept request");
-      _acceptRequest();
-      Navigator.pop(context);
+      if (SevaCore.of(context).loggedInUser.calendarId != null) {
+        calenderConfirmation();
+      } else {
+        _acceptRequest();
+        Navigator.pop(context);
+      }
     }
+  }
+
+  void calenderConfirmation() {
+    showDialog(
+      context: context,
+      builder: (_context) {
+        return CalenderEventConfirmationDialog(
+          title: widget.requestItem.title,
+          isrequest: true,
+          cancelled: () async {
+            await _acceptRequest();
+            Navigator.pop(_context);
+            Navigator.pop(context);
+          },
+          addToCalender: () async {
+            Set<String> acceptorList =
+                Set.from(widget.requestItem.allowedCalenderUsers);
+            acceptorList.add(SevaCore.of(context).loggedInUser.email);
+
+            widget.requestItem.allowedCalenderUsers = acceptorList.toList();
+            await _acceptRequest();
+            Navigator.pop(_context);
+            Navigator.pop(context);
+//              linearProgressForCreatingRequest();
+//
+//              int resVar = await _writeToDB();
+//              await _updateProjectModel();
+//              Navigator.pop(dialogContext);
+//
+//              if (widget.isOfferRequest == true && widget.userModel != null) {
+//                Navigator.pop(context, {'response': 'ACCEPTED'});
+//              } else {
+//                if (resVar == 0) {
+//                  showInsufficientBalance();
+//                }
+//                Navigator.pop(_context);
+//                Navigator.pop(context);
+//              }
+          },
+        );
+      },
+    );
   }
 
   void _acceptRequest() {
