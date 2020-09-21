@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -110,17 +111,51 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
-                      //Once approved
-                      approveInvitationForVolunteerRequest(
-                          model: widget.requestInvitationModel,
-                          notificationId: widget.notificationId,
-                          user: widget.userModel);
+                      //Once approvedp
+                      print(widget.userModel.calendarId);
+                      if (widget.userModel.calendarId != null) {
+                        print('true');
+                        showDialog(
+                          context: context,
+                          builder: (_context) {
+                            return CalenderEventConfirmationDialog(
+                              title: widget
+                                  .requestInvitationModel.requestModel.title,
+                              isrequest: true,
+                              cancelled: () async {
+                                approveInvitationForVolunteerRequest(
+                                    allowedCalender: false,
+                                    model: widget.requestInvitationModel,
+                                    notificationId: widget.notificationId,
+                                    user: widget.userModel);
+                                Navigator.pop(_context);
+                                Navigator.of(context).pop();
+                              },
+                              addToCalender: () async {
+                                approveInvitationForVolunteerRequest(
+                                    allowedCalender: true,
+                                    model: widget.requestInvitationModel,
+                                    notificationId: widget.notificationId,
+                                    user: widget.userModel);
+                                Navigator.pop(_context);
+                                Navigator.of(context).pop();
+                              },
+                            );
+                          },
+                        );
 
-                      if (progressContext != null) {
-                        Navigator.pop(progressContext);
+                        //  calenderConfirmation(context);
+                      } else {
+                        print('false');
+
+                        approveInvitationForVolunteerRequest(
+                            allowedCalender: false,
+                            model: widget.requestInvitationModel,
+                            notificationId: widget.notificationId,
+                            user: widget.userModel);
+
+                        Navigator.of(context).pop();
                       }
-
-                      Navigator.of(context).pop();
                     },
                   ),
                 ),
@@ -160,6 +195,8 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
     );
   }
 
+  void calenderConfirmation(BuildContext context) {}
+
   void showProgressDialog(BuildContext context, String message) {
     showDialog(
         barrierDismissible: false,
@@ -191,12 +228,14 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
     RequestInvitationModel model,
     String notificationId,
     UserModel user,
+    bool allowedCalender,
   }) {
     acceptInviteRequest(
       requestId: model.requestModel.id,
       acceptedUserEmail: user.email,
       acceptedUserId: user.sevaUserID,
       notificationId: notificationId,
+      allowedCalender: allowedCalender,
     );
 
     FirestoreManager.readUserNotification(notificationId, user.email);

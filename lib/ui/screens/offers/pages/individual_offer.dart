@@ -1,5 +1,6 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
@@ -31,6 +32,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   CustomLocation customLocation;
   bool autoValidateText = false;
   bool autoValidateCashText = false;
+  String title = '';
 
   FocusNode _title = FocusNode();
   FocusNode _description = FocusNode();
@@ -125,9 +127,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
               return CustomTextField(
                 currentNode: _availability,
                 initialValue: snapshot.data != null
-                    ? snapshot.data.contains('__*__')
-                        ? snapshot.data
-                        : null
+                    ? snapshot.data.contains('__*__') ? snapshot.data : null
                     : null,
                 heading: S.of(context).availablity,
                 onChanged: _bloc.onAvailabilityChanged,
@@ -289,7 +289,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                         : null
                                     : null,
                                 heading: "${S.of(context).title}*",
-                                onChanged: _bloc.onTitleChanged,
+                                onChanged: (String value) {
+                                  _bloc.onTitleChanged(value);
+                                  title = value;
+                                },
                                 hint: "${S.of(context).offer_title_hint}..",
                                 maxLength: null,
                                 error:
@@ -374,10 +377,45 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                       return;
                                     }
                                     if (widget.offerModel == null) {
-                                      _bloc.createOrUpdateOffer(
-                                        user: SevaCore.of(context).loggedInUser,
-                                        timebankId: widget.timebankId,
-                                      );
+                                      if (SevaCore.of(context)
+                                              .loggedInUser
+                                              .calendarId !=
+                                          null) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (_context) {
+                                            return CalenderEventConfirmationDialog(
+                                              title: title,
+                                              isrequest: false,
+                                              cancelled: () async {
+                                                _bloc.createOrUpdateOffer(
+                                                  user: SevaCore.of(context)
+                                                      .loggedInUser,
+                                                  timebankId: widget.timebankId,
+                                                );
+                                                Navigator.of(_context).pop();
+                                              },
+                                              addToCalender: () async {
+                                                _bloc.allowedCalenderEvent =
+                                                    true;
+
+                                                _bloc.createOrUpdateOffer(
+                                                  user: SevaCore.of(context)
+                                                      .loggedInUser,
+                                                  timebankId: widget.timebankId,
+                                                );
+                                                Navigator.of(_context).pop();
+                                              },
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        _bloc.createOrUpdateOffer(
+                                          user:
+                                              SevaCore.of(context).loggedInUser,
+                                          timebankId: widget.timebankId,
+                                        );
+                                      }
                                     } else {
                                       _bloc.updateIndividualOffer(
                                         widget.offerModel,

@@ -60,8 +60,9 @@ Future<bool> confirmationDialog(
             ),
             onPressed: onConfirmed != null
                 ? () {
-                    onConfirmed();
                     Navigator.of(viewContext).pop();
+
+                    onConfirmed();
                   }
                 : null,
           ),

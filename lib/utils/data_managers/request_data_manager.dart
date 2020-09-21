@@ -1212,15 +1212,26 @@ Future<void> acceptInviteRequest({
   @required String acceptedUserEmail,
   @required String acceptedUserId,
   @required String notificationId,
+  @required bool allowedCalender,
 }) async {
-  await Firestore.instance
-      .collection('requests')
-      .document(requestId)
-      .updateData({
-    'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
-    //'acceptors': FieldValue.arrayUnion([acceptedUserEmail]),
-    'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
-  });
+  if (allowedCalender) {
+    await Firestore.instance
+        .collection('requests')
+        .document(requestId)
+        .updateData({
+      'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+      'allowedCalenderUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+      'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
+    });
+  } else {
+    await Firestore.instance
+        .collection('requests')
+        .document(requestId)
+        .updateData({
+      'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+      'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
+    });
+  }
 }
 
 Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
