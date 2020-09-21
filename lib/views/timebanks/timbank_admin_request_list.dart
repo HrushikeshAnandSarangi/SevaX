@@ -727,7 +727,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 //                          timebankModel.members.map((s) => s).toList();
 //                      members.remove(user.sevaUserID);
                       if (widget.isCommunity != null && widget.isCommunity) {
-                        print("user ${user.sevaUserID}");
                         removeMemberTimebankFn(
                             context: parentContext,
                             userModel: user,
@@ -799,11 +798,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         ),
       );
     } else {
-      print("am i viewing as admin - " + widget.isUserAdmin.toString());
-      print((widget.isUserAdmin &&
-          (SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID ||
-              user.sevaUserID == timebankModel.creatorId)));
-
       if (!widget.isUserAdmin) {
         return widget.isUserAdmin &&
                 (SevaCore.of(context).loggedInUser.sevaUserID ==
@@ -1238,7 +1232,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         communityId: communityId,
         senderUserId: user.sevaUserID,
         targetUserId: timebank.creatorId);
-    print("bhhfhff ${notification} ");
     await Firestore.instance
         .collection('timebanknew')
         .document(timebank.id)
@@ -1340,8 +1333,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
             onTap: widget.isFromGroup
                 ? _navigateToAddMembers
                 : () async {
-                    print(
-                        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTimebankCode");
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -1415,7 +1406,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
               var email = userModelList[i].email.trim();
               if (emailIndexMap[userModelList[i].email] == null &&
                   !_adminEmails.contains(email)) {
-//                print("Member email found:$email");
                 // Filtering duplicates
                 _membersWidgets.add(addItems[i]);
                 indexToModelMap[lastIndex] = userModelList[i];
@@ -1592,18 +1582,14 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       UserModel userModel,
       TimebankModel timebankModel,
       bool isFromExit}) async {
-    print("remove member");
     Map<String, dynamic> responseData = await removeMemberFromGroup(
         sevauserid: userModel.sevaUserID, groupId: timebankModel.id);
     if (responseData['deletable'] == true) {
-      print("removed member");
       if (isFromExit) {
         await sendNotificationToAdmin(
             user: userModel,
             timebank: timebankModel,
             communityId: userModel.currentCommunity);
-        print("notification  sent");
-
         Navigator.of(parentContext).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (context) => HomePageRouter(),

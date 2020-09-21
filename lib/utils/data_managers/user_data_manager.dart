@@ -165,7 +165,6 @@ Stream<List<DonationModel>> getDonationList(
         List<DonationModel> donationsList = [];
         snapshot.documents.forEach((document) {
           DonationModel model = DonationModel.fromMap(document.data);
-          print(model);
           if (model.donationStatus == DonationStatus.ACKNOWLEDGED)
             donationsList.add(model);
         });
@@ -238,10 +237,8 @@ Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(
 
   var res = await http
       .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
-  print('res--->$res');
   if (res.statusCode == 200) {
     var data = json.decode(res.body);
-    print(res.body);
     var rest = data["result"] as List;
     var useModelStatus = UserModelListMoreStatus();
     useModelStatus.userModelList = rest
@@ -266,10 +263,8 @@ Future<UserModelListMoreStatus>
       '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
   var res = await http
       .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
-  print('res--->$res');
   if (res.statusCode == 200) {
     var data = json.decode(res.body);
-    print(res.body);
     var rest = data["result"] as List;
     var useModelStatus = UserModelListMoreStatus();
     useModelStatus.userModelList = rest
@@ -289,10 +284,8 @@ Future<UserModelListMoreStatus> getUsersForTimebankId(
   } else {
     saveXLink = 'Sevax';
   }
-  print("peekaboo:${FlavorConfig.values.timebankName}");
   var urlLink = FlavorConfig.values.cloudFunctionBaseURL +
       '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email';
-  print("\n\n\n\n\n\n\n\nMembersListURL:$urlLink");
   var res = await http
       .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
   if (res.statusCode == 200) {
@@ -399,7 +392,6 @@ Future<Map<String, dynamic>> checkChangeOwnershipStatus(
     "${FlavorConfig.values.cloudFunctionBaseURL}/checkTasksAndPaymentsForTransferOwnership",
     body: {"timebankId": timebankId, "sevauserid": sevauserid},
   );
-  print("result ${result}");
   var data = json.decode(result.body);
   return data;
 }
@@ -409,7 +401,6 @@ Future<ProfanityImageModel> checkProfanityForImage({String imageUrl}) async {
     "${FlavorConfig.values.cloudFunctionBaseURL}/visionApi",
     body: {"imageURL": imageUrl},
   );
-  print("result code ${result.statusCode}");
 
   ProfanityImageModel profanityImageModel;
   try {
@@ -452,7 +443,6 @@ Future<String> updateChangeOwnerDetails(
         }
       }),
       headers: {"Content-Type": "application/json"});
-  print("result ${result.body}");
   //var data = json.decode(result.body);
   return result.statusCode.toString();
 }

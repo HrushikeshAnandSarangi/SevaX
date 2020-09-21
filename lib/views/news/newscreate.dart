@@ -199,17 +199,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                           padding: EdgeInsets.only(bottom: 0.0),
                           child: Container(
                               height: 200,
-                              child: KeyboardActions(
-                                  tapOutsideToDismiss: true,
-                                  config: KeyboardActionsConfig(
-                                    keyboardSeparatorColor: Color(0x0FF766FE0),
-                                    keyboardActionsPlatform:
-                                        KeyboardActionsPlatform.IOS,
-                                    actions: [
-                                      KeyboardActionsItem(focusNode: postNode)
-                                    ],
-                                  ),
-                                  child: TextFormField(
+                              child: TextFormField(
                                     focusNode: postNode,
                                     textCapitalization:
                                         TextCapitalization.sentences,
@@ -291,8 +281,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                       newsObject.subheading = value;
                                       // print("object");
                                     },
-                                  ))),
-                        ),
+                                  ),
+                        )),
                       ],
                     ),
                   ),
