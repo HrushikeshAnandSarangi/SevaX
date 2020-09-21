@@ -11,10 +11,10 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/utils/feeds_web_scrapper.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/scraper.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
@@ -462,9 +462,26 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     // print("${newsObject.hashTags}");
   }
 
-  Future scrapeURLDetails(String subHeadings) async {
-    newsObject = await fetchPosts(
-        url: newsObject.urlsFromPost[0], newsObject: newsObject);
+  Future<void> scrapeURLDetails(String subHeadings) async {
+    FeedsWebScraper webScraper = FeedsWebScraper(url: subHeadings);
+
+    try {
+      if (await webScraper.loadData()) {
+        var result = webScraper.getScrapedData();
+        if (result != null) {
+          newsObject.title = result.title;
+          newsObject.imageScraped = result.image ?? 'NoData';
+          newsObject.description = result.body;
+        }
+      }
+      return;
+    } on Exception catch (e) {
+      print(e);
+      return;
+    }
+
+    // newsObject = await fetchPosts(
+    //     url: newsObject.urlsFromPost[0], newsObject: newsObject);
   }
 }
 
@@ -535,7 +552,6 @@ void _silblingTimebankSelectionBottomsheet(BuildContext mcontext,
   showModalBottomSheet(
     context: mcontext,
     builder: (BuildContext bc) {
-      var focusNodes = List.generate(1, (_) => FocusNode());
       return Container(
         child: Builder(builder: (context) {
           return Scaffold(

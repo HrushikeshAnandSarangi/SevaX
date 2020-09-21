@@ -107,77 +107,83 @@ class NewsCardViewState extends State<NewsCardView> {
       ),
       body: SafeArea(
         child: Column(children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              newsAuthorAndDate,
-              widget.newsModel.title == null ||
-                      widget.newsModel.title == "NoData"
-                  ? Offstage()
-                  : newsTitle,
-              newsImage,
-              photoCredits,
-              subHeadings,
-              document,
-              tags,
-              listOfHashTags,
-              listOfLinks,
-              LikeComment(
-                newsModel: widget.newsModel,
-                userId: SevaCore.of(context).loggedInUser.email,
-                isFromHome: false,
-              ),
-            ],
-          ),
           Expanded(
-            child: Container(
-//                  height: MediaQuery.of(context).size.width / 1.0,
-              padding: EdgeInsets.fromLTRB(8, 19, 8, 0),
-              child: StreamBuilder<NewsModel>(
-                  stream: NewsService()
-                      .getCommentsByFeedId(id: widget.newsModel.id),
-                  builder: (context, snapshot) {
-                    if (snapshot.data == null ||
-                        (snapshot.hasData &&
-                            snapshot.data.comments.length == 0)) {
-                      return Center(
-                        child: Text("No data"),
-                      );
-                    }
-                    if (snapshot.hasData) {
-                      List<Comments> commentsList = snapshot.data.comments;
-                      print("Printing CommentsList ${commentsList.length}");
-                      return ListView.builder(
-                        itemCount: commentsList.length,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onLongPress: () async {
-                              if (commentsList[index].createdEmail ==
-                                  SevaCore.of(context).loggedInUser.email) {
-                                final result = await showDialog(
-                                  context: context,
-                                  builder: (_) => DeleteCommentOverlay(
-                                    feed: widget.newsModel,
-                                    index: index,
-                                    isReply: false,
-                                  ),
-                                );
-                                return result;
-                              }
-                            },
-                            child: Container(
-                              child:
-                                  CommentContainer(commentsList[index], index),
-                            ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  newsAuthorAndDate,
+                  widget.newsModel.title == null ||
+                          widget.newsModel.title == "NoData"
+                      ? Offstage()
+                      : newsTitle,
+                  newsImage,
+                  photoCredits,
+                  subHeadings,
+                  document,
+                  tags,
+                  listOfHashTags,
+                  listOfLinks,
+                  LikeComment(
+                    newsModel: widget.newsModel,
+                    userId: SevaCore.of(context).loggedInUser.email,
+                    isFromHome: false,
+                  ),
+
+                  //============================//
+                  Container(
+                    padding: EdgeInsets.fromLTRB(8, 19, 8, 0),
+                    child: StreamBuilder<NewsModel>(
+                      stream: NewsService()
+                          .getCommentsByFeedId(id: widget.newsModel.id),
+                      builder: (context, snapshot) {
+                        if (snapshot.data == null ||
+                            (snapshot.hasData &&
+                                snapshot.data.comments.length == 0)) {
+                          return Center(
+                            child: Text("No data"),
                           );
-                        },
-                        shrinkWrap: true,
-                      );
-                    }
-                    return Container();
-                  }),
+                        }
+                        if (snapshot.hasData) {
+                          List<Comments> commentsList = snapshot.data.comments;
+                          print("Printing CommentsList ${commentsList.length}");
+                          return ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: commentsList.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onLongPress: () async {
+                                  if (commentsList[index].createdEmail ==
+                                      SevaCore.of(context).loggedInUser.email) {
+                                    final result = await showDialog(
+                                      context: context,
+                                      builder: (_) => DeleteCommentOverlay(
+                                        feed: widget.newsModel,
+                                        index: index,
+                                        isReply: false,
+                                      ),
+                                    );
+                                    return result;
+                                  }
+                                },
+                                child: Container(
+                                  child: CommentContainer(
+                                      commentsList[index], index),
+                                ),
+                              );
+                            },
+                            shrinkWrap: true,
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
+
           Divider(
             color: Colors.black38,
             height: 1,
