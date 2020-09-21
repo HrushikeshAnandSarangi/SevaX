@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -8,8 +9,8 @@ import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/extensions.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 import '../../flavor_config.dart';
 import '../core.dart';
@@ -183,20 +184,49 @@ Future<bool> offerActions(BuildContext context, OfferModel model) async {
     print("----------------" + hasSufficientCredits.toString());
 
     if (hasSufficientCredits) {
+      var myUserID = SevaCore.of(context).loggedInUser.sevaUserID;
+      var email = SevaCore.of(context).loggedInUser.email;
+
       await confirmationDialog(
         context: context,
         title:
             "You are signing up for this ${model.groupOfferDataModel.classTitle.trim()}. Doing so will debit a total of ${model.groupOfferDataModel.numberOfClassHours} credits from you after you say OK.",
         onConfirmed: () {
-          var myUserID = SevaCore.of(context).loggedInUser.sevaUserID;
-          Firestore.instance
-              .collection("offers")
-              .document(model.id)
-              .updateData({
-            'groupOfferDataModel.signedUpMembers': FieldValue.arrayUnion(
-              [myUserID],
-            )
-          });
+          if (SevaCore.of(context).loggedInUser.calendarId == null) {
+            showDialog(
+              context: context,
+              builder: (_context) {
+                return CalenderEventConfirmationDialog(
+                  title: model.groupOfferDataModel.classTitle,
+                  isrequest: false,
+                  cancelled: () async {
+                    updateOffer(
+                        offerId: model.id,
+                        userId: myUserID,
+                        userEmail: email,
+                        allowCalenderEvent: false);
+
+                    Navigator.of(_context).pop();
+                  },
+                  addToCalender: () async {
+                    updateOffer(
+                        offerId: model.id,
+                        userId: myUserID,
+                        userEmail: email,
+                        allowCalenderEvent: true);
+
+                    Navigator.of(_context).pop();
+                  },
+                );
+              },
+            );
+          } else {
+            updateOffer(
+                offerId: model.id,
+                userId: myUserID,
+                userEmail: email,
+                allowCalenderEvent: false);
+          }
         },
       );
     } else {
@@ -219,4 +249,27 @@ Future<bool> offerActions(BuildContext context, OfferModel model) async {
     if (!_isParticipant) addBookMark(model.id, _userId);
   }
   return true;
+}
+
+void updateOffer(
+    {String userId,
+    bool allowCalenderEvent,
+    String userEmail,
+    String offerId}) {
+  if (allowCalenderEvent) {
+    Firestore.instance.collection("offers").document(offerId).updateData({
+      'groupOfferDataModel.signedUpMembers': FieldValue.arrayUnion(
+        [userId],
+      ),
+      'allowedCalenderUsers': FieldValue.arrayUnion(
+        [userEmail],
+      )
+    });
+  } else {
+    Firestore.instance.collection("offers").document(offerId).updateData({
+      'groupOfferDataModel.signedUpMembers': FieldValue.arrayUnion(
+        [userId],
+      )
+    });
+  }
 }

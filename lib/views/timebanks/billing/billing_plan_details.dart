@@ -104,12 +104,7 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
                           offstage: _billingPlanDetailsModels[index].hidden,
                           child: BillingPlanCard(
                             billMeVisibility:
-                                _billingPlanDetailsModels[index].id ==
-                                            'grande_plan' ||
-                                        _billingPlanDetailsModels[index].id ==
-                                            'venti_plan'
-                                    ? true
-                                    : false,
+                                _billingPlanDetailsModels[index].billMeEnabled,
                             plan: _billingPlanDetailsModels[index],
                             user: widget.user,
                             isSelected: _billingPlanDetailsModels[index].id ==

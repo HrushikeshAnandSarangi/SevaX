@@ -8,6 +8,8 @@ String billingPlanDetailsModelToJson(List<BillingPlanDetailsModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class BillingPlanDetailsModel {
+  bool billMeEnabled;
+  bool isCardRequired;
   String id;
   bool hidden;
   String planName;
@@ -20,22 +22,25 @@ class BillingPlanDetailsModel {
   List<String> freeTransaction;
   List<String> billableTransaction;
 
-  BillingPlanDetailsModel({
-    this.id,
-    this.hidden,
-    this.planName,
-    this.planDescription,
-    this.price,
-    this.currency,
-    this.duration,
-    this.note1,
-    this.note2,
-    this.freeTransaction,
-    this.billableTransaction,
-  });
+  BillingPlanDetailsModel(
+      {this.id,
+      this.hidden,
+      this.planName,
+      this.planDescription,
+      this.price,
+      this.currency,
+      this.duration,
+      this.note1,
+      this.note2,
+      this.freeTransaction,
+      this.billableTransaction,
+      this.billMeEnabled,
+      this.isCardRequired});
 
   factory BillingPlanDetailsModel.fromJson(Map<String, dynamic> json) =>
       BillingPlanDetailsModel(
+        isCardRequired: json['bill_me_enabled'],
+        billMeEnabled: json['is_card_required'],
         id: json["id"],
         hidden: json["hidden"] ?? false,
         planName: json["plan_name"],
