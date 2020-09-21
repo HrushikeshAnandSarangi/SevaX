@@ -246,6 +246,61 @@ class ProfileViewerState extends State<ProfileViewer> {
                       skills: snapshot.data['skills'],
                       interests: snapshot.data['interests'],
                     ),
+                    Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        child: TRscore(
+                            user.trustworthinessscore,
+                            user.reliabilityscore
+                        )
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                  child:GoodsAndAmountDonations(
+                        userId: user.sevaUserID,
+                        isGoods: false,
+                        isTimeBank: false,
+                        onTap: () {})),
+                    SizedBox(
+                      height: 15,
+                    ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                  child:GoodsAndAmountDonations(
+                        userId: user.sevaUserID,
+                        isGoods: true,
+                        isTimeBank: false,
+                        onTap: () {})),
+                    Padding(
+                      padding:
+                      EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                      child: StreamBuilder<List<RequestModel>>(
+                        stream: FirestoreManager.getCompletedRequestStream(
+                            userEmail: widget.userEmail,
+                            userId: user.sevaUserID),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text(snapshot.error.toString());
+                          }
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return LoadingIndicator();
+                          }
+
+                          List<RequestModel> requestList = snapshot.data;
+                          double toltalHoursWorked = 0;
+
+                          toltalHoursWorked = getTotalWorkedHours(requestList);
+
+                          return JobsCounter(
+                            jobs: requestList.length,
+                            hours: toltalHoursWorked.toInt(),
+                          );
+                        },
+                      ),
+                    ),
                     Container(
                       padding: EdgeInsets.symmetric(
                         vertical: 10,
@@ -299,48 +354,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                       ),
                     ),
                     SizedBox(
-                      height: 20,
-                    ),
-                    GoodsAndAmountDonations(
-                        userId: user.sevaUserID,
-                        isGoods: false,
-                        isTimeBank: false,
-                        onTap: () {}),
-                    SizedBox(
                       height: 15,
-                    ),
-                    GoodsAndAmountDonations(
-                        userId: user.sevaUserID,
-                        isGoods: true,
-                        isTimeBank: false,
-                        onTap: () {}),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-                      child: StreamBuilder<List<RequestModel>>(
-                        stream: FirestoreManager.getCompletedRequestStream(
-                            userEmail: widget.userEmail,
-                            userId: user.sevaUserID),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return Text(snapshot.error.toString());
-                          }
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return LoadingIndicator();
-                          }
-
-                          List<RequestModel> requestList = snapshot.data;
-                          double toltalHoursWorked = 0;
-
-                          toltalHoursWorked = getTotalWorkedHours(requestList);
-
-                          return JobsCounter(
-                            jobs: requestList.length,
-                            hours: toltalHoursWorked.toInt(),
-                          );
-                        },
-                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -363,6 +377,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                         ),
                       ),
                     ),
+                    SizedBox(height: 20)
                   ],
                 ),
               );

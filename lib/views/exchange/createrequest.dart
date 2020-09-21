@@ -1429,7 +1429,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         );
       } else {
         List<String> acceptorList =
-            widget.isOfferRequest && widget.offer.creatorAllowedCalender
+            widget.isOfferRequest != null && widget.offer.creatorAllowedCalender
                 ? [widget.offer.email]
                 : [];
         requestModel.allowedCalenderUsers = acceptorList.toList();
