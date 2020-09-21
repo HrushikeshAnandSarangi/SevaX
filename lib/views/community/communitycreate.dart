@@ -25,6 +25,7 @@ import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -674,23 +675,26 @@ class CreateEditCommunityViewFormState
                             color: Colors.grey,
                           ),
                         ),
-                        Center(
-                          child: ParentTimebankPickerWidget(
-                            selectedTimebank: this.selectedTimebank,
-                            onChanged: (CommunityModel selectedTimebank) {
-                              print("received data model ");
-                              setState(() {
-                                this.selectedTimebank = selectedTimebank.name;
-                              });
-                              snapshot.data.timebank.updateValueByKey(
-                                  'parentTimebankId',
-                                  selectedTimebank.primary_timebank);
-                              timebankModel.parentTimebankId =
-                                  selectedTimebank.primary_timebank;
-                              snapshot.data.community.updateValueByKey(
-                                  'parentTimebankId',
-                                  selectedTimebank.primary_timebank);
-                            },
+                        TransactionsMatrixCheck(
+                            transaction_matrix_type: "parent_timebanks",
+                          child: Center(
+                            child: ParentTimebankPickerWidget(
+                              selectedTimebank: this.selectedTimebank,
+                              onChanged: (CommunityModel selectedTimebank) {
+                                print("received data model ");
+                                setState(() {
+                                  this.selectedTimebank = selectedTimebank.name;
+                                });
+                                snapshot.data.timebank.updateValueByKey(
+                                    'parentTimebankId',
+                                    selectedTimebank.primary_timebank);
+                                timebankModel.parentTimebankId =
+                                    selectedTimebank.primary_timebank;
+                                snapshot.data.community.updateValueByKey(
+                                    'parentTimebankId',
+                                    selectedTimebank.primary_timebank);
+                              },
+                            ),
                           ),
                         ),
                         widget.isCreateTimebank

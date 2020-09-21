@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -302,30 +303,33 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         Theme.of(context).platform == TargetPlatform.iOS){
         return Container();
     }
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => MonthsListing.of(
-              communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-              planId: planId,
-              communityModel:communityModel
+    return TransactionsMatrixCheck(
+        transaction_matrix_type: "invoice_generation",
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => MonthsListing.of(
+                communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+                planId: planId,
+                communityModel:communityModel
+              ),
             ),
-          ),
-        );
-      },
-      child: Column(
-        children: [
-          Text(
-            "${S.of(context).invoice_and_reports}",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: Colors.red,
+          );
+        },
+        child: Column(
+          children: [
+            Text(
+              "${S.of(context).invoice_and_reports}",
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+              ),
             ),
-          ),
-            SizedBox(height: 20),
-        ],
+              SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }
