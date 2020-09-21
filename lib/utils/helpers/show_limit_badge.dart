@@ -54,6 +54,7 @@ class TransactionLimitCheck extends StatelessWidget {
         super(key: key);
   @override
   Widget build(BuildContext context) {
+// TODO make adjustments here itself to include plans limit check also
     final _userBloc = BlocProvider.of<UserDataBloc>(context);
 
     return StreamBuilder(

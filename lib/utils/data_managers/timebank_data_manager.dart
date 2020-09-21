@@ -567,3 +567,16 @@ Stream<List<prefix0.OfferModel>> getBookmarkedOffersByMember(
     ),
   );
 }
+
+Stream<CommunityModel> getCurrentCommunityStream(String communityId) async* {
+    Stream<DocumentSnapshot> ds = await Firestore.instance.collection("communities").document(communityId).snapshots();
+
+    yield* ds.transform(
+        StreamTransformer<DocumentSnapshot, CommunityModel>.fromHandlers(
+            handleData: (snapshot, modelSink) {
+                CommunityModel communityModel = CommunityModel(snapshot.data);
+                modelSink.add(communityModel);
+            },
+        ),
+    );
+}
