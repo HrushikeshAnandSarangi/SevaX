@@ -8,6 +8,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/offer_list_items.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -170,83 +171,92 @@ class OffersState extends State<OffersModule> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      GestureDetector(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 40,
-                            child:
-                                Image.asset("lib/assets/images/googlecal.png"),
-                          ),
-                          onTap: () async {
-                            String redirectUrl =
-                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                            String authorizationUrl =
-                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                            if (await canLaunch(authorizationUrl.toString())) {
-                              await launch(authorizationUrl.toString());
-                            }
-                            Navigator.of(bc).pop();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => prefix0.CreateOffer(
-                                  timebankId: timebankId,
-                                  // communityId: widget.communityId,
+                        TransactionsMatrixCheck(
+                           transaction_matrix_type: "calendar_sync",
+                        child: GestureDetector(
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 40,
+                              child:
+                                  Image.asset("lib/assets/images/googlecal.png"),
+                            ),
+                            onTap: () async {
+                              String redirectUrl =
+                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                              String authorizationUrl =
+                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                              if (await canLaunch(authorizationUrl.toString())) {
+                                await launch(authorizationUrl.toString());
+                              }
+                              Navigator.of(bc).pop();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => prefix0.CreateOffer(
+                                    timebankId: timebankId,
+                                    // communityId: widget.communityId,
+                                  ),
                                 ),
-                              ),
-                            );
-                          }),
-                      GestureDetector(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 40,
-                            child:
-                                Image.asset("lib/assets/images/outlookcal.png"),
-                          ),
-                          onTap: () async {
-                            String redirectUrl =
-                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                            String authorizationUrl =
-                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                            if (await canLaunch(authorizationUrl.toString())) {
-                              await launch(authorizationUrl.toString());
-                            }
-                            Navigator.of(bc).pop();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => prefix0.CreateOffer(
-                                  timebankId: timebankId,
-                                  // communityId: widget.communityId,
+                              );
+                            }),
+                      ),
+                      TransactionsMatrixCheck(
+                          transaction_matrix_type: "calendar_sync",
+                        child: GestureDetector(
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 40,
+                              child:
+                                  Image.asset("lib/assets/images/outlookcal.png"),
+                            ),
+                            onTap: () async {
+                              String redirectUrl =
+                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                              String authorizationUrl =
+                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                              if (await canLaunch(authorizationUrl.toString())) {
+                                await launch(authorizationUrl.toString());
+                              }
+                              Navigator.of(bc).pop();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => prefix0.CreateOffer(
+                                    timebankId: timebankId,
+                                    // communityId: widget.communityId,
+                                  ),
                                 ),
-                              ),
-                            );
-                          }),
-                      GestureDetector(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 40,
-                            child: Image.asset("lib/assets/images/ical.png"),
-                          ),
-                          onTap: () async {
-                            String redirectUrl =
-                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                            String authorizationUrl =
-                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                            if (await canLaunch(authorizationUrl.toString())) {
-                              await launch(authorizationUrl.toString());
-                            }
-                            Navigator.of(bc).pop();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => prefix0.CreateOffer(
-                                  timebankId: timebankId,
-                                  // communityId: widget.communityId,
+                              );
+                            }),
+                      ),
+                      TransactionsMatrixCheck(
+                          transaction_matrix_type: "calendar_sync",
+                        child: GestureDetector(
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 40,
+                              child: Image.asset("lib/assets/images/ical.png"),
+                            ),
+                            onTap: () async {
+                              String redirectUrl =
+                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                              String authorizationUrl =
+                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                              if (await canLaunch(authorizationUrl.toString())) {
+                                await launch(authorizationUrl.toString());
+                              }
+                              Navigator.of(bc).pop();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => prefix0.CreateOffer(
+                                    timebankId: timebankId,
+                                    // communityId: widget.communityId,
+                                  ),
                                 ),
-                              ),
-                            );
-                          })
+                              );
+                            }),
+                      )
                     ],
                   ),
                 ),

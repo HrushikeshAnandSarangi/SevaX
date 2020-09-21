@@ -40,16 +40,19 @@ class TransactionsMatrixCheck extends StatelessWidget {
             Map<String, dynamic> matrix_current_plan = plan_transactions_matrix[communityModel.payment['planId']];
             allowTransaction = matrix_current_plan[transaction_matrix_type]['allow'];
             log("${matrix_current_plan['planName']}   ${allowTransaction}");
-            if(!allowTransaction){
-                return _showDialog(context, matrix_current_plan['planName']);
-//                Navigator.of(context).pop();
-            }else{
-                return child;
-            }
+            return GestureDetector(
+                onTap: () {
+                    _showDialog(context, matrix_current_plan['planName']);
+                },
+                child: AbsorbPointer(
+                    absorbing: !allowTransaction,
+                    child: child,
+                ),
+            );
           });
         }
 
-  Widget _showDialog(context, String planName) {
+  void _showDialog(context, String planName) {
       showDialog(
           context: context,
           builder: (BuildContext _context) {
@@ -69,7 +72,7 @@ class TransactionsMatrixCheck extends StatelessWidget {
                                   size: 30,
                               ),
                           ),
-                          Text('This feature is unavailable for the $planName', textAlign: TextAlign.center,),
+                          Text('This feature is not available for the $planName. Please upgrade your plan to access this feature.', textAlign: TextAlign.center,),
                           SizedBox(width: 10),
                           FlatButton(
                               color: Theme.of(context).accentColor,
