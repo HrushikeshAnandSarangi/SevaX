@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
@@ -81,7 +79,6 @@ class FeedsWebScraper {
     String body = '';
     List<Element> para = document.getElementsByTagName('p');
     para.forEach((element) {
-      log(element.text.trim());
       if (element.text != null &&
           element.text.isNotEmpty &&
           element.text.length > 150) {
