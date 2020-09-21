@@ -36,10 +36,8 @@ class TransactionsMatrixCheck extends StatelessWidget {
         builder: (BuildContext context, snapshot) {
             CommunityModel communityModel = snapshot.data;
             Map<String, dynamic> plan_transactions_matrix = json.decode(AppConfig.remoteConfig.getString('transactions_plans_matrix'));
-            log(" payment checkkk --- ${communityModel.name} ${plan_transactions_matrix}");
             Map<String, dynamic> matrix_current_plan = plan_transactions_matrix[communityModel.payment['planId']];
             allowTransaction = matrix_current_plan[transaction_matrix_type]['allow'];
-            log("${matrix_current_plan['planName']}   ${allowTransaction}");
             return GestureDetector(
                 onTap: () {
                     _showDialog(context, matrix_current_plan['planName']);
