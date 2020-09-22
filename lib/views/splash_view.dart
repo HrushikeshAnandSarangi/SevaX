@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flurry/flurry.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -60,15 +63,58 @@ class _SplashViewState extends State<SplashView> {
   String _loadingMessage = '';
   bool _initialized = false;
   bool mainForced = false;
+  bool hasConnection = false;
 
+  String _connectionStatus = 'Unknown';
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  ConnectivityResult connectivityResult;
   @override
   void initState() {
     super.initState();
+    initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen((result) {
+      setState(() async {
+        connectivityResult = result;
+        try {
+          final result = await InternetAddress.lookup('google.com');
+          if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+            hasConnection = true;
+          } else {
+            hasConnection = false;
+          }
+        } on SocketException catch (_) {
+          hasConnection = false;
+        }
+      });
+    });
     if (FlavorConfig.appFlavor == Flavor.APP) {
       initFlurry();
     }
     initLocaleForTimeAgoLibrary();
     _createNotificationChannel();
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        String wifiName, wifiBSSID, wifiIP;
+        break;
+      case ConnectivityResult.mobile:
+      case ConnectivityResult.none:
+        setState(() => _connectionStatus = result.toString());
+        break;
+      default:
+        setState(() => _connectionStatus = 'Failed to get connectivity.');
+        break;
+    }
   }
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -152,7 +198,139 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-    return sevaAppSplash;
+    switch (connectivityResult) {
+      case ConnectivityResult.none:
+        return noInternet;
+        break;
+      case ConnectivityResult.wifi:
+        return hasConnection ? sevaAppSplash : noInternet;
+        break;
+      case ConnectivityResult.mobile:
+        return hasConnection ? sevaAppSplash : noInternet;
+        break;
+      default:
+        return defaultWidget;
+        break;
+    }
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initConnectivity() async {
+    ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          hasConnection = true;
+        } else {
+          hasConnection = false;
+        }
+      } on SocketException catch (_) {
+        hasConnection = false;
+      }
+      setState(() {
+        connectivityResult = result;
+      });
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Widget get noInternet {
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Theme.of(context).secondaryHeaderColor,
+              Theme.of(context).secondaryHeaderColor,
+              Theme.of(context).secondaryHeaderColor
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
+                'lib/assets/images/seva-x-logo.png',
+                height: 140,
+                width: 200,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 32.0),
+                child: Text(
+                  S.of(context).check_internet,
+                  style: TextStyle(color: Colors.black, fontSize: 18),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget get defaultWidget {
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Theme.of(context).secondaryHeaderColor,
+              Theme.of(context).secondaryHeaderColor,
+              Theme.of(context).secondaryHeaderColor
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
+                'lib/assets/images/seva-x-logo.png',
+                height: 140,
+                width: 200,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 32.0),
+                child: Text(
+                  S.of(context).hang_on,
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 8),
+                child: SizedBox(
+                  height: 2,
+                  width: 150,
+                  child: LinearProgressIndicator(
+                    backgroundColor: Theme.of(context).splashColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget get sevaAppSplash {
