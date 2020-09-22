@@ -75,6 +75,7 @@ class _GoodsAndAmountDonationsState extends State<GoodsAndAmountDonations> {
           child: Container(
             height: 75,
             child: Card(
+              elevation: 0.5,
               child: Row(
                 children: [
                   SizedBox(

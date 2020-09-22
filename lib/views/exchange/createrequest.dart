@@ -14,6 +14,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/components/ProfanityDetector.dart';
+import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -1397,25 +1398,68 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           requestModel.photoUrl = timebankModel.photoUrl;
           break;
       }
+      if (SevaCore.of(context).loggedInUser.calendarId != null) {
+        showDialog(
+          context: context,
+          builder: (_context) {
+            return CalenderEventConfirmationDialog(
+              title: requestModel.title,
+              isrequest: true,
+              cancelled: () async {
+                List<String> acceptorList =
+                    widget.isOfferRequest && widget.offer.creatorAllowedCalender
+                        ? [widget.offer.email]
+                        : [];
+                requestModel.allowedCalenderUsers = acceptorList.toList();
 
-      linearProgressForCreatingRequest();
-      int resVar = await _writeToDB();
-      await _updateProjectModel();
-      Navigator.pop(dialogContext);
-
-      if (widget.isOfferRequest == true && widget.userModel != null) {
-        Navigator.pop(context, {'response': 'ACCEPTED'});
+                await continueCreateRequest(
+                    confirmationDialogContext: _context);
+              },
+              addToCalender: () async {
+                List<String> acceptorList =
+                    widget.isOfferRequest && widget.offer.creatorAllowedCalender
+                        ? [widget.offer.email, requestModel.email]
+                        : [requestModel.email];
+                requestModel.allowedCalenderUsers = acceptorList.toList();
+                await continueCreateRequest(
+                    confirmationDialogContext: _context);
+              },
+            );
+          },
+        );
       } else {
-        if (resVar == 0) {
-          showInsufficientBalance();
-        }
-        Navigator.pop(context);
+        List<String> acceptorList =
+            widget.isOfferRequest != null && widget.offer.creatorAllowedCalender
+                ? [widget.offer.email]
+                : [];
+        requestModel.allowedCalenderUsers = acceptorList.toList();
+        continueCreateRequest(confirmationDialogContext: null);
       }
     }
   }
 
   bool hasRegisteredLocation() {
     return location != null;
+  }
+
+  void continueCreateRequest({BuildContext confirmationDialogContext}) async {
+    linearProgressForCreatingRequest();
+
+    int resVar = await _writeToDB();
+    await _updateProjectModel();
+    Navigator.pop(dialogContext);
+
+    if (widget.isOfferRequest == true && widget.userModel != null) {
+      Navigator.pop(context, {'response': 'ACCEPTED'});
+    } else {
+      if (resVar == 0) {
+        showInsufficientBalance();
+      }
+      if (confirmationDialogContext != null) {
+        Navigator.pop(confirmationDialogContext);
+      }
+      Navigator.pop(context);
+    }
   }
 
   void linearProgressForCreatingRequest() {

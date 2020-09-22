@@ -96,8 +96,8 @@ class _LocationPickerState extends State<LocationPicker> {
 //    );
 //  }
 
-  Future<void> loadInitialAddress(marker) async {
-    address = await _getAddressFromLatLng(target);
+  Future<void> loadInitialAddress(marker, context) async {
+    address = await _getAddressFromLatLng(target, context);
     setState(() {
       address;
       markers = {marker};
@@ -300,9 +300,9 @@ class _LocationPickerState extends State<LocationPicker> {
         compassEnabled: true,
         markers: markers,
         onCameraMove: (position) {
-          // setState(() {
+           setState(() {
           target = position.target;
-          // });
+           });
         },
         onCameraIdle: () {
           _addMarker();
@@ -335,7 +335,7 @@ class _LocationPickerState extends State<LocationPicker> {
     );
   }
 
-  Future<String> _getAddressFromLatLng(LatLng latlng) async {
+  Future<String> _getAddressFromLatLng(LatLng latlng, context) async {
     if (latlng != null) {
       try {
         List<Placemark> p = await geolocator.placemarkFromCoordinates(
@@ -394,7 +394,7 @@ class _LocationPickerState extends State<LocationPicker> {
         title: S.of(context).marker,
       ),
     );
-    loadInitialAddress(marker);
+    loadInitialAddress(marker, context);
   }
 
   /// Animate to location corresponding to [LatLng]
