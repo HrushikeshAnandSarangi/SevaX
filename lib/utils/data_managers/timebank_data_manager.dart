@@ -459,7 +459,10 @@ Stream<CardModel> getCardModelStream({@required String communityId}) async* {
           CardModel model = CardModel(snapshot.data);
           model.timebankid = snapshot.documentID;
           modelSink.add(model);
-        } else {}
+        } else {
+          //no card exists
+          modelSink.add(null);
+        }
       },
     ),
   );

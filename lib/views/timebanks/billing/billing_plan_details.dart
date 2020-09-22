@@ -103,6 +103,7 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
                         return Offstage(
                           offstage: _billingPlanDetailsModels[index].hidden,
                           child: BillingPlanCard(
+                            activePlanId: widget.planName,
                             billMeVisibility:
                                 _billingPlanDetailsModels[index].billMeEnabled,
                             plan: _billingPlanDetailsModels[index],
