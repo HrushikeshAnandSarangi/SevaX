@@ -241,7 +241,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             TextSpan(
               text: data != NO_SELECTED_PLAN_YET
                   ? ' ${S.of(context).change_plan}'
-                  : 'Synching payment data.',
+                  : 'Syncing payment data.',
               style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 16,
