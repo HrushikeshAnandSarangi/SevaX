@@ -1441,7 +1441,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         approvedUsers.add(widget.userModel.email);
         requestModel.approvedUsers = approvedUsers;
       }
-      requestModel.softDelete = false;
 
       if (requestModel.isRecurring) {
         if (requestModel.recurringDays.length == 0) {
@@ -1461,7 +1460,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             credits: requestModel.numberOfHours.toDouble(),
             userId: myDetails.sevaUserID,
           );
-
           if (!onBalanceCheckResult) {
             showInsufficientBalance();
             return;
@@ -1473,8 +1471,25 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           requestModel.photoUrl = timebankModel.photoUrl;
           break;
       }
+      int timestamp = DateTime.now().millisecondsSinceEpoch;
+      String timestampString = timestamp.toString();
+      requestModel.id = '${requestModel.email}*$timestampString';
+      if (requestModel.isRecurring) {
+          requestModel.parent_request_id = requestModel.id;
+      } else {
+          requestModel.parent_request_id = null;
+      }
+      requestModel.softDelete = false;
+      requestModel.postTimestamp = timestamp;
+      requestModel.accepted = false;
+      requestModel.acceptors = [];
+      requestModel.invitedUsers = [];
+      requestModel.address = selectedAddress;
+      requestModel.location = location;
+      requestModel.root_timebank_id = FlavorConfig.values.timebankId;
+      requestModel.softDelete = false;
 
-//      _settingModalBottomSheet(context);
+
       if (SevaCore.of(context).loggedInUser.calendarId != null) {
         showDialog(
           context: context,
@@ -1503,11 +1518,33 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           },
         );
       } else {
-        List<String> acceptorList = widget.isOfferRequest != null && widget.offer.creatorAllowedCalender
-                ? [widget.offer.email]
-                : [];
-        requestModel.allowedCalenderUsers = acceptorList.toList();
-        continueCreateRequest(confirmationDialogContext: null);
+//        continueCreateRequest(confirmationDialogContext: null);
+
+          showDialog(
+              context: context,
+              builder: (_context) {
+                  return CalenderEventConfirmationDialog(
+                      title: requestModel.title,
+                      isrequest: true,
+                      cancelled: () async {
+                          List<String> acceptorList = widget.isOfferRequest && widget.offer.creatorAllowedCalender
+                              ? [widget.offer.email]
+                              : [];
+                          requestModel.allowedCalenderUsers = acceptorList.toList();
+
+                          await continueCreateRequest(
+                              confirmationDialogContext: _context);
+                      },
+                      addToCalender: () async {
+                          List<String> acceptorList = widget.isOfferRequest && widget.offer.creatorAllowedCalender
+                              ? [widget.offer.email]
+                              : [];
+                          requestModel.allowedCalenderUsers = acceptorList.toList();
+                          await continueCreateRequest(confirmationDialogContext: _context);
+                      },
+                  );
+              },
+          );
       }
     }
   }
@@ -1796,24 +1833,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   Future<int> _writeToDB() async {
-    print(requestModel.cashModel);
-    print(requestModel.cashModel.achdetails);
-    int timestamp = DateTime.now().millisecondsSinceEpoch;
-    String timestampString = timestamp.toString();
-    requestModel.id = '${requestModel.email}*$timestampString';
-    if (requestModel.isRecurring) {
-      requestModel.parent_request_id = requestModel.id;
-    } else {
-      requestModel.parent_request_id = null;
-    }
-    requestModel.postTimestamp = timestamp;
-    requestModel.accepted = false;
-    requestModel.acceptors = [];
-    requestModel.invitedUsers = [];
-    requestModel.address = selectedAddress;
-    requestModel.location = location;
-    requestModel.root_timebank_id = FlavorConfig.values.timebankId;
-    requestModel.softDelete = false;
+
     if (requestModel.id == null) return 0;
     // credit the timebank the required credits before the request creation
     await TransactionBloc().createNewTransaction(

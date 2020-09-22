@@ -5,6 +5,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
 class UserDataBloc extends BlocBase {
@@ -38,10 +39,13 @@ class UserDataBloc extends BlocBase {
             .snapshots(),
         (u, c) => HomeRouterModel(user: u, community: c),
       ).listen((HomeRouterModel model) {
-        if (!_user.isClosed)
-          _user.add(UserModel.fromMap(model.user.data, 'user_data_bloc'));
-        if (!_community.isClosed)
-          _community.add(CommunityModel(model.community.data));
+        if (!_user.isClosed){
+            _user.add(UserModel.fromMap(model.user.data, 'user_data_bloc'));
+        }
+        if (!_community.isClosed){
+            _community.add(CommunityModel(model.community.data));
+            AppConfig.paymentStatusMap = _community.value.payment;
+        }
       });
   }
 

@@ -16,14 +16,14 @@ import '../app_config.dart';
 class TransactionsMatrixCheck extends StatelessWidget {
   final Widget child;
   String transaction_matrix_type;
-  CommunityModel communityModel;
+  Map<String, dynamic> paymentStatusMap;
   bool allowTransaction;
 
   TransactionsMatrixCheck({
     Key key,
     @required this.child,
     this.transaction_matrix_type,
-    this.communityModel,
+    this.paymentStatusMap,
     this.allowTransaction,
   });
 
@@ -31,24 +31,20 @@ class TransactionsMatrixCheck extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<CommunityModel>(
-        stream: getCurrentCommunityStream(SevaCore.of(context).loggedInUser.currentCommunity),
-        builder: (BuildContext context, snapshot) {
-            CommunityModel communityModel = snapshot.data;
-            Map<String, dynamic> plan_transactions_matrix = json.decode(AppConfig.remoteConfig.getString('transactions_plans_matrix'));
-            Map<String, dynamic> matrix_current_plan = plan_transactions_matrix[communityModel.payment['planId']];
-            allowTransaction = matrix_current_plan[transaction_matrix_type]['allow'];
-            return GestureDetector(
-                onTap: () {
-                    _showDialog(context, matrix_current_plan['planName']);
-                },
-                child: AbsorbPointer(
-                    absorbing: !allowTransaction,
-                    child: child,
-                ),
-            );
-          });
-        }
+      paymentStatusMap = AppConfig.paymentStatusMap;
+      Map<String, dynamic> plan_transactions_matrix = json.decode(AppConfig.remoteConfig.getString('transactions_plans_matrix'));
+      Map<String, dynamic> matrix_current_plan = plan_transactions_matrix[paymentStatusMap['planId']];
+      allowTransaction = matrix_current_plan[transaction_matrix_type]['allow'];
+      return GestureDetector(
+          onTap: () {
+              _showDialog(context, matrix_current_plan['planName']);
+          },
+          child: AbsorbPointer(
+              absorbing: !allowTransaction,
+              child: child,
+          ),
+      );
+  }
 
   void _showDialog(context, String planName) {
       showDialog(
