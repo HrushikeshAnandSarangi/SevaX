@@ -468,7 +468,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               cursorColor: Colors.black54,
               focusNode: focusNodes[3],
               textInputAction: TextInputAction.done,
-
+              keyboardType: TextInputType.phone,
               //  validator: _validateEmailId,
               onSaved: (value) {
                 projectModel.phoneNumber = '+' + value;

@@ -157,7 +157,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                         },
                       ),
                       headingText(S.of(context).status),
-                      statusWidget(),
+                      //  statusWidget(),
                     ],
                   ),
             cardsHeadingWidget(_bloc),

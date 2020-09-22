@@ -150,6 +150,7 @@ class _RequestDonationDisputePageState
                       status: widget.model.donationStatus,
                       operatingMode: operatingMode,
                       bloc: _bloc,
+                      comments: widget.model.goodsDetails.comments,
                       // goods: Map<String, String>.from(
                       //   widget.model.goodsDetails.donatedGoods,
                       // ),
@@ -513,6 +514,7 @@ class _GoodsFlow extends StatelessWidget {
     this.status,
     this.requiredGoods,
     this.operatingMode,
+    this.comments,
   })  : _bloc = bloc,
         super(key: key);
   final status;
@@ -520,6 +522,7 @@ class _GoodsFlow extends StatelessWidget {
   // final Map<String, String> goods;
   final Map<String, String> requiredGoods;
   final OperatingMode operatingMode;
+  final String comments;
 
   @override
   Widget build(BuildContext context) {
@@ -534,6 +537,13 @@ class _GoodsFlow extends StatelessWidget {
                   : S.of(context).acknowledge_donated,
           style: TextStyle(fontSize: 18),
         ),
+        SizedBox(height: 8),
+        comments != null
+            ? Text(
+                comments ?? '',
+                style: TextStyle(fontSize: 16),
+              )
+            : Offstage(),
         SizedBox(height: 20),
         StreamBuilder<Map<String, String>>(
           stream: _bloc.goodsRecieved,

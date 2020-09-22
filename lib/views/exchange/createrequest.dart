@@ -5,6 +5,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:flutter/cupertino.dart';
@@ -141,7 +142,7 @@ class RequestCreateForm extends StatefulWidget {
   }
 }
 
-class RequestCreateFormState extends State<RequestCreateForm> {
+class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindingObserver{
   final _formKey = GlobalKey<FormState>();
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
@@ -178,6 +179,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     print(requestModel);
     _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
@@ -196,6 +198,22 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
       // _fetchCurrentlocation;
     }
+  }
+
+  @override
+  void dispose() {
+      WidgetsBinding.instance.removeObserver(this);
+      super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+      if (state == AppLifecycleState.resumed) {
+          log("over riding stuff");
+          Future.delayed(Duration(milliseconds: 1000), (){
+              fetchLinkData();
+          });
+      }
   }
 
   void get _fetchCurrentlocation async {
@@ -329,8 +347,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             headerContainer(snapshot),
-                            TransactionsMatrixCheck(transaction_matrix_type: "cash_goods_requests", child: RequestTypeWidget()),
-                            Text(
+//                            TransactionsMatrixCheck(transaction_matrix_type: "cash_goods_requests", child: RequestTypeWidget()),
+                              RequestTypeWidget(),
+                              Text(
                               S.of(context).request_title,
                               style: TextStyle(
                                 fontSize: 16,
@@ -1441,7 +1460,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         approvedUsers.add(widget.userModel.email);
         requestModel.approvedUsers = approvedUsers;
       }
-      requestModel.softDelete = false;
 
       if (requestModel.isRecurring) {
         if (requestModel.recurringDays.length == 0) {
@@ -1461,7 +1479,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             credits: requestModel.numberOfHours.toDouble(),
             userId: myDetails.sevaUserID,
           );
-
           if (!onBalanceCheckResult) {
             showInsufficientBalance();
             return;
@@ -1473,8 +1490,25 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           requestModel.photoUrl = timebankModel.photoUrl;
           break;
       }
+      int timestamp = DateTime.now().millisecondsSinceEpoch;
+      String timestampString = timestamp.toString();
+      requestModel.id = '${requestModel.email}*$timestampString';
+      if (requestModel.isRecurring) {
+          requestModel.parent_request_id = requestModel.id;
+      } else {
+          requestModel.parent_request_id = null;
+      }
+      requestModel.softDelete = false;
+      requestModel.postTimestamp = timestamp;
+      requestModel.accepted = false;
+      requestModel.acceptors = [];
+      requestModel.invitedUsers = [];
+      requestModel.address = selectedAddress;
+      requestModel.location = location;
+      requestModel.root_timebank_id = FlavorConfig.values.timebankId;
+      requestModel.softDelete = false;
 
-//      _settingModalBottomSheet(context);
+
       if (SevaCore.of(context).loggedInUser.calendarId != null) {
         showDialog(
           context: context,
@@ -1483,7 +1517,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               title: requestModel.title,
               isrequest: true,
               cancelled: () async {
-                List<String> acceptorList = widget.isOfferRequest && widget.offer.creatorAllowedCalender
+                List<String> acceptorList = widget.isOfferRequest!=null && widget.offer.creatorAllowedCalender
                         ? [widget.offer.email]
                         : [];
                 requestModel.allowedCalenderUsers = acceptorList.toList();
@@ -1492,7 +1526,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     confirmationDialogContext: _context);
               },
               addToCalender: () async {
-                List<String> acceptorList = widget.isOfferRequest && widget.offer.creatorAllowedCalender
+                List<String> acceptorList = widget.isOfferRequest!=null && widget.offer.creatorAllowedCalender
                         ? [widget.offer.email, requestModel.email]
                         : [requestModel.email];
                 requestModel.allowedCalenderUsers = acceptorList.toList();
@@ -1503,11 +1537,35 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           },
         );
       } else {
-        List<String> acceptorList = widget.isOfferRequest != null && widget.offer.creatorAllowedCalender
-                ? [widget.offer.email]
-                : [];
-        requestModel.allowedCalenderUsers = acceptorList.toList();
-        continueCreateRequest(confirmationDialogContext: null);
+//        continueCreateRequest(confirmationDialogContext: null);
+
+          showDialog(
+              context: context,
+              builder: (_context) {
+                  return CalenderEventConfirmationDialog(
+                      title: requestModel.title,
+                      isrequest: true,
+                      cancelled: () async {
+                          List<String> acceptorList = widget.isOfferRequest!=null && widget.offer.creatorAllowedCalender
+                              ? [widget.offer.email]
+                              : [];
+                          requestModel.allowedCalenderUsers = acceptorList.toList();
+
+                          await continueCreateRequest(
+                              confirmationDialogContext: _context);
+                      },
+                      addToCalender: () async {
+                          List<String> acceptorList = widget.isOfferRequest!=null && widget.offer.creatorAllowedCalender
+                              ? [widget.offer.email]
+                              : [];
+                          requestModel.allowedCalenderUsers = acceptorList.toList();
+                          Navigator.of(_context).pop();
+//                          await continueCreateRequest(confirmationDialogContext: _context);
+                          await _settingModalBottomSheet(context);
+                      },
+                  );
+              },
+          );
       }
     }
   }
@@ -1543,79 +1601,70 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
-                                      TransactionsMatrixCheck(
-                                          transaction_matrix_type: "calendar_sync",
-                                          child: GestureDetector(
-                                              child: CircleAvatar(
-                                                  backgroundColor: Colors.white,
-                                                  radius: 40,
-                                                  child:
-                                                  Image.asset("lib/assets/images/googlecal.png"),
-                                              ),
-                                              onTap: () async {
-                                                  String redirectUrl =
-                                                      "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                                                  String authorizationUrl =
-                                                      "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                                                  log("auth url is ${authorizationUrl}");
-                                                  if (await canLaunch(authorizationUrl.toString())) {
-                                                      await launch(authorizationUrl.toString());
-                                                  }
-                                                  Navigator.of(bc).pop();
+                                      GestureDetector(
+                                          child: CircleAvatar(
+                                              backgroundColor: Colors.white,
+                                              radius: 40,
+                                              child:
+                                              Image.asset("lib/assets/images/googlecal.png"),
+                                          ),
+                                          onTap: () async {
+                                              String redirectUrl =
+                                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                                              String authorizationUrl =
+                                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                                              log("auth url is ${authorizationUrl}");
+                                              if (await canLaunch(authorizationUrl.toString())) {
+                                                  await launch(authorizationUrl.toString());
+                                              }
+                                              Navigator.of(bc).pop();
 
 
 
 
 
-                                              }),
-                                      ),
-                                      TransactionsMatrixCheck(
-                                          transaction_matrix_type: "calendar_sync",
-                                          child: GestureDetector(
-                                              child: CircleAvatar(
-                                                  backgroundColor: Colors.white,
-                                                  radius: 40,
-                                                  child:
-                                                  Image.asset("lib/assets/images/outlookcal.png"),
-                                              ),
-                                              onTap: () async {
-                                                  String redirectUrl =
-                                                      "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                                                  String authorizationUrl =
-                                                      "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                                                  if (await canLaunch(authorizationUrl.toString())) {
-                                                      await launch(authorizationUrl.toString());
-                                                  }
-                                                  Navigator.of(bc).pop();
+                                          }),
+                                      GestureDetector(
+                                          child: CircleAvatar(
+                                              backgroundColor: Colors.white,
+                                              radius: 40,
+                                              child:
+                                              Image.asset("lib/assets/images/outlookcal.png"),
+                                          ),
+                                          onTap: () async {
+                                              String redirectUrl =
+                                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                                              String authorizationUrl =
+                                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                                              if (await canLaunch(authorizationUrl.toString())) {
+                                                  await launch(authorizationUrl.toString());
+                                              }
+                                              Navigator.of(bc).pop();
 
 
 
 
-                                              }),
-                                      ),
-                                      TransactionsMatrixCheck(
-                                          transaction_matrix_type: "calendar_sync",
-                                          child: GestureDetector(
-                                              child: CircleAvatar(
-                                                  backgroundColor: Colors.white,
-                                                  radius: 40,
-                                                  child: Image.asset("lib/assets/images/ical.png"),
-                                              ),
-                                              onTap: () async {
-                                                  String redirectUrl =
-                                                      "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                                                  String authorizationUrl =
-                                                      "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                                                  if (await canLaunch(authorizationUrl.toString())) {
-                                                      await launch(authorizationUrl.toString());
-                                                  }
-                                                  Navigator.of(bc).pop();
+                                          }),
+                                      GestureDetector(
+                                          child: CircleAvatar(
+                                              backgroundColor: Colors.white,
+                                              radius: 40,
+                                              child: Image.asset("lib/assets/images/ical.png"),
+                                          ),
+                                          onTap: () async {
+                                              String redirectUrl =
+                                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                                              String authorizationUrl =
+                                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                                              if (await canLaunch(authorizationUrl.toString())) {
+                                                  await launch(authorizationUrl.toString());
+                                              }
+                                              Navigator.of(bc).pop();
 
 
 
 
-                                              }),
-                                      )
+                                          })
                                   ],
                               ),
                           ),
@@ -1776,6 +1825,22 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     );
   }
 
+  Future<void> fetchLinkData() async {
+      // FirebaseDynamicLinks.getInitialLInk does a call to firebase to get us the real link because we have shortened it.
+      var link = await FirebaseDynamicLinks.instance.getInitialLink();
+      log("<<<<<<<<<<<<<<<<<<<< $link");
+      // buildContext = context;
+      // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
+      FirebaseDynamicLinks.instance.onLink(onError: (_) async {
+          print("Error from create req!!!");
+      }, onSuccess: (PendingDynamicLinkData dynamicLink) async {
+          print("success from create req!!!");
+
+      });
+
+      // This will handle incoming links if the application is already opened
+  }
+
   String getTimeInFormat(int timeStamp) {
     return DateFormat('EEEEEEE, MMMM dd yyyy',
             Locale(AppConfig.prefs.getString('language_code')).toLanguageTag())
@@ -1796,24 +1861,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   Future<int> _writeToDB() async {
-    print(requestModel.cashModel);
-    print(requestModel.cashModel.achdetails);
-    int timestamp = DateTime.now().millisecondsSinceEpoch;
-    String timestampString = timestamp.toString();
-    requestModel.id = '${requestModel.email}*$timestampString';
-    if (requestModel.isRecurring) {
-      requestModel.parent_request_id = requestModel.id;
-    } else {
-      requestModel.parent_request_id = null;
-    }
-    requestModel.postTimestamp = timestamp;
-    requestModel.accepted = false;
-    requestModel.acceptors = [];
-    requestModel.invitedUsers = [];
-    requestModel.address = selectedAddress;
-    requestModel.location = location;
-    requestModel.root_timebank_id = FlavorConfig.values.timebankId;
-    requestModel.softDelete = false;
+
     if (requestModel.id == null) return 0;
     // credit the timebank the required credits before the request creation
     await TransactionBloc().createNewTransaction(

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -20,6 +22,7 @@ Future<void> fetchRemoteConfig() async {
   AppConfig.remoteConfig = await RemoteConfig.instance;
   AppConfig.remoteConfig.fetch(expiration: Duration.zero);
   AppConfig.remoteConfig.activateFetched();
+  AppConfig.plan_transactions_matrix = await json.decode(AppConfig.remoteConfig.getString('transactions_plans_matrix'));
 }
 
 Future<void> main() async {
