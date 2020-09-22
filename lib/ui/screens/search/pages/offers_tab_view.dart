@@ -11,6 +11,7 @@ import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -132,56 +133,65 @@ class _OffersTabViewState extends State<OffersTabView> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      GestureDetector(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 40,
-                            child:
-                                Image.asset("lib/assets/images/googlecal.png"),
-                          ),
-                          onTap: () async {
-                            String redirectUrl =
-                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                            String authorizationUrl =
-                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                            if (await canLaunch(authorizationUrl.toString())) {
-                              await launch(authorizationUrl.toString());
-                            }
-                            Navigator.of(bc).pop();
-                          }),
-                      GestureDetector(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 40,
-                            child:
-                                Image.asset("lib/assets/images/outlookcal.png"),
-                          ),
-                          onTap: () async {
-                            String redirectUrl =
-                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                            String authorizationUrl =
-                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                            if (await canLaunch(authorizationUrl.toString())) {
-                              await launch(authorizationUrl.toString());
-                            }
-                            Navigator.of(bc).pop();
-                          }),
-                      GestureDetector(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 40,
-                            child: Image.asset("lib/assets/images/ical.png"),
-                          ),
-                          onTap: () async {
-                            String redirectUrl =
-                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                            String authorizationUrl =
-                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                            if (await canLaunch(authorizationUrl.toString())) {
-                              await launch(authorizationUrl.toString());
-                            }
-                            Navigator.of(bc).pop();
-                          })
+                      TransactionsMatrixCheck(
+                          transaction_matrix_type: "calendar_sync",
+                          child: GestureDetector(
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 40,
+                              child:
+                                  Image.asset("lib/assets/images/googlecal.png"),
+                            ),
+                            onTap: () async {
+                              String redirectUrl =
+                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                              String authorizationUrl =
+                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                              if (await canLaunch(authorizationUrl.toString())) {
+                                await launch(authorizationUrl.toString());
+                              }
+                              Navigator.of(bc).pop();
+                            }),
+                      ),
+                      TransactionsMatrixCheck(
+                          transaction_matrix_type: "calendar_sync",
+                          child: GestureDetector(
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 40,
+                              child:
+                                  Image.asset("lib/assets/images/outlookcal.png"),
+                            ),
+                            onTap: () async {
+                              String redirectUrl =
+                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                              String authorizationUrl =
+                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                              if (await canLaunch(authorizationUrl.toString())) {
+                                await launch(authorizationUrl.toString());
+                              }
+                              Navigator.of(bc).pop();
+                            }),
+                      ),
+                      TransactionsMatrixCheck(
+                          transaction_matrix_type: "calendar_sync",
+                          child: GestureDetector(
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 40,
+                              child: Image.asset("lib/assets/images/ical.png"),
+                            ),
+                            onTap: () async {
+                              String redirectUrl =
+                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                              String authorizationUrl =
+                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                              if (await canLaunch(authorizationUrl.toString())) {
+                                await launch(authorizationUrl.toString());
+                              }
+                              Navigator.of(bc).pop();
+                            }),
+                      )
                     ],
                   ),
                 ),

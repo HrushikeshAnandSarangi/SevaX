@@ -459,7 +459,10 @@ Stream<CardModel> getCardModelStream({@required String communityId}) async* {
           CardModel model = CardModel(snapshot.data);
           model.timebankid = snapshot.documentID;
           modelSink.add(model);
-        } else {}
+        } else {
+          //no card exists
+          modelSink.add(null);
+        }
       },
     ),
   );
@@ -568,4 +571,17 @@ Stream<List<prefix0.OfferModel>> getBookmarkedOffersByMember(
       },
     ),
   );
+}
+
+Stream<CommunityModel> getCurrentCommunityStream(String communityId) async* {
+    Stream<DocumentSnapshot> ds = await Firestore.instance.collection("communities").document(communityId).snapshots();
+
+    yield* ds.transform(
+        StreamTransformer<DocumentSnapshot, CommunityModel>.fromHandlers(
+            handleData: (snapshot, modelSink) {
+                CommunityModel communityModel = CommunityModel(snapshot.data);
+                modelSink.add(communityModel);
+            },
+        ),
+    );
 }

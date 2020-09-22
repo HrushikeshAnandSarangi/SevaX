@@ -40,6 +40,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   var transactionPaymentData;
   final profanityDetector = ProfanityDetector();
   bool autoValidateText = false;
+  final String NO_SELECTED_PLAN_YET = "";
   List<BillingPlanDetailsModel> _billingPlanDetailsModels = [];
   @override
   void initState() {
@@ -74,9 +75,9 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
     // FocusScope.of(context).requestFocus(FocusNode());
 
     final _bloc = BlocProvider.of<UserDataBloc>(context);
-    print("---->community model ${_bloc.community}");
-
     this.parentContext = context;
+    var currentCommunityId = SevaCore.of(context).loggedInUser.currentCommunity;
+    print(currentCommunityId + "  <<<<");
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -90,65 +91,67 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                       headingText(S.of(context).plan_details),
                       StreamBuilder<CardModel>(
                         stream: FirestoreManager.getCardModelStream(
-                            communityId: SevaCore.of(context)
-                                .loggedInUser
-                                .currentCommunity),
+                          communityId: currentCommunityId,
+                        ),
                         builder: (parentContext, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return LoadingIndicator();
                           }
-                          print("Inside ============ Procceding");
+                          //No Card added user is on neighbourhood plan
+                          if (snapshot.data == null) {
+                            return spendingsTextWidgettwo(
+                              "You are on neighbourhood plan.",
+                            );
+                          }
 
                           if (snapshot.hasData && snapshot.data != null) {
-                            print("Inside ============ true plan");
-
                             cardModel = snapshot.data;
                             //print('cardmodel ${cardModel.currentPlan}');
                             //  print('subscription  ${cardModel.toString()}');
                             //print('subscription  ${cardModel.subscriptionModel}');
                             if (cardModel.subscriptionModel != null) {
-                              String data = "";
+                              String data = NO_SELECTED_PLAN_YET;
                               _billingPlanDetailsModels.removeWhere((element) =>
                                   element.id != cardModel.currentPlan);
-                              cardModel.subscriptionModel
-                                  .forEach((subscritpion) {
-                                if (subscritpion.containsKey("items")) {
-                                  if (subscritpion['items']['data'] != null) {
-                                    planData =
-                                        subscritpion['items']['data'] ?? [];
-                                    if (cardModel.currentPlan ==
-                                        SevaBillingPlans.COMMUNITY_PLAN) {
-                                      data =
-                                          "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).paying} \$${_billingPlanDetailsModels[0].price} ${S.of(context).monthly_charges_of} \$0.05 ${S.of(context).plan_details_quota1}.";
-                                    } else if (cardModel.currentPlan ==
-                                        SevaBillingPlans.NON_PROFIT) {
-                                      data =
-                                          "${S.of(context).your_community_on_the}  ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).plan_yearly_1500} \$0.03 ${S.of(context).plan_details_quota1}.";
-                                    } else if (cardModel.currentPlan ==
-                                        SevaBillingPlans.ENTERPRISE) {
-                                      data =
-                                          "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).paying} \$${_billingPlanDetailsModels[0].price} ${S.of(context).charges_of} \$0.01  ${S.of(context).per_transaction_quota}.";
+                              if (cardModel.subscriptionModel != null &&
+                                  cardModel.subscriptionModel.length > 0)
+                                cardModel.subscriptionModel.forEach(
+                                  (subscritpion) {
+                                    if (subscritpion.containsKey("items")) {
+                                      if (subscritpion['items']['data'] !=
+                                          null) {
+                                        planData =
+                                            subscritpion['items']['data'] ?? [];
+                                        if (cardModel.currentPlan ==
+                                            SevaBillingPlans.COMMUNITY_PLAN) {
+                                          data =
+                                              "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).paying} \$${_billingPlanDetailsModels[0].price} ${S.of(context).monthly_charges_of} \$0.05 ${S.of(context).plan_details_quota1}.";
+                                        } else if (cardModel.currentPlan ==
+                                            SevaBillingPlans.NON_PROFIT) {
+                                          data =
+                                              "${S.of(context).your_community_on_the}  ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).plan_yearly_1500} \$0.03 ${S.of(context).plan_details_quota1}.";
+                                        } else if (cardModel.currentPlan ==
+                                            SevaBillingPlans.ENTERPRISE) {
+                                          data =
+                                              "${S.of(context).your_community_on_the} ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, ${S.of(context).paying} \$${_billingPlanDetailsModels[0].price} ${S.of(context).charges_of} \$0.01  ${S.of(context).per_transaction_quota}.";
+                                        }
+                                        return spendingsTextWidgettwo(
+                                            data ?? NO_SELECTED_PLAN_YET);
+                                      } else {
+                                        return emptyText();
+                                      }
+                                    } else {
+                                      return emptyText();
                                     }
-                                    return spendingsTextWidgettwo(data ?? "");
-                                  } else {
-                                    return emptyText();
-                                  }
-                                } else {
-                                  return emptyText();
-                                }
-                              });
-                              return spendingsTextWidgettwo(data ?? "");
+                                  },
+                                );
+                              return spendingsTextWidgettwo(
+                                  data ?? NO_SELECTED_PLAN_YET);
                             } else {
                               return emptyText();
                             }
                           } else {
-                            print("Inside ============ timebankbilling plan");
-                            if (_bloc.community.payment['planId'] ==
-                                SevaBillingPlans.NEIGHBOUR_HOOD_PLAN) {
-                              return spendingsTextWidgettwo(
-                                  "You're on neightbourhood plan");
-                            }
                             return emptyText();
                           }
                         },
@@ -236,27 +239,36 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
               text: data,
             ),
             TextSpan(
-              text: data != ""
+              text: data != NO_SELECTED_PLAN_YET
                   ? ' ${S.of(context).change_plan}'
-                  : S.of(context).view_selected_plans,
+                  : 'Synching payment data.',
               style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 16,
                   fontFamily: 'Europa',
                   decoration: TextDecoration.underline),
               recognizer: TapGestureRecognizer()
-                ..onTap = () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BillingPlanDetails(
-                          user: SevaCore.of(context).loggedInUser,
-                          planName: cardModel.currentPlan,
-                          isPlanActive: data != "",
-                          autoImplyLeading: true,
-                          isPrivateTimebank: communityModel.private,
-                        ),
+                ..onTap = () {
+                  if (data == NO_SELECTED_PLAN_YET) {
+                    return;
+                  }
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BillingPlanDetails(
+                        user: SevaCore.of(context).loggedInUser,
+                        planName:
+                            cardModel != null && cardModel.currentPlan != null
+                                ? cardModel.currentPlan
+                                : SevaBillingPlans.NEIGHBOUR_HOOD_PLAN,
+                        isPlanActive: data != NO_SELECTED_PLAN_YET,
+                        autoImplyLeading: true,
+                        isPrivateTimebank: communityModel.private,
                       ),
                     ),
+                  );
+                },
             ),
           ],
         ),
@@ -293,8 +305,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             return LoadingIndicator();
           }
           if (snapshot.hasData && snapshot.data != null) {
-            print('snap data ===>${snapshot.data.data}');
-
             if (snapshot.data.data != null &&
                 snapshot.data.data['payment_state'] != null) {
               pastPlans = snapshot.data.data['payment_state']['plans'] ?? [];
@@ -304,7 +314,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                   itemBuilder: (context, index) {
                     return spendingsTextWidget(
 //                        "For the ${pastPlans[index]['nickname'] ?? " "} charged \$ ${pastPlans[index]['amount'] / 100 ?? ""} .");
-                        "dummy string");
+                        "Plan Active");
                   });
             } else {
               return emptyText();
@@ -358,7 +368,17 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                     Icons.edit,
                   ),
                   onPressed: () {
-                    print("clicked");
+                    // Navigator.of(context).push(
+                    //   MaterialPageRoute(
+                    //     builder: (context) => BillingPlanDetails(
+                    //       user: SevaCore.of(context).loggedInUser,
+                    //       isPlanActive: false,
+                    //       autoImplyLeading: true,
+                    //       isPrivateTimebank: communityModel.private,
+                    //     ),
+                    //   ),
+                    // );
+
                     if (planName == '' &&
                         !_bloc.community.payment.containsKey("planId")) {
                       Navigator.of(context).push(
@@ -383,15 +403,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                         ),
                       );
                     }
-//                builder: (context) => CustomCreditCard(
-//                  frontBackground: CardBackgrounds.white,
-//                  cardNumber: "7777",
-//                  cardExpiry: "03/22",
-//                  cardHolderName: "Umesh Raj",
-//                  cardType: CardType.masterCard,
-//                  bankName: "HDFC",
-//                ),
-//              ));
                   },
                 ),
               ),

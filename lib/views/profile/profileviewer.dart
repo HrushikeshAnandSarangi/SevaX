@@ -28,6 +28,7 @@ class ProfileViewer extends StatefulWidget {
   final String timebankId;
   final String entityName;
   final bool isFromTimebank;
+
   //UserModel userModel;
   //bool isBlocked = false;
 
@@ -39,6 +40,7 @@ class ProfileViewer extends StatefulWidget {
   })  : assert(userEmail != null),
 //        assert(entityName != null),
         assert(timebankId != null);
+
 //        assert(isFromTimebank != null);
   @override
   State<StatefulWidget> createState() {
@@ -246,6 +248,61 @@ class ProfileViewerState extends State<ProfileViewer> {
                       skills: snapshot.data['skills'],
                       interests: snapshot.data['interests'],
                     ),
+                    Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        child: TRscore(
+                            user.trustworthinessscore, user.reliabilityscore)),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                        child: GoodsAndAmountDonations(
+                            userId: user.sevaUserID,
+                            isGoods: false,
+                            isTimeBank: false,
+                            onTap: () {})),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+                        child: GoodsAndAmountDonations(
+                            userId: user.sevaUserID,
+                            isGoods: true,
+                            isTimeBank: false,
+                            onTap: () {})),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 25, vertical: 0),
+                      child: StreamBuilder<List<RequestModel>>(
+                        stream: FirestoreManager.getCompletedRequestStream(
+                            userEmail: widget.userEmail,
+                            userId: user.sevaUserID),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text(snapshot.error.toString());
+                          }
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return LoadingIndicator();
+                          }
+
+                          List<RequestModel> requestList = snapshot.data;
+                          double toltalHoursWorked = 0;
+
+                          toltalHoursWorked = getTotalWorkedHours(requestList);
+
+                          return JobsCounter(
+                            jobs: requestList.length,
+                            hours: toltalHoursWorked.toInt(),
+                          );
+                        },
+                      ),
+                    ),
                     Container(
                       padding: EdgeInsets.symmetric(
                         vertical: 10,
@@ -299,48 +356,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                       ),
                     ),
                     SizedBox(
-                      height: 20,
-                    ),
-                    GoodsAndAmountDonations(
-                        userId: user.sevaUserID,
-                        isGoods: false,
-                        isTimeBank: false,
-                        onTap: () {}),
-                    SizedBox(
                       height: 15,
-                    ),
-                    GoodsAndAmountDonations(
-                        userId: user.sevaUserID,
-                        isGoods: true,
-                        isTimeBank: false,
-                        onTap: () {}),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-                      child: StreamBuilder<List<RequestModel>>(
-                        stream: FirestoreManager.getCompletedRequestStream(
-                            userEmail: widget.userEmail,
-                            userId: user.sevaUserID),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return Text(snapshot.error.toString());
-                          }
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return LoadingIndicator();
-                          }
-
-                          List<RequestModel> requestList = snapshot.data;
-                          double toltalHoursWorked = 0;
-
-                          toltalHoursWorked = getTotalWorkedHours(requestList);
-
-                          return JobsCounter(
-                            jobs: requestList.length,
-                            hours: toltalHoursWorked.toInt(),
-                          );
-                        },
-                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -363,6 +379,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                         ),
                       ),
                     ),
+                    SizedBox(height: 20)
                   ],
                 ),
               );
@@ -590,6 +607,7 @@ class JobsCounter extends StatelessWidget {
   }) : super(key: key);
   final int jobs;
   final int hours;
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -600,7 +618,10 @@ class JobsCounter extends StatelessWidget {
             alignment: Alignment.centerLeft,
             decoration: BoxDecoration(
               border: Border(
-                top: borderOnepx,
+                top: BorderSide(
+                  color: Colors.white,
+                  width: 0,
+                ),
                 right: borderHalfpx,
                 bottom: borderOnepx,
               ),
@@ -631,7 +652,10 @@ class JobsCounter extends StatelessWidget {
             height: 80,
             decoration: BoxDecoration(
               border: Border(
-                top: borderOnepx,
+                top: BorderSide(
+                  color: Colors.white,
+                  width: 0,
+                ),
                 left: borderHalfpx,
                 bottom: borderOnepx,
               ),
@@ -664,6 +688,7 @@ class JobsCounter extends StatelessWidget {
 class UserProfileDetails extends StatefulWidget {
   final String title;
   final String details;
+
   const UserProfileDetails({
     Key key,
     this.title,
@@ -942,6 +967,7 @@ class ProfileImage extends StatelessWidget {
   final String image;
   final double radius;
   final String tag;
+
   const ProfileImage({
     Key key,
     this.image,

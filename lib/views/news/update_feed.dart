@@ -8,9 +8,8 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/utils/feeds_web_scrapper.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/scraper.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
@@ -415,18 +414,25 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   }
 
   Future scrapeURLDetails(String subHeadings) async {
-    newsObject = await fetchPosts(
-        url: newsObject.urlsFromPost[0],
-        newsObject: newsObject); // print("Final Project $newsObject");
-  }
+    // newsObject = await fetchPosts(
+    //     url: newsObject.urlsFromPost[0],
+    //     newsObject: newsObject); // print("Final Project $newsObject");
+    FeedsWebScraper webScraper = FeedsWebScraper(url: subHeadings);
 
-  Future _getLocation() async {
-    String address = await LocationUtility().getFormattedAddress(
-      location.latitude,
-      location.longitude,
-    );
-    setState(() {
-      this.selectedAddress = address;
-    });
+    try {
+      if (await webScraper.loadData()) {
+        var result = webScraper.getScrapedData();
+        if (result != null) {
+          newsObject.title = result.title;
+          newsObject.imageScraped = result.image;
+          newsObject.newsImageUrl = result.image;
+          newsObject.description = result.body;
+        }
+      }
+      return;
+    } on Exception catch (e) {
+      print(e);
+      return;
+    }
   }
 }

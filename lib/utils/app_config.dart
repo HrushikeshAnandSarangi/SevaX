@@ -7,6 +7,7 @@ class AppConfig {
   static const String skip_skill = "skip_skill";
   static const String skip_interest = "skip_interest";
   static const String skip_bio = "skip_bio";
+  static Map<String, dynamic> paymentStatusMap = {};
 
   static BillingPlanModel billing;
   static SharedPreferences prefs;

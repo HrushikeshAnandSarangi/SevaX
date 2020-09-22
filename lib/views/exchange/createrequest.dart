@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,6 +30,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/extensions.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
@@ -42,6 +44,7 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:usage/uuid/uuid.dart';
 
 class CreateRequest extends StatefulWidget {
@@ -326,7 +329,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             headerContainer(snapshot),
-                            RequestTypeWidget(),
+                            TransactionsMatrixCheck(transaction_matrix_type: "cash_goods_requests", child: RequestTypeWidget()),
                             Text(
                               S.of(context).request_title,
                               style: TextStyle(
@@ -400,14 +403,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                   child: RaisedButton(
                                     onPressed: createRequest,
                                     child: Text(
-                                      S
-                                          .of(context)
-                                          .create_request
-                                          .padLeft(10)
-                                          .padRight(10),
-                                      style: Theme.of(context)
-                                          .primaryTextTheme
-                                          .button,
+                                        S.of(context).create_request.padLeft(10).padRight(10),
+                                      style: Theme.of(context).primaryTextTheme.button,
                                     ),
                                   ),
                                 ),
@@ -424,82 +421,160 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   Widget RequestGoodsDescriptionData() {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            S.of(context).request_goods_description,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          GoodsDynamicSelection(
-            onSelectedGoods: (goods) => {
-              print(goods),
-              requestModel.goodsDonationDetails.requiredGoods = goods
-            },
-          ),
-          Text(
-            S.of(context).request_goods_address,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Europa',
-              color: Colors.black,
-            ),
-          ),
-          Text(
-            S.of(context).request_goods_address_hint,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
-          ),
-          TextFormField(
-            autovalidate: autoValidateCashText,
-            onChanged: (value) {
-              if (value.length > 1) {
-                setState(() {
-                  autoValidateCashText = true;
-                });
-              } else {
-                setState(() {
-                  autoValidateCashText = false;
-                });
-              }
-            },
-            focusNode: focusNodes[8],
-            onFieldSubmitted: (v) {
-              FocusScope.of(context).requestFocus(focusNodes[8]);
-            },
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              errorMaxLines: 2,
-              hintText: S.of(context).request_goods_address_inputhint,
-              hintStyle: hintTextStyle,
-            ),
-            initialValue: widget.offer != null && widget.isOfferRequest
-                ? getOfferDescription(
-                    offerDataModel: widget.offer,
-                  )
-                : "",
-            keyboardType: TextInputType.multiline,
-            maxLines: 3,
-            validator: (value) {
-              if (value.isEmpty) {
-                return S.of(context).validation_error_general_text;
-              } else {
-                print(requestModel);
-                requestModel.goodsDonationDetails.address = value;
+    Future.delayed(Duration(milliseconds: 1500), (){
+        return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+                Text(
+                    S.of(context).request_goods_description,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                    ),
+                ),
+                GoodsDynamicSelection(
+                    onSelectedGoods: (goods) => {
+                        print(goods),
+                        requestModel.goodsDonationDetails.requiredGoods = goods
+                    },
+                ),
+                Text(
+                    S.of(context).request_goods_address,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Europa',
+                        color: Colors.black,
+                    ),
+                ),
+                Text(
+                    S.of(context).request_goods_address_hint,
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                    ),
+                ),
+                TextFormField(
+                    autovalidate: autoValidateCashText,
+                    onChanged: (value) {
+                        if (value.length > 1) {
+                            setState(() {
+                                autoValidateCashText = true;
+                            });
+                        } else {
+                            setState(() {
+                                autoValidateCashText = false;
+                            });
+                        }
+                    },
+                    focusNode: focusNodes[8],
+                    onFieldSubmitted: (v) {
+                        FocusScope.of(context).requestFocus(focusNodes[8]);
+                    },
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                        errorMaxLines: 2,
+                        hintText: S.of(context).request_goods_address_inputhint,
+                        hintStyle: hintTextStyle,
+                    ),
+                    initialValue: widget.offer != null && widget.isOfferRequest
+                        ? getOfferDescription(
+                        offerDataModel: widget.offer,
+                    )
+                        : "",
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 3,
+                    validator: (value) {
+                        if (value.isEmpty) {
+                            return S.of(context).validation_error_general_text;
+                        } else {
+                            print(requestModel);
+                            requestModel.goodsDonationDetails.address = value;
 //                setState(() {});
-              }
-              return null;
-            },
-          ),
-        ]);
+                        }
+                        return null;
+                    },
+                ),
+            ]);
+    });
+//      return Column(
+//        crossAxisAlignment: CrossAxisAlignment.start,
+//        children: <Widget>[
+//          Text(
+//            S.of(context).request_goods_description,
+//            style: TextStyle(
+//              fontSize: 16,
+//              fontWeight: FontWeight.bold,
+//              fontFamily: 'Europa',
+//              color: Colors.black,
+//            ),
+//          ),
+//          GoodsDynamicSelection(
+//            onSelectedGoods: (goods) => {
+//              print(goods),
+//              requestModel.goodsDonationDetails.requiredGoods = goods
+//            },
+//          ),
+//          Text(
+//            S.of(context).request_goods_address,
+//            style: TextStyle(
+//              fontSize: 16,
+//              fontWeight: FontWeight.bold,
+//              fontFamily: 'Europa',
+//              color: Colors.black,
+//            ),
+//          ),
+//          Text(
+//            S.of(context).request_goods_address_hint,
+//            style: TextStyle(
+//              fontSize: 12,
+//              color: Colors.grey,
+//            ),
+//          ),
+//          TextFormField(
+//            autovalidate: autoValidateCashText,
+//            onChanged: (value) {
+//              if (value.length > 1) {
+//                setState(() {
+//                  autoValidateCashText = true;
+//                });
+//              } else {
+//                setState(() {
+//                  autoValidateCashText = false;
+//                });
+//              }
+//            },
+//            focusNode: focusNodes[8],
+//            onFieldSubmitted: (v) {
+//              FocusScope.of(context).requestFocus(focusNodes[8]);
+//            },
+//            textInputAction: TextInputAction.next,
+//            decoration: InputDecoration(
+//              errorMaxLines: 2,
+//              hintText: S.of(context).request_goods_address_inputhint,
+//              hintStyle: hintTextStyle,
+//            ),
+//            initialValue: widget.offer != null && widget.isOfferRequest
+//                ? getOfferDescription(
+//                    offerDataModel: widget.offer,
+//                  )
+//                : "",
+//            keyboardType: TextInputType.multiline,
+//            maxLines: 3,
+//            validator: (value) {
+//              if (value.isEmpty) {
+//                return S.of(context).validation_error_general_text;
+//              } else {
+//                print(requestModel);
+//                requestModel.goodsDonationDetails.address = value;
+////                setState(() {});
+//              }
+//              return null;
+//            },
+//          ),
+//        ]);
   }
 
   Widget RequestPaymentACH(RequestModel requestModel) {
@@ -940,13 +1015,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     },
                   ),
                   _optionRadioButton(
-                      title: S.of(context).request_type_cash,
-                      value: RequestType.CASH,
-                      groupvalue: requestModel.requestType,
-                      onChanged: (value) {
-                        requestModel.requestType = value;
-                        setState(() => {});
-                      }),
+                    title: S.of(context).request_type_cash,
+                    value: RequestType.CASH,
+                    groupvalue: requestModel.requestType,
+                    onChanged: (value) {
+                      requestModel.requestType = value;
+                      setState(() => {});
+                    }),
                   _optionRadioButton(
                       title: S.of(context).request_type_goods,
                       value: RequestType.GOODS,
@@ -1366,7 +1441,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         approvedUsers.add(widget.userModel.email);
         requestModel.approvedUsers = approvedUsers;
       }
-      requestModel.softDelete = false;
 
       if (requestModel.isRecurring) {
         if (requestModel.recurringDays.length == 0) {
@@ -1386,7 +1460,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             credits: requestModel.numberOfHours.toDouble(),
             userId: myDetails.sevaUserID,
           );
-
           if (!onBalanceCheckResult) {
             showInsufficientBalance();
             return;
@@ -1398,6 +1471,25 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           requestModel.photoUrl = timebankModel.photoUrl;
           break;
       }
+      int timestamp = DateTime.now().millisecondsSinceEpoch;
+      String timestampString = timestamp.toString();
+      requestModel.id = '${requestModel.email}*$timestampString';
+      if (requestModel.isRecurring) {
+          requestModel.parent_request_id = requestModel.id;
+      } else {
+          requestModel.parent_request_id = null;
+      }
+      requestModel.softDelete = false;
+      requestModel.postTimestamp = timestamp;
+      requestModel.accepted = false;
+      requestModel.acceptors = [];
+      requestModel.invitedUsers = [];
+      requestModel.address = selectedAddress;
+      requestModel.location = location;
+      requestModel.root_timebank_id = FlavorConfig.values.timebankId;
+      requestModel.softDelete = false;
+
+
       if (SevaCore.of(context).loggedInUser.calendarId != null) {
         showDialog(
           context: context,
@@ -1406,8 +1498,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               title: requestModel.title,
               isrequest: true,
               cancelled: () async {
-                List<String> acceptorList =
-                    widget.isOfferRequest && widget.offer.creatorAllowedCalender
+                List<String> acceptorList = widget.isOfferRequest && widget.offer.creatorAllowedCalender
                         ? [widget.offer.email]
                         : [];
                 requestModel.allowedCalenderUsers = acceptorList.toList();
@@ -1416,8 +1507,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     confirmationDialogContext: _context);
               },
               addToCalender: () async {
-                List<String> acceptorList =
-                    widget.isOfferRequest && widget.offer.creatorAllowedCalender
+                List<String> acceptorList = widget.isOfferRequest && widget.offer.creatorAllowedCalender
                         ? [widget.offer.email, requestModel.email]
                         : [requestModel.email];
                 requestModel.allowedCalenderUsers = acceptorList.toList();
@@ -1428,18 +1518,166 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           },
         );
       } else {
-        List<String> acceptorList =
-            widget.isOfferRequest && widget.offer.creatorAllowedCalender
-                ? [widget.offer.email]
-                : [];
-        requestModel.allowedCalenderUsers = acceptorList.toList();
-        continueCreateRequest(confirmationDialogContext: null);
+//        continueCreateRequest(confirmationDialogContext: null);
+
+          showDialog(
+              context: context,
+              builder: (_context) {
+                  return CalenderEventConfirmationDialog(
+                      title: requestModel.title,
+                      isrequest: true,
+                      cancelled: () async {
+                          List<String> acceptorList = widget.isOfferRequest && widget.offer.creatorAllowedCalender
+                              ? [widget.offer.email]
+                              : [];
+                          requestModel.allowedCalenderUsers = acceptorList.toList();
+
+                          await continueCreateRequest(
+                              confirmationDialogContext: _context);
+                      },
+                      addToCalender: () async {
+                          List<String> acceptorList = widget.isOfferRequest && widget.offer.creatorAllowedCalender
+                              ? [widget.offer.email]
+                              : [];
+                          requestModel.allowedCalenderUsers = acceptorList.toList();
+                          await continueCreateRequest(confirmationDialogContext: _context);
+                      },
+                  );
+              },
+          );
       }
     }
   }
 
   bool hasRegisteredLocation() {
     return location != null;
+  }
+
+  void _settingModalBottomSheet(context) {
+      Map<String, dynamic> stateOfcalendarCallback = {
+          "email": SevaCore.of(context).loggedInUser.email,
+          "mobile": globals.isMobile,
+          "envName": FlavorConfig.values.envMode
+      };
+      var stateVar = jsonEncode(stateOfcalendarCallback);
+
+      showModalBottomSheet(
+          context: context,
+          builder: (BuildContext bc) {
+              return Container(
+                  child: new Wrap(
+                      children: <Widget>[
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+                              child: Text(
+                                  S.of(context).calendars_popup_desc,
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                      TransactionsMatrixCheck(
+                                          transaction_matrix_type: "calendar_sync",
+                                          child: GestureDetector(
+                                              child: CircleAvatar(
+                                                  backgroundColor: Colors.white,
+                                                  radius: 40,
+                                                  child:
+                                                  Image.asset("lib/assets/images/googlecal.png"),
+                                              ),
+                                              onTap: () async {
+                                                  String redirectUrl =
+                                                      "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                                                  String authorizationUrl =
+                                                      "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                                                  log("auth url is ${authorizationUrl}");
+                                                  if (await canLaunch(authorizationUrl.toString())) {
+                                                      await launch(authorizationUrl.toString());
+                                                  }
+                                                  Navigator.of(bc).pop();
+
+
+
+
+
+                                              }),
+                                      ),
+                                      TransactionsMatrixCheck(
+                                          transaction_matrix_type: "calendar_sync",
+                                          child: GestureDetector(
+                                              child: CircleAvatar(
+                                                  backgroundColor: Colors.white,
+                                                  radius: 40,
+                                                  child:
+                                                  Image.asset("lib/assets/images/outlookcal.png"),
+                                              ),
+                                              onTap: () async {
+                                                  String redirectUrl =
+                                                      "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                                                  String authorizationUrl =
+                                                      "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                                                  if (await canLaunch(authorizationUrl.toString())) {
+                                                      await launch(authorizationUrl.toString());
+                                                  }
+                                                  Navigator.of(bc).pop();
+
+
+
+
+                                              }),
+                                      ),
+                                      TransactionsMatrixCheck(
+                                          transaction_matrix_type: "calendar_sync",
+                                          child: GestureDetector(
+                                              child: CircleAvatar(
+                                                  backgroundColor: Colors.white,
+                                                  radius: 40,
+                                                  child: Image.asset("lib/assets/images/ical.png"),
+                                              ),
+                                              onTap: () async {
+                                                  String redirectUrl =
+                                                      "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                                                  String authorizationUrl =
+                                                      "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                                                  if (await canLaunch(authorizationUrl.toString())) {
+                                                      await launch(authorizationUrl.toString());
+                                                  }
+                                                  Navigator.of(bc).pop();
+
+
+
+
+                                              }),
+                                      )
+                                  ],
+                              ),
+                          ),
+                          Row(
+                              children: <Widget>[
+                                  Spacer(),
+                                  FlatButton(
+                                      child: Text(
+                                          S.of(context).skip_for_now,
+                                          style: TextStyle(
+                                              color: FlavorConfig.values.theme.primaryColor),
+                                      ),
+                                      onPressed: () {
+                                          Navigator.of(bc).pop();
+
+
+
+
+                                      }),
+                              ],
+                          )
+                      ],
+                  ),
+              );
+          });
   }
 
   void continueCreateRequest({BuildContext confirmationDialogContext}) async {
@@ -1595,24 +1833,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   Future<int> _writeToDB() async {
-    print(requestModel.cashModel);
-    print(requestModel.cashModel.achdetails);
-    int timestamp = DateTime.now().millisecondsSinceEpoch;
-    String timestampString = timestamp.toString();
-    requestModel.id = '${requestModel.email}*$timestampString';
-    if (requestModel.isRecurring) {
-      requestModel.parent_request_id = requestModel.id;
-    } else {
-      requestModel.parent_request_id = null;
-    }
-    requestModel.postTimestamp = timestamp;
-    requestModel.accepted = false;
-    requestModel.acceptors = [];
-    requestModel.invitedUsers = [];
-    requestModel.address = selectedAddress;
-    requestModel.location = location;
-    requestModel.root_timebank_id = FlavorConfig.values.timebankId;
-    requestModel.softDelete = false;
+
     if (requestModel.id == null) return 0;
     // credit the timebank the required credits before the request creation
     await TransactionBloc().createNewTransaction(
@@ -2084,6 +2305,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
       {'goodTitle': goodsTitle?.firstWordUpperCase(), 'lang': goodsLanguage},
     );
   }
+
 
   Padding getSuggestionLayout({
     String suggestion,

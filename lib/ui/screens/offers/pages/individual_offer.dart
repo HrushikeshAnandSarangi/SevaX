@@ -9,6 +9,7 @@ import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
@@ -275,7 +276,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       child: Column(
                         children: <Widget>[
                           SizedBox(height: 20),
-                          RequestTypeWidget(),
+                          TransactionsMatrixCheck(transaction_matrix_type: "cash_goods_offers", child: RequestTypeWidget()),
                           StreamBuilder<String>(
                             stream: _bloc.title,
                             builder: (context, snapshot) {

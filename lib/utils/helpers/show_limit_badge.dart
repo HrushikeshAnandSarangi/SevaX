@@ -54,15 +54,14 @@ class TransactionLimitCheck extends StatelessWidget {
         super(key: key);
   @override
   Widget build(BuildContext context) {
+// TODO make adjustments here itself to include plans limit check also
     final _userBloc = BlocProvider.of<UserDataBloc>(context);
 
     return StreamBuilder(
       stream: _userBloc.comunityStream,
       builder: (context, AsyncSnapshot<CommunityModel> snapshot) {
-        bool isAdmin =
-            _userBloc.community.admins.contains(_userBloc.user.sevaUserID);
-        bool isBillingFailed =
-            !(_userBloc.community.payment['payment_success'] ?? false);
+        bool isAdmin = _userBloc.community.admins.contains(_userBloc.user.sevaUserID);
+        bool isBillingFailed = !(_userBloc.community.payment['payment_success'] ?? false);
         return GestureDetector(
           onTap: () {
             _showDialog(context, isAdmin, _userBloc.user, isBillingFailed,
