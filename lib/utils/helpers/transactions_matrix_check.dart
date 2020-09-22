@@ -32,17 +32,16 @@ class TransactionsMatrixCheck extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
       paymentStatusMap = AppConfig.paymentStatusMap;
-      Map<String, dynamic> plan_transactions_matrix = json.decode(AppConfig.remoteConfig.getString('transactions_plans_matrix'));
+      Map<String, dynamic> plan_transactions_matrix = AppConfig.plan_transactions_matrix;
       Map<String, dynamic> matrix_current_plan = plan_transactions_matrix[paymentStatusMap['planId']];
       allowTransaction = matrix_current_plan[transaction_matrix_type]['allow'];
-      return GestureDetector(
+      log("<><><><><><><><> $allowTransaction");
+
+      return allowTransaction ? child : GestureDetector(
           onTap: () {
               _showDialog(context, matrix_current_plan['planName']);
           },
-          child: AbsorbPointer(
-              absorbing: !allowTransaction,
-              child: child,
-          ),
+          child: AbsorbPointer(absorbing: true, child: child),
       );
   }
 

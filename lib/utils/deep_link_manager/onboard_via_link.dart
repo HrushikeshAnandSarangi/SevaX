@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,8 @@ Future<void> fetchLinkData() async {
     print("Error!!!");
   }, onSuccess: (PendingDynamicLinkData dynamicLink) async {
     print("succes!!!");
+    log("coming after syncing calendar");
+
     return handleLinkData(
       data: dynamicLink,
     );
