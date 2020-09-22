@@ -96,8 +96,6 @@ class _SplashViewState extends State<SplashView> {
     _createNotificationChannel();
   }
 
-  void searchNet() {}
-
   @override
   void dispose() {
     _connectivitySubscription.cancel();
@@ -222,7 +220,19 @@ class _SplashViewState extends State<SplashView> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       result = await _connectivity.checkConnectivity();
-      connectivityResult = result;
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          hasConnection = true;
+        } else {
+          hasConnection = false;
+        }
+      } on SocketException catch (_) {
+        hasConnection = false;
+      }
+      setState(() {
+        connectivityResult = result;
+      });
     } on PlatformException catch (e) {
       print(e.toString());
     }
