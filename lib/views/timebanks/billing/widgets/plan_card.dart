@@ -10,6 +10,7 @@ import '../../../../main_seva_dev.dart' as dev;
 import '../billing_view.dart';
 
 class BillingPlanCard extends StatefulWidget {
+  final String activePlanId;
   final bool isSelected;
   final bool isPlanActive;
   final UserModel user;
@@ -18,16 +19,17 @@ class BillingPlanCard extends StatefulWidget {
   final bool billMeVisibility;
   final bool isBillMe;
 
-  const BillingPlanCard(
-      {Key key,
-      this.plan,
-      this.user,
-      this.isSelected = false,
-      this.isPlanActive = false,
-      this.canBillMe,
-      this.billMeVisibility,
-      this.isBillMe})
-      : super(key: key);
+  const BillingPlanCard({
+    Key key,
+    this.plan,
+    this.user,
+    this.isSelected = false,
+    this.isPlanActive = false,
+    this.canBillMe,
+    this.billMeVisibility,
+    this.activePlanId,
+    this.isBillMe,
+  }) : super(key: key);
 
   @override
   _BillingPlanCardState createState() => _BillingPlanCardState();
@@ -198,7 +200,11 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
                     ),
                   ),
                   onPressed: () {
-                    if (widget.isPlanActive) {
+                    if (widget.isPlanActive &&
+                        widget.activePlanId != null &&
+                        widget.activePlanId !=
+                            SevaBillingPlans.NEIGHBOUR_HOOD_PLAN) {
+                      print("${widget.plan.id}  ${widget.isPlanActive}");
                       _changePlanAlert(context);
                     } else {
                       if (widget.plan.id ==
@@ -208,6 +214,8 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
                           context: context,
                         );
                       } else {
+                        print(
+                            "${widget.isPlanActive} && ${widget.activePlanId != null} && ${widget.activePlanId != SevaBillingPlans.NEIGHBOUR_HOOD_PLAN}");
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => BillingView(

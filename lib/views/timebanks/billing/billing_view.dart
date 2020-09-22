@@ -30,12 +30,15 @@ class BillingView extends StatefulWidget {
   final ChangeOwnershipModel changeOwnershipModel;
   final CommunityModel communityModel;
 
-  BillingView(this.timebankid, this.planId,
-      {this.user,
-      this.isFromChangeOwnership,
-      this.notificationId,
-      this.changeOwnershipModel,
-      this.communityModel});
+  BillingView(
+    this.timebankid,
+    this.planId, {
+    this.user,
+    this.isFromChangeOwnership,
+    this.notificationId,
+    this.changeOwnershipModel,
+    this.communityModel,
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -45,7 +48,6 @@ class BillingView extends StatefulWidget {
 
 class BillingViewState extends State<BillingView> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-
   Future<UserCardsModel> userCardDetails;
 
   BuildContext dialogContext;
@@ -76,8 +78,7 @@ class BillingViewState extends State<BillingView> {
         CardFormPaymentRequest(),
       ).then((PaymentMethod paymentMethod) {
         return paymentMethod;
-      }).catchError((setError) => {print(setError)});
-//      StripePayment.createTokenWithCard(paymentMethod.card).then((token) {
+      }).catchError((setError) => {print("Error in payment" + setError)});
       var paymentbloc = PaymentsBloc();
       paymentbloc.storeNewCard(paymentMethod.id, widget.timebankid,
           widget.user ?? SevaCore.of(context).loggedInUser, widget.planId);
@@ -102,7 +103,10 @@ class BillingViewState extends State<BillingView> {
           setState(() {});
         });
       } else {
-        _cardAlertMessage(isSuccess: true);
+        _cardAlertMessage(
+          isSuccess: true,
+          communityId: widget.user.currentCommunity,
+        );
       }
     }
   }
@@ -439,20 +443,32 @@ class BillingViewState extends State<BillingView> {
     );
   }
 
-  void _cardAlertMessage({bool isSuccess = true}) {
+  void _cardAlertMessage({
+    bool isSuccess = true,
+    String communityId,
+  }) {
+    print(communityId + " <<<<<<<<<<<<<<<request from function");
     showDialog(
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         if (isSuccess) {
           Future.delayed(Duration(milliseconds: 600), () {
+            // Here we need to update the payment to false
+            Firestore.instance
+                .collection('communities')
+                .document(communityId)
+                .updateData({
+              "payment.payment_success": false,
+            });
             Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (context1) => FlavorConfig.appFlavor == Flavor.APP
-                      ? MainApplication()
-                      : dev.MainApplication(),
-                ),
-                (Route<dynamic> route) => false);
+              MaterialPageRoute(
+                builder: (context1) => FlavorConfig.appFlavor == Flavor.APP
+                    ? MainApplication()
+                    : dev.MainApplication(),
+              ),
+              (Route<dynamic> route) => false,
+            );
           });
         }
         return AlertDialog(
