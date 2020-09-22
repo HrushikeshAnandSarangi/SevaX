@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -43,6 +44,7 @@ import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
 import 'package:sevaexchange/widgets/multi_select/flutter_multiselect.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:usage/uuid/uuid.dart';
 
 class CreateRequest extends StatefulWidget {
@@ -401,14 +403,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                                   child: RaisedButton(
                                     onPressed: createRequest,
                                     child: Text(
-                                      S
-                                          .of(context)
-                                          .create_request
-                                          .padLeft(10)
-                                          .padRight(10),
-                                      style: Theme.of(context)
-                                          .primaryTextTheme
-                                          .button,
+                                        S.of(context).create_request.padLeft(10).padRight(10),
+                                      style: Theme.of(context).primaryTextTheme.button,
                                     ),
                                   ),
                                 ),
@@ -1477,6 +1473,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           requestModel.photoUrl = timebankModel.photoUrl;
           break;
       }
+
+//      _settingModalBottomSheet(context);
       if (SevaCore.of(context).loggedInUser.calendarId != null) {
         showDialog(
           context: context,
@@ -1485,8 +1483,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               title: requestModel.title,
               isrequest: true,
               cancelled: () async {
-                List<String> acceptorList =
-                    widget.isOfferRequest && widget.offer.creatorAllowedCalender
+                List<String> acceptorList = widget.isOfferRequest && widget.offer.creatorAllowedCalender
                         ? [widget.offer.email]
                         : [];
                 requestModel.allowedCalenderUsers = acceptorList.toList();
@@ -1495,8 +1492,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     confirmationDialogContext: _context);
               },
               addToCalender: () async {
-                List<String> acceptorList =
-                    widget.isOfferRequest && widget.offer.creatorAllowedCalender
+                List<String> acceptorList = widget.isOfferRequest && widget.offer.creatorAllowedCalender
                         ? [widget.offer.email, requestModel.email]
                         : [requestModel.email];
                 requestModel.allowedCalenderUsers = acceptorList.toList();
@@ -1507,8 +1503,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           },
         );
       } else {
-        List<String> acceptorList =
-            widget.isOfferRequest != null && widget.offer.creatorAllowedCalender
+        List<String> acceptorList = widget.isOfferRequest != null && widget.offer.creatorAllowedCalender
                 ? [widget.offer.email]
                 : [];
         requestModel.allowedCalenderUsers = acceptorList.toList();
@@ -1519,6 +1514,133 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
   bool hasRegisteredLocation() {
     return location != null;
+  }
+
+  void _settingModalBottomSheet(context) {
+      Map<String, dynamic> stateOfcalendarCallback = {
+          "email": SevaCore.of(context).loggedInUser.email,
+          "mobile": globals.isMobile,
+          "envName": FlavorConfig.values.envMode
+      };
+      var stateVar = jsonEncode(stateOfcalendarCallback);
+
+      showModalBottomSheet(
+          context: context,
+          builder: (BuildContext bc) {
+              return Container(
+                  child: new Wrap(
+                      children: <Widget>[
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+                              child: Text(
+                                  S.of(context).calendars_popup_desc,
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                      TransactionsMatrixCheck(
+                                          transaction_matrix_type: "calendar_sync",
+                                          child: GestureDetector(
+                                              child: CircleAvatar(
+                                                  backgroundColor: Colors.white,
+                                                  radius: 40,
+                                                  child:
+                                                  Image.asset("lib/assets/images/googlecal.png"),
+                                              ),
+                                              onTap: () async {
+                                                  String redirectUrl =
+                                                      "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                                                  String authorizationUrl =
+                                                      "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                                                  log("auth url is ${authorizationUrl}");
+                                                  if (await canLaunch(authorizationUrl.toString())) {
+                                                      await launch(authorizationUrl.toString());
+                                                  }
+                                                  Navigator.of(bc).pop();
+
+
+
+
+
+                                              }),
+                                      ),
+                                      TransactionsMatrixCheck(
+                                          transaction_matrix_type: "calendar_sync",
+                                          child: GestureDetector(
+                                              child: CircleAvatar(
+                                                  backgroundColor: Colors.white,
+                                                  radius: 40,
+                                                  child:
+                                                  Image.asset("lib/assets/images/outlookcal.png"),
+                                              ),
+                                              onTap: () async {
+                                                  String redirectUrl =
+                                                      "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                                                  String authorizationUrl =
+                                                      "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                                                  if (await canLaunch(authorizationUrl.toString())) {
+                                                      await launch(authorizationUrl.toString());
+                                                  }
+                                                  Navigator.of(bc).pop();
+
+
+
+
+                                              }),
+                                      ),
+                                      TransactionsMatrixCheck(
+                                          transaction_matrix_type: "calendar_sync",
+                                          child: GestureDetector(
+                                              child: CircleAvatar(
+                                                  backgroundColor: Colors.white,
+                                                  radius: 40,
+                                                  child: Image.asset("lib/assets/images/ical.png"),
+                                              ),
+                                              onTap: () async {
+                                                  String redirectUrl =
+                                                      "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                                                  String authorizationUrl =
+                                                      "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                                                  if (await canLaunch(authorizationUrl.toString())) {
+                                                      await launch(authorizationUrl.toString());
+                                                  }
+                                                  Navigator.of(bc).pop();
+
+
+
+
+                                              }),
+                                      )
+                                  ],
+                              ),
+                          ),
+                          Row(
+                              children: <Widget>[
+                                  Spacer(),
+                                  FlatButton(
+                                      child: Text(
+                                          S.of(context).skip_for_now,
+                                          style: TextStyle(
+                                              color: FlavorConfig.values.theme.primaryColor),
+                                      ),
+                                      onPressed: () {
+                                          Navigator.of(bc).pop();
+
+
+
+
+                                      }),
+                              ],
+                          )
+                      ],
+                  ),
+              );
+          });
   }
 
   void continueCreateRequest({BuildContext confirmationDialogContext}) async {
@@ -2163,6 +2285,7 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
       {'goodTitle': goodsTitle?.firstWordUpperCase(), 'lang': goodsLanguage},
     );
   }
+
 
   Padding getSuggestionLayout({
     String suggestion,
