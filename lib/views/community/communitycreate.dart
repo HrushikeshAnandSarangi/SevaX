@@ -140,15 +140,14 @@ class CreateEditCommunityViewFormState
   bool autoValidateText = false;
 
   void initState() {
-    super.initState();
-    var _searchText = "";
-
     if (widget.isCreateTimebank == false) {
       getModelData();
       Future.delayed(Duration.zero, () {
         createEditCommunityBloc.getChildTimeBanks(context);
       });
     }
+    super.initState();
+
     focusNodes = List.generate(8, (_) => FocusNode());
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
@@ -168,7 +167,6 @@ class CreateEditCommunityViewFormState
         .forEach((s) {
       if (s.isEmpty) {
         setState(() {
-          _searchText = "";
           errTxt = null;
         });
       } else {
@@ -236,9 +234,11 @@ class CreateEditCommunityViewFormState
               communityId: SevaCore.of(context).loggedInUser.currentCommunity)
           .then((onValue) {
         communityModel = onValue;
+
         communitynName = communityModel.name;
         taxPercentage = onValue.taxPercentage * 100;
         searchTextController.text = communityModel.name;
+        print("about ${communityModel.about}");
       });
     });
 
@@ -676,7 +676,7 @@ class CreateEditCommunityViewFormState
                           ),
                         ),
                         TransactionsMatrixCheck(
-                            transaction_matrix_type: "parent_timebanks",
+                          transaction_matrix_type: "parent_timebanks",
                           child: Center(
                             child: ParentTimebankPickerWidget(
                               selectedTimebank: this.selectedTimebank,
