@@ -11,11 +11,13 @@ class UpgradePlanBanner extends StatefulWidget {
   final BannerDetails details;
   final String activePlanName;
   final bool isCommunityPrivate;
+  final bool showAppBar;
   const UpgradePlanBanner({
     Key key,
     this.details,
     this.activePlanName,
     this.isCommunityPrivate,
+    this.showAppBar = true,
   })  : assert(details != null),
         super(key: key);
 
@@ -57,13 +59,15 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Upgrade Plan',
-          style: TextStyle(fontSize: 18),
-        ),
-      ),
+      appBar: widget.showAppBar
+          ? AppBar(
+              centerTitle: true,
+              title: Text(
+                'Upgrade Plan',
+                style: TextStyle(fontSize: 18),
+              ),
+            )
+          : null,
       body: Container(
         width: double.infinity,
         padding: EdgeInsets.all(30),
@@ -136,7 +140,7 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
                   MaterialPageRoute(
                     builder: (context) => BillingPlanDetails(
                       user: SevaCore.of(context).loggedInUser,
-                      planName: widget.activePlanName,
+                      activePlanId: widget.activePlanName,
                       isPlanActive: true,
                       autoImplyLeading: true,
                       isPrivateTimebank: widget.isCommunityPrivate ?? false,

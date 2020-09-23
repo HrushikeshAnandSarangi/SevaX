@@ -363,6 +363,7 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
             .updateData(
           {
             "payment": {
+              "status": 200,
               "payment_success": true,
               "planId": widget.plan.id,
               "message": isBillMe

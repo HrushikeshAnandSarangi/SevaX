@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/ui/screens/upgrade_plan_banners/pages/upgrade_plan_banner.dart';
@@ -10,9 +8,6 @@ class TransactionsMatrixCheck extends StatelessWidget {
   final Widget child;
   final String transaction_matrix_type;
   final BannerDetails upgradeDetails;
-  // Map<String, dynamic> paymentStatusMap;
-  // bool allowTransaction;
-  // final
 
   TransactionsMatrixCheck({
     Key key,
@@ -24,14 +19,13 @@ class TransactionsMatrixCheck extends StatelessWidget {
   });
 
   //this widget checks wether this plan allows a particular transaction to be done or not
-
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> matrix_current_plan = AppConfig
-        .plan_transactions_matrix[AppConfig.paymentStatusMap['planId']];
-    bool allowTransaction =
-        matrix_current_plan[transaction_matrix_type]['allow'];
-    log("<><><><><><><><> $allowTransaction");
+    // Map<String, dynamic> matrix_current_plan = AppConfig
+    //     .plan_transactions_matrix[AppConfig.paymentStatusMap['planId']];
+    // bool allowTransaction =
+    //     matrix_current_plan[transaction_matrix_type]['allow'];
+    // log("<><><><><><><><> $allowTransaction");
 
     // paymentStatusMap = ;
     // Map<String, dynamic> plan_transactions_matrix =
@@ -41,7 +35,7 @@ class TransactionsMatrixCheck extends StatelessWidget {
     // allowTransaction = matrix_current_plan[transaction_matrix_type]['allow'];
     // log("<><><><><><><><> $allowTransaction");
 
-    return allowTransaction
+    return checkAllowedTransaction(transaction_matrix_type)
         ? child
         : GestureDetector(
             onTap: () {
@@ -101,4 +95,10 @@ class TransactionsMatrixCheck extends StatelessWidget {
   //     },
   //   );
   // }
+
+  static bool checkAllowedTransaction(String transaction_matrix_type) {
+    Map<String, dynamic> matrix_current_plan = AppConfig
+        .plan_transactions_matrix[AppConfig.paymentStatusMap['planId']];
+    return matrix_current_plan[transaction_matrix_type]['allow'];
+  }
 }
