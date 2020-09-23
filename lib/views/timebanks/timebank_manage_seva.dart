@@ -1,20 +1,18 @@
 import 'dart:collection';
-import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
-import 'package:sevaexchange/models/invoice_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/ui/screens/invoice/pages/report_pdf.dart';
 import 'package:sevaexchange/ui/screens/invoice/pages/months_list.dart';
 import 'package:sevaexchange/ui/screens/reported_members/pages/reported_member_page.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/soft_delete_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
-import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
@@ -57,11 +55,12 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
       });
     });
     Future.delayed(Duration.zero, () {
-      FirestoreManager.getplanForCurrentCommunity(widget.timebankModel.communityId).then((onvalue){
+      FirestoreManager.getplanForCurrentCommunity(
+              widget.timebankModel.communityId)
+          .then((onvalue) {
         planId = onvalue;
       });
     });
-
 
     setState(() {});
   }
@@ -299,21 +298,22 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
   }
 
   Widget viewInvoice({BuildContext context}) {
-    if(Theme.of(context).platform == TargetPlatform.android ||
-        Theme.of(context).platform == TargetPlatform.iOS){
-        return Container();
+    if (Theme.of(context).platform == TargetPlatform.android ||
+        Theme.of(context).platform == TargetPlatform.iOS) {
+      return Container();
     }
     return TransactionsMatrixCheck(
-        transaction_matrix_type: "invoice_generation",
+      upgradeDetails: AppConfig.upgradePlanBannerModel.invoice_generation,
+      transaction_matrix_type: "invoice_generation",
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => MonthsListing.of(
-                communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-                planId: planId,
-                communityModel:communityModel
-              ),
+                  communityId:
+                      SevaCore.of(context).loggedInUser.currentCommunity,
+                  planId: planId,
+                  communityModel: communityModel),
             ),
           );
         },
@@ -327,7 +327,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                 color: Colors.red,
               ),
             ),
-              SizedBox(height: 20),
+            SizedBox(height: 20),
           ],
         ),
       ),
@@ -363,11 +363,9 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                   child: changeOwnerShip,
                 )
               : Container(),
-
           viewInvoice(context: context),
           viewReportedMembers(context: context),
           SizedBox(height: 20),
-
           widget.timebankModel.creatorId ==
                   SevaCore.of(context).loggedInUser.sevaUserID
               ? deleteTimebank

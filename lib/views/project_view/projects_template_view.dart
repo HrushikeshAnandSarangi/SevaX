@@ -6,6 +6,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/project_view/create_edit_project.dart';
@@ -133,7 +134,11 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
               isProjectTemplateSelected = true;
             }),
           ),
-          TransactionsMatrixCheck(transaction_matrix_type: "project_templates", child: searchFieldWidget()),
+          TransactionsMatrixCheck(
+            upgradeDetails: AppConfig.upgradePlanBannerModel.project_templates,
+            transaction_matrix_type: "project_templates",
+            child: searchFieldWidget(),
+          ),
           buildTemplateWidget(),
         ],
       ),
@@ -176,16 +181,16 @@ class _ProjectTemplateViewState extends State<ProjectTemplateView> {
               ProjectTemplateModel projectTemplateModel =
                   projectTemplateList[index];
               return RadioListTile(
-              value: index,
-              groupValue: value,
-              activeColor: primaryColor,
-              onChanged: (ind) => setState(() {
-                value = ind;
-                selectedProjectTemplate = projectTemplateList[ind];
-                print("name ${selectedProjectTemplate.templateName}");
-              }),
-              title: Text(projectTemplateModel.templateName),
-                );
+                value: index,
+                groupValue: value,
+                activeColor: primaryColor,
+                onChanged: (ind) => setState(() {
+                  value = ind;
+                  selectedProjectTemplate = projectTemplateList[ind];
+                  print("name ${selectedProjectTemplate.templateName}");
+                }),
+                title: Text(projectTemplateModel.templateName),
+              );
             },
           );
         },
