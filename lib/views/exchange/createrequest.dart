@@ -7,7 +7,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:sevaexchange/globals.dart' as globals;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +19,7 @@ import 'package:sevaexchange/components/calender_event_confirm_dialog.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
@@ -142,7 +142,8 @@ class RequestCreateForm extends StatefulWidget {
   }
 }
 
-class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindingObserver{
+class RequestCreateFormState extends State<RequestCreateForm>
+    with WidgetsBindingObserver {
   final _formKey = GlobalKey<FormState>();
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
@@ -202,18 +203,18 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
 
   @override
   void dispose() {
-      WidgetsBinding.instance.removeObserver(this);
-      super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
-      if (state == AppLifecycleState.resumed) {
-          log("over riding stuff");
-          Future.delayed(Duration(milliseconds: 1000), (){
-              fetchLinkData();
-          });
-      }
+    if (state == AppLifecycleState.resumed) {
+      log("over riding stuff");
+      Future.delayed(Duration(milliseconds: 1000), () {
+        fetchLinkData();
+      });
+    }
   }
 
   void get _fetchCurrentlocation async {
@@ -348,8 +349,8 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                           children: <Widget>[
                             headerContainer(snapshot),
 //                            TransactionsMatrixCheck(transaction_matrix_type: "cash_goods_requests", child: RequestTypeWidget()),
-                              RequestTypeWidget(),
-                              Text(
+                            RequestTypeWidget(),
+                            Text(
                               S.of(context).request_title,
                               style: TextStyle(
                                 fontSize: 16,
@@ -422,8 +423,14 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                                   child: RaisedButton(
                                     onPressed: createRequest,
                                     child: Text(
-                                        S.of(context).create_request.padLeft(10).padRight(10),
-                                      style: Theme.of(context).primaryTextTheme.button,
+                                      S
+                                          .of(context)
+                                          .create_request
+                                          .padLeft(10)
+                                          .padRight(10),
+                                      style: Theme.of(context)
+                                          .primaryTextTheme
+                                          .button,
                                     ),
                                   ),
                                 ),
@@ -440,82 +447,82 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   }
 
   Widget RequestGoodsDescriptionData() {
-      return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-              Text(
-                  S.of(context).request_goods_description,
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Europa',
-                      color: Colors.black,
-                  ),
-              ),
-              GoodsDynamicSelection(
-                  onSelectedGoods: (goods) => {
-                      print(goods),
-                      requestModel.goodsDonationDetails.requiredGoods = goods
-                  },
-              ),
-              Text(
-                  S.of(context).request_goods_address,
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Europa',
-                      color: Colors.black,
-                  ),
-              ),
-              Text(
-                  S.of(context).request_goods_address_hint,
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                  ),
-              ),
-              TextFormField(
-                  autovalidate: autoValidateCashText,
-                  onChanged: (value) {
-                      if (value.length > 1) {
-                          setState(() {
-                              autoValidateCashText = true;
-                          });
-                      } else {
-                          setState(() {
-                              autoValidateCashText = false;
-                          });
-                      }
-                  },
-                  focusNode: focusNodes[8],
-                  onFieldSubmitted: (v) {
-                      FocusScope.of(context).requestFocus(focusNodes[8]);
-                  },
-                  textInputAction: TextInputAction.next,
-                  decoration: InputDecoration(
-                      errorMaxLines: 2,
-                      hintText: S.of(context).request_goods_address_inputhint,
-                      hintStyle: hintTextStyle,
-                  ),
-                  initialValue: widget.offer != null && widget.isOfferRequest
-                      ? getOfferDescription(
-                      offerDataModel: widget.offer,
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            S.of(context).request_goods_description,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          GoodsDynamicSelection(
+            onSelectedGoods: (goods) => {
+              print(goods),
+              requestModel.goodsDonationDetails.requiredGoods = goods
+            },
+          ),
+          Text(
+            S.of(context).request_goods_address,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa',
+              color: Colors.black,
+            ),
+          ),
+          Text(
+            S.of(context).request_goods_address_hint,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+            ),
+          ),
+          TextFormField(
+            autovalidate: autoValidateCashText,
+            onChanged: (value) {
+              if (value.length > 1) {
+                setState(() {
+                  autoValidateCashText = true;
+                });
+              } else {
+                setState(() {
+                  autoValidateCashText = false;
+                });
+              }
+            },
+            focusNode: focusNodes[8],
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(focusNodes[8]);
+            },
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              errorMaxLines: 2,
+              hintText: S.of(context).request_goods_address_inputhint,
+              hintStyle: hintTextStyle,
+            ),
+            initialValue: widget.offer != null && widget.isOfferRequest
+                ? getOfferDescription(
+                    offerDataModel: widget.offer,
                   )
-                      : "",
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 3,
-                  validator: (value) {
-                      if (value.isEmpty) {
-                          return S.of(context).validation_error_general_text;
-                      } else {
-                          print(requestModel);
-                          requestModel.goodsDonationDetails.address = value;
+                : "",
+            keyboardType: TextInputType.multiline,
+            maxLines: 3,
+            validator: (value) {
+              if (value.isEmpty) {
+                return S.of(context).validation_error_general_text;
+              } else {
+                print(requestModel);
+                requestModel.goodsDonationDetails.address = value;
 //                setState(() {});
-                      }
-                      return null;
-                  },
-              ),
-          ]);
+              }
+              return null;
+            },
+          ),
+        ]);
   }
 
   Widget RequestPaymentACH(RequestModel requestModel) {
@@ -955,22 +962,32 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                       setState(() => {});
                     },
                   ),
-                  _optionRadioButton(
-                    title: S.of(context).request_type_cash,
-                    value: RequestType.CASH,
-                    groupvalue: requestModel.requestType,
-                    onChanged: (value) {
-                      requestModel.requestType = value;
-                      setState(() => {});
-                    }),
-                  _optionRadioButton(
-                      title: S.of(context).request_type_goods,
-                      value: RequestType.GOODS,
-                      groupvalue: requestModel.requestType,
-                      onChanged: (value) {
-                        requestModel.requestType = value;
-                        setState(() => {});
-                      }),
+                  TransactionsMatrixCheck(
+                    upgradeDetails:
+                        AppConfig.upgradePlanBannerModel.cash_request,
+                    transaction_matrix_type: 'cash_request',
+                    child: _optionRadioButton(
+                        title: S.of(context).request_type_cash,
+                        value: RequestType.CASH,
+                        groupvalue: requestModel.requestType,
+                        onChanged: (value) {
+                          requestModel.requestType = value;
+                          setState(() => {});
+                        }),
+                  ),
+                  TransactionsMatrixCheck(
+                    upgradeDetails:
+                        AppConfig.upgradePlanBannerModel.goods_request,
+                    transaction_matrix_type: 'goods_request',
+                    child: _optionRadioButton(
+                        title: S.of(context).request_type_goods,
+                        value: RequestType.GOODS,
+                        groupvalue: requestModel.requestType,
+                        onChanged: (value) {
+                          requestModel.requestType = value;
+                          setState(() => {});
+                        }),
+                  ),
                 ],
               )
             ],
@@ -1416,9 +1433,9 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
       String timestampString = timestamp.toString();
       requestModel.id = '${requestModel.email}*$timestampString';
       if (requestModel.isRecurring) {
-          requestModel.parent_request_id = requestModel.id;
+        requestModel.parent_request_id = requestModel.id;
       } else {
-          requestModel.parent_request_id = null;
+        requestModel.parent_request_id = null;
       }
       requestModel.softDelete = false;
       requestModel.postTimestamp = timestamp;
@@ -1430,7 +1447,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
       requestModel.root_timebank_id = FlavorConfig.values.timebankId;
       requestModel.softDelete = false;
 
-
       if (SevaCore.of(context).loggedInUser.calendarId != null) {
         showDialog(
           context: context,
@@ -1439,18 +1455,20 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
               title: requestModel.title,
               isrequest: true,
               cancelled: () async {
-                List<String> acceptorList = widget.isOfferRequest!=null && widget.offer.creatorAllowedCalender
-                        ? [widget.offer.email]
-                        : [];
+                List<String> acceptorList = widget.isOfferRequest != null &&
+                        widget.offer.creatorAllowedCalender
+                    ? [widget.offer.email]
+                    : [];
                 requestModel.allowedCalenderUsers = acceptorList.toList();
 
                 await continueCreateRequest(
                     confirmationDialogContext: _context);
               },
               addToCalender: () async {
-                List<String> acceptorList = widget.isOfferRequest!=null && widget.offer.creatorAllowedCalender
-                        ? [widget.offer.email, requestModel.email]
-                        : [requestModel.email];
+                List<String> acceptorList = widget.isOfferRequest != null &&
+                        widget.offer.creatorAllowedCalender
+                    ? [widget.offer.email, requestModel.email]
+                    : [requestModel.email];
                 requestModel.allowedCalenderUsers = acceptorList.toList();
                 await continueCreateRequest(
                     confirmationDialogContext: _context);
@@ -1458,55 +1476,56 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
             );
           },
         );
-      }
-      else {
+      } else {
 //        continueCreateRequest(confirmationDialogContext: null);
 
-          showDialog(
-              context: context,
-              builder: (_context) {
-                  return CalenderEventConfirmationDialog(
-                      title: requestModel.title,
-                      isrequest: true,
-                      cancelled: () async {
-                          List<String> acceptorList = widget.isOfferRequest!=null && widget.offer.creatorAllowedCalender
-                              ? [widget.offer.email]
-                              : [];
-                          requestModel.allowedCalenderUsers = acceptorList.toList();
+        showDialog(
+          context: context,
+          builder: (_context) {
+            return CalenderEventConfirmationDialog(
+              title: requestModel.title,
+              isrequest: true,
+              cancelled: () async {
+                List<String> acceptorList = widget.isOfferRequest != null &&
+                        widget.offer.creatorAllowedCalender
+                    ? [widget.offer.email]
+                    : [];
+                requestModel.allowedCalenderUsers = acceptorList.toList();
 
-                          await continueCreateRequest(
-                              confirmationDialogContext: _context);
-                          eventsIdsArr = [];
-                      },
-                      addToCalender: () async {
-                          List<String> acceptorList = widget.isOfferRequest!=null && widget.offer.creatorAllowedCalender
-                              ? [widget.offer.email]
-                              : [];
-                          requestModel.allowedCalenderUsers = acceptorList.toList();
-                          Navigator.of(_context).pop();
-
-                          linearProgressForCreatingRequest();
-                          eventsIdsArr = await _writeToDB();
-                          await _updateProjectModel();
-                          await _settingModalBottomSheet(context);
-
-                          Navigator.pop(dialogContext);
-                          eventsIdsArr = [];
-                          if (widget.isOfferRequest == true && widget.userModel != null) {
-                              Navigator.pop(context, {'response': 'ACCEPTED'});
-                          } else {
-                              if (eventsIdsArr.length == 0) {
-                                  showInsufficientBalance();
-                              }
-                              if (_context != null) {
-                                  Navigator.pop(_context);
-                              }
-                              Navigator.pop(context);
-                          }
-                      },
-                  );
+                await continueCreateRequest(
+                    confirmationDialogContext: _context);
+                eventsIdsArr = [];
               },
-          );
+              addToCalender: () async {
+                List<String> acceptorList = widget.isOfferRequest != null &&
+                        widget.offer.creatorAllowedCalender
+                    ? [widget.offer.email]
+                    : [];
+                requestModel.allowedCalenderUsers = acceptorList.toList();
+                Navigator.of(_context).pop();
+
+                linearProgressForCreatingRequest();
+                eventsIdsArr = await _writeToDB();
+                await _updateProjectModel();
+                await _settingModalBottomSheet(context);
+
+                Navigator.pop(dialogContext);
+                eventsIdsArr = [];
+                if (widget.isOfferRequest == true && widget.userModel != null) {
+                  Navigator.pop(context, {'response': 'ACCEPTED'});
+                } else {
+                  if (eventsIdsArr.length == 0) {
+                    showInsufficientBalance();
+                  }
+                  if (_context != null) {
+                    Navigator.pop(_context);
+                  }
+                  Navigator.pop(context);
+                }
+              },
+            );
+          },
+        );
       }
     }
   }
@@ -1516,106 +1535,106 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   }
 
   void _settingModalBottomSheet(context) {
-      Map<String, dynamic> stateOfcalendarCallback = {
-          "email": SevaCore.of(context).loggedInUser.email,
-          "mobile": globals.isMobile,
-          "envName": FlavorConfig.values.envMode,
-          "eventsArr":eventsIdsArr,
-          "createType":"REQUEST"
-      };
-      var stateVar = jsonEncode(stateOfcalendarCallback);
+    Map<String, dynamic> stateOfcalendarCallback = {
+      "email": SevaCore.of(context).loggedInUser.email,
+      "mobile": globals.isMobile,
+      "envName": FlavorConfig.values.envMode,
+      "eventsArr": eventsIdsArr,
+      "createType": "REQUEST"
+    };
+    var stateVar = jsonEncode(stateOfcalendarCallback);
 
-      showModalBottomSheet(
-          context: context,
-          builder: (BuildContext bc) {
-              return Container(
-                  child: new Wrap(
-                      children: <Widget>[
-                          Padding(
-                              padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
-                              child: Text(
-                                  S.of(context).calendars_popup_desc,
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                          ),
-                          Padding(
-                              padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                      GestureDetector(
-                                          child: CircleAvatar(
-                                              backgroundColor: Colors.white,
-                                              radius: 40,
-                                              child:
-                                              Image.asset("lib/assets/images/googlecal.png"),
-                                          ),
-                                          onTap: () async {
-                                              String redirectUrl =
-                                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                                              String authorizationUrl =
-                                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                                              log("auth url is ${authorizationUrl}");
-                                              if (await canLaunch(authorizationUrl.toString())) {
-                                                  await launch(authorizationUrl.toString());
-                                              }
-                                              Navigator.of(bc).pop();
-                                          }),
-                                      GestureDetector(
-                                          child: CircleAvatar(
-                                              backgroundColor: Colors.white,
-                                              radius: 40,
-                                              child:
-                                              Image.asset("lib/assets/images/outlookcal.png"),
-                                          ),
-                                          onTap: () async {
-                                              String redirectUrl =
-                                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                                              String authorizationUrl =
-                                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                                              if (await canLaunch(authorizationUrl.toString())) {
-                                                  await launch(authorizationUrl.toString());
-                                              }
-                                              Navigator.of(bc).pop();
-                                          }),
-                                      GestureDetector(
-                                          child: CircleAvatar(
-                                              backgroundColor: Colors.white,
-                                              radius: 40,
-                                              child: Image.asset("lib/assets/images/ical.png"),
-                                          ),
-                                          onTap: () async {
-                                              String redirectUrl =
-                                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                                              String authorizationUrl =
-                                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                                              if (await canLaunch(authorizationUrl.toString())) {
-                                                  await launch(authorizationUrl.toString());
-                                              }
-                                              Navigator.of(bc).pop();
-                                          })
-                                  ],
-                              ),
-                          ),
-                          Row(
-                              children: <Widget>[
-                                  Spacer(),
-                                  FlatButton(
-                                      child: Text(
-                                          S.of(context).skip_for_now,
-                                          style: TextStyle(
-                                              color: FlavorConfig.values.theme.primaryColor),
-                                      ),
-                                      onPressed: () {
-                                          Navigator.of(bc).pop();
-                                      }),
-                              ],
-                          )
-                      ],
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: new Wrap(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+                  child: Text(
+                    S.of(context).calendars_popup_desc,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-              );
-          });
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child:
+                                Image.asset("lib/assets/images/googlecal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl =
+                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                            log("auth url is ${authorizationUrl}");
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                          }),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child:
+                                Image.asset("lib/assets/images/outlookcal.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl =
+                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                          }),
+                      GestureDetector(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 40,
+                            child: Image.asset("lib/assets/images/ical.png"),
+                          ),
+                          onTap: () async {
+                            String redirectUrl =
+                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                            String authorizationUrl =
+                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                            if (await canLaunch(authorizationUrl.toString())) {
+                              await launch(authorizationUrl.toString());
+                            }
+                            Navigator.of(bc).pop();
+                          })
+                    ],
+                  ),
+                ),
+                Row(
+                  children: <Widget>[
+                    Spacer(),
+                    FlatButton(
+                        child: Text(
+                          S.of(context).skip_for_now,
+                          style: TextStyle(
+                              color: FlavorConfig.values.theme.primaryColor),
+                        ),
+                        onPressed: () {
+                          Navigator.of(bc).pop();
+                        }),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
   }
 
   void continueCreateRequest({BuildContext confirmationDialogContext}) async {
@@ -1753,19 +1772,18 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   }
 
   Future<void> fetchLinkData() async {
-      // FirebaseDynamicLinks.getInitialLInk does a call to firebase to get us the real link because we have shortened it.
-      var link = await FirebaseDynamicLinks.instance.getInitialLink();
-      log("<<<<<<<<<<<<<<<<<<<< $link");
-      // buildContext = context;
-      // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
-      FirebaseDynamicLinks.instance.onLink(onError: (_) async {
-          print("Error from create req!!!");
-      }, onSuccess: (PendingDynamicLinkData dynamicLink) async {
-          print("success from create req!!!");
+    // FirebaseDynamicLinks.getInitialLInk does a call to firebase to get us the real link because we have shortened it.
+    var link = await FirebaseDynamicLinks.instance.getInitialLink();
+    log("<<<<<<<<<<<<<<<<<<<< $link");
+    // buildContext = context;
+    // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
+    FirebaseDynamicLinks.instance.onLink(onError: (_) async {
+      print("Error from create req!!!");
+    }, onSuccess: (PendingDynamicLinkData dynamicLink) async {
+      print("success from create req!!!");
+    });
 
-      });
-
-      // This will handle incoming links if the application is already opened
+    // This will handle incoming links if the application is already opened
   }
 
   String getTimeInFormat(int timeStamp) {
@@ -1788,7 +1806,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   }
 
   Future<List<String>> _writeToDB() async {
-
     if (requestModel.id == null) return [];
     // credit the timebank the required credits before the request creation
     await TransactionBloc().createNewTransaction(
@@ -1806,7 +1823,8 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
       resultVar.add(requestModel.id);
       return resultVar;
     } else {
-      resultVar = await FirestoreManager.createRecurringEvents(requestModel: requestModel);
+      resultVar = await FirestoreManager.createRecurringEvents(
+          requestModel: requestModel);
       return resultVar;
     }
   }
@@ -2076,8 +2094,8 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
       querySnapshot.documents.forEach((DocumentSnapshot data) {
         goods[data.documentID] = data['goodTitle'];
       });
-        print(goods);
-        isDataLoaded = true;
+      print(goods);
+      isDataLoaded = true;
     });
 
     super.initState();
@@ -2257,7 +2275,6 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
       {'goodTitle': goodsTitle?.firstWordUpperCase(), 'lang': goodsLanguage},
     );
   }
-
 
   Padding getSuggestionLayout({
     String suggestion,
