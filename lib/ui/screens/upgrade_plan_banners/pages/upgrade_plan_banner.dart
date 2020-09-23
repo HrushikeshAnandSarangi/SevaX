@@ -1,12 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 
 class UpgradePlanBanner extends StatefulWidget {
   final BannerDetails details;
-
-  const UpgradePlanBanner({Key key, this.details})
-      : assert(details != null),
+  final String activePlanName;
+  final bool isCommunityPrivate;
+  const UpgradePlanBanner({
+    Key key,
+    this.details,
+    this.activePlanName,
+    this.isCommunityPrivate,
+  })  : assert(details != null),
         super(key: key);
 
   @override
@@ -65,11 +72,22 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
             Spacer(),
             RaisedButton(
               child: Text(
-                'Upgrade to community',
+                'Upgrade Plan',
                 style: TextStyle(fontSize: 16),
               ),
               onPressed: () {
-                //TODO: navigate to plan screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BillingPlanDetails(
+                      user: SevaCore.of(context).loggedInUser,
+                      planName: widget.activePlanName,
+                      isPlanActive: true,
+                      autoImplyLeading: true,
+                      isPrivateTimebank: widget.isCommunityPrivate,
+                    ),
+                  ),
+                );
               },
             ),
             Spacer(flex: 2),
