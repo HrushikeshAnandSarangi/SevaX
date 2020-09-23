@@ -1554,6 +1554,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
 
                           await continueCreateRequest(
                               confirmationDialogContext: _context);
+                          eventsIdsArr = [];
                       },
                       addToCalender: () async {
                           List<String> acceptorList = widget.isOfferRequest!=null && widget.offer.creatorAllowedCalender
@@ -1564,10 +1565,11 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
 
                           linearProgressForCreatingRequest();
                           eventsIdsArr = await _writeToDB();
-                          await _settingModalBottomSheet(context);
                           await _updateProjectModel();
-                          Navigator.pop(dialogContext);
+                          await _settingModalBottomSheet(context);
 
+                          Navigator.pop(dialogContext);
+                          eventsIdsArr = [];
                           if (widget.isOfferRequest == true && widget.userModel != null) {
                               Navigator.pop(context, {'response': 'ACCEPTED'});
                           } else {

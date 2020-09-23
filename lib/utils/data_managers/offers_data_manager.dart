@@ -160,7 +160,7 @@ Future<void> createOffer({@required OfferModel offerModel}) async {
       .setData(offerModel.toMap());
 }
 
-Future<int> createRecurringEventsOffer(
+Future<List<String>> createRecurringEventsOffer(
     {@required OfferModel offerModel}) async {
   var batch = Firestore.instance.batch();
   var db = Firestore.instance;
@@ -170,6 +170,7 @@ Future<int> createRecurringEventsOffer(
       eventEndDate = DateTime.fromMillisecondsSinceEpoch(
           offerModel.groupOfferDataModel.endDate);
   List<Map<String, dynamic>> temparr = [];
+  List<String> offerIds = [];
   DocumentSnapshot projectDoc = null;
 
   if (offerModel.end.endType == "on") {
@@ -266,11 +267,12 @@ Future<int> createRecurringEventsOffer(
 
   temparr.forEach((tempobj) {
     batch.setData(db.collection("offers").document(tempobj['id']), tempobj);
+    offerIds.add(tempobj['id']);
     log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['groupOfferDataModel']['startDate']).toString()} with occurence count of ${tempobj['occurenceCount']}");
   });
 
   await batch.commit();
-  return 1;
+  return offerIds;
 }
 
 Future<void> updateRecurrenceOffersFrontEnd(
