@@ -512,55 +512,66 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
     }
 
     if (SevaCore.of(context).loggedInUser.calendarId != null) {
-      showDialog(
-        context: context,
-        builder: (_context) {
-          return CalenderEventConfirmationDialog(
-            title: title,
-            isrequest: false,
-            cancelled: () async {
-              await _bloc.createOneToManyOffer(
-                  user: SevaCore.of(context).loggedInUser,
-                  timebankId: widget.timebankId);
-              Navigator.of(_context).pop();
-            },
-            addToCalender: () async {
-              _bloc.allowedCalenderEvent = true;
+        _bloc.allowedCalenderEvent = true;
 
-              await _bloc.createOneToManyOffer(
-                  user: SevaCore.of(context).loggedInUser,
-                  timebankId: widget.timebankId);
-              Navigator.of(_context).pop();
-            },
-          );
-        },
-      );
+        await _bloc.createOneToManyOffer(
+            user: SevaCore.of(context).loggedInUser,
+            timebankId: widget.timebankId);
+//      showDialog(
+//        context: context,
+//        builder: (_context) {
+//          return CalenderEventConfirmationDialog(
+//            title: title,
+//            isrequest: false,
+//            cancelled: () async {
+//              await _bloc.createOneToManyOffer(
+//                  user: SevaCore.of(context).loggedInUser,
+//                  timebankId: widget.timebankId);
+//              Navigator.of(_context).pop();
+//            },
+//            addToCalender: () async {
+//              _bloc.allowedCalenderEvent = true;
+//
+//              await _bloc.createOneToManyOffer(
+//                  user: SevaCore.of(context).loggedInUser,
+//                  timebankId: widget.timebankId);
+//              Navigator.of(_context).pop();
+//            },
+//          );
+//        },
+//      );
     } else {
-        showDialog(
-            context: context,
-            builder: (_context) {
-                return CalenderEventConfirmationDialog(
-                    title: title,
-                    isrequest: false,
-                    cancelled: () async {
-                        await _bloc.createOneToManyOffer(
-                            user: SevaCore.of(context).loggedInUser,
-                            timebankId: widget.timebankId);
-                        Navigator.of(_context).pop();
-                    },
-                    addToCalender: () async {
-                        _bloc.allowedCalenderEvent = true;
+        _bloc.allowedCalenderEvent = true;
 
-                        await _bloc.createOneToManyOffer(
-                            user: SevaCore.of(context).loggedInUser,
-                            timebankId: widget.timebankId);
-                        await _settingModalBottomSheet(context);
-
-                        Navigator.of(_context).pop();
-                    },
-                );
-            },
-        );
+        await _bloc.createOneToManyOffer(
+            user: SevaCore.of(context).loggedInUser,
+            timebankId: widget.timebankId);
+        await _settingModalBottomSheet(context);
+//        showDialog(
+//            context: context,
+//            builder: (_context) {
+//                return CalenderEventConfirmationDialog(
+//                    title: title,
+//                    isrequest: false,
+//                    cancelled: () async {
+//                        await _bloc.createOneToManyOffer(
+//                            user: SevaCore.of(context).loggedInUser,
+//                            timebankId: widget.timebankId);
+//                        Navigator.of(_context).pop();
+//                    },
+//                    addToCalender: () async {
+//                        _bloc.allowedCalenderEvent = true;
+//
+//                        await _bloc.createOneToManyOffer(
+//                            user: SevaCore.of(context).loggedInUser,
+//                            timebankId: widget.timebankId);
+//                        await _settingModalBottomSheet(context);
+//
+//                        Navigator.of(_context).pop();
+//                    },
+//                );
+//            },
+//        );
     }
   }
 
