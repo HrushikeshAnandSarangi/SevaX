@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
@@ -8,6 +10,7 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/timebank_home_page.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
 import 'package:sevaexchange/ui/screens/search/pages/search_page.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
@@ -38,10 +41,16 @@ class _HomeDashBoardState extends State<HomeDashBoard>
 
   @override
   void initState() {
+    planTransactionsMatrix();
     super.initState();
     Future.delayed(Duration.zero, () {
       _homeDashBoardBloc.getAllCommunities(SevaCore.of(context).loggedInUser);
     });
+  }
+
+  Future<void> planTransactionsMatrix() async {
+    AppConfig.plan_transactions_matrix = await json
+        .decode(AppConfig.remoteConfig.getString('transactions_plans_matrix'));
   }
 
   @override

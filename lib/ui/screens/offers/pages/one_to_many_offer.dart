@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
@@ -19,6 +20,12 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/location_picker_widget.dart';
+import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
+import 'package:sevaexchange/globals.dart' as globals;
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../../../flavor_config.dart';
 
 class OneToManyOffer extends StatefulWidget {
   final OfferModel offerModel;
@@ -903,7 +910,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
             title: title,
             isrequest: false,
             cancelled: () async {
-              _bloc.createOneToManyOffer(
+              await _bloc.createOneToManyOffer(
                   user: SevaCore.of(context).loggedInUser,
                   timebankId: widget.timebankId);
               Navigator.of(_context).pop();
@@ -911,7 +918,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
             addToCalender: () async {
               _bloc.allowedCalenderEvent = true;
 
-              _bloc.createOneToManyOffer(
+              await _bloc.createOneToManyOffer(
                   user: SevaCore.of(context).loggedInUser,
                   timebankId: widget.timebankId);
               Navigator.of(_context).pop();
@@ -920,10 +927,148 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
         },
       );
     } else {
-      _bloc.createOneToManyOffer(
-          user: SevaCore.of(context).loggedInUser,
-          timebankId: widget.timebankId);
+        showDialog(
+            context: context,
+            builder: (_context) {
+                return CalenderEventConfirmationDialog(
+                    title: title,
+                    isrequest: false,
+                    cancelled: () async {
+                        await _bloc.createOneToManyOffer(
+                            user: SevaCore.of(context).loggedInUser,
+                            timebankId: widget.timebankId);
+                        Navigator.of(_context).pop();
+                    },
+                    addToCalender: () async {
+                        _bloc.allowedCalenderEvent = true;
+
+                        await _bloc.createOneToManyOffer(
+                            user: SevaCore.of(context).loggedInUser,
+                            timebankId: widget.timebankId);
+                        await _settingModalBottomSheet(context);
+
+                        Navigator.of(_context).pop();
+                    },
+                );
+            },
+        );
     }
+  }
+
+  void _settingModalBottomSheet(context) {
+      Map<String, dynamic> stateOfcalendarCallback = {
+          "email": SevaCore.of(context).loggedInUser.email,
+          "mobile": globals.isMobile,
+          "envName": FlavorConfig.values.envMode,
+          "eventsArr":_bloc.offerIds,
+          "createType":"OFFER"
+      };
+      var stateVar = jsonEncode(stateOfcalendarCallback);
+      showModalBottomSheet(
+          context: context,
+          builder: (BuildContext bc) {
+              return Container(
+                  child: new Wrap(
+                      children: <Widget>[
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+                              child: Text(
+                                  S.of(context).calendars_popup_desc,
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                      TransactionsMatrixCheck(
+                                          upgradeDetails:
+                                      AppConfig.upgradePlanBannerModel.calendar_sync,
+                                          transaction_matrix_type: "calendar_sync",
+                                          child: GestureDetector(
+                                              child: CircleAvatar(
+                                                  backgroundColor: Colors.white,
+                                                  radius: 40,
+                                                  child:
+                                                  Image.asset("lib/assets/images/googlecal.png"),
+                                              ),
+                                              onTap: () async {
+                                                  String redirectUrl =
+                                                      "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                                                  String authorizationUrl =
+                                                      "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                                                  if (await canLaunch(authorizationUrl.toString())) {
+                                                      await launch(authorizationUrl.toString());
+                                                  }
+                                                  Navigator.of(bc).pop();
+                                              }),
+                                      ),
+                                      TransactionsMatrixCheck(
+                                          upgradeDetails:
+                                          AppConfig.upgradePlanBannerModel.calendar_sync,
+                                          transaction_matrix_type: "calendar_sync",
+                                          child: GestureDetector(
+                                              child: CircleAvatar(
+                                                  backgroundColor: Colors.white,
+                                                  radius: 40,
+                                                  child:
+                                                  Image.asset("lib/assets/images/outlookcal.png"),
+                                              ),
+                                              onTap: () async {
+                                                  String redirectUrl =
+                                                      "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                                                  String authorizationUrl =
+                                                      "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                                                  if (await canLaunch(authorizationUrl.toString())) {
+                                                      await launch(authorizationUrl.toString());
+                                                  }
+                                                  Navigator.of(bc).pop();
+                                              }),
+                                      ),
+                                      TransactionsMatrixCheck(
+                                          upgradeDetails:
+                                          AppConfig.upgradePlanBannerModel.calendar_sync,
+                                          transaction_matrix_type: "calendar_sync",
+                                          child: GestureDetector(
+                                              child: CircleAvatar(
+                                                  backgroundColor: Colors.white,
+                                                  radius: 40,
+                                                  child: Image.asset("lib/assets/images/ical.png"),
+                                              ),
+                                              onTap: () async {
+                                                  String redirectUrl =
+                                                      "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                                                  String authorizationUrl =
+                                                      "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                                                  if (await canLaunch(authorizationUrl.toString())) {
+                                                      await launch(authorizationUrl.toString());
+                                                  }
+                                                  Navigator.of(bc).pop();
+                                              }),
+                                      )
+                                  ],
+                              ),
+                          ),
+                          Row(
+                              children: <Widget>[
+                                  Spacer(),
+                                  FlatButton(
+                                      child: Text(
+                                          S.of(context).skip_for_now,
+                                          style: TextStyle(
+                                              color: FlavorConfig.values.theme.primaryColor),
+                                      ),
+                                      onPressed: () {
+                                          Navigator.of(bc).pop();
+                                      }),
+                              ],
+                          )
+                      ],
+                  ),
+              );
+          });
   }
 
   void updateOneToManyOfferFunc(int editType) async {

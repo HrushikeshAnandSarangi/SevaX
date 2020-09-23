@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -32,9 +33,14 @@ class HomeDashBoardBloc extends BlocBase {
   Stream<List<CommunityModel>> get communities => _communities.stream;
 
   void getAllCommunities(UserModel user) async {
+    Set<String> communitiesList = Set.from(user.communities);
+
+    if (await communitiesList.contains(FlavorConfig.values.timebankId)) {
+      await communitiesList.remove(FlavorConfig.values.timebankId);
+    }
     List<CommunityModel> c = [];
-    if (user.communities != null) {
-      user.communities.forEach((id) async {
+    if (communitiesList != null) {
+      communitiesList.forEach((id) async {
         var value = await Firestore.instance
             .collection("communities")
             .document(id)

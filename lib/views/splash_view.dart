@@ -19,7 +19,6 @@ import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/deep_link_manager/onboard_via_link.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/helpers/notification_manager.dart';
-import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
@@ -30,26 +29,26 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import 'onboarding/interests_view.dart';
 import 'onboarding/skills_view.dart';
-
-class UserData {
-  static final UserData _singleton = UserData._internal();
-
-  factory UserData() => _singleton;
-
-  UserData._internal();
-
-  bool isFromLogin = true;
-
-  static UserData get shared => _singleton;
-
-  UserModel user = UserModel();
-  String userId;
-  String locationStr;
-
-  Future updateUserData() async {
-    await fireStoreManager.updateUser(user: user);
-  }
-}
+//
+//class UserData {
+//  static final UserData _singleton = UserData._internal();
+//
+//  factory UserData() => _singleton;
+//
+//  UserData._internal();
+//
+//  bool isFromLogin = true;
+//
+//  static UserData get shared => _singleton;
+//
+//  UserModel user = UserModel();
+//  String userId;
+//  String locationStr;
+//
+//  Future updateUserData() async {
+//    await fireStoreManager.updateUser(user: user);
+//  }
+//}
 
 class SplashView extends StatefulWidget {
   final bool skipToHomePage;
@@ -333,6 +332,11 @@ class _SplashViewState extends State<SplashView> {
     );
   }
 
+  Future<Timer> startTime() async {
+    var _duration = Duration(seconds: 5);
+    return Timer(_duration, _navigateToLoginPage);
+  }
+
   Widget get sevaAppSplash {
     return Scaffold(
       body: Container(
@@ -382,15 +386,16 @@ class _SplashViewState extends State<SplashView> {
   }
 
   void initiateLogin() {
-    _getLoggedInUserId()
-        .then(handleLoggedInUserIdResponse)
-        .catchError((error) {});
+    _getLoggedInUserId().then(handleLoggedInUserIdResponse).catchError((error) {
+      _navigateToLoginPage();
+    });
   }
 
   Future<String> _getLoggedInUserId() async {
-    String userId = await PreferenceManager.loggedInUserId;
+    //  String userId = await PreferenceManager.loggedInUserId;
+    String userId = (await FirebaseAuth.instance.currentUser())?.uid;
 
-    UserData.shared.userId = userId;
+    // UserData.shared.userId = userId;
 
     return userId;
   }
@@ -437,7 +442,7 @@ class _SplashViewState extends State<SplashView> {
       return;
     }
 
-    UserData.shared.user = loggedInUser;
+    // UserData.shared.user = loggedInUser;
 
     await AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 3));
     await AppConfig.remoteConfig.activateFetched();
