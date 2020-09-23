@@ -24,8 +24,8 @@ class UpgradePlanBannerModel {
     this.csv_import_users,
     this.private_groups,
     this.parent_timebanks,
-    this.cash_goods_requests,
-    this.cash_goods_offers,
+    this.cash_donation,
+    this.goods_donation,
     this.admins_child_timebanks_messaging,
   });
   BannerDetails pin_feeds;
@@ -47,8 +47,8 @@ class UpgradePlanBannerModel {
   BannerDetails csv_import_users;
   BannerDetails private_groups;
   BannerDetails parent_timebanks;
-  BannerDetails cash_goods_requests;
-  BannerDetails cash_goods_offers;
+  BannerDetails cash_donation;
+  BannerDetails goods_donation;
   BannerDetails admins_child_timebanks_messaging;
 
   factory UpgradePlanBannerModel.fromJson(Map<String, dynamic> json) =>
@@ -111,11 +111,11 @@ class UpgradePlanBannerModel {
         parent_timebanks: json.containsKey("parent_timebanks")
             ? BannerDetails.fromJson(json["parent_timebanks"])
             : null,
-        cash_goods_requests: json.containsKey("cash_goods_requests")
-            ? BannerDetails.fromJson(json["cash_goods_requests"])
+        cash_donation: json.containsKey("cash_donation")
+            ? BannerDetails.fromJson(json["cash_donation"])
             : null,
-        cash_goods_offers: json.containsKey("cash_goods_offers")
-            ? BannerDetails.fromJson(json["cash_goods_offers"])
+        goods_donation: json.containsKey("goods_donation")
+            ? BannerDetails.fromJson(json["goods_donation"])
             : null,
         admins_child_timebanks_messaging: json
                 .containsKey("admins_child_timebanks_messaging")
