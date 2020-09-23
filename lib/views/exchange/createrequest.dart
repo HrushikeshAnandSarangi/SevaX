@@ -155,7 +155,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   );
   End end = End();
   var focusNodes = List.generate(16, (_) => FocusNode());
-
+  List<String> eventsIdsArr = [];
   GeoFirePoint location;
 
   double sevaCoinsValue = 0;
@@ -1536,7 +1536,8 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
             );
           },
         );
-      } else {
+      }
+      else {
 //        continueCreateRequest(confirmationDialogContext: null);
 
           showDialog(
@@ -1560,8 +1561,24 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                               : [];
                           requestModel.allowedCalenderUsers = acceptorList.toList();
                           Navigator.of(_context).pop();
-//                          await continueCreateRequest(confirmationDialogContext: _context);
+
+                          linearProgressForCreatingRequest();
+                          eventsIdsArr = await _writeToDB();
                           await _settingModalBottomSheet(context);
+                          await _updateProjectModel();
+                          Navigator.pop(dialogContext);
+
+                          if (widget.isOfferRequest == true && widget.userModel != null) {
+                              Navigator.pop(context, {'response': 'ACCEPTED'});
+                          } else {
+                              if (eventsIdsArr.length == 0) {
+                                  showInsufficientBalance();
+                              }
+                              if (_context != null) {
+                                  Navigator.pop(_context);
+                              }
+                              Navigator.pop(context);
+                          }
                       },
                   );
               },
@@ -1578,7 +1595,9 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
       Map<String, dynamic> stateOfcalendarCallback = {
           "email": SevaCore.of(context).loggedInUser.email,
           "mobile": globals.isMobile,
-          "envName": FlavorConfig.values.envMode
+          "envName": FlavorConfig.values.envMode,
+          "eventsArr":eventsIdsArr,
+          "createType":"REQUEST"
       };
       var stateVar = jsonEncode(stateOfcalendarCallback);
 
@@ -1618,11 +1637,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                                                   await launch(authorizationUrl.toString());
                                               }
                                               Navigator.of(bc).pop();
-
-
-
-
-
                                           }),
                                       GestureDetector(
                                           child: CircleAvatar(
@@ -1640,10 +1654,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                                                   await launch(authorizationUrl.toString());
                                               }
                                               Navigator.of(bc).pop();
-
-
-
-
                                           }),
                                       GestureDetector(
                                           child: CircleAvatar(
@@ -1660,10 +1670,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                                                   await launch(authorizationUrl.toString());
                                               }
                                               Navigator.of(bc).pop();
-
-
-
-
                                           })
                                   ],
                               ),
@@ -1679,10 +1685,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                                       ),
                                       onPressed: () {
                                           Navigator.of(bc).pop();
-
-
-
-
                                       }),
                               ],
                           )
@@ -1695,14 +1697,15 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   void continueCreateRequest({BuildContext confirmationDialogContext}) async {
     linearProgressForCreatingRequest();
 
-    int resVar = await _writeToDB();
+    List<String> resVar = await _writeToDB();
+    eventsIdsArr = resVar;
     await _updateProjectModel();
     Navigator.pop(dialogContext);
 
     if (widget.isOfferRequest == true && widget.userModel != null) {
       Navigator.pop(context, {'response': 'ACCEPTED'});
     } else {
-      if (resVar == 0) {
+      if (resVar.length == 0) {
         showInsufficientBalance();
       }
       if (confirmationDialogContext != null) {
@@ -1860,9 +1863,9 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
     return requestCoins <= finalbalance;
   }
 
-  Future<int> _writeToDB() async {
+  Future<List<String>> _writeToDB() async {
 
-    if (requestModel.id == null) return 0;
+    if (requestModel.id == null) return [];
     // credit the timebank the required credits before the request creation
     await TransactionBloc().createNewTransaction(
         requestModel.timebankId,
@@ -1873,16 +1876,15 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
         "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
         requestModel.id,
         requestModel.timebankId);
+    List<String> resultVar = [];
     if (!requestModel.isRecurring) {
       await FirestoreManager.createRequest(requestModel: requestModel);
-    }
-    int resultVar = 1;
-    if (requestModel.isRecurring) {
-      resultVar = await FirestoreManager.createRecurringEvents(
-          requestModel: requestModel);
+      resultVar.add(requestModel.id);
+      return resultVar;
+    } else {
+      resultVar = await FirestoreManager.createRecurringEvents(requestModel: requestModel);
       return resultVar;
     }
-    return resultVar;
   }
 
   Future _updateProjectModel() async {

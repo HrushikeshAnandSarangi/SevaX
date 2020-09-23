@@ -13,6 +13,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 Future<void> fetchLinkData() async {
   // FirebaseDynamicLinks.getInitialLInk does a call to firebase to get us the real link because we have shortened it.
   var link = await FirebaseDynamicLinks.instance.getInitialLink();
+
   // buildContext = context;
   // This link may exist if the app was opened fresh so we'll want to handle it the same way onLink will.
   await handleLinkData(data: link);
@@ -20,6 +21,7 @@ Future<void> fetchLinkData() async {
     print("Error!!!");
   }, onSuccess: (PendingDynamicLinkData dynamicLink) async {
     print("succes!!!");
+    log(">>>>>>>>>>link is  ${dynamicLink.link.toString()}");
     log("coming after syncing calendar");
 
     return handleLinkData(
