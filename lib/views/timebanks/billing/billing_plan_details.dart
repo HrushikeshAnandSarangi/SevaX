@@ -16,14 +16,14 @@ class BillingPlanDetails extends StatefulWidget {
   final UserModel user;
   final bool isPlanActive;
   final bool isPrivateTimebank;
-  final String planName;
+  final String activePlanId;
   final bool isBillMe;
 
   const BillingPlanDetails(
       {Key key,
       this.user,
       this.isPlanActive,
-      this.planName,
+      this.activePlanId,
       this.autoImplyLeading = false,
       this.isPrivateTimebank,
       this.isBillMe})
@@ -45,11 +45,8 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
           .getString('billing_plans_${S.of(context).localeName}'),
     );
     if (widget.isPrivateTimebank) {
-      _billingPlanDetailsModels
-          .removeWhere((element) => element.planName == 'Community Plan');
-    } else {
-      _billingPlanDetailsModels
-          .removeWhere((element) => element.planName == 'Tall Plan');
+      _billingPlanDetailsModels.removeWhere(
+          (element) => element.id == SevaBillingPlans.NEIGHBOUR_HOOD_PLAN);
     }
     setState(() {});
   }
@@ -103,13 +100,13 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
                         return Offstage(
                           offstage: _billingPlanDetailsModels[index].hidden,
                           child: BillingPlanCard(
-                            activePlanId: widget.planName,
+                            activePlanId: widget.activePlanId,
                             billMeVisibility:
                                 _billingPlanDetailsModels[index].billMeEnabled,
                             plan: _billingPlanDetailsModels[index],
                             user: widget.user,
                             isSelected: _billingPlanDetailsModels[index].id ==
-                                widget.planName,
+                                widget.activePlanId,
                             isPlanActive: widget.isPlanActive,
                             canBillMe: billMeEmails.contains(widget.user.email),
                             isBillMe: widget.isBillMe ?? false,

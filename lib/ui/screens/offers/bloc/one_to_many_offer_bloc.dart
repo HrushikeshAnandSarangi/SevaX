@@ -18,6 +18,7 @@ class OneToManyOfferBloc extends BlocBase {
   int occurenceCount;
   End end;
   String parent_offer_id;
+  List<String> offerIds = [];
 
   final _title = BehaviorSubject<String>();
   final _preparationHours = BehaviorSubject<String>();
@@ -71,6 +72,7 @@ class OneToManyOfferBloc extends BlocBase {
           sevaUserId: user.sevaUserID,
           timebankId: timebankId,
           communityId: user.currentCommunity,
+          creatorAllowedCalender: allowedCalenderEvent,
           allowedCalenderUsers: allowedCalenderEvent ? [user.email] : [],
           selectedAdrress:
               _location.value == null ? null : _location.value.address,
@@ -97,11 +99,16 @@ class OneToManyOfferBloc extends BlocBase {
         }
 
         createOffer(offerModel: offerModel).then((_) {
+          offerIds.add(offerModel.id);
           if (offerModel.isRecurring) {
             return createRecurringEventsOffer(offerModel: offerModel);
           }
-          return 1;
-        }).then((_) {
+        }).then((offerIdsList) {
+            if (offerModel.isRecurring) {
+                offerIdsList.forEach((Id) {
+                    offerIds.add(Id);
+                });
+            }
           _status.add(Status.COMPLETE);
         }).catchError((e) => _status.add(Status.ERROR));
       } else {

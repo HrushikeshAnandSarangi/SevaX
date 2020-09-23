@@ -8,9 +8,6 @@ class TransactionsMatrixCheck extends StatelessWidget {
   final Widget child;
   final String transaction_matrix_type;
   final BannerDetails upgradeDetails;
-  // Map<String, dynamic> paymentStatusMap;
-  // bool allowTransaction;
-  // final
 
   TransactionsMatrixCheck({
     Key key,
@@ -22,7 +19,6 @@ class TransactionsMatrixCheck extends StatelessWidget {
   });
 
   //this widget checks wether this plan allows a particular transaction to be done or not
-
   @override
   Widget build(BuildContext context) {
     // Map<String, dynamic> matrix_current_plan = AppConfig

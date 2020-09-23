@@ -12,6 +12,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/payment_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/widgets/credit_card/utils/card_background.dart';
@@ -461,6 +462,7 @@ class BillingViewState extends State<BillingView> {
                 .updateData({
               'payment.message': 'Syncing payment data',
               "payment.payment_success": false,
+              'payment.status': SevaPaymentStatusCodes.PROCESSING_PLAN_UPDATE,
             });
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
