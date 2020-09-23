@@ -963,7 +963,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   TransactionsMatrixCheck(
                     upgradeDetails:
                         AppConfig.upgradePlanBannerModel.cash_request,
-                    transaction_matrix_type: 'cash_request',
+                    transaction_matrix_type: 'cash_goods_requests',
                     child: _optionRadioButton(
                         title: S.of(context).request_type_cash,
                         value: RequestType.CASH,
@@ -976,7 +976,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                   TransactionsMatrixCheck(
                     upgradeDetails:
                         AppConfig.upgradePlanBannerModel.goods_request,
-                    transaction_matrix_type: 'goods_request',
+                    transaction_matrix_type: 'cash_goods_requests',
                     child: _optionRadioButton(
                         title: S.of(context).request_type_goods,
                         value: RequestType.GOODS,
@@ -1446,83 +1446,96 @@ class RequestCreateFormState extends State<RequestCreateForm>
       requestModel.softDelete = false;
 
       if (SevaCore.of(context).loggedInUser.calendarId != null) {
-        showDialog(
-          context: context,
-          builder: (_context) {
-            return CalenderEventConfirmationDialog(
-              title: requestModel.title,
-              isrequest: true,
-              cancelled: () async {
-                List<String> acceptorList = widget.isOfferRequest != null &&
-                        widget.offer.creatorAllowedCalender
-                    ? [widget.offer.email]
-                    : [];
-                requestModel.allowedCalenderUsers = acceptorList.toList();
-
-                await continueCreateRequest(
-                    confirmationDialogContext: _context);
-              },
-              addToCalender: () async {
-                List<String> acceptorList = widget.isOfferRequest != null &&
-                        widget.offer.creatorAllowedCalender
-                    ? [widget.offer.email, requestModel.email]
-                    : [requestModel.email];
-                requestModel.allowedCalenderUsers = acceptorList.toList();
-                await continueCreateRequest(
-                    confirmationDialogContext: _context);
-              },
-            );
-          },
-        );
+      List<String> acceptorList = widget.isOfferRequest != null &&
+          widget.offer.creatorAllowedCalender
+          ? [widget.offer.email, requestModel.email]
+          : [requestModel.email];
+      requestModel.allowedCalenderUsers = acceptorList.toList();
+      await continueCreateRequest(
+          confirmationDialogContext: null);
+//        showDialog(
+//          context: context,
+//          builder: (_context) {
+//            return CalenderEventConfirmationDialog(
+//              title: requestModel.title,
+//              isrequest: true,
+//              cancelled: () async {
+//                List<String> acceptorList = widget.isOfferRequest != null &&
+//                        widget.offer.creatorAllowedCalender
+//                    ? [widget.offer.email]
+//                    : [];
+//                requestModel.allowedCalenderUsers = acceptorList.toList();
+//
+//                await continueCreateRequest(
+//                    confirmationDialogContext: _context);
+//              },
+//              addToCalender: () async {
+//                List<String> acceptorList = widget.isOfferRequest != null &&
+//                        widget.offer.creatorAllowedCalender
+//                    ? [widget.offer.email, requestModel.email]
+//                    : [requestModel.email];
+//                requestModel.allowedCalenderUsers = acceptorList.toList();
+//                await continueCreateRequest(
+//                    confirmationDialogContext: _context);
+//              },
+//            );
+//          },
+//        );
       } else {
 
-        showDialog(
-          context: context,
-          builder: (_context) {
-            return CalenderEventConfirmationDialog(
-              title: requestModel.title,
-              isrequest: true,
-              cancelled: () async {
-                List<String> acceptorList = widget.isOfferRequest != null &&
-                        widget.offer.creatorAllowedCalender
-                    ? [widget.offer.email]
-                    : [];
-                requestModel.allowedCalenderUsers = acceptorList.toList();
+          linearProgressForCreatingRequest();
+          eventsIdsArr = await _writeToDB();
+          await _updateProjectModel();
+          log("after showing modal bottom");
 
-                await continueCreateRequest(
-                    confirmationDialogContext: _context);
-                eventsIdsArr = [];
-              },
-              addToCalender: () async {
-                log("inside add to calendar");
-                          List<String> acceptorList = widget.isOfferRequest!=null && widget.offer.creatorAllowedCalender
-                              ? [widget.offer.email, requestModel.email]
-                    : [requestModel.email];
-                requestModel.allowedCalenderUsers = acceptorList.toList();
-                Navigator.of(_context).pop();
+          Navigator.pop(dialogContext);
+          await _settingModalBottomSheet(context);
 
-                linearProgressForCreatingRequest();
-                eventsIdsArr = await _writeToDB();
-                await _updateProjectModel();
-                await _settingModalBottomSheet(context);
-
-                          Navigator.pop(dialogContext);
+//        showDialog(
+//          context: context,
+//          builder: (_context) {
+//            return CalenderEventConfirmationDialog(
+//              title: requestModel.title,
+//              isrequest: true,
+//              cancelled: () async {
+//                List<String> acceptorList = widget.isOfferRequest != null &&
+//                        widget.offer.creatorAllowedCalender
+//                    ? [widget.offer.email]
+//                    : [];
+//                requestModel.allowedCalenderUsers = acceptorList.toList();
 //
-                          if (eventsIdsArr.length == 0) {
-                              showInsufficientBalance();
-                          }
-                          if (_context != null) {
-                              Navigator.pop(_context);
-                          }
-                          if (widget.isOfferRequest == true && widget.userModel != null) {
-                              Navigator.pop(context, {'response': 'ACCEPTED'});
-                          } else {
-                  Navigator.pop(context);
-                }
-              },
-            );
-          },
-        );
+//                await continueCreateRequest(
+//                    confirmationDialogContext: _context);
+//                eventsIdsArr = [];
+//              },
+//              addToCalender: () async {
+//                log("inside add to calendar");
+//                          List<String> acceptorList = widget.isOfferRequest!=null && widget.offer.creatorAllowedCalender
+//                              ? [widget.offer.email, requestModel.email]
+//                    : [requestModel.email];
+//                requestModel.allowedCalenderUsers = acceptorList.toList();
+//
+//                linearProgressForCreatingRequest();
+//                eventsIdsArr = await _writeToDB();
+//                await _updateProjectModel();
+//                await _settingModalBottomSheet(context);
+//
+//                Navigator.pop(dialogContext);
+//                if (eventsIdsArr.length == 0) {
+//                  showInsufficientBalance();
+//                }
+//                if (_context != null) {
+//                  Navigator.pop(_context);
+//                }
+//                if (widget.isOfferRequest == true && widget.userModel != null) {
+//                  Navigator.pop(context, {'response': 'ACCEPTED'});
+//                } else {
+//                  Navigator.pop(context);
+//                }
+//              },
+//            );
+//          },
+//        );
       }
     }
   }
@@ -1573,8 +1586,24 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             String authorizationUrl =
                                 "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
                             log("auth url is ${authorizationUrl}");
+
+                            List<String> acceptorList = widget.isOfferRequest!=null && widget.offer.creatorAllowedCalender
+                                ? [widget.offer.email, requestModel.email]
+                                : [requestModel.email];
+                            requestModel.allowedCalenderUsers = acceptorList.toList();
+                            await FirestoreManager.updateRequest(requestModel: requestModel);
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
+                            }
+                            setState((){comingFromDynamicLink=true;});
+                            log("after showing modal bottom");
+                            if (eventsIdsArr.length == 0) {
+                                showInsufficientBalance();
+                            }
+                            if (widget.isOfferRequest == true && widget.userModel != null) {
+                                Navigator.pop(context, {'response': 'ACCEPTED'});
+                            } else {
+                                Navigator.pop(context);
                             }
                             Navigator.of(bc).pop();
                           }),
@@ -1590,28 +1619,41 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                 "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                             String authorizationUrl =
                                 "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+
+                            List<String> acceptorList = widget.isOfferRequest!=null && widget.offer.creatorAllowedCalender
+                                ? [widget.offer.email, requestModel.email]
+                                : [requestModel.email];
+                            requestModel.allowedCalenderUsers = acceptorList.toList();
+                            await FirestoreManager.updateRequest(requestModel: requestModel);
                             if (await canLaunch(authorizationUrl.toString())) {
                               await launch(authorizationUrl.toString());
                             }
                             setState((){comingFromDynamicLink=true;});
-                                              Navigator.of(bc).pop();
-                                          }),
-                                      GestureDetector(
-                                          child: CircleAvatar(
-                                              backgroundColor: Colors.white,
-                                              radius: 40,
-                                              child: Image.asset("lib/assets/images/ical.png"),
-                                          ),
-                                          onTap: () async {
-                                              String redirectUrl =
-                                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                                              String authorizationUrl =
-                                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                                              if (await canLaunch(authorizationUrl.toString())) {
-                                                  await launch(authorizationUrl.toString());
-                                              }
-                                              Navigator.of(bc).pop();
-                                          })
+                            Navigator.of(bc).pop();
+                          }),
+                          GestureDetector(
+                              child: CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  radius: 40,
+                                  child: Image.asset("lib/assets/images/ical.png"),
+                              ),
+                              onTap: () async {
+                                  String redirectUrl =
+                                      "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                                  String authorizationUrl =
+                                      "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+
+                                  List<String> acceptorList = widget.isOfferRequest!=null && widget.offer.creatorAllowedCalender
+                                      ? [widget.offer.email, requestModel.email]
+                                      : [requestModel.email];
+                                  requestModel.allowedCalenderUsers = acceptorList.toList();
+                                  await FirestoreManager.updateRequest(requestModel: requestModel);
+                                  if (await canLaunch(authorizationUrl.toString())) {
+                                      await launch(authorizationUrl.toString());
+                                  }
+                                  setState((){comingFromDynamicLink=true;});
+                                  Navigator.of(bc).pop();
+                              })
                                   ],
                               ),
                           ),
@@ -1624,7 +1666,12 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                           style: TextStyle(
                                               color: FlavorConfig.values.theme.primaryColor),
                                       ),
-                                      onPressed: () {
+                                      onPressed: () async {
+
+                                          List<String> acceptorList = widget.isOfferRequest != null &&
+                                              widget.offer.creatorAllowedCalender ? [widget.offer.email] : [];
+                                          requestModel.allowedCalenderUsers = acceptorList.toList();
+                                          await FirestoreManager.updateRequest(requestModel: requestModel);
                                           Navigator.of(bc).pop();
                                       }),
                               ],
@@ -1651,7 +1698,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
       }
     if (widget.isOfferRequest == true && widget.userModel != null) {
         Navigator.pop(context, {'response': 'ACCEPTED'});
-    }else{
+    } else {
         Navigator.pop(context);
     }
   }
