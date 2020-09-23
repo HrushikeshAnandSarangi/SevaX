@@ -171,6 +171,7 @@ Future<List<String>> createRecurringEventsOffer(
           offerModel.groupOfferDataModel.endDate);
   List<Map<String, dynamic>> temparr = [];
   List<String> offerIds = [];
+  offerIds.add(offerModel.id);
   DocumentSnapshot projectDoc = null;
 
   if (offerModel.end.endType == "on") {

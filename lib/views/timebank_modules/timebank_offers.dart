@@ -86,10 +86,6 @@ class OffersState extends State<OffersModule> {
                         widget.timebankModel.requestedSoftDelete,
                     child: GestureDetector(
                       onTap: () {
-                        if (SevaCore.of(context).loggedInUser.calendarId ==
-                            null) {
-                          _settingModalBottomSheet(context);
-                        } else {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -99,7 +95,6 @@ class OffersState extends State<OffersModule> {
                               ),
                             ),
                           );
-                        }
                       },
                       child: Container(
                           margin: EdgeInsets.only(left: 0),

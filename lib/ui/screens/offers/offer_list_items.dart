@@ -210,7 +210,7 @@ class OfferListItems extends StatelessWidget {
         }
       },
       onActionPressed: () async {
-        if (SevaCore.of(parentContext).loggedInUser.calendarId == null) {
+        if (SevaCore.of(parentContext).loggedInUser.calendarId == null && model.offerType==OfferType.GROUP_OFFER) {
           _settingModalBottomSheet(parentContext, model);
         } else {
           offerActions(parentContext, model);

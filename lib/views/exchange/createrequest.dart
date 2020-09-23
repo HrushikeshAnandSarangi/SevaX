@@ -156,6 +156,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   End end = End();
   var focusNodes = List.generate(16, (_) => FocusNode());
   List<String> eventsIdsArr = [];
+  bool comingFromDynamicLink = false;
   GeoFirePoint location;
 
   double sevaCoinsValue = 0;
@@ -208,11 +209,8 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
-      if (state == AppLifecycleState.resumed) {
-          log("over riding stuff");
-          Future.delayed(Duration(milliseconds: 1000), (){
-              fetchLinkData();
-          });
+      if (state == AppLifecycleState.resumed && comingFromDynamicLink) {
+          Navigator.of(context).pop();
       }
   }
 
@@ -1460,7 +1458,6 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
         );
       }
       else {
-//        continueCreateRequest(confirmationDialogContext: null);
 
           showDialog(
               context: context,
@@ -1479,9 +1476,10 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                           eventsIdsArr = [];
                       },
                       addToCalender: () async {
+                          log("inside add to calendar");
                           List<String> acceptorList = widget.isOfferRequest!=null && widget.offer.creatorAllowedCalender
-                              ? [widget.offer.email]
-                              : [];
+                              ? [widget.offer.email, requestModel.email]
+                              : [requestModel.email];
                           requestModel.allowedCalenderUsers = acceptorList.toList();
                           Navigator.of(_context).pop();
 
@@ -1491,16 +1489,16 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                           await _settingModalBottomSheet(context);
 
                           Navigator.pop(dialogContext);
-                          eventsIdsArr = [];
+//
+                          if (eventsIdsArr.length == 0) {
+                              showInsufficientBalance();
+                          }
+                          if (_context != null) {
+                              Navigator.pop(_context);
+                          }
                           if (widget.isOfferRequest == true && widget.userModel != null) {
                               Navigator.pop(context, {'response': 'ACCEPTED'});
                           } else {
-                              if (eventsIdsArr.length == 0) {
-                                  showInsufficientBalance();
-                              }
-                              if (_context != null) {
-                                  Navigator.pop(_context);
-                              }
                               Navigator.pop(context);
                           }
                       },
@@ -1577,6 +1575,7 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
                                               if (await canLaunch(authorizationUrl.toString())) {
                                                   await launch(authorizationUrl.toString());
                                               }
+                                              setState((){comingFromDynamicLink=true;});
                                               Navigator.of(bc).pop();
                                           }),
                                       GestureDetector(
@@ -1626,16 +1625,16 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
     await _updateProjectModel();
     Navigator.pop(dialogContext);
 
-    if (widget.isOfferRequest == true && widget.userModel != null) {
-      Navigator.pop(context, {'response': 'ACCEPTED'});
-    } else {
       if (resVar.length == 0) {
         showInsufficientBalance();
       }
       if (confirmationDialogContext != null) {
         Navigator.pop(confirmationDialogContext);
       }
-      Navigator.pop(context);
+    if (widget.isOfferRequest == true && widget.userModel != null) {
+        Navigator.pop(context, {'response': 'ACCEPTED'});
+    }else{
+        Navigator.pop(context);
     }
   }
 
