@@ -895,7 +895,7 @@ class CreateEditCommunityViewFormState
                                                 BillingPlanDetails(
                                               user: user,
                                               isPlanActive: false,
-                                              planName: "",
+                                              activePlanId: "",
                                               isPrivateTimebank:
                                                   timebankModel.private,
                                             ),

@@ -197,7 +197,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                           MaterialPageRoute(
                             builder: (context) => BillingPlanDetails(
                                 user: SevaCore.of(context).loggedInUser,
-                                planName: _bloc.community.payment["planId"],
+                                activePlanId: _bloc.community.payment["planId"],
                                 isPlanActive: true,
                                 autoImplyLeading: true,
                                 isPrivateTimebank: communityModel.private,
@@ -257,7 +257,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                     MaterialPageRoute(
                       builder: (context) => BillingPlanDetails(
                         user: SevaCore.of(context).loggedInUser,
-                        planName:
+                        activePlanId:
                             cardModel != null && cardModel.currentPlan != null
                                 ? cardModel.currentPlan
                                 : SevaBillingPlans.NEIGHBOUR_HOOD_PLAN,

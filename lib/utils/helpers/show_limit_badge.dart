@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
+import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 
 import '../bloc_provider.dart';
 
@@ -18,8 +19,9 @@ class ShowLimitBadge extends StatelessWidget {
       stream: _userBloc.comunityStream,
       builder: (context, AsyncSnapshot<CommunityModel> snapshot) {
         return Offstage(
-          offstage: (_userBloc.community.payment['payment_success'] &&
-              _userBloc.community.payment['statusCode'] != 112),
+          offstage: PaymentUtils.getFailedBannerVisibilityStatus(
+            communityModel: _userBloc.community,
+          ),
           child: Container(
             height: 20,
             width: double.infinity,
@@ -41,6 +43,37 @@ class ShowLimitBadge extends StatelessWidget {
       },
     );
   }
+}
+
+class PaymentUtils {
+  static bool getFailedBannerVisibilityStatus({
+    CommunityModel communityModel,
+  }) {
+    if (!communityModel.payment['payment_success']) {
+      if (communityModel.payment['status'] != null &&
+          communityModel.payment['status'] ==
+              SevaPaymentStatusCodes.PROCESSING_PLAN_UPDATE)
+        return true;
+      else
+        return false;
+    } else
+      return true;
+  }
+
+  static bool isFailedOrProcessingPlanUpdate({
+    CommunityModel communityModel,
+  }) {
+    if (communityModel.payment['status'] != null &&
+        communityModel.payment['status'] ==
+            SevaPaymentStatusCodes.PROCESSING_PLAN_UPDATE)
+      return true;
+    else
+      return false;
+  }
+}
+
+class SevaPaymentStatusCodes {
+  static int PROCESSING_PLAN_UPDATE = 201;
 }
 
 class TransactionLimitCheck extends StatelessWidget {
@@ -67,8 +100,19 @@ class TransactionLimitCheck extends StatelessWidget {
             !(_userBloc.community.payment['payment_success'] ?? false);
         return GestureDetector(
           onTap: () {
-            _showDialog(context, isAdmin, _userBloc.user, isBillingFailed,
-                _userBloc.community.private);
+            _showDialog(
+              context,
+              isAdmin,
+              _userBloc.user,
+              isBillingFailed,
+              _userBloc.community.private,
+              isBillingFailed
+                  ? PaymentUtils.isFailedOrProcessingPlanUpdate(
+                      communityModel: _userBloc.community,
+                    )
+                  : false,
+              _userBloc.community.payment['planId'],
+            );
           },
           child: AbsorbPointer(
             absorbing: isBillingFailed || isSoftDeleteRequested,
@@ -79,8 +123,15 @@ class TransactionLimitCheck extends StatelessWidget {
     );
   }
 
-  void _showDialog(context, bool isAdmin, UserModel user, bool isBillingFailed,
-      bool isPrivate) {
+  void _showDialog(
+    context,
+    bool isAdmin,
+    UserModel user,
+    bool isBillingFailed,
+    bool isPrivate,
+    bool isUpdatingPlan,
+    String activePlanId,
+  ) {
     showDialog(
       context: context,
       builder: (BuildContext _context) {
@@ -106,6 +157,7 @@ class TransactionLimitCheck extends StatelessWidget {
                   isAdmin: isAdmin,
                   isSoftDeleteRequested: isSoftDeleteRequested,
                   isBillingFailed: isBillingFailed,
+                  isUpdatingPlan: isUpdatingPlan,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -121,10 +173,10 @@ class TransactionLimitCheck extends StatelessWidget {
                   ),
                   onPressed: () {
                     Navigator.of(_context).pop();
-
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => BillingPlanDetails(
+                          activePlanId: activePlanId,
                           autoImplyLeading: true,
                           user: user,
                           isPlanActive: false,
@@ -159,7 +211,16 @@ String getMessage({
   bool isAdmin,
   bool isBillingFailed,
   bool isSoftDeleteRequested,
+  bool isUpdatingPlan,
 }) {
+  print("$isUpdatingPlan <<<<<<<<<<<<<<<<<<<<");
+
+  if (isUpdatingPlan) {
+    return isAdmin
+        ? "We are updating your plan please hang on tight!"
+        : S.of(context).limit_badge_contact_admin;
+  }
+
   if (isBillingFailed) {
     return isAdmin
         ? S.of(context).limit_badge_billing_failed
@@ -170,5 +231,6 @@ String getMessage({
         ? S.of(context).limit_badge_delete_in_progress
         : S.of(context).limit_badge_contact_admin;
   }
+
   return 'Something went wrong!';
 }
