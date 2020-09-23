@@ -77,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
     Locale _sysLng = ui.window.locale;
     Locale _language = S.delegate.isSupported(_sysLng) ? _sysLng : Locale('en');
     appLanguage.changeLanguage(_language);
-    UserData.shared.isFromLogin = true;
+    //UserData.shared.isFromLogin = true;
     //Todo check this line
     // ScreenUtil.init(context);
     // ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: true);
