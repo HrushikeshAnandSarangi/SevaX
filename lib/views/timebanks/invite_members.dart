@@ -22,6 +22,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/invitation_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/user_added_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/deep_link_manager/deep_link_manager.dart';
 import 'package:sevaexchange/utils/deep_link_manager/invitation_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -359,7 +360,8 @@ class InviteAddMembersState extends State<InviteAddMembers> {
           height: 15,
         ),
         TransactionsMatrixCheck(
-            transaction_matrix_type: "csv_import_users",
+          upgradeDetails: AppConfig.upgradePlanBannerModel.csv_import_users,
+          transaction_matrix_type: "csv_import_users",
           child: GestureDetector(
             onTap: () {
               _openFileExplorer();

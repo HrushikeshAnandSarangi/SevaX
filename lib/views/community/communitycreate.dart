@@ -676,6 +676,8 @@ class CreateEditCommunityViewFormState
                           ),
                         ),
                         TransactionsMatrixCheck(
+                          upgradeDetails:
+                              AppConfig.upgradePlanBannerModel.parent_timebanks,
                           transaction_matrix_type: "parent_timebanks",
                           child: Center(
                             child: ParentTimebankPickerWidget(

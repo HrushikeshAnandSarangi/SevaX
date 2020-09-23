@@ -9,6 +9,7 @@ import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
 import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
@@ -86,8 +87,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
                       ),
                     ),
                     TransactionsMatrixCheck(
-                        transaction_matrix_type:"cash_goods_offers",
-                        child: Column(
+                      upgradeDetails:
+                          AppConfig.upgradePlanBannerModel.cash_donation,
+                      transaction_matrix_type: "cash_goods_offers",
+                      child: Column(
                         children: <Widget>[
                           _optionRadioButton(
                             title: S.of(context).request_type_time,
@@ -131,7 +134,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
               return CustomTextField(
                 currentNode: _availability,
                 initialValue: snapshot.data != null
-                    ? snapshot.data.contains('__*__') ? snapshot.data : null
+                    ? snapshot.data.contains('__*__')
+                        ? snapshot.data
+                        : null
                     : null,
                 heading: S.of(context).availablity,
                 onChanged: _bloc.onAvailabilityChanged,

@@ -252,7 +252,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                   if (data == NO_SELECTED_PLAN_YET) {
                     return;
                   }
-
                   Navigator.push(
                     context,
                     MaterialPageRoute(

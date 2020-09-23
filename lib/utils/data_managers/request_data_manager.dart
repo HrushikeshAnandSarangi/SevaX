@@ -48,7 +48,7 @@ Future<void> createDonation({@required DonationModel donationModel}) async {
       .setData(donationModel.toMap());
 }
 
-Future<int> createRecurringEvents({@required RequestModel requestModel}) async {
+Future<List<String>> createRecurringEvents({@required RequestModel requestModel}) async {
   var batch = Firestore.instance.batch();
   var db = Firestore.instance;
   double sevaCreditsCount = 0;
@@ -59,6 +59,7 @@ Future<int> createRecurringEvents({@required RequestModel requestModel}) async {
           DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd);
   double balanceVar = await getMemberBalance(requestModel.sevaUserId);
   List<Map<String, dynamic>> temparr = [];
+  List<String> eventsIdsArr = [];
   DocumentSnapshot projectDoc = null;
   ProjectModel projectData = null;
 
@@ -170,19 +171,22 @@ Future<int> createRecurringEvents({@required RequestModel requestModel}) async {
     log("inside personal req check");
     if (balanceVar - sevaCreditsCount >= 0) {
       log("yup balance");
+      eventsIdsArr.add(requestModel.id);
       temparr.forEach((tempobj) {
-        batch.setData(
-            db.collection("requests").document(tempobj['id']), tempobj);
+        batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
+        eventsIdsArr.add(tempobj['id']);
         log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['request_start']).toString()} with occurence count of ${tempobj['occurenceCount']}");
       });
     } else {
       log("oops no balance");
-      return 0;
+      return [];
     }
   } else {
     log("inside timebank req " + requestModel.requestMode.toString());
+    eventsIdsArr.add(requestModel.id);
     temparr.forEach((tempobj) {
       batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
+      eventsIdsArr.add(tempobj['id']);
       log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['request_start']).toString()} with occurence count of ${tempobj['occurenceCount']}");
     });
   }
@@ -206,7 +210,7 @@ Future<int> createRecurringEvents({@required RequestModel requestModel}) async {
   }
 
   await batch.commit();
-  return 1;
+  return eventsIdsArr;
 }
 
 Future<void> updateRecurrenceRequestsFrontEnd(
