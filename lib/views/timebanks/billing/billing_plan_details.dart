@@ -45,11 +45,8 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
           .getString('billing_plans_${S.of(context).localeName}'),
     );
     if (widget.isPrivateTimebank) {
-      _billingPlanDetailsModels
-          .removeWhere((element) => element.planName == 'Community Plan');
-    } else {
-      _billingPlanDetailsModels
-          .removeWhere((element) => element.planName == 'Tall Plan');
+      _billingPlanDetailsModels.removeWhere(
+          (element) => element.id == SevaBillingPlans.NEIGHBOUR_HOOD_PLAN);
     }
     setState(() {});
   }

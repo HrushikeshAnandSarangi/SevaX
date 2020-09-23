@@ -4,33 +4,31 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/repeat_availability/recurring_listing.dart';
-import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:sevaexchange/globals.dart' as globals;
 
 import '../../../flavor_config.dart';
-import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class OfferListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
   final TimebankModel timebankModel;
   String sevaUserId;
-  OfferListItems({
-    Key key,
-    this.parentContext,
-    this.timebankId,
-    this.timebankModel
-  }) : super(key: key);
+  OfferListItems(
+      {Key key, this.parentContext, this.timebankId, this.timebankModel})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
@@ -57,8 +55,8 @@ class OfferListItems extends StatelessWidget {
                 );
               }
               var consolidatedList =
-              GroupOfferCommons.groupAndConsolidateOffers(
-                  offersList, SevaCore.of(context).loggedInUser.sevaUserID);
+                  GroupOfferCommons.groupAndConsolidateOffers(
+                      offersList, SevaCore.of(context).loggedInUser.sevaUserID);
               return formatListOffer(consolidatedList: consolidatedList);
           }
         },
@@ -86,8 +84,8 @@ class OfferListItems extends StatelessWidget {
                 );
               }
               var consolidatedList =
-              GroupOfferCommons.groupAndConsolidateOffers(
-                  offersList, SevaCore.of(context).loggedInUser.sevaUserID);
+                  GroupOfferCommons.groupAndConsolidateOffers(
+                      offersList, SevaCore.of(context).loggedInUser.sevaUserID);
               return formatListOffer(consolidatedList: consolidatedList);
           }
         },
@@ -100,9 +98,9 @@ class OfferListItems extends StatelessWidget {
     List<OfferModel> filteredList = [];
     requestModelList.forEach((request) {
       if (!(SevaCore.of(context)
-          .loggedInUser
-          .blockedMembers
-          .contains(request.sevaUserId) ||
+              .loggedInUser
+              .blockedMembers
+              .contains(request.sevaUserId) ||
           SevaCore.of(context)
               .loggedInUser
               .blockedBy
@@ -143,7 +141,7 @@ class OfferListItems extends StatelessWidget {
     switch (offerModelList.getType()) {
       case OfferModelList.TITLE:
         var isMyContent =
-        (offerModelList as OfferTitle).groupTitle.contains("My");
+            (offerModelList as OfferTitle).groupTitle.contains("My");
         return Container(
           height: isMyContent ? 0 : 25,
           margin: isMyContent
@@ -160,7 +158,8 @@ class OfferListItems extends StatelessWidget {
           ),
         );
       case OfferModelList.OFFER:
-        return getOfferViewHolder(context, (offerModelList as OfferItem).offerModel);
+        return getOfferViewHolder(
+            context, (offerModelList as OfferItem).offerModel);
     }
   }
 
@@ -174,7 +173,6 @@ class OfferListItems extends StatelessWidget {
   }
 
   Widget getOfferViewHolder(context, OfferModel model) {
-
     return OfferCard(
       isCardVisible: isOfferVisible(
         model,
@@ -189,29 +187,32 @@ class OfferListItems extends StatelessWidget {
       offerType: model.offerType,
       startDate: model?.groupOfferDataModel?.startDate,
       selectedAddress: model.selectedAdrress,
-      actionButtonLabel: getButtonLabel(context, model, SevaCore.of(parentContext).loggedInUser.sevaUserID),
-      buttonColor: (model.type == RequestType.CASH || model.type == RequestType.GOODS) ?  Theme.of(parentContext).primaryColor:  isParticipant(parentContext, model) ? Colors.grey
-          : Theme.of(parentContext).primaryColor,
+      actionButtonLabel: getButtonLabel(
+          context, model, SevaCore.of(parentContext).loggedInUser.sevaUserID),
+      buttonColor:
+          (model.type == RequestType.CASH || model.type == RequestType.GOODS)
+              ? Theme.of(parentContext).primaryColor
+              : isParticipant(parentContext, model)
+                  ? Colors.grey
+                  : Theme.of(parentContext).primaryColor,
       onCardPressed: () async {
-        if(model.isRecurring){
+        if (model.isRecurring) {
           Navigator.push(
               parentContext,
               MaterialPageRoute(
                   builder: (context) => RecurringListing(
-                    offerModel: model,
-                    timebankModel: timebankModel,
-                    requestModel: null,
-                  )
-              )
-          );
-        }else{
+                        offerModel: model,
+                        timebankModel: timebankModel,
+                        requestModel: null,
+                      )));
+        } else {
           _navigateToOfferDetails(model);
         }
       },
       onActionPressed: () async {
-        if(SevaCore.of(parentContext).loggedInUser.calendarId==null) {
+        if (SevaCore.of(parentContext).loggedInUser.calendarId == null) {
           _settingModalBottomSheet(parentContext, model);
-        }else{
+        } else {
           offerActions(parentContext, model);
         }
       },
@@ -221,7 +222,7 @@ class OfferListItems extends StatelessWidget {
   void _settingModalBottomSheet(context, OfferModel model) {
     Map<String, dynamic> stateOfcalendarCallback = {
       "email": SevaCore.of(context).loggedInUser.email,
-      "mobile":globals.isMobile,
+      "mobile": globals.isMobile,
       "envName": FlavorConfig.values.envMode
     };
     var stateVar = jsonEncode(stateOfcalendarCallback);
@@ -239,14 +240,16 @@ class OfferListItems extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(6,6,6,6),
+                  padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       TransactionsMatrixCheck(
-                          transaction_matrix_type: "calendar_sync",
-                          child: GestureDetector(
+                        upgradeDetails:
+                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                        transaction_matrix_type: "calendar_sync",
+                        child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 40,
@@ -254,18 +257,22 @@ class OfferListItems extends StatelessWidget {
                                   "lib/assets/images/googlecal.png"),
                             ),
                             onTap: () async {
-                              String redirectUrl = "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                              String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                              if (await canLaunch(authorizationUrl.toString())) {
+                              String redirectUrl =
+                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                              String authorizationUrl =
+                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                              if (await canLaunch(
+                                  authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
-                            }
-                        ),
+                            }),
                       ),
                       TransactionsMatrixCheck(
-                          transaction_matrix_type: "calendar_sync",
-                          child: GestureDetector(
+                        upgradeDetails:
+                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                        transaction_matrix_type: "calendar_sync",
+                        child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 40,
@@ -273,33 +280,38 @@ class OfferListItems extends StatelessWidget {
                                   "lib/assets/images/outlookcal.png"),
                             ),
                             onTap: () async {
-                              String redirectUrl = "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                              String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                              if (await canLaunch(authorizationUrl.toString())) {
+                              String redirectUrl =
+                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                              String authorizationUrl =
+                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                              if (await canLaunch(
+                                  authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
-                            }
-                        ),
+                            }),
                       ),
                       TransactionsMatrixCheck(
-                          transaction_matrix_type: "calendar_sync",
+                        upgradeDetails:
+                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                        transaction_matrix_type: "calendar_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 40,
-                              child: Image.asset(
-                                  "lib/assets/images/ical.png"),
+                              child: Image.asset("lib/assets/images/ical.png"),
                             ),
                             onTap: () async {
-                              String redirectUrl = "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                              String authorizationUrl = "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                              if (await canLaunch(authorizationUrl.toString())) {
+                              String redirectUrl =
+                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                              String authorizationUrl =
+                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                              if (await canLaunch(
+                                  authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
-                            }
-                        ),
+                            }),
                       )
                     ],
                   ),
@@ -309,12 +321,15 @@ class OfferListItems extends StatelessWidget {
                     Spacer(),
                     FlatButton(
 //                        child: Text(S.of(context).skip_for_now, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
-                        child: Text(S.of(context).do_it_later, style: TextStyle(color: FlavorConfig.values.theme.primaryColor),),
-                        onPressed: (){
+                        child: Text(
+                          S.of(context).do_it_later,
+                          style: TextStyle(
+                              color: FlavorConfig.values.theme.primaryColor),
+                        ),
+                        onPressed: () {
                           Navigator.of(bc).pop();
                           offerActions(parentContext, model);
-                        }
-                    ),
+                        }),
                   ],
                 )
               ],
@@ -427,8 +442,14 @@ class NearOfferListItems extends StatelessWidget {
       {List<OfferModel> requestModelList, BuildContext context}) {
     List<OfferModel> filteredList = [];
     requestModelList.forEach((request) {
-      if (!(SevaCore.of(context).loggedInUser.blockedMembers.contains(request.sevaUserId) ||
-          SevaCore.of(context).loggedInUser.blockedBy.contains(request.sevaUserId))) {
+      if (!(SevaCore.of(context)
+              .loggedInUser
+              .blockedMembers
+              .contains(request.sevaUserId) ||
+          SevaCore.of(context)
+              .loggedInUser
+              .blockedBy
+              .contains(request.sevaUserId))) {
         filteredList.add(request);
       }
     });
@@ -449,9 +470,14 @@ class NearOfferListItems extends StatelessWidget {
       offerType: model.offerType,
       startDate: model?.groupOfferDataModel?.startDate,
       selectedAddress: model.selectedAdrress,
-      actionButtonLabel: getButtonLabel(context, model, SevaCore.of(parentContext).loggedInUser.sevaUserID),
-      buttonColor: (model.type == RequestType.CASH || model.type == RequestType.GOODS) ?  Theme.of(parentContext).primaryColor:  isParticipant(parentContext, model) ? Colors.grey
-          : Theme.of(parentContext).primaryColor,
+      actionButtonLabel: getButtonLabel(
+          context, model, SevaCore.of(parentContext).loggedInUser.sevaUserID),
+      buttonColor:
+          (model.type == RequestType.CASH || model.type == RequestType.GOODS)
+              ? Theme.of(parentContext).primaryColor
+              : isParticipant(parentContext, model)
+                  ? Colors.grey
+                  : Theme.of(parentContext).primaryColor,
       onCardPressed: () => _navigateToOfferDetails(model),
       onActionPressed: () => offerActions(parentContext, model),
     );
