@@ -81,7 +81,7 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
                   MaterialPageRoute(
                     builder: (context) => BillingPlanDetails(
                       user: SevaCore.of(context).loggedInUser,
-                      planName: widget.activePlanName,
+                      activePlanId: widget.activePlanName,
                       isPlanActive: true,
                       autoImplyLeading: true,
                       isPrivateTimebank: widget.isCommunityPrivate,
