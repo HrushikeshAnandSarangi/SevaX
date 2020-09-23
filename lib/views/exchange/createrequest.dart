@@ -440,160 +440,82 @@ class RequestCreateFormState extends State<RequestCreateForm> with WidgetsBindin
   }
 
   Widget RequestGoodsDescriptionData() {
-    Future.delayed(Duration(milliseconds: 1500), (){
-        return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-                Text(
-                    S.of(context).request_goods_description,
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                    ),
-                ),
-                GoodsDynamicSelection(
-                    onSelectedGoods: (goods) => {
-                        print(goods),
-                        requestModel.goodsDonationDetails.requiredGoods = goods
-                    },
-                ),
-                Text(
-                    S.of(context).request_goods_address,
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Europa',
-                        color: Colors.black,
-                    ),
-                ),
-                Text(
-                    S.of(context).request_goods_address_hint,
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                    ),
-                ),
-                TextFormField(
-                    autovalidate: autoValidateCashText,
-                    onChanged: (value) {
-                        if (value.length > 1) {
-                            setState(() {
-                                autoValidateCashText = true;
-                            });
-                        } else {
-                            setState(() {
-                                autoValidateCashText = false;
-                            });
-                        }
-                    },
-                    focusNode: focusNodes[8],
-                    onFieldSubmitted: (v) {
-                        FocusScope.of(context).requestFocus(focusNodes[8]);
-                    },
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                        errorMaxLines: 2,
-                        hintText: S.of(context).request_goods_address_inputhint,
-                        hintStyle: hintTextStyle,
-                    ),
-                    initialValue: widget.offer != null && widget.isOfferRequest
-                        ? getOfferDescription(
-                        offerDataModel: widget.offer,
-                    )
-                        : "",
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 3,
-                    validator: (value) {
-                        if (value.isEmpty) {
-                            return S.of(context).validation_error_general_text;
-                        } else {
-                            print(requestModel);
-                            requestModel.goodsDonationDetails.address = value;
+      return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+              Text(
+                  S.of(context).request_goods_description,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Europa',
+                      color: Colors.black,
+                  ),
+              ),
+              GoodsDynamicSelection(
+                  onSelectedGoods: (goods) => {
+                      print(goods),
+                      requestModel.goodsDonationDetails.requiredGoods = goods
+                  },
+              ),
+              Text(
+                  S.of(context).request_goods_address,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Europa',
+                      color: Colors.black,
+                  ),
+              ),
+              Text(
+                  S.of(context).request_goods_address_hint,
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                  ),
+              ),
+              TextFormField(
+                  autovalidate: autoValidateCashText,
+                  onChanged: (value) {
+                      if (value.length > 1) {
+                          setState(() {
+                              autoValidateCashText = true;
+                          });
+                      } else {
+                          setState(() {
+                              autoValidateCashText = false;
+                          });
+                      }
+                  },
+                  focusNode: focusNodes[8],
+                  onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(focusNodes[8]);
+                  },
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                      errorMaxLines: 2,
+                      hintText: S.of(context).request_goods_address_inputhint,
+                      hintStyle: hintTextStyle,
+                  ),
+                  initialValue: widget.offer != null && widget.isOfferRequest
+                      ? getOfferDescription(
+                      offerDataModel: widget.offer,
+                  )
+                      : "",
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 3,
+                  validator: (value) {
+                      if (value.isEmpty) {
+                          return S.of(context).validation_error_general_text;
+                      } else {
+                          print(requestModel);
+                          requestModel.goodsDonationDetails.address = value;
 //                setState(() {});
-                        }
-                        return null;
-                    },
-                ),
-            ]);
-    });
-//      return Column(
-//        crossAxisAlignment: CrossAxisAlignment.start,
-//        children: <Widget>[
-//          Text(
-//            S.of(context).request_goods_description,
-//            style: TextStyle(
-//              fontSize: 16,
-//              fontWeight: FontWeight.bold,
-//              fontFamily: 'Europa',
-//              color: Colors.black,
-//            ),
-//          ),
-//          GoodsDynamicSelection(
-//            onSelectedGoods: (goods) => {
-//              print(goods),
-//              requestModel.goodsDonationDetails.requiredGoods = goods
-//            },
-//          ),
-//          Text(
-//            S.of(context).request_goods_address,
-//            style: TextStyle(
-//              fontSize: 16,
-//              fontWeight: FontWeight.bold,
-//              fontFamily: 'Europa',
-//              color: Colors.black,
-//            ),
-//          ),
-//          Text(
-//            S.of(context).request_goods_address_hint,
-//            style: TextStyle(
-//              fontSize: 12,
-//              color: Colors.grey,
-//            ),
-//          ),
-//          TextFormField(
-//            autovalidate: autoValidateCashText,
-//            onChanged: (value) {
-//              if (value.length > 1) {
-//                setState(() {
-//                  autoValidateCashText = true;
-//                });
-//              } else {
-//                setState(() {
-//                  autoValidateCashText = false;
-//                });
-//              }
-//            },
-//            focusNode: focusNodes[8],
-//            onFieldSubmitted: (v) {
-//              FocusScope.of(context).requestFocus(focusNodes[8]);
-//            },
-//            textInputAction: TextInputAction.next,
-//            decoration: InputDecoration(
-//              errorMaxLines: 2,
-//              hintText: S.of(context).request_goods_address_inputhint,
-//              hintStyle: hintTextStyle,
-//            ),
-//            initialValue: widget.offer != null && widget.isOfferRequest
-//                ? getOfferDescription(
-//                    offerDataModel: widget.offer,
-//                  )
-//                : "",
-//            keyboardType: TextInputType.multiline,
-//            maxLines: 3,
-//            validator: (value) {
-//              if (value.isEmpty) {
-//                return S.of(context).validation_error_general_text;
-//              } else {
-//                print(requestModel);
-//                requestModel.goodsDonationDetails.address = value;
-////                setState(() {});
-//              }
-//              return null;
-//            },
-//          ),
-//        ]);
+                      }
+                      return null;
+                  },
+              ),
+          ]);
   }
 
   Widget RequestPaymentACH(RequestModel requestModel) {
@@ -2154,10 +2076,8 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
       querySnapshot.documents.forEach((DocumentSnapshot data) {
         goods[data.documentID] = data['goodTitle'];
       });
-      print(goods);
-      setState(() {
+        print(goods);
         isDataLoaded = true;
-      });
     });
 
     super.initState();

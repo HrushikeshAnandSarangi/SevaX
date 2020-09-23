@@ -984,6 +984,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
                                       TransactionsMatrixCheck(
+                                          upgradeDetails:
+                                      AppConfig.upgradePlanBannerModel.calendar_sync,
                                           transaction_matrix_type: "calendar_sync",
                                           child: GestureDetector(
                                               child: CircleAvatar(
@@ -1004,6 +1006,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                               }),
                                       ),
                                       TransactionsMatrixCheck(
+                                          upgradeDetails:
+                                          AppConfig.upgradePlanBannerModel.calendar_sync,
                                           transaction_matrix_type: "calendar_sync",
                                           child: GestureDetector(
                                               child: CircleAvatar(
@@ -1024,6 +1028,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                               }),
                                       ),
                                       TransactionsMatrixCheck(
+                                          upgradeDetails:
+                                          AppConfig.upgradePlanBannerModel.calendar_sync,
                                           transaction_matrix_type: "calendar_sync",
                                           child: GestureDetector(
                                               child: CircleAvatar(
