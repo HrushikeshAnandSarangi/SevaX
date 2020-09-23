@@ -459,6 +459,7 @@ class BillingViewState extends State<BillingView> {
                 .collection('communities')
                 .document(communityId)
                 .updateData({
+              'payment.message': 'Syncing payment data',
               "payment.payment_success": false,
             });
             Navigator.of(context).pushAndRemoveUntil(
@@ -472,7 +473,9 @@ class BillingViewState extends State<BillingView> {
           });
         }
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
           content: isSuccess
               ? Column(
                   mainAxisSize: MainAxisSize.min,

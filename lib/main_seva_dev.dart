@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +12,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
+import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/ui/utils/connectivity.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
@@ -23,7 +22,8 @@ Future<void> fetchRemoteConfig() async {
   AppConfig.remoteConfig = await RemoteConfig.instance;
   AppConfig.remoteConfig.fetch(expiration: Duration.zero);
   AppConfig.remoteConfig.activateFetched();
-  AppConfig.plan_transactions_matrix = await json.decode(AppConfig.remoteConfig.getString('transactions_plans_matrix'));
+  AppConfig.plan_transactions_matrix = await json
+      .decode(AppConfig.remoteConfig.getString('transactions_plans_matrix'));
 }
 
 Future<void> main() async {
@@ -54,6 +54,13 @@ Future<void> main() async {
   final AppLanguage appLanguage = AppLanguage();
   await appLanguage.fetchLocale();
   await fetchRemoteConfig();
+
+  //get all upgrade screen banner data that is used to show upgrade plan screens
+  String upgradePlanBannerData =
+      AppConfig.remoteConfig.getString('upgrade_plan_banner_details');
+  AppConfig.upgradePlanBannerModel =
+      upgradePlanBannerModelFromJson(upgradePlanBannerData);
+
   _firebaseMessaging.configure(
     onMessage: (Map<String, dynamic> message) {
       print('onMessage: $message');
@@ -119,7 +126,9 @@ class MainApplication extends StatelessWidget {
                   },
                 );
               },
-              // home:BillingPlanDetails(),
+              // home: UpgradePlanBanner(
+              //   details: AppConfig.upgradePlanBannerModel.onetomany_offers,
+              // ),
               home: SplashView(),
             ),
           );
