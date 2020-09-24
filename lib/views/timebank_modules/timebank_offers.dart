@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/screens/offers/offer_list_items.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
@@ -86,15 +87,23 @@ class OffersState extends State<OffersModule> {
                         widget.timebankModel.requestedSoftDelete,
                     child: GestureDetector(
                       onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => prefix0.CreateOffer(
-                                timebankId: timebankId,
-                                // communityId: widget.communityId,
-                              ),
-                            ),
-                          );
+                        //TODO REMOVE
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddToCalendar(),
+                          ),
+                        );
+
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => prefix0.CreateOffer(
+                        //       timebankId: timebankId,
+                        //       // communityId: widget.communityId,
+                        //     ),
+                        //   ),
+                        // );
                       },
                       child: Container(
                           margin: EdgeInsets.only(left: 0),
