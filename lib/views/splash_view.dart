@@ -244,7 +244,7 @@ class _SplashViewState extends State<SplashView> {
       return Future.value(null);
     }
 
-    return _updateConnectionStatus(result);
+    // return _updateConnectionStatus(result);
   }
 
   Widget get noInternet {
