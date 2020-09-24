@@ -25,6 +25,7 @@ import 'package:sevaexchange/models/cash_model.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
@@ -1457,10 +1458,22 @@ class RequestCreateFormState extends State<RequestCreateForm>
         linearProgressForCreatingRequest();
         eventsIdsArr = await _writeToDB();
         await _updateProjectModel();
-        log("after showing modal bottom");
 
         Navigator.pop(dialogContext);
-        await _settingModalBottomSheet(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return AddToCalendar(
+                isOfferRequest: widget.isOfferRequest,
+                offer: widget.offer,
+                requestModel: requestModel,
+                userModel: widget.userModel,
+              );
+            },
+          ),
+        );
+        // await _settingModalBottomSheet(context);
       }
     }
   }
