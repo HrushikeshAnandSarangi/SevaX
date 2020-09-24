@@ -53,6 +53,7 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
   void dispose() {
     _timer?.cancel();
     _pageIndicator.close();
+    controller.dispose();
     super.dispose();
   }
 
@@ -81,7 +82,7 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
                   //   child: Icon(Icons.add),
                   // ),
                   TextSpan(
-                    text: 'Upgrade your plan for ${widget.details.name}',
+                    text: '${widget.details.name}',
                   )
                 ],
               ),
