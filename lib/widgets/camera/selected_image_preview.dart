@@ -67,14 +67,14 @@ class _SelectedImagePreviewState extends State<SelectedImagePreview> {
             Center(
               child: Image.file(_file),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Positioned(
-                  bottom: 12,
-                  left: 12,
-                  right: 12,
-                  child: MessageInput(
+            Positioned(
+              bottom: 12,
+              left: 12,
+              right: 12,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  MessageInput(
                     handleChange: (String value) {
                       if (value.length < 2) {
                         setState(() {
@@ -93,19 +93,19 @@ class _SelectedImagePreviewState extends State<SelectedImagePreview> {
                       send(_file, textController.text);
                     },
                   ),
-                ),
-                isProfane
-                    ? Container(
-                        margin: EdgeInsets.only(left: 20),
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          errorText,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(fontSize: 12, color: Colors.red),
-                        ),
-                      )
-                    : Offstage(),
-              ],
+                  isProfane
+                      ? Container(
+                          margin: EdgeInsets.only(left: 20),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            errorText,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(fontSize: 12, color: Colors.red),
+                          ),
+                        )
+                      : Offstage(),
+                ],
+              ),
             ),
           ],
         ),
