@@ -12,6 +12,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/localization/applanguage.dart';
+import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/onboarding/email_verify_page.dart';
@@ -446,6 +447,12 @@ class _SplashViewState extends State<SplashView> {
 
     await AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 3));
     await AppConfig.remoteConfig.activateFetched();
+
+    //get all upgrade screen banner data that is used to show upgrade plan screens
+    String upgradePlanBannerData =
+        AppConfig.remoteConfig.getString('upgrade_plan_banner_details');
+    AppConfig.upgradePlanBannerModel =
+        upgradePlanBannerModelFromJson(upgradePlanBannerData);
 
     Map<String, dynamic> versionInfo =
         json.decode(AppConfig.remoteConfig.getString('app_version'));
