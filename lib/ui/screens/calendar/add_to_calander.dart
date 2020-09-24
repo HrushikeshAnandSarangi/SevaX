@@ -20,12 +20,16 @@ class AddToCalendar extends StatefulWidget {
   final OfferModel offer;
   @required
   final bool isOfferRequest;
+  @required
+  final List<String> eventsIdsArr;
+
 
   AddToCalendar({
     this.requestModel,
     this.userModel,
     this.offer,
     this.isOfferRequest,
+    this.eventsIdsArr
   });
 
   @override
@@ -37,7 +41,6 @@ class AddToCalendar extends StatefulWidget {
 enum CalanderType { iCAL, GOOGLE_CALANDER, OUTLOOK }
 
 class AddToCalendarState extends State<AddToCalendar> {
-  List<String> eventsIdsArr = [];
 
   Future<void> iCalIntegration() async {
     Map<String, dynamic> stateOfcalendarCallback = {
@@ -46,7 +49,7 @@ class AddToCalendarState extends State<AddToCalendar> {
       //TODO
       "mobile": true,
       "envName": FlavorConfig.values.envMode,
-      "eventsArr": eventsIdsArr,
+      "eventsArr": widget.eventsIdsArr,
       "createType": "REQUEST"
     };
     var stateVar = jsonEncode(stateOfcalendarCallback);
@@ -85,7 +88,7 @@ class AddToCalendarState extends State<AddToCalendar> {
       //TODO
       "mobile": true,
       "envName": FlavorConfig.values.envMode,
-      "eventsArr": eventsIdsArr,
+      "eventsArr": widget.eventsIdsArr,
       "createType": "REQUEST"
     };
     var stateVar = jsonEncode(stateOfcalendarCallback);
@@ -128,7 +131,7 @@ class AddToCalendarState extends State<AddToCalendar> {
       //TODO
       "mobile": true,
       "envName": FlavorConfig.values.envMode,
-      "eventsArr": eventsIdsArr,
+      "eventsArr": widget.eventsIdsArr,
       "createType": "REQUEST"
     };
     var stateVar = jsonEncode(stateOfcalendarCallback);
