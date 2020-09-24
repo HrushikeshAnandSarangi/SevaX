@@ -18,7 +18,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> fetchRemoteConfig() async {
   AppConfig.remoteConfig = await RemoteConfig.instance;
-  AppConfig.remoteConfig.fetch(expiration: Duration.zero);
+  AppConfig.remoteConfig.fetch(expiration: Duration.zero).catchError((onError) {
+    print("ERROR WHILE FETCHING " + onError);
+  }).then((value) {
+    print("Successfully fetched");
+  });
   AppConfig.remoteConfig.activateFetched();
 }
 
@@ -50,12 +54,6 @@ Future<void> main() async {
   final AppLanguage appLanguage = AppLanguage();
   await appLanguage.fetchLocale();
   await fetchRemoteConfig();
-
-  //get all upgrade screen banner data that is used to show upgrade plan screens
-  String upgradePlanBannerData =
-      AppConfig.remoteConfig.getString('upgrade_plan_banner_details');
-  AppConfig.upgradePlanBannerModel =
-      upgradePlanBannerModelFromJson(upgradePlanBannerData);
 
   _firebaseMessaging.configure(
     onMessage: (Map<String, dynamic> message) {

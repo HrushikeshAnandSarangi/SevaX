@@ -137,15 +137,15 @@ class RequestsState extends State<RequestsModule> {
                                   }
                                   _showProtectedTimebankMessage();
                                 } else {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CreateRequest(
-                                          timebankId: timebankId,
-                                          projectId: '',
-                                        ),
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CreateRequest(
+                                        timebankId: timebankId,
+                                        projectId: '',
                                       ),
-                                    );
+                                    ),
+                                  );
                                 }
                               },
                             ),
