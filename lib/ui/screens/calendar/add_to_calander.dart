@@ -165,33 +165,41 @@ class AddToCalendarState extends State<AddToCalendar> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('Thank you for confirming your appointment'),
-          Text('Tuesday september'),
-          FlatButton(
-            onPressed: () {
-              // _settingModalBottomSheet(context);
-            },
-            child: Text('Add to Calander'),
+          Icon(
+            Icons.check_circle_rounded,
+            size: 80,
+            color: Colors.green,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              getCalander(
-                icon: Icon(Icons.calendar_today_outlined),
-                onPressed: iCalIntegration,
-                title: 'Add to iCal',
-              ),
-              getCalander(
-                icon: Icon(Icons.calendar_today_outlined),
-                onPressed: googleCalanderIntegration,
-                title: 'Add to Google',
-              ),
-              getCalander(
-                icon: Icon(Icons.calendar_today_outlined),
-                onPressed: outlookCalanderIntegration,
-                title: 'Add to Outlook',
-              ),
-            ],
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            child: Text('Add to calander'),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            child: Text('Do you want to add this event to your calendar?'),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 80),
+            child: Wrap(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                getCalander(
+                  icon: Icon(Icons.calendar_today_outlined),
+                  onPressed: iCalIntegration,
+                  title: 'Add to iCal',
+                ),
+                getCalander(
+                  icon: Icon(Icons.calendar_today_outlined),
+                  onPressed: googleCalanderIntegration,
+                  title: 'Add to Google Calander',
+                ),
+                getCalander(
+                  icon: Icon(Icons.calendar_today_outlined),
+                  onPressed: outlookCalanderIntegration,
+                  title: 'Add to Outlook',
+                ),
+              ],
+            ),
           )
         ],
       ),

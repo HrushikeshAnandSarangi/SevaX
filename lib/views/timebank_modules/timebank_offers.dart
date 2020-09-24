@@ -88,22 +88,22 @@ class OffersState extends State<OffersModule> {
                     child: GestureDetector(
                       onTap: () {
                         //TODO REMOVE
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => AddToCalendar(),
-                        //   ),
-                        // );
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => prefix0.CreateOffer(
-                              timebankId: timebankId,
-                              // communityId: widget.communityId,
-                            ),
+                            builder: (context) => AddToCalendar(),
                           ),
                         );
+
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => prefix0.CreateOffer(
+                        //       timebankId: timebankId,
+                        //       // communityId: widget.communityId,
+                        //     ),
+                        //   ),
+                        // );
                       },
                       child: Container(
                           margin: EdgeInsets.only(left: 0),
