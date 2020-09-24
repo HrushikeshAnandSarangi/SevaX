@@ -363,7 +363,8 @@ class _ChatPageState extends State<ChatPage> {
         if (snapshot.hasError) {
           return Text(S.of(context).failed_to_load_post);
         }
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            snapshot.data == null) {
           return Container();
         }
 
