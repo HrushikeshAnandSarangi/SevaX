@@ -222,8 +222,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
                   borderRadius: BorderRadius.circular(25.7),
                 ),
                 enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(25.7)),
+                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(25.7),
+                ),
                 hintText: S.of(context).invite_via_email,
                 hintStyle: TextStyle(color: Colors.black45, fontSize: 13)),
           ),
