@@ -11,6 +11,7 @@ import 'package:sevaexchange/components/repeat_availability/repeat_widget.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/screens/calendar/add_to_calander.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/one_to_many_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
@@ -546,7 +547,22 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
         await _bloc.createOneToManyOffer(
             user: SevaCore.of(context).loggedInUser,
             timebankId: widget.timebankId);
-        await _settingModalBottomSheet(context);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) {
+                    return AddToCalendar(
+                        isOfferRequest: null,
+                        offer: null,
+                        requestModel: null,
+                        userModel: null,
+                        eventsIdsArr:_bloc.offerIds
+
+                    );
+                },
+            ),
+        );
+//        await _settingModalBottomSheet(context);
 //        showDialog(
 //            context: context,
 //            builder: (_context) {
