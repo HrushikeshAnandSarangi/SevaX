@@ -179,7 +179,7 @@ class AddToCalendarState extends State<AddToCalendar> {
           ),
           Container(
             margin: EdgeInsets.only(top: 10),
-            child: Text('Add to calander'),
+            child: Text('Add to calendar'),
           ),
           Container(
             margin: EdgeInsets.only(top: 10),
@@ -207,7 +207,7 @@ class AddToCalendarState extends State<AddToCalendar> {
                       child: Image.asset("lib/assets/images/googlecal.png"),
                     ),
                     onPressed: googleCalanderIntegration,
-                    title: 'Add to Google Calander',
+                    title: 'Add to Google Calendar',
                   ),
                   getCalander(
                     icon: CircleAvatar(

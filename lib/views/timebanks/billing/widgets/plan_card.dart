@@ -6,11 +6,13 @@ import 'package:http/http.dart' as http;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/billing_plan_details.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/views/core.dart';
 
 import '../../../../flavor_config.dart';
 import '../../../../main_app.dart';
 import '../../../../main_seva_dev.dart' as dev;
+import '../../../splash_view.dart';
 import '../billing_view.dart';
 
 class BillingPlanCard extends StatefulWidget {
@@ -218,8 +220,16 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
                         widget.plan.id,
                       ).then((value) {
                         Navigator.of(context, rootNavigator: true).pop();
-                        planChangedMessage(context, value)
-                            .then((_) => Navigator.of(context).pop());
+                        planChangedMessage(context, value).then(
+                          (_) => Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (context1) => SevaCore(
+                                  loggedInUser: widget.user,
+                                  child: HomePageRouter(),
+                                ),
+                              ),
+                              (Route<dynamic> route) => false),
+                        );
                       });
                     } else {
                       if (widget.plan.id ==
