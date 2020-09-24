@@ -1469,7 +1469,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
                 offer: widget.offer,
                 requestModel: requestModel,
                 userModel: widget.userModel,
-                eventsIdsArr:eventsIdsArr
+                eventsIdsArr: eventsIdsArr
               );
             },
           ),

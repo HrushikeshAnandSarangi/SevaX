@@ -41,8 +41,91 @@ class AddToCalendar extends StatefulWidget {
 enum CalanderType { iCAL, GOOGLE_CALANDER, OUTLOOK }
 
 class AddToCalendarState extends State<AddToCalendar> {
+    Future<void> googleCalanderIntegration() async {
+        Map<String, dynamic> stateOfcalendarCallback = {
+            "email": SevaCore.of(context).loggedInUser.email,
+            // "mobile": globals.isMobile,
+            //TODO
+            "mobile": true,
+            "envName": FlavorConfig.values.envMode,
+            "eventsArr": widget.eventsIdsArr,
+            "createType": widget.requestModel!=null ? "REQUEST":"OFFER"
+        };
+        var stateVar = jsonEncode(stateOfcalendarCallback);
+        String redirectUrl =
+            "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+        String authorizationUrl =
+            "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
 
-  Future<void> iCalIntegration() async {
+        //listOfEmails for which event is created
+        if(widget.requestModel!=null){
+            List<String> acceptorList =
+            widget.isOfferRequest != null && widget.offer.creatorAllowedCalender
+                ? [widget.offer.email, widget.requestModel.email]
+                : [widget.requestModel.email];
+            widget.requestModel.allowedCalenderUsers = acceptorList.toList();
+            await FirestoreManager.updateRequest(requestModel: widget.requestModel);
+        }
+        if (await canLaunch(authorizationUrl.toString())) {
+            await launch(authorizationUrl.toString());
+        }
+        // setState(() {
+        //   comingFromDynamicLink = true;
+        // });
+
+        // log("after showing modal bottom");
+        // if (eventsIdsArr.length == 0) {
+        //   showInsufficientBalance();
+        // }
+
+        if (widget.isOfferRequest == true && widget.userModel != null) {
+            Navigator.pop(context, {'response': 'ACCEPTED'});
+        } else {
+            Navigator.pop(context);
+        }
+        // Navigator.of(bc).pop();
+    }
+
+    Future<void> outlookCalanderIntegration() async {
+        Map<String, dynamic> stateOfcalendarCallback = {
+            "email": SevaCore.of(context).loggedInUser.email,
+            // "mobile": globals.isMobile,
+            //TODO
+            "mobile": true,
+            "envName": FlavorConfig.values.envMode,
+            "eventsArr": widget.eventsIdsArr,
+            "createType": widget.requestModel!=null ? "REQUEST" : "OFFER"
+        };
+        var stateVar = jsonEncode(stateOfcalendarCallback);
+        String redirectUrl =
+            "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+        String authorizationUrl =
+            "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+
+        if(widget.requestModel!=null){
+            List<String> acceptorList =
+            widget.isOfferRequest != null && widget.offer.creatorAllowedCalender
+                ? [widget.offer.email, widget.requestModel.email]
+                : [widget.requestModel.email];
+            widget.requestModel.allowedCalenderUsers = acceptorList.toList();
+            await FirestoreManager.updateRequest(requestModel: widget.requestModel);
+        }
+        if (await canLaunch(authorizationUrl.toString())) {
+            await launch(authorizationUrl.toString());
+        }
+        // setState(() {
+        //   comingFromDynamicLink = true;
+        // });
+        // Navigator.of(bc).pop();
+
+        if (widget.isOfferRequest == true && widget.userModel != null) {
+            Navigator.pop(context, {'response': 'ACCEPTED'});
+        } else {
+            Navigator.pop(context);
+        }
+    }
+
+    Future<void> iCalIntegration() async {
     Map<String, dynamic> stateOfcalendarCallback = {
       "email": SevaCore.of(context).loggedInUser.email,
       // "mobile": globals.isMobile,
@@ -50,7 +133,7 @@ class AddToCalendarState extends State<AddToCalendar> {
       "mobile": true,
       "envName": FlavorConfig.values.envMode,
       "eventsArr": widget.eventsIdsArr,
-      "createType": "REQUEST"
+      "createType": widget.requestModel!=null ? "REQUEST":"OFFER"
     };
     var stateVar = jsonEncode(stateOfcalendarCallback);
 
@@ -59,12 +142,14 @@ class AddToCalendarState extends State<AddToCalendar> {
     String authorizationUrl =
         "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
 
-    List<String> acceptorList =
+    if(widget.requestModel!=null){
+        List<String> acceptorList =
         widget.isOfferRequest != null && widget.offer.creatorAllowedCalender
             ? [widget.offer.email, widget.requestModel.email]
             : [widget.requestModel.email];
-    widget.requestModel.allowedCalenderUsers = acceptorList.toList();
-    await FirestoreManager.updateRequest(requestModel: widget.requestModel);
+        widget.requestModel.allowedCalenderUsers = acceptorList.toList();
+        await FirestoreManager.updateRequest(requestModel: widget.requestModel);
+    }
     if (await canLaunch(authorizationUrl.toString())) {
       await launch(authorizationUrl.toString());
     }
@@ -72,86 +157,6 @@ class AddToCalendarState extends State<AddToCalendar> {
     //   comingFromDynamicLink = true;
     // });
     // Navigator.of(bc).pop();
-    // Navigator.of(bc).pop();
-
-    if (widget.isOfferRequest == true && widget.userModel != null) {
-      Navigator.pop(context, {'response': 'ACCEPTED'});
-    } else {
-      Navigator.pop(context);
-    }
-  }
-
-  Future<void> googleCalanderIntegration() async {
-    Map<String, dynamic> stateOfcalendarCallback = {
-      "email": SevaCore.of(context).loggedInUser.email,
-      // "mobile": globals.isMobile,
-      //TODO
-      "mobile": true,
-      "envName": FlavorConfig.values.envMode,
-      "eventsArr": widget.eventsIdsArr,
-      "createType": "REQUEST"
-    };
-    var stateVar = jsonEncode(stateOfcalendarCallback);
-    String redirectUrl =
-        "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-    String authorizationUrl =
-        "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-
-    //listOfEmails for which event is created
-    List<String> acceptorList =
-        widget.isOfferRequest != null && widget.offer.creatorAllowedCalender
-            ? [widget.offer.email, widget.requestModel.email]
-            : [widget.requestModel.email];
-    widget.requestModel.allowedCalenderUsers = acceptorList.toList();
-    await FirestoreManager.updateRequest(requestModel: widget.requestModel);
-    if (await canLaunch(authorizationUrl.toString())) {
-      await launch(authorizationUrl.toString());
-    }
-    // setState(() {
-    //   comingFromDynamicLink = true;
-    // });
-
-    // log("after showing modal bottom");
-    // if (eventsIdsArr.length == 0) {
-    //   showInsufficientBalance();
-    // }
-
-    if (widget.isOfferRequest == true && widget.userModel != null) {
-      Navigator.pop(context, {'response': 'ACCEPTED'});
-    } else {
-      Navigator.pop(context);
-    }
-    // Navigator.of(bc).pop();
-  }
-
-  Future<void> outlookCalanderIntegration() async {
-    Map<String, dynamic> stateOfcalendarCallback = {
-      "email": SevaCore.of(context).loggedInUser.email,
-      // "mobile": globals.isMobile,
-      //TODO
-      "mobile": true,
-      "envName": FlavorConfig.values.envMode,
-      "eventsArr": widget.eventsIdsArr,
-      "createType": "REQUEST"
-    };
-    var stateVar = jsonEncode(stateOfcalendarCallback);
-    String redirectUrl =
-        "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-    String authorizationUrl =
-        "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-
-    List<String> acceptorList =
-        widget.isOfferRequest != null && widget.offer.creatorAllowedCalender
-            ? [widget.offer.email, widget.requestModel.email]
-            : [widget.requestModel.email];
-    widget.requestModel.allowedCalenderUsers = acceptorList.toList();
-    await FirestoreManager.updateRequest(requestModel: widget.requestModel);
-    if (await canLaunch(authorizationUrl.toString())) {
-      await launch(authorizationUrl.toString());
-    }
-    // setState(() {
-    //   comingFromDynamicLink = true;
-    // });
     // Navigator.of(bc).pop();
 
     if (widget.isOfferRequest == true && widget.userModel != null) {
@@ -198,15 +203,6 @@ class AddToCalendarState extends State<AddToCalendar> {
                     icon: CircleAvatar(
                       backgroundColor: Colors.white,
                       radius: 35,
-                      child: Image.asset("lib/assets/images/ical.png"),
-                    ),
-                    onPressed: iCalIntegration,
-                    title: 'Add to iCal',
-                  ),
-                  getCalander(
-                    icon: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 35,
                       child: Image.asset("lib/assets/images/googlecal.png"),
                     ),
                     onPressed: googleCalanderIntegration,
@@ -221,6 +217,15 @@ class AddToCalendarState extends State<AddToCalendar> {
                     onPressed: outlookCalanderIntegration,
                     title: 'Add to Outlook',
                   ),
+                    getCalander(
+                        icon: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 35,
+                            child: Image.asset("lib/assets/images/ical.png"),
+                        ),
+                        onPressed: iCalIntegration,
+                        title: 'Add to iCal',
+                    ),
                   Container(
                     alignment: Alignment.bottomRight,
                     child: FlatButton(
