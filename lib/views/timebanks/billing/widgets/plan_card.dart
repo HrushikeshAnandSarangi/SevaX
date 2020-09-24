@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/billing_plan_details.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/views/core.dart';
 
 import '../../../../flavor_config.dart';
 import '../../../../main_app.dart';
@@ -199,13 +203,24 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
                           : Colors.white,
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
+                    if (widget.activePlanId == widget.plan.id) {
+                      return;
+                    }
                     if (widget.isPlanActive &&
                         widget.activePlanId != null &&
                         widget.activePlanId !=
                             SevaBillingPlans.NEIGHBOUR_HOOD_PLAN) {
                       print("${widget.plan.id}  ${widget.isPlanActive}");
                       _changePlanAlert(context);
+                      _changePlan(
+                        SevaCore.of(context).loggedInUser.currentCommunity,
+                        widget.plan.id,
+                      ).then((value) {
+                        Navigator.of(context, rootNavigator: true).pop();
+                        planChangedMessage(context, value)
+                            .then((_) => Navigator.of(context).pop());
+                      });
                     } else {
                       if (widget.plan.id ==
                               SevaBillingPlans.NEIGHBOUR_HOOD_PLAN ||
@@ -328,15 +343,37 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
     );
   }
 
-  void _changePlanAlert(context) {
+  void _changePlanAlert(
+    BuildContext context,
+  ) {
     showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Row(
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(width: 30),
+              Expanded(child: Text('Changing plan')),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> planChangedMessage(
+    BuildContext context,
+    bool isSuccess,
+  ) async {
+    await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(S.of(context).plan_change),
-          content: Container(
-            child: Text(S.of(context).contact_seva_to_change_plan),
-          ),
+          content: Text(isSuccess
+              ? 'Plan Changed'
+              : 'Something went wrong! Please try again'),
           actions: <Widget>[
             FlatButton(
               child: Text(S.of(context).close),
@@ -348,6 +385,25 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
         );
       },
     );
+  }
+
+  Future<bool> _changePlan(String communityId, String planId) async {
+    try {
+      http.Response result = await http.post(
+        FlavorConfig.values.cloudFunctionBaseURL + '/planChangeHandler',
+        body: json.encode({'communityId': communityId, "newPlanId": planId}),
+        headers: {"Content-type": "application/json"},
+      );
+
+      if (result.statusCode == 200) {
+        return true;
+      } else {
+        print(result.body);
+      }
+    } catch (e) {
+      print(e);
+    }
+    return false;
   }
 
   void _planSuccessMessage({
