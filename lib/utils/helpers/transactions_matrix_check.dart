@@ -101,7 +101,7 @@ class TransactionsMatrixCheck extends StatelessWidget {
 
     Map<String, dynamic> matrix_current_plan = AppConfig
         .plan_transactions_matrix[AppConfig.paymentStatusMap['planId']];
-    return matrix_current_plan.containsKey(transaction_matrix_type)
+    return matrix_current_plan?.containsKey(transaction_matrix_type) ?? false
         ? matrix_current_plan[transaction_matrix_type]['allow']
         : true;
   }
