@@ -1460,7 +1460,7 @@ class RequestCreateFormState extends State<RequestCreateForm>
         await _updateProjectModel();
 
         Navigator.pop(dialogContext);
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) {

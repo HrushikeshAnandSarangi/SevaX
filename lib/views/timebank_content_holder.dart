@@ -719,13 +719,6 @@ class DiscussionListState extends State<DiscussionList> {
                                   ),
                                 ],
                               )),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          document(
-                              newsDocumentName: news.newsDocumentName,
-                              newsDocumentUrl: news.newsDocumentUrl),
-                          //  SizedBox(height: 10),
                         ],
                       ),
                     )

@@ -161,13 +161,20 @@ class AddToCalendarState extends State<AddToCalendar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        title: Text(
+          'Add event to calander',
+          style: TextStyle(fontSize: 16),
+        ),
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(
             Icons.check_circle_rounded,
-            size: 80,
+            size: 120,
             color: Colors.green,
           ),
           Container(
@@ -179,26 +186,54 @@ class AddToCalendarState extends State<AddToCalendar> {
             child: Text('Do you want to add this event to your calendar?'),
           ),
           Container(
-            margin: EdgeInsets.only(top: 80),
-            child: Wrap(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                getCalander(
-                  icon: Icon(Icons.calendar_today_outlined),
-                  onPressed: iCalIntegration,
-                  title: 'Add to iCal',
-                ),
-                getCalander(
-                  icon: Icon(Icons.calendar_today_outlined),
-                  onPressed: googleCalanderIntegration,
-                  title: 'Add to Google Calander',
-                ),
-                getCalander(
-                  icon: Icon(Icons.calendar_today_outlined),
-                  onPressed: outlookCalanderIntegration,
-                  title: 'Add to Outlook',
-                ),
-              ],
+            margin: EdgeInsets.only(top: 50),
+            child: SingleChildScrollView(
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  getCalander(
+                    icon: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 35,
+                      child: Image.asset("lib/assets/images/ical.png"),
+                    ),
+                    onPressed: iCalIntegration,
+                    title: 'Add to iCal',
+                  ),
+                  getCalander(
+                    icon: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 35,
+                      child: Image.asset("lib/assets/images/googlecal.png"),
+                    ),
+                    onPressed: googleCalanderIntegration,
+                    title: 'Add to Google Calander',
+                  ),
+                  getCalander(
+                    icon: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 35,
+                      child: Image.asset("lib/assets/images/outlookcal.png"),
+                    ),
+                    onPressed: outlookCalanderIntegration,
+                    title: 'Add to Outlook',
+                  ),
+                  Container(
+                    alignment: Alignment.bottomRight,
+                    child: FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        S.of(context).skip_for_now,
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           )
         ],
@@ -209,16 +244,24 @@ class AddToCalendarState extends State<AddToCalendar> {
   Widget getCalander({
     Function onPressed,
     String title,
-    Icon icon,
+    CircleAvatar icon,
   }) {
-    return Row(
-      children: [
-        IconButton(
-          icon: icon,
-          onPressed: onPressed,
-        ),
-        Text(title)
-      ],
+    return Container(
+      margin: EdgeInsets.only(left: 10),
+      child: Row(
+        children: [
+          icon,
+          FlatButton(
+            onPressed: onPressed,
+            child: Text(
+              title,
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 
