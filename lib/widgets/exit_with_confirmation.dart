@@ -16,7 +16,8 @@ class ExitWithConfirmation extends StatelessWidget {
     return showDialog(
           context: context,
           builder: (_context) => AlertDialog(
-            title: Text('Are you sure you want to cancel editing'),
+            title: Text(
+                'Please confirm that you want to cancel editing. You will lose all changes if you confirm.'),
             actions: [
               FlatButton(
                 onPressed: () {
