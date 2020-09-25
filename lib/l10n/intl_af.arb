@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2020-09-25T11:44:19+00:00",
+    "@@last_modified": "2020-09-25T15:22:57+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -457,7 +457,7 @@
     "help_contact_us": "Kontak Ons",
     "help_version": "weergawe",
     "feedback": "Feedback",
-    "send_feedback": "Stuur terugvoer",
+    "send_feedback": "Stuur terugvoering",
     "enter_feedback": "Voer asseblief u terugvoer in",
     "feedback_messagae": "Laat weet ons asseblief van u waardevolle terugvoer",
     "create_timebank_description": "'N TimeBank is 'n gemeenskap van vrywilligers wat mekaar en die groter gemeenskap tyd gee en ontvang",
@@ -997,5 +997,6 @@
     "bookmark": "Boekmerk",
     "alert_before_exit": "Bevestig dat u die redigering wil kanselleer. U sal alle veranderinge verloor as u bevestig.",
     "payment_still_processing": "Ons is besig om u plan op te dateer asb.",
-    "cancel_editing_confirmation": "Bevestig dat u die redigering wil kanselleer. U sal alle veranderinge verloor as u bevestig."
+    "cancel_editing_confirmation": "Bevestig dat u die redigering wil kanselleer. U sal alle veranderinge verloor as u bevestig.",
+    "sending_feedback": "Stuur terugvoer"
 }

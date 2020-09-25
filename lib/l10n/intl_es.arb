@@ -1,6 +1,6 @@
 {
     "@@locale": "es",
-    "@@last_modified": "2020-09-25T11:44:18+00:00",
+    "@@last_modified": "2020-09-25T15:22:57+00:00",
     "check_met": "Verificando, se nos conhecemos antes",
     "we_met": "Nós nos encontramos antes",
     "hang_on": "Aguarde",
@@ -457,7 +457,7 @@
     "help_contact_us": "Contáctenos",
     "help_version": "Versión",
     "feedback": "Retroalimentación",
-    "send_feedback": "Envío de comentarios",
+    "send_feedback": "Enviar comentarios",
     "enter_feedback": "Por favor ingrese sus comentarios",
     "feedback_messagae": "Por favor, háganos saber acerca de sus valiosos comentarios",
     "create_timebank_description": "Un TimeBank es una comunidad de voluntarios que se dan y reciben tiempo entre ellos y con la comunidad en general.",
@@ -997,5 +997,6 @@
     "bookmark": "Marcador",
     "alert_before_exit": "Confirme que desea cancelar la edición. Perderá todos los cambios si confirma.",
     "payment_still_processing": "Estamos actualizando su plan, ¡agárrese fuerte!",
-    "cancel_editing_confirmation": "Confirme que desea cancelar la edición. Perderá todos los cambios si confirma."
+    "cancel_editing_confirmation": "Confirme que desea cancelar la edición. Perderá todos los cambios si confirma.",
+    "sending_feedback": "Envío de comentarios"
 }

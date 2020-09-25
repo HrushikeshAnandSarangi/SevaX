@@ -115,6 +115,7 @@ class TransactionLimitCheck extends StatelessWidget {
                   : false,
               _userBloc.community.payment['planId'],
               exaustedLimit,
+              _userBloc.community.billMe,
             );
           },
           child: AbsorbPointer(
@@ -136,6 +137,7 @@ class TransactionLimitCheck extends StatelessWidget {
     bool isUpdatingPlan,
     String activePlanId,
     bool exaustedLimit,
+    bool isBillMe,
   ) {
     showDialog(
       context: context,
@@ -187,6 +189,7 @@ class TransactionLimitCheck extends StatelessWidget {
                           user: user,
                           isPlanActive: false,
                           isPrivateTimebank: isPrivate,
+                          isBillMe: isBillMe,
                         ),
                       ),
                     );

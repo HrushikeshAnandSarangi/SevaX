@@ -621,11 +621,7 @@ class _DonationViewState extends State<DonationView> {
                             .then((value) {
                           if (value) {
                             // hideProgress();
-                            getSuccessDialog(S
-                                    .of(context)
-                                    .donations_requested
-                                    .toLowerCase())
-                                .then(
+                            getSuccessDialog().then(
                               //to pop the screen
                               (_) => Navigator.of(context).pop(),
                             );
@@ -788,11 +784,7 @@ class _DonationViewState extends State<DonationView> {
                           .then((value) {
                         if (value) {
                           // hideProgress();
-                          getSuccessDialog(S
-                                  .of(context)
-                                  .donations_requested
-                                  .toLowerCase())
-                              .then(
+                          getSuccessDialog().then(
                             //to pop the screen
                             (_) => Navigator.of(context).pop(),
                           );
@@ -942,8 +934,7 @@ class _DonationViewState extends State<DonationView> {
                         .then((value) {
                       if (value) {
                         hideProgress();
-                        getSuccessDialog(S.of(context).pledged.toLowerCase())
-                            .then(
+                        getSuccessDialog().then(
                           //to pop the screen
                           (_) => Navigator.of(context).pop(),
                         );
@@ -1105,8 +1096,7 @@ class _DonationViewState extends State<DonationView> {
                           .then((value) {
                         if (value) {
                           // hideProgress();
-                          getSuccessDialog(S.of(context).pledged.toLowerCase())
-                              .then(
+                          getSuccessDialog().then(
                             //to pop the screen
                             (_) => Navigator.of(context).pop(),
                           );
@@ -1167,7 +1157,7 @@ class _DonationViewState extends State<DonationView> {
     fontSize: 13,
     color: Colors.grey,
   );
-  Future<bool> getSuccessDialog(data) async {
+  Future<bool> getSuccessDialog() async {
     await showDialog(
       barrierDismissible: false,
       context: context,
@@ -1180,7 +1170,7 @@ class _DonationViewState extends State<DonationView> {
                   .firstWordUpperCase()
                   .replaceFirst('.', '') +
               ' ' +
-              data),
+              S.of(context).pledged),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(

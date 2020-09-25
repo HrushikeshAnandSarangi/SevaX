@@ -236,6 +236,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
                   isPlanActive: false,
                   autoImplyLeading: true,
                   isPrivateTimebank: communityModel.private,
+                  isBillMe: communityModel.billMe,
                 ),
               ),
             );
