@@ -5,6 +5,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+
 import 'messages_all.dart';
 
 class S {
@@ -2306,7 +2307,7 @@ class S {
       );
 
   String get send_feedback => Intl.message(
-        'Send feedback',
+        'Sending Feedback',
         name: 'send_feedback',
       );
 
@@ -5019,6 +5020,21 @@ class S {
   String get bookmark => Intl.message(
         'Bookmark',
         name: 'bookmark',
+      );
+
+  String get alert_before_exit => Intl.message(
+        'Please confirm that you want to cancel editing. You will lose all changes if you confirm.',
+        name: 'alert_before_exit',
+      );
+
+  String get payment_still_processing => Intl.message(
+        'We are updating your plan please hang on tight!',
+        name: 'payment_still_processing',
+      );
+
+  String get cancel_editing_confirmation => Intl.message(
+        'Please confirm that you want to cancel editing. You will lose all changes if you confirm.',
+        name: 'cancel_editing_confirmation',
       );
 }
 

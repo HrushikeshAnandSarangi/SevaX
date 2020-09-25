@@ -1,6 +1,6 @@
 {
     "@@locale": "sn",
-    "@@last_modified": "2020-09-16T19:02:28+00:00",
+    "@@last_modified": "2020-09-25T11:44:19+00:00",
     "check_met": "Kuongorora, kana takasangana zvisati zvaitika",
     "we_met": "Takasangana zvisati zvaitika",
     "hang_on": "Ramba wakasimba",
@@ -457,7 +457,7 @@
     "help_contact_us": "Taura nesu",
     "help_version": "Shanduro",
     "feedback": "Mhinduro",
-    "send_feedback": "Tumira mhinduro",
+    "send_feedback": "Kutumira Mhinduro",
     "enter_feedback": "Ndokumbira utore mhinduro yako",
     "feedback_messagae": "Ndokumbirawo kuti tizivise nezve yenyu inokosha mhinduro",
     "create_timebank_description": "A TimeBank inharaunda yevazvipiri inopa uye kugashira nguva kune mumwe nemumwe uye kune yakakura nharaunda",
@@ -994,5 +994,8 @@
     "signed_up": "Wakanyoresa Up",
     "accepted_offer": "Yakagamuchirwa Chipo",
     "accept_offer": "Gamuchira Chipo",
-    "bookmark": "Bookmark"
+    "bookmark": "Bookmark",
+    "alert_before_exit": "Ndokumbira usimbise kuti iwe unoda kukanzura kugadzirisa. Iwe ucharasikirwa neshanduko dzese ukasimbisa",
+    "payment_still_processing": "Tiri kuvandudza chirongwa chako ndapota ramba wakasimba!",
+    "cancel_editing_confirmation": "Ndokumbira usimbise kuti iwe unoda kukanzura kugadzirisa. Iwe ucharasikirwa neshanduko dzese ukasimbisa"
 }
