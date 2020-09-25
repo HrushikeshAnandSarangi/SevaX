@@ -594,7 +594,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
 
     Widget _pinCodeWidget(int pinCode) {
       return Container(
-        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
         child: TextFormField(
           textInputAction: TextInputAction.done,
           onFieldSubmitted: (input) {
@@ -657,7 +657,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
 
     Widget _streetAddressWidget(String street_address1) {
       return Container(
-        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+        margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
         child: TextFormField(
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {

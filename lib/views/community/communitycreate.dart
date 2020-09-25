@@ -1443,7 +1443,7 @@ class CreateEditCommunityViewFormState
 
     Widget _pinCodeWidget(controller) {
       return Container(
-        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
         child: TextFormField(
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[4]);
@@ -1521,7 +1521,7 @@ class CreateEditCommunityViewFormState
 
     Widget _streetAddressWidget(controller) {
       return Container(
-        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+        margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
         child: TextFormField(
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
