@@ -4,7 +4,6 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
-import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 
 import '../bloc_provider.dart';
 
@@ -217,7 +216,7 @@ String getMessage({
 
   if (isUpdatingPlan) {
     return isAdmin
-        ? "We are updating your plan please hang on tight!"
+        ? 'We are updating your plan please hang on tight!'
         : S.of(context).limit_badge_contact_admin;
   }
 

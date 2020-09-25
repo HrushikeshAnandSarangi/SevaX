@@ -10,8 +10,6 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 
-import '../../../flavor_config.dart';
-
 class UserProfileBloc {
   final BuildContext context;
   final _communities = BehaviorSubject<List<Widget>>();
@@ -27,9 +25,9 @@ class UserProfileBloc {
   void getAllCommunities(context, UserModel userModel) async {
     Set<String> communitiesList = Set.from(userModel.communities);
 
-    if (await communitiesList.contains(FlavorConfig.values.timebankId)) {
-      await communitiesList.remove(FlavorConfig.values.timebankId);
-    }
+//    if (await communitiesList.contains(FlavorConfig.values.timebankId)) {
+//      await communitiesList.remove(FlavorConfig.values.timebankId);
+//    }
 
     if (userModel?.sevaUserID != null)
       FirestoreManager.getUserForIdStream(
