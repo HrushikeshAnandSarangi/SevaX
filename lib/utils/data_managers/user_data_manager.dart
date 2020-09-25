@@ -408,8 +408,7 @@ Future<ProfanityImageModel> checkProfanityForImage({String imageUrl}) async {
 //  } on FormatException catch (formatException) {
 //    print("format exception");
 //    return null;
-//  }
-  on Exception catch (exception) {
+  } on Exception catch (exception) {
     print("general exception");
 
     //other exception

@@ -679,7 +679,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
       if (widget.requestItem.approvedUsers.contains(assosciatedEmail)) {
         Set<String> approvedUsers = Set.from(widget.requestItem.approvedUsers);
+        Set<String> calenderUsers =
+            Set.from(widget.requestItem.allowedCalenderUsers);
         approvedUsers.remove(SevaCore.of(context).loggedInUser.email);
+        if (calenderUsers.contains(SevaCore.of(context).loggedInUser.email)) {
+          calenderUsers.remove(SevaCore.of(context).loggedInUser.email);
+          widget.requestItem.allowedCalenderUsers = calenderUsers.toList();
+        }
         widget.requestItem.approvedUsers = approvedUsers.toList();
       }
 
