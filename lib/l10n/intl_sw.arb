@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2020-09-16T19:02:28+00:00",
+    "@@last_modified": "2020-09-25T11:44:19+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -457,7 +457,7 @@
     "help_contact_us": "Wasiliana nasi",
     "help_version": "Toleo",
     "feedback": "Majibu",
-    "send_feedback": "Tuma maoni",
+    "send_feedback": "Kutuma Maoni",
     "enter_feedback": "Tafadhali ingiza maoni yako",
     "feedback_messagae": "Tafadhali tujulishe kuhusu maoni yako muhimu",
     "create_timebank_description": "TimeBank ni jamii ya wajitolea ambao hupeana na kupokea wakati kwa kila mmoja na kwa jamii kubwa",
@@ -994,5 +994,8 @@
     "signed_up": "Umejisajili",
     "accepted_offer": "Ofa Iliyokubaliwa",
     "accept_offer": "Kubali Ofa",
-    "bookmark": "Alamisho"
+    "bookmark": "Alamisho",
+    "alert_before_exit": "Tafadhali thibitisha kuwa unataka kughairi kuhariri. Utapoteza mabadiliko yote ikiwa utathibitisha.",
+    "payment_still_processing": "Tunasasisha mpango wako tafadhali hutegemea sana!",
+    "cancel_editing_confirmation": "Tafadhali thibitisha kuwa unataka kughairi kuhariri. Utapoteza mabadiliko yote ikiwa utathibitisha."
 }

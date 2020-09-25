@@ -25,7 +25,6 @@ import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -675,28 +674,23 @@ class CreateEditCommunityViewFormState
                             color: Colors.grey,
                           ),
                         ),
-                        TransactionsMatrixCheck(
-                          upgradeDetails:
-                              AppConfig.upgradePlanBannerModel.parent_timebanks,
-                          transaction_matrix_type: "parent_timebanks",
-                          child: Center(
-                            child: ParentTimebankPickerWidget(
-                              selectedTimebank: this.selectedTimebank,
-                              onChanged: (CommunityModel selectedTimebank) {
-                                print("received data model ");
-                                setState(() {
-                                  this.selectedTimebank = selectedTimebank.name;
-                                });
-                                snapshot.data.timebank.updateValueByKey(
-                                    'parentTimebankId',
-                                    selectedTimebank.primary_timebank);
-                                timebankModel.parentTimebankId =
-                                    selectedTimebank.primary_timebank;
-                                snapshot.data.community.updateValueByKey(
-                                    'parentTimebankId',
-                                    selectedTimebank.primary_timebank);
-                              },
-                            ),
+                        Center(
+                          child: ParentTimebankPickerWidget(
+                            selectedTimebank: this.selectedTimebank,
+                            onChanged: (CommunityModel selectedTimebank) {
+                              print("received data model ");
+                              setState(() {
+                                this.selectedTimebank = selectedTimebank.name;
+                              });
+                              snapshot.data.timebank.updateValueByKey(
+                                  'parentTimebankId',
+                                  selectedTimebank.primary_timebank);
+                              timebankModel.parentTimebankId =
+                                  selectedTimebank.primary_timebank;
+                              snapshot.data.community.updateValueByKey(
+                                  'parentTimebankId',
+                                  selectedTimebank.primary_timebank);
+                            },
                           ),
                         ),
                         widget.isCreateTimebank
@@ -1449,7 +1443,7 @@ class CreateEditCommunityViewFormState
 
     Widget _pinCodeWidget(controller) {
       return Container(
-        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
         child: TextFormField(
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[4]);
@@ -1527,7 +1521,7 @@ class CreateEditCommunityViewFormState
 
     Widget _streetAddressWidget(controller) {
       return Container(
-        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+        margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
         child: TextFormField(
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {

@@ -405,9 +405,9 @@ Future<ProfanityImageModel> checkProfanityForImage({String imageUrl}) async {
   ProfanityImageModel profanityImageModel;
   try {
     profanityImageModel = ProfanityImageModel.fromMap(json.decode(result.body));
-  } on FormatException catch (formatException) {
-    print("format exception");
-    return null;
+//  } on FormatException catch (formatException) {
+//    print("format exception");
+//    return null;
   } on Exception catch (exception) {
     print("general exception");
 

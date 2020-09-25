@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-CN",
-    "@@last_modified": "2020-09-16T19:02:28+00:00",
+    "@@last_modified": "2020-09-25T11:44:19+00:00",
     "check_met": "检查我们是否见过",
     "we_met": "我们见过",
     "hang_on": "稍待",
@@ -994,5 +994,8 @@
     "signed_up": "注册",
     "accepted_offer": "接受报价",
     "accept_offer": "接受报价",
-    "bookmark": "书签"
+    "bookmark": "书签",
+    "alert_before_exit": "请确认您要取消编辑。如果确认，您将丢失所有更改。",
+    "payment_still_processing": "我们正在更新您的计划，请稍候！",
+    "cancel_editing_confirmation": "请确认您要取消编辑。如果确认，您将丢失所有更改。"
 }

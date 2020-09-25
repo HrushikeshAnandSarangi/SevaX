@@ -530,7 +530,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
 
     Widget _pinCodeWidget() {
       return Container(
-        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
         child: TextFormField(
           textInputAction: TextInputAction.next,
           onFieldSubmitted: (input) {
@@ -580,7 +580,7 @@ class _ChangeOwnershipDialogViewState extends State<ChangeOwnershipDialog> {
 
     Widget _streetAddressWidget() {
       return Container(
-        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+        margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
         child: TextFormField(
           textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
