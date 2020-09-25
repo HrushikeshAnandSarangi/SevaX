@@ -12,8 +12,10 @@ import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/utils/feeds_web_scrapper.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/widgets/exit_with_confirmation.dart';
 
@@ -28,6 +30,9 @@ class NewsCreate extends StatelessWidget {
       child: WillPopScope(
         onWillPop: () async {
           globals.newsImageURL = null;
+          globals.newsDocumentURL = null;
+          globals.newsDocumentName = null;
+          globals.webImageUrl = null;
           return true;
         },
         child: Scaffold(
@@ -285,45 +290,50 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     ),
 
                     Center(
-                        child: RaisedButton(
-                      textColor: Colors.green,
-                      elevation: 0,
-                      child: Container(
-                        constraints: BoxConstraints.loose(
-                          Size(MediaQuery.of(context).size.width - 220, 50),
+                        child: TransactionsMatrixCheck(
+                      upgradeDetails:
+                          AppConfig.upgradePlanBannerModel.parent_timebanks,
+                      transaction_matrix_type: "parent_timebanks",
+                      child: RaisedButton(
+                        textColor: Colors.green,
+                        elevation: 0,
+                        child: Container(
+                          constraints: BoxConstraints.loose(
+                            Size(MediaQuery.of(context).size.width - 220, 50),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                'Posting to ' +
+                                    ((this.selectedTimebanks.length > 1)
+                                        ? this
+                                                .selectedTimebanks
+                                                .length
+                                                .toString() +
+                                            ' timebanks'
+                                        : this.widget.timebankModel.name),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                              Icon(Icons.arrow_drop_down)
+                            ],
+                          ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              'Posting to ' +
-                                  ((this.selectedTimebanks.length > 1)
-                                      ? this
-                                              .selectedTimebanks
-                                              .length
-                                              .toString() +
-                                          ' timebanks'
-                                      : this.widget.timebankModel.name),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                            Icon(Icons.arrow_drop_down)
-                          ],
-                        ),
+                        color: Colors.grey[200],
+                        onPressed: () async {
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          _silblingTimebankSelectionBottomsheet(
+                              context,
+                              this.widget.timebankModel,
+                              selectedTimebanks,
+                              (selectedTimebanks) => {
+                                    print(selectedTimebanks),
+                                    setState(() =>
+                                        {selectedTimebanks = selectedTimebanks})
+                                  });
+                        },
                       ),
-                      color: Colors.grey[200],
-                      onPressed: () async {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        _silblingTimebankSelectionBottomsheet(
-                            context,
-                            this.widget.timebankModel,
-                            selectedTimebanks,
-                            (selectedTimebanks) => {
-                                  print(selectedTimebanks),
-                                  setState(() =>
-                                      {selectedTimebanks = selectedTimebanks})
-                                });
-                      },
                     )),
                     // Text(""),
                     Padding(
