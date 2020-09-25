@@ -226,11 +226,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
             widget.timebankModel.admins.contains(sevaUserId)) ||
         (widget.projectModel.mode == "Personal" &&
             widget.projectModel.creatorId == sevaUserId)) {
-      if (SevaCore.of(context).loggedInUser.calendarId == null) {
-        _settingModalBottomSheet(context);
-      } else {
         proceedCreatingRequest();
-      }
     } else {
       _showProtectedTimebankMessage();
     }
