@@ -77,7 +77,7 @@ void _parentSelectionBottomsheet(BuildContext mcontext, onChanged) {
                     bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: SearchParentTimebanks(
                   keepOnBackPress: false,
-                  loggedInUser: SevaCore.of(context).loggedInUser,
+                  loggedInUser: SevaCore.of(mcontext).loggedInUser,
                   showBackBtn: false,
                   isFromHome: false,
                   onChanged: onChanged,
