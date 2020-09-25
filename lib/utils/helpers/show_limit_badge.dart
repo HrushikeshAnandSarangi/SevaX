@@ -216,7 +216,7 @@ String getMessage({
 
   if (isUpdatingPlan) {
     return isAdmin
-        ? 'We are updating your plan please hang on tight!'
+        ? S.of(context).payment_still_processing
         : S.of(context).limit_badge_contact_admin;
   }
 
@@ -231,5 +231,5 @@ String getMessage({
         : S.of(context).limit_badge_contact_admin;
   }
 
-  return 'Something went wrong!';
+  return S.of(context).general_stream_error;
 }

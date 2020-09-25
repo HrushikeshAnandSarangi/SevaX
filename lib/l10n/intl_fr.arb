@@ -1,6 +1,6 @@
 {
     "@@locale": "fr",
-    "@@last_modified": "2020-09-16T19:02:28+00:00",
+    "@@last_modified": "2020-09-25T11:44:19+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Accrochez-vous bien",
@@ -457,7 +457,7 @@
     "help_contact_us": "Nous contacter",
     "help_version": "Version",
     "feedback": "Retour d'information",
-    "send_feedback": "Envoyer des commentaires",
+    "send_feedback": "Envoi de commentaires",
     "enter_feedback": "Veuillez entrer vos commentaires",
     "feedback_messagae": "Veuillez nous faire part de vos précieux commentaires",
     "create_timebank_description": "Une banque de temps est une communauté de bénévoles qui donnent et reçoivent du temps les uns aux autres et à la communauté en général",
@@ -994,5 +994,8 @@
     "signed_up": "Signé",
     "accepted_offer": "Offre acceptée",
     "accept_offer": "Accepter l'offre",
-    "bookmark": "Signet"
+    "bookmark": "Signet",
+    "alert_before_exit": "Veuillez confirmer que vous souhaitez annuler la modification. Vous perdrez toutes les modifications si vous confirmez.",
+    "payment_still_processing": "Nous mettons à jour votre plan s'il vous plaît attendez!",
+    "cancel_editing_confirmation": "Veuillez confirmer que vous souhaitez annuler la modification. Vous perdrez toutes les modifications si vous confirmez."
 }
