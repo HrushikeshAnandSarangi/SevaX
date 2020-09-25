@@ -156,7 +156,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                           }
                         },
                       ),
-                      headingText(S.of(context).status),
+                      // headingText(S.of(context).status),
                       //  statusWidget(),
                     ],
                   ),
@@ -266,7 +266,9 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                         isPrivateTimebank: communityModel.private,
                       ),
                     ),
-                  );
+                  ).then((value) {
+                    setState(() {});
+                  });
                 },
             ),
           ],
