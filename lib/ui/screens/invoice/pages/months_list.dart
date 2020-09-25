@@ -179,8 +179,10 @@ class _MonthsListingState extends State<MonthsListing> {
                 var sum = 0;
                 transactionsMonthsList[index].forEach((k, v) {
                   if (transactionTypes.containsKey(k)) {
-                    if (transactionTypes[k]["billable"] == true) {
-                      sum += v;
+                    if(k!="billedquota") {
+                        if (transactionTypes[k]["billable"] == true) {
+                            sum += v;
+                        }
                     }
                   }
                 });
