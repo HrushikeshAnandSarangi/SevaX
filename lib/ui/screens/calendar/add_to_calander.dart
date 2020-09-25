@@ -5,6 +5,8 @@ import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:url_launcher/url_launcher.dart';
@@ -254,150 +256,27 @@ class AddToCalendarState extends State<AddToCalendar> {
     String title,
     CircleAvatar icon,
   }) {
-    return Container(
-      margin: EdgeInsets.only(left: 10),
-      child: Row(
-        children: [
-          icon,
-          FlatButton(
-            onPressed: onPressed,
-            child: Text(
-              title,
-              style: TextStyle(
-                color: Colors.black,
+    return TransactionsMatrixCheck(
+        upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
+        transaction_matrix_type: "calendar_sync",
+        child: Container(
+        margin: EdgeInsets.only(left: 10),
+        child: Row(
+          children: [
+            icon,
+            FlatButton(
+              onPressed: onPressed,
+              child: Text(
+                title,
+                style: TextStyle(
+                  color: Colors.black,
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
-
-  // void _settingModalBottomSheet(BuildContext context) {
-
-  //   showModalBottomSheet(
-  //       context: context,
-  //       builder: (BuildContext bc) {
-  //         return Container(
-  //           child: new Wrap(
-  //             children: <Widget>[
-  //               Padding(
-  //                 padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
-  //                 child: Text(
-  //                   S.of(context).calendars_popup_desc,
-  //                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-  //                 ),
-  //               ),
-  //               Padding(
-  //                 padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
-  //                 child: Row(
-  //                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //                   crossAxisAlignment: CrossAxisAlignment.center,
-  //                   children: <Widget>[
-  //                     GestureDetector(
-  //                       child: CircleAvatar(
-  //                         backgroundColor: Colors.white,
-  //                         radius: 40,
-  //                         child: Image.asset("lib/assets/images/googlecal.png"),
-  //                       ),
-  //                       onTap: () async {},
-  //                     ),
-  //                     GestureDetector(
-  //                         child: CircleAvatar(
-  //                           backgroundColor: Colors.white,
-  //                           radius: 40,
-  //                           child: Image.asset(
-  //                             "lib/assets/images/outlookcal.png",
-  //                           ),
-  //                         ),
-  //                         onTap: () async {
-  //                           String redirectUrl =
-  //                               "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-  //                           String authorizationUrl =
-  //                               "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-
-  //                           List<String> acceptorList =
-  //                               widget.isOfferRequest != null &&
-  //                                       widget.offer.creatorAllowedCalender
-  //                                   ? [
-  //                                       widget.offer.email,
-  //                                       widget.requestModel.email
-  //                                     ]
-  //                                   : [widget.requestModel.email];
-  //                           widget.requestModel.allowedCalenderUsers =
-  //                               acceptorList.toList();
-  //                           await FirestoreManager.updateRequest(
-  //                               requestModel: widget.requestModel);
-  //                           if (await canLaunch(authorizationUrl.toString())) {
-  //                             await launch(authorizationUrl.toString());
-  //                           }
-  //                           // setState(() {
-  //                           //   comingFromDynamicLink = true;
-  //                           // });
-  //                           Navigator.of(bc).pop();
-  //                         }),
-  //                     GestureDetector(
-  //                         child: CircleAvatar(
-  //                           backgroundColor: Colors.white,
-  //                           radius: 40,
-  //                           child: Image.asset("lib/assets/images/ical.png"),
-  //                         ),
-  //                         onTap: () async {
-  //                           String redirectUrl =
-  //                               "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-  //                           String authorizationUrl =
-  //                               "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-
-  //                           List<String> acceptorList =
-  //                               widget.isOfferRequest != null &&
-  //                                       widget.offer.creatorAllowedCalender
-  //                                   ? [
-  //                                       widget.offer.email,
-  //                                       widget.requestModel.email
-  //                                     ]
-  //                                   : [widget.requestModel.email];
-  //                           widget.requestModel.allowedCalenderUsers =
-  //                               acceptorList.toList();
-  //                           await FirestoreManager.updateRequest(
-  //                               requestModel: widget.requestModel);
-  //                           if (await canLaunch(authorizationUrl.toString())) {
-  //                             await launch(authorizationUrl.toString());
-  //                           }
-  //                           // setState(() {
-  //                           //   comingFromDynamicLink = true;
-  //                           // });
-  //                           Navigator.of(bc).pop();
-  //                         })
-  //                   ],
-  //                 ),
-  //               ),
-  //               Row(
-  //                 children: <Widget>[
-  //                   Spacer(),
-  //                   FlatButton(
-  //                       child: Text(
-  //                         S.of(context).skip_for_now,
-  //                         style: TextStyle(
-  //                             color: FlavorConfig.values.theme.primaryColor),
-  //                       ),
-  //                       onPressed: () async {
-  //                         List<String> acceptorList =
-  //                             widget.isOfferRequest != null &&
-  //                                     widget.offer.creatorAllowedCalender
-  //                                 ? [widget.offer.email]
-  //                                 : [];
-  //                         widget.requestModel.allowedCalenderUsers =
-  //                             acceptorList.toList();
-  //                         await FirestoreManager.updateRequest(
-  //                             requestModel: widget.requestModel);
-  //                         Navigator.of(bc).pop();
-  //                       }),
-  //                 ],
-  //               )
-  //             ],
-  //           ),
-  //         );
-  //       });
-  // }
 
 }

@@ -14,7 +14,9 @@ import 'package:sevaexchange/ui/screens/message/widgets/frequent_contacts_builde
 import 'package:sevaexchange/ui/screens/message/widgets/selected_member_list_builder.dart';
 import 'package:sevaexchange/ui/utils/icons.dart';
 import 'package:sevaexchange/ui/utils/strings.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 
 class NewChatPage extends StatefulWidget {
@@ -73,62 +75,66 @@ class _NewChatPageState extends State<NewChatPage> {
               children: <Widget>[
                 _bloc.isSelectionEnabled
                     ? SelectedMemberListBuilder()
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context)
-                                .push(
-                              MaterialPageRoute<ChatModel>(
-                                builder: (context) => CreateNewChatPage(
-                                  frequentContacts: widget.frequentContacts,
-                                  isSelectionEnabled: true,
+                    : TransactionsMatrixCheck(
+                        upgradeDetails: AppConfig.upgradePlanBannerModel.multi_member_messaging,
+                        transaction_matrix_type: "multi_member_messaging",
+                      child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .push(
+                                MaterialPageRoute<ChatModel>(
+                                  builder: (context) => CreateNewChatPage(
+                                    frequentContacts: widget.frequentContacts,
+                                    isSelectionEnabled: true,
+                                  ),
                                 ),
-                              ),
-                            )
-                                .then((ChatModel model) {
-                              if (model != null) {
-                                Navigator.of(context).pop(model);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => ChatPage(
-                                      chatModel: model,
-                                      senderId: model.groupDetails.admins[0],
+                              )
+                              .then((ChatModel model) {
+                                if (model != null) {
+                                  Navigator.of(context).pop(model);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatPage(
+                                        chatModel: model,
+                                        senderId: model.groupDetails.admins[0],
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }
-                            });
-                          },
-                          child: Container(
-                            height: 50,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  CircleAvatar(
-                                    backgroundColor: Colors.grey[300],
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: Image.asset(groupIcon),
+                                  );
+                                }
+                              });
+                            },
+                            child: Container(
+                              height: 50,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: <Widget>[
+                                    CircleAvatar(
+                                      backgroundColor: Colors.grey[300],
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: Image.asset(groupIcon),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: 12),
-                                  Text(
-                                    S.of(context).messaging_room,
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontSize: 16,
+                                    SizedBox(width: 12),
+                                    Text(
+                                      S.of(context).messaging_room,
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                        fontSize: 16,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
+                    ),
                 Container(
                   height: 30,
                   width: MediaQuery.of(context).size.width,
@@ -143,11 +149,7 @@ class _NewChatPageState extends State<NewChatPage> {
                     ),
                   ),
                 ),
-                (widget.frequentContacts ?? [])
-                                .where((element) => !element.isGroupMessage)
-                                .length >
-                            0 ||
-                        !_bloc.isSelectionEnabled
+                (widget.frequentContacts ?? []).where((element) => !element.isGroupMessage).length > 0 || !_bloc.isSelectionEnabled
                     ? FrequentContactsBuilder(
                         widget.frequentContacts,
                         _bloc.isSelectionEnabled,
