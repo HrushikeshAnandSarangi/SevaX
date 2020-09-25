@@ -28,7 +28,7 @@ class OfferParticipants extends StatelessWidget {
             return Container(
               height: MediaQuery.of(context).size.height * 0.75,
               alignment: Alignment.center,
-              child: Text(S.of(context).no_participants_yet),
+              child: Center(child: Text(S.of(context).no_participants_yet)),
             );
           }
           return ListView.builder(

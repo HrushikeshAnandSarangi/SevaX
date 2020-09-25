@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-TW",
-    "@@last_modified": "2020-09-25T11:44:19+00:00",
+    "@@last_modified": "2020-09-25T15:22:57+00:00",
     "check_met": "檢查我們是否見過",
     "we_met": "我們曾見過",
     "hang_on": "稍待。。。",
@@ -997,5 +997,6 @@
     "bookmark": "書籤",
     "alert_before_exit": "請確認您要取消編輯。如果確認，您將丟失所有更改。",
     "payment_still_processing": "我們正在更新您的計劃，請稍候！",
-    "cancel_editing_confirmation": "請確認您要取消編輯。如果確認，您將丟失所有更改。"
+    "cancel_editing_confirmation": "請確認您要取消編輯。如果確認，您將丟失所有更改。",
+    "sending_feedback": "發送反饋"
 }

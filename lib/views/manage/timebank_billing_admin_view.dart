@@ -241,7 +241,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             TextSpan(
               text: data != NO_SELECTED_PLAN_YET
                   ? ' ${S.of(context).change_plan}'
-                  : 'Syncing payment data.',
+                  : S.of(context).payment_still_processing,
               style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 16,
@@ -264,6 +264,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                         isPlanActive: data != NO_SELECTED_PLAN_YET,
                         autoImplyLeading: true,
                         isPrivateTimebank: communityModel.private,
+                        isBillMe: communityModel.billMe,
                       ),
                     ),
                   ).then((value) {
@@ -389,6 +390,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                             isPlanActive: false,
                             autoImplyLeading: true,
                             isPrivateTimebank: communityModel.private,
+                            isBillMe: communityModel.billMe,
                           ),
                         ),
                       );
