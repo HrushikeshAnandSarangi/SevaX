@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 //import 'package:collection/ lib\views\timebank_content_holder.dart';
@@ -231,7 +232,9 @@ class TimebankModel extends DataModel {
           members == null ? null : List<dynamic>.from(members.map((x) => x)),
       "protected": protected == null ? null : protected,
       "private": private == null ? null : private,
-      "parent_timebank_id": parentTimebankId == null ? null : parentTimebankId,
+      "parent_timebank_id": parentTimebankId == null || parentTimebankId.isEmpty
+          ? FlavorConfig.values.timebankId
+          : parentTimebankId,
       "community_id": communityId == null ? null : communityId,
       "root_timebank_id": rootTimebankId == null ? null : rootTimebankId,
       "children":

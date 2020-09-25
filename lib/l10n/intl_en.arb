@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-09-25T11:44:18+00:00",
+    "@@last_modified": "2020-09-25T15:22:57+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -457,7 +457,7 @@
     "help_contact_us": "Contact Us",
     "help_version": "Version",
     "feedback": "Feedback",
-    "send_feedback": "Sending Feedback",
+    "send_feedback": "Send Feedback",
     "enter_feedback": "Please enter your feedback",
     "feedback_messagae": "Please let us know about your valuable feedback",
     "create_timebank_description": "A TimeBank is a community of volunteers that give and receive time to each other and to the larger community",
@@ -997,5 +997,6 @@
     "bookmark": "Bookmark",
     "alert_before_exit": "Please confirm that you want to cancel editing. You will lose all changes if you confirm.",
     "payment_still_processing": "We are updating your plan please hang on tight!",
-    "cancel_editing_confirmation": "Please confirm that you want to cancel editing. You will lose all changes if you confirm."
+    "cancel_editing_confirmation": "Please confirm that you want to cancel editing. You will lose all changes if you confirm.",
+    "sending_feedback": "Sending Feedback"
 }

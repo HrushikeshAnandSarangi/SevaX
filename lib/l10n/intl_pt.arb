@@ -1,6 +1,6 @@
 {
     "@@locale": "pt",
-    "@@last_modified": "2020-09-25T11:44:19+00:00",
+    "@@last_modified": "2020-09-25T15:22:57+00:00",
     "check_met": "Checando, se já nos conhecemos",
     "we_met": "Já nos conhecemos",
     "hang_on": "Aguarde ",
@@ -457,7 +457,7 @@
     "help_contact_us": "Entrar em contato",
     "help_version": "Versão",
     "feedback": "Comentários",
-    "send_feedback": "Enviando feedback",
+    "send_feedback": "Enviar comentários",
     "enter_feedback": "Digite seu feedback",
     "feedback_messagae": "Informe-nos sobre seus valiosos comentários",
     "create_timebank_description": "Um Banco de tempo é uma comunidade de voluntários que dão e recebem tempo um para o outro e para a comunidade maior",
@@ -997,5 +997,6 @@
     "bookmark": "marca páginas",
     "alert_before_exit": "Confirme que deseja cancelar a edição. Você perderá todas as alterações se confirmar.",
     "payment_still_processing": "Estamos atualizando seu plano, por favor, espere um pouco!",
-    "cancel_editing_confirmation": "Confirme que deseja cancelar a edição. Você perderá todas as alterações se confirmar."
+    "cancel_editing_confirmation": "Confirme que deseja cancelar a edição. Você perderá todas as alterações se confirmar.",
+    "sending_feedback": "Enviando feedback"
 }

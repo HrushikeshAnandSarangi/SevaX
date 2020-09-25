@@ -311,7 +311,7 @@ class AboutApp extends StatelessWidget {
 
                     showProgressDialog(
                       context,
-                      S.of(context).send_feedback,
+                      S.of(context).sending_feedback,
                     );
 
                     await http.post(

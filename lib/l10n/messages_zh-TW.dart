@@ -834,6 +834,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "send_feedback" : MessageLookupByLibrary.simpleMessage("發送反饋"),
     "send_request" : MessageLookupByLibrary.simpleMessage("發送請求"),
     "sending" : MessageLookupByLibrary.simpleMessage("正在發送..."),
+    "sending_feedback" : MessageLookupByLibrary.simpleMessage("發送反饋"),
     "sending_invitation" : MessageLookupByLibrary.simpleMessage("發送邀請函..."),
     "set_duration" : MessageLookupByLibrary.simpleMessage(" 點擊設定時間段"),
     "settings" : MessageLookupByLibrary.simpleMessage("設置"),

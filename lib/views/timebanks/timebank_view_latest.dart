@@ -137,6 +137,9 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 ),
               ),
             ),
+            SizedBox(
+              height: 5,
+            ),
             isUserJoined
                 ? TimeBankSevaCoin(
                     isAdmin: !widget.timebankModel.admins

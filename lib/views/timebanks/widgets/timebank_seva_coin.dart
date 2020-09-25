@@ -48,40 +48,53 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
         double balance = 0;
         if (snapshot.hasData && snapshot != null) {
           balance = snapshot.data['balance'].toDouble();
-          return Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Offstage(
-                    offstage: widget.isAdmin,
-                    child: SevaCoinWidget(
-                        amount: balance ?? 0,
-                        onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return ReviewEarningsPage(
-                                      type: "timebank",
-                                      timebankid: this.widget.timebankData.id);
-                                },
-                              ),
-                            ))),
-                Container(
-                  width: 148,
-                  height: 40,
-                  child: Padding(
-                      padding: const EdgeInsets.only(left: 5.0),
-                      child: RaisedButton(
-                        onPressed: _showFontSizePickerDialog,
-                        child: Text(
-                          S.of(context).donate,
-                          style: TextStyle(color: Colors.white, fontSize: 14),
+          return widget.isAdmin
+              ? Container(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        SevaCoinWidget(
+                            amount: balance ?? 0,
+                            onTap: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return ReviewEarningsPage(
+                                          type: "timebank",
+                                          timebankid:
+                                              this.widget.timebankData.id);
+                                    },
+                                  ),
+                                )),
+                        SizedBox(
+                          height: 5,
                         ),
-                      )),
+                        donateButton(),
+                      ]),
                 )
-              ]);
+              : Container(
+                  child: Center(
+                    child: donateButton(),
+                  ),
+                );
         }
         return LoadingIndicator();
       },
+    );
+  }
+
+  Widget donateButton() {
+    return Container(
+      height: 45,
+      padding: const EdgeInsets.only(left: 8.0),
+      child: RaisedButton(
+        onPressed: _showFontSizePickerDialog,
+        child: Text(
+          S.of(context).donate,
+          style: TextStyle(color: Colors.white, fontSize: 14),
+        ),
+      ),
     );
   }
 
