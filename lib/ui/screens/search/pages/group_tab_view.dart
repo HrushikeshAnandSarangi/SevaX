@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart'
@@ -74,7 +75,7 @@ class _GroupTabViewState extends State<GroupTabView> {
                     snapshot.data.requests,
                   );
                   return GroupCard(
-                    image: group.photoUrl ?? "",
+                    image: group.photoUrl ?? defaultGroupImageURL,
                     title: group.name,
                     subtitle: group.missionStatement,
                     status: joinStatus,

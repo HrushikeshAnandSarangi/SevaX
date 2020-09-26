@@ -73,11 +73,7 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                         donateButton(),
                       ]),
                 )
-              : Container(
-                  child: Center(
-                    child: donateButton(),
-                  ),
-                );
+              : donateButton();
         }
         return LoadingIndicator();
       },
