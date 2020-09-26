@@ -163,8 +163,11 @@ class SearchStockImagesViewState extends State<SearchStockImages>
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Text(
                 this.catSelected > -1
-                    ? S.of(context).choose_image
+                    ? S.of(context).choose_image +
+                            ' from ${categories[catSelected]['name'] ?? ''}' ??
+                        ''
                     : "Choose Category",
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
                 ),
