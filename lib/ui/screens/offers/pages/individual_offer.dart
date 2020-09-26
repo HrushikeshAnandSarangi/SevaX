@@ -133,9 +133,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
               return CustomTextField(
                 currentNode: _availability,
                 initialValue: snapshot.data != null
-                    ? snapshot.data.contains('__*__')
-                        ? snapshot.data
-                        : null
+                    ? snapshot.data.contains('__*__') ? snapshot.data : null
                     : null,
                 heading: S.of(context).availablity,
                 onChanged: _bloc.onAvailabilityChanged,
@@ -213,6 +211,10 @@ class _IndividualOfferState extends State<IndividualOffer> {
     return StreamBuilder<GoodsDonationDetails>(
         stream: _bloc.goodsDonationDetails,
         builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Container();
+          }
+
           return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
