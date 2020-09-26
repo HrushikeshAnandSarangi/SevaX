@@ -302,23 +302,9 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         headingTitle(
           S.of(context).bulk_invite_users_csv,
         ),
-        RichText(
-          text: TextSpan(
-            style: TextStyle(color: Colors.grey),
-            children: [
-              TextSpan(text: "${S.of(context).csv_message1}"),
-//              TextSpan(
-//                text: S.of(context).csv_message2 + ' ',
-//                style: TextStyle(
-//                    color: Colors.grey,
-//                    fontSize: 14,
-//                    fontFamily: 'Europa',
-//                    fontWeight: FontWeight.bold,
-//                    fontStyle: FontStyle.italic),
-//              ),
-//              TextSpan(text: " ${S.of(context).csv_message3}  "),
-            ],
-          ),
+        Padding(
+          padding: EdgeInsets.only(left: 5),
+          child: Text(S.of(context).csv_message1),
         ),
         SizedBox(
           height: 10,
@@ -360,81 +346,91 @@ class InviteAddMembersState extends State<InviteAddMembers> {
         SizedBox(
           height: 15,
         ),
-        TransactionsMatrixCheck(
-          upgradeDetails: AppConfig.upgradePlanBannerModel.csv_import_users,
-          transaction_matrix_type: "csv_import_users",
-          child: GestureDetector(
-            onTap: () {
-              _openFileExplorer();
-            },
-            child: Container(
-              height: 150,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                border: DashPathBorder.all(
-                  dashArray: CircularIntervalList<double>(<double>[5.0, 2.5]),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: TransactionsMatrixCheck(
+            upgradeDetails: AppConfig.upgradePlanBannerModel.csv_import_users,
+            transaction_matrix_type: "csv_import_users",
+            child: GestureDetector(
+              onTap: () {
+                _openFileExplorer();
+              },
+              child: Container(
+                height: 150,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  border: DashPathBorder.all(
+                    dashArray: CircularIntervalList<double>(<double>[5.0, 2.5]),
+                  ),
                 ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Image.asset(
-                    'lib/assets/images/csv.png',
-                    // color: FlavorConfig.values.theme.primaryColor,
-                  ),
-                  Text(
-                    S.of(context).choose_csv,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  _isDocumentBeingUploaded
-                      ? Container(
-                          margin: EdgeInsets.only(top: 20),
-                          child: Center(
-                            child: Container(
-                              height: 50,
-                              width: 50,
-                              child: CircularProgressIndicator(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(
+                      'lib/assets/images/csv.png',
+                      // color: FlavorConfig.values.theme.primaryColor,
+                    ),
+                    Text(
+                      S.of(context).choose_csv,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    _isDocumentBeingUploaded
+                        ? Container(
+                            margin: EdgeInsets.only(top: 20),
+                            child: Center(
+                              child: Container(
+                                height: 50,
+                                width: 50,
+                                child: CircularProgressIndicator(),
+                              ),
                             ),
-                          ),
-                        )
-                      : Container(
-                          child: csvFileModel.csvUrl == null
-                              ? Offstage()
-                              : Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Card(
-                                    color: Colors.grey[100],
-                                    child: ListTile(
-                                      leading: Icon(Icons.attachment),
-                                      title: Text(
-                                        csvFileModel.csvTitle ?? "Document.csv",
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      trailing: IconButton(
-                                        icon: Icon(Icons.clear),
-                                        onPressed: () => setState(() {
-                                          csvFileModel.csvTitle = null;
-                                          csvFileModel.csvUrl = null;
-                                        }),
+                          )
+                        : Container(
+                            child: csvFileModel.csvUrl == null
+                                ? Offstage()
+                                : Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Card(
+                                      color: Colors.grey[100],
+                                      child: ListTile(
+                                        leading: Icon(Icons.attachment),
+                                        title: Text(
+                                          csvFileModel.csvTitle ??
+                                              "Document.csv",
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        trailing: IconButton(
+                                          icon: Icon(Icons.clear),
+                                          onPressed: () => setState(() {
+                                            csvFileModel.csvTitle = null;
+                                            csvFileModel.csvUrl = null;
+                                          }),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                        ),
-                ],
+                          ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-        Text(
-          S.of(context).csv_size_limit,
-          style: TextStyle(color: Colors.grey),
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Text(
+            S.of(context).csv_size_limit,
+            style: TextStyle(color: Colors.grey),
+          ),
         ),
-        Text(
-          csvFileError,
-          style: TextStyle(color: Colors.red),
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Text(
+            csvFileError,
+            style: TextStyle(color: Colors.red),
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
