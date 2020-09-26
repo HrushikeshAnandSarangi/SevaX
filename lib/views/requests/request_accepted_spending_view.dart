@@ -1014,7 +1014,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
           ? ChatType.TYPE_PERSONAL
           : widget.timebankModel.parentTimebankId ==
-                  '73d0de2c-198b-4788-be64-a804700a88a4'
+                  FlavorConfig.values.timebankId
               ? ChatType.TYPE_TIMEBANK
               : ChatType.TYPE_GROUP,
     );
@@ -1026,7 +1026,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
           ? ChatType.TYPE_PERSONAL
           : widget.timebankModel.parentTimebankId ==
-                  '73d0de2c-198b-4788-be64-a804700a88a4'
+                  FlavorConfig.values.timebankId
               ? ChatType.TYPE_TIMEBANK
               : ChatType.TYPE_GROUP,
     );

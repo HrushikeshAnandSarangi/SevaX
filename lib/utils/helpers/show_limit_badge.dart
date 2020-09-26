@@ -76,6 +76,12 @@ class SevaPaymentStatusCodes {
   static int PROCESSING_PLAN_UPDATE = 201;
 }
 
+enum ViewerRole {
+  CREATOR,
+  ADMIN,
+  MEMBER,
+}
+
 class TransactionLimitCheck extends StatelessWidget {
   final Widget child;
   final bool isSoftDeleteRequested;
@@ -86,14 +92,26 @@ class TransactionLimitCheck extends StatelessWidget {
     @required this.isSoftDeleteRequested,
   })  : assert(isSoftDeleteRequested != null),
         super(key: key);
+
+  ViewerRole initViewerRole(UserDataBloc _userBloc) {
+    if (_userBloc.community.creator_email == _userBloc.user.sevaUserID) {
+      return ViewerRole.CREATOR;
+    }
+
+    if (_userBloc.community.admins.contains(_userBloc.user.sevaUserID)) {
+      return ViewerRole.ADMIN;
+    }
+
+    return ViewerRole.MEMBER;
+  }
+
   @override
   Widget build(BuildContext context) {
     final _userBloc = BlocProvider.of<UserDataBloc>(context);
     return StreamBuilder(
       stream: _userBloc.comunityStream,
       builder: (context, AsyncSnapshot<CommunityModel> snapshot) {
-        bool isAdmin =
-            _userBloc.community.admins.contains(_userBloc.user.sevaUserID);
+        ViewerRole viewRole = initViewerRole(_userBloc);
         bool isBillingFailed =
             !(_userBloc.community.payment['payment_success'] ?? false);
 
@@ -104,7 +122,7 @@ class TransactionLimitCheck extends StatelessWidget {
           onTap: () {
             _showDialog(
               context,
-              isAdmin,
+              viewRole,
               _userBloc.user,
               isBillingFailed,
               _userBloc.community.private,
@@ -130,7 +148,7 @@ class TransactionLimitCheck extends StatelessWidget {
 
   void _showDialog(
     context,
-    bool isAdmin,
+    ViewerRole viewRole,
     UserModel user,
     bool isBillingFailed,
     bool isPrivate,
@@ -161,7 +179,7 @@ class TransactionLimitCheck extends StatelessWidget {
               Text(
                 getMessage(
                   context: context,
-                  isAdmin: isAdmin,
+                  viewRole: viewRole,
                   isSoftDeleteRequested: isSoftDeleteRequested,
                   isBillingFailed: isBillingFailed,
                   isUpdatingPlan: isUpdatingPlan,
@@ -171,8 +189,8 @@ class TransactionLimitCheck extends StatelessWidget {
               ),
               SizedBox(height: 10),
               Offstage(
-                offstage:
-                    !isAdmin || (isSoftDeleteRequested && !isBillingFailed),
+                offstage: viewRole != ViewerRole.CREATOR ||
+                    (isSoftDeleteRequested && !isBillingFailed),
                 child: FlatButton(
                   color: Theme.of(context).accentColor,
                   child: Text(
@@ -256,35 +274,69 @@ class SevaPlansBillingConfig {
   };
 }
 
+String getRoleAssociatedMessage({
+  ViewerRole viewRole,
+  String forCreator,
+  String forAdmin,
+  String forMember,
+}) {
+  switch (viewRole) {
+    case ViewerRole.ADMIN:
+      return forAdmin;
+
+    case ViewerRole.CREATOR:
+      return forCreator;
+
+    case ViewerRole.MEMBER:
+      return forMember;
+
+    default:
+      return "";
+  }
+}
+
 String getMessage({
   BuildContext context,
-  bool isAdmin,
+  ViewerRole viewRole,
   bool isBillingFailed,
   bool isSoftDeleteRequested,
   bool isUpdatingPlan,
   bool exaustedLimit,
 }) {
   if (exaustedLimit) {
-    return isAdmin
-        ? "Please contact creator"
-        : S.of(context).limit_badge_contact_admin;
+    return getRoleAssociatedMessage(
+      viewRole: viewRole,
+      forAdmin: "Please contact creator",
+      forCreator:
+          "Please upgrade your plan as you have exausted your current limit.",
+      forMember: S.of(context).limit_badge_contact_admin,
+    );
   }
 
   if (isUpdatingPlan) {
-    return isAdmin
-        ? S.of(context).payment_still_processing
-        : S.of(context).limit_badge_contact_admin;
+    return getRoleAssociatedMessage(
+      viewRole: viewRole,
+      forAdmin: S.of(context).payment_still_processing,
+      forCreator: S.of(context).payment_still_processing,
+      forMember: S.of(context).limit_badge_contact_admin,
+    );
   }
 
   if (isBillingFailed) {
-    return isAdmin
-        ? S.of(context).limit_badge_billing_failed
-        : S.of(context).limit_badge_contact_admin;
+    return getRoleAssociatedMessage(
+      viewRole: viewRole,
+      forAdmin: S.of(context).limit_badge_billing_failed,
+      forCreator: S.of(context).limit_badge_billing_failed,
+      forMember: S.of(context).limit_badge_contact_admin,
+    );
   }
   if (isSoftDeleteRequested) {
-    return isAdmin
-        ? S.of(context).limit_badge_delete_in_progress
-        : S.of(context).limit_badge_contact_admin;
+    return getRoleAssociatedMessage(
+      viewRole: viewRole,
+      forAdmin: S.of(context).limit_badge_delete_in_progress,
+      forCreator: S.of(context).limit_badge_delete_in_progress,
+      forMember: S.of(context).limit_badge_contact_admin,
+    );
   }
 
   return S.of(context).general_stream_error;

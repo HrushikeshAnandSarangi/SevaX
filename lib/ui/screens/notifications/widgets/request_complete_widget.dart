@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -360,8 +361,7 @@ class RequestCompleteWidget extends StatelessWidget {
         name: receiverUser.fullname,
         type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
             ? ChatType.TYPE_PERSONAL
-            : timebankModel.parentTimebankId ==
-                    '73d0de2c-198b-4788-be64-a804700a88a4'
+            : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
                 ? ChatType.TYPE_TIMEBANK
                 : ChatType.TYPE_GROUP,
       );
@@ -372,8 +372,7 @@ class RequestCompleteWidget extends StatelessWidget {
         name: loggedInUser.fullname,
         type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
             ? ChatType.TYPE_PERSONAL
-            : timebankModel.parentTimebankId ==
-                    '73d0de2c-198b-4788-be64-a804700a88a4'
+            : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
                 ? ChatType.TYPE_TIMEBANK
                 : ChatType.TYPE_GROUP,
       );

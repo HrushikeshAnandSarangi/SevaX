@@ -66,8 +66,8 @@ class UserModel extends DataModel {
   String calendarEmail;
   String calendarScope;
 
-  UserModel({
-      this.calendarScope,
+  UserModel(
+      {this.calendarScope,
       this.calendarEmail,
       this.calendarAccessToken,
       this.calendarId,
@@ -114,7 +114,7 @@ class UserModel extends DataModel {
       this.calendarScope = map['calendarScope'];
     }
     if (map.containsKey('calendarEmail')) {
-        this.calendarEmail = map['calendarEmail'];
+      this.calendarEmail = map['calendarEmail'];
     }
     if (map.containsKey('calendarId')) {
       this.calendarId = map['calendarId'];
@@ -185,7 +185,7 @@ class UserModel extends DataModel {
       List<String> communities = List.castFrom(map['communities']);
       this.communities = communities;
     } else {
-      this.communities = ['73d0de2c-198b-4788-be64-a804700a88a4'];
+      this.communities = [FlavorConfig.values.timebankId];
     }
 
     if (map.containsKey('blockedBy')) {
@@ -235,7 +235,7 @@ class UserModel extends DataModel {
       List<String> timebanksList = List.castFrom(map['membershipTimebanks']);
       this.membershipTimebanks = timebanksList;
     } else {
-      this.membershipTimebanks = ['73d0de2c-198b-4788-be64-a804700a88a4'];
+      this.membershipTimebanks = [FlavorConfig.values.timebankId];
     }
     if (map.containsKey('sevauserid')) {
       this.sevaUserID = map['sevauserid'];
@@ -359,7 +359,7 @@ class UserModel extends DataModel {
       object['calendarId'] = this.calendarId;
     }
     if (this.calendarScope != null) {
-        object['calendarScope'] = this.calendarScope;
+      object['calendarScope'] = this.calendarScope;
     }
     if (this.calendarEmail != null) {
       object['calendarEmail'] = this.calendarEmail;
@@ -416,7 +416,7 @@ class UserModel extends DataModel {
     if (this.communities != null && this.communities.isNotEmpty) {
       object['communities'] = this.communities;
     } else {
-      object['communities'] = ['73d0de2c-198b-4788-be64-a804700a88a4'];
+      object['communities'] = [FlavorConfig.values.timebankId];
     }
     if (this.favoriteByTimeBank != null && this.favoriteByTimeBank.isNotEmpty) {
       object['favoriteByTimeBank'] = this.favoriteByTimeBank;

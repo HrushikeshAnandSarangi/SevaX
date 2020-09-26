@@ -359,7 +359,6 @@ Future<List<Map<String, dynamic>>> getTransactionsCountsList(
 
 /// Get a particular Timebank by it's ID
 Future<TimebankModel> getTimeBankForId({@required String timebankId}) async {
-
   TimebankModel timeBankModel;
   await Firestore.instance
       .collection('timebanknew')
@@ -572,14 +571,17 @@ Stream<List<prefix0.OfferModel>> getBookmarkedOffersByMember(
 }
 
 Stream<CommunityModel> getCurrentCommunityStream(String communityId) async* {
-    Stream<DocumentSnapshot> ds = await Firestore.instance.collection("communities").document(communityId).snapshots();
+  Stream<DocumentSnapshot> ds = await Firestore.instance
+      .collection("communities")
+      .document(communityId)
+      .snapshots();
 
-    yield* ds.transform(
-        StreamTransformer<DocumentSnapshot, CommunityModel>.fromHandlers(
-            handleData: (snapshot, modelSink) {
-                CommunityModel communityModel = CommunityModel(snapshot.data);
-                modelSink.add(communityModel);
-            },
-        ),
-    );
+  yield* ds.transform(
+    StreamTransformer<DocumentSnapshot, CommunityModel>.fromHandlers(
+      handleData: (snapshot, modelSink) {
+        CommunityModel communityModel = CommunityModel(snapshot.data);
+        modelSink.add(communityModel);
+      },
+    ),
+  );
 }
