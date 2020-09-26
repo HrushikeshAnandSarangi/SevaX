@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:http/http.dart' as http;
+import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/utils/remote_config_keys.dart';
 
 SpellCheckResponse spellCheckResponseFromMap(String str) =>
     SpellCheckResponse.fromMap(json.decode(str));
@@ -159,12 +161,25 @@ class SentimentExpression {
 class SpellCheckManager {
   static String _getOcpApimKey() {
     final _random = new Random();
-    var listOfKeys = [
-      '754b7ee07e8d49bb93542466f14d96b3',
-      'dcfb68de198c49379634f779aa4b4ea0',
-      'ca0982be53644221920ae9895c50bf83',
-    ];
+    List<String> listOfKeys;
+    try {
+      listOfKeys = List.from(
+        json.decode(
+          AppConfig.remoteConfig.getString(RemoteConfigKeys.tisaneKeys),
+        ),
+      );
+    } on Exception {
+      listOfKeys = [
+        "754b7ee07e8d49bb93542466f14d96b3",
+        "dcfb68de198c49379634f779aa4b4ea0",
+        "ca0982be53644221920ae9895c50bf83",
+        "100e0be5b97b413d8238765aa6d8bff3",
+        "1747bf96244a474b9ec919f4ec204135",
+        "39ee6143bc824e0c82ad788f35a5ae4b"
+      ];
+    }
     var rand = 0 + _random.nextInt((listOfKeys.length - 1) - 0);
+    print('using key ${listOfKeys[rand]}');
     return listOfKeys[rand];
   }
 
