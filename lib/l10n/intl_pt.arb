@@ -1,6 +1,6 @@
 {
     "@@locale": "pt",
-    "@@last_modified": "2020-09-25T15:22:57+00:00",
+    "@@last_modified": "2020-09-26T14:15:05+00:00",
     "check_met": "Checando, se já nos conhecemos",
     "we_met": "Já nos conhecemos",
     "hang_on": "Aguarde ",
@@ -972,7 +972,7 @@
     "add_amount_donate_empty": "A quantidade não pode estar vazia",
     "add_goods_donate_empty": "Selecione pelo menos um produto para oferecer.",
     "offer_type": "Tipo de oferta *",
-    "request_goods_offer": "Forneça a lista de bens \/ suprimentos que você oferece *",
+    "request_goods_offer": "Forneça a lista de bens \/ suprimentos que você pode oferecer *",
     "offerReview": "Corpo: Você recebeu uma avaliação para a oferta:",
     "request_review_body_creator": "Corpo: Você recebeu uma revisão para a solicitação:",
     "request_review_body_user": "Corpo: Você recebeu uma revisão sobre o trabalho que realizou para a solicitação:",
@@ -996,7 +996,17 @@
     "accept_offer": "Aceitar oferta",
     "bookmark": "marca páginas",
     "alert_before_exit": "Confirme que deseja cancelar a edição. Você perderá todas as alterações se confirmar.",
-    "payment_still_processing": "Estamos atualizando seu plano, por favor, espere um pouco!",
+    "payment_still_processing": "Seu pagamento ainda está sendo processado. Por favor, tente esta operação um pouco mais tarde",
     "cancel_editing_confirmation": "Confirme que deseja cancelar a edição. Você perderá todas as alterações se confirmar.",
-    "sending_feedback": "Enviando feedback"
+    "sending_feedback": "Enviando feedback",
+    "plan_changed": "Plano alterado",
+    "changing_plan": "Mudança de plano",
+    "upgrade_plan": "Plano de atualização",
+    "exhausted_free_quota": "Você esgotou sua cota gratuita de transações,",
+    "exhaust_limit_admin_message": "entre em contato com o criador do Timebank para atualizar seu plano",
+    "exhaust_limit_creator_message": "atualize seu plano para continuar.",
+    "exhaust_limit_user_message": "entre em contato com o administrador do Timebank para atualizar seu plano",
+    "needs_upgraded_plan": "O recurso que você escolheu precisa de um plano atualizado.",
+    "plan_upgrade_message_admin": "Entre em contato com o criador do seu banco de dados para ativar este recurso",
+    "plan_upgrade_message_user": "Entre em contato com o administrador do seu banco de dados para ativar este recurso"
 }

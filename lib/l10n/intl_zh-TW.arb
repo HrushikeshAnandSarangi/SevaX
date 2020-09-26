@@ -1,6 +1,6 @@
 {
     "@@locale": "zh-TW",
-    "@@last_modified": "2020-09-25T15:22:57+00:00",
+    "@@last_modified": "2020-09-26T14:15:06+00:00",
     "check_met": "檢查我們是否見過",
     "we_met": "我們曾見過",
     "hang_on": "稍待。。。",
@@ -972,7 +972,7 @@
     "add_amount_donate_empty": "金額不能為空",
     "add_goods_donate_empty": "請選擇至少一種商品。",
     "offer_type": "優惠類型*",
-    "request_goods_offer": "提供您提供的商品\/供應清單*",
+    "request_goods_offer": "提供您可以提供的商品\/供應清單*",
     "offerReview": "正文：您已收到此優惠的評論：",
     "request_review_body_creator": "正文：您已收到針對該請求的審核：",
     "request_review_body_user": "正文：您已收到對您為請求所做的工作的評論：",
@@ -996,7 +996,17 @@
     "accept_offer": "接受報價",
     "bookmark": "書籤",
     "alert_before_exit": "請確認您要取消編輯。如果確認，您將丟失所有更改。",
-    "payment_still_processing": "我們正在更新您的計劃，請稍候！",
+    "payment_still_processing": "您的付款仍在處理中。請稍後再嘗試此操作",
     "cancel_editing_confirmation": "請確認您要取消編輯。如果確認，您將丟失所有更改。",
-    "sending_feedback": "發送反饋"
+    "sending_feedback": "發送反饋",
+    "plan_changed": "計劃已變更",
+    "changing_plan": "變更計劃",
+    "upgrade_plan": "升級計劃",
+    "exhausted_free_quota": "您已經用盡了免費的交易額度，",
+    "exhaust_limit_admin_message": "請與時間銀行的創建者聯繫以升級您的計劃",
+    "exhaust_limit_creator_message": "請升級您的計劃以繼續。",
+    "exhaust_limit_user_message": "請與時間銀行的管理員聯繫以升級您的計劃",
+    "needs_upgraded_plan": "您選擇的功能需要升級計劃。",
+    "plan_upgrade_message_admin": "請聯繫您的時間銀行的創建者以激活此功能",
+    "plan_upgrade_message_user": "請與您的時間銀行的管理員聯繫以激活此功能"
 }

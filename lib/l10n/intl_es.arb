@@ -1,6 +1,6 @@
 {
     "@@locale": "es",
-    "@@last_modified": "2020-09-25T15:22:57+00:00",
+    "@@last_modified": "2020-09-26T14:15:05+00:00",
     "check_met": "Verificando, se nos conhecemos antes",
     "we_met": "Nós nos encontramos antes",
     "hang_on": "Aguarde",
@@ -972,7 +972,7 @@
     "add_amount_donate_empty": "La cantidad no puede estar vacía",
     "add_goods_donate_empty": "Seleccione al menos un producto para ofrecer.",
     "offer_type": "Tipo de oferta *",
-    "request_goods_offer": "Proporcione la lista de bienes \/ suministros que ofrece *",
+    "request_goods_offer": "Proporcione la lista de bienes \/ suministros que puede ofrecer *",
     "offerReview": "Cuerpo: ha recibido una reseña de la oferta:",
     "request_review_body_creator": "Cuerpo: ha recibido una revisión de la solicitud:",
     "request_review_body_user": "Cuerpo: ha recibido una revisión del trabajo que hizo para la solicitud:",
@@ -996,7 +996,17 @@
     "accept_offer": "Aceptar la oferta",
     "bookmark": "Marcador",
     "alert_before_exit": "Confirme que desea cancelar la edición. Perderá todos los cambios si confirma.",
-    "payment_still_processing": "Estamos actualizando su plan, ¡agárrese fuerte!",
+    "payment_still_processing": "Su pago aún se está procesando. Intente esta operación un poco más tarde",
     "cancel_editing_confirmation": "Confirme que desea cancelar la edición. Perderá todos los cambios si confirma.",
-    "sending_feedback": "Envío de comentarios"
+    "sending_feedback": "Envío de comentarios",
+    "plan_changed": "Plan cambiado",
+    "changing_plan": "Cambio de plan",
+    "upgrade_plan": "Plan de actualización",
+    "exhausted_free_quota": "Ha agotado su cuota gratuita de transacciones,",
+    "exhaust_limit_admin_message": "comuníquese con el creador de Timebank para actualizar su plan",
+    "exhaust_limit_creator_message": "actualice su plan para continuar.",
+    "exhaust_limit_user_message": "comuníquese con el administrador de Timebank para actualizar su plan",
+    "needs_upgraded_plan": "La función que ha elegido necesita un plan actualizado.",
+    "plan_upgrade_message_admin": "Póngase en contacto con el creador de su banco de tiempo para activar esta función",
+    "plan_upgrade_message_user": "Póngase en contacto con el administrador de su banco de tiempo para activar esta función"
 }

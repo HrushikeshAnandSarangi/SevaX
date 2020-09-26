@@ -1,6 +1,6 @@
 {
     "@@locale": "sn",
-    "@@last_modified": "2020-09-25T15:22:57+00:00",
+    "@@last_modified": "2020-09-26T14:15:06+00:00",
     "check_met": "Kuongorora, kana takasangana zvisati zvaitika",
     "we_met": "Takasangana zvisati zvaitika",
     "hang_on": "Ramba wakasimba",
@@ -972,7 +972,7 @@
     "add_amount_donate_empty": "Huwandu haugone kuve usina chinhu",
     "add_goods_donate_empty": "Ndokumbira usarudze atleast chinhu chimwe chekupa.",
     "offer_type": "Mhando yekupa *",
-    "request_goods_offer": "Ipa runyorwa rweZvinhu \/ Zvishandiso zvaunopa *",
+    "request_goods_offer": "Ipa runyorwa rweZvinhu \/ Zvishandiso zvaunogona kupa *",
     "offerReview": "Muviri: Wakatambira wongororo yekupihwa:",
     "request_review_body_creator": "Mutumbi: Wakatambira ongororo yechikumbiro:",
     "request_review_body_user": "Mutumbi: Wakatambira wongororo pabasa rawakaitira chikumbiro:",
@@ -996,7 +996,17 @@
     "accept_offer": "Gamuchira Chipo",
     "bookmark": "Bookmark",
     "alert_before_exit": "Ndokumbira usimbise kuti iwe unoda kukanzura kugadzirisa. Iwe ucharasikirwa neshanduko dzese ukasimbisa",
-    "payment_still_processing": "Tiri kuvandudza chirongwa chako ndapota ramba wakasimba!",
+    "payment_still_processing": "Kubhadhara kwako kuchiri kugadziriswa. Ndokumbirawo muedze oparesheni iyi zvishoma gare gare",
     "cancel_editing_confirmation": "Ndokumbira usimbise kuti iwe unoda kukanzura kugadzirisa. Iwe ucharasikirwa neshanduko dzese ukasimbisa",
-    "sending_feedback": "Kutumira Mhinduro"
+    "sending_feedback": "Kutumira Mhinduro",
+    "plan_changed": "Hurongwa Hwakachinjwa",
+    "changing_plan": "Kuchinja hurongwa",
+    "upgrade_plan": "Ndiwedzere Plan",
+    "exhausted_free_quota": "Wakaneta kota yako yemahara yekutengeserana,",
+    "exhaust_limit_admin_message": "ndapota nyorera iye mugadziri weTimebank kuti uvandudze hurongwa hwako",
+    "exhaust_limit_creator_message": "Ndokumbira uvandudze hurongwa hwako kuti uenderere mberi.",
+    "exhaust_limit_user_message": "ndapota nyorera admin weTimebank kuti uvandudze hurongwa hwako",
+    "needs_upgraded_plan": "Chinhu chawakasarudza chinoda chirongwa chakakwidziridzwa.",
+    "plan_upgrade_message_admin": "Ndokumbira kuti ubate musiki weTimebank yako kuti umise chinhu ichi",
+    "plan_upgrade_message_user": "Ndokumbira kuti ubate admin weTimebank yako kuti uite chinhu ichi"
 }

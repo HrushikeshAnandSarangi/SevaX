@@ -306,12 +306,12 @@ String getMessage({
   bool exaustedLimit,
 }) {
   if (exaustedLimit) {
+    String exhausted = S.of(context).exhausted_free_quota;
     return getRoleAssociatedMessage(
       viewRole: viewRole,
-      forAdmin: "Please contact creator",
-      forCreator:
-          "Please upgrade your plan as you have exausted your current limit.",
-      forMember: S.of(context).limit_badge_contact_admin,
+      forAdmin: '$exhausted ${S.of(context).exhaust_limit_admin_message}',
+      forCreator: '$exhausted ${S.of(context).exhaust_limit_creator_message}',
+      forMember: '$exhausted ${S.of(context).exhaust_limit_user_message}',
     );
   }
 
