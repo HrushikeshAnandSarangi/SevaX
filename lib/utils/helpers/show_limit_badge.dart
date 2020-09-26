@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
+import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 
 import '../bloc_provider.dart';
 
@@ -87,9 +88,7 @@ class TransactionLimitCheck extends StatelessWidget {
         super(key: key);
   @override
   Widget build(BuildContext context) {
-// TODO make adjustments here itself to include plans limit check also
     final _userBloc = BlocProvider.of<UserDataBloc>(context);
-
     return StreamBuilder(
       stream: _userBloc.comunityStream,
       builder: (context, AsyncSnapshot<CommunityModel> snapshot) {
@@ -97,6 +96,10 @@ class TransactionLimitCheck extends StatelessWidget {
             _userBloc.community.admins.contains(_userBloc.user.sevaUserID);
         bool isBillingFailed =
             !(_userBloc.community.payment['payment_success'] ?? false);
+
+        bool exaustedLimit = getTransactionStatus(
+          communityModel: _userBloc.community,
+        );
         return GestureDetector(
           onTap: () {
             _showDialog(
@@ -111,10 +114,13 @@ class TransactionLimitCheck extends StatelessWidget {
                     )
                   : false,
               _userBloc.community.payment['planId'],
+              exaustedLimit,
+              _userBloc.community.billMe,
             );
           },
           child: AbsorbPointer(
-            absorbing: isBillingFailed || isSoftDeleteRequested,
+            absorbing:
+                isBillingFailed || isSoftDeleteRequested || exaustedLimit,
             child: child,
           ),
         );
@@ -130,6 +136,8 @@ class TransactionLimitCheck extends StatelessWidget {
     bool isPrivate,
     bool isUpdatingPlan,
     String activePlanId,
+    bool exaustedLimit,
+    bool isBillMe,
   ) {
     showDialog(
       context: context,
@@ -157,6 +165,7 @@ class TransactionLimitCheck extends StatelessWidget {
                   isSoftDeleteRequested: isSoftDeleteRequested,
                   isBillingFailed: isBillingFailed,
                   isUpdatingPlan: isUpdatingPlan,
+                  exaustedLimit: exaustedLimit,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -180,6 +189,7 @@ class TransactionLimitCheck extends StatelessWidget {
                           user: user,
                           isPlanActive: false,
                           isPrivateTimebank: isPrivate,
+                          isBillMe: isBillMe,
                         ),
                       ),
                     );
@@ -205,14 +215,60 @@ class TransactionLimitCheck extends StatelessWidget {
   }
 }
 
+bool getTransactionStatus({
+  CommunityModel communityModel,
+}) {
+  int activeCount = 0;
+  if (communityModel.payment['planId'] ==
+          SevaBillingPlans.NEIGHBOUR_HOOD_PLAN &&
+      communityModel.billingQuota != null) {
+    List<String> neighbourhoodPlanBillableTransactions = List.castFrom(
+        SevaPlansBillingConfig
+            .billingPlans[SevaBillingPlans.NEIGHBOUR_HOOD_PLAN]['action']);
+
+    neighbourhoodPlanBillableTransactions.forEach((billableItem) {
+      if (communityModel.billingQuota.containsKey(billableItem)) {
+        activeCount += communityModel.billingQuota[billableItem];
+      }
+    });
+    return activeCount >= SevaPlansBillingConfig.NEIGHBOURHOOD_LIMIT;
+  } else {
+    return false;
+  }
+}
+
+class SevaPlansBillingConfig {
+  static final NEIGHBOURHOOD_LIMIT = 15;
+  static Map<String, dynamic> billingPlans = {
+    "neighbourhood_plan": {
+      "initial_transactions_amount": 15,
+      "initial_transactions_qty": 50,
+      "pro_data_bill_amount": '0.05',
+      'action': [
+        // "quota_TypeJoinTimebank",
+        "quota_TypeRequestApply",
+        "quota_TypeRequestCreation",
+        "quota_TypeRequestAccepted",
+        "quota_TypeOfferCreated",
+        "quota_TypeOfferAccepted"
+      ],
+    },
+  };
+}
+
 String getMessage({
   BuildContext context,
   bool isAdmin,
   bool isBillingFailed,
   bool isSoftDeleteRequested,
   bool isUpdatingPlan,
+  bool exaustedLimit,
 }) {
-  print("$isUpdatingPlan <<<<<<<<<<<<<<<<<<<<");
+  if (exaustedLimit) {
+    return isAdmin
+        ? "Please contact creator"
+        : S.of(context).limit_badge_contact_admin;
+  }
 
   if (isUpdatingPlan) {
     return isAdmin

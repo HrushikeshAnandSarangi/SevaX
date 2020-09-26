@@ -232,7 +232,7 @@ class TimebankModel extends DataModel {
           members == null ? null : List<dynamic>.from(members.map((x) => x)),
       "protected": protected == null ? null : protected,
       "private": private == null ? null : private,
-      "parent_timebank_id": parentTimebankId == null || parentTimebankId == ''
+      "parent_timebank_id": parentTimebankId == null || parentTimebankId.isEmpty
           ? FlavorConfig.values.timebankId
           : parentTimebankId,
       "community_id": communityId == null ? null : communityId,

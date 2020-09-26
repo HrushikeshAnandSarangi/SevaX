@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
+import 'package:sevaexchange/utils/extensions.dart';
 
 class SearchTabBar extends StatelessWidget {
   const SearchTabBar({
@@ -17,7 +18,7 @@ class SearchTabBar extends StatelessWidget {
       S.of(context).requests,
       S.of(context).offers,
       S.of(context).projects,
-      S.of(context).groups,
+      S.of(context).groups.toLowerCase().firstWordUpperCase(),
       S.of(context).members,
     ];
 

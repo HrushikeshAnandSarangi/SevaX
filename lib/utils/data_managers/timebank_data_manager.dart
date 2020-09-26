@@ -359,8 +359,6 @@ Future<List<Map<String, dynamic>>> getTransactionsCountsList(
 
 /// Get a particular Timebank by it's ID
 Future<TimebankModel> getTimeBankForId({@required String timebankId}) async {
-  assert(timebankId != null && timebankId.isNotEmpty,
-      'Time bank ID cannot be null or empty');
 
   TimebankModel timeBankModel;
   await Firestore.instance

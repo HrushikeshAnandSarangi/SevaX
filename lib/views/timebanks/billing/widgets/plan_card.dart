@@ -12,7 +12,6 @@ import 'package:sevaexchange/views/core.dart';
 import '../../../../flavor_config.dart';
 import '../../../../main_app.dart';
 import '../../../../main_seva_dev.dart' as dev;
-import '../../../splash_view.dart';
 import '../billing_view.dart';
 
 class BillingPlanCard extends StatefulWidget {
@@ -305,7 +304,7 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(S.of(context).billable_transactions),
+          title: Text(S.of(context).bill_me),
           content: Container(
             height: 300,
             width: 300,

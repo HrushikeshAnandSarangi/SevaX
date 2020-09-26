@@ -124,9 +124,13 @@ class _RegisterPageState extends State<RegisterPage>
                             SizedBox(height: 16),
                             _imagePicker,
                             _formFields,
-                            cvUpload(
-                              title: S.of(context).upload_cv_resume,
-                              text: S.of(context).cv_message,
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 16),
+                              child: cvUpload(
+                                title: S.of(context).upload_cv_resume,
+                                text: S.of(context).cv_message,
+                              ),
                             ),
                             SizedBox(height: 24),
                             registerButton,
@@ -202,8 +206,8 @@ class _RegisterPageState extends State<RegisterPage>
               children: <Widget>[
                 Image.asset(
                   'lib/assets/images/cv.png',
-                  height: 50,
-                  width: 50,
+                  height: 40,
+                  width: 40,
                   color: FlavorConfig.values.theme.primaryColor,
                 ),
                 Text(
@@ -216,8 +220,8 @@ class _RegisterPageState extends State<RegisterPage>
                         margin: EdgeInsets.only(top: 20),
                         child: Center(
                           child: Container(
-                            height: 50,
-                            width: 50,
+                            height: 40,
+                            width: 40,
                             child: CircularProgressIndicator(),
                           ),
                         ),
@@ -226,7 +230,7 @@ class _RegisterPageState extends State<RegisterPage>
                         child: cvName == null
                             ? Offstage()
                             : Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(10.0),
                                 child: Card(
                                   color: Colors.grey[100],
                                   child: ListTile(

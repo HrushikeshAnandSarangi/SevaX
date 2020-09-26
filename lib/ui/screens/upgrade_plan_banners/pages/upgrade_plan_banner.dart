@@ -4,6 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/upgrade_plan-banner_details_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 
@@ -12,12 +15,16 @@ class UpgradePlanBanner extends StatefulWidget {
   final String activePlanName;
   final bool isCommunityPrivate;
   final bool showAppBar;
+//  final TimebankModel timebankModel;
+
+
   const UpgradePlanBanner({
     Key key,
     this.details,
     this.activePlanName,
     this.isCommunityPrivate,
     this.showAppBar = true,
+//    this.timebankModel
   })  : assert(details != null),
         super(key: key);
 
@@ -28,7 +35,10 @@ class UpgradePlanBanner extends StatefulWidget {
 class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
   final controller = PageController(initialPage: 999);
   final _pageIndicator = BehaviorSubject<int>();
+  UserModel currentUser = null;
+  TimebankModel timebankModel = null;
   Timer _timer;
+  BuildContext dialogLoadingContext;
 
   @override
   void initState() {
@@ -69,91 +79,142 @@ class _UpgradePlanBannerState extends State<UpgradePlanBanner> {
               ),
             )
           : null,
-      body: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(30),
-        child: Column(
-          children: [
-            RichText(
-              text: TextSpan(
-                style: TextStyle(fontSize: 16, color: Colors.black),
-                children: [
-                  // WidgetSpan(
-                  //   child: Icon(Icons.add),
-                  // ),
-                  TextSpan(
-                    text: '${widget.details.name}',
-                  )
-                ],
-              ),
-              textAlign: TextAlign.center,
-            ),
-            Spacer(),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.4,
-              child: PageView.builder(
-                controller: controller,
-                // itemCount: widget.details.images.length,
-                itemBuilder: (context, index) {
-                  return CachedNetworkImage(
-                    imageUrl: widget
-                        .details.images[index % widget.details.images.length],
-                    // fit: BoxFit.cover,
-                  );
-                },
-              ),
-            ),
-            StreamBuilder<int>(
-                stream: _pageIndicator.stream,
-                builder: (context, snapshot) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      widget.details.images.length,
-                      (index) => Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 10,
-                          width: 10,
-                          color: index == (snapshot.data ?? 0)
-                              ? Colors.grey
-                              : Colors.grey[300],
+      body: FutureBuilder<TimebankModel>(
+        future: getTimeBankForId(timebankId: SevaCore.of(context).loggedInUser.currentTimebank),
+        builder: (context, snapshot) {
+            if(snapshot.hasError){
+                print("error while bringing the snapshot is ${snapshot.error}");
+                return Text("Sorry Couldn't fetch data");
+            }
+            if(snapshot.connectionState==ConnectionState.waiting){
+                return Center(
+                    child: SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: CircularProgressIndicator(),
+                    ),
+                );
+            }
+            timebankModel = snapshot.data;
+            currentUser = SevaCore.of(context).loggedInUser;
+          return Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(30),
+            child: Column(
+              children: [
+                RichText(
+                  text: TextSpan(
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                    children: [
+                      // WidgetSpan(
+                      //   child: Icon(Icons.add),
+                      // ),
+                      TextSpan(
+                        text: '${widget.details.name}',
+                      )
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Spacer(),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  child: PageView.builder(
+                    controller: controller,
+                    // itemCount: widget.details.images.length,
+                    itemBuilder: (context, index) {
+                      return CachedNetworkImage(
+                        imageUrl: widget
+                            .details.images[index % widget.details.images.length],
+                        // fit: BoxFit.cover,
+                      );
+                    },
+                  ),
+                ),
+                StreamBuilder<int>(
+                    stream: _pageIndicator.stream,
+                    builder: (context, snapshot) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          widget.details.images.length,
+                          (index) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              height: 10,
+                              width: 10,
+                              color: index == (snapshot.data ?? 0)
+                                  ? Colors.grey
+                                  : Colors.grey[300],
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                Spacer(),
+                Text(
+                  widget.details.message,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 14),
+                ),
+                Spacer(),
+                timebankModel.creatorId == currentUser.sevaUserID ?
+                  RaisedButton(
+                  child: Text(
+                    'Upgrade Plan',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BillingPlanDetails(
+                          user: SevaCore.of(context).loggedInUser,
+                          activePlanId: widget.activePlanName,
+                          isPlanActive: true,
+                          autoImplyLeading: true,
+                          isPrivateTimebank: widget.isCommunityPrivate ?? false,
                         ),
                       ),
+                    );
+                  },
+                ) : timebankModel.admins.contains(currentUser.sevaUserID) ?
+                RichText(
+                    text: TextSpan(
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        children: [
+                            // WidgetSpan(
+                            //   child: Icon(Icons.add),
+                            // ),
+                            TextSpan(
+                                text: 'Please contact the timebank creator',
+                            )
+                        ],
                     ),
-                  );
-                }),
-            Spacer(),
-            Text(
-              widget.details.message,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14),
-            ),
-            Spacer(),
-            RaisedButton(
-              child: Text(
-                'Upgrade Plan',
-                style: TextStyle(fontSize: 16),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BillingPlanDetails(
-                      user: SevaCore.of(context).loggedInUser,
-                      activePlanId: widget.activePlanName,
-                      isPlanActive: true,
-                      autoImplyLeading: true,
-                      isPrivateTimebank: widget.isCommunityPrivate ?? false,
+                    textAlign: TextAlign.center,
+                ) : RichText(
+                    text: TextSpan(
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        children: [
+                            // WidgetSpan(
+                            //   child: Icon(Icons.add),
+                            // ),
+                            TextSpan(
+                                text: 'Please contact the timebank admins or the timebank creator',
+                            )
+                        ],
                     ),
-                  ),
-                );
-              },
+                    textAlign: TextAlign.center,
+                ),
+                Spacer(flex: 2),
+              ],
             ),
-            Spacer(flex: 2),
-          ],
-        ),
+          );
+        }
       ),
     );
   }
+
+
+
 }

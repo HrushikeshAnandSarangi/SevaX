@@ -223,7 +223,8 @@ class OfferListItems extends StatelessWidget {
     Map<String, dynamic> stateOfcalendarCallback = {
       "email": SevaCore.of(context).loggedInUser.email,
       "mobile": globals.isMobile,
-      "envName": FlavorConfig.values.envMode
+      "envName": FlavorConfig.values.envMode,
+        "eventsArr": []
     };
     var stateVar = jsonEncode(stateOfcalendarCallback);
     showModalBottomSheet(

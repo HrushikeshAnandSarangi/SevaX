@@ -1512,106 +1512,118 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      GestureDetector(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 40,
-                            child:
-                                Image.asset("lib/assets/images/googlecal.png"),
-                          ),
-                          onTap: () async {
-                            String redirectUrl =
-                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                            String authorizationUrl =
-                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                            log("auth url is ${authorizationUrl}");
+                      TransactionsMatrixCheck(
+                          upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
+                          transaction_matrix_type: "calendar_sync",
+                        child: GestureDetector(
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 40,
+                              child:
+                                  Image.asset("lib/assets/images/googlecal.png"),
+                            ),
+                            onTap: () async {
+                              String redirectUrl =
+                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                              String authorizationUrl =
+                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                              log("auth url is ${authorizationUrl}");
 
-                            List<String> acceptorList =
-                                widget.isOfferRequest != null &&
-                                        widget.offer.creatorAllowedCalender
-                                    ? [widget.offer.email, requestModel.email]
-                                    : [requestModel.email];
-                            requestModel.allowedCalenderUsers =
-                                acceptorList.toList();
-                            await FirestoreManager.updateRequest(
-                                requestModel: requestModel);
-                            if (await canLaunch(authorizationUrl.toString())) {
-                              await launch(authorizationUrl.toString());
-                            }
-                            setState(() {
-                              comingFromDynamicLink = true;
-                            });
-                            log("after showing modal bottom");
-                            if (eventsIdsArr.length == 0) {
-                              showInsufficientBalance();
-                            }
-                            if (widget.isOfferRequest == true &&
-                                widget.userModel != null) {
-                              Navigator.pop(context, {'response': 'ACCEPTED'});
-                            } else {
-                              Navigator.pop(context);
-                            }
-                            Navigator.of(bc).pop();
-                          }),
-                      GestureDetector(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 40,
-                            child:
-                                Image.asset("lib/assets/images/outlookcal.png"),
-                          ),
-                          onTap: () async {
-                            String redirectUrl =
-                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                            String authorizationUrl =
-                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                              List<String> acceptorList =
+                                  widget.isOfferRequest != null &&
+                                          widget.offer.creatorAllowedCalender
+                                      ? [widget.offer.email, requestModel.email]
+                                      : [requestModel.email];
+                              requestModel.allowedCalenderUsers =
+                                  acceptorList.toList();
+                              await FirestoreManager.updateRequest(
+                                  requestModel: requestModel);
+                              if (await canLaunch(authorizationUrl.toString())) {
+                                await launch(authorizationUrl.toString());
+                              }
+                              setState(() {
+                                comingFromDynamicLink = true;
+                              });
+                              log("after showing modal bottom");
+                              if (eventsIdsArr.length == 0) {
+                                showInsufficientBalance();
+                              }
+                              if (widget.isOfferRequest == true &&
+                                  widget.userModel != null) {
+                                Navigator.pop(context, {'response': 'ACCEPTED'});
+                              } else {
+                                Navigator.pop(context);
+                              }
+                              Navigator.of(bc).pop();
+                            }),
+                      ),
+                      TransactionsMatrixCheck(
+                          upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
+                          transaction_matrix_type: "calendar_sync",
+                          child: GestureDetector(
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 40,
+                              child:
+                                  Image.asset("lib/assets/images/outlookcal.png"),
+                            ),
+                            onTap: () async {
+                              String redirectUrl =
+                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                              String authorizationUrl =
+                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
 
-                            List<String> acceptorList =
-                                widget.isOfferRequest != null &&
-                                        widget.offer.creatorAllowedCalender
-                                    ? [widget.offer.email, requestModel.email]
-                                    : [requestModel.email];
-                            requestModel.allowedCalenderUsers =
-                                acceptorList.toList();
-                            await FirestoreManager.updateRequest(
-                                requestModel: requestModel);
-                            if (await canLaunch(authorizationUrl.toString())) {
-                              await launch(authorizationUrl.toString());
-                            }
-                            setState(() {
-                              comingFromDynamicLink = true;
-                            });
-                            Navigator.of(bc).pop();
-                          }),
-                      GestureDetector(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 40,
-                            child: Image.asset("lib/assets/images/ical.png"),
-                          ),
-                          onTap: () async {
-                            String redirectUrl =
-                                "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
-                            String authorizationUrl =
-                                "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
+                              List<String> acceptorList =
+                                  widget.isOfferRequest != null &&
+                                          widget.offer.creatorAllowedCalender
+                                      ? [widget.offer.email, requestModel.email]
+                                      : [requestModel.email];
+                              requestModel.allowedCalenderUsers =
+                                  acceptorList.toList();
+                              await FirestoreManager.updateRequest(
+                                  requestModel: requestModel);
+                              if (await canLaunch(authorizationUrl.toString())) {
+                                await launch(authorizationUrl.toString());
+                              }
+                              setState(() {
+                                comingFromDynamicLink = true;
+                              });
+                              Navigator.of(bc).pop();
+                            }),
+                      ),
+                      TransactionsMatrixCheck(
+                          upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
+                          transaction_matrix_type: "calendar_sync",
+                          child: GestureDetector(
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 40,
+                              child: Image.asset("lib/assets/images/ical.png"),
+                            ),
+                            onTap: () async {
+                              String redirectUrl =
+                                  "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
+                              String authorizationUrl =
+                                  "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
 
-                            List<String> acceptorList =
-                                widget.isOfferRequest != null &&
-                                        widget.offer.creatorAllowedCalender
-                                    ? [widget.offer.email, requestModel.email]
-                                    : [requestModel.email];
-                            requestModel.allowedCalenderUsers =
-                                acceptorList.toList();
-                            await FirestoreManager.updateRequest(
-                                requestModel: requestModel);
-                            if (await canLaunch(authorizationUrl.toString())) {
-                              await launch(authorizationUrl.toString());
-                            }
-                            setState(() {
-                              comingFromDynamicLink = true;
-                            });
-                            Navigator.of(bc).pop();
-                          })
+                              List<String> acceptorList =
+                                  widget.isOfferRequest != null &&
+                                          widget.offer.creatorAllowedCalender
+                                      ? [widget.offer.email, requestModel.email]
+                                      : [requestModel.email];
+                              requestModel.allowedCalenderUsers =
+                                  acceptorList.toList();
+                              await FirestoreManager.updateRequest(
+                                  requestModel: requestModel);
+                              if (await canLaunch(authorizationUrl.toString())) {
+                                await launch(authorizationUrl.toString());
+                              }
+                              setState(() {
+                                comingFromDynamicLink = true;
+                              });
+                              Navigator.of(bc).pop();
+                            }),
+                      )
                     ],
                   ),
                 ),

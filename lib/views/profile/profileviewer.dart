@@ -87,7 +87,7 @@ class ProfileViewerState extends State<ProfileViewer> {
             height: 80,
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: const EdgeInsets.only(left: 20.0),
+              padding: const EdgeInsets.only(left: 10.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -99,7 +99,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                       rating: trustworthinessscore != null
                           ? trustworthinessscore
                           : 0,
-                      size: 30.0,
+                      size: 28.0,
                       filledIconData: Icons.star,
                       halfFilledIconData: Icons.star_half,
                       color: Colors.yellow,
@@ -114,6 +114,9 @@ class ProfileViewerState extends State<ProfileViewer> {
             ),
           ),
         ),
+        SizedBox(
+          width: 5,
+        ),
         Expanded(
           child: Container(
             alignment: Alignment.centerLeft,
@@ -127,7 +130,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                     onRated: (v) {},
                     starCount: 5,
                     rating: reliabilityscore != null ? reliabilityscore : 0,
-                    size: 30.0,
+                    size: 28.0,
                     filledIconData: Icons.star,
                     halfFilledIconData: Icons.star_half,
                     color: Colors.yellow,
