@@ -687,6 +687,8 @@ class CreateEditCommunityViewFormState
                                   selectedTimebank.primary_timebank);
                               timebankModel.associatedParentTimebankId =
                                   selectedTimebank.primary_timebank;
+                              communityModel.parentTimebankId =
+                                  selectedTimebank.primary_timebank;
                               snapshot.data.community.updateValueByKey(
                                   'parentTimebankId',
                                   selectedTimebank.primary_timebank);
