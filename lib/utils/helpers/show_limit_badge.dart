@@ -193,10 +193,12 @@ class TransactionLimitCheck extends StatelessWidget {
                     (isSoftDeleteRequested && !isBillingFailed),
                 child: FlatButton(
                   color: Theme.of(context).accentColor,
-                  child: Text(
-                    S.of(context).configure_billing,
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  child: viewRole == ViewerRole.CREATOR
+                      ? Text(
+                          S.of(context).configure_billing,
+                          style: TextStyle(color: Colors.white),
+                        )
+                      : Container(),
                   onPressed: () {
                     Navigator.of(_context).pop();
                     Navigator.of(context).push(

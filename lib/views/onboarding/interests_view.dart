@@ -110,9 +110,9 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 borderRadius: BorderRadius.circular(8),
               ),
               errorBuilder: (context, err) {
-                return Text('Error was thrown');
+                return Text(S.of(context).error_occured);
               },
-              debounceDuration: Duration(milliseconds: 600),
+              debounceDuration: Duration(milliseconds: 300),
               textFieldConfiguration: TextFieldConfiguration(
                 style: hasPellError
                     ? TextStyle(

@@ -22,8 +22,10 @@ class SpellCheckResponse {
   factory SpellCheckResponse.fromMap(Map<String, dynamic> json) =>
       SpellCheckResponse(
         text: json["text"],
-        sentenceList: List<SentenceList>.from(
-            json["sentence_list"].map((x) => SentenceList.fromMap(x))),
+        sentenceList: json["sentence_list"] == null
+            ? []
+            : List<SentenceList>.from(
+                json["sentence_list"].map((x) => SentenceList.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
@@ -52,8 +54,10 @@ class SentenceList {
         text: json["text"],
         correctedText: json["corrected_text"],
         parseTree: ParseTree.fromMap(json["parse_tree"]),
-        nbestParses: List<ParseTree>.from(
-            json["nbest_parses"].map((x) => ParseTree.fromMap(x))),
+        nbestParses: json["nbest_parses"] == null
+            ? []
+            : List<ParseTree>.from(
+                json["nbest_parses"].map((x) => ParseTree.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
@@ -76,8 +80,9 @@ class ParseTree {
 
   factory ParseTree.fromMap(Map<String, dynamic> json) => ParseTree(
         id: json["id"],
-        phrases:
-            List<Phrase>.from(json["phrases"].map((x) => Phrase.fromMap(x))),
+        phrases: json["phrases"] == null
+            ? []
+            : List<Phrase>.from(json["phrases"].map((x) => Phrase.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
@@ -189,7 +194,6 @@ class SpellCheckManager {
 
       case HTTPResponseCodes.RESULT_OK:
         print("RESULSTS OK for $keyword");
-
         return SpellCheckResult.evaluateKeywordResult(spellChekRespons.body);
 
       default:
