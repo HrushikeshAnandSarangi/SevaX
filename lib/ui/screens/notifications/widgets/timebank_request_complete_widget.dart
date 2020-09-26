@@ -324,8 +324,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
           : timebankModel.name,
       type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
           ? ChatType.TYPE_PERSONAL
-          : timebankModel.parentTimebankId ==
-                  '73d0de2c-198b-4788-be64-a804700a88a4'
+          : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
               ? ChatType.TYPE_TIMEBANK
               : ChatType.TYPE_GROUP,
     );
@@ -336,8 +335,7 @@ class TimebankRequestCompletedWidget extends StatelessWidget {
       name: receiver.fullname,
       type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
           ? ChatType.TYPE_PERSONAL
-          : timebankModel.parentTimebankId ==
-                  '73d0de2c-198b-4788-be64-a804700a88a4'
+          : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
               ? ChatType.TYPE_TIMEBANK
               : ChatType.TYPE_GROUP,
     );

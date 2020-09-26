@@ -59,7 +59,7 @@ class Searches {
         .where('members', arrayContains: loggedInUser.sevaUserID)
         .getDocuments();
     timebankSnap.documents.forEach((DocumentSnapshot doc) {
-      if (doc.documentID != "73d0de2c-198b-4788-be64-a804700a88a4") {
+      if (doc.documentID != FlavorConfig.values.timebankId) {
         timebanksIdArr.add(doc.documentID);
       }
     });
@@ -88,7 +88,7 @@ class Searches {
               },
               {
                 "match": {
-                  "root_timebank_id": "73d0de2c-198b-4788-be64-a804700a88a4"
+                  "root_timebank_id": FlavorConfig.values.timebankId,
                 }
               },
               {
@@ -151,7 +151,7 @@ class Searches {
         .where('members', arrayContains: loggedInUser.sevaUserID)
         .getDocuments();
     timebankSnap.documents.forEach((DocumentSnapshot doc) {
-      if (doc.documentID != "73d0de2c-198b-4788-be64-a804700a88a4") {
+      if (doc.documentID != FlavorConfig.values.timebankId) {
         timebanksIdArr.add(doc.documentID);
       }
     });
@@ -279,7 +279,7 @@ class Searches {
         .where('members', arrayContains: loggedInUser.sevaUserID)
         .getDocuments();
     timebankSnap.documents.forEach((DocumentSnapshot doc) {
-      if (doc.documentID != "73d0de2c-198b-4788-be64-a804700a88a4") {
+      if (doc.documentID != FlavorConfig.values.timebankId) {
         timebanksIdArr.add(doc.documentID);
       }
     });
@@ -342,7 +342,7 @@ class Searches {
         .where('members', arrayContains: loggedInUser.sevaUserID)
         .getDocuments();
     timebankSnap.documents.forEach((DocumentSnapshot doc) {
-      if (doc.documentID != "73d0de2c-198b-4788-be64-a804700a88a4") {
+      if (doc.documentID != FlavorConfig.values.timebankId) {
         timebanksIdArr.add(doc.documentID);
       }
     });

@@ -199,7 +199,7 @@ class CommunityApiProvider {
     if (id.isNotEmpty) {
       await Firestore.instance
           .collection('timebanknew')
-          .where('parent_timebank_id', isEqualTo: id)
+          .where('associatedParentTimebankId', isEqualTo: id)
           .getDocuments()
           .then((QuerySnapshot querySnapshot) {
         print(id);

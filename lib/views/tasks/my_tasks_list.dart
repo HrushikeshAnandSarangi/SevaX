@@ -25,6 +25,7 @@ import 'package:sevaexchange/views/tasks/completed_list.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../flavor_config.dart';
 import 'completed_list.dart';
 import 'notAccepted_tasks.dart';
 
@@ -724,8 +725,7 @@ class TaskCardViewState extends State<TaskCardView> {
             : timebankModel.name,
         type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
             ? ChatType.TYPE_PERSONAL
-            : timebankModel.parentTimebankId ==
-                    '73d0de2c-198b-4788-be64-a804700a88a4'
+            : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
                 ? ChatType.TYPE_TIMEBANK
                 : ChatType.TYPE_GROUP,
       );
@@ -736,8 +736,7 @@ class TaskCardViewState extends State<TaskCardView> {
         name: loggedInUser.fullname,
         type: requestModel.requestMode == RequestMode.PERSONAL_REQUEST
             ? ChatType.TYPE_PERSONAL
-            : timebankModel.parentTimebankId ==
-                    '73d0de2c-198b-4788-be64-a804700a88a4'
+            : timebankModel.parentTimebankId == FlavorConfig.values.timebankId
                 ? ChatType.TYPE_TIMEBANK
                 : ChatType.TYPE_GROUP,
       );
