@@ -46,13 +46,38 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                       timebankId: model.entityId,
                       notificationId: notification.id);
                 },
-                onPressed: () {
-                  showDialogForJoinRequestApproval(
+                onPressed: () async {
+                  await showDialogForJoinRequestApproval(
                     context: context,
                     userModel: user,
                     model: model,
                     notificationId: notification.id,
-                  );
+                  ).then((value) async {
+                    if (value == null) {
+                      return;
+                    }
+                    if (value) {
+                      await addMemberToTimebank(
+                        timebankId: model.entityId,
+                        joinRequestId: model.id,
+                        memberJoiningSevaUserId: model.userId,
+                        notificaitonId: notification.id,
+                        communityId:
+                            SevaCore.of(context).loggedInUser.currentCommunity,
+                        newMemberJoinedEmail: user.email,
+                        isFromGroup: model.isFromGroup,
+                      ).commit();
+                    } else {
+                      await showProgressForOnboardingUser(context);
+                      rejectMemberJoinRequest(
+                        timebankId: model.entityId,
+                        joinRequestId: model.id,
+                        notificaitonId: notification.id,
+                      ).commit();
+
+                      Navigator.of(context, rootNavigator: true).pop();
+                    }
+                  });
                 },
               )
             : Container();
@@ -60,13 +85,13 @@ class TimebankJoinRequestWidget extends StatelessWidget {
     );
   }
 
-  void showDialogForJoinRequestApproval({
+  Future<bool> showDialogForJoinRequestApproval({
     BuildContext context,
     UserModel userModel,
     JoinRequestModel model,
     String notificationId,
-  }) {
-    showDialog(
+  }) async {
+    return await showDialog(
       context: context,
       builder: (BuildContext viewContext) {
         return AlertDialog(
@@ -147,21 +172,8 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () async {
-                          Navigator.pop(viewContext);
+                          Navigator.pop(viewContext, true);
                           // showProgressForOnboardingUser(context);
-
-                          await addMemberToTimebank(
-                            timebankId: model.entityId,
-                            joinRequestId: model.id,
-                            memberJoiningSevaUserId: model.userId,
-                            notificaitonId: notificationId,
-                            communityId: SevaCore.of(context)
-                                .loggedInUser
-                                .currentCommunity,
-                            newMemberJoinedEmail: userModel.email,
-                            isFromGroup: model.isFromGroup,
-                          ).commit();
-                          Navigator.of(context, rootNavigator: true).pop();
                         },
                       ),
                     ),
@@ -177,15 +189,7 @@ class TimebankJoinRequestWidget extends StatelessWidget {
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () async {
-                          Navigator.pop(viewContext);
-                          showProgressForOnboardingUser(context);
-                          await rejectMemberJoinRequest(
-                            timebankId: model.entityId,
-                            joinRequestId: model.id,
-                            notificaitonId: notificationId,
-                          ).commit();
-
-                          Navigator.of(context, rootNavigator: true).pop();
+                          Navigator.pop(viewContext, false);
                         },
                       ),
                     ),
