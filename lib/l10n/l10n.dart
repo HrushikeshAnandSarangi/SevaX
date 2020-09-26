@@ -3252,7 +3252,7 @@ class S {
       );
 
   String get csv_message1 => Intl.message(
-        'first download the CSV template. Then, include the users that you would like to add . Finally, upload the updated CSV file',
+        'First download the CSV template. Then, include the users that you would like to add . Finally, upload the updated CSV file',
         name: 'csv_message1',
       );
 
@@ -3362,7 +3362,7 @@ class S {
       );
 
   String get invite_message => Intl.message(
-        'Timebank. Timebanks are communities that allow you to volunteer and also receive time credits towards getting things done for you. Use the code',
+        'Timebanks are communities that allow you to volunteer and also receive time credits towards getting things done for you. Use the code',
         name: 'invite_message',
       );
 
@@ -3452,7 +3452,7 @@ class S {
       );
 
   String get loan_seva_credit_to_user => Intl.message(
-        'Loan seva credits to user',
+        'Donate seva credits to user',
         name: 'loan_seva_credit_to_user',
       );
 
@@ -3462,7 +3462,7 @@ class S {
       );
 
   String get timebank_loan_message => Intl.message(
-        'On click of Approve, Timebank balance will be adjusted',
+        'On click of Donate, Timebank balance will be adjusted.',
         name: 'timebank_loan_message',
       );
 
@@ -5086,8 +5086,8 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
         Locale.fromSubtags(languageCode: 'es'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'zh',countryCode: "CN"),
-        Locale.fromSubtags(languageCode: 'zh',countryCode: "TW"),
+        Locale.fromSubtags(languageCode: 'zh',countryCode:"CN"),
+        Locale.fromSubtags(languageCode: 'zh',countryCode:"TW"),
         Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'sw'),
         Locale.fromSubtags(languageCode: 'en'),

@@ -23,7 +23,7 @@ class UserProfileBloc {
   StreamSink<bool> get changeCommunity => _communityLoaded.sink;
 
   void getAllCommunities(context, UserModel userModel) async {
-    Set<String> communitiesList = Set.from(userModel.communities);
+    Set<String> communitiesList = Set.from(userModel?.communities ?? []);
 
 //    if (await communitiesList.contains(FlavorConfig.values.timebankId)) {
 //      await communitiesList.remove(FlavorConfig.values.timebankId);
