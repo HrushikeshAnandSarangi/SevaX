@@ -36,6 +36,7 @@ class TimebankModel extends DataModel {
   DateTime lastMessageTimestamp;
 
   Map<String, NotificationSetting> notificationSetting;
+  String associatedParentTimebankId;
   // CompareToTimeBank joinStatus;
 
   // List<String> members;
@@ -62,6 +63,10 @@ class TimebankModel extends DataModel {
     this.private = map.containsKey("private") ? map["private"] : false;
     this.parentTimebankId =
         map.containsKey("parent_timebank_id") ? map["parent_timebank_id"] : '';
+    this.associatedParentTimebankId =
+        map.containsKey("associatedParentTimebankId")
+            ? map["associatedParentTimebankId"]
+            : '';
     this.communityId =
         map.containsKey("community_id") ? map["community_id"] : '';
     this.rootTimebankId =
@@ -164,6 +169,10 @@ class TimebankModel extends DataModel {
     if (key == 'parentTimebankId') {
       this.parentTimebankId = value;
     }
+
+    if (key == 'associatedParentTimebankId') {
+      this.associatedParentTimebankId = value;
+    }
     if (key == 'rootTimebankId') {
       this.rootTimebankId = value;
     }
@@ -237,6 +246,9 @@ class TimebankModel extends DataModel {
           : parentTimebankId,
       "community_id": communityId == null ? null : communityId,
       "root_timebank_id": rootTimebankId == null ? null : rootTimebankId,
+      "associatedParentTimebankId": associatedParentTimebankId == null
+          ? null
+          : associatedParentTimebankId,
       "children":
           children == null ? null : List<dynamic>.from(children.map((x) => x)),
       "balance": balance == null ? null : balance,

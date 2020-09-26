@@ -683,9 +683,9 @@ class CreateEditCommunityViewFormState
                                 this.selectedTimebank = selectedTimebank.name;
                               });
                               snapshot.data.timebank.updateValueByKey(
-                                  'parentTimebankId',
+                                  'associatedParentTimebankId',
                                   selectedTimebank.primary_timebank);
-                              timebankModel.parentTimebankId =
+                              timebankModel.associatedParentTimebankId =
                                   selectedTimebank.primary_timebank;
                               snapshot.data.community.updateValueByKey(
                                   'parentTimebankId',
