@@ -289,8 +289,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       ),
                     ),
 
-                    Visibility(
-                        visible: widget.timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID),
+                    Offstage(
+                        offstage: !widget.timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID),
                       child: Center(
                           child: TransactionsMatrixCheck(
                         upgradeDetails:
