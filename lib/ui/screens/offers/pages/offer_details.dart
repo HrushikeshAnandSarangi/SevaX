@@ -297,7 +297,7 @@ class OfferDetails extends StatelessWidget {
   void _onEdit(BuildContext context) {
     switch (offerModel.offerType) {
       case OfferType.INDIVIDUAL_OFFER:
-        Navigator.of(context).push(
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => IndividualOffer(
               offerModel: offerModel,
@@ -534,7 +534,7 @@ class OfferDetails extends StatelessWidget {
       "email": SevaCore.of(context).loggedInUser.email,
       "mobile": globals.isMobile,
       "envName": FlavorConfig.values.envMode,
-        "eventsArr":[]
+      "eventsArr": []
     };
     var stateVar = jsonEncode(stateOfcalendarCallback);
     showModalBottomSheet(

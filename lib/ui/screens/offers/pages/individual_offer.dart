@@ -424,6 +424,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                       );
                                     }
                                   } else {
+                                    print(
+                                        "Updating offer inside  else ${widget.offerModel.goodsDonationDetails.toMap().toString()}");
                                     _bloc.updateIndividualOffer(
                                       widget.offerModel,
                                     );
