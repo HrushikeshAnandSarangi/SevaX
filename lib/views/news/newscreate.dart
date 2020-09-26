@@ -289,52 +289,55 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       ),
                     ),
 
-                    Center(
-                        child: TransactionsMatrixCheck(
-                      upgradeDetails:
-                          AppConfig.upgradePlanBannerModel.parent_timebanks,
-                      transaction_matrix_type: "parent_timebanks",
-                      child: RaisedButton(
-                        textColor: Colors.green,
-                        elevation: 0,
-                        child: Container(
-                          constraints: BoxConstraints.loose(
-                            Size(MediaQuery.of(context).size.width - 220, 50),
+                    Visibility(
+                        visible: widget.timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID),
+                      child: Center(
+                          child: TransactionsMatrixCheck(
+                        upgradeDetails:
+                            AppConfig.upgradePlanBannerModel.parent_timebanks,
+                        transaction_matrix_type: "parent_timebanks",
+                        child: RaisedButton(
+                          textColor: Colors.green,
+                          elevation: 0,
+                          child: Container(
+                            constraints: BoxConstraints.loose(
+                              Size(MediaQuery.of(context).size.width - 220, 50),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Posting to ' +
+                                      ((this.selectedTimebanks.length > 1)
+                                          ? this
+                                                  .selectedTimebanks
+                                                  .length
+                                                  .toString() +
+                                              ' timebanks'
+                                          : this.widget.timebankModel.name),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                                Icon(Icons.arrow_drop_down)
+                              ],
+                            ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                'Posting to ' +
-                                    ((this.selectedTimebanks.length > 1)
-                                        ? this
-                                                .selectedTimebanks
-                                                .length
-                                                .toString() +
-                                            ' timebanks'
-                                        : this.widget.timebankModel.name),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                              Icon(Icons.arrow_drop_down)
-                            ],
-                          ),
+                          color: Colors.grey[200],
+                          onPressed: () async {
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            _silblingTimebankSelectionBottomsheet(
+                                context,
+                                this.widget.timebankModel,
+                                selectedTimebanks,
+                                (selectedTimebanks) => {
+                                      print(selectedTimebanks),
+                                      setState(() =>
+                                          {selectedTimebanks = selectedTimebanks})
+                                    });
+                          },
                         ),
-                        color: Colors.grey[200],
-                        onPressed: () async {
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          _silblingTimebankSelectionBottomsheet(
-                              context,
-                              this.widget.timebankModel,
-                              selectedTimebanks,
-                              (selectedTimebanks) => {
-                                    print(selectedTimebanks),
-                                    setState(() =>
-                                        {selectedTimebanks = selectedTimebanks})
-                                  });
-                        },
-                      ),
-                    )),
+                      )),
+                    ),
                     // Text(""),
                     Padding(
                       padding: const EdgeInsets.only(top: 0),
