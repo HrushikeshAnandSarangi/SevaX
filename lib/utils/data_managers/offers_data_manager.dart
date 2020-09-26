@@ -561,5 +561,5 @@ Future<void> updateOfferWithRequest({
   await Firestore.instance
       .collection('offers')
       .document(offer.id)
-      .setData(offer.toMap(), merge: true);
+      .updateData(offer.toMap());
 }

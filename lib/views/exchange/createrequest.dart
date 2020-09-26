@@ -37,6 +37,7 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
+import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/spell_check_manager.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
@@ -1465,12 +1466,11 @@ class RequestCreateFormState extends State<RequestCreateForm>
           MaterialPageRoute(
             builder: (context) {
               return AddToCalendar(
-                isOfferRequest: widget.isOfferRequest,
-                offer: widget.offer,
-                requestModel: requestModel,
-                userModel: widget.userModel,
-                eventsIdsArr: eventsIdsArr
-              );
+                  isOfferRequest: widget.isOfferRequest,
+                  offer: widget.offer,
+                  requestModel: requestModel,
+                  userModel: widget.userModel,
+                  eventsIdsArr: eventsIdsArr);
             },
           ),
         );
@@ -1513,14 +1513,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       TransactionsMatrixCheck(
-                          upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
-                          transaction_matrix_type: "calendar_sync",
+                        upgradeDetails:
+                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                        transaction_matrix_type: "calendar_sync",
                         child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 40,
-                              child:
-                                  Image.asset("lib/assets/images/googlecal.png"),
+                              child: Image.asset(
+                                  "lib/assets/images/googlecal.png"),
                             ),
                             onTap: () async {
                               String redirectUrl =
@@ -1538,7 +1539,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                   acceptorList.toList();
                               await FirestoreManager.updateRequest(
                                   requestModel: requestModel);
-                              if (await canLaunch(authorizationUrl.toString())) {
+                              if (await canLaunch(
+                                  authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
                               }
                               setState(() {
@@ -1550,7 +1552,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                               }
                               if (widget.isOfferRequest == true &&
                                   widget.userModel != null) {
-                                Navigator.pop(context, {'response': 'ACCEPTED'});
+                                Navigator.pop(
+                                    context, {'response': 'ACCEPTED'});
                               } else {
                                 Navigator.pop(context);
                               }
@@ -1558,14 +1561,15 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             }),
                       ),
                       TransactionsMatrixCheck(
-                          upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
-                          transaction_matrix_type: "calendar_sync",
-                          child: GestureDetector(
+                        upgradeDetails:
+                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                        transaction_matrix_type: "calendar_sync",
+                        child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 40,
-                              child:
-                                  Image.asset("lib/assets/images/outlookcal.png"),
+                              child: Image.asset(
+                                  "lib/assets/images/outlookcal.png"),
                             ),
                             onTap: () async {
                               String redirectUrl =
@@ -1582,7 +1586,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                   acceptorList.toList();
                               await FirestoreManager.updateRequest(
                                   requestModel: requestModel);
-                              if (await canLaunch(authorizationUrl.toString())) {
+                              if (await canLaunch(
+                                  authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
                               }
                               setState(() {
@@ -1592,9 +1597,10 @@ class RequestCreateFormState extends State<RequestCreateForm>
                             }),
                       ),
                       TransactionsMatrixCheck(
-                          upgradeDetails: AppConfig.upgradePlanBannerModel.calendar_sync,
-                          transaction_matrix_type: "calendar_sync",
-                          child: GestureDetector(
+                        upgradeDetails:
+                            AppConfig.upgradePlanBannerModel.calendar_sync,
+                        transaction_matrix_type: "calendar_sync",
+                        child: GestureDetector(
                             child: CircleAvatar(
                               backgroundColor: Colors.white,
                               radius: 40,
@@ -1615,7 +1621,8 @@ class RequestCreateFormState extends State<RequestCreateForm>
                                   acceptorList.toList();
                               await FirestoreManager.updateRequest(
                                   requestModel: requestModel);
-                              if (await canLaunch(authorizationUrl.toString())) {
+                              if (await canLaunch(
+                                  authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
                               }
                               setState(() {
@@ -2115,6 +2122,9 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
       });
       print(goods);
       isDataLoaded = true;
+      if (this.mounted) {
+        setState(() {});
+      }
     });
 
     super.initState();
@@ -2129,12 +2139,13 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 8),
-          TypeAheadField<String>(
+          TypeAheadField<SuggestedItem>(
             suggestionsBoxDecoration: SuggestionsBoxDecoration(
-              // color: Colors.red,
               borderRadius: BorderRadius.circular(8),
-              // shape: RoundedRectangleBorder(),
             ),
+            errorBuilder: (context, err) {
+              return Text(S.of(context).error_occured);
+            },
             hideOnError: true,
             textFieldConfiguration: TextFieldConfiguration(
               controller: _textEditingController,
@@ -2172,23 +2183,91 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
             ),
             suggestionsBoxController: controller,
             suggestionsCallback: (pattern) async {
-              List<String> dataCopy = [];
-              goods.forEach((id, skill) => dataCopy.add(skill));
-              dataCopy.retainWhere(
-                  (s) => s.toLowerCase().contains(pattern.toLowerCase()));
+              List<SuggestedItem> dataCopy = [];
+              goods.forEach(
+                (k, v) => dataCopy.add(SuggestedItem()
+                  ..suggestionMode = SuggestionMode.FROM_DB
+                  ..suggesttionTitle = v),
+              );
+              dataCopy.retainWhere((s) => s.suggesttionTitle
+                  .toLowerCase()
+                  .contains(pattern.toLowerCase()));
 
+              if (pattern.length > 2 &&
+                  !dataCopy
+                      .contains(SuggestedItem()..suggesttionTitle = pattern)) {
+                var spellCheckResult =
+                    await SpellCheckManager.evaluateSpellingFor(pattern,
+                        language: 'en');
+                if (spellCheckResult.hasErros) {
+                  dataCopy.add(SuggestedItem()
+                    ..suggestionMode = SuggestionMode.USER_DEFINED
+                    ..suggesttionTitle = pattern);
+                } else if (spellCheckResult.correctSpelling != pattern) {
+                  dataCopy.add(SuggestedItem()
+                    ..suggestionMode = SuggestionMode.SUGGESTED
+                    ..suggesttionTitle = spellCheckResult.correctSpelling);
+
+                  dataCopy.add(SuggestedItem()
+                    ..suggestionMode = SuggestionMode.USER_DEFINED
+                    ..suggesttionTitle = pattern);
+                } else {
+                  dataCopy.add(SuggestedItem()
+                    ..suggestionMode = SuggestionMode.USER_DEFINED
+                    ..suggesttionTitle = pattern);
+                }
+              }
               return await Future.value(dataCopy);
             },
-            itemBuilder: (context, suggestion) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  suggestion,
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              );
+            itemBuilder: (context, suggestedItem) {
+              switch (suggestedItem.suggestionMode) {
+                case SuggestionMode.FROM_DB:
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      suggestedItem.suggesttionTitle,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  );
+
+                case SuggestionMode.SUGGESTED:
+                  if (ProfanityDetector()
+                      .isProfaneString(suggestedItem.suggesttionTitle)) {
+                    return ProfanityDetector.getProanityAdvisory(
+                      suggestion: suggestedItem.suggesttionTitle,
+                      suggestionMode: SuggestionMode.SUGGESTED,
+                      context: context,
+                    );
+                  }
+                  return searchUserDefinedEntity(
+                    keyword: suggestedItem.suggesttionTitle,
+                    language: 'en',
+                    suggestionMode: suggestedItem.suggestionMode,
+                    showLoader: true,
+                  );
+
+                case SuggestionMode.USER_DEFINED:
+                  if (ProfanityDetector()
+                      .isProfaneString(suggestedItem.suggesttionTitle)) {
+                    return ProfanityDetector.getProanityAdvisory(
+                      suggestion: suggestedItem.suggesttionTitle,
+                      suggestionMode: SuggestionMode.USER_DEFINED,
+                      context: context,
+                    );
+                  }
+
+                  return searchUserDefinedEntity(
+                    keyword: suggestedItem.suggesttionTitle,
+                    language: 'en',
+                    suggestionMode: suggestedItem.suggestionMode,
+                    showLoader: false,
+                  );
+
+                default:
+                  return Container();
+              }
             },
             noItemsFoundBuilder: (context) {
               return searchUserDefinedEntity(
@@ -2197,18 +2276,57 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
               );
             },
             onSuggestionSelected: (suggestion) {
+              if (ProfanityDetector()
+                  .isProfaneString(suggestion.suggesttionTitle)) {
+                return;
+              }
+
+              switch (suggestion.suggestionMode) {
+                case SuggestionMode.SUGGESTED:
+                  var newGoodId = Uuid().generateV4();
+                  addGoodsToDb(
+                    goodsId: newGoodId,
+                    goodsLanguage: 'en',
+                    goodsTitle: suggestion.suggesttionTitle,
+                  );
+                  goods[newGoodId] = suggestion.suggesttionTitle;
+                  break;
+
+                case SuggestionMode.USER_DEFINED:
+                  var goodId = Uuid().generateV4();
+                  addGoodsToDb(
+                    goodsId: goodId,
+                    goodsLanguage: 'en',
+                    goodsTitle: suggestion.suggesttionTitle,
+                  );
+                  goods[goodId] = suggestion.suggesttionTitle;
+                  break;
+
+                case SuggestionMode.FROM_DB:
+                  break;
+              }
+              // controller.close();
+
               _textEditingController.clear();
               if (!_selectedGoods.containsValue(suggestion)) {
                 controller.close();
-                String id =
-                    goods.keys.firstWhere((k) => goods[k] == suggestion);
-                _selectedGoods[id] = suggestion;
-//                   List<String> selectedID = [];
-//                   _selectedGoods.forEach((id, _) => selectedID.add(id));
-//                   print(selectedID);
+                String id = goods.keys.firstWhere(
+                  (k) => goods[k] == suggestion.suggesttionTitle,
+                );
+                _selectedGoods[id] = suggestion.suggesttionTitle;
                 widget.onSelectedGoods(_selectedGoods);
                 setState(() {});
               }
+
+              // _textEditingController.clear();
+              // if (!_selectedGoods.containsValue(suggestion)) {
+              //   controller.close();
+              //   String id =
+              //       goods.keys.firstWhere((k) => goods[k] == suggestion);
+              //   _selectedGoods[id] = suggestion;
+              //   widget.onSelectedGoods(_selectedGoods);
+              //   setState(() {});
+              // }
             },
           ),
           SizedBox(height: 20),
@@ -2242,7 +2360,6 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                     ],
                   ),
                 ),
-          //   Spacer(),
         ],
       ),
     );
@@ -2251,6 +2368,8 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
   FutureBuilder<SpellCheckResult> searchUserDefinedEntity({
     String keyword,
     String language,
+    SuggestionMode suggestionMode,
+    bool showLoader,
   }) {
     return FutureBuilder<SpellCheckResult>(
       future: SpellCheckManager.evaluateSpellingFor(
@@ -2259,12 +2378,12 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
       ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return getLinearLoading;
+          return showLoader ? getLinearLoading : LinearProgressIndicator();
         }
 
         return getSuggestionLayout(
-          suggestion:
-              !snapshot.data.hasErros ? snapshot.data.correctSpelling : keyword,
+          suggestion: keyword,
+          suggestionMode: suggestionMode,
         );
       },
     );
@@ -2297,57 +2416,67 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
 
   Padding getSuggestionLayout({
     String suggestion,
+    SuggestionMode suggestionMode,
   }) {
     return Padding(
-      padding: const EdgeInsets.all(18.0),
-      child: GestureDetector(
-        onTap: () async {
-          _textEditingController.clear();
-          controller.close();
-          var goodsId = Uuid().generateV4();
-          await addGoodsToDb(
-            goodsId: goodsId,
-            goodsLanguage: 'en',
-            goodsTitle: suggestion,
-          );
-          goods[goodsId] = suggestion;
-
-          if (!_selectedGoods.containsValue(suggestion)) {
-            controller.close();
-            String id = goods.keys.firstWhere((k) => goods[k] == suggestion);
-            _selectedGoods[id] = suggestion;
-            setState(() {});
-          }
-        },
-        child: Container(
-            height: 40,
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${S.of(context).add.toUpperCase()} \"${suggestion}\"",
-                        style: TextStyle(fontSize: 16, color: Colors.blue),
+      padding: const EdgeInsets.all(10.0),
+      child: Container(
+          height: 40,
+          alignment: Alignment.centerLeft,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: "Add ",
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "\"${suggestion}\"",
+                            style: suggestionMode == SuggestionMode.SUGGESTED
+                                ? TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.blue,
+                                  )
+                                : TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: Colors.red,
+                                    decorationStyle: TextDecorationStyle.wavy,
+                                    decorationThickness: 1.5,
+                                  ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        S.of(context).no_data,
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                    Text(
+                      suggestionMode == SuggestionMode.SUGGESTED
+                          ? 'Suggested'
+                          : 'You entered',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                Icon(
-                  Icons.add,
-                  color: Colors.grey,
-                ),
-              ],
-            )),
-      ),
+              ),
+              Icon(
+                Icons.add,
+                color: Colors.grey,
+              ),
+            ],
+          )),
     );
   }
 }

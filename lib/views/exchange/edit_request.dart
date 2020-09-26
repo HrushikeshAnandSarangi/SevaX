@@ -1840,7 +1840,6 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
           children: <Widget>[
             SizedBox(height: 8),
             //TODOSUGGESTION
-
             TypeAheadField<SuggestedItem>(
                 suggestionsBoxDecoration: SuggestionsBoxDecoration(
                   borderRadius: BorderRadius.circular(8),
@@ -1860,8 +1859,9 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                       borderRadius: BorderRadius.circular(25.7),
                     ),
                     enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(25.7)),
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7),
+                    ),
                     contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
                     prefixIcon: Icon(
                       Icons.search,
@@ -1882,12 +1882,6 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                 ),
                 suggestionsBoxController: controller,
                 suggestionsCallback: (pattern) async {
-                  // List<String> dataCopy = [];
-                  // goods.forEach((id, skill) => dataCopy.add(skill));
-                  // dataCopy.retainWhere(
-                  //     (s) => s.toLowerCase().contains(pattern.toLowerCase()));
-                  // return await Future.value(dataCopy);
-
                   List<SuggestedItem> dataCopy = [];
                   goods.forEach(
                     (k, v) => dataCopy.add(SuggestedItem()
@@ -1922,7 +1916,6 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                         ..suggesttionTitle = pattern);
                     }
                   }
-
                   return await Future.value(dataCopy);
                 },
                 itemBuilder: (context, suggestedItem) {
@@ -1990,21 +1983,22 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
 
                   switch (suggestion.suggestionMode) {
                     case SuggestionMode.SUGGESTED:
-                      var interestId = Uuid().generateV4();
-                      SkillsAndInterestBloc.addInterestToDb(
-                        interestId: interestId,
-                        interestLanguage: 'en',
-                        interestTitle: suggestion.suggesttionTitle,
+                      var newGoodId = Uuid().generateV4();
+                      addGoodsToDb(
+                        goodsId: newGoodId,
+                        goodsLanguage: 'en',
+                        goodsTitle: suggestion.suggesttionTitle,
                       );
-                      goods[interestId] = suggestion.suggesttionTitle;
+                      goods[newGoodId] = suggestion.suggesttionTitle;
                       break;
 
                     case SuggestionMode.USER_DEFINED:
                       var goodId = Uuid().generateV4();
-                      SkillsAndInterestBloc.addInterestToDb(
-                          interestId: goodId,
-                          interestLanguage: 'en',
-                          interestTitle: suggestion.suggesttionTitle);
+                      addGoodsToDb(
+                        goodsId: goodId,
+                        goodsLanguage: 'en',
+                        goodsTitle: suggestion.suggesttionTitle,
+                      );
                       goods[goodId] = suggestion.suggesttionTitle;
                       break;
 
@@ -2017,7 +2011,8 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                   if (!_selectedGoods.containsValue(suggestion)) {
                     controller.close();
                     String id = goods.keys.firstWhere(
-                        (k) => goods[k] == suggestion.suggesttionTitle);
+                      (k) => goods[k] == suggestion.suggesttionTitle,
+                    );
                     _selectedGoods[id] = suggestion.suggesttionTitle;
                     widget.onSelectedGoods(_selectedGoods);
                     setState(() {});
@@ -2055,9 +2050,15 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                                     : CustomChip(
                                         title: value,
                                         onDelete: () {
-                                          String id = goods.keys.firstWhere(
-                                              (k) => goods[k] == value);
+                                          String id =
+                                              _selectedGoods.keys.firstWhere(
+                                            (k) {
+                                              return _selectedGoods[k] == value;
+                                            },
+                                          );
                                           _selectedGoods.remove(id);
+                                          widget
+                                              .onSelectedGoods(_selectedGoods);
                                           setState(() {});
                                         },
                                       ),
