@@ -1840,7 +1840,6 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
           children: <Widget>[
             SizedBox(height: 8),
             //TODOSUGGESTION
-
             TypeAheadField<SuggestedItem>(
                 suggestionsBoxDecoration: SuggestionsBoxDecoration(
                   borderRadius: BorderRadius.circular(8),
@@ -1860,8 +1859,9 @@ class _GoodsDynamicSelectionState extends State<GoodsDynamicSelection> {
                       borderRadius: BorderRadius.circular(25.7),
                     ),
                     enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(25.7)),
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(25.7),
+                    ),
                     contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
                     prefixIcon: Icon(
                       Icons.search,

@@ -364,7 +364,9 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
             children: [
               CircularProgressIndicator(),
               SizedBox(width: 30),
-              Expanded(child: Text('Changing plan')),
+              Expanded(
+                child: Text(S.of(context).changing_plan),
+              ),
             ],
           ),
         );
@@ -380,9 +382,11 @@ class _BillingPlanCardState extends State<BillingPlanCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: Text(isSuccess
-              ? 'Plan Changed'
-              : 'Something went wrong! Please try again'),
+          content: Text(
+            isSuccess
+                ? S.of(context).plan_changed
+                : S.of(context).general_stream_error,
+          ),
           actions: <Widget>[
             FlatButton(
               child: Text(S.of(context).close),

@@ -1,6 +1,6 @@
 {
     "@@locale": "fr",
-    "@@last_modified": "2020-09-25T15:22:57+00:00",
+    "@@last_modified": "2020-09-26T14:15:05+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Accrochez-vous bien",
@@ -972,7 +972,7 @@
     "add_amount_donate_empty": "Le montant ne peut pas être vide",
     "add_goods_donate_empty": "Veuillez sélectionner au moins un produit à offrir.",
     "offer_type": "Type d'offre *",
-    "request_goods_offer": "Fournissez la liste des biens \/ fournitures que vous proposez *",
+    "request_goods_offer": "Fournissez la liste des biens \/ fournitures que vous pouvez offrir *",
     "offerReview": "Corps: Vous avez reçu un avis sur l'offre:",
     "request_review_body_creator": "Corps: Vous avez reçu un avis pour la demande:",
     "request_review_body_user": "Corps: Vous avez reçu un avis sur le travail que vous avez effectué pour la demande:",
@@ -996,7 +996,17 @@
     "accept_offer": "Accepter l'offre",
     "bookmark": "Signet",
     "alert_before_exit": "Veuillez confirmer que vous souhaitez annuler la modification. Vous perdrez toutes les modifications si vous confirmez.",
-    "payment_still_processing": "Nous mettons à jour votre plan s'il vous plaît attendez!",
+    "payment_still_processing": "Votre paiement est toujours en cours de traitement. Veuillez essayer cette opération un peu plus tard",
     "cancel_editing_confirmation": "Veuillez confirmer que vous souhaitez annuler la modification. Vous perdrez toutes les modifications si vous confirmez.",
-    "sending_feedback": "Envoi de commentaires"
+    "sending_feedback": "Envoi de commentaires",
+    "plan_changed": "Plan modifié",
+    "changing_plan": "Changer de plan",
+    "upgrade_plan": "Plan de mise à niveau",
+    "exhausted_free_quota": "Vous avez épuisé votre quota gratuit de transactions,",
+    "exhaust_limit_admin_message": "veuillez contacter le créateur de la banque de temps pour mettre à niveau votre plan",
+    "exhaust_limit_creator_message": "veuillez mettre à jour votre plan pour continuer.",
+    "exhaust_limit_user_message": "veuillez contacter l'administrateur de la banque de temps pour mettre à niveau votre plan",
+    "needs_upgraded_plan": "La fonctionnalité que vous avez choisie nécessite un plan mis à niveau.",
+    "plan_upgrade_message_admin": "Veuillez contacter le créateur de votre Timebank pour activer cette fonctionnalité",
+    "plan_upgrade_message_user": "Veuillez contacter l'administrateur de votre banque de temps pour activer cette fonctionnalité"
 }

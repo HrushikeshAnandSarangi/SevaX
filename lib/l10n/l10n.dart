@@ -5,6 +5,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+
 import 'messages_all.dart';
 
 class S {
@@ -4893,7 +4894,7 @@ class S {
       );
 
   String get request_goods_offer => Intl.message(
-        'Provide the list of Goods/Supplies that you offer*',
+        'Provide the list of Goods/Supplies that you  can offer*',
         name: 'request_goods_offer',
       );
 
@@ -5013,7 +5014,7 @@ class S {
       );
 
   String get payment_still_processing => Intl.message(
-        'We are updating your plan please hang on tight!',
+        'Your payment is still being processed. Please try this operation a little later',
         name: 'payment_still_processing',
       );
 
@@ -5026,6 +5027,56 @@ class S {
         'Sending Feedback',
         name: 'sending_feedback',
       );
+
+  String get plan_changed => Intl.message(
+        'Plan Changed',
+        name: 'plan_changed',
+      );
+
+  String get changing_plan => Intl.message(
+        'Changing plan',
+        name: 'changing_plan',
+      );
+
+  String get upgrade_plan => Intl.message(
+        'Upgrade Plan',
+        name: 'upgrade_plan',
+      );
+
+  String get exhausted_free_quota => Intl.message(
+        'You have exhausted your free quota of transactions,',
+        name: 'exhausted_free_quota',
+      );
+
+  String get exhaust_limit_admin_message => Intl.message(
+        'please contact the creator of the Timebank to upgrade your plan',
+        name: 'exhaust_limit_admin_message',
+      );
+
+  String get exhaust_limit_creator_message => Intl.message(
+        'please upgrade your plan to continue.',
+        name: 'exhaust_limit_creator_message',
+      );
+
+  String get exhaust_limit_user_message => Intl.message(
+        'please contact the admin of the Timebank to upgrade your plan',
+        name: 'exhaust_limit_user_message',
+      );
+
+  String get needs_upgraded_plan => Intl.message(
+        'The feature you have chosen needs an upgraded plan.',
+        name: 'needs_upgraded_plan',
+      );
+
+  String get plan_upgrade_message_admin => Intl.message(
+        'Please contact the creator of your Timebank to activate this feature',
+        name: 'plan_upgrade_message_admin',
+      );
+
+  String get plan_upgrade_message_user => Intl.message(
+        'Please contact the admin of your Timebank to activate this feature',
+        name: 'plan_upgrade_message_user',
+      );
 }
 
 class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
@@ -5035,8 +5086,8 @@ class ArbifyLocalizationsDelegate extends LocalizationsDelegate<S> {
         Locale.fromSubtags(languageCode: 'es'),
         Locale.fromSubtags(languageCode: 'pt'),
         Locale.fromSubtags(languageCode: 'sn'),
-        Locale.fromSubtags(languageCode: 'zh'),
-        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'zh',countryCode: "CN"),
+        Locale.fromSubtags(languageCode: 'zh',countryCode: "TW"),
         Locale.fromSubtags(languageCode: 'af'),
         Locale.fromSubtags(languageCode: 'sw'),
         Locale.fromSubtags(languageCode: 'en'),

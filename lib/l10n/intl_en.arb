@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "@@last_modified": "2020-09-25T15:22:57+00:00",
+    "@@last_modified": "2020-09-26T14:15:05+00:00",
     "check_met": "Checking, if we met before",
     "we_met": "We met before",
     "hang_on": "Hang on tight",
@@ -972,7 +972,7 @@
     "add_amount_donate_empty": "Amount cannot be empty",
     "add_goods_donate_empty": "Please select atleast one goods to offer.",
     "offer_type": "Offer type*",
-    "request_goods_offer": "Provide the list of Goods\/Supplies that you offer*",
+    "request_goods_offer": "Provide the list of Goods\/Supplies that you  can offer*",
     "offerReview": "Body: You have received a review for the offer:",
     "request_review_body_creator": "Body: You have received a review for the request:",
     "request_review_body_user": "Body: You have received a review on the work that you did for the request:",
@@ -996,7 +996,17 @@
     "accept_offer": "Accept Offer",
     "bookmark": "Bookmark",
     "alert_before_exit": "Please confirm that you want to cancel editing. You will lose all changes if you confirm.",
-    "payment_still_processing": "We are updating your plan please hang on tight!",
+    "payment_still_processing": "Your payment is still being processed. Please try this operation a little later",
     "cancel_editing_confirmation": "Please confirm that you want to cancel editing. You will lose all changes if you confirm.",
-    "sending_feedback": "Sending Feedback"
+    "sending_feedback": "Sending Feedback",
+    "plan_changed": "Plan Changed",
+    "changing_plan": "Changing plan",
+    "upgrade_plan": "Upgrade Plan",
+    "exhausted_free_quota": "You have exhausted your free quota of transactions,",
+    "exhaust_limit_admin_message": "please contact the creator of the Timebank to upgrade your plan",
+    "exhaust_limit_creator_message": "please upgrade your plan to continue.",
+    "exhaust_limit_user_message": "please contact the admin of the Timebank to upgrade your plan",
+    "needs_upgraded_plan": "The feature you have chosen needs an upgraded plan.",
+    "plan_upgrade_message_admin": "Please contact the creator of your Timebank to activate this feature",
+    "plan_upgrade_message_user": "Please contact the admin of your Timebank to activate this feature"
 }

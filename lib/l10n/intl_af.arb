@@ -1,6 +1,6 @@
 {
     "@@locale": "af",
-    "@@last_modified": "2020-09-25T15:22:57+00:00",
+    "@@last_modified": "2020-09-26T14:15:06+00:00",
     "check_met": "Kyk of ons voorheen ontmoet het",
     "we_met": "Ons het voorheen ontmoet",
     "hang_on": "Hou vas",
@@ -972,7 +972,7 @@
     "add_amount_donate_empty": "Bedrag kan nie leeg wees nie",
     "add_goods_donate_empty": "Kies ten minste een goed wat u wil aanbied.",
     "offer_type": "Aanbiedingstipe *",
-    "request_goods_offer": "Verskaf die lys van goedere \/ voorrade wat u aanbied *",
+    "request_goods_offer": "Verskaf die lys van goedere \/ voorrade wat u kan aanbied *",
     "offerReview": "Liggaam: u het 'n resensie vir die aanbod ontvang:",
     "request_review_body_creator": "Liggaam: u het 'n hersiening ontvang vir die versoek:",
     "request_review_body_user": "Liggaam: u het 'n oorsig ontvang van die werk wat u vir die versoek gedoen het:",
@@ -996,7 +996,17 @@
     "accept_offer": "Aanvaar die aanbod",
     "bookmark": "Boekmerk",
     "alert_before_exit": "Bevestig dat u die redigering wil kanselleer. U sal alle veranderinge verloor as u bevestig.",
-    "payment_still_processing": "Ons is besig om u plan op te dateer asb.",
+    "payment_still_processing": "U betaling word nog verwerk. Probeer hierdie bewerking asseblief 'n bietjie later",
     "cancel_editing_confirmation": "Bevestig dat u die redigering wil kanselleer. U sal alle veranderinge verloor as u bevestig.",
-    "sending_feedback": "Stuur terugvoer"
+    "sending_feedback": "Stuur terugvoer",
+    "plan_changed": "Plan verander",
+    "changing_plan": "Veranderende plan",
+    "upgrade_plan": "Opgraderingsplan",
+    "exhausted_free_quota": "U het u gratis kwota transaksies uitgeput,",
+    "exhaust_limit_admin_message": "kontak die skepper van die Timebank om u plan op te gradeer",
+    "exhaust_limit_creator_message": "gradeer asseblief u plan op om voort te gaan.",
+    "exhaust_limit_user_message": "kontak die administrateur van die Timebank om u plan op te gradeer",
+    "needs_upgraded_plan": "Die gekose funksie benodig 'n opgegradeerde plan.",
+    "plan_upgrade_message_admin": "Kontak die skepper van u Timebank om hierdie funksie te aktiveer",
+    "plan_upgrade_message_user": "Kontak die administrateur van u Timebank om hierdie funksie te aktiveer"
 }

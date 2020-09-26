@@ -1,6 +1,6 @@
 {
     "@@locale": "sw",
-    "@@last_modified": "2020-09-25T15:22:57+00:00",
+    "@@last_modified": "2020-09-26T14:15:06+00:00",
     "check_met": "Kuangalia, ikiwa tulikutana hapo awali",
     "we_met": "Tulikutana hapo awali",
     "hang_on": "Kaa sana",
@@ -972,7 +972,7 @@
     "add_amount_donate_empty": "Kiasi hakiwezi kuwa tupu",
     "add_goods_donate_empty": "Tafadhali chagua angalau bidhaa utakayotoa.",
     "offer_type": "Aina ya ofa *",
-    "request_goods_offer": "Toa orodha ya Bidhaa \/ Ugavi ambao unatoa *",
+    "request_goods_offer": "Toa orodha ya Bidhaa \/ Vifaa ambavyo unaweza kutoa *",
     "offerReview": "Mwili: Umepokea hakiki ya ofa:",
     "request_review_body_creator": "Mwili: Umepokea hakiki ya ombi:",
     "request_review_body_user": "Mwili: Umepokea ukaguzi juu ya kazi uliyofanya kwa ombi:",
@@ -996,7 +996,17 @@
     "accept_offer": "Kubali Ofa",
     "bookmark": "Alamisho",
     "alert_before_exit": "Tafadhali thibitisha kuwa unataka kughairi kuhariri. Utapoteza mabadiliko yote ikiwa utathibitisha.",
-    "payment_still_processing": "Tunasasisha mpango wako tafadhali hutegemea sana!",
+    "payment_still_processing": "Malipo yako bado yanachakatwa. Tafadhali jaribu operesheni hii baadaye kidogo",
     "cancel_editing_confirmation": "Tafadhali thibitisha kuwa unataka kughairi kuhariri. Utapoteza mabadiliko yote ikiwa utathibitisha.",
-    "sending_feedback": "Kutuma Maoni"
+    "sending_feedback": "Kutuma Maoni",
+    "plan_changed": "Mpango Umebadilishwa",
+    "changing_plan": "Mpango wa kubadilisha",
+    "upgrade_plan": "Boresha Mpango",
+    "exhausted_free_quota": "Umemaliza upendeleo wako wa bure wa shughuli,",
+    "exhaust_limit_admin_message": "tafadhali wasiliana na muundaji wa Timebank ili kuboresha mpango wako",
+    "exhaust_limit_creator_message": "tafadhali sasisha mpango wako ili uendelee.",
+    "exhaust_limit_user_message": "tafadhali wasiliana na msimamizi wa Timebank ili kuboresha mpango wako",
+    "needs_upgraded_plan": "Kipengele ulichochagua kinahitaji mpango ulioboreshwa.",
+    "plan_upgrade_message_admin": "Tafadhali wasiliana na muundaji wa Timebank yako ili kuamsha huduma hii",
+    "plan_upgrade_message_user": "Tafadhali wasiliana na msimamizi wa Timebank yako ili kuamsha huduma hii"
 }
