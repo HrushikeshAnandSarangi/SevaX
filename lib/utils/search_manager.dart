@@ -9,9 +9,6 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_template_model.dart';
 
 class SearchManager {
-  static final String _baseUrl = 'http://api.sevaexchange.com:9200';
-  // static final String _baseUrl = 'https://b23ca2bd485f4bc18fe0ae03f9da283e.us-west1.gcp.cloud.es.io:9243';
-
   static Future<http.Response> makeGetRequest({
     @required String url,
     Map<String, String> headers,
@@ -38,11 +35,6 @@ class SearchManager {
         "query": {
           "bool": {
             "must": [
-              {
-                "match": {
-                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
-                }
-              },
               {
                 "multi_match": {
                   "query": "$queryString",
@@ -302,11 +294,6 @@ class SearchManager {
           "bool": {
             "must": [
               {
-                "match": {
-                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
-                }
-              },
-              {
                 "multi_match": {
                   "query": "$queryString",
                   "fields": ["email", "fullname"],
@@ -348,11 +335,6 @@ class SearchManager {
           "bool": {
             "must": [
               {
-                "match": {
-                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
-                }
-              },
-              {
                 "multi_match": {
                   "query": "$queryString",
                   "fields": ["email", "fullname", "bio"],
@@ -392,11 +374,6 @@ class SearchManager {
           "bool": {
             "must": [
               {
-                "match": {
-                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
-                }
-              },
-              {
                 "multi_match": {
                   "query": "$queryString",
                   "fields": ["email", "fullname", "bio"],
@@ -433,11 +410,6 @@ class SearchManager {
           "bool": {
             "must": [
               {
-                "match": {
-                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
-                }
-              },
-              {
                 "multi_match": {
                   "query": "$queryString",
                   "fields": [
@@ -467,38 +439,6 @@ class SearchManager {
     yield newsList;
   }
 
-  static Stream<List<TimebankModel>> searchForTimebank({
-    @required queryString,
-  }) async* {
-    String url = '$_baseUrl/everything_timebanks/_search?q=$queryString*';
-    List<Map<String, dynamic>> hitList = await _makeElasticSearchRequest(url);
-
-    List<TimebankModel> timebankList = [];
-    hitList.forEach((map) {
-      Map<String, dynamic> sourceMap = map['_source'];
-      TimebankModel model = TimebankModel(sourceMap);
-      model.id = map['_id'];
-      timebankList.add(model);
-    });
-    yield timebankList;
-  }
-
-  static Stream<List<CampaignModel>> searchForCampaign({
-    @required queryString,
-  }) async* {
-    String url = '$_baseUrl/everything_campaigns/_search?q=$queryString*';
-    List<Map<String, dynamic>> hitList = await _makeElasticSearchRequest(url);
-
-    List<CampaignModel> campaignList = [];
-    hitList.forEach((map) {
-      Map<String, dynamic> sourceMap = map['_source'];
-      CampaignModel model = CampaignModel.fromMap(sourceMap);
-      model.id = map['_id'];
-      campaignList.add(model);
-    });
-    yield campaignList;
-  }
-
   static Stream<List<OfferModel>> searchForOffer({
     @required queryString,
   }) async* {
@@ -509,11 +449,6 @@ class SearchManager {
         "query": {
           "bool": {
             "must": [
-              {
-                "match": {
-                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
-                }
-              },
               {
                 "multi_match": {
                   "query": "$queryString",
@@ -549,11 +484,6 @@ class SearchManager {
         "query": {
           "bool": {
             "must": [
-              {
-                "match": {
-                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
-                }
-              },
               {
                 "multi_match": {
                   "query": "$queryString",
