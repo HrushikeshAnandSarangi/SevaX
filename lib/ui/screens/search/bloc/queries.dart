@@ -87,11 +87,6 @@ class Searches {
                 }
               },
               {
-                "match": {
-                  "root_timebank_id": FlavorConfig.values.timebankId,
-                }
-              },
-              {
                 "multi_match": {
                   "query": queryString,
                   "fields": [
@@ -359,11 +354,6 @@ class Searches {
           "bool": {
             "must": [
               {
-                "match": {
-                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
-                }
-              },
-              {
                 "terms": {"timebankId.keyword": myTimebanks}
               },
               {
@@ -483,11 +473,6 @@ class Searches {
         "query": {
           "bool": {
             "must": [
-              {
-                "match": {
-                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
-                }
-              },
               {
                 "term": {"communities.keyword": loggedInUser.currentCommunity}
               },
