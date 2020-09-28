@@ -52,7 +52,7 @@ class FlavorConfig {
     switch (appFlavor) {
       case Flavor.SEVA_DEV:
         return FlavorValues(
-          googleMapsKey: "AIzaSyCfJs1RFK22W-KvpPWkTmJ3lhrGEKoJ-Gc",
+          googleMapsKey: "AIzaSyC5p0iPaOTJEtOpfc8bT5zQnxlIrHtVgsU",
           projectApiKey: "AIzaSyA1uAGsq35nEARPexmT5c1AFL29wfOuv5Y",
           bundleId: 'com.sevaexchange.dev',
           packageName: 'com.sevaexchange.dev',
@@ -67,7 +67,6 @@ class FlavorConfig {
           timebankName: 'Seva Exchange',
           offertitle: 'Offer',
           requestTitle: 'Request',
-
           buttonTextColor: Colors.black,
           theme: ThemeData(
             appBarTheme: AppBarTheme(
@@ -133,7 +132,7 @@ class FlavorConfig {
 
       case Flavor.APP:
         return FlavorValues(
-          googleMapsKey: "AIzaSyCfJs1RFK22W-KvpPWkTmJ3lhrGEKoJ-Gc",
+          googleMapsKey: "AIzaSyC5p0iPaOTJEtOpfc8bT5zQnxlIrHtVgsU",
           projectApiKey: "AIzaSyC5p0iPaOTJEtOpfc8bT5zQnxlIrHtVgsU",
           bundleId: 'com.sevaexchange.app',
           packageName: 'com.sevaexchange.sevax',
