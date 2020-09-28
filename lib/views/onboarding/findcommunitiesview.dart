@@ -22,6 +22,7 @@ import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
+import 'package:sevaexchange/views/profile/filters.dart';
 
 class FindCommunitiesView extends StatefulWidget {
   final bool keepOnBackPress;
@@ -102,6 +103,18 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               automaticallyImplyLeading: false,
               elevation: 0.5,
               actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.filter_list),
+                  onPressed: () async {
+                      await Navigator.of(context)
+                          .push(
+                          MaterialPageRoute(
+                              builder: (context) => NearByFiltersView(),
+                          ),
+                      )
+                          .then((value) => setState(() {}));
+                  },
+                ),
                 IconButton(
                   icon: Icon(
                     Icons.power_settings_new,
