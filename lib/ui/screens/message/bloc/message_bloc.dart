@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -41,35 +42,45 @@ class MessageBloc extends BlocBase {
         ChatModel chat = ChatModel.fromMap(snapshot.data);
         chat.id = snapshot.documentID;
         log(chat.id + '====timestamp ===> ${chat.timestamp}');
-        String senderId =
-            chat.participants.firstWhere((id) => id != userModel.sevaUserID);
+        String senderId = chat.participants.firstWhere(
+          (id) => id != userModel.sevaUserID,
+          orElse: () => null,
+        );
         log("===> sender id :$senderId");
-        if (userModel.blockedBy.contains(senderId) ||
-            userModel.blockedMembers.contains(senderId) ||
-            (chat.deletedBy.containsKey(userModel.sevaUserID) &&
-                chat.deletedBy[userModel.sevaUserID] > (chat.timestamp ?? 0)) ||
-            (chat.lastMessage == '' || chat.lastMessage == null) &&
-                !chat.isGroupMessage) {
-          log("Blocked or no message");
-        } else {
-          if (chat.unreadStatus.containsKey(userModel.sevaUserID) &&
-              chat.unreadStatus[userModel.sevaUserID] > 0) {
-            unreadCount++;
-          }
-          if (frequentContacts.length < 5) {
-            FrequentContactsModel fc;
-            if (chat.isGroupMessage) {
-              fc = FrequentContactsModel(chat, null, chat.isGroupMessage);
-            } else {
-              fc = FrequentContactsModel(
-                  null,
-                  chat.participantInfo.firstWhere(
-                      (ParticipantInfo info) => info.id == senderId),
-                  chat.isGroupMessage);
+        if (senderId != null) {
+          if (userModel.blockedBy.contains(senderId) ||
+              userModel.blockedMembers.contains(senderId) ||
+              (chat.deletedBy.containsKey(userModel.sevaUserID) &&
+                  chat.deletedBy[userModel.sevaUserID] >
+                      (chat.timestamp ?? 0)) ||
+              (chat.lastMessage == '' || chat.lastMessage == null) &&
+                  !chat.isGroupMessage) {
+            log("Blocked or no message");
+          } else {
+            if (chat.unreadStatus.containsKey(userModel.sevaUserID) &&
+                chat.unreadStatus[userModel.sevaUserID] > 0) {
+              unreadCount++;
             }
-            frequentContacts.add(fc);
+            if (frequentContacts.length < 5) {
+              FrequentContactsModel fc;
+              if (chat.isGroupMessage) {
+                fc = FrequentContactsModel(chat, null, chat.isGroupMessage);
+              } else {
+                fc = FrequentContactsModel(
+                    null,
+                    chat.participantInfo.firstWhere(
+                        (ParticipantInfo info) => info.id == senderId),
+                    chat.isGroupMessage);
+              }
+              frequentContacts.add(fc);
+            }
+            chats.add(chat);
           }
-          chats.add(chat);
+        } else {
+          Crashlytics.instance
+              .log('Chat issue with same memeber chat id ${chat.id}');
+
+          log('chat id is ${chat.id}');
         }
       });
       if (!_personalMessage.isClosed) _personalMessage.add(chats);

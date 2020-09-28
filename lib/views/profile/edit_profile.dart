@@ -1066,36 +1066,13 @@ class _EditProfilePageState extends State<EditProfilePage>
                       style: TextStyle(fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
-                      var connResult = await Connectivity().checkConnectivity();
-                      if (connResult == ConnectivityResult.none) {
-                        _scaffoldKey.currentState.showSnackBar(
-                          SnackBar(
-                            content: Text(S.of(context).check_internet),
-                            action: SnackBarAction(
-                              label: S.of(context).dismiss,
-                              onPressed: () => _scaffoldKey.currentState
-                                  .hideCurrentSnackBar(),
-                            ),
-                          ),
-                        );
-                        return;
-                      }
-                      await FCMNotificationManager
-                          .removeDeviceRegisterationForMember(
-                              email: SevaCore.of(context).loggedInUser.email);
+                      FCMNotificationManager.removeDeviceRegisterationForMember(
+                          email: SevaCore.of(context).loggedInUser.email);
 
-                      // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-                      //   statusBarBrightness: Brightness.light,
-                      //   statusBarColor: Colors.white,
-                      // ));
-                      try {
-                        Navigator.of(_context).pop();
-                      } catch (e) {
-                        print(e);
-                      }
+                      Navigator.of(_context).pop();
 
                       _signOut(
-                          _context, SevaCore.of(context).loggedInUser.email);
+                          context, SevaCore.of(context).loggedInUser.email);
                     },
                   ),
                   FlatButton(
