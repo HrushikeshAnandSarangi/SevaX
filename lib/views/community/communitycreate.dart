@@ -240,6 +240,7 @@ class CreateEditCommunityViewFormState
         communitynName = communityModel.name;
         taxPercentage = onValue.taxPercentage * 100;
         searchTextController.text = communityModel.name;
+        descriptionTextController.text = communityModel.about;
         print("about ${communityModel.about}");
       });
     });
