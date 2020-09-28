@@ -1100,11 +1100,13 @@ class _EditProfilePageState extends State<EditProfilePage>
     // Navigator.pop(context);
     var auth = AuthProvider.of(context).auth;
     await auth.signOut();
-    Navigator.pushReplacement(
+
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) => SplashView(),
       ),
+      (Route<dynamic> route) => false,
     );
   }
 }
