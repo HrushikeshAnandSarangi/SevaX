@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/neayby_setting/nearby_setting.dart';
 
-import '../core.dart';
 
 class NearByFiltersView extends StatelessWidget {
+  final UserModel userModel;
+
+  NearByFiltersView(this.userModel);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,7 +16,7 @@ class NearByFiltersView extends StatelessWidget {
       ),
       body: SafeArea(
         child: NearbySettingsWidget(
-          SevaCore.of(context).loggedInUser,
+          userModel,
         ),
       ),
     );

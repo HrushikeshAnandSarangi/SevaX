@@ -49,7 +49,12 @@ class PaymentUtils {
   static bool getFailedBannerVisibilityStatus({
     CommunityModel communityModel,
   }) {
-    if (!communityModel.payment['payment_success']) {
+    if (communityModel.payment == null ||
+        !communityModel.payment.containsKey('payment_success')) {
+      return true;
+    }
+
+    if (!communityModel.payment['payment_success'] ?? false) {
       if (communityModel.payment['status'] != null &&
           communityModel.payment['status'] ==
               SevaPaymentStatusCodes.PROCESSING_PLAN_UPDATE)

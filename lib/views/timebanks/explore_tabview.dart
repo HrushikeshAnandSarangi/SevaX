@@ -61,7 +61,9 @@ class _ExploreTabViewState extends State<ExploreTabView> {
                 await Navigator.of(context)
                     .push(
                       MaterialPageRoute(
-                        builder: (context) => NearByFiltersView(),
+                        builder: (context) => NearByFiltersView(
+                          SevaCore.of(context).loggedInUser,
+                        ),
                       ),
                     )
                     .then((value) => setState(() {}));
@@ -89,8 +91,7 @@ class _ExploreTabViewState extends State<ExploreTabView> {
                     isScrollable: true,
                     tabs: [
                       Tab(
-                        text: S.of(context)
-                            .find_timebanks,
+                        text: S.of(context).find_timebanks,
                       ),
                       Tab(
                         text:

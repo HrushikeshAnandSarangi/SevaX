@@ -106,13 +106,15 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                 IconButton(
                   icon: Icon(Icons.filter_list),
                   onPressed: () async {
-                      await Navigator.of(context)
-                          .push(
+                    await Navigator.of(context)
+                        .push(
                           MaterialPageRoute(
-                              builder: (context) => NearByFiltersView(),
+                            builder: (context) => NearByFiltersView(
+                              SevaCore.of(parentContext).loggedInUser,
+                            ),
                           ),
-                      )
-                          .then((value) => setState(() {}));
+                        )
+                        .then((value) => setState(() {}));
                   },
                 ),
                 IconButton(
