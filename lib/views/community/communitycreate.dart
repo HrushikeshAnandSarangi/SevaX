@@ -105,7 +105,10 @@ class CreateEditCommunityViewFormState
   CommunityModel editCommunityModel = CommunityModel({});
   final _formKey = GlobalKey<FormState>();
   TextEditingController searchTextController = TextEditingController();
+  TextEditingController descriptionTextController = TextEditingController();
   TimebankModel timebankModel = TimebankModel({});
+  TimebankModel parentTimebank = TimebankModel({});
+
   TimebankModel editTimebankModel = TimebankModel({});
   String memberAssignment = "+ Add Members";
   List members = [];
@@ -243,6 +246,13 @@ class CreateEditCommunityViewFormState
 
     timebankModel =
         await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
+    if (timebankModel != null &&
+        timebankModel.associatedParentTimebankId != null) {
+      parentTimebank = await FirestoreManager.getTimeBankForId(
+          timebankId: timebankModel.associatedParentTimebankId);
+      selectedTimebank = parentTimebank.name;
+    }
+
     selectedAddress = timebankModel.address;
     location = timebankModel.location;
     totalMembersCount = await FirestoreManager.getMembersCountOfAllMembers(
@@ -405,6 +415,8 @@ class CreateEditCommunityViewFormState
                         ),
                         headingText(S.of(context).about),
                         TextFormField(
+                          controller: descriptionTextController,
+
                           autovalidate: autoValidateText,
                           focusNode: aboutFocus,
                           decoration: InputDecoration(
@@ -415,7 +427,7 @@ class CreateEditCommunityViewFormState
                           textInputAction: TextInputAction.done,
                           maxLines: 3,
                           textCapitalization: TextCapitalization.sentences,
-                          initialValue: timebankModel.missionStatement ?? "",
+                          //  initialValue: timebankModel.missionStatement ?? "",
                           onChanged: (value) {
                             if (value.length > 1 && !autoValidateText) {
                               setState(() {
