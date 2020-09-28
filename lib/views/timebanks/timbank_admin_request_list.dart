@@ -1664,6 +1664,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       bool isFromExit}) async {
     Map<String, dynamic> responseData = await removeMemberFromTimebank(
         sevauserid: userModel.sevaUserID, timebankId: timebankModel.id);
+    print(responseData.toString());
     if (responseData['deletable'] == true) {
       if (isFromExit) {
         print("im about to exit");
@@ -1695,7 +1696,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                   " ${isFromExit ? "You" : "User"} ${S.of(context).cant_exit_timebank}"),
               content: Text("${isFromExit ? "You" : "User"} have \n"
                   "${responseData['pendingProjects']['unfinishedProjects']} ${S.of(context).pending_projects},\n"
-                  "${responseData['pendingRequests']['unfinishedRequests']} ${S.of(context).pending_requests},\n"
+                  "${responseData['PendingRequests']['unfinishedRequests']} ${S.of(context).pending_requests},\n"
                   "${responseData['pendingOffers']['unfinishedOffers']} ${S.of(context).pending_offers}.\n "
                   "${S.of(context).clear_transaction} "),
               actions: <Widget>[
