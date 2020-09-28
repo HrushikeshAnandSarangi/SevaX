@@ -6,7 +6,8 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:sevaexchange/models/location_model.dart';
 
 final searchScaffoldKey = GlobalKey<ScaffoldState>();
-const kGoogleApiKey = "AIzaSyCfJs1RFK22W-KvpPWkTmJ3lhrGEKoJ-Gc";
+//Prod web key
+const kGoogleApiKey = "AIzaSyC5p0iPaOTJEtOpfc8bT5zQnxlIrHtVgsU";
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
 class CustomSearchScaffold extends PlacesAutocompleteWidget {
