@@ -571,7 +571,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               ],
             ),
             onPressed: () {
-                applyAction();
+              applyAction();
             },
           ),
         )
@@ -590,23 +590,22 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       } else {
         await _acceptRequest();
         showDialog(
-            context: context,
-            builder: (_context) {
-                return CalenderEventConfirmationDialog(
-                    title: widget.requestItem.title,
-                    isrequest: true,
-                    cancelled: () async {
-                        Navigator.pop(_context);
-                        Navigator.pop(context);
-                    },
-                    addToCalender: () async {
-                        _settingModalBottomSheet(context);
-                        Navigator.pop(_context);
-                    },
-                );
-            },
+          context: context,
+          builder: (_context) {
+            return CalenderEventConfirmationDialog(
+              title: widget.requestItem.title,
+              isrequest: true,
+              cancelled: () async {
+                Navigator.pop(_context);
+                Navigator.pop(context);
+              },
+              addToCalender: () async {
+                _settingModalBottomSheet(context);
+                Navigator.pop(_context);
+              },
+            );
+          },
         );
-
       }
     }
   }
@@ -627,12 +626,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 Set.from(widget.requestItem.allowedCalenderUsers);
             acceptorList.add(SevaCore.of(context).loggedInUser.email);
             widget.requestItem.allowedCalenderUsers = acceptorList.toList();
-            await FirestoreManager.updateRequest(requestModel: widget.requestItem);
+            await FirestoreManager.updateRequest(
+                requestModel: widget.requestItem);
             Navigator.pop(_context);
             Navigator.pop(context);
           },
         );
-
       },
     );
   }
@@ -670,10 +669,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
       acceptorList.remove(assosciatedEmail);
       widget.requestItem.acceptors = acceptorList.toList();
-      if(widget.requestItem.allowedCalenderUsers.contains(assosciatedEmail)){
-          Set<String> allowedCalenderUsersList = Set.from(widget.requestItem.allowedCalenderUsers);
-          allowedCalenderUsersList.remove(assosciatedEmail);
-          widget.requestItem.allowedCalenderUsers = allowedCalenderUsersList.toList();
+      if (widget.requestItem.allowedCalenderUsers.contains(assosciatedEmail)) {
+        Set<String> allowedCalenderUsersList =
+            Set.from(widget.requestItem.allowedCalenderUsers);
+        allowedCalenderUsersList.remove(assosciatedEmail);
+        widget.requestItem.allowedCalenderUsers =
+            allowedCalenderUsersList.toList();
       }
       if (widget.requestItem.approvedUsers.contains(assosciatedEmail)) {
         Set<String> approvedUsers = Set.from(widget.requestItem.approvedUsers);
@@ -685,7 +686,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           widget.requestItem.allowedCalenderUsers = calenderUsers.toList();
         }
         widget.requestItem.approvedUsers = approvedUsers.toList();
-
       }
 
       acceptRequest(
@@ -1094,10 +1094,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
               onPressed: () async {
-                await Firestore.instance
-                    .collection('requests')
-                    .document(widget.requestItem.id)
-                    .updateData({'softDelete': true});
+                await deleteRequest().commit();
                 Navigator.of(dialogContext).pop();
                 Navigator.of(context).pop();
               },
@@ -1109,6 +1106,28 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         );
       },
     );
+  }
+
+  WriteBatch deleteRequest() {
+    //add to timebank members
+
+    WriteBatch batch = Firestore.instance.batch();
+    var requestRef = Firestore.instance
+        .collection('requests')
+        .document(widget.requestItem.id);
+
+    if (widget.requestItem.projectId != null) {
+      var projectsRef = Firestore.instance
+          .collection('projects')
+          .document(widget.requestItem.projectId);
+      batch.updateData(projectsRef, {
+        'pendingRequests': FieldValue.arrayRemove([widget.requestItem.id])
+      });
+    }
+
+    batch.delete(requestRef);
+
+    return batch;
   }
 
   void _showProtectedTimebankMessage() {
@@ -1142,7 +1161,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       "email": SevaCore.of(context).loggedInUser.email,
       "mobile": globals.isMobile,
       "envName": FlavorConfig.values.envMode,
-        "eventsArr": []
+      "eventsArr": []
     };
     log("inside bottom sheet");
     var stateVar = jsonEncode(stateOfcalendarCallback);
@@ -1181,18 +1200,20 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                   "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                               String authorizationUrl =
                                   "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=google_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                              Set<String> acceptorList =
-                              Set.from(widget.requestItem.allowedCalenderUsers);
-                              acceptorList.add(SevaCore.of(context).loggedInUser.email);
-                              widget.requestItem.allowedCalenderUsers = acceptorList.toList();
-                              await FirestoreManager.updateRequest(requestModel: widget.requestItem);
+                              Set<String> acceptorList = Set.from(
+                                  widget.requestItem.allowedCalenderUsers);
+                              acceptorList
+                                  .add(SevaCore.of(context).loggedInUser.email);
+                              widget.requestItem.allowedCalenderUsers =
+                                  acceptorList.toList();
+                              await FirestoreManager.updateRequest(
+                                  requestModel: widget.requestItem);
                               if (await canLaunch(
                                   authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
                               }
                               Navigator.of(bc).pop();
                               Navigator.pop(context);
-
                             }),
                       ),
                       TransactionsMatrixCheck(
@@ -1212,11 +1233,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               String authorizationUrl =
                                   "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=outlook_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
 
-                              Set<String> acceptorList =
-                              Set.from(widget.requestItem.allowedCalenderUsers);
-                              acceptorList.add(SevaCore.of(context).loggedInUser.email);
-                              widget.requestItem.allowedCalenderUsers = acceptorList.toList();
-                              await FirestoreManager.updateRequest(requestModel: widget.requestItem);
+                              Set<String> acceptorList = Set.from(
+                                  widget.requestItem.allowedCalenderUsers);
+                              acceptorList
+                                  .add(SevaCore.of(context).loggedInUser.email);
+                              widget.requestItem.allowedCalenderUsers =
+                                  acceptorList.toList();
+                              await FirestoreManager.updateRequest(
+                                  requestModel: widget.requestItem);
 
                               if (await canLaunch(
                                   authorizationUrl.toString())) {
@@ -1241,11 +1265,14 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                   "${FlavorConfig.values.cloudFunctionBaseURL}/callbackurlforoauth";
                               String authorizationUrl =
                                   "https://api.kloudless.com/v1/oauth?client_id=B_2skRqWhNEGs6WEFv9SQIEfEfvq2E6fVg3gNBB3LiOGxgeh&response_type=code&scope=icloud_calendar&state=${stateVar}&redirect_uri=$redirectUrl";
-                              Set<String> acceptorList =
-                              Set.from(widget.requestItem.allowedCalenderUsers);
-                              acceptorList.add(SevaCore.of(context).loggedInUser.email);
-                              widget.requestItem.allowedCalenderUsers = acceptorList.toList();
-                              await FirestoreManager.updateRequest(requestModel: widget.requestItem);
+                              Set<String> acceptorList = Set.from(
+                                  widget.requestItem.allowedCalenderUsers);
+                              acceptorList
+                                  .add(SevaCore.of(context).loggedInUser.email);
+                              widget.requestItem.allowedCalenderUsers =
+                                  acceptorList.toList();
+                              await FirestoreManager.updateRequest(
+                                  requestModel: widget.requestItem);
                               if (await canLaunch(
                                   authorizationUrl.toString())) {
                                 await launch(authorizationUrl.toString());
