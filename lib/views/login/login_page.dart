@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
@@ -48,9 +49,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     if (Platform.isIOS) {
-      AppleSignIn.onCredentialRevoked.listen((_) {
-        print("Credentials revoked");
-      });
+      AppleSignIn.onCredentialRevoked.listen((_) {});
     }
     fetchRemoteConfig();
   }
@@ -244,9 +243,7 @@ class _LoginPageState extends State<LoginPage> {
                                                           value;
                                                       return null;
                                                     },
-                                                    onChanged: (value) {
-                                                      print("$value");
-                                                    },
+                                                    onChanged: (value) {},
                                                     initialValue: "",
                                                     keyboardType: TextInputType
                                                         .emailAddress,
@@ -329,14 +326,11 @@ class _LoginPageState extends State<LoginPage> {
                                           onActivityResult['userEmail']
                                               .toString()
                                               .isNotEmpty) {
-                                        print("send reset link");
                                         resetPassword(
                                             onActivityResult['userEmail']);
                                         _scaffoldKey.currentState
                                             .hideCurrentSnackBar();
-                                      } else {
-                                        print("Cancelled forgot passowrd");
-                                      }
+                                      } else {}
                                     });
                                   },
                                   child: Padding(
@@ -750,11 +744,10 @@ class _LoginPageState extends State<LoginPage> {
     UserModel user;
     try {
       user = await auth.signInWithApple();
-      print("User apple:$user");
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
-      print(error);
+      Crashlytics.instance.log(error.toString());
     }
     isLoading = false;
     _processLogin(user);
@@ -788,7 +781,7 @@ class _LoginPageState extends State<LoginPage> {
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
-      print(error);
+      Crashlytics.instance.log(error.toString());
     }
     isLoading = false;
     _processLogin(user);
@@ -809,13 +802,12 @@ class _LoginPageState extends State<LoginPage> {
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
-      print(error);
+      Crashlytics.instance.log(error.toString());
     }
     isLoading = false;
     if (user == null) {
       return;
     }
-    print(user);
     _processLogin(user);
   }
 

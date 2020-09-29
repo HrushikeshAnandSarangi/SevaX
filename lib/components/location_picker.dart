@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+
 import 'package:app_settings/app_settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/l10n/l10n.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/ui/screens/location/widgets/location_confirmation_card.dart';
+
 import 'get_location.dart';
 
 extension StringExtension on String {
@@ -126,10 +128,10 @@ class _LocationPickerState extends State<LocationPicker> {
       render = LocationConfimationCard(
         locationDataModel: locationDataFromSearch.location == null
             ? LocationDataModel(
-          address == null ? "" : address,
-          temp.latitude,
-          temp.longitude,
-        )
+                address == null ? "" : address,
+                temp.latitude,
+                temp.longitude,
+              )
             : locationDataFromSearch,
       );
     } else {
@@ -159,7 +161,6 @@ class _LocationPickerState extends State<LocationPicker> {
                   fullscreenDialog: true,
                 ),
               );
-              print('came here');
               if (model?.lat != null && model?.lng != null) {
                 locationDataFromSearch = model;
                 target = LatLng(
@@ -167,10 +168,11 @@ class _LocationPickerState extends State<LocationPicker> {
                 _addMarker(latLng: target);
                 var temp = point;
                 if (locationDataFromSearch.lat != null &&
-                    locationDataFromSearch.lng != null && temp != null) {
+                    locationDataFromSearch.lng != null &&
+                    temp != null) {
                   if (point.distance(
-                      lat: locationDataFromSearch.lat,
-                      lng: locationDataFromSearch.lng) >
+                          lat: locationDataFromSearch.lat,
+                          lng: locationDataFromSearch.lng) >
                       0.005) {
                     locationDataFromSearch.location = null;
                   }
@@ -300,19 +302,22 @@ class _LocationPickerState extends State<LocationPicker> {
         compassEnabled: true,
         markers: markers,
         onCameraMove: (position) {
-           setState(() {
-          target = position.target;
-           });
+          setState(() {
+            target = position.target;
+          });
         },
         onCameraIdle: () {
           _addMarker();
           var temp = point;
           if (locationDataFromSearch.lat != null &&
-              locationDataFromSearch.lng != null && temp != null) {
-            log(point.distance(
-              lat: locationDataFromSearch.lat,
-              lng: locationDataFromSearch.lng,
-            ).toString());
+              locationDataFromSearch.lng != null &&
+              temp != null) {
+            log(point
+                .distance(
+                  lat: locationDataFromSearch.lat,
+                  lng: locationDataFromSearch.lng,
+                )
+                .toString());
             if (point.distance(
                     lat: locationDataFromSearch.lat,
                     lng: locationDataFromSearch.lng) >
@@ -411,8 +416,11 @@ class _LocationPickerState extends State<LocationPicker> {
       zoom: 15,
     );
     _addMarker(latLng: location);
-    Future.delayed(Duration(milliseconds: 100), () => {
-      mapController.animateCamera(CameraUpdate.newCameraPosition(newPosition))
-    });
+    Future.delayed(
+        Duration(milliseconds: 100),
+        () => {
+              mapController
+                  .animateCamera(CameraUpdate.newCameraPosition(newPosition))
+            });
   }
 }

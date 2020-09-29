@@ -194,11 +194,9 @@ class SearchManager {
 //    await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
     bool templateFound = false;
     for (var map in hitList) {
-      print("template name is  ${map['_source']['templateName']}");
       if (map['_source']['templateName'].toLowerCase() ==
           queryString.toLowerCase()) {
         templateFound = true;
-        print("template name is  ${map['_source']['templateName']}");
 
         break;
       }
@@ -346,8 +344,6 @@ class SearchManager {
         }
       },
     );
-
-    print(url + "   ==========  " + body);
 
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);

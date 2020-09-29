@@ -140,7 +140,6 @@ class SearchStockImagesViewState extends State<SearchStockImages>
   }
 
   onCatSelected(dynamic index) {
-    print(index);
     setState(() => this.catSelected = index);
   }
 
@@ -197,8 +196,6 @@ class StockImageListingView extends StatelessWidget {
   staggeredtilesView(childs, bool isimages) {
     List<Widget> categoriesList = [];
     List<StaggeredTile> staggeredtiles = [];
-    print('hey');
-    print(childs.length);
     for (var i = 0; i < childs.length; i++) {
       categoriesList.add(_Tile(
           childs[i]['image'],
@@ -226,7 +223,6 @@ class StockImageListingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(catSelected);
     if (catSelected > -1) {
       List childs = categories[catSelected]['children'];
       return staggeredtilesView(childs, true);

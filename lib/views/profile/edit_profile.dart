@@ -296,9 +296,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                                   }
                                   if (await canLaunch(usermodel.cvUrl)) {
                                     launch(usermodel.cvUrl);
-                                  } else {
-                                    print('could not launch url');
-                                  }
+                                  } else {}
                                 },
                                 icon: Icon(
                                   Icons.save_alt,
@@ -530,13 +528,10 @@ class _EditProfilePageState extends State<EditProfilePage>
       _paths = null;
       _path = await FilePicker.getFilePath(
           type: FileType.custom, allowedExtensions: ['pdf']);
-    } on PlatformException catch (e) {
-      print("Unsupported operation" + e.toString());
-    }
+    } on PlatformException catch (e) {throw e;}
     //   if (!mounted) return;
     if (_path != null) {
       _fileName = _path.split('/').last;
-      print("FIle  name $_fileName");
 
       userDoc(_path, _fileName);
     }
@@ -547,7 +542,6 @@ class _EditProfilePageState extends State<EditProfilePage>
     // TODO: implement addWebImageUrl
 
     if (globals.webImageUrl != null && globals.webImageUrl.isNotEmpty) {
-      print('${globals.webImageUrl}');
       setState(() {
         SevaCore.of(context).loggedInUser.photoURL = globals.webImageUrl;
         widget.userModel.photoURL = globals.webImageUrl;
@@ -656,7 +650,6 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   Future updateUserData(UserModel user) async {
-    print("inside updateUserData------------");
     await FirestoreManager.updateUser(user: user);
   }
 
@@ -696,17 +689,14 @@ class _EditProfilePageState extends State<EditProfilePage>
               setState(() {
                 this._saving = false;
               });
-            }).catchError((e) => print(e));
-          } else {
-            print('error');
-          }
+            });
+          } else {}
         });
       } else {
         setState(() {
           SevaCore.of(context).loggedInUser.photoURL = imageURL;
           widget.userModel.photoURL = imageURL;
         });
-        print("image url ${imageURL}");
         await updateUserPic();
       }
     }

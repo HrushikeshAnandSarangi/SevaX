@@ -231,11 +231,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
     fontFamily: 'Europa',
   );
 
-  @override
-  addWebImageUrl(String imageUrl) {
-    // TODO: implement addWebImageUrl
-    throw UnimplementedError();
-  }
+
 
   void _showImageUrlAlert(BuildContext mContext) {
     // flutter defined function

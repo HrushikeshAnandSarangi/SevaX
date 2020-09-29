@@ -48,7 +48,8 @@ Future<void> createDonation({@required DonationModel donationModel}) async {
       .setData(donationModel.toMap());
 }
 
-Future<List<String>> createRecurringEvents({@required RequestModel requestModel}) async {
+Future<List<String>> createRecurringEvents(
+    {@required RequestModel requestModel}) async {
   var batch = Firestore.instance.batch();
   var db = Firestore.instance;
   double sevaCreditsCount = 0;
@@ -114,7 +115,6 @@ Future<List<String>> createRecurringEvents({@required RequestModel requestModel}
 //          batch.setData(db.collection("requests").document(temp.id), temp.toMap());
           temparr.add(temp.toMap());
           log("on mode inside if with day ${eventStartDate.toString()} with occurence count of ${temp.occurenceCount}");
-          print("id is ${temp.id}");
         }
       } else {
         lastRound = true;
@@ -173,7 +173,8 @@ Future<List<String>> createRecurringEvents({@required RequestModel requestModel}
       log("yup balance");
       eventsIdsArr.add(requestModel.id);
       temparr.forEach((tempobj) {
-        batch.setData(db.collection("requests").document(tempobj['id']), tempobj);
+        batch.setData(
+            db.collection("requests").document(tempobj['id']), tempobj);
         eventsIdsArr.add(tempobj['id']);
         log("---------   ${DateTime.fromMillisecondsSinceEpoch(tempobj['request_start']).toString()} with occurence count of ${tempobj['occurenceCount']}");
       });
@@ -306,9 +307,6 @@ Future<void> updateRecurrenceRequestsFrontEnd(
           if (projectData != null) {
             projectData.pendingRequests.add(temp.id);
           }
-
-          print(
-              "on mode inside if with day ${eventStartDate.toString()} with occurence count of ${temp.occurenceCount}");
         }
       } else {
         lastRound = true;
@@ -551,12 +549,9 @@ Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<ProjectModel>>.fromHandlers(
       handleData: (snapshot, projectSink) {
-        print("inside streamtransformer");
         List<ProjectModel> projectsList = [];
         snapshot.documents.forEach(
           (documentSnapshot) {
-            print("documentSnapshot.data.name --------" +
-                documentSnapshot.data["name"]);
             ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
             projectsList.add(model);
@@ -579,8 +574,6 @@ Future<List<ProjectModel>> getAllProjectListFuture({String timebankid}) async {
       .then((data) {
     data.documents.forEach(
       (documentSnapshot) {
-        print("documentSnapshot.data.name --------" +
-            documentSnapshot.data["name"]);
         ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
         model.id = documentSnapshot.documentID;
         projectsList.add(model);
@@ -614,8 +607,6 @@ Stream<List<RequestModel>> getTimebankRequestListStream(
           },
         );
 
-        print("request list size ____________ ${requestList.length}");
-
         requestSink.add(requestList);
       },
     ),
@@ -646,9 +637,6 @@ Stream<List<RequestModel>> getTimebankExistingRequestListStream(
             }
           },
         );
-
-        print(
-            "request list size ____________ ${requestList.length.toString()}");
 
         requestSink.add(requestList);
       },
@@ -727,10 +715,7 @@ Stream<List<RequestModel>> getNearRequestListStream(
   userLocation = await geolocator.getCurrentPosition();
   double lat = userLocation.latitude;
   double lng = userLocation.longitude;
-  print("timebank id ->--------------------- " + timebankId);
 
-  print(
-      "Location retrieved fom user ->  ${lat.toString()} + ${lng.toString()}");
   GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
   var query;
   if (isFromSettings == true) {
@@ -755,10 +740,9 @@ Stream<List<RequestModel>> getNearRequestListStream(
   try {
     radius = json.decode(AppConfig.remoteConfig.getString('radius'));
   } on Exception {
-    print("Exception raised while getting user minimum radius ");
+    //Crashlytics.instance.log(error.toString());
+
   }
-  print(
-      "radius is fetched from remote config near request item ${radius.toDouble()}");
 
   var data = geo.collection(collectionRef: query).within(
         center: center,
@@ -955,7 +939,7 @@ Future<void> approveRequestCompletion({
     Map<String, dynamic> dataMap = data.data;
     CommunityModel communityModel = CommunityModel(dataMap);
     taxPercentage = communityModel.taxPercentage ?? 0;
-    // print('---->tax percentage $taxPercentage');
+    //
 
     double tax = transactionvalue * taxPercentage;
     transactionvalue = transactionvalue - tax;
@@ -1019,10 +1003,8 @@ Future<void> approveRequestCompletion({
       type: NotificationType.TransactionDebit,
       data: transactionData,
     );
-    print("${debitnotification.id}");
 
     await utils.createTransactionNotification(model: debitnotification);
-    print("==>debit notification sent<==");
   }
 
   // }
@@ -1072,7 +1054,6 @@ Future<void> approveRequestCompletion({
 
   await utils.createTaskCompletedApprovedNotification(model: notification);
   await utils.createTransactionNotification(model: creditnotification);
-  print("==>Transaction complete<==");
 }
 
 Future<void> approveAcceptRequest({
@@ -1441,8 +1422,6 @@ Stream<List<RequestModel>> getCompletedRequestStream({
           if (isRequestCompleted) requestList.add(model);
         });
         requestSink.add(requestList);
-
-        print("request model --->>> ${requestList.toString()}");
       },
     ),
   );
@@ -1468,7 +1447,7 @@ Stream<List<TransactionModel>> getTimebankCreditsDebitsStream({
           requestList.add(model);
         });
         requestSink.add(requestList);
-        // print("request model --->>> ${requestList.toString()}");
+        //
       },
     ),
   );
@@ -1495,7 +1474,7 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
         });
         requestSink.add(requestList);
 
-        // print("request model --->>> ${requestList.toString()}");
+        //
       },
     ),
   );
@@ -1514,13 +1493,11 @@ Future<bool> hasSufficientCredits({
     lowerLimit =
         json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
   } on Exception {
-    print("Exception raised while getting user minimum balance");
+    // Crashlytics.instance.log(error.toString());
+
   }
 
   var maxAvailableBalance = (sevaCoinsBalance + lowerLimit ?? 50);
-
-  print(
-      "Seva Credits ($sevaCoinsBalance) Credits requested $credits ----------------------------- LOWER LIMIT BALANCE $maxAvailableBalance can credit + ${maxAvailableBalance - credits >= 0}");
 
   return maxAvailableBalance - credits >= 0;
 }
@@ -1534,13 +1511,12 @@ Future<bool> hasSufficientCreditsIncludingRecurring(
     lowerLimit =
         json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
   } on Exception {
-    print("Exception raised while getting user minimum balance");
+    //  Crashlytics.instance.log(error.toString());
+
   }
 
   var maxAvailableBalance = (sevaCoinsBalance + lowerLimit ?? 50);
   var creditsNew = isRecurring ? credits * recurrences : credits;
-  print(
-      "Seva Credits ($sevaCoinsBalance) Credits requested $credits ----------------------------- LOWER LIMIT BALANCE $maxAvailableBalance can credit + ${maxAvailableBalance - credits >= 0}");
 
   return maxAvailableBalance - (creditsNew) >= 0;
 }
@@ -1551,7 +1527,7 @@ Future<double> getMemberBalance(userId) async {
     sevaUserId: userId,
   );
   sevaCoins = userModel.currentBalance;
-  print("listen to coins -> " + sevaCoins.toString());
+
   return double.parse(sevaCoins.toStringAsFixed(2));
 }
 

@@ -33,7 +33,6 @@ Future<void> updateNews({@required NewsModel newsObject}) async {
 }
 
 Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
-  print('hey');
   var data = Firestore.instance
       .collection('news')
       .where('timebanksposted', arrayContains: timebankID)
@@ -123,10 +122,8 @@ Stream<List<NewsModel>> getNearNewsStream(
   try {
     radius = json.decode(AppConfig.remoteConfig.getString('radius'));
   } on Exception {
-    print("Exception raised while getting user minimum balance ");
+    //
   }
-  print(
-      "radius is fetched from remote config getNearNewsStream ${radius.toDouble()}");
 
   var data = geos.collection(collectionRef: query).within(
         center: center,
@@ -135,13 +132,9 @@ Stream<List<NewsModel>> getNearNewsStream(
         strictMode: true,
       );
 
-  print(
-      "-------------${lat.toString()}---------${lng.toString()}--------${data.toString()}");
-
   yield* data.transform(
       StreamTransformer<List<DocumentSnapshot>, List<NewsModel>>.fromHandlers(
           handleData: (querySnapshot, newsSink) async {
-    print("-------------------------------------------------------");
     List<NewsModel> modelList = [];
 
     querySnapshot.forEach((document) {
@@ -200,10 +193,8 @@ Stream<List<NewsModel>> getAllNearNewsStream() async* {
   try {
     radius = json.decode(AppConfig.remoteConfig.getString('radius'));
   } on Exception {
-    print("Exception raised while getting user minimum balance ");
+    //
   }
-  print(
-      "radius is fetched from remote config getAllNearNewsStream ${radius.toDouble()}");
 
   GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
   var query = Firestore.instance.collection('news');

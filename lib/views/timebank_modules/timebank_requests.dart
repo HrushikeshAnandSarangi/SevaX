@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,7 +18,6 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
-import 'package:sevaexchange/utils/helpers/transactions_matrix_check.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
@@ -30,7 +28,6 @@ import 'package:sevaexchange/views/timebank_modules/request_details_about_page.d
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../core.dart';
 
@@ -60,7 +57,6 @@ class RequestsState extends State<RequestsModule> {
   @override
   void initState() {
     super.initState();
-    print("is coming from settings ${widget.isFromSettings}");
   }
 
   @override
@@ -118,9 +114,6 @@ class RequestsState extends State<RequestsModule> {
                                 ),
                               ),
                               onTap: () {
-                                print(
-                                    "onTap =================================");
-
                                 if (widget.timebankModel.protected) {
                                   if (widget.timebankModel.admins.contains(
                                     SevaCore.of(context)
@@ -594,7 +587,6 @@ class NearRequestListItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(" $isFromSettings  $timebankId");
     return FutureBuilder<Object>(
         future: FirestoreManager.getUserForId(
           sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
@@ -608,7 +600,6 @@ class NearRequestListItems extends StatelessWidget {
           }
           UserModel user = snapshot.data;
           String loggedintimezone = user.timezone;
-          print("time zone is === $loggedintimezone");
           return StreamBuilder<List<RequestModel>>(
             stream: timebankId != 'All'
                 ? FirestoreManager.getNearRequestListStream(
@@ -867,7 +858,6 @@ class RequestListItemsState extends State<RequestListItems> {
   void initState() {
     super.initState();
 
-    print("is commig from settings ${widget.isFromSettings}");
     if (!widget.isFromSettings) {
       timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankId);
     }
@@ -1316,7 +1306,6 @@ class RequestListItemsState extends State<RequestListItems> {
     timeBankBloc.setIsAdmin(widget.isAdmin);
 
     if (model.isRecurring) {
-      print("is recurring ===== ${model.isRecurring}");
       Navigator.push(
           widget.parentContext,
           MaterialPageRoute(

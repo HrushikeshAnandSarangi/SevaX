@@ -110,7 +110,9 @@ class ImagePickerDialog extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    !globals.isFromOnBoarding ? dismissDialog() : print('');
+                    if (!globals.isFromOnBoarding) {
+                      dismissDialog();
+                    }
 
                     _listener.openStockImages(context);
                   },
@@ -122,7 +124,9 @@ class ImagePickerDialog extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    !globals.isFromOnBoarding ? dismissDialog() : print('');
+                    if (!globals.isFromOnBoarding) {
+                      dismissDialog();
+                    }
 
                     Navigator.of(context).push(
                       MaterialPageRoute(

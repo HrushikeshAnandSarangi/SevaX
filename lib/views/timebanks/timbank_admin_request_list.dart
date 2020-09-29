@@ -1154,14 +1154,14 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   //           SevaCore.of(context).loggedInUser.currentCommunity;
   //     }
   //     var insertMembers = model.members.contains(user.sevaUserID);
-  //     print("Itemqwerty:${user.sevaUserID} is present:$insertMembers");
+  //
   //     var memberList = List<String>();
   //     memberList.addAll(model.members);
   //     if (!model.members.contains(user.sevaUserID)) {
   //       memberList.add(user.sevaUserID);
   //     }
   //     model.members = memberList;
-  //     print(
+  //
   //         "Itemqwerty:${user.sevaUserID} is listSize:${model.members.length}");
   //     await updateUser(user: user);
   //   });
@@ -1180,7 +1180,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   //   }
   //   UserModel user = await getUserForId(sevaUserId: userId);
   //   var currentCommunity = SevaCore.of(context).loggedInUser.currentCommunity;
-  //   print("Current community:$currentCommunity");
+  //
   //   var communities = List<String>();
   //   if (user.communities != null && user.communities.length > 0) {
   //     communities.addAll(user.communities);
@@ -1664,10 +1664,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       bool isFromExit}) async {
     Map<String, dynamic> responseData = await removeMemberFromTimebank(
         sevauserid: userModel.sevaUserID, timebankId: timebankModel.id);
-    print(responseData.toString());
+
     if (responseData['deletable'] == true) {
       if (isFromExit) {
-        print("im about to exit");
         await sendNotificationToAdmin(
             user: userModel,
             timebank: timebankModel,

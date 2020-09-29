@@ -47,7 +47,6 @@ class _SkillViewNewState extends State<SkillViewNew> {
 
   @override
   void initState() {
-    print(widget.userModel.skills);
     hasPellError = false;
     Firestore.instance
         .collection('skills')
@@ -252,7 +251,6 @@ class _SkillViewNewState extends State<SkillViewNew> {
               onSuggestionSelected: (SuggestedItem suggestion) {
                 if (ProfanityDetector()
                     .isProfaneString(suggestion.suggesttionTitle)) {
-                  print("No action can be taken on profane word");
                   return;
                 }
 
@@ -344,7 +342,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   }
                   List<String> selectedID = [];
                   _selectedSkills.forEach((id, _) => selectedID.add(id));
-                  print(selectedID);
+
                   widget.onSelectedSkills(selectedID);
                 },
                 child: Text(

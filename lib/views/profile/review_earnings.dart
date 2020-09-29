@@ -55,7 +55,6 @@ class _ReviewEarningState extends State<ReviewEarning> {
         },
       );
     } else if (widget.type == 'timebank') {
-      print('came here timebank id' + widget.timebankid.toString());
       FirestoreManager.getTimebankCreditsDebitsStream(
               timebankid: widget.timebankid,
               userId: SevaCore.of(context).loggedInUser.sevaUserID)

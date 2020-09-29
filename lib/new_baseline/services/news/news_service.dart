@@ -18,7 +18,6 @@ class NewsService {
   Future<void> updateFeedById({
     @required NewsModel newsModel,
   }) async {
-    print(newsModel.id);
     return await Firestore.instance
         .collection('news')
         .document(newsModel.id)
@@ -58,7 +57,7 @@ class NewsService {
       List<Comments> modelList = [];
       querySnapshot.documents.forEach((document) {
         Comments comment = Comments.fromMap(document.data);
-        print(comment.comment);
+
         modelList.add(Comments.fromMap(document.data));
       });
       commentSink.add(modelList);
@@ -81,7 +80,6 @@ class NewsService {
       querySnapshot.documents.forEach((document) {
         NewsModel feed = NewsModel.fromMap(document.data);
         feed.comments.forEach((comment) {
-          print("This is comment text ${comment.comment.toString()}");
           modelList.add(Comments.fromMap(document.data));
         });
       });
@@ -124,8 +122,8 @@ class NewsService {
 //        handleData: (snapshot, userSink) async {
 //          DocumentSnapshot documentSnapshot = snapshot.documents[0];
 //          NewsModel model = NewsModel.fromMap(documentSnapshot.data);
-//          print("test............");
-//          print(model.toString());
+//
+//
 //          model.id = id;
 //          userSink.add(model);
 //        },
