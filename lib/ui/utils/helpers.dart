@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
@@ -97,4 +99,17 @@ handleVolunterFeedbackForTrustWorthynessNRealiablityScore(
           ratingCal(temp['2'] + temp['3']), user.trustworthinessscore)
     }, merge: true);
   }
+}
+
+Future<double> findDistance(
+  Coordinates coordinates,
+) async {
+  final Location _location = Location();
+  var location = await _location.getLocation();
+  LatLng _locat = LatLng(location.latitude, location.longitude);
+  double distance = GeoFirePoint.distanceBetween(
+    to: coordinates,
+    from: Coordinates(_locat.latitude, _locat.longitude),
+  );
+  return distance;
 }
