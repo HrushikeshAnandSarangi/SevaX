@@ -310,7 +310,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                             );
                           },
                         ),
-                        SizedBox(height: 40),
+                        SizedBox(height: 30),
                         StreamBuilder<String>(
                           stream: _bloc.offerDescription,
                           builder: (context, snapshot) {
@@ -364,7 +364,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                 },
                               );
                             }),
-                        SizedBox(height: 40),
+                        SizedBox(height: 10),
                         RaisedButton(
                           onPressed: status.data == Status.LOADING
                               ? () {}
