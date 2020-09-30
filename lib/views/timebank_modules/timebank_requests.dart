@@ -28,6 +28,7 @@ import 'package:sevaexchange/views/timebank_modules/request_details_about_page.d
 import 'package:sevaexchange/views/timebanks/widgets/loading_indicator.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 import 'package:sevaexchange/widgets/custom_info_dialog.dart';
+import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../core.dart';
 
@@ -1127,8 +1128,28 @@ class RequestListItemsState extends State<RequestListItems> {
     );
   }
 
+  String getLocation(String location) {
+    if (location != null && location.length > 1) {
+      List<String> l = location.split(',');
+      l = l.reversed.toList();
+      if (l.length >= 2) {
+        return "${l[1]},${l[0]}";
+      } else if (l.length >= 1) {
+        return "${l[0]}";
+      } else {
+        print("elasticsearch pjs location result is");
+        return null;
+      }
+    } else {
+      print("elasticsearch pjs location result isggggg");
+      return null;
+    }
+  }
+
   Widget getFromNormalRequest(
       {RequestModel model, String loggedintimezone, String userEmail}) {
+    var requestLocation = getLocation(model.address);
+
     return Container(
       decoration: containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
@@ -1139,142 +1160,186 @@ class RequestListItemsState extends State<RequestListItems> {
           onTap: () => editRequest(model: model),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                ClipOval(
-                  child: SizedBox(
-                    height: 45,
-                    width: 45,
-                    child: FadeInImage.assetNetwork(
-                      fit: BoxFit.cover,
-                      placeholder: 'lib/assets/images/profile.png',
-                      image: model.photoUrl == null
-                          ? defaultUserImageURL
-                          : model.photoUrl,
+            child: Column(
+              children: [
+                Row(
+                  children: <Widget>[
+                    requestLocation != null
+                        ? Icon(
+                            Icons.location_on,
+                            color: Theme.of(context).primaryColor,
+                          )
+                        : Container(),
+                    requestLocation != null
+                        ? Text(requestLocation)
+                        : Container(),
+                    Spacer(),
+                    Text(
+                      timeAgo
+                          .format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  model.postTimestamp),
+                              locale: Locale(AppConfig.prefs
+                                      .getString('language_code'))
+                                  .toLanguageTag())
+                          .replaceAll('hours ago', 'h'),
+                      style: TextStyle(
+                        fontFamily: 'Europa',
+                        color: Colors.black38,
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                SizedBox(width: 16),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      getAppropriateTag(model.requestType),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            model.title,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: Theme.of(widget.parentContext)
-                                .textTheme
-                                .subhead,
-                          ),
-                          Container(
-                              margin: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-                              child: Center(
-                                child: Visibility(
-                                  visible: model.isRecurring,
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              RecurringListing(
-                                            requestModel: model,
-                                            offerModel: null,
-                                            timebankModel: null,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: Icon(Icons.navigate_next),
-                                  ),
-                                ),
-                              ))
-                        ],
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        child: Text(
-                          model.description,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style:
-                              Theme.of(widget.parentContext).textTheme.subtitle,
+                SizedBox(height: 16),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    ClipOval(
+                      child: SizedBox(
+                        height: 45,
+                        width: 45,
+                        child: FadeInImage.assetNetwork(
+                          fit: BoxFit.cover,
+                          placeholder: 'lib/assets/images/profile.png',
+                          image: model.photoUrl == null
+                              ? defaultUserImageURL
+                              : model.photoUrl,
                         ),
                       ),
-                      SizedBox(height: 8),
-                      Visibility(
-                        visible: !model.isRecurring,
-                        child: Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              getTimeFormattedString(
-                                  model.requestStart, loggedintimezone),
-                            ),
-                            SizedBox(width: 2),
-                            Icon(Icons.arrow_forward, size: 14),
-                            SizedBox(width: 4),
-                            Text(
-                              getTimeFormattedString(
-                                model.requestEnd,
-                                loggedintimezone,
+                    ),
+                    SizedBox(width: 16),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          getAppropriateTag(model.requestType),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                model.title,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: Theme.of(widget.parentContext)
+                                    .textTheme
+                                    .subhead,
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Visibility(
-                        visible: model.isRecurring,
-                        child: Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              "Recurring",
-                              style: TextStyle(
-                                  fontSize: 16.0,
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          model.acceptors.contains(userEmail) ||
-                                  model.approvedUsers.contains(userEmail)
-                              ? Container(
-                                  margin: EdgeInsets.only(top: 10, bottom: 10),
-                                  width: 100,
-                                  height: 32,
-                                  child: FlatButton(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    padding: EdgeInsets.all(0),
-                                    color: Colors.green,
-                                    child: Text(
-                                      S.of(context).applied,
-                                      style: TextStyle(
-                                        color: Colors.white,
+                              Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+                                  child: Center(
+                                    child: Visibility(
+                                      visible: model.isRecurring,
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RecurringListing(
+                                                requestModel: model,
+                                                offerModel: null,
+                                                timebankModel: null,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Icon(Icons.navigate_next),
                                       ),
                                     ),
-                                    onPressed: () {},
-                                  ),
-                                )
-                              : Container(),
+                                  ))
+                            ],
+                          ),
+                          SizedBox(height: 4),
+                          Visibility(
+                            visible: !model.isRecurring,
+                            child: Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  getTimeFormattedString(
+                                      model.requestEnd, loggedintimezone),
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.grey),
+                                ),
+                                SizedBox(width: 2),
+                                Icon(
+                                  Icons.remove,
+                                  size: 14,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: 2),
+                                Text(
+                                  getTimeFormattedString(
+                                      model.requestEnd, loggedintimezone),
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.7,
+                            child: Text(
+                              model.description,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(widget.parentContext)
+                                  .textTheme
+                                  .subtitle,
+                            ),
+                          ),
+                          Visibility(
+                            visible: model.isRecurring,
+                            child: Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  "Recurring",
+                                  style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              model.acceptors.contains(userEmail) ||
+                                      model.approvedUsers.contains(userEmail)
+                                  ? Container(
+                                      margin:
+                                          EdgeInsets.only(top: 10, bottom: 10),
+                                      width: 100,
+                                      height: 32,
+                                      child: FlatButton(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        padding: EdgeInsets.all(0),
+                                        color: Colors.green,
+                                        child: Text(
+                                          S.of(context).applied,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        onPressed: () {},
+                                      ),
+                                    )
+                                  : Container(),
+                            ],
+                          ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
