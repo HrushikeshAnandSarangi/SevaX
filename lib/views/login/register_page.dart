@@ -838,7 +838,8 @@ class _RegisterPageState extends State<RegisterPage>
       if (dialogContext != null) {
         Navigator.pop(dialogContext);
       }
-       Crashlytics.instance.log(error.toString());error;
+      Crashlytics.instance.log(error.toString());
+      error;
       log('createUser: error: ${error.toString()}');
       return null;
     }
@@ -849,6 +850,7 @@ class _RegisterPageState extends State<RegisterPage>
     if (_image == null) return;
     setState(() {
       this.selectedImage = _image;
+      this.webImageUrl = null;
       isImageSelected = S.of(context).update_photo;
     });
   }

@@ -54,6 +54,19 @@ class _LoginPageState extends State<LoginPage> {
     fetchRemoteConfig();
   }
 
+//  Future<void> delete() async {
+//    await Firestore.instance
+//        .collection('communities')
+//        .getDocuments()
+//        .then((snapshot) {
+//      for (DocumentSnapshot ds in snapshot.documents) {
+//        if (ds.documentID != '73d0de2c-198b-4788-be64-a804700a88a4') {
+//          ds.reference.delete();
+//        }
+//      }
+//    });
+//  }
+
   Future<void> fetchRemoteConfig() async {
     AppConfig.remoteConfig = await RemoteConfig.instance;
     AppConfig.remoteConfig.fetch(expiration: Duration.zero);

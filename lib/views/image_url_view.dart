@@ -63,7 +63,7 @@ class _ImageUrlViewState extends State<ImageUrlView> {
             onPressed: () {
               if (imageUrls != null && imageUrls.isNotEmpty) {
                 globals.webImageUrl = imageUrls[0];
-                print('glg ${globals.webImageUrl}');
+                //print('glg ${globals.webImageUrl}');
 
                 Navigator.of(context).pop();
               } else {
@@ -230,8 +230,6 @@ class _ImageUrlViewState extends State<ImageUrlView> {
     color: Colors.grey,
     fontFamily: 'Europa',
   );
-
-
 
   void _showImageUrlAlert(BuildContext mContext) {
     // flutter defined function
